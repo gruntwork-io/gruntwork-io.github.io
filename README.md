@@ -54,7 +54,6 @@ On OS X, using the [docker-osx-dev](https://github.com/brikis98/docker-osx-dev) 
 
 ## TODO
 
-1. Favicon of Gruntwork log
 1. Make all client logos the same style
 1. Fill in proper Google Analytics ID
 
