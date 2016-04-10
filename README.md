@@ -44,6 +44,9 @@ On OS X, using the [docker-osx-dev](https://github.com/brikis98/docker-osx-dev) 
 1. We use [Basscss](http://www.basscss.com/), [Sass](http://sass-lang.com/), [Font Awesome
    Icons](http://fortawesome.github.io/Font-Awesome/icons/), [Hint.css](http://kushagragour.in/lab/hint/),and [Google
    Fonts](https://www.google.com/fonts) for styling.
+1. The design is based on the [html5up hyperspace theme](http://html5up.net/uploads/demos/hyperspace/).
+1. The logo is built from two images on The Noun Project: [Monster](https://thenounproject.com/term/monster/184225/)
+   and [Hard Hat](https://thenounproject.com/term/hard-hat/144300/).
 1. We use [jQuery](https://jquery.com/), [lazySizes](http://afarkas.github.io/lazysizes/), and
    [responsive-nav.js](http://responsive-nav.com/) for behavior.
 1. We're using [UptimeRobot](http://uptimerobot.com/) and [Google Analytics](http://www.google.com/analytics/) for
@@ -51,10 +54,8 @@ On OS X, using the [docker-osx-dev](https://github.com/brikis98/docker-osx-dev) 
 
 ## TODO
 
-1. Publish Docker image to gruntwork Docker Hub organization
-1. Gruntwork Logo
 1. Favicon of Gruntwork log
-1. Make all client logos the same size
+1. Make all client logos the same style
 1. Fill in proper Google Analytics ID
 
 ## License
