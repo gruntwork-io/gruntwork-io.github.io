@@ -1,0 +1,19 @@
+<section id="our-clients" class="wrapper style1 fade-up">
+  <div class="inner">
+    <h2>Our clients</h2>
+    <p>It has been our privilege to work with software teams of all sizes, including:</p>
+
+    <div class="p2">
+      <div class="flex flex-wrap">
+        {% for client in site.data.clients %}
+          <div class="flex flex-center sm-col-2 mr4 mb4">
+            <div>
+              <img src="/assets/img/client-logos/{{ client.logo }}" style="max-height: 160px; max-width: 160px">
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+

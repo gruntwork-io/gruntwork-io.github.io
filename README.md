@@ -49,8 +49,9 @@ On OS X, using the [docker-osx-dev](https://github.com/brikis98/docker-osx-dev) 
 ## TODO
 
 1. Publish Docker image to gruntwork Docker Hub organization
-1. Favicon
-1. Logo
+1. Gruntwork Logo
+1. Favicon of Gruntwork log
+1. Make all client logos the same size
 1. Fill in proper Google Analytics ID
 
 ## License

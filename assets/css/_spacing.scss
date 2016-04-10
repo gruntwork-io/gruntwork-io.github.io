@@ -1,0 +1,22 @@
+$whitespaceAmount: 1rem;
+
+@for $i from 0 through 16 {
+  .pt#{$i} { padding-top: $whitespaceAmount * $i; }
+  .pr#{$i} { padding-right: $whitespaceAmount * $i; }
+  .pb#{$i} { padding-bottom: $whitespaceAmount * $i; }
+  .pl#{$i} { padding-left: $whitespaceAmount * $i; }
+}
+
+@for $i from 5 through 16 {
+  .mt#{$i} { margin-top: $whitespaceAmount * $i; }
+  .mr#{$i} { margin-right: $whitespaceAmount * $i; }
+  .mb#{$i} { margin-bottom: $whitespaceAmount * $i; }
+  .ml#{$i} { margin-left: $whitespaceAmount * $i; }
+  .m#{$i} { margin: $whitespaceAmount * $i; }
+
+  .pt#{$i} { padding-top: $whitespaceAmount * $i; }
+  .pr#{$i} { padding-right: $whitespaceAmount * $i; }
+  .pb#{$i} { padding-bottom: $whitespaceAmount * $i; }
+  .pl#{$i} { padding-left: $whitespaceAmount * $i; }
+  .p#{$i} { padding: $whitespaceAmount * $i; }
+}
