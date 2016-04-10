@@ -2,6 +2,9 @@
 
 This is the code for the [Gruntwork website](http://www.gruntwork.io).
 
+Gruntwork gets you up and running on AWS with world-class infrastructure and DevOps practices in about 2 weeks. You
+focus on your product. We'll take care of the Gruntwork.
+
 ## Quick start
 
 1. Use Git to clone this repo
