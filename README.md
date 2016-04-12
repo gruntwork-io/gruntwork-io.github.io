@@ -25,14 +25,14 @@ On Linux:
 
 1. `git clone` this repo
 2. `docker-compose up`
-3. Go to `http://localhost:4000` to test 
+3. Go to `http://localhost:4000` to test
 
 On OS X, using the [docker-osx-dev](https://github.com/brikis98/docker-osx-dev) project:
 
 1. `git clone` this repo
 2. In one tab: `docker-osx-dev`
 3. In another tab: `docker-compose up`
-4. Go to `http://dockerhost:4000` to test
+4. Go to `http://default:4000` to test
 
 ## Technologies
 
