@@ -54,8 +54,17 @@ On OS X, using the [docker-osx-dev](https://github.com/brikis98/docker-osx-dev) 
 
 ## TODO
 
-1. Make all client logos the same style
-1. Fill in proper Google Analytics ID
+1. Make all client logos the same style.
+1. Fill in proper Google Analytics ID.
+1. Add GA tracking when each person scrolls to a new section of the site.
+1. Consider adding a note that we are not a PaaS. Perhaps an FAQ section? Example: "Get up and running as fast as PaaS,
+   but own all the code and flexibility of IaaS."
+1. Remove extraneous links.
+1. Add line to "contact us" section that says "Careers". When you click, it says "interested in working with us, email
+   us."
+1. Implement contact us form.
+1. Fix mobile rendering issues.
+1. Finalize Gruntwork logo.
 
 ## License
 
