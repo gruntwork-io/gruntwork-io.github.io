@@ -8,10 +8,10 @@ focus on your product. We'll take care of the Gruntwork.
 ## Quick start
 
 1. Use Git to clone this repo
-1. Make sure you have [Jekyll](http://jekyllrb.com/docs/installation/) installed
-1. Just the first time: `bundle install`
-1. To build the site and serve it: `bundle exec jekyll serve`
-1. To test: `http://localhost:4000`
+2. Make sure you have [Jekyll](http://jekyllrb.com/docs/installation/) installed
+3. Just the first time: `bundle install`
+4. To build the site and serve it: `bundle exec jekyll serve`
+5. To test: `http://localhost:4000`
 
 See the [Jekyll](http://jekyllrb.com/) and [GitHub Pages](https://pages.github.com/) documentation for more info.
 
@@ -34,36 +34,40 @@ On OS X, using the [docker-osx-dev](https://github.com/brikis98/docker-osx-dev) 
 3. In another tab: `docker-compose up`
 4. Go to `http://default:4000` to test
 
+*NOTE: If using the old [boot2docker](http://boot2docker.io/) to run Docker on OS X, instead of `http://default:4000`, the URL will be `http://dockerhost:4000`. If using [docker-machine](https://docs.docker.com/machine/) to run Docker on OS X, replace `default` with the name of your docker-machine (which by default is `default`.)*
+
+*Finally, if using the new [Docker for Mac](https://blog.docker.com/2016/03/docker-for-mac-windows-beta/), then `docker-osx-dev` will hopefully no longer be necessary.*
+
 ## Technologies
 
 1. Built with [Jekyll](http://jekyllrb.com/). This website is completely static and we use basic HTML or Markdown for
-   everything.
-1. Hosted on [GitHub Pages](https://pages.github.com/). We're using the [GitHub Pages
+     everything.
+2. Hosted on [GitHub Pages](https://pages.github.com/). We're using the [GitHub Pages
    Gem](https://help.github.com/articles/using-jekyll-with-pages/) and only Jekyll plugins that are [available on
    GitHub Pages](https://help.github.com/articles/repository-metadata-on-github-pages/).
-1. We use [Basscss](http://www.basscss.com/), [Sass](http://sass-lang.com/), [Font Awesome
+3. We use [Basscss](http://www.basscss.com/), [Sass](http://sass-lang.com/), [Font Awesome
    Icons](http://fortawesome.github.io/Font-Awesome/icons/), [Hint.css](http://kushagragour.in/lab/hint/),and [Google
    Fonts](https://www.google.com/fonts) for styling.
-1. The design is based on the [html5up hyperspace theme](http://html5up.net/uploads/demos/hyperspace/).
-1. The logo is built from two images on The Noun Project: [Monster](https://thenounproject.com/term/monster/184225/)
+4. The design is based on the [html5up hyperspace theme](http://html5up.net/uploads/demos/hyperspace/).
+5. The logo is built from two images on The Noun Project: [Monster](https://thenounproject.com/term/monster/184225/)
    and [Hard Hat](https://thenounproject.com/term/hard-hat/144300/).
-1. We use [jQuery](https://jquery.com/), [lazySizes](http://afarkas.github.io/lazysizes/), and
+6. We use [jQuery](https://jquery.com/), [lazySizes](http://afarkas.github.io/lazysizes/), and
    [responsive-nav.js](http://responsive-nav.com/) for behavior.
-1. We're using [UptimeRobot](http://uptimerobot.com/) and [Google Analytics](http://www.google.com/analytics/) for
+7. We're using [UptimeRobot](http://uptimerobot.com/) and [Google Analytics](http://www.google.com/analytics/) for
    monitoring and metrics.
 
 ## TODO
 
 1. Fill in proper Google Analytics ID.
-1. Add GA tracking when each person scrolls to a new section of the site.
-1. Consider adding a note that we are not a PaaS. Perhaps an FAQ section? Example: "Get up and running as fast as PaaS,
+2. Add GA tracking when each person scrolls to a new section of the site.
+3. Consider adding a note that we are not a PaaS. Perhaps an FAQ section? Example: "Get up and running as fast as PaaS,
    but own all the code and flexibility of IaaS."
-1. Remove extraneous links.
-1. Add line to "contact us" section that says "Careers". When you click, it says "interested in working with us, email
+4. Remove extraneous links.
+5. Add line to "contact us" section that says "Careers". When you click, it says "interested in working with us, email
    us."
-1. Implement contact us form.
-1. Fix mobile rendering issues.
-1. Finalize Gruntwork logo.
+6. Implement contact us form.
+7. Fix mobile rendering issues.
+8. Finalize Gruntwork logo.
 
 ## License
 
