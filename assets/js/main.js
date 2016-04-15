@@ -22,15 +22,8 @@
   if (skel.vars.IEVersion < 12)
     $body.addClass('is-ie');
 
-  // Disable animations/transitions until the page has loaded.
-  //if (skel.canUse('transition'))
-  //  $body.addClass('is-loading');
-
-  $window.on('load', function() {
-    window.setTimeout(function() {
-      $body.removeClass('is-loading');
-    }, 100);
-  });
+  // Kick off transition to fade the page in
+  $body.removeClass('is-loading');
 
   // Forms.
 
