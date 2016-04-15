@@ -10,12 +10,14 @@
 		position: relative;
 
 		> .inner {
-			@include padding(5em, 5em);
+			// EDITED BY GRUNTWORK
+			padding: 5em;
 			max-width: 100%;
 			width: _size(inner-width);
 
 			@include breakpoint(xlarge) {
-				@include padding(4em, 4em);
+				// EDITED BY GRUNTWORK
+				padding: 4em;
 			}
 
 			@include breakpoint(large) {
@@ -23,7 +25,8 @@
 			}
 
 			@include breakpoint(small) {
-				@include padding(3em, 2em);
+				// EDITED BY GRUNTWORK
+				padding: 3em 2em;
 			}
 		}
 
