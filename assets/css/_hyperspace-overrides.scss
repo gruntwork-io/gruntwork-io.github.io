@@ -11,11 +11,26 @@
   }
 }
 
-#intro .inner, #our-clients .inner {
+#intro .inner {
   max-width: 52em;
+}
 
+#our-clients .inner {
   .client-logo {
-    width: 130px;
-    height: 110px
+    width: 300px;
+    height: 225px;
+  }
+
+  @include breakpoint(small) {
+    .client-logo {
+      width: 125px;
+      height: 90px;
+
+      img {
+        max-width: 90px;
+        max-height: 60px;
+      }
+    }
+
   }
 }
