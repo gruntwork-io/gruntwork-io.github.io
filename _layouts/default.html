@@ -4,7 +4,9 @@
     {% include head.html %}
   </head>
   <body class="is-loading">
-    {% include sidebar.html %}
+    {% unless page.no_sidebar %}
+      {% include sidebar.html %}
+    {% endunless %}
     {{ content }}
     {% include footer.html %}
     {% include scripts.html %}
