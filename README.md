@@ -50,24 +50,11 @@ On OS X, using the [docker-osx-dev](https://github.com/brikis98/docker-osx-dev) 
    Fonts](https://www.google.com/fonts) for styling.
 4. The design is based on the [html5up hyperspace theme](http://html5up.net/uploads/demos/hyperspace/).
 5. The logo is built from two images on The Noun Project: [Monster](https://thenounproject.com/term/monster/184225/)
-   and [Hard Hat](https://thenounproject.com/term/hard-hat/144300/).
+   and [Hard Hat](https://thenounproject.com/term/hard-hat/410909/).
 6. We use [jQuery](https://jquery.com/), [lazySizes](http://afarkas.github.io/lazysizes/), and
    [responsive-nav.js](http://responsive-nav.com/) for behavior.
 7. We're using [UptimeRobot](http://uptimerobot.com/) and [Google Analytics](http://www.google.com/analytics/) for
    monitoring and metrics.
-
-## TODO
-
-1. Fill in proper Google Analytics ID.
-2. Add GA tracking when each person scrolls to a new section of the site.
-3. Consider adding a note that we are not a PaaS. Perhaps an FAQ section? Example: "Get up and running as fast as PaaS,
-   but own all the code and flexibility of IaaS."
-4. Remove extraneous links.
-5. Add line to "contact us" section that says "Careers". When you click, it says "interested in working with us, email
-   us."
-6. Implement contact us form.
-7. Fix mobile rendering issues.
-8. Finalize Gruntwork logo.
 
 ## License
 
