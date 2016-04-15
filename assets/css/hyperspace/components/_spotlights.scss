@@ -6,8 +6,10 @@
 
 /* Spotlights */
 
+// LOTS OF CUSTOM EDIT BY GRUNTWORK IN THIS FILE
+
 .spotlights {
-	> section {
+	section {
 		@include vendor('display', 'flex');
 		@include vendor('flex-direction', 'row');
 		min-height: 22.5em;
@@ -16,7 +18,7 @@
 			min-height: 0;
 		}
 
-		> .image {
+		.image {
 			background-position: center center;
 			background-size: cover;
 			border-radius: 0;
@@ -43,7 +45,7 @@
 			}
 		}
 
-		> .content {
+		.content {
 			@include padding(4em, 5em);
 			@include vendor('display', 'flex');
 			@include vendor('flex-direction', 'column');
@@ -74,14 +76,14 @@
 
 		&.inactive,
 		body.is-loading & {
-			> .image {
+			.image {
 				&:before {
 					opacity: 1;
 				}
 			}
 
-			> .content {
-				> .inner {
+			.content {
+				.inner {
 					@include vendor('transform', 'translateX(-1em)');
 					opacity: 0;
 				}
@@ -89,7 +91,7 @@
 		}
 
 		@include breakpoint(xlarge) {
-			> .content {
+			.content {
 				@include padding(4em, 4em);
 			}
 		}
@@ -97,19 +99,19 @@
 		@include breakpoint(medium) {
 			display: block;
 
-			> .image {
+			.image {
 				width: 100%;
 				height: 50vh;
 			}
 
-			> .content {
+			.content {
 				width: 100%;
 			}
 
 			&.inactive,
 			body.is-loading & {
-				> .content {
-					> .inner {
+				.content {
+					.inner {
 						@include vendor('transform', 'translateY(1em)');
 					}
 				}
@@ -117,12 +119,12 @@
 		}
 
 		@include breakpoint(small) {
-			> .image {
+			.image {
 				height: 50vh;
 				min-height: 15em;
 			}
 
-			> .content {
+			.content {
 				@include padding(3em, 2em);
 			}
 		}
