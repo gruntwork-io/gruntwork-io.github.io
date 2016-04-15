@@ -6,7 +6,7 @@
     <div class="flex flex-wrap">
       {% for client in site.data.clients %}
         <div class="flex flex-center col client-logo">
-          <img src="/assets/img/client-logos/{{ client.logo }}" class="mx-auto">
+          {% include image.html path=client.logo alt="Gruntwork" class="mx-auto" %}
         </div>
       {% endfor %}
     </div>

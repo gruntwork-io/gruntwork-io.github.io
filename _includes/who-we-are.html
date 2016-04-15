@@ -10,8 +10,8 @@
     </div>
   </div>
   <section>
-    <a href="http://www.ybrikman.com/?ref=gruntwork-bio" class="image bg-cover" target="_blank">
-      <img src="/assets/img/yevgeniy-brikman.jpg" alt="Yevgeniy Brikman" data-position="center center" />
+    <a href="http://www.ybrikman.com/?ref=gruntwork-bio" target="_blank" class="image bg-cover">
+      {% include image.html path="team/yevgeniy-brikman.jpg" alt="Yevgeniy Brikman" class="col-12 bg-cover" %}
     </a>
     <div class="content">
       <div class="inner">
@@ -27,8 +27,8 @@
     </div>
   </section>
   <section>
-    <a href="https://joshpadnick.com/" class="image bg-cover" target="_blank">
-      <img src="/assets/img/josh-padnick.jpg" alt="Josh Padnick" data-position="top center" />
+    <a href="https://joshpadnick.com/" target="_blank" class="image bg-cover">
+      {% include image.html path="team/josh-padnick.jpg" alt="Josh Padnick" class="col-12 bg-cover" %}
     </a>
     <div class="content">
       <div class="inner">
@@ -43,8 +43,8 @@
     </div>
   </section>
   <section>
-    <a href="{{ site.url }}" class="image" target="_blank">
-      {% include logo.html %}
+    <a href="{{ site.url }}" target="_blank" class="image">
+      {% include logo.html class="col-12 bg-cover" %}
     </a>
     <div class="content">
       <div class="inner">

@@ -162,25 +162,40 @@
           $(this).removeClass('inactive');
 
         }
-      })
-      .each(function() {
-
-        var	$this = $(this),
-            $image = $this.find('.image'),
-            $img = $image.find('img'),
-            x;
-
-        // Assign image.
-        $image.css('background-image', 'url(' + $img.attr('src') + ')');
-
-        // Set background position.
-        if (x = $img.data('position'))
-          $image.css('background-position', x);
-
-        // Hide <img>.
-        $img.hide();
-
       });
+
+  document.addEventListener('lazybeforeunveil', function(e) {
+    var imagesToConvertToBgImages = $(e.target).filter('img.bg-cover');
+
+    if (imagesToConvertToBgImages.length > 0) {
+      imagesToConvertToBgImages.each(function (index, el) {
+        var $el = $(el);
+        var parent = $el.parent();
+
+        parent.css({'background-image': 'url(' + $el.attr('data-src') + ')'});
+        $el.remove();
+      });
+      e.preventDefault();
+    }
+  });
+      //.each(function() {
+      //
+      //  var	$this = $(this),
+      //      $image = $this.find('.image'),
+      //      $img = $image.find('img'),
+      //      x;
+      //
+      //  // Assign image.
+      //  $image
+      //
+      //  // Set background position.
+      //  if (x = $img.data('position'))
+      //    $image.css('background-position', x);
+      //
+      //  // Hide <img>.
+      //  $img.hide();
+      //
+      //});
 
   // Features.
   if (skel.canUse('transition'))
