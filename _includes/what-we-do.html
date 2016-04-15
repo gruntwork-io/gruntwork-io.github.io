@@ -12,73 +12,15 @@
       Some of our most popular packages are:
     </p>
     <div class="features">
-      <section>
-        <span class="icon major fa-code-fork"></span>
-        <h3>Continuous integration</h3>
-        <p>
-          Automated build pipeline that runs on a CI server (e.g. Jenkins, Travis CI, Circle CI) after every commit to
-          build your code, run your tests, and produce a versioned artifact of your app (e.g. Docker image or AMI built
-          via Packer).
-        </p>
-      </section>
-      <section>
-        <span class="icon major fa-rocket"></span>
-        <h3>Automated deployment</h3>
-        <p>
-          Zero-downtime, immutable deployment triggered via a single click in your CI server, a commit to a specific
-          branch, or even after every commit if you prefer continuous deployment. Includes integration with health
-          checks and automatic rollback.
-        </p>
-      </section>
-      <section>
-        <span class="icon major fa-sitemap"></span>
-        <h3>Network security</h3>
-        <p>
-          A secure VPC configuration with multiple environments (staging, production, mgmt), multiple layers of
-          subnets (public, private, persistence), strict security groups, NAT gateways, TLS/SSL certificates, and a bastion host for secure
-          SSH access.
-        </p>
-      </section>
-      <section>
-        <span class="icon major fa-lock"></span>
-        <h3>Secrets management</h3>
-        <p>
-          Set up Vault for secrets management. Use Vault for configuration secrets (e.g. DB passwords), generating
-          temporary SSH keys (instead of storing unencrypted Key Pairs), and generating temporary AWS credentials
-          (instead of storing unencrypted access keys).
-        </p>
-      </section>
-      <section>
-        <span class="icon major fa-bar-chart"></span>
-        <h3>Monitoring</h3>
-        <p>
-          Centralized log aggregation, metrics for all of your servers (e.g. CPU usage, memory usage, throughput,
-          latency), and automatic alerts for a variety of problems.
-        </p>
-      </section>
-      <section>
-        <span class="icon major fa-globe"></span>
-        <h3>Availability &amp; Scalability</h3>
-        <p>
-          High availability and scalability using Auto Scaling Groups, Auto Scaling Policies, Elastic Load Balancers,
-          S3, CloudFront, and automated data backup &amp; restore.
-        </p>
-      </section>
-      <section>
-        <span class="icon major fa-cogs"></span>
-        <h3>Configuration</h3>
-        <p>
-          Configure your infrastructure using Terraform; configure your apps at build time (e.g. dependencies) using
-          Docker and Packer; configure your apps at runtime (e.g. service discovery) using Consul.
-        </p>
-      </section>
-      <section>
-        <span class="icon major fa-users"></span>
-        <h3>Consulting</h3>
-        <p>
-          Don't see a package that does what you need? We offer general DevOps consulting on an hourly basis.
-        </p>
-      </section>
+      {% for package in site.data.packages %}
+        <section>
+          <div class="clearfix">
+            <i class="icon major {{ package.icon }} col"></i>
+            <h3 class="col ml1">{{ package.title }}</h3>
+          </div>
+          <p>{{ package.description }}</p>
+        </section>
+      {% endfor %}
     </div>
   </div>
 </section>

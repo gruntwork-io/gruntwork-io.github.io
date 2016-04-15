@@ -15,10 +15,16 @@
 		margin: 0 0 _size(element-margin) 0;
 
 		section {
-			@include padding(3em, 3em, (0.5em, 0, 0, 4em));
+			// EDITED BY GRUNTWORK
+			@include padding(3em, 3em, (0, 0, 0, 0));
 			width: 50%;
 			border-top: solid 1px _palette(border);
 			position: relative;
+
+			// EDITED BY GRUNTWORK
+			h3 {
+				line-height: 2.5;
+			}
 
 			&:nth-child(-n + 2) {
 				border-top-width: 0;
@@ -35,9 +41,10 @@
 				));
 				@include vendor('transition-delay', '1s');
 				@include vendor('transform', 'scale(1)');
-				position: absolute;
-				left: 3em;
-				top: 3em;
+				// EDITED BY GRUNTWORK
+				//position: absolute;
+				//left: 3em;
+				//top: 3em;
 				opacity: 1;
 			}
 
@@ -75,12 +82,14 @@
 
 		@include breakpoint(small) {
 			section {
-				@include padding(2em, 1.5em, (0.5em, 0, 0, 4em));
+				// EDITED BY GRUNTWORK
+				@include padding(2em, 1.5em, (0, 0, 0, 0));
 
-				.icon {
-					left: 1.5em;
-					top: 2em;
-				}
+				// EDITED BY GRUNTWORK
+				//.icon {
+				//	left: 1.5em;
+				//	top: 2em;
+				//}
 			}
 		}
 
@@ -88,11 +97,12 @@
 			section {
 				@include padding(2em, 1.5em, (0, 0, 0, 0));
 
-				.icon {
-					left: 0;
-					position: relative;
-					top: 0;
-				}
+				// EDITED BY GRUNTWORK
+				//.icon {
+				//	left: 0;
+				//	position: relative;
+				//	top: 0;
+				//}
 			}
 		}
 	}
