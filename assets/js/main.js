@@ -796,4 +796,16 @@
         });
 
 
+  // Track all links
+  $(document).on('click', 'a', function(e) {
+    var target = $(e.target);
+    var href = target.attr("href");
+    ga('send', 'event', {
+      eventCategory: 'link',
+      eventAction: 'click',
+      eventLabel: href,
+      transport: 'beacon'
+    });
+  });
+
 })(jQuery);
