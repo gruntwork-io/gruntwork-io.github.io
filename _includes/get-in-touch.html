@@ -4,7 +4,7 @@
     <p>Want to work with us? Got a question?</p>
     <div class="split style1">
       <section>
-        <form method="post" action="https://formspree.io/{{ site.contact.email }}">
+        <form method="post" action="https://formspree.io/{{ site.data.contact.email.url }}">
           <input type="hidden" name="_next" value="{{ site.url }}/thanks/" />
           <input type="hidden" name="_subject" value="New inquiry from {{ site.url }}" />
           <input type="text" name="_gotcha" style="display:none" />
@@ -29,20 +29,21 @@
         <ul class="contact">
           <li>
             <h3>Email</h3>
-            <a href="mailto:{{ site.contact.email }}">{{ site.contact.email }}</a>
+            <a href="mailto:{{ site.data.contact.email.url }}">{{ site.data.contact.email.url }}</a>
           </li>
           <li>
             <h3>Careers &amp; Jobs</h3>
-            <a href="mailto:{{ site.contact.careers_email }}">{{ site.contact.careers_email }}</a>
+            <a href="mailto:{{ site.data.contact.careers.url }}">{{ site.data.contact.careers.url }}</a>
           </li>
           <li>
             <h3>Social</h3>
             <ul class="icons">
-              <li><a href="{{ site.contact.twitter_url }}" class="fa-twitter" target="_blank"><span class="label">Twitter</span></a></li>
-              <li><a href="{{ site.contact.linkedin_url }}" class="fa-linkedin" target="_blank"><span class="label">LinkedIn</span></a></li>
-              <li><a href="{{ site.contact.facebook_url }}" class="fa-facebook" target="_blank"><span class="label">Facebook</span></a></li>
-              <li><a href="{{ site.contact.google_plus_url }}" class="fa-google-plus" target="_blank"><span class="label">Google</span></a></li>
-              <li><a href="{{ site.contact.github_url }}" class="fa-github" target="_blank"><span class="label">GitHub</span></a></li>
+              {% for contact_key_value in site.data.contact %}
+                {% assign contact = contact_key_value[1] %}
+                {% if contact.type == 'social' %}
+                  <li><a href="{{ contact.url }}" class="{{ contact.icon }}" target="_blank"><span class="label">{{ contact.label }}</span></a></li>
+                {% endif %}
+              {% endfor %}
             </ul>
           </li>
         </ul>

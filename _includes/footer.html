@@ -3,6 +3,14 @@
     <ul class="menu center">
       <li>&copy; {{ site.time | date: "%Y" }} {{ site.full_company_name }}. All rights reserved.</li>
       <li>Design: <a href="http://html5up.net" target="_blank">HTML5 UP</a></li>
+      <li>
+        {% for contact_key_value in site.data.contact %}
+          {% assign contact = contact_key_value[1] %}
+          {% if contact.type == 'social' or contact.label == 'Email' %}
+            <a href="{{ contact.url }}" target="_blank" title="{{ contact.label }}" class="no-border"><i class="fa fa-fw {{ contact.icon }}"></i></a>
+          {% endif %}
+        {% endfor %}
+      </li>
     </ul>
   </div>
 </footer>
