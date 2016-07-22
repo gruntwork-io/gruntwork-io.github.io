@@ -1,0 +1,19 @@
+{% capture separator %}<span class="px1">|</span>{% endcapture %}
+
+<div class="h6">
+  <span class="mr1 nowrap">
+    <i class="fa fa-calendar"></i>
+    <time datetime="{{ include.post.date | date:"%Y-%m-%d" }}">{{ include.post.date | date:"%b %d, %Y" }}</time>
+  </span>
+  {% if include.post.tags.size > 0 %}
+    <span class="mr1 nowrap">
+      <i class="fa fa-tags"></i>
+      {% for tag in include.post.tags %}
+        {{ tag }}{% unless forloop.last %},{% endunless %}
+      {% endfor %}
+    </span>
+  {% endif %}
+  <span class="mr1 nowrap">
+    <a href="{{ include.post.url }}" class="h6">Continue Reading &raquo;</a>
+  </span>
+</div>

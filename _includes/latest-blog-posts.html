@@ -1,0 +1,19 @@
+<section id="blog" class="wrapper style3 fade-up">
+  <div class="inner">
+    <h2>Latest blog posts</h2>
+    <p>
+      Check out the <a href="{{ site.contact.blog_url }}" data-event-category="External Link" data-event-action="click">Gruntwork Blog</a>
+      for the latest news on DevOps, AWS, software infrastructure, and Gruntwork itself. If you want to be notified of
+      new posts, <a href="/newsletter" data-event-category="Internal Link" data-event-action="click">subscribe to the
+      Gruntwork Newsletter!</a>
+    </p>
+    {% for post in site.data.blog_posts %}
+      {% include post-outline.html post=post time_estimate=true %}
+    {% endfor %}
+    <div class="center">
+      <ul class="actions">
+        <li><a href="{{ site.contact.blog_url }}" class="button" data-event-category="External Link" data-event-action="click">Read more on the Gruntwork Blog</a></li>
+      </ul>
+    </div>
+  </div>
+</section>
