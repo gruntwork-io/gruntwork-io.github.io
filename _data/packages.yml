@@ -1,42 +1,73 @@
-- title: "Continuous integration"
-  icon: "fa-code-fork"
+- title: "Network Topology"
+  icon: "vpc.png"
+  docs_url: "https://github.com/gruntwork-io/module-vpc-public"
   description: |
-    Automated build pipeline that runs on a CI server (e.g. Jenkins, Travis CI, Circle CI) after every commit to
-    build your code, run your tests, and produce a versioned artifact of your app (e.g. Docker image or AMI built
-    via Packer).
-- title: "Automated deployment"
-  icon: "fa-rocket"
+    Set up a best practices network topology in your AWS account. This Package creates an isolated VPC for each
+    environment (staging, production, mgmt), and within each environment, sets up multiple tiers of isolated subnets
+    (public, private, persistence) network ACLs, security groups, NAT gateways, and VPC peering connections.
+- title: "Monitoring and Alerting"
+  icon: "chart.png"
+  docs_url: "https://github.com/gruntwork-io/module-aws-monitoring-public"
   description: |
-    Zero-downtime, immutable deployment, with automatic health checks and rollbacks, triggered via a single click on
-    your CI server, a commit to a specific branch, or even after every commit if you prefer continuous deployment.
-- title: "Network security"
-  icon: "fa-sitemap"
+    Set up monitoring and alerting using AWS CloudWatch. This Package exposes metrics not available in the AWS
+    hypervisor (e.g. memory and disk space utilization), configures Route 53 health checks for your public endpoints,
+    installs a default set of alerts (e.g. for CPU usage, disk space, 5xx errors) that notify you via email or text
+    message, and aggregates logs from all your applications so you can see them in the CloudWatch console.
+- title: "Docker Cluster"
+  icon: "docker.png"
+  docs_url: "https://github.com/gruntwork-io/module-ecs-public"
   description: |
-    A secure VPC configuration with multiple environments (staging, production, mgmt), multiple layers of
-    subnets (public, private, persistence), strict security groups, NAT gateways, TLS/SSL certificates, and a bastion
-    host for secure SSH access.
-- title: "Secrets management"
-  icon: "fa-lock"
+    Deploy your Docker containers on top of the AWS EC2 Container Service (ECS). This Package creates the ECS Cluster,
+    runs your Docker containers as ECS services, supports zero-downtime, rolling deployment of new Docker container
+    versions, configures load balancing, health checks, and service discovery using ELBs, scales the number of nodes
+    and tasks up and down based on traffic, and provides automatic recovery of failed nodes and Tasks.
+- title: "AMI Cluster"
+  icon: "asg.png"
+  docs_url: "https://github.com/gruntwork-io/module-asg-public"
   description: |
-    Set up Vault or AWS KMS for secrets management. Use Vault for configuration secrets (e.g. DB passwords), generating
-    temporary SSH keys (instead of storing unencrypted Key Pairs), and requesting temporary AWS credentials
-    (instead of storing unencrypted access keys).
-- title: "Monitoring"
-  icon: "fa-bar-chart"
+    Deploy your Amazon Machine Images (AMIs) on top of an AWS Auto Scaling Group (ASG). This Package creates the ASG
+    Cluster, supports zero-downtime, rolling deployment of new AMI versions, configures load balancing, health checks,
+    and service discovery using ELBs, scales the number of nodes up and down based on traffic, and provides automatic
+    recovery of failed nodes.
+- title: "Security"
+  icon: "lock.png"
+  docs_url: "https://github.com/gruntwork-io/module-security-public"
   description: |
-    Centralized log aggregation, metrics for all of your servers (e.g. CPU usage, memory usage, throughput,
-    latency), and automatic alerts for a variety of problems.
-- title: "Availability &amp; Scalability"
-  icon: "fa-globe"
+    Set up best security best practices for managing secrets, credentials, and servers. This Package uses AWS Key
+    Management Service (KMS) to encrypt and decypt secrets so you can securely store them version control, configures
+    servers to accept SSH connections from an authorized list of IAM users that updates automatically, and provides
+    server hardening with automated security updates and tools like fail2ban.
+- title: "Continuous Delivery"
+  icon: "jenkins.png"
+  docs_url: "https://github.com/gruntwork-io/module-ci-public"
   description: |
-    High availability and scalability using Auto Scaling Groups, Auto Scaling Policies, Elastic Load Balancers,
-    S3, CloudFront, and automated data backup &amp; restore.
-- title: "Configuration"
-  icon: "fa-cogs"
+    Set up an automated pipeline to build and deploy code using a CI server such as Jenkins, CircleCI, or Travis. After
+    every commit, this Package build your code, runs your tests, and packages your app into a deployable, versioned
+    artifact (e.g. Docker image or Amazon Machine Image). You can kick off an automated deployment by pushing to a
+    specific branch, creating a new tag, manually running a CI job, or even after every single commit (continuous
+    deployment).
+- title: "Relational Database"
+  icon: "mysql.png"
+  docs_url: "https://github.com/gruntwork-io/module-data-storage-public"
   description: |
-    Configure your infrastructure using Terraform; configure your apps at build time (e.g. dependencies) using
-    Docker and Packer; configure your apps at runtime (e.g. service discovery) using Consul.
+    Run MySQL, Postgres, MariaDB, or Aurora on Amazon’s Relational Database Service (RDS). This Packages creates
+    the database, sets up replicas, configures automatic failover to a standby in a separate Availability Zone in case
+    of problems, and configures automatic backup.
+- title: "Distributed Cache"
+  icon: "redis.png"
+  docs_url: "https://github.com/gruntwork-io/module-data-storage-public"
+  description: |
+    Run Redis or Memcached clusters using Amazon’s ElastiCache Service. This Packages creates the cluster, sets up
+    replicas, configures automatic failover to a standby in a separate Availability Zone in case of problems, and
+    configures automatic backup.
+- title: "Backup and Recovery"
+  icon: "backup.png"
+  description: |
+    Set up automated backup and recovery of your services. This Packages creates automated backup jobs that take
+    snapshots of your servers on a scheduled basis, clean up old backups to free up space, and monitoring and alarms
+    for the backup jobs that notify you if a scheduled backup didn't happen.
 - title: "Consulting"
-  icon: "fa-users"
+  icon: "grunty.png"
   description: |
-    Don't see a package that does what you need? We offer general DevOps consulting on an hourly basis.
+    Don't see a Package that does what you need? We offer general DevOps consulting on an hourly basis. We also offer
+    training in AWS, Terraform, Docker, Packer, and other DevOps technologies and practices.

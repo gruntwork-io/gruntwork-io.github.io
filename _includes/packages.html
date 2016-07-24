@@ -1,0 +1,23 @@
+<div class="features">
+  {% for package in site.data.packages %}
+    {% capture image_path %}package-icons/{{ package.icon }}{% endcapture %}
+    <section>
+      <div class="align-center">
+        <div>{% include image.html path=image_path %}</div>
+        <h3 class="mb0 mt2">
+          {% if package.docs_url %}
+          <a href="{{ package.docs_url }}" target="_blank">{{ package.title }}</a>
+          {% else %}
+          {{ package.title }}
+          {% endif %}
+        </h3>
+        {% if package.docs_url %}
+        <a href="{{ package.docs_url }}" target="_blank" class="h6">{{ package.docs_url | remove_first:'https://' | truncate: 50, '...'  }}</a><br>
+        {% endif %}
+      </div>
+      <p class="mt2 h4">
+        {{ package.description }}
+      </p>
+    </section>
+  {% endfor %}
+</div>
