@@ -778,4 +778,8 @@
           }
         });
 
+  $('.expand').on('click', function(event) {
+    $(event.currentTarget).find('.collapsed').toggle();
+  });
+
 })(jQuery);

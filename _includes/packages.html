@@ -1,0 +1,26 @@
+<div class="features">
+  {% for package in site.data.packages %}
+    <section class="expand">
+      <div class="align-center">
+        {% if package.image %}
+          {% include image.html path=package.image class="icon block mx-auto" %}
+        {% else %}
+          <i class="icon major fa-{{ package.fa_icon }} fa-lg mx-auto"></i>
+        {% endif %}
+        <h3 class="mt2">
+          {{ package.title }}
+        </h3>
+      </div>
+      <div class="display-none collapsed">
+        {% if package.docs_url %}
+          <div class="align-center">
+            <a href="{{ package.docs_url }}" target="_blank" class="h6">{{ package.docs_url | remove_first:'https://' | truncate: 50, '...'  }}</a>
+          </div>
+        {% endif %}
+        <p class="mt2 mb0 h4">
+          {{ package.description }}
+        </p>
+      </div>
+    </section>
+  {% endfor %}
+</div>

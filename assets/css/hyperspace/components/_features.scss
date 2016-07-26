@@ -14,16 +14,22 @@
 		background: _palette(border-bg);
 		margin: 0 0 _size(element-margin) 0;
 
+		// EDITED BY GRUNTWORK
+		section:hover {
+			background-color: rgba(255,255,255,0.20);
+			cursor: pointer;
+		}
+
 		section {
 			// EDITED BY GRUNTWORK
-			@include padding(2em, 2em, (0, 0, 0, 0));
+			padding: 2em;
 			width: 50%;
 			border-top: solid 1px _palette(border);
 			position: relative;
 
 			// EDITED BY GRUNTWORK
 			h3 {
-				line-height: 2.5;
+				line-height: 0.5;
 			}
 
 			&:nth-child(-n + 2) {
@@ -83,7 +89,7 @@
 		@include breakpoint(small) {
 			section {
 				// EDITED BY GRUNTWORK
-				@include padding(2em, 1.5em, (0, 0, 0, 0));
+				padding: 2em 1.5em;
 
 				// EDITED BY GRUNTWORK
 				//.icon {
@@ -95,7 +101,7 @@
 
 		@include breakpoint(xsmall) {
 			section {
-				@include padding(2em, 1.5em, (0, 0, 0, 0));
+				padding: 2em 1.5em;
 
 				// EDITED BY GRUNTWORK
 				//.icon {
