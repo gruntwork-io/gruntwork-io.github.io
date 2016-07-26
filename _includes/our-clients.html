@@ -3,10 +3,10 @@
     <h2>Our clients</h2>
     <p>It has been our privilege to work with software teams of all sizes, including:</p>
 
-    <div class="flex flex-wrap">
+    <div class="clearfix mxn2">
       {% for client in site.data.clients %}
-        <div class="flex flex-center col client-logo">
-          {% include image.html path=client.logo alt="Gruntwork" class="mx-auto" %}
+        <div class="col col-6 sm-col-4 md-col-3 px2 align-center">
+          {% include image.html path=client.logo alt="Gruntwork" %}
         </div>
       {% endfor %}
     </div>
