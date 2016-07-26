@@ -1,6 +1,6 @@
 <div class="features">
   {% for package in site.data.packages %}
-    <section class="expand">
+    <section class="expand" ga-on="click" ga-event-category="click" ga-event-action="expand-package">
       <div class="align-center">
         {% if package.image %}
           {% include image.html path=package.image class="icon block mx-auto" %}
