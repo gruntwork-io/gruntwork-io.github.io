@@ -1,12 +1,12 @@
 - title: "Network Topology"
-  icon: "aws.png"
+  fa_icon: "sitemap"
   docs_url: "https://github.com/gruntwork-io/module-vpc-public"
   description: |
     Set up a best practices network topology in your AWS account. This Package creates an isolated VPC for each
     environment (staging, production, mgmt), and within each environment, sets up multiple tiers of isolated subnets
     (public, private, persistence) network ACLs, security groups, NAT gateways, and VPC peering connections.
 - title: "Monitoring and Alerting"
-  icon: "chart.png"
+  fa_icon: "bar-chart"
   docs_url: "https://github.com/gruntwork-io/module-aws-monitoring-public"
   description: |
     Set up monitoring and alerting using AWS CloudWatch. This Package exposes metrics not available in the AWS
@@ -14,7 +14,7 @@
     installs a default set of alerts (e.g. for CPU usage, disk space, 5xx errors) that notify you via email or text
     message, and aggregates logs from all your applications so you can see them in the CloudWatch console.
 - title: "Docker Cluster"
-  icon: "docker.png"
+  fa_icon: "th"
   docs_url: "https://github.com/gruntwork-io/module-ecs-public"
   description: |
     Deploy your Docker containers on top of the AWS EC2 Container Service (ECS). This Package creates the ECS Cluster,
@@ -22,7 +22,7 @@
     versions, configures load balancing, health checks, and service discovery using ELBs, scales the number of nodes
     and tasks up and down based on traffic, and provides automatic recovery of failed nodes and Tasks.
 - title: "AMI Cluster"
-  icon: "asg.png"
+  fa_icon: "cubes"
   docs_url: "https://github.com/gruntwork-io/module-asg-public"
   description: |
     Deploy your Amazon Machine Images (AMIs) on top of an AWS Auto Scaling Group (ASG). This Package creates the ASG
@@ -30,7 +30,7 @@
     and service discovery using ELBs, scales the number of nodes up and down based on traffic, and provides automatic
     recovery of failed nodes.
 - title: "Security"
-  icon: "lock.png"
+  fa_icon: "lock"
   docs_url: "https://github.com/gruntwork-io/module-security-public"
   description: |
     Set up best security best practices for managing secrets, credentials, and servers. This Package uses AWS Key
@@ -38,7 +38,7 @@
     servers to accept SSH connections from an authorized list of IAM users that updates automatically, and provides
     server hardening with automated security updates and tools like fail2ban.
 - title: "Continuous Delivery"
-  icon: "jenkins.png"
+  fa_icon: "refresh"
   docs_url: "https://github.com/gruntwork-io/module-ci-public"
   description: |
     Set up an automated pipeline to build and deploy code using a CI server such as Jenkins, CircleCI, or Travis. After
@@ -47,27 +47,27 @@
     specific branch, creating a new tag, manually running a CI job, or even after every single commit (continuous
     deployment).
 - title: "Relational Database"
-  icon: "mysql.png"
+  fa_icon: "database"
   docs_url: "https://github.com/gruntwork-io/module-data-storage-public"
   description: |
     Run MySQL, Postgres, MariaDB, or Aurora on Amazon’s Relational Database Service (RDS). This Packages creates
     the database, sets up replicas, configures automatic failover to a standby in a separate Availability Zone in case
     of problems, and configures automatic backup.
 - title: "Distributed Cache"
-  icon: "redis.png"
+  fa_icon: "server"
   docs_url: "https://github.com/gruntwork-io/module-data-storage-public"
   description: |
     Run Redis or Memcached clusters using Amazon’s ElastiCache Service. This Packages creates the cluster, sets up
     replicas, configures automatic failover to a standby in a separate Availability Zone in case of problems, and
     configures automatic backup.
 - title: "Backup and Recovery"
-  icon: "backup.png"
+  fa_icon: "cloud-upload"
   description: |
     Set up automated backup and recovery of your services. This Packages creates automated backup jobs that take
     snapshots of your servers on a scheduled basis, clean up old backups to free up space, and monitoring and alarms
     for the backup jobs that notify you if a scheduled backup didn't happen.
 - title: "Consulting"
-  icon: "grunty.png"
+  image: "logo/grunty-small.png"
   description: |
     Don't see a Package that does what you need? We offer general DevOps consulting on an hourly basis. We also offer
     training in AWS, Terraform, Docker, Packer, and other DevOps technologies and practices.

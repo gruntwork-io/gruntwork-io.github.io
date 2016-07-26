@@ -1,0 +1,22 @@
+<p>
+  Gruntwork Packages define
+  <a href="https://en.wikipedia.org/wiki/Infrastructure_as_Code" target="_blank">infrastructure-as-code</a>
+  for use with <a href="https://aws.amazon.com/" target="_blank">AWS</a>
+  using <a href="https://www.terraform.io/" target="_blank">Terraform</a>,
+  <a href="https://www.docker.com/" target="_blank">Docker</a>,
+  <a href="https://www.packer.io/" target="_blank">Packer</a>, and
+  <a href="https://golang.org/" target="_blank">Go</a>.
+</p>
+<p>
+  Gruntwork Packages work with:
+</p>
+<section class="container">
+  <div class="clearfix mxn2">
+    {% for technology in site.data.technologies %}
+      {% capture image_path %}technologies/small/{{ technology.logo }}{% endcapture %}
+      <div class="col col-6 sm-col-4 md-col-3 lg-col-2 m1 border rounded bg-white align-center">
+        {% include image.html path=image_path alt=image.name class="valign-middle" %}
+      </div>
+    {% endfor %}
+  </div>
+</section>

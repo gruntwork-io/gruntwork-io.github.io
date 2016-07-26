@@ -1,23 +1,26 @@
 <div class="features">
   {% for package in site.data.packages %}
-    {% capture image_path %}package-icons/{{ package.icon }}{% endcapture %}
-    <section>
+    <section class="expand">
       <div class="align-center">
-        <div>{% include image.html path=image_path %}</div>
-        <h3 class="mb0 mt2">
-          {% if package.docs_url %}
-          <a href="{{ package.docs_url }}" target="_blank">{{ package.title }}</a>
-          {% else %}
-          {{ package.title }}
-          {% endif %}
-        </h3>
-        {% if package.docs_url %}
-        <a href="{{ package.docs_url }}" target="_blank" class="h6">{{ package.docs_url | remove_first:'https://' | truncate: 50, '...'  }}</a><br>
+        {% if package.image %}
+          {% include image.html path=package.image class="icon block mx-auto" %}
+        {% else %}
+          <i class="icon major fa-{{ package.fa_icon }} fa-lg mx-auto"></i>
         {% endif %}
+        <h3 class="mt2">
+          {{ package.title }}
+        </h3>
       </div>
-      <p class="mt2 h4">
-        {{ package.description }}
-      </p>
+      <div class="display-none collapsed">
+        {% if package.docs_url %}
+          <div class="align-center">
+            <a href="{{ package.docs_url }}" target="_blank" class="h6">{{ package.docs_url | remove_first:'https://' | truncate: 50, '...'  }}</a>
+          </div>
+        {% endif %}
+        <p class="mt2 mb0 h4">
+          {{ package.description }}
+        </p>
+      </div>
     </section>
   {% endfor %}
 </div>

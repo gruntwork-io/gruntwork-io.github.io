@@ -5,32 +5,21 @@
       At Gruntwork, we've taken the thousands of hours we spent building infrastructure on Amazon Web Services (AWS)
       and condensed all that experience and code into pre-assembled <strong>Infrastructure Packages</strong>. An
       Infrastructure Package is a reusable, battle-tested, documented, configurable, best-practices definition of a
-      piece of infrastructure (for all the details, see
-      <a href="#TODO!!" target="_blank">Gruntwork Infrastructure Packages: Control Your DevOps Code without Having to
-      Write Most of It</a>).
+      piece of infrastructure.
     </p>
+    <h3 class="h2" id="packages">Infrastructure Packages</h3>
     <p>
-      The Infrastructure Packages we have available are:
+      Here are the Infrastructure Packages we have available (click on a package to see its description and
+      documentation):
     </p>
     {% include packages.html %}
-    <h2 class="mt4">
-      About Gruntwork Infrastructure Packages
-    </h2>
-    <p class="mb2">
-      Gruntwork Infrastructure Packages are:
-    </p>
-    <ul>
-      {% for feature in site.data.package_features %}
-        <li class="">
-          <strong>{{ feature.label }}</strong>:
-          {{ feature.description }}
-        </li>
-      {% endfor %}
-    </ul>
-    <div class="center mt4">
-      <ul class="actions">
-        <li><a href="#our-clients" class="button scrolly" data-event-category="Internal Link" data-event-action="click">Who's using Gruntwork Infrastructure Packages?</a></li>
-      </ul>
-    </div>
+    <h3 class="mt4 h2">
+      Infrastructure Packages Features
+    </h3>
+    {% include features.html %}
+    <h3 class="mt4 h2">
+      Infrastructure Package Technologies
+    </h3>
+    {% include technologies.html %}
   </div>
 </section>
