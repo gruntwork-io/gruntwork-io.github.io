@@ -60,12 +60,14 @@
     Run Redis or Memcached clusters using Amazon’s ElastiCache Service. This Packages creates the cluster, sets up
     replicas, configures automatic failover to a standby in a separate Availability Zone in case of problems, and
     configures automatic backup.
-- title: "Backup and Recovery"
+- title: "Stateful Server"
   fa_icon: "cloud-upload"
+  docs_url: "https://github.com/gruntwork-io/module-server-public"
   description: |
-    Set up automated backup and recovery of your services. This Packages creates automated backup jobs that take
-    snapshots of your servers on a scheduled basis, clean up old backups to free up space, and monitoring and alarms
-    for the backup jobs that notify you if a scheduled backup didn't happen.
+    Set up a best-practices deployment of a single, stateful server on top of AWS, such as Jenkins or WordPress. This
+    Package deploys an EC2 Instance, attaches an EBS volume that persists data between redeploys, configures the
+    Instance with a public IP and DNS A record (optional), uses AWS Lambda job to run backup the Instance on a
+    cron schedule, and adds an alarm that goes off if a backup job doesn’t run within a scheduled time period.
 - title: "Consulting"
   image: "logo/grunty-small.png"
   description: |
