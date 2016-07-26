@@ -1,26 +1,25 @@
-<div class="features">
-  {% for package in site.data.packages %}
-    <section class="expand" ga-on="click" ga-event-category="click" ga-event-action="expand-package">
-      <div class="align-center">
-        {% if package.image %}
-          {% include image.html path=package.image class="icon block mx-auto" %}
-        {% else %}
-          <i class="icon major fa-{{ package.fa_icon }} fa-lg mx-auto"></i>
-        {% endif %}
-        <h3 class="mt2">
-          {{ package.title }}
-        </h3>
-      </div>
-      <div class="display-none collapsed">
-        {% if package.docs_url %}
-          <div class="align-center">
-            <a href="{{ package.docs_url }}" target="_blank" class="h6">{{ package.docs_url | remove_first:'https://' | truncate: 50, '...'  }}</a>
-          </div>
-        {% endif %}
-        <p class="mt2 mb0 h4">
-          {{ package.description }}
-        </p>
-      </div>
-    </section>
-  {% endfor %}
-</div>
+{% for package in site.data.packages %}
+  {% capture id %}package-{{ package.title | downcase | replace:' ','-' }}{% endcapture %}
+  <div class="mb2 packages">
+    <a href="#{{ id }}" id="{{ id }}" class="block clearfix border bg-white px2 py1 js-expand">
+      {% if package.image %}
+        {% include image.html path=package.image class="col header-line-height" %}
+      {% else %}
+        <i class="fa fa-{{ package.fa_icon }} fa-fw col color-accent3 header-line-height"></i>
+      {% endif %}
+      <h3 class="ml1 mb0 col color-accent3">
+        {{ package.title }}
+      </h3>
+      <i class="fa fa-chevron-down right color-accent3 header-line-height js-{{ id }}-collapsed"></i>
+      <i class="fa fa-chevron-up right color-accent3 header-line-height initially-hidden js-{{ id }}-collapsed"></i>
+    </a>
+    <div class="collapsed p2 bg-transparent-white border border-transparent-white initially-hidden js-{{ id }}-collapsed">
+      <p class="h4 mb0">
+        {{ package.description }}
+      </p>
+      {% if package.docs_url %}
+        <p class="h4 mt2 mb0">Documentation: <a href="{{ package.docs_url }}" target="_blank">{{ package.docs_url }}</a></p>
+      {% endif %}
+    </div>
+  </div>
+{% endfor %}
