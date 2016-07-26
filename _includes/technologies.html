@@ -10,13 +10,11 @@
 <p>
   Gruntwork Packages work with:
 </p>
-<section class="container">
-  <div class="clearfix mxn2">
-    {% for technology in site.data.technologies %}
-      {% capture image_path %}technologies/small/{{ technology.logo }}{% endcapture %}
-      <div class="col col-6 sm-col-4 md-col-3 lg-col-2 m1 border rounded bg-white align-center">
-        {% include image.html path=image_path alt=image.name class="valign-middle" %}
-      </div>
-    {% endfor %}
-  </div>
+<section class="clearfix">
+  {% for technology in site.data.technologies %}
+    {% capture image_path %}technologies/small/{{ technology.logo }}{% endcapture %}
+    <div class="col col-4 sm-col-3 md-col-2 m1 rounded bg-white align-center">
+      {% include image.html path=image_path alt=image.name class="valign-middle" %}
+    </div>
+  {% endfor %}
 </section>
