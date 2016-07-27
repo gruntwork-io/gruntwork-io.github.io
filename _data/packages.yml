@@ -33,24 +33,24 @@
   fa_icon: "lock"
   docs_url: "https://github.com/gruntwork-io/module-security-public"
   description: |
-    Set up best security best practices for managing secrets, credentials, and servers. This Package uses AWS Key
-    Management Service (KMS) to encrypt and decypt secrets so you can securely store them version control, configures
+    Set up security best practices for managing secrets, credentials, and servers. This Package uses AWS Key Management
+    Service (KMS) to encrypt and decypt secrets so you can securely store them in version control, configures
     servers to accept SSH connections from an authorized list of IAM users that updates automatically, and provides
     server hardening with automated security updates and tools like fail2ban.
 - title: "Continuous Delivery"
   fa_icon: "refresh"
   docs_url: "https://github.com/gruntwork-io/module-ci-public"
   description: |
-    Set up an automated pipeline to build and deploy code using a CI server such as Jenkins, CircleCI, or Travis. After
-    every commit, this Package build your code, runs your tests, and packages your app into a deployable, versioned
-    artifact (e.g. Docker image or Amazon Machine Image). You can kick off an automated deployment by pushing to a
-    specific branch, creating a new tag, manually running a CI job, or even after every single commit (continuous
-    deployment).
+    Set up an automated pipeline to build and deploy code using a self-hosted CI server (e.g. Jenkins) or cloud-based
+    CI service (e.g. CircleCI, or Travis). After every commit, this Package builds your code, runs your tests, and
+    packages your app into a deployable, versioned artifact (e.g. Docker image or Amazon Machine Image). You can kick
+    off an automated deployment by pushing to a specific branch, creating a new tag, manually running a CI job, or even
+    after every single commit (continuous deployment).
 - title: "Relational Database"
   fa_icon: "database"
   docs_url: "https://github.com/gruntwork-io/module-data-storage-public"
   description: |
-    Run MySQL, Postgres, MariaDB, or Aurora on Amazon’s Relational Database Service (RDS). This Packages creates
+    Run MySQL, Postgres, MariaDB, or Amazon Aurora on Amazon’s Relational Database Service (RDS). This Packages creates
     the database, sets up replicas, configures automatic failover to a standby in a separate Availability Zone in case
     of problems, and configures automatic backup.
 - title: "Distributed Cache"
