@@ -66,5 +66,5 @@
   description: |
     Set up a best-practices deployment of a single, stateful server on top of AWS, such as Jenkins or WordPress. This
     Package deploys an EC2 Instance, attaches an EBS volume that persists data between redeploys, configures the
-    Instance with a public IP and DNS A record (optional), uses AWS Lambda job to run backup the Instance on a
+    Instance with a public IP and DNS A record (optional), uses an AWS Lambda job to backup the Instance on a
     cron schedule, and adds an alarm that goes off if a backup job doesn’t run within a scheduled time period.
