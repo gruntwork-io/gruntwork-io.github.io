@@ -778,8 +778,10 @@
           }
         });
 
-  $('.expand').on('click', function(event) {
-    $(event.currentTarget).find('.collapsed').toggle();
+  $('.js-expand').on('click', function(event) {
+    event.preventDefault();
+    var id = $(event.currentTarget).attr('id');
+    $('.js-' + id + '-collapsed').toggle();
   });
 
 })(jQuery);
