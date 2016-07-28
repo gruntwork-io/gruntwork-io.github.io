@@ -7,7 +7,8 @@
         {% for contact_key_value in site.data.contact %}
           {% assign contact = contact_key_value[1] %}
           {% if contact.type == 'social' or contact.label == 'Email' %}
-            <a href="{{ contact.url }}" target="_blank" title="{{ contact.label }}" class="no-border"><i class="fa fa-fw {{ contact.icon }}"></i></a>
+            {% capture url %}{% if contact.label == 'Email' %}mailto:{{ contact.url }}{% else %}{{ contact.url }}{% endif %}{% endcapture %}
+            <a href="{{ url }}" target="_blank" title="{{ contact.label }}" class="no-border"><i class="fa fa-fw {{ contact.icon }}"></i></a>
           {% endif %}
         {% endfor %}
       </li>
