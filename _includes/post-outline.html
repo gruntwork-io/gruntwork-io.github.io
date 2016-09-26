@@ -4,12 +4,12 @@
       {% if include.post.thumbnail_url %}
         {% include image.html path=include.post.thumbnail_url external=true alt=include.post.title class="border border-white border-thick" %}
       {% else %}
-        <div class="border border-white border-thick white h1 py4 px4 center">Aa</div>
+        <div class="border border-white white h1 py4 px4 center">Aa</div>
       {% endif %}
     </a>
   </div>
   <div class="col sm-col-8 px2">
-    <a href="{{ include.post.url }}"><h3 class="mt0">{{ include.post.title }}</h3></a>
+    <a href="{{ include.post.url }}"><h3 class="mt0 regular">{{ include.post.title }}</h3></a>
     <p class="mb2 left-align">{{ include.post.excerpt | strip_html | truncate: 165, '...'  }}</p>
     {% include post-metadata.html post=include.post %}
   </div>
