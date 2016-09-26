@@ -2,7 +2,7 @@
   <div class="col sm-col-4 px2 mb2">
     <a href="{{ include.post.url }}" class="no-border">
       {% if include.post.thumbnail_url %}
-        {% include image.html path=include.post.thumbnail_url external=true alt=include.post.title class="border border-white border-thick" %}
+        {% include image.html path=include.post.thumbnail_url external=true alt=include.post.title class="border border-white" %}
       {% else %}
         <div class="border border-white white h1 py4 px4 center">Aa</div>
       {% endif %}
