@@ -35,8 +35,9 @@
   description: |
     Set up security best practices for managing secrets, credentials, and servers. This Package uses AWS Key Management
     Service (KMS) to encrypt and decypt secrets so you can securely store them in version control, configures
-    servers to accept SSH connections from an authorized list of IAM users that updates automatically, and provides
-    server hardening with automated security updates and tools like fail2ban.
+    servers to accept SSH connections from an authorized list of IAM users that updates automatically, configures IAM
+    Groups according to best practices, enables CloudTrail with encrypted events, and implements server hardening with 
+    automated security updates and tools like fail2ban.
 - title: "Continuous Delivery"
   fa_icon: "refresh"
   docs_url: "https://github.com/gruntwork-io/module-ci-public"
