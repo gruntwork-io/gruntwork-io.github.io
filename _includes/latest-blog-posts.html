@@ -8,7 +8,7 @@
       Gruntwork Newsletter!</a>
     </p>
     {% for post in site.data.blog_posts %}
-      {% if forloop.index < 3 %}
+      {% if forloop.index0 < 3 %}
         {% include post-outline.html post=post time_estimate=true %}
       {% endif %}
     {% endfor %}
