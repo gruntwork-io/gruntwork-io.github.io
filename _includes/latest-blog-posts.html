@@ -8,7 +8,9 @@
       Gruntwork Newsletter!</a>
     </p>
     {% for post in site.data.blog_posts %}
-      {% include post-outline.html post=post time_estimate=true %}
+      {% if forloop.index < 3 %}
+        {% include post-outline.html post=post time_estimate=true %}
+      {% endif %}
     {% endfor %}
     <div class="center mt4">
       <ul class="actions">
