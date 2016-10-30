@@ -3,7 +3,7 @@
 <div class="h6">
   <span class="mr1 nowrap">
     <i class="fa fa-calendar"></i>
-    <time datetime="{{ include.post.date | date:"%Y-%m-%d" }}">{{ include.post.date | date:"%b %d, %Y" }}</time>
+    <time datetime="{{ include.post.date | date:"%Y-%m-%d" }}">{{ include.post.date | date:"%b %-d, %Y" }}</time>
   </span>
   {% if include.post.tags.size > 0 %}
     <span class="mr1 nowrap">
