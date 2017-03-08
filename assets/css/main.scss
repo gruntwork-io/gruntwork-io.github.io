@@ -1,64 +1,31 @@
 ---
 # Jekyll requires this Front Matter to enable sass compilation
 ---
-/*!
- * Bootstrap v3.3.7 (http://getbootstrap.com)
- * Copyright 2011-2016 Twitter, Inc.
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
- */
 
-// node_modules/bootstrap-sass/assets/stylesheets/_bootstrap.scss
+@import "bootstrap-custom";
+@import "fonts";
+@import "footer";
 
-// Core variables and mixins
-@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/variables";
-@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/mixins";
+.row.is-flex {
+    display: flex;
+    flex-wrap: wrap;
+}
+.row.is-flex > [class*='col-'] {
+    display: flex;
+    flex-direction: column;
+}
 
-// Reset and dependencies
-@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/normalize";
-@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/print";
-@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/glyphicons";
+.row.is-vertical-flex > [class*='col-'] {
+    display: flex;
+    flex-direction: column;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    min-height: 100px;
+    -webkit-box-pack: center;
+    justify-content: center;
+}
 
-// Core CSS
-@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/scaffolding";
-@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/type";
-@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/code";
-@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/grid";
-@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/tables";
-@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/forms";
-@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/buttons";
-
-// Components
-@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/component-animations";
-@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/dropdowns";
-@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/button-groups";
-@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/input-groups";
-@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/navs";
-@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/navbar";
-@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/breadcrumbs";
-@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/pagination";
-@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/pager";
-@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/labels";
-@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/badges";
-@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/jumbotron";
-@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/thumbnails";
-@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/alerts";
-@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/progress-bars";
-@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/media";
-@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/list-group";
-@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/panels";
-@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/responsive-embed";
-@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/wells";
-@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/close";
-
-// Components w/ JavaScript
-@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/modals";
-@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/tooltip";
-@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/popovers";
-@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/carousel";
-
-// Utility classes
-@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/utilities";
-@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/responsive-utilities";
 
 $purple: #C444FB;
 $red: #FF2B67;
@@ -69,14 +36,29 @@ $cyan: #1AE5DC;
 $orange: #FF632B;
 
 body {
-    background-attachment: fixed;
-    background-image: url(/assets/img/background.png);
-    background-position: top right;
-    background-repeat: repeat;
+    // background-attachment: fixed;
+    // background-image: url(/assets/img/background.png);
+    // background-position: top right;
+    // background-repeat: repeat;
     color: white;
+
+    background: url(/assets/img/background.svg);
+    background-size: 100%;
 
     font-family: 'Adelle Sans';
     font-size: 18px;
+
+    overflow-x: hidden;
+}
+
+.diagonial {
+    background: url(/assets/img/diagonial.svg);
+    background-size: 100%;
+    background-repeat: no-repeat;
+    margin-top: -500px;
+    padding-top: 500px;
+    padding-bottom: 1000px;
+    margin-bottom: -1000px;
 }
 
 .navbar {
@@ -103,12 +85,17 @@ body {
 
 }
 
+.help__cta,
+.case-studies__cta {
+    display: inline-block;
+    margin-top: 50px;
+}
+
 .help {
 
 }
 
 .training-promo {
-
 }
 
 .plans-promo {
@@ -172,13 +159,17 @@ body {
 }
 
 .section {
-    margin-top: 50px;
-    margin-bottom: 50px;
+    margin-top: 100px;
+    margin-bottom: 100px;
+}
+
+.hero img {
+    margin-right: -10%;
 }
 
 .hero--heading {
     font-family: 'Dosis';
-    font-size: 32px;
+    font-size: 45px;
     font-weight: lighter;
     text-transform: uppercase;
     background-image: -webkit-gradient( linear, left top, right top, color-stop(0, $purple), color-stop(0.5, $red));
@@ -186,6 +177,8 @@ body {
     color:transparent;
     -webkit-background-clip: text;
     background-clip: text;
+
+    margin-top: 50px;
 }
 .hero--text {
     font-family: 'Adelle Sans';
@@ -254,6 +247,8 @@ body {
     color:transparent;
     -webkit-background-clip: text;
     background-clip: text;
+    margin-bottom: 50px;
+    text-align: center;
 }
 .case-studies--heading {
     font-family: 'Dosis';
@@ -265,15 +260,56 @@ body {
     color:transparent;
     -webkit-background-clip: text;
     background-clip: text;
+    margin-bottom: 50px;
+    text-align: center;
+}
+
+.tech-list {}
+.tech-list__item {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.tech-list__item-img {
+    margin: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
 }
 
 .clients-list {}
 .clients-list__item {
-
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    border-right: 1px solid rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 17px;
+    text-align: center;
 
     img {
-        width: 100%;
+        width: 50%;
+        display: block;
+        margin: 0 auto;
     }
+}
+
+ .clients-list__item-heading {
+     font-weight: bold;
+ }
+ .clients-list__item-text {
+     font-weight: lighter;
+ }
+
+.help-list__item {
+    margin-bottom: 20px;
+
+    img {
+        display: block;
+        margin-bottom: 20px;
+    }
+}
+
+.help-list__item-text {
+    color: rgba(255, 255, 255, 0.5);
+    padding-left: 20px;
+    padding-right: 20px;
 }
