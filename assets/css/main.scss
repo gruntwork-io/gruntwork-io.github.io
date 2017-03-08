@@ -2,6 +2,15 @@
 # Jekyll requires this Front Matter to enable sass compilation
 ---
 
+$purple: #C444FB;
+$red: #FF2B67;
+
+$blue: #06A2FF;
+$cyan: #1AE5DC;
+$light-blue: #139FBA;
+
+$orange: #FF632B;
+
 @import "bootstrap-custom";
 @import "fonts";
 @import "footer";
@@ -25,15 +34,6 @@
     -webkit-box-pack: center;
     justify-content: center;
 }
-
-
-$purple: #C444FB;
-$red: #FF2B67;
-
-$blue: #06A2FF;
-$cyan: #1AE5DC;
-
-$orange: #FF632B;
 
 body {
     // background-attachment: fixed;
@@ -136,6 +136,20 @@ body {
     color: white;
     letter-spacing: 1px;
     padding-bottom: 5px;
+}
+
+.link-btn {
+    font-family: 'Adelle Sans';
+    font-weight: bold;
+    font-size: 14px;
+    text-transform: uppercase;
+
+    background: white;
+    color: $light-blue;
+    border-radius: 20px;
+    letter-spacing: 1px;
+    padding: 11px 20px 10px;
+    display: inline-block;
 }
 
 .link-bordered:hover {
