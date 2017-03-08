@@ -1,12 +1,253 @@
 ---
 # Jekyll requires this Front Matter to enable sass compilation
 ---
+/*!
+ * Bootstrap v3.3.7 (http://getbootstrap.com)
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ */
 
-@import 'basscss';
-@import "font-awesome";
-@import "hyperspace/main";
-@import "hyperspace-overrides";
-@import "spacing";
-@import "links";
-@import "colors";
-@import "borders";
+// node_modules/bootstrap-sass/assets/stylesheets/_bootstrap.scss
+
+// Core variables and mixins
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/variables";
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/mixins";
+
+// Reset and dependencies
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/normalize";
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/print";
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/glyphicons";
+
+// Core CSS
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/scaffolding";
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/type";
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/code";
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/grid";
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/tables";
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/forms";
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/buttons";
+
+// Components
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/component-animations";
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/dropdowns";
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/button-groups";
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/input-groups";
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/navs";
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/navbar";
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/breadcrumbs";
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/pagination";
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/pager";
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/labels";
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/badges";
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/jumbotron";
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/thumbnails";
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/alerts";
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/progress-bars";
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/media";
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/list-group";
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/panels";
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/responsive-embed";
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/wells";
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/close";
+
+// Components w/ JavaScript
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/modals";
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/tooltip";
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/popovers";
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/carousel";
+
+// Utility classes
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/utilities";
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/responsive-utilities";
+
+$purple: #C444FB;
+$red: #FF2B67;
+
+$blue: #06A2FF;
+$cyan: #1AE5DC;
+
+$orange: #FF632B;
+
+body {
+    background-attachment: fixed;
+    background-image: url(/assets/img/background.png);
+    background-position: top right;
+    background-repeat: repeat;
+    color: white;
+
+    font-family: 'Adelle Sans';
+    font-size: 18px;
+}
+
+.navbar-brand {
+    font-family: 'Galano Grotesque';
+    font-size: 35px;
+    font-weight: bold;
+    color: white;
+}
+
+.navbar-link {
+    text-transform: uppercase;
+    font-size: 13px;
+    color: white;
+}
+
+.case-studies {
+
+}
+
+.help {
+
+}
+
+.training-promo {
+
+}
+
+.plans-promo {
+
+}
+
+.packages-promo {
+
+}
+
+.list, .list {
+    list-style: none;
+    padding: 0;
+}
+
+.list li {
+    position: relative;
+}
+
+.list li:before {
+    content: '';
+    position: absolute;
+    border-left: 1px solid $orange;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: -10px;
+}
+
+.link-bordered {
+    font-family: 'Adelle Sans';
+    font-weight: bold;
+    font-size: 14px;
+    text-transform: uppercase;
+    border-bottom: 1px;
+    border-style: solid;
+    -webkit-border-image: -webkit-gradient(linear, left top, right top, from($purple), to($red)) 0 30 30 21 repeat repeat;
+    color: white;
+    letter-spacing: 1px;
+    padding-bottom: 5px;
+}
+
+.link-bordered:hover {
+    background-image: -webkit-gradient( linear, left top, right top, color-stop(0, $purple), color-stop(0.5, $red));
+    background-image: -webkit-gradient( linear, left top, right top, color-stop(0, $purple), color-stop(0.5, $red));
+    color:transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
+.packages-promo--text {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.packages-promo--list {
+    font-weight: lighter;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 16px;
+    line-height: 30px;
+}
+
+.section {
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.hero--heading {
+    font-family: 'Dosis';
+    font-size: 32px;
+    font-weight: lighter;
+    text-transform: uppercase;
+    background-image: -webkit-gradient( linear, left top, right top, color-stop(0, $purple), color-stop(0.5, $red));
+    background-image: -webkit-gradient( linear, left top, right top, color-stop(0, $purple), color-stop(0.5, $red));
+    color:transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+.hero--text {
+    font-family: 'Adelle Sans';
+    font-size: 26px;
+    font-weight: lighter;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.training-promo--heading {
+    font-family: 'Dosis';
+    font-size: 32px;
+    font-weight: lighter;
+    background-image: -webkit-gradient( linear, left top, right top, color-stop(0, $red), color-stop(0.5, $orange));
+    background-image: -webkit-gradient( linear, left top, right top, color-stop(0, $red), color-stop(0.5, $orange));
+    color:transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+.training-promo--text {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.packages-promo--heading {
+    font-family: 'Dosis';
+    font-size: 32px;
+    font-weight: lighter;
+    background-image: -webkit-gradient( linear, left top, right top, color-stop(0, $cyan), color-stop(0.5, $blue));
+    background-image: -webkit-gradient( linear, left top, right top, color-stop(0, $cyan), color-stop(0.5, $blue));
+    color:transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+.packages-promo--text {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.plans-promo--heading {
+    font-family: 'Dosis';
+    font-size: 32px;
+    font-weight: lighter;
+    background-image: -webkit-gradient( linear, left top, right top, color-stop(0, $purple), color-stop(0.5, $red));
+    background-image: -webkit-gradient( linear, left top, right top, color-stop(0, $purple), color-stop(0.5, $red));
+    color:transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+.plans-promo--text {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.help--heading {
+    font-family: 'Dosis';
+    font-size: 45px;
+    font-weight: lighter;
+    text-transform: uppercase;
+    background-image: -webkit-gradient( linear, left top, right top, color-stop(0, $orange), color-stop(0.5, $red));
+    background-image: -webkit-gradient( linear, left top, right top, color-stop(0, $orange), color-stop(0.5, $red));
+    color:transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+.case-studies--heading {
+    font-family: 'Dosis';
+    font-size: 45px;
+    font-weight: lighter;
+    text-transform: uppercase;
+    background-image: -webkit-gradient( linear, left top, right top, color-stop(0, $purple), color-stop(0.5, $red));
+    background-image: -webkit-gradient( linear, left top, right top, color-stop(0, $purple), color-stop(0.5, $red));
+    color:transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+}

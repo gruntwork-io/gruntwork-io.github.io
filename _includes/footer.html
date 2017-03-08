@@ -1,17 +1,44 @@
-<footer id="footer" class="wrapper style1-alt">
-  <div class="inner mx-auto">
-    <ul class="menu center">
-      <li>&copy; {{ site.time | date: "%Y" }} {{ site.full_company_name }}. All rights reserved.</li>
-      <li>Design: <a href="http://html5up.net" target="_blank">HTML5 UP</a></li>
-      <li>
-        {% for contact_key_value in site.data.contact %}
-          {% assign contact = contact_key_value[1] %}
-          {% if contact.type == 'social' or contact.label == 'Email' %}
-            {% capture url %}{% if contact.label == 'Email' %}mailto:{{ contact.url }}{% else %}{{ contact.url }}{% endif %}{% endcapture %}
-            <a href="{{ url }}" target="_blank" title="{{ contact.label }}" class="no-border"><i class="fa fa-fw {{ contact.icon }}"></i></a>
-          {% endif %}
-        {% endfor %}
-      </li>
-    </ul>
+<footer id="footer" class="footer">
+  <div class="text-center">
+    <h1>Take the grunt work out of DevOps.</h1>
+    <a href="" class="btn btn-primary">Contact us</a>
+  </div>
+  <div class="row">
+    <div class="col-sm-3">
+      <p>Products & Services</p>
+      <ul>
+        <li>Infrastructure Packages</li>
+        <li>Stacks</li>
+        <li>Consulting & Training</li>
+        <li>Support Plans</li>
+      </ul>
+    </div>
+    <div class="col-sm-3">
+      <p>Gruntwork</p>
+      <ul>
+        <li>About</li>
+        <li>Clients</li>
+        <li>Blog</li>
+        <li>Partners</li>
+      </ul>
+    </div>
+    <div class="col-sm-3">
+      <p>Support</p>
+      <ul>
+        <li>Community</li>
+        <li>Documentation</li>
+        <li>Tutorials</li>
+        <li>Submit a Ticket</li>
+      </ul>
+    </div>
+    <div class="col-sm-3">
+      <p>Connect</p>
+      <ul>
+        <li>Github</li>
+        <li>Twitter</li>
+        <li>LinkedIn</li>
+        <li>Newsletter</li>
+      </ul>
+    </div>
   </div>
 </footer>
