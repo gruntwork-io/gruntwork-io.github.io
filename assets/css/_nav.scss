@@ -1,0 +1,143 @@
+/* @see https://codepen.io/andreasstorm/pen/lriga?editors=1100 */
+
+.navigation {
+  @include make-row();
+	  padding-top: 40px;
+}
+
+.navigation__logo {
+  @include make-sm-column(4);
+}
+
+.navigation__menu {
+  @include make-sm-column(8);
+
+	  max-width: 1000px;
+	  margin: 0 auto;
+	  padding: 0px 20px;
+	  position: relative;
+}
+
+nav > ul {
+  	@extend .pull-right;
+}
+
+nav > ul > li {
+  	text-align: center;
+	  line-height: 60px;
+	  margin-left: 10px;
+	  margin-right: 10px;
+}
+
+.navbar-brand {
+    font-family: 'Galano Grotesque';
+    font-size: 35px;
+    font-weight: bold;
+    color: white;
+}
+
+.navbar-link {
+    font-family: 'Adelle Sans';
+    font-size: 13px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+nav > ul li ul li {
+	  width: 100%;
+  	text-align: left;
+}
+
+nav ul li:hover {
+	  cursor: pointer;
+	  position: relative;
+}
+nav ul li:hover > ul {
+  	display: block;
+}
+nav ul li:hover > a {
+	  color: rgba(255, 255, 255, 1);
+}
+
+nav > ul li ul {
+  	display: none;
+  	position: absolute;
+  	left: 0;
+	  top: 100%;
+  	width: 300px;
+	  z-index: 2000;
+}
+nav > ul li ul li > a {
+	  text-decoration: none;
+}
+
+[type="checkbox"], label {
+	  display: none;
+}
+
+@media screen and (max-width: 1100px) {
+	nav ul {
+		  display: none;
+	}
+
+	label {
+  		display: block;
+  		background: #222;
+		  width: 40px;
+  		height: 40px;
+  		cursor: pointer;
+		  position: absolute;
+		  right: 20px;
+  		top: 0px;
+	}
+
+label:after{
+  content:'';
+  display: block;
+  width: 30px;
+  height: 5px;
+  background: #777;
+  margin: 7px 5px;
+  box-shadow: 0px 10px 0px #777, 0px 20px 0px #777
+}
+
+	[type="checkbox"]:checked ~ ul {
+  		display: block;
+  		z-index: 9999;
+  		position: absolute;
+		  right: 20px;
+		  left: 20px;
+      margin-top: 50px;
+	}
+
+	nav a {
+		  color: #777;
+	}
+
+	nav ul li {
+		  display: block;
+  		float: none;
+  		width: 100%;
+  		text-align: left;
+  		background: #222;
+		  text-indent: 20px;
+	}
+
+	nav > ul > li {
+  		margin-left: 0px;
+	}
+
+	nav > ul li ul li {
+  		display: block;
+		  float: none;
+	}
+
+	nav > ul li ul {
+		  display: block;
+  		position: relative;
+  		width: 100%;
+		  z-index: 9999;
+		  float: none;
+	}
+}

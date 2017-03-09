@@ -13,44 +13,10 @@ $light-blue: #139FBA;
 
 $orange: #FF632B;
 
-// @import "../../node_modules/responsive-nav/responsive-nav.css";
-.js .navbar-custom {
-  clip: rect(0 0 0 0);
-  max-height: 0;
-  position: absolute;
-  display: block;
-  overflow: hidden;
-  zoom: 1;
-}
-
-.navbar-custom.opened {
-  max-height: 9999px;
-}
-
-.nav-toggle {
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -o-user-select: none;
-  user-select: none;
-}
-
-@media screen and (min-width: 40em) {
-  .js .navbar-custom {
-    position: relative;
-  }
-  .js .navbar-custom.closed {
-    max-height: none;
-  }
-  .nav-toggle {
-    display: none;
-  }
-}
 @import "bootstrap-custom";
 @import "fonts";
 @import "footer";
+@import "nav";
 
 .row.is-flex {
     display: flex;
@@ -98,22 +64,6 @@ body {
         margin-top: -800px;
         padding-top: 800px;
     }
-}
-
-.navbar-brand {
-    font-family: 'Galano Grotesque';
-    font-size: 35px;
-    font-weight: bold;
-    color: white;
-}
-
-.navbar-link {
-    font-family: 'Adelle Sans';
-    font-size: 13px;
-    font-weight: bold;
-    text-transform: uppercase;
-    font-size: 13px;
-    color: white;
 }
 
 .case-studies {
@@ -187,11 +137,6 @@ body {
     color:transparent;
     -webkit-background-clip: text;
     background-clip: text;
-}
-
-.packages-promo--text {
-    padding-top: 10px;
-    padding-bottom: 10px;
 }
 
 .section {
@@ -274,21 +219,23 @@ body {
 .icons-stack {
     @include make-row();
 
-    display: flex;
-    flex-wrap: wrap;
+    @media (min-width: 768px) {
+        display: flex;
+        flex-wrap: wrap;
+    }
 }
 
 .icons-stack__item {
     @include make-sm-column(6);
     @include make-lg-column(4);
 
-    display: flex;
-    flex-direction: column;
-    -webkit-box-align: center;
-    align-items: center;
-    min-height: 100px;
-    -webkit-box-pack: center;
-    justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+
+    @media (min-width: 768px) {
+        display: flex;
+        flex-direction: column;
+    }
 }
 
 .icons-stack__item-text {
@@ -298,24 +245,48 @@ body {
 }
 .icons-stack__item-img {
     display: block;
-    margin-bottom: 20px;
+    margin: 0 auto 20px;
+}
+.icons-stack__item-icon {
+    display: block;
+    margin: 0 auto 20px;
+    width: 50px;
+    height: 50px;
 }
 .icons-stack__item-img--fixed {
-    display: block;
-    margin-bottom: 20px;
-
     width: 40%;
     display: block;
-    margin: 0 auto;
+    margin: 0 auto 20px;
 }
 
 .promo {
     @extend .container;
-    @extend .section;
+
+    /* @see http://stackoverflow.com/a/25517025/1955940 */
+
+    @media (min-width: 768px) {
+        display: flex;
+        align-items: center;
+    }
 }
 
-.promo__half {
-    @include make-sm-column(6);
+.promo__narrow {
+    @include make-sm-column(5);
+}
+.promo__wide {
+    @include make-sm-column(7);
+}
+
+.promo__img {
+    width: 100%;
+    display: block;
+    margin: 0 auto;
+}
+
+.promo__narrow,
+.promo__wide {
+    margin-top: 50px;
+    margin-bottom: 50px;
 }
 
 .promo--list {
@@ -350,4 +321,9 @@ body {
 
 .promo__heading--purple-red {
     background-image: -webkit-gradient( linear, left top, right top, color-stop(0, $purple), color-stop(0.5, $red));
+}
+
+.v-align-row {
+    display: flex;
+    align-items: center;
 }
