@@ -18,49 +18,70 @@
 	  position: relative;
 }
 
-nav > ul {
+.navigation__container > ul {
   	@extend .pull-right;
 }
 
-nav > ul > li {
+.navigation__container > ul > li {
   	text-align: center;
 	  line-height: 60px;
 	  margin-left: 10px;
 	  margin-right: 10px;
 }
 
-.navbar-brand {
+.logo-text {
     font-family: 'Galano Grotesque';
     font-size: 35px;
     font-weight: bold;
     color: white;
 }
 
-.navbar-link {
+.navigation__menu-link {
     font-family: 'Adelle Sans';
     font-size: 13px;
     font-weight: bold;
     text-transform: uppercase;
     color: rgba(255, 255, 255, 0.6);
+		transition: all 0.3s;
 }
 
-nav > ul li ul li {
+.navigation__menu-link:hover {
+	text-decoration: none;
+}
+
+.navigation__menu-link--emphasis {
+	color: white;
+	padding: 10px 30px 8px;
+	line-height: 20px;
+	box-shadow: 0 0 22px 0 rgba(0,0,0,0.11);
+	border-radius: 100px;
+	color: white;
+	letter-spacing: 1px;
+	line-height: 23px;
+	background-image: -webkit-gradient( linear, left top, right top, color-stop(0, $red), color-stop(0.5, $orange));
+}
+.navigation__menu-link--emphasis:hover {
+	box-shadow: none;
+	background-image: -webkit-gradient( linear, left top, right top, color-stop(0, $red), color-stop(0.5, $orange));
+}
+
+.navigation__container > ul li ul li {
 	  width: 100%;
   	text-align: left;
 }
 
-nav ul li:hover {
+.navigation__container ul li:hover {
 	  cursor: pointer;
 	  position: relative;
 }
-nav ul li:hover > ul {
+.navigation__container ul li:hover > ul {
   	display: block;
 }
-nav ul li:hover > a {
+.navigation__container ul li:hover > a {
 	  color: rgba(255, 255, 255, 1);
 }
 
-nav > ul li ul {
+.navigation__container > ul li ul {
   	display: none;
   	position: absolute;
   	left: 0;
@@ -68,7 +89,7 @@ nav > ul li ul {
   	width: 300px;
 	  z-index: 2000;
 }
-nav > ul li ul li > a {
+.navigation__container > ul li ul li > a {
 	  text-decoration: none;
 }
 
@@ -77,7 +98,7 @@ nav > ul li ul li > a {
 }
 
 @media screen and (max-width: 1100px) {
-	nav ul {
+	.navigation__container ul {
 		  display: none;
 	}
 
@@ -111,11 +132,11 @@ label:after{
       margin-top: 50px;
 	}
 
-	nav a {
+	.navigation__container a {
 		  color: #777;
 	}
 
-	nav ul li {
+	.navigation__container ul li {
 		  display: block;
   		float: none;
   		width: 100%;
@@ -124,16 +145,16 @@ label:after{
 		  text-indent: 20px;
 	}
 
-	nav > ul > li {
+	.navigation__container > ul > li {
   		margin-left: 0px;
 	}
 
-	nav > ul li ul li {
+	.navigation__container > ul li ul li {
   		display: block;
 		  float: none;
 	}
 
-	nav > ul li ul {
+	.navigation__container > ul li ul {
 		  display: block;
   		position: relative;
   		width: 100%;
