@@ -73,10 +73,6 @@ $orange: #FF632B;
 }
 
 body {
-    // background-attachment: fixed;
-    // background-image: url(/assets/img/background.png);
-    // background-position: top right;
-    // background-repeat: repeat;
     color: white;
 
     background: url(/assets/img/background.svg);
@@ -92,10 +88,16 @@ body {
     background: url(/assets/img/diagonial.svg);
     background-size: 100% auto;
     background-repeat: no-repeat;
-    margin-top: -500px;
-    padding-top: 500px;
+    margin-top: -300px;
+    padding-top: 300px;
     padding-bottom: 1000px;
     margin-bottom: -1000px;
+
+    @media(min-width:1200px){
+        background: url(/assets/img/diagonialx2.svg);
+        margin-top: -800px;
+        padding-top: 800px;
+    }
 }
 
 .navbar-brand {
@@ -115,7 +117,9 @@ body {
 }
 
 .case-studies {
+    @extend .container;
 
+    text-align: center;
 }
 
 .help__cta,
@@ -125,18 +129,9 @@ body {
 }
 
 .help {
+    @extend .container;
 
-}
-
-.training-promo {
-}
-
-.plans-promo {
-
-}
-
-.packages-promo {
-
+    text-align: center;
 }
 
 .list, .list {
@@ -176,12 +171,13 @@ body {
     font-weight: bold;
     font-size: 14px;
     text-transform: uppercase;
-
+    box-shadow: 0 0 22px 0 rgba(0,0,0,0.11);
+    border-radius: 100px;
     background: white;
     color: $light-blue;
-    border-radius: 20px;
     letter-spacing: 1px;
-    padding: 11px 20px 10px;
+    padding: 15px 40px 13px;
+    line-height: 23px;
     display: inline-block;
 }
 
@@ -197,24 +193,31 @@ body {
     padding-top: 10px;
     padding-bottom: 10px;
 }
-.packages-promo--list {
-    font-weight: lighter;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    font-size: 16px;
-    line-height: 30px;
-}
 
 .section {
     margin-top: 40px;
     margin-bottom: 40px;
 }
 
-.hero img {
+.hero {
+    @extend .container;
+    @extend .section;
+}
+
+.hero__left {
+    @include make-sm-column(4);
+    margin-top: 50px;
+}
+.hero__right {
+    @include make-sm-column(8);
+    text-align: right;
+}
+
+.hero__img {
     margin-right: -10%;
 }
 
-.hero--heading {
+.heading__lead {
     font-family: 'Dosis';
     font-size: 45px;
     font-weight: lighter;
@@ -227,90 +230,22 @@ body {
 
     margin-top: 50px;
 }
-.hero--text {
+.heading__text {
     font-family: 'Adelle Sans';
     font-size: 26px;
     font-weight: lighter;
     padding-top: 10px;
     padding-bottom: 10px;
+    line-height: 32px;
 }
-.training-promo--heading {
-    font-family: 'Dosis';
-    font-size: 32px;
-    font-weight: lighter;
-    background-image: -webkit-gradient( linear, left top, right top, color-stop(0, $red), color-stop(0.5, $orange));
-    background-image: -webkit-gradient( linear, left top, right top, color-stop(0, $red), color-stop(0.5, $orange));
-    color:transparent;
-    -webkit-background-clip: text;
-    background-clip: text;
+.help__container {
+    @include make-sm-column(10);
+    @include make-sm-column-offset(1);
 }
-.training-promo--text {
-    padding-top: 10px;
-    padding-bottom: 10px;
+.help__container,
+.case-studies__container {
+    margin-top: 50px;
 }
-.training-promo--list {
-    font-weight: lighter;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    font-size: 16px;
-    line-height: 30px;
-}
-
-.packages-promo--heading {
-    font-family: 'Dosis';
-    font-size: 32px;
-    font-weight: lighter;
-    background-image: -webkit-gradient( linear, left top, right top, color-stop(0, $cyan), color-stop(0.5, $blue));
-    background-image: -webkit-gradient( linear, left top, right top, color-stop(0, $cyan), color-stop(0.5, $blue));
-    color:transparent;
-    -webkit-background-clip: text;
-    background-clip: text;
-}
-.packages-promo--text {
-    padding-top: 10px;
-    padding-bottom: 10px;
-}
-.plans-promo--heading {
-    font-family: 'Dosis';
-    font-size: 32px;
-    font-weight: lighter;
-    background-image: -webkit-gradient( linear, left top, right top, color-stop(0, $purple), color-stop(0.5, $red));
-    background-image: -webkit-gradient( linear, left top, right top, color-stop(0, $purple), color-stop(0.5, $red));
-    color:transparent;
-    -webkit-background-clip: text;
-    background-clip: text;
-}
-.plans-promo--text {
-    padding-top: 10px;
-    padding-bottom: 10px;
-}
-.help--heading {
-    font-family: 'Dosis';
-    font-size: 45px;
-    font-weight: lighter;
-    text-transform: uppercase;
-    background-image: -webkit-gradient( linear, left top, right top, color-stop(0, $orange), color-stop(0.5, $red));
-    background-image: -webkit-gradient( linear, left top, right top, color-stop(0, $orange), color-stop(0.5, $red));
-    color:transparent;
-    -webkit-background-clip: text;
-    background-clip: text;
-    margin-bottom: 50px;
-    text-align: center;
-}
-.case-studies--heading {
-    font-family: 'Dosis';
-    font-size: 45px;
-    font-weight: lighter;
-    text-transform: uppercase;
-    background-image: -webkit-gradient( linear, left top, right top, color-stop(0, $purple), color-stop(0.5, $red));
-    background-image: -webkit-gradient( linear, left top, right top, color-stop(0, $purple), color-stop(0.5, $red));
-    color:transparent;
-    -webkit-background-clip: text;
-    background-clip: text;
-    margin-bottom: 50px;
-    text-align: center;
-}
-
 .tech-list {
     margin-top: 80px;
 }
@@ -328,45 +263,91 @@ body {
     right: 0;
 }
 
-.clients-list {}
-.clients-list__item {
-    color: rgba(255, 255, 255, 0.5);
-    font-size: 17px;
-    text-align: center;
-
-    img {
-        width: 40%;
-        display: block;
-        margin: 0 auto;
-    }
-}
-
- .clients-list__item-heading {
-     font-weight: bold;
- }
- .clients-list__item-text {
-     font-weight: lighter;
- }
-
-.help-list__item {
-    margin-bottom: 20px;
-
-    img {
-        display: block;
-        margin-bottom: 20px;
-    }
-}
-
-.help-list__item-text {
-    color: rgba(255, 255, 255, 0.5);
-    padding-left: 20px;
-    padding-right: 20px;
-}
-
 .header {
     margin-top: 50px;
 }
 
 .icon-bar {
     background: white;
+}
+
+.icons-stack {
+    @include make-row();
+
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.icons-stack__item {
+    @include make-sm-column(6);
+    @include make-lg-column(4);
+
+    display: flex;
+    flex-direction: column;
+    -webkit-box-align: center;
+    align-items: center;
+    min-height: 100px;
+    -webkit-box-pack: center;
+    justify-content: center;
+}
+
+.icons-stack__item-text {
+    color: rgba(255, 255, 255, 0.5);
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.icons-stack__item-img {
+    display: block;
+    margin-bottom: 20px;
+}
+.icons-stack__item-img--fixed {
+    display: block;
+    margin-bottom: 20px;
+
+    width: 40%;
+    display: block;
+    margin: 0 auto;
+}
+
+.promo {
+    @extend .container;
+    @extend .section;
+}
+
+.promo__half {
+    @include make-sm-column(6);
+}
+
+.promo--list {
+    font-weight: lighter;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 16px;
+    line-height: 30px;
+}
+
+.promo__text {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.promo__heading {
+    font-family: 'Dosis';
+    font-size: 32px;
+    font-weight: lighter;
+    color:transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
+.promo__heading--red-orange {
+    background-image: -webkit-gradient( linear, left top, right top, color-stop(0, $red), color-stop(0.5, $orange));
+}
+
+.promo__heading--cyan-blue {
+    background-image: -webkit-gradient( linear, left top, right top, color-stop(0, $cyan), color-stop(0.5, $blue));
+}
+
+.promo__heading--purple-red {
+    background-image: -webkit-gradient( linear, left top, right top, color-stop(0, $purple), color-stop(0.5, $red));
 }
