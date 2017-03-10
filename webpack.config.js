@@ -15,18 +15,31 @@ module.exports = {
       {
         test: /\.scss$/,
         loader: ExtractTextPlugin.extract({
-          fallback: "style-loader",
-          use: ['css-loader', {
-            loader: 'postcss-loader',
-            options: {
-              plugins: function () {
-                return [
-                  require('precss'),
-                  require('autoprefixer')
-                ];
+          fallback: 'style-loader',
+          use: [
+            {
+              loader: 'css-loader',
+              options: {
+                sourceMap: true
+              }
+            }, {
+              loader: 'postcss-loader',
+              options: {
+                sourceMap: true,
+                plugins: function () {
+                  return [
+                    require('precss'),
+                    require('autoprefixer')
+                  ];
+                }
+              }
+            }, {
+              loader: 'sass-loader',
+              options: {
+                sourceMap: true
               }
             }
-          }, 'sass-loader?outputStyle=expanded']
+          ]
         }),
         include: `${__dirname}/source/sass`,
       },
