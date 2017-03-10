@@ -188,6 +188,11 @@ a:focus {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+
+    /* Safari fix !?!? */
+    &:before {
+      display: initial;
+    }
   }
 }
 
