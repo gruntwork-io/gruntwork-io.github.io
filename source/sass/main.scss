@@ -30,6 +30,13 @@ body {
     overflow-x: hidden;
 }
 
+a:hover,
+a:visited,
+a:active,
+a:focus {
+    text-decoration: none;
+}
+
 .case-studies {
     @extend .container;
 
@@ -78,6 +85,10 @@ body {
     color: white;
     letter-spacing: 1px;
     padding-bottom: 5px;
+}
+
+.link-bordered:hover {
+    color: $light-blue;
 }
 
 .link-btn {
