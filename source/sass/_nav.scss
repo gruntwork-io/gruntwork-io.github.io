@@ -3,19 +3,22 @@
 .navigation {
   @extend .container;
 	padding-top: 40px;
+	position: relative;
 }
 
 .navigation__logo {
-  @include make-sm-column(4);
+  @include make-xs-column(4);
 }
 
 .navigation__menu {
-  @include make-sm-column(8);
+  @include make-xs-column(8);
 
-	  max-width: 1000px;
-	  margin: 0 auto;
-	  padding: 0px 20px;
-	  position: relative;
+	@media screen and (max-width: 1100px) {
+		position: initial
+	}
+	max-width: 1000px;
+	margin: 0 auto;
+	padding: 0px 20px;
 }
 
 .navigation__container > ul {
@@ -50,19 +53,21 @@
 }
 
 .navigation__menu-link--emphasis {
-	color: white;
-	padding: 10px 30px 8px;
-	line-height: 20px;
-	box-shadow: 0 0 22px 0 rgba(0,0,0,0.11);
-	border-radius: 100px;
-	color: white;
-	letter-spacing: 1px;
-	line-height: 23px;
-	background-image: linear-gradient(90deg, $red, $orange);
+	@media screen and (min-width: 1100px) {
+		color: white;
+		padding: 10px 30px 8px;
+		box-shadow: 0 0 22px 0 rgba(0,0,0,0.11);
+		border-radius: 100px;
+		letter-spacing: 1px;
+		line-height: 23px;
+		background-image: linear-gradient(90deg, $red, $orange);
+	}
 }
 .navigation__menu-link--emphasis:hover {
-	box-shadow: none;
-	background-image: linear-gradient(90deg, $red, $orange);
+	@media screen and (min-width: 1100px) {
+		box-shadow: none;
+		background-image: linear-gradient(90deg, $red, $orange);
+	}
 }
 
 .navigation__container > ul li ul li {
@@ -104,13 +109,12 @@
 
 	label {
   		display: block;
-  		background: #222;
 		  width: 40px;
   		height: 40px;
   		cursor: pointer;
 		  position: absolute;
 		  right: 20px;
-  		top: 0px;
+  		top: 45px;
 	}
 
 label:after{
@@ -118,9 +122,9 @@ label:after{
   display: block;
   width: 30px;
   height: 5px;
-  background: #777;
+  background: white;
   margin: 7px 5px;
-  box-shadow: 0px 10px 0px #777, 0px 20px 0px #777
+  box-shadow: 0px 10px 0px white, 0px 20px 0px white
 }
 
 	[type="checkbox"]:checked ~ ul {
