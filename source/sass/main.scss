@@ -262,6 +262,10 @@ a:focus {
   width: 80%;
   display: block;
   margin: 0 auto;
+
+  @media (max-width: 767px) {
+    width: 100%
+  }
 }
 
 .promo__wide--reverse,
@@ -317,7 +321,7 @@ a:focus {
   }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1200px) {
   .grid-item {
     border: 1px solid rgba(255, 255, 255, 0.2);
 
