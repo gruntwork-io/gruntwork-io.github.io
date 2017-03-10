@@ -37,22 +37,18 @@ a:focus {
     text-decoration: none;
 }
 
+.help,
 .case-studies {
     @extend .container;
 
+    margin-top: 100px;
     text-align: center;
 }
 
 .help__cta,
 .case-studies__cta {
-    display: inline-block;
-    margin-top: 50px;
-}
-
-.help {
-    @extend .container;
-
     text-align: center;
+    margin-top: 50px;
 }
 
 .list, .list {
@@ -85,6 +81,8 @@ a:focus {
     color: white;
     letter-spacing: 1px;
     padding-bottom: 5px;
+    margin-bottom: 5px;
+    line-height: 30px;
 }
 
 .link-bordered:hover {
@@ -114,7 +112,7 @@ a:focus {
 }
 
 .section {
-    margin-top: 40px;
+    margin-top: 100px;
     margin-bottom: 40px;
 }
 
@@ -261,7 +259,7 @@ a:focus {
 }
 
 .promo__img {
-    width: 100%;
+    width: 80%;
     display: block;
     margin: 0 auto;
 }
@@ -274,7 +272,7 @@ a:focus {
     margin-bottom: 50px;
 }
 
-.promo--list {
+.promo__list {
     font-weight: lighter;
     padding-top: 10px;
     padding-bottom: 10px;
@@ -283,6 +281,8 @@ a:focus {
 }
 
 .promo__text {
+    margin-top: 10px;
+    margin-bottom: 10px;
     padding-top: 10px;
     padding-bottom: 10px;
 }
@@ -294,6 +294,7 @@ a:focus {
     color:transparent;
     -webkit-background-clip: text;
     background-clip: text;
+    margin-bottom: 10px;
 }
 
 .promo__heading--red-orange {
