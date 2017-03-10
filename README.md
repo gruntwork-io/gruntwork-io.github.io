@@ -53,6 +53,7 @@ On OS X, using the [docker-osx-dev](https://github.com/brikis98/docker-osx-dev) 
    and [Hard Hat](https://thenounproject.com/term/hard-hat/410909/).
 5. We're using [UptimeRobot](http://uptimerobot.com/) and [Google Analytics](http://www.google.com/analytics/) for
    monitoring and metrics.
+6. We use [webpack](http://webpack.js.org) to parse and bundle CSS and JS.
 
 ## License
 
