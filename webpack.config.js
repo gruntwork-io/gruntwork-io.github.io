@@ -45,7 +45,7 @@ module.exports = {
       },
       {
         test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/,
-        loader: 'url-loader?limit=10000&mimetype=application/font-woff',
+        loader: 'file-loader',
         options: {
           publicPath: '/assets/fonts/',
           outputPath: 'fonts/'
@@ -53,7 +53,7 @@ module.exports = {
       },
       {
         test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
-        loader: 'url-loader?limit=10000&mimetype=application/octet-stream',
+        loader: 'file-loader',
         options: {
           publicPath: '/assets/fonts/',
           outputPath: 'fonts/'
@@ -69,7 +69,7 @@ module.exports = {
       },
       {
         test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-        loader: 'url-loader?limit=10000&mimetype=image/svg+xml',
+        loader: 'file-loader',
         options: {
           publicPath: '/assets/fonts/',
           outputPath: 'fonts/'
