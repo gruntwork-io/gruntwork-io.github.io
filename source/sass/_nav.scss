@@ -1,0 +1,244 @@
+/* @see https://codepen.io/andreasstorm/pen/lriga?editors=1100 */
+
+.navigation {
+  @extend .container;
+	padding-top: 40px;
+	position: relative;
+}
+
+.navigation__logo {
+  @include make-xs-column(4);
+}
+
+.navigation__menu {
+  @include make-xs-column(8);
+
+	@media screen and (max-width: 1100px) {
+		position: initial
+	}
+	max-width: 1000px;
+	margin: 0 auto;
+	padding: 0px 20px;
+}
+
+.navigation__container > ul {
+  @extend .pull-right;
+}
+
+.navigation__container > ul > li {
+  text-align: center;
+  line-height: 60px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.logo-text {
+  font-family: 'Galano Grotesque';
+  font-size: 35px;
+  font-weight: bold;
+  color: white;
+}
+
+.logo-text:hover,
+.logo-text:focus,
+.logo-text:active {
+	color: $purple;
+}
+
+.navigation__menu-link {
+  font-family: 'Adelle Sans';
+  font-size: 13px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+  transition: all 0.3s;
+}
+
+.navigation__menu-link:hover {
+	text-decoration: none;
+}
+
+.navigation__menu-link--emphasis {
+	@media screen and (min-width: 1100px) {
+		color: white;
+		padding: 10px 30px 8px;
+		box-shadow: 0 0 22px 0 rgba(0,0,0,0.11);
+		border-radius: 100px;
+		letter-spacing: 1px;
+		line-height: 23px;
+		background-image: linear-gradient(90deg, $red, $orange);
+	}
+}
+.navigation__menu-link--emphasis:hover {
+	@media screen and (min-width: 1100px) {
+		box-shadow: none;
+		background-image: linear-gradient(90deg, $red, $orange);
+	}
+}
+
+.navigation__container > ul li ul li {
+  width: 100%;
+  text-align: left;
+  line-height: 30px;
+}
+
+.navigation__container ul li:hover {
+  cursor: pointer;
+  position: relative;
+}
+.navigation__container ul li:hover > ul {
+  display: block;
+}
+.navigation__container ul li:hover > a {
+  color: rgba(255, 255, 255, 1);
+}
+
+.navigation__container > ul li ul {
+  display: none;
+  position: absolute;
+  left: -25%;
+  top: 100%;
+  width: auto;
+  z-index: 2000;
+
+  background: white;
+  border-radius: 5px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+.navigation__container > ul li ul:before {
+	content: '';
+	position: absolute;
+	top: -10px;
+	width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid white;
+}
+.navigation__container > ul li ul li > a {
+  text-decoration: none;
+  white-space:nowrap;
+  line-height: 30px;
+  display: block;
+
+  color: $blue-menu;
+  padding-left: 45px;
+  padding-right: 20px;
+}
+
+.with-icon {
+  background-repeat: no-repeat;
+  background-position: 20px center;
+
+  &.boxes {
+    background-image: url(/assets/img/menu/boxes.svg);
+  }
+  &.stack {
+    background-image: url(/assets/img/menu/stack.svg);
+  }
+  &.tag {
+    background-image: url(/assets/img/menu/tag.svg);
+  }
+  &.book {
+    background-image: url(/assets/img/menu/book.svg);
+  }
+}
+
+.navigation__container > ul li ul li > a:hover {
+	color: $blue-menu;
+}
+[type="checkbox"], label {
+  display: none;
+}
+
+@media screen and (max-width: 1100px) {
+	.navigation__container ul {
+    display: none;
+	}
+
+	label {
+    display: block;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    position: absolute;
+    right: 20px;
+    top: 45px;
+	}
+
+  label:after{
+    content:'';
+    display: block;
+    width: 30px;
+    height: 5px;
+    background: white;
+    margin: 7px 5px;
+    box-shadow: 0px 10px 0px white, 0px 20px 0px white
+  }
+
+	[type="checkbox"]:checked ~ ul {
+    display: block;
+    z-index: 9999;
+    position: absolute;
+    right: 20px;
+    left: 20px;
+    margin-top: 50px;
+	}
+
+	.navigation__container a {
+    color: rgba(255, 255, 255, 0.6);
+	}
+
+	.navigation__container ul li {
+    display: block;
+    float: none;
+    width: 100%;
+    text-align: left;
+    background: #1D2630;
+    text-indent: 20px;
+	}
+
+	.navigation__container > ul > li {
+    margin-left: 0px;
+	}
+
+	.navigation__container > ul li ul li {
+    display: block;
+    float: none;
+    line-height: 60px;
+	}
+
+	.navigation__container > ul li ul {
+    display: block;
+    position: relative;
+    width: 100%;
+    z-index: 9999;
+    float: none;
+    background: none;
+    left: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+	}
+
+  .navigation__container > ul li ul:before {
+    display: none;
+  }
+  .navigation__container > ul li ul li > a {
+    color: rgba(255, 255, 255, 0.6);
+    padding: 0;
+    line-height: 60px;
+
+    background-image: none;
+  }
+
+  .with-icon {
+    &.boxes,
+    &.stack,
+    &.tag,
+    &.book {
+      background-image: none;
+    }
+  }
+
+}
