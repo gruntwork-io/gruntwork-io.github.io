@@ -44,31 +44,7 @@ module.exports = {
         include: `${__dirname}/source/sass`,
       },
       {
-        test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/,
-        loader: 'file-loader',
-        options: {
-          publicPath: '/assets/fonts/',
-          outputPath: 'fonts/'
-        }
-      },
-      {
-        test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
-        loader: 'file-loader',
-        options: {
-          publicPath: '/assets/fonts/',
-          outputPath: 'fonts/'
-        }
-      },
-      {
-        test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
-        loader: 'file-loader',
-        options: {
-          publicPath: '/assets/fonts/',
-          outputPath: 'fonts/'
-        }
-      },
-      {
-        test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
+        test: /\.(woff|woff2|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
         loader: 'file-loader',
         options: {
           publicPath: '/assets/fonts/',
