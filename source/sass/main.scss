@@ -1,8 +1,6 @@
----
-# Jekyll requires this Front Matter to enable sass compilation
----
-
 //Above the fold fit viewport: http://jsfiddle.net/3T2hy/2/?utm_source=website&utm_medium=embed&utm_campaign=3T2hy
+
+$bootstrap-sass-asset-helper: true;
 
 $purple: #C444FB;
 $red: #FF2B67;
@@ -76,7 +74,7 @@ body {
     text-transform: uppercase;
     border-bottom: 1px;
     border-style: solid;
-    -webkit-border-image: -webkit-gradient(linear, left top, right top, from($purple), to($red)) 0 30 30 21;
+    border-image: linear-gradient(90deg, $purple, $red) 0 30 30 21;
     color: white;
     letter-spacing: 1px;
     padding-bottom: 5px;
@@ -102,13 +100,6 @@ body {
     box-shadow: none;
     text-decoration: none;
     color: $light-blue;
-}
-
-.link-bordered:hover {
-    background-image: -webkit-gradient( linear, left top, right top, color-stop(0, $purple), color-stop(0.5, $red));
-    color:transparent;
-    -webkit-background-clip: text;
-    background-clip: text;
 }
 
 .section {
@@ -149,11 +140,10 @@ body {
     font-size: 45px;
     font-weight: lighter;
     text-transform: uppercase;
-    background-image: -webkit-gradient( linear, left top, right top, color-stop(0, $purple), color-stop(0.5, $red));
+    background-image: linear-gradient(90deg, $purple, $red);
     color:transparent;
     -webkit-background-clip: text;
     background-clip: text;
-
     margin-top: 50px;
 }
 .heading__text {
@@ -294,15 +284,15 @@ body {
 }
 
 .promo__heading--red-orange {
-    background-image: -webkit-gradient( linear, left top, right top, color-stop(0, $red), color-stop(0.5, $orange));
+    background-image: linear-gradient(90deg, $red, $orange);
 }
 
 .promo__heading--cyan-blue {
-    background-image: -webkit-gradient( linear, left top, right top, color-stop(0, $cyan), color-stop(0.5, $blue));
+    background-image: linear-gradient(90deg, $cyan, $blue);
 }
 
 .promo__heading--purple-red {
-    background-image: -webkit-gradient( linear, left top, right top, color-stop(0, $purple), color-stop(0.5, $red));
+    background-image: linear-gradient(90deg, $purple, $red);
 }
 
 .v-align-row {
