@@ -125,10 +125,24 @@
   color: $blue;
   padding-left: 45px;
   padding-right: 20px;
+}
 
-  background-image: url(/assets/img/menu/book.svg);
+.with-icon {
   background-repeat: no-repeat;
   background-position: 20px center;
+
+  &.boxes {
+    background-image: url(/assets/img/menu/boxes.svg);
+  }
+  &.stack {
+    background-image: url(/assets/img/menu/stack.svg);
+  }
+  &.tag {
+    background-image: url(/assets/img/menu/tag.svg);
+  }
+  &.book {
+    background-image: url(/assets/img/menu/book.svg);
+  }
 }
 
 .navigation__container > ul li ul li > a:hover {
@@ -216,6 +230,15 @@
     line-height: 60px;
 
     background-image: none;
+  }
+
+  .with-icon {
+    &.boxes,
+    &.stack,
+    &.tag,
+    &.book {
+      background-image: none;
+    }
   }
 
 }
