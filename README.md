@@ -9,12 +9,9 @@ You focus on your product. We'll take care of the Gruntwork.
 
 1. Use Git to clone this repo
 2. Make sure you have [Jekyll](http://jekyllrb.com/docs/installation/) installed
-3. Just the first time: `bundle install && npm install`
-4. Start the webpack development server: `webpack-dev-server --inline --hot --host=0.0.0.0`
-5. Start Jekyll server: `bundle exec jekyll serve --config _config.yml,_config.dev.yml`
-6. Go to http://localhost:4000
-
-While in development(`_config.dev.yml`), Jekyll will fetch the assets from webpack's url.
+3. Just the first time: `bundle install`
+5. Start Jekyll server: `bundle exec jekyll serve`
+6. Go to `http://localhost:4000`
 
 See the [Jekyll](http://jekyllrb.com/) and [GitHub Pages](https://pages.github.com/) documentation for more info.
 
@@ -27,14 +24,14 @@ already setup for you.
 On Linux:
 
 1. `git clone` this repo
-2. `npm start`
+2. `docker-compose up`
 3. Go to `http://localhost:4000` to test
 
 On OS X, using the [docker-osx-dev](https://github.com/brikis98/docker-osx-dev) project:
 
 1. `git clone` this repo
 2. In one tab: `docker-osx-dev`
-3. In another tab: `npm start`
+3. In another tab: `docker-compose up`
 4. Go to `http://default:4000` to test
 
 *NOTE: If using the old [boot2docker](http://boot2docker.io/) to run Docker on OS X, instead of `http://default:4000`, the URL will be `http://dockerhost:4000`. If using [docker-machine](https://docs.docker.com/machine/) to run Docker on OS X, replace `default` with the name of your docker-machine (which by default is `default`.)*
@@ -54,6 +51,22 @@ On OS X, using the [docker-osx-dev](https://github.com/brikis98/docker-osx-dev) 
 5. We're using [UptimeRobot](http://uptimerobot.com/) and [Google Analytics](http://www.google.com/analytics/) for
    monitoring and metrics.
 6. We use [webpack](http://webpack.js.org) to parse and bundle CSS and JS.
+
+## Develop
+
+To start a development environment locally:
+
+1. Use Git to clone this repo
+2. Make sure you have [Jekyll](http://jekyllrb.com/docs/installation/) installed
+3. Just the first time: `bundle install && npm install`
+4. Start the webpack development server: `webpack-dev-server --inline --hot --host=0.0.0.0`
+5. Start Jekyll server: `bundle exec jekyll serve --config _config.yml,_config.dev.yml`
+6. Go to `http://localhost:4000`
+
+While in development(`_config.dev.yml`), Jekyll will fetch the assets from webpack's url.
+
+Assets are kept into `assets` folder and tracked by the VCS. Do not edit those directly. Edit
+the `source` folder files and let webpack compile them.
 
 ## License
 
