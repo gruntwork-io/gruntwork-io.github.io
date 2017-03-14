@@ -13,18 +13,22 @@ permalink: /contact.html
   </header>
   <div class="row">
     <div class="col-sm-6 col-sm-offset-3">
-      <form class="contact-form">
+      <form class="contact-form" method="post" action="https://formspree.io/konmpar@gmail.com">
+        <input type="hidden" name="_next" value="{{ site.url }}/thanks/" />
+        <input type="hidden" name="_subject" value="New inquiry from {{ site.url }}" />
+        <input type="hidden" name="_replyto" value="konmpar@gmail.com" />
+        <input type="text" name="_gotcha" style="display:none" />
         <div class="row">
           <div class="col-sm-6">
             <div class="form-group">
               <label for="firstName">First Name*</label>
-              <input type="text" class="form-control" id="firstName">
+              <input type="text" class="form-control" id="firstName" name="firstName">
             </div>
           </div>
           <div class="col-sm-6">
             <div class="form-group">
               <label for="lastName">Last Name*</label>
-              <input type="text" class="form-control" id="lastName">
+              <input type="text" class="form-control" id="lastName" name="lastName">
             </div>
           </div>
         </div>
@@ -32,13 +36,13 @@ permalink: /contact.html
           <div class="col-sm-6">
             <div class="form-group">
               <label for="email">Email Address*</label>
-              <input type="email" class="form-control" id="email">
+              <input type="email" class="form-control" id="email" name="email">
             </div>
           </div>
           <div class="col-sm-6">
             <div class="form-group">
               <label for="phone">Phone</label>
-              <input type="text" class="form-control" id="phone">
+              <input type="text" class="form-control" id="phone" name="phone">
             </div>
           </div>
         </div>
@@ -51,7 +55,12 @@ permalink: /contact.html
                 {% for package in site.data.packages %}
                   <div class="checkbox-container">
                     <div class="checkbox">
-                      <input type="checkbox" value="None" id="{{forloop.index0}}" name="check" checked />
+                      <input
+                        type="checkbox"
+                        value="None"
+                        id="{{forloop.index0}}"
+                        name="{{forloop.index0}}"
+                        checked />
                       <label for="{{forloop.index0}}"></label>
                       <span>{{package.name}}</span>
                     </div>
@@ -62,19 +71,31 @@ permalink: /contact.html
             <div class="accordionItem close">
               <div class="accordionItemHeading">Support</div>
               <div class="accordionItemContent">
-                <textarea class="form-control" rows="3" placeholder="Briefly describe what kind of consulting you’re looking for..."></textarea>
+                <textarea
+                  name="support-request"
+                  class="form-control"
+                  rows="3"
+                  placeholder="Briefly describe what kind of consulting you’re looking for..."></textarea>
               </div>
             </div>
             <div class="accordionItem close">
               <div class="accordionItemHeading">Training</div>
               <div class="accordionItemContent">
-                <textarea class="form-control" rows="3" placeholder="Briefly describe what kind of consulting you’re looking for..."></textarea>
+                <textarea
+                name="training-request"
+                  class="form-control"
+                  rows="3"
+                  placeholder="Briefly describe what kind of consulting you’re looking for..."></textarea>
               </div>
             </div>
             <div class="accordionItem close">
               <div class="accordionItemHeading">Consulting</div>
               <div class="accordionItemContent">
-                <textarea class="form-control" rows="3" placeholder="Briefly describe what kind of consulting you’re looking for..."></textarea>
+                <textarea
+                  name="consulting-request"
+                  class="form-control"
+                  rows="3"
+                  placeholder="Briefly describe what kind of consulting you’re looking for..."></textarea>
               </div>
             </div>
           </div>
