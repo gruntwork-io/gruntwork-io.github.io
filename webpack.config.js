@@ -4,6 +4,7 @@ const path = require('path');
 module.exports = {
   entry: [
     `${__dirname}/source/sass/main.scss`,
+    `${__dirname}/source/js/entry.js`,
   ],
   output: {
     path: path.join(__dirname, './assets/'),

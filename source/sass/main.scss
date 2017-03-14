@@ -3,6 +3,7 @@
 @import "fonts";
 @import "footer";
 @import "nav";
+@import "accordion";
 
 body {
   color: white;
@@ -34,10 +35,16 @@ a:focus {
 
 .help,
 .case-studies,
+.contact,
 .plans {
   @extend .container;
 
   margin-top: 100px;
+}
+
+.help,
+.case-studies,
+.plans {
   text-align: center;
 }
 
@@ -144,7 +151,15 @@ a:focus {
   }
 }
 
+.heading {
+
+  &--center {
+    text-align: center;
+  }
+}
+
 .heading__lead {
+  display: inline-block;
   font-family: 'Dosis';
   font-size: 45px;
   font-weight: lighter;
@@ -516,4 +531,20 @@ a:focus {
     border-right: 10px solid transparent;
     border-top: 10px solid white;
   }
+}
+
+.contact-form {
+  margin-top: 50px;
+}
+
+.submit-btn {
+  @extend .link-btn;
+
+  margin-top: 70px;
+  background: linear-gradient(90deg, $blue, $cyan);
+  color: white;
+}
+
+.email-us {
+  margin-top: 35px;
 }
