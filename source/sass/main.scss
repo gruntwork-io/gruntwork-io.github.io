@@ -390,6 +390,7 @@ a:focus {
   li {
     line-height: 50px;
     font-size: 15px;
+    position: relative;
 
     &:nth-child(2n+1) {
       background: rgba(255,255,255,0.06)
@@ -461,4 +462,40 @@ a:focus {
 
   margin-top: 10px;
   margin-right: 10px;
+
+  &:hover + .plan-info-text {
+    display: block;
+  }
+}
+
+.plan-info-text {
+  position: absolute;
+  display: none;
+  font-size: 17px;
+  text-transform: none;
+  bottom: 60px;
+  right: calc(50% - 280px);
+  width: 300px;
+  line-height: 20px;
+  background: white;
+  color: black;
+  border-radius: 5px;
+  padding: 20px;
+  z-index: 99999;
+
+  p {
+    margin-top: 20px;
+  }
+
+  &:after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: calc(50% - 10px);
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid white;
+  }
 }
