@@ -1,0 +1,58 @@
+---
+layout: default
+title: Support Plans | Gruntwork
+permalink: /plans.html
+---
+
+<section class="section plans">
+  <header class="heading">
+    <h2 class="heading__lead">Support Plans</h2>
+    <h2 class="heading__text">
+      The best way to manage and update your infrastructure.
+    </h2>
+    <div class="row">
+      <div class="col-sm-8 col-sm-offset-2">
+        <p>
+          lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+        </p>
+      </div>
+    </div>
+    <ul class="checks-list">
+      <li>Ongoing Updates to Your Packages</li>
+      <li>We Keep Track of All DevOps Updates</li>
+      <li>Continuous Improvements</li>
+      <li>Access to Our Engineers</li>
+      <li>Security Alerts</li>
+    </ul>
+  </header>
+  <div class="plans-table">
+    <ul class="plans-table__item first">
+      <li>
+        <div class="plan-heading"></div>
+      </li>
+      {% for item in site.data['plan-items'] %}
+        <li>
+          {{item.name}}
+          <div class="plan-info"></div>
+          <div class="plan-info-text">
+            <strong>{{item.name}}</strong>
+            <p>{{item.description}}</p>
+          </div>
+        </li>
+      {% endfor %}
+      <li>&nbsp;</li>
+    </ul>
+    {% for plan in site.data.plans %}
+      <ul class="plans-table__item">
+        <li><div class="plan-heading plan-heading--{{plan.name | downcase}}">{{plan.name}}</div></li>
+        {% for value in plan.values %}
+          <li>
+            <span class="plan-mobile-label">{{site.data['plan-items'][forloop.index0].name}}</span>
+            {{value}}
+          </li>
+        {% endfor %}
+        <li><a href="#" class="plan-cta"><span class="plan-cta--{{plan.name | downcase}}">Get a quote</span></a></li>
+      </ul>
+    {% endfor %}
+  </div>
+</section>
