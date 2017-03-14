@@ -31,7 +31,6 @@ label {
 .form-control {
   font-size: 16px;
   color: white;
-  line-height: 45px;
   height: 45px;
   background-color: transparent;
   border: 1px solid rgba(255,255,255, 0.3);
@@ -66,28 +65,16 @@ label {
     background: transparent;
     border-radius: 4px;
     border: 1px solid rgba(255,255,255, 0.3);
-    &:after {
-      content: '';
-      width: 9px;
-      height: 5px;
-      position: absolute;
-      top: 7px;
-      left: 5px;
-      border: 3px solid #fcfff4;
-      border-top: none;
-      border-right: none;
-      background: transparent;
-      opacity: 0;
-      transform: rotate(-45deg);
-    }
     &:hover::after {
       opacity: 0.3;
     }
   }
   input[type=checkbox] {
     visibility: hidden;
-    &:checked + label:after {
-      opacity: 1;
+    &:checked + label {
+      border-color: $red;
+      background-image: url(/assets/img/check-white.svg);
+      background-repeat: no-repeat;
     }
   }
 }
