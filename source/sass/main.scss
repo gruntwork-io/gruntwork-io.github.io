@@ -460,8 +460,15 @@ a:focus {
 .plan-info {
   @extend .pull-right;
 
+  background: url(/assets/img/info.svg);
+  width: 22px;
+  height: 22px;
   margin-top: 10px;
   margin-right: 10px;
+
+  &:hover {
+    background: url(/assets/img/info-white.svg)
+  }
 
   &:hover + .plan-info-text {
     display: block;
