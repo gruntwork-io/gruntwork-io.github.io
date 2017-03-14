@@ -10,8 +10,8 @@ You focus on your product. We'll take care of the Gruntwork.
 1. Use Git to clone this repo
 2. Make sure you have [Jekyll](http://jekyllrb.com/docs/installation/) installed
 3. Just the first time: `bundle install`
-4. To build the site and serve it: `bundle exec jekyll serve`
-5. To test: `http://localhost:4000`
+5. Start Jekyll server: `bundle exec jekyll serve`
+6. Go to `http://localhost:4000`
 
 See the [Jekyll](http://jekyllrb.com/) and [GitHub Pages](https://pages.github.com/) documentation for more info.
 
@@ -45,16 +45,28 @@ On OS X, using the [docker-osx-dev](https://github.com/brikis98/docker-osx-dev) 
 2. Hosted on [GitHub Pages](https://pages.github.com/). We're using the [GitHub Pages
    Gem](https://help.github.com/articles/using-jekyll-with-pages/) and only Jekyll plugins that are [available on
    GitHub Pages](https://help.github.com/articles/repository-metadata-on-github-pages/).
-3. We use [Basscss](http://www.basscss.com/), [Sass](http://sass-lang.com/), [Font Awesome
-   Icons](http://fortawesome.github.io/Font-Awesome/icons/), [Hint.css](http://kushagragour.in/lab/hint/),and [Google
-   Fonts](https://www.google.com/fonts) for styling.
-4. The design is based on the [html5up hyperspace theme](http://html5up.net/uploads/demos/hyperspace/).
-5. The logo is built from two images on The Noun Project: [Monster](https://thenounproject.com/term/monster/184225/)
+3. We use [BootstrapCSS](http://www.getbootstrap.com/), [Sass](http://sass-lang.com/).
+4. The logo is built from two images on The Noun Project: [Monster](https://thenounproject.com/term/monster/184225/)
    and [Hard Hat](https://thenounproject.com/term/hard-hat/410909/).
-6. We use [jQuery](https://jquery.com/), [lazySizes](http://afarkas.github.io/lazysizes/), and
-   [responsive-nav.js](http://responsive-nav.com/) for behavior.
-7. We're using [UptimeRobot](http://uptimerobot.com/) and [Google Analytics](http://www.google.com/analytics/) for
+5. We're using [UptimeRobot](http://uptimerobot.com/) and [Google Analytics](http://www.google.com/analytics/) for
    monitoring and metrics.
+6. We use [webpack](http://webpack.js.org) to parse and bundle CSS and JS.
+
+## Develop
+
+To start a development environment locally:
+
+1. Use Git to clone this repo
+2. Make sure you have [Jekyll](http://jekyllrb.com/docs/installation/) installed
+3. Just the first time: `bundle install && npm install`
+4. Start the webpack development server: `webpack-dev-server --inline --hot --host=0.0.0.0`
+5. Start Jekyll server: `bundle exec jekyll serve --config _config.yml,_config.dev.yml`
+6. Go to `http://localhost:4000`
+
+While in development(`_config.dev.yml`), Jekyll will fetch the assets from webpack's url.
+
+Assets are kept into `assets` folder and tracked by the VCS. Do not edit those directly. Edit
+the `source` folder files and let webpack compile them.
 
 ## License
 

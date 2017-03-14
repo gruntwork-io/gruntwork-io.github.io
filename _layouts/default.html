@@ -3,10 +3,8 @@
   <head>
     {% include head.html %}
   </head>
-  <body class="is-loading">
-    {% unless page.no_sidebar or layout.no_sidebar %}
-      {% include sidebar.html %}
-    {% endunless %}
+  <body>
+    {% include navbar.html %}
     {{ content }}
     {% include footer.html %}
     {% include scripts.html %}

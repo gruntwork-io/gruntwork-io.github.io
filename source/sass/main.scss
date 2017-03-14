@@ -1,0 +1,350 @@
+@import "variables";
+@import "bootstrap-custom";
+@import "fonts";
+@import "footer";
+@import "nav";
+
+body {
+  color: white;
+
+  background-image: url(/assets/img/diagonialx2.svg), url(/assets/img/background.svg);
+  background-repeat: no-repeat, repeat;
+  background-position: 85% center, left;
+  background-size: cover, auto;
+
+  font-family: 'Adelle Sans';
+  font-size: 18px;
+
+  /* Hero illustration goes outside the container */
+  overflow-x: hidden;
+}
+
+a:hover,
+a:visited,
+a:active,
+a:focus {
+  text-decoration: none;
+}
+
+.help,
+.case-studies {
+  @extend .container;
+
+  margin-top: 100px;
+  text-align: center;
+}
+
+.help__cta,
+.case-studies__cta {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.list, .list {
+  list-style: none;
+  padding: 0;
+}
+
+.list li {
+  position: relative;
+}
+
+.list li:before {
+  content: '';
+  position: absolute;
+  border-left: 1px solid $orange;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: -10px;
+}
+
+.link-bordered {
+  font-family: 'Adelle Sans';
+  font-weight: bold;
+  font-size: 14px;
+  text-transform: uppercase;
+  border-bottom: 1px;
+  border-style: solid;
+  border-image: linear-gradient(90deg, $purple, $red) 0 30 30 21;
+  color: white;
+  letter-spacing: 1px;
+  padding-bottom: 5px;
+  margin-bottom: 5px;
+  line-height: 30px;
+}
+
+.link-bordered:hover {
+  color: $light-blue;
+}
+
+.link-btn {
+  font-family: 'Adelle Sans';
+  font-weight: bold;
+  font-size: 14px;
+  text-transform: uppercase;
+  box-shadow: 0 0 22px 0 rgba(0,0,0,0.11);
+  border-radius: 100px;
+  background: white;
+  color: $light-blue;
+  letter-spacing: 1px;
+  padding: 15px 40px 13px;
+  line-height: 23px;
+  display: inline-block;
+  transition: all 0.3s;
+}
+
+.link-btn:hover {
+  box-shadow: none;
+  text-decoration: none;
+  color: $light-blue;
+}
+
+.section {
+  margin-top: 100px;
+  margin-bottom: 40px;
+
+  @media (max-width: 768px) {
+    margin-top: 40px;
+  }
+}
+
+.hero {
+  @extend .container;
+  @extend .section;
+}
+.hero-cta {
+  @include make-sm-column(12);
+  padding: 30px;
+  text-align: center;
+  @media (min-width: 768px) {
+    margin-top: -300px;
+  }
+}
+.hero__left {
+  @include make-sm-column(4);
+  margin-top: 50px;
+}
+.hero__right {
+  @include make-sm-column(8);
+  text-align: right;
+}
+
+.hero__img {
+  @media (min-width: 768px) {
+    margin-right: -18%;
+    display: inline;
+  }
+}
+
+.heading__lead {
+  font-family: 'Dosis';
+  font-size: 45px;
+  font-weight: lighter;
+  text-transform: uppercase;
+  background-image: linear-gradient(90deg, $purple, $red);
+  color:transparent;
+  /* @see https://msdn.microsoft.com/en-us/library/jj127314(v=vs.85).aspx */
+  -webkit-background-clip: text;
+  background-clip: text;
+  margin-top: 50px;
+}
+.heading__text {
+  font-family: 'Adelle Sans';
+  font-size: 26px;
+  font-weight: lighter;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  line-height: 32px;
+}
+.help__container {
+  @include make-sm-column(10);
+  @include make-sm-column-offset(1);
+}
+.help__container,
+.case-studies__container {
+  margin-top: 50px;
+}
+.tech-list {
+  margin-top: 80px;
+}
+.tech-list__item {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.header {
+  margin-top: 50px;
+}
+
+.icon-bar {
+  background: white;
+}
+
+.icons-stack {
+  @include make-row();
+
+  @media (min-width: 768px) {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    /* Safari fix !?!? */
+    &:before {
+      display: initial;
+    }
+  }
+}
+
+.icons-stack__item {
+  @include make-sm-column(6);
+  @include make-lg-column(4);
+
+  padding: 20px;
+
+  @media (min-width: 768px) {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+
+.icons-stack__item-text {
+  color: rgba(255, 255, 255, 0.5);
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.icons-stack__item-img {
+  display: block;
+  margin: 0 auto 20px;
+}
+.icons-stack__item-icon {
+  display: block;
+  margin: 0 auto 20px;
+  width: 50px;
+  height: 50px;
+}
+.icons-stack__item-img--fixed {
+  width: 40%;
+  display: block;
+  margin: 0 auto 20px;
+}
+
+.promo {
+  @extend .container;
+
+  /* @see http://stackoverflow.com/a/25517025/1955940 */
+
+  @media (min-width: 768px) {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.promo__narrow {
+  @include make-sm-column(5);
+}
+.promo__wide {
+  @include make-sm-column(7);
+}
+
+.promo__narrow--reverse {
+  @include make-sm-column(5);
+  @include make-sm-column-push(7);
+}
+.promo__wide--reverse {
+  @include make-sm-column(7);
+  @include make-sm-column-pull(5);
+}
+
+.promo__img {
+  width: 80%;
+  display: block;
+  margin: 0 auto;
+
+  @media (max-width: 767px) {
+    width: 100%
+  }
+}
+
+.promo__wide--reverse,
+.promo__narrow--reverse,
+.promo__narrow,
+.promo__wide {
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+.promo__list {
+  font-weight: lighter;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-size: 16px;
+  line-height: 30px;
+}
+
+.promo__text {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.promo__heading {
+  font-family: 'Dosis';
+  font-size: 32px;
+  font-weight: lighter;
+  color:transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  margin-bottom: 10px;
+}
+
+.promo__heading--red-orange {
+  background-image: linear-gradient(90deg, $red, $orange);
+}
+
+.promo__heading--cyan-blue {
+  background-image: linear-gradient(90deg, $cyan, $blue);
+}
+
+.promo__heading--purple-red {
+  background-image: linear-gradient(90deg, $purple, $red);
+}
+
+.v-align-row {
+
+  @media (min-width: 768px) {
+    display: flex;
+    align-items: center;
+  }
+}
+
+@media (min-width: 1200px) {
+  .grid-item {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+
+    &--top {
+        border-top: none;
+    }
+    &--top-left {
+        border-top: none;
+        border-left: none;
+    }
+    &--top-right {
+        border-top: none;
+        border-right: none;
+    }
+    &--bottom {
+        border-bottom: none;
+    }
+    &--bottom-left {
+        border-bottom: none;
+        border-left: none;
+    }
+    &--bottom-right {
+        border-bottom: none;
+        border-right: none;
+    }
+  }
+}
