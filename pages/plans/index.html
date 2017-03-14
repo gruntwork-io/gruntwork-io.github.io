@@ -47,7 +47,7 @@ permalink: /plans.html
         <li><div class="plan-heading plan-heading--{{plan.name | downcase}}">{{plan.name}}</div></li>
         {% for value in plan.values %}
           <li>
-            <span class="abbreviation">{{site.data['plan-items'][forloop.index0].name}}</span>
+            <span class="plan-mobile-label">{{site.data['plan-items'][forloop.index0].name}}</span>
             {{value}}
           </li>
         {% endfor %}
