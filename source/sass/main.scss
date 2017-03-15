@@ -38,8 +38,6 @@ a:focus {
 .contact,
 .stacks,
 .plans {
-  @extend .container;
-
   margin-top: 100px;
 }
 
@@ -116,6 +114,8 @@ a:focus {
 }
 
 .section {
+  @extend .container;
+
   margin-top: 100px;
   margin-bottom: 40px;
 
@@ -391,6 +391,8 @@ a:focus {
 .plans-table {
   @include make-row();
 
+  background: #161D26;
+
   @media (min-width: 768px) {
     margin-top: 140px;
   }
@@ -401,8 +403,12 @@ a:focus {
   padding: 0;
   border-right: 1px solid rgba(255,255,255,0.2);
 
+  &:first-child {
+    padding-left: 30px;
+  }
   &:last-child {
     border-right: none;
+    padding-right: 30px;
   }
 
   li {
@@ -654,4 +660,8 @@ a:focus {
   font-size: 15px;
   color: rgba(255,255,255,0.5);
   text-transform: uppercase;
+}
+.include__text {
+  font-size: 15px;
+  color: rgba(255,255,255,1);
 }
