@@ -32,7 +32,7 @@ label {
   font-size: 16px;
   color: white;
   height: 45px;
-  background-color: transparent;
+  background-color: #161D26;
   border: 1px solid rgba(255,255,255, 0.3);
   box-shadow: none;
 
@@ -41,6 +41,20 @@ label {
     outline: 0;
     box-shadow: none;
   }
+}
+
+textarea.form-control {
+  background: #1D252F;
+}
+
+.has-error .form-control,
+.has-error .form-control:focus,
+.has-error .form-control:active {
+  border-color: $red;
+  box-shadow: none;
+}
+.has-error label {
+  color: $red;
 }
 
 .checkbox-container {

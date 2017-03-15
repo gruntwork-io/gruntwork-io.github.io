@@ -2,6 +2,7 @@
 layout: default
 title: Contact us | Gruntwork
 permalink: /contact.html
+slug: contact-page
 ---
 
 <section class="section contact">
@@ -57,11 +58,10 @@ permalink: /contact.html
                     <div class="checkbox">
                       <input
                         type="checkbox"
-                        value="None"
-                        id="{{forloop.index0}}"
-                        name="{{forloop.index0}}"
-                        checked />
-                      <label for="{{forloop.index0}}"></label>
+                        value="Interested"
+                        id="{{package.name || slugify}}"
+                        name="{{package.name || slugify}}"/>
+                      <label for="{{package.name || slugify}}"></label>
                       <span>{{package.name}}</span>
                     </div>
                   </div>

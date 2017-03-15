@@ -1,15 +1,17 @@
+const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const path = require('path');
 
 module.exports = {
-  entry: [
-    `${__dirname}/source/sass/main.scss`,
-    `${__dirname}/source/js/entry.js`,
-  ],
+  entry: {
+    main: `${__dirname}/source/sass/main.scss`,
+    'index-page': `${__dirname}/source/js/index-page.js`,
+    'contact-page': `${__dirname}/source/js/contact-page.js`,
+  },
   output: {
     path: path.join(__dirname, './assets/'),
-    publicPath: '/',
-    filename: 'js/build.js',
+    publicPath: 'http://localhost:8080/',
+    filename: 'js/[name].js',
   },
   module: {
     loaders: [
@@ -59,6 +61,7 @@ module.exports = {
       filename: 'css/style.css',
       allChunks: true,
     }),
+    new webpack.optimize.CommonsChunkPlugin('init')
   ],
   devtool: 'eval-cheap-module-source-map',
   devServer: {
