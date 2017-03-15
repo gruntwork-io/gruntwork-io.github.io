@@ -1,0 +1,112 @@
+---
+layout: default
+title: Contact us | Gruntwork
+permalink: /contact.html
+slug: contact-page
+---
+
+<section class="section contact">
+  <header class="heading heading--center">
+    <h2 class="heading__lead">Contact us</h2>
+    <h2 class="heading__text">
+      You run the infrastructure. We’ll do the Gruntwork.
+    </h2>
+  </header>
+  <div class="row">
+    <div class="col-sm-6 col-sm-offset-3">
+      <form class="contact-form" method="post" action="https://formspree.io/konmpar@gmail.com">
+        <input type="hidden" name="_next" value="{{ site.url }}/thanks/" />
+        <input type="hidden" name="_subject" value="New inquiry from {{ site.url }}" />
+        <input type="hidden" name="_replyto" value="konmpar@gmail.com" />
+        <input type="text" name="_gotcha" style="display:none" />
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="firstName">First Name*</label>
+              <input type="text" class="form-control" id="firstName" name="firstName">
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="lastName">Last Name*</label>
+              <input type="text" class="form-control" id="lastName" name="lastName">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="email">Email Address*</label>
+              <input type="email" class="form-control" id="email" name="email">
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="phone">Phone</label>
+              <input type="text" class="form-control" id="phone" name="phone">
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="">Tell us what you’re interested in</label>
+          <div class="accordionWrapper">
+            <div class="accordionItem close">
+              <div class="accordionItemHeading">Infrastructure Packages</div>
+              <div class="accordionItemContent">
+                {% for package in site.data.packages %}
+                  <div class="checkbox-container">
+                    <div class="checkbox">
+                      <input
+                        type="checkbox"
+                        value="Interested"
+                        id="{{package.name || slugify}}"
+                        name="{{package.name || slugify}}"/>
+                      <label for="{{package.name || slugify}}"></label>
+                      <span>{{package.name}}</span>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+            <div class="accordionItem close">
+              <div class="accordionItemHeading">Support</div>
+              <div class="accordionItemContent">
+                <textarea
+                  name="support-request"
+                  class="form-control"
+                  rows="3"
+                  placeholder="Briefly describe what kind of consulting you’re looking for..."></textarea>
+              </div>
+            </div>
+            <div class="accordionItem close">
+              <div class="accordionItemHeading">Training</div>
+              <div class="accordionItemContent">
+                <textarea
+                name="training-request"
+                  class="form-control"
+                  rows="3"
+                  placeholder="Briefly describe what kind of consulting you’re looking for..."></textarea>
+              </div>
+            </div>
+            <div class="accordionItem close">
+              <div class="accordionItemHeading">Consulting</div>
+              <div class="accordionItemContent">
+                <textarea
+                  name="consulting-request"
+                  class="form-control"
+                  rows="3"
+                  placeholder="Briefly describe what kind of consulting you’re looking for..."></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="text-center">
+          <a href="#" class="submit-btn">Submit</a>
+          <div class="email-us">
+            or email us at <a href="#" class="link-bordered">info@gruntwork.io</a>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>

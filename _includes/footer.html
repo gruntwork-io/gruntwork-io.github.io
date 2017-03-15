@@ -1,8 +1,12 @@
 <footer id="footer" class="footer">
-  <img src="/assets/img/grunty.png" alt="" class="footer__logo">
+  {% if page.slug == "index" %}
+  <img src="/assets/img/grunty-hat.png" alt="" class="footer__logo">
+  {% else %}
+  <img src="/assets/img/grunty.svg" alt="" class="footer__logo">
+  {% endif %}
   <div class="footer__header">
     <h1 class="footer__heading">Take the grunt work out of DevOps.</h1>
-    <a href="" class="link-btn">Contact us</a>
+    <a href="/contact" class="link-btn">Contact us</a>
   </div>
   <div class="footer_body">
     <div class="footer_menu-container">
@@ -24,7 +28,7 @@
           Consulting & Training
         </a>
         <a
-          href=""
+          href="/plans"
           class="footer-menu__link">
           Support Plans
         </a>

@@ -1,9 +1,12 @@
-<script src="{{ site.assets_base_url }}js/build.js" />
 <script>
   // window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
   // ga('create', 'UA-76462621-1', 'auto');
   // ga('require', 'autotrack');
   // ga('send', 'pageview');
 </script>
+<script src="{{ site.assets_base_url }}js/init.js"></script>
+{% if page.slug %}
+  <script src="{{ site.assets_base_url }}js/{{ page.slug }}.js"></script>
+{% endif %}
 <script async src="https://www.google-analytics.com/analytics.js"></script>
 <script async src="https://cdnjs.cloudflare.com/ajax/libs/autotrack/0.6.5/autotrack.js"></script>
