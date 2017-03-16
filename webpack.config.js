@@ -126,7 +126,7 @@ module.exports = {
   plugins: plugins,
   devtool: 'eval-cheap-module-source-map',
   devServer: {
-    contentBase: '/assets/',
+    publicPath: '/assets/',
     hot: true,
     inline: true,
     proxy: {
