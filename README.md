@@ -59,14 +59,17 @@ To start a development environment locally:
 1. Use Git to clone this repo
 2. Make sure you have [Jekyll](http://jekyllrb.com/docs/installation/) installed
 3. Just the first time: `bundle install && npm install`
-4. Start the webpack development server: `webpack-dev-server --inline --hot --host=0.0.0.0`
-5. Start Jekyll server: `bundle exec jekyll serve --config _config.yml,_config.dev.yml`
-6. Go to `http://localhost:4000`
+4. Start the webpack development server and the Jekyl server: `npm run dev`
+6. Go to `http://localhost:8080`
 
 While in development(`_config.dev.yml`), Jekyll will fetch the assets from webpack's url.
 
 Assets are kept into `assets` folder and tracked by the VCS. Do not edit those directly. Edit
 the `source` folder files and let webpack compile them.
+
+## Develop
+
+Run `npm run build` after you are satisfied with the changes you've made.
 
 ## License
 
