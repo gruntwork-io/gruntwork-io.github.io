@@ -4,8 +4,8 @@
   "description": "This is the code for the [Gruntwork website](http://www.gruntwork.io).",
   "private": true,
   "scripts": {
-    "dev": "concurrently 'bundle exec jekyll serve --config _config.yml,_config.dev.yml' 'webpack-dev-server --inline'",
-    "build": "webpack -p && bundle exec jekyll build"
+    "dev": "concurrently 'bundle exec jekyll serve --config _config.yml,_config.dev.yml' 'webpack-dev-server --inline --hot'",
+    "build": "NODE_ENV=production webpack -p && bundle exec jekyll build"
   },
   "homepage": "https://github.com/kbariotis/gruntwork-io.github.io#readme",
   "devDependencies": {
