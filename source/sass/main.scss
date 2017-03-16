@@ -36,9 +36,8 @@ a:focus {
 .help,
 .case-studies,
 .contact,
+.stacks,
 .plans {
-  @extend .container;
-
   margin-top: 100px;
 }
 
@@ -115,6 +114,8 @@ a:focus {
 }
 
 .section {
+  @extend .container;
+
   margin-top: 100px;
   margin-bottom: 40px;
 
@@ -390,6 +391,8 @@ a:focus {
 .plans-table {
   @include make-row();
 
+  background: #161D26;
+
   @media (min-width: 768px) {
     margin-top: 140px;
   }
@@ -400,8 +403,12 @@ a:focus {
   padding: 0;
   border-right: 1px solid rgba(255,255,255,0.2);
 
+  &:first-child {
+    padding-left: 30px;
+  }
   &:last-child {
     border-right: none;
+    padding-right: 30px;
   }
 
   li {
@@ -571,4 +578,90 @@ a:focus {
       width: 100%;
     }
   }
+}
+
+.heading__title {
+  font-size: 17px;
+  font-weight: bold;
+  border-bottom: 1px;
+  border-style: solid;
+  border-image: linear-gradient(90deg, $purple, $red) 0 30 30 21;
+  display: inline-block;
+  text-transform: uppercase;
+}
+
+.stacks-list {
+  @include make-row();
+
+  @media (min-width: 768px) {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    /* Safari fix !?!? */
+    &:before {
+      display: initial;
+    }
+  }
+}
+.stacks-list__item {
+  @include make-sm-column(6);
+  @include make-md-column(3);
+  text-align: center;
+  margin-bottom: 20px;
+
+  @media (min-width: 768px) {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  transition: all 0.1s;
+  opacity: 0.6;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+.stacks-list__item-container {
+  background-image: linear-gradient(rgba(49, 52, 78, 0.5), #161D26);
+  border: 1px solid #636669;
+  border-radius: 5px;
+  padding-bottom: 30px;
+  padding-left: 20px;
+  padding-right: 20px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.stacks-list__item-img {
+  width: 50%;
+  margin: 0 auto;
+  display: block;
+  height: 200px;
+}
+
+.stacks-list__item-title {
+  color: rgba(255,255,255,0.5);
+  text-transform: uppercase;
+  font-size: 15px;
+  margin-bottom: 20px;
+}
+
+.include {
+  margin-bottom: 20px;
+  flex: 1;
+}
+.include__title {
+  font-weight: bold;
+  font-size: 16px;
+}
+.include__explain {
+  font-size: 15px;
+  color: rgba(255,255,255,0.5);
+  text-transform: uppercase;
+}
+.include__text {
+  font-size: 15px;
+  color: rgba(255,255,255,1);
 }
