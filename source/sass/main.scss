@@ -681,3 +681,13 @@ a:focus {
   color: rgba(255,255,255,0.75);
   line-height: 25px;
 }
+
+.partners {
+  @include make-row();
+  text-align: center;
+  margin-top: 70px;
+}
+
+.partners__item {
+  @include make-sm-column(6);
+}
