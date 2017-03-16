@@ -7,10 +7,11 @@ module.exports = {
     main: `${__dirname}/source/sass/main.scss`,
     'index-page': `${__dirname}/source/js/index-page.js`,
     'contact-page': `${__dirname}/source/js/contact-page.js`,
+    'infra-page': `${__dirname}/source/js/infra-page.js`,
   },
   output: {
     path: path.join(__dirname, './assets/'),
-    publicPath: 'http://localhost:8080/',
+    publicPath: '/',
     filename: 'js/[name].js',
   },
   module: {
@@ -65,6 +66,11 @@ module.exports = {
   ],
   devtool: 'eval-cheap-module-source-map',
   devServer: {
+    inline: true,
+    proxy: {
+      "**": "http://localhost:4000"
+    },
+    host: '0.0.0.0',
     headers: {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
