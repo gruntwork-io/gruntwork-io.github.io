@@ -70,20 +70,48 @@ slug: infra-page
     <div class="packages">
       {% for package in site.data.packages %}
         <div class="package-container">
-          <div class="row package">
-            <div class="col-sm-1">
-              <img src="/assets/img/blue-box.svg" alt="" class="img-responsive">
-            </div>
-            <div class="col-sm-9">
+          <div class="package">
+            <div class="package-text">
+              <img src="/assets/img/blue-box.svg" alt="" class="package__image">
               <div class="package__title">{{package.name}}</div>
               <div class="package__text">
                 {{package.description}}
               </div>
             </div>
-            <div class="col-sm-2 text-center"><a href="#" class="link-bordered">More Info</a></div>
+            <div class="package-action">
+              <a href="#" class="package__cta">More Info</a>
+            </div>
           </div>
         </div>
       {% endfor %}
     </div>
+  </section>
+  <section class="section text-center">
+    <a href="/contact" class="link-btn">Request a quote for the packages</a>
+  </section>
+  <section class="section help">
+    <header class="heading">
+      <h2 class="heading__lead">Technologies We Support</h2>
+    </header>
+    {% for tech in site.data.technologies %}
+      <div class="technologies">
+        <div class="technologies__header"><span>{{tech.name}}<span></div>
+        <ul class="technologies-list">
+        {% for item in tech.items %}
+          <li class="technologies-list__item">
+            <img src="/assets/img/technologies/grayscale/{{item.image}}" alt="">
+            <div class="technologies-list__item-text {% if item.soon %}technologies-list__item-text--fade{% endif %}">
+              {{item.text}}
+            </div>
+          </li>
+        {% endfor %}
+        </ul>
+      </div>
+      {% if forloop.index0 == 3 %}
+        <section class="section text-center">
+          <img src="/assets/img/empty-boxes.svg" alt="">
+        </section>
+      {% endif %}
+    {% endfor %}
   </section>
 </section>

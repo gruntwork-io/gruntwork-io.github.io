@@ -80,11 +80,13 @@ a:focus {
   border-bottom: 1px;
   border-style: solid;
   border-image: linear-gradient(90deg, $purple, $red) 0 30 30 21;
+  border-left: none;
+  border-right: none;
+  display: inline-block;
   color: white;
   letter-spacing: 1px;
   padding-bottom: 5px;
   margin-bottom: 5px;
-  line-height: 30px;
 }
 
 .link-bordered:hover {
@@ -672,6 +674,25 @@ a:focus {
   margin-top: 15px;
   background-image: linear-gradient(rgba(49, 52, 78, 0.5), #161D26);
   border: 1px solid rgba(100, 100, 100, 0.6);
+
+  @media (max-width: 767px) {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+}
+.package {
+  @include make-row()
+}
+.package-text {
+  @include make-md-column(10);
+}
+.package-action {
+  @include make-md-column(2);
+  text-align: center;
+}
+.package__cta {
+  @extend .link-bordered;
+  margin: 20px;
 }
 .package__title {
   font-weight: bold;
@@ -680,6 +701,19 @@ a:focus {
 .package__text {
   color: rgba(255,255,255,0.75);
   line-height: 25px;
+  max-height: 50px;
+  overflow: hidden;
+}
+.package__image {
+  float: left;
+  margin: 20px;
+
+  @media (max-width: 767px) {
+    float: none;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+  }
 }
 
 .partners {
@@ -690,4 +724,61 @@ a:focus {
 
 .partners__item {
   @include make-sm-column(6);
+}
+
+.technologies {
+  margin-top: 50px;
+}
+.technologies-list {
+  @extend .list-inline;
+  margin-top: 30px;
+
+  .technologies-list__item {
+    padding-left: 20px;
+    padding-right: 20px;
+    border-right: 1px solid rgba(255,255,255, 0.2);
+    width: 153px;
+    vertical-align: middle;
+    margin-top: 20px;
+
+    &:last-child {
+      border: none;
+    }
+  }
+}
+
+.technologies__header {
+  font-size: 15px;
+  font-weight: bold;
+  text-transform: uppercase;
+  position: relative;
+
+  span {
+    background: #161D26;
+    padding: 0;
+    margin: 0;
+    padding-left: 10px;
+  }
+
+  &:before {
+    content: '';
+    position: absolute;
+    height: 1px;
+    background: rgba(255,255,255, 0.2);
+    top: 10px;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    z-index: -99999;
+  }
+}
+
+.technologies-list__item-text {
+  font-size: 13px;
+  margin-top: 15px;
+  text-transform: uppercase;
+
+  &--fade {
+    color: rgba(255,255,255, 0.6);
+  }
 }

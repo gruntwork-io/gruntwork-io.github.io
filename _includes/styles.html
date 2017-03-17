@@ -1,2 +1,4 @@
 <!--[if lte IE 8]><script src="/assets/js/html5shiv.js"></script><![endif]-->
-<link rel="stylesheet" href="{{ site.assets_base_url }}css/style.css" />
+{% if inject_styles == false %}
+  <link rel="stylesheet" href="{{ site.assets_base_url }}css/style.css" />
+{% endif %}
