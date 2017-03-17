@@ -1,22 +1,9 @@
+var classHelp = require('./utils/classes');
+var accordion = require('./utils/accordion');
 var serialize = require('form-serialize');
 var axios = require('axios');
-var accordion = require('./utils/accordion');
 
 accordion();
-
-function addClass(el, className) {
-  if (el.className.indexOf(className) === -1) {
-    el.className += ' ' + className;
-  }
-}
-
-function removeClass(el, className) {
-  var elClass = ' ' + el.className + ' ';
-  while (elClass.indexOf(' ' + className + ' ') != -1) {
-    elClass = elClass.replace(' ' + className + ' ', '');
-  }
-  el.className = elClass;
-}
 
 var requireFields = [
   'firstName',
@@ -42,7 +29,7 @@ submitButton.addEventListener('click', function (e) {
 
     if (!(fieldName in data)) {
       var field = form.querySelector('[name=' + fieldName + ']');
-      addClass(field.parentNode, 'has-error');
+      classHelp.addClass(field.parentNode, 'has-error');
       hasError = true;
     }
   }
