@@ -675,6 +675,13 @@ a:focus {
   background-image: linear-gradient(rgba(49, 52, 78, 0.5), #161D26);
   border: 1px solid rgba(100, 100, 100, 0.6);
 
+  opacity: 0.6;
+
+  &:hover,
+  &.open {
+    opacity: 1;
+  }
+
   @media (max-width: 767px) {
     padding-left: 15px;
     padding-right: 15px;
