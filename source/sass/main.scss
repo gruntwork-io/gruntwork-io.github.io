@@ -120,7 +120,7 @@ a:focus {
   margin-top: 100px;
   margin-bottom: 40px;
 
-  @media (max-width: 768px) {
+  @media (max-width: 767px) {
     margin-top: 40px;
   }
 }
@@ -131,8 +131,6 @@ a:focus {
 
 .hero {
   @extend .row;
-
-  margin-top: 100px;
 }
 .hero-cta {
   @include make-sm-column(12);
@@ -174,6 +172,10 @@ a:focus {
   margin-top: 100px;
 
   @extend .purple-red-gradient;
+
+  @media (max-width: 767px) {
+    margin-top: 0;
+  }
 }
 .heading__text {
   font-family: 'Adelle Sans';
@@ -422,6 +424,10 @@ a:focus {
   &:last-child {
     border-right: none;
     padding-right: 30px;
+
+    @media (max-width: 767px) {
+      padding-right: 0;
+    }
   }
 
   li {
@@ -754,6 +760,11 @@ a:focus {
     &:last-child {
       border: none;
     }
+
+    @media (max-width: 767px) {
+      border: none;
+    }
+
   }
 }
 
