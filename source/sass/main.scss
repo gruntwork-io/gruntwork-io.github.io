@@ -401,7 +401,9 @@ a:focus {
 }
 .plans-table__item {
   @extend .list-unstyled;
-  @include make-sm-column(3);
+  @include make-sm-column(12);
+  @include make-md-column(4);
+  @include make-lg-column(3);
   padding: 0;
   border-right: 1px solid rgba(255,255,255,0.2);
 
@@ -418,13 +420,20 @@ a:focus {
     font-size: 15px;
     position: relative;
 
-    &:nth-child(2n+1) {
+    &:nth-child(2n+2) {
       background: rgba(255,255,255,0.06)
+    }
+
+    &:last-child {
+      background: none;
+      border: none;
     }
   }
 
   &.first {
     @extend .hidden-xs;
+    @extend .hidden-sm;
+    @extend .hidden-md;
 
     li {
       text-align: left;
@@ -437,11 +446,14 @@ a:focus {
 
   .plan-mobile-label {
     @extend .visible-xs-inline-block;
+    @extend .visible-sm-inline-block;
+    @extend .visible-md-inline-block;
     color: rgba(255,255,255,0.5);
   }
 
-  @media (max-width: 767px) {
+  @media (max-width: 991px) {
     margin-top: 100px;
+    border: none;
   }
 }
 
