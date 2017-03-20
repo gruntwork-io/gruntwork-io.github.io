@@ -37,6 +37,7 @@ a:focus {
 .case-studies,
 .contact,
 .stacks,
+.infrastructure,
 .plans {
   margin-top: 100px;
 }
@@ -116,8 +117,6 @@ a:focus {
 }
 
 .section {
-  @extend .container;
-
   margin-top: 100px;
   margin-bottom: 40px;
 
@@ -131,8 +130,7 @@ a:focus {
 }
 
 .hero {
-  @extend .container;
-  @extend .section;
+  @extend .row;
 }
 .hero-cta {
   @include make-sm-column(12);
@@ -260,7 +258,7 @@ a:focus {
 }
 
 .promo {
-  @extend .container;
+  @include make-row();
 
   /* @see http://stackoverflow.com/a/25517025/1955940 */
 
