@@ -254,6 +254,9 @@ a:focus {
   width: 40%;
   display: block;
   margin: 0 auto 20px;
+  /* IE */
+  max-width: 100%;
+  flex-shrink: 0;
 }
 
 .promo {
@@ -580,7 +583,7 @@ a:focus {
   border-image: linear-gradient(90deg, $purple, $red) 0 30 30 21;
   display: inline-block;
   text-transform: uppercase;
-  padding-bottom: 8px;
+  padding-bottom: 7px;
 }
 
 .stacks-list {
@@ -643,7 +646,7 @@ a:focus {
 
 .include {
   margin-bottom: 20px;
-  flex: 1;
+  flex: 1 0 auto;
 }
 .include__title {
   font-weight: bold;
