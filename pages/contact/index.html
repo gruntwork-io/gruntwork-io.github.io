@@ -14,10 +14,10 @@ slug: contact-page
   </header>
   <div class="row">
     <div class="col-sm-6 col-sm-offset-3">
-      <form class="contact-form" method="post" action="https://formspree.io/konmpar@gmail.com">
+      <form class="contact-form" method="post" action="https://formspree.io/{{site.data.contact.email.url}}">
         <input type="hidden" name="_next" value="{{ site.url }}/thanks/" />
         <input type="hidden" name="_subject" value="New inquiry from {{ site.url }}" />
-        <input type="hidden" name="_replyto" value="konmpar@gmail.com" />
+        <input type="hidden" name="_replyto" value="{{site.data.contact.email.url}}" />
         <input type="text" name="_gotcha" style="display:none" />
         <div class="row">
           <div class="col-sm-6">
@@ -103,7 +103,7 @@ slug: contact-page
         <div class="text-center">
           <a href="#" class="submit-btn">Submit</a>
           <div class="email-us">
-            or email us at <a href="#" class="link-bordered">info@gruntwork.io</a>
+            or email us at <a href="mailto:{{site.data.contact.email.url}}" class="link-bordered">{{site.data.contact.email.url}}</a>
           </div>
         </div>
       </form>
