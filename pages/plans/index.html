@@ -45,14 +45,14 @@ permalink: /plans.html
       </ul>
       {% for plan in site.data.plans %}
         <ul class="plans-table__item">
-          <li><div class="plan-heading plan-heading--{{plan.color}}">{{plan.name}}</div></li>
+          <li><div class="plan-heading {{plan.color}}-gradient">{{plan.name}}</div></li>
           {% for value in plan.values %}
             <li>
               <span class="plan-mobile-label">{{site.data['plan-items'][forloop.index0].name}}</span>
               {{value}}
             </li>
           {% endfor %}
-          <li><a href="#" class="plan-cta"><span class="plan-cta--{{plan.color}}">Get a quote</span></a></li>
+          <li><a href="#" class="plan-cta"><span class="{{plan.color}}-gradient">Get a quote</span></a></li>
         </ul>
       {% endfor %}
     </div>
