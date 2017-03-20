@@ -19,7 +19,7 @@ permalink: /stacks.html
   </header>
   <section class="section">
     <h2 class="heading__title">What's a stack?</h2>
-    <p>
+    <p class="section__paragraph">
       At Gruntwork we’ve taken the thousands of hours we spent building infrastructure
       on Amazon Web Services (AWS) and condensed all that experience and code into
       pre-assembled Stacks. A Stack is a reusable, battle-tested, documented, configurable,
@@ -49,75 +49,21 @@ permalink: /stacks.html
   <section class="section">
     <h2 class="heading__title">Available Stacks</h2>
     <div class="stacks-list">
-      <div class="stacks-list__item">
-        <div class="stacks-list__item-container">
-          <img class="stacks-list__item-img" src="/assets/img/technologies/grayscale/rails.svg" alt="">
-          <div class="stacks-list__item-title">Ruby On Rails</div>
-          <div class="include">
-            <div class="include__title">MySQL</div>
-            <div class="include__explain">Database</div>
+      {% for stack in site.data.stacks %}
+        <div class="stacks-list__item">
+          <div class="stacks-list__item-container">
+            <img class="stacks-list__item-img" src="/assets/img/technologies/grayscale/{{ stack.image }}" alt="">
+            <div class="stacks-list__item-title">{{ stack.name }}</div>
+            {% for property in stack.properties %}
+              <div class="include">
+                <div class="include__title">{{ property.service }}</div>
+                <div class="include__explain">{{ property.name }}</div>
+              </div>
+            {% endfor %}
+            <a href="#" class="plan-cta"><span class="plan-cta--{{stack.color}}">Get a quote</span></a>
           </div>
-          <div class="include">
-            <div class="include__title">Memcached</div>
-            <div class="include__explain">Cache</div>
-          </div>
-          <div class="include">
-            <div class="include__title">Circleci</div>
-            <div class="include__explain">CI System</div>
-          </div>
-          <div class="include">
-            <div class="include__title">Cloud Watch</div>
-            <div class="include__explain">Monitoring System</div>
-          </div>
-          <a href="#" class="plan-cta"><span class="plan-cta--blue">Get a quote</span></a>
         </div>
-      </div>
-      <div class="stacks-list__item">
-        <div class="stacks-list__item-container">
-          <img class="stacks-list__item-img" src="/assets/img/technologies/grayscale/nodejs.svg" alt="">
-          <div class="stacks-list__item-title">Node.js</div>
-          <div class="include">
-            <div class="include__title">MongoDB</div>
-            <div class="include__explain">Database</div>
-          </div>
-          <div class="include">
-            <div class="include__title">Memcached</div>
-            <div class="include__explain">Cache</div>
-          </div>
-          <div class="include">
-            <div class="include__title">Circleci</div>
-            <div class="include__explain">CI System</div>
-          </div>
-          <div class="include">
-            <div class="include__title">Cloud Watch</div>
-            <div class="include__explain">Monitoring System</div>
-          </div>
-          <a href="#" class="plan-cta"><span class="plan-cta--purple">Get a quote</span></a>
-        </div>
-      </div>
-      <div class="stacks-list__item">
-        <div class="stacks-list__item-container">
-          <img class="stacks-list__item-img" src="/assets/img/technologies/grayscale/django.svg" alt="">
-          <div class="stacks-list__item-title">Django</div>
-          <div class="include">
-            <div class="include__title">PostregesSQL</div>
-            <div class="include__explain">Database</div>
-          </div>
-          <div class="include">
-            <div class="include__title">Memcached</div>
-            <div class="include__explain">Cache</div>
-          </div>
-          <div class="include">
-            <div class="include__title">Circleci</div>
-            <div class="include__explain">CI System</div>
-          </div>
-          <div class="include">
-            <div class="include__title">Cloud Watch</div>
-            <div class="include__explain">Monitoring System</div>
-          </div>
-          <a href="#" class="plan-cta"><span class="plan-cta--red">Get a quote</span></a>
-        </div>
-      </div>
+      {% endfor %}
       <div class="stacks-list__item">
         <div class="stacks-list__item-container">
           <img class="stacks-list__item-img" src="/assets/img/grunty.svg" alt="">

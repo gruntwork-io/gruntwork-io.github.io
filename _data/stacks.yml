@@ -1,0 +1,36 @@
+- name: Ruby On Rails
+  image: rails.svg
+  color: blue
+  properties:
+  - name: Database
+    service: MySQL
+  - name: Cache
+    service: Memcached
+  - name: CI System
+    service: CircleCI
+  - name: Monitoring System
+    service: Cloud Watch
+- name: Node.js
+  image: nodejs.svg
+  color: purple
+  properties:
+  - name: Database
+    service: MongoDB
+  - name: Cache
+    service: Memcached
+  - name: CI System
+    service: CircleCI
+  - name: Monitoring System
+    service: Cloud Watch
+- name: Django
+  image: django.svg
+  color: red
+  properties:
+  - name: Database
+    service: PostgresSQL
+  - name: Cache
+    service: Memcached
+  - name: CI System
+    service: CircleCI
+  - name: Monitoring System
+    service: Cloud Watch
