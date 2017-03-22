@@ -131,6 +131,12 @@ a:focus {
 
 .hero {
   @extend .row;
+
+  @media (min-width: 1200px) {
+    .heading__lead {
+      white-space: nowrap;
+    }
+  }
 }
 .hero-cta {
   @include make-sm-column(12);
