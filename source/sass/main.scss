@@ -43,8 +43,7 @@ a:focus {
 }
 
 .help,
-.case-studies,
-.plans {
+.case-studies {
   text-align: center;
 }
 
@@ -419,11 +418,8 @@ a:focus {
 .plans-table {
   @include make-row();
 
+  text-align: center;
   background: #161D26;
-
-  @media (min-width: 768px) {
-    margin-top: 140px;
-  }
 }
 .plans-table__item {
   @extend .list-unstyled;
