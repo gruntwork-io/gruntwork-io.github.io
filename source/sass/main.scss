@@ -75,8 +75,6 @@ a:focus {
 
 .link-bordered {
   font-family: 'Adelle Sans';
-  font-weight: bold;
-  font-size: 14px;
   border-bottom: 1px;
   border-style: solid;
   border-image: linear-gradient(90deg, $purple, $red) 0 30 30 21;
@@ -85,6 +83,7 @@ a:focus {
   display: inline-block;
   color: white;
   letter-spacing: 1px;
+  line-height: normal;
 
   &--upper {
     padding-bottom: 5px;
@@ -145,6 +144,8 @@ a:focus {
   @include make-sm-column(12);
   padding: 30px;
   text-align: center;
+  font-weight: bold;
+  font-size: 14px;
   @media (min-width: 768px) {
     margin-top: -300px;
   }
@@ -328,6 +329,11 @@ a:focus {
   margin-bottom: 10px;
   padding-top: 10px;
   padding-bottom: 10px;
+}
+
+.promo__cta {
+  font-weight: bold;
+  font-size: 14px;
 }
 
 .promo__heading {

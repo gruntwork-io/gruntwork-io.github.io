@@ -10,6 +10,10 @@
     service: CircleCI
   - name: Monitoring System
     service: Cloud Watch
+  - name: ECS Cluster
+    service: Docker
+  - name: Security
+    service: VPC, IAM, KMS, SSH, TLS
 - name: Node.js
   image: nodejs.svg
   color: purple-red
@@ -22,15 +26,23 @@
     service: CircleCI
   - name: Monitoring System
     service: Cloud Watch
-- name: Django
-  image: django.svg
+  - name: ECS Cluster
+    service: Docker
+  - name: Security
+    service: VPC, IAM, KMS, SSH, TLS
+- name: Spring Boot
+  image: spring-boot.svg
   color: red-orange
   properties:
   - name: Database
     service: PostgresSQL
   - name: Cache
-    service: Memcached
+    service: Redis
   - name: CI System
     service: CircleCI
   - name: Monitoring System
     service: Cloud Watch
+  - name: ECS Cluster
+    service: Docker
+  - name: Security
+    service: VPC, IAM, KMS, SSH, TLS
