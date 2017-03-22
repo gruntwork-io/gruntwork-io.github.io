@@ -6,8 +6,7 @@ var axios = require('axios');
 accordion();
 
 var requireFields = [
-  'firstName',
-  'lastName',
+  'name',
   'email',
 ]
 

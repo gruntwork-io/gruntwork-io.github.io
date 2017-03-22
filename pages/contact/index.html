@@ -9,7 +9,7 @@ slug: contact-page
   <header class="heading heading--center">
     <h2 class="heading__lead">Contact us</h2>
     <h2 class="heading__text">
-      You run the infrastructure. We’ll do the Gruntwork.
+      You focus on your product. We’ll do the Gruntwork.
     </h2>
   </header>
   <div class="row">
@@ -19,19 +19,9 @@ slug: contact-page
         <input type="hidden" name="_subject" value="New inquiry from {{ site.url }}" />
         <input type="hidden" name="_replyto" value="{{site.data.contact.email.url}}" />
         <input type="text" name="_gotcha" style="display:none" />
-        <div class="row">
-          <div class="col-sm-6">
-            <div class="form-group">
-              <label for="firstName">First Name*</label>
-              <input type="text" class="form-control" id="firstName" name="firstName">
-            </div>
-          </div>
-          <div class="col-sm-6">
-            <div class="form-group">
-              <label for="lastName">Last Name*</label>
-              <input type="text" class="form-control" id="lastName" name="lastName">
-            </div>
-          </div>
+        <div class="form-group">
+          <label for="name">Name*</label>
+          <input type="text" class="form-control" id="name" name="name">
         </div>
         <div class="row">
           <div class="col-sm-6">
@@ -42,13 +32,13 @@ slug: contact-page
           </div>
           <div class="col-sm-6">
             <div class="form-group">
-              <label for="phone">Phone</label>
-              <input type="text" class="form-control" id="phone" name="phone">
+              <label for="company">Company Name</label>
+              <input type="text" class="form-control" id="company" name="company">
             </div>
           </div>
         </div>
         <div class="form-group">
-          <label for="">Tell us what you’re interested in</label>
+          <label for="">Tell us what you’re interested in (optional)</label>
           <div class="accordionWrapper">
             <div class="accordionItem close">
               <div class="accordionItemHeading">Infrastructure Packages</div>
@@ -102,11 +92,38 @@ slug: contact-page
         </div>
         <div class="text-center">
           <a href="#" class="submit-btn">Submit</a>
-          <div class="email-us">
-            or email us at <a href="mailto:{{site.data.contact.email.url}}" class="link-bordered">{{site.data.contact.email.url}}</a>
-          </div>
         </div>
       </form>
     </div>
+  </div>
+  <div class="section text-center">
+    <h2 class="heading__title">Other ways to contact us</h2>
+    <ul class="social-links">
+      <li>
+        <a href="{{site.data.contact.github.url}}" class="social-links__link">
+          <img src="/assets/img/github.svg" alt="Gruntwork on GitHub" class="social-links__img">
+        </a>
+      </li>
+      <li>
+        <a href="{{site.data.contact.linkedin.url}}" class="social-links__link">
+          <img src="/assets/img/linkedin.svg" alt="Gruntwork on LinkedIn" class="social-links__img">
+        </a>
+      </li>
+      <li>
+        <a href="{{site.data.contact.twitter.url}}" class="social-links__link">
+          <img src="/assets/img/twitter.svg" alt="Gruntwork on Twitter" class="social-links__img">
+        </a>
+      </li>
+      <li>
+        <a href="{{site.data.contact.facebook.url}}" class="social-links__link">
+          <img src="/assets/img/facebook.svg" alt="Gruntwork on Facebook" class="social-links__img">
+        </a>
+      </li>
+      <li>
+        <a href="/newsletter" class="social-links__link">
+          <img src="/assets/img/book.svg" alt="Gruntwork's Newsletter" class="social-links__img">
+        </a>
+      </li>
+    </ul>
   </div>
 </section>

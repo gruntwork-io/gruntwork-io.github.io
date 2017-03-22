@@ -564,10 +564,17 @@ a:focus {
   color: white;
 }
 
-.email-us {
-  margin-top: 35px;
+.social-links {
+  @extend .list-inline;
+  margin-top: 20px;
 }
-
+.social-links__link {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+.social-links__img {
+  width: 40px;
+}
 .thanks-container {
   background-image: url(../images/thanks-background.svg), url(../images/letter.svg);
   background-repeat: no-repeat, no-repeat;
