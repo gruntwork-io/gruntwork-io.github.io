@@ -12,13 +12,13 @@ function toggle (e) {
   var package = this.parentNode.parentNode.parentNode;
 
   var textContainer = package.querySelector('.package__text');
-  if (textContainer.style.maxHeight === '100%') {
+  if (textContainer.style.maxHeight === '500px') {
     classHelp.removeClass(package, 'open');
     this.innerHTML = 'More info'
     textContainer.style.maxHeight = '50px';
   } else {
     classHelp.addClass(package, 'open');
     this.innerHTML = 'Less info'
-    textContainer.style.maxHeight = '100%';
+    textContainer.style.maxHeight = '500px';
   }
 }

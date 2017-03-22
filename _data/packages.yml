@@ -2,70 +2,80 @@
   fa_icon: "sitemap"
   docs_url: "https://github.com/gruntwork-io/module-vpc-public"
   description: |
-    Set up a best practices network topology in your AWS account. This Package creates an isolated VPC for each
-    environment (staging, production, mgmt), and within each environment, sets up multiple tiers of isolated subnets
-    (public, private, persistence) network ACLs, security groups, NAT gateways, and VPC peering connections.
+    Set up a best practices network topology in your AWS account. This Package creates
+    an isolated VPC for each environment (staging, production, mgmt), and within each
+    environment, sets up multiple tiers of isolated subnets (public, private, persistence)
+    network ACLs, security groups, NAT gateways, and VPC peering connections.
 - name: "Monitoring and Alerting"
   fa_icon: "bar-chart"
   docs_url: "https://github.com/gruntwork-io/module-aws-monitoring-public"
   description: |
-    Set up monitoring and alerting using AWS CloudWatch. This Package exposes metrics not available in the AWS
-    hypervisor (e.g. memory and disk space utilization), configures Route 53 health checks for your public endpoints,
-    installs a default set of alerts (e.g. for CPU usage, disk space, 5xx errors) that notify you via email or text
-    message, and aggregates logs from all your applications so you can see them in the CloudWatch console.
+    Set up monitoring and alerting using AWS CloudWatch. This Package exposes metrics
+    not available in the AWS hypervisor (e.g. memory and disk space utilization),
+    configures Route 53 health checks for your public endpoints, installs a default set
+    of alerts (e.g. for CPU usage, disk space, 5xx errors) that notify you via email or text
+    message, and aggregates logs from all your applications so you can see them in the
+    CloudWatch console.
 - name: "Docker Cluster"
   fa_icon: "th"
   docs_url: "https://github.com/gruntwork-io/module-ecs-public"
   description: |
-    Deploy your Docker containers on top of the AWS EC2 Container Service (ECS). This Package creates the ECS Cluster,
-    runs your Docker containers as ECS services, supports zero-downtime, rolling deployment of new Docker container
-    versions, configures load balancing, health checks, and service discovery using ELBs, scales the number of nodes
-    and tasks up and down based on traffic, and provides automatic recovery of failed nodes and Tasks.
+    Deploy your Docker containers on top of the AWS EC2 Container Service (ECS). This
+    Package creates the ECS Cluster, runs your Docker containers as ECS services, supports
+    zero-downtime, rolling deployment of new Docker container versions, configures load
+    balancing, health checks, and service discovery using ELBs, scales the number of nodes
+    and tasks up and down based on traffic, and provides automatic recovery of failed nodes
+    and Tasks.
 - name: "AMI Cluster"
   fa_icon: "cubes"
   docs_url: "https://github.com/gruntwork-io/module-asg-public"
   description: |
-    Deploy your Amazon Machine Images (AMIs) on top of an AWS Auto Scaling Group (ASG). This Package creates the ASG
-    Cluster, supports zero-downtime, rolling deployment of new AMI versions, configures load balancing, health checks,
-    and service discovery using ELBs, scales the number of nodes up and down based on traffic, and provides automatic
+    Deploy your Amazon Machine Images (AMIs) on top of an AWS Auto Scaling Group (ASG). This
+    Package creates the ASG Cluster, supports zero-downtime, rolling deployment of new AMI
+    versions, configures load balancing, health checks, and service discovery using ELBs,
+    scales the number of nodes up and down based on traffic, and provides automatic
     recovery of failed nodes.
 - name: "Security"
   fa_icon: "lock"
   docs_url: "https://github.com/gruntwork-io/module-security-public"
   description: |
-    Set up security best practices for managing secrets, credentials, and servers. This Package uses AWS Key Management
-    Service (KMS) to encrypt and decypt secrets so you can securely store them in version control, configures
-    servers to accept SSH connections from an authorized list of IAM users that updates automatically, configures IAM
-    Groups according to best practices, enables CloudTrail with encrypted events, and implements server hardening with
-    automated security updates and tools like fail2ban.
+    Set up security best practices for managing secrets, credentials, and servers. This
+    Package uses AWS Key Management Service (KMS) to encrypt and decypt secrets so you can
+    securely store them in version control, configures servers to accept SSH connections
+    from an authorized list of IAM users that updates automatically, configures IAM Groups
+    according to best practices, enables CloudTrail with encrypted events, and implements
+    server hardening with automated security updates and tools like fail2ban.
 - name: "Continuous Delivery"
   fa_icon: "refresh"
   docs_url: "https://github.com/gruntwork-io/module-ci-public"
   description: |
-    Set up an automated pipeline to build and deploy code using a self-hosted CI server (e.g. Jenkins) or cloud-based
-    CI service (e.g. CircleCI, or Travis). After every commit, this Package builds your code, runs your tests, and
-    packages your app into a deployable, versioned artifact (e.g. Docker image or Amazon Machine Image). You can kick
-    off an automated deployment by pushing to a specific branch, creating a new tag, manually running a CI job, or even
-    after every single commit (continuous deployment).
+    Set up an automated pipeline to build and deploy code using a self-hosted CI server (e.g.
+    Jenkins) or cloud-based CI service (e.g. CircleCI, or Travis). After every commit, this
+    Package builds your code, runs your tests, and packages your app into a deployable,
+    versioned artifact (e.g. Docker image or Amazon Machine Image). You can kick off an
+    automated deployment by pushing to a specific branch, creating a new tag, manually running
+    a CI job, or even after every single commit (continuous deployment).
 - name: "Relational Database"
   fa_icon: "database"
   docs_url: "https://github.com/gruntwork-io/module-data-storage-public"
   description: |
-    Run MySQL, Postgres, MariaDB, or Amazon Aurora on Amazon’s Relational Database Service (RDS). This Packages creates
-    the database, sets up replicas, configures automatic failover to a standby in a separate Availability Zone in case
-    of problems, and configures automatic backup.
+    Run MySQL, Postgres, MariaDB, or Amazon Aurora on Amazon’s Relational Database Service
+    (RDS). This Packages creates the database, sets up replicas, configures automatic
+    failover to a standby in a separate Availability Zone in case of problems, and configures
+    automatic backup.
 - name: "Distributed Cache"
   fa_icon: "server"
   docs_url: "https://github.com/gruntwork-io/module-cache-public"
   description: |
-    Run Redis or Memcached clusters using Amazon’s ElastiCache Service. This Packages creates the cluster, sets up
-    replicas, configures automatic failover to a standby in a separate Availability Zone in case of problems, and
-    configures automatic backup.
+    Run Redis or Memcached clusters using Amazon’s ElastiCache Service. This Packages
+    creates the cluster, sets up replicas, configures automatic failover to a standby in
+    a separate Availability Zone in case of problems, and configures automatic backup.
 - name: "Stateful Server"
   fa_icon: "cloud-upload"
   docs_url: "https://github.com/gruntwork-io/module-server-public"
   description: |
-    Set up a best-practices deployment of a single, stateful server on top of AWS, such as Jenkins or WordPress. This
-    Package deploys an EC2 Instance, attaches an EBS volume that persists data between redeploys, configures the
-    Instance with a public IP and DNS A record (optional), uses an AWS Lambda job to backup the Instance on a
-    cron schedule, and adds an alarm that goes off if a backup job doesn’t run within a scheduled time period.
+    Set up a best-practices deployment of a single, stateful server on top of AWS, such as
+    Jenkins or WordPress. This Package deploys an EC2 Instance, attaches an EBS volume that
+    persists data between redeploys, configures the Instance with a public IP and DNS A record
+    (optional), uses an AWS Lambda job to backup the Instance on a cron schedule, and adds an
+    alarm that goes off if a backup job doesn’t run within a scheduled time period.

@@ -77,7 +77,6 @@ a:focus {
   font-family: 'Adelle Sans';
   font-weight: bold;
   font-size: 14px;
-  text-transform: uppercase;
   border-bottom: 1px;
   border-style: solid;
   border-image: linear-gradient(90deg, $purple, $red) 0 30 30 21;
@@ -86,8 +85,12 @@ a:focus {
   display: inline-block;
   color: white;
   letter-spacing: 1px;
-  padding-bottom: 5px;
-  margin-bottom: 5px;
+
+  &--upper {
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+  }
 }
 
 .link-bordered:hover {
@@ -706,6 +709,7 @@ a:focus {
 }
 .package__cta {
   @extend .link-bordered;
+  @extend .link-bordered--upper;
   margin: 20px;
 }
 .package__title {
@@ -717,6 +721,14 @@ a:focus {
   line-height: 25px;
   max-height: 50px;
   overflow: hidden;
+  transition: all 0.1s;
+
+  .open & {
+    margin-top: 20px;
+  }
+}
+.package__link {
+  margin-top: 20px;
 }
 .package__image {
   float: left;
