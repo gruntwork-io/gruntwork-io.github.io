@@ -46,9 +46,23 @@
   max-height: 50px;
   overflow: hidden;
   transition: all 0.1s;
+  position: relative;
 
   .open & {
     margin-top: 20px;
+  }
+}
+.package__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(transparent, #161D26);
+  transition: all 0.1s;
+
+  .open & {
+    background: none;
   }
 }
 .package__link {
