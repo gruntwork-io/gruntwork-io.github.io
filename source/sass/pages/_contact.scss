@@ -49,3 +49,55 @@
     }
   }
 }
+
+.package-info {
+  display: inline-block;
+  background: url(../images/info.svg);
+  width: 22px;
+  height: 22px;
+  line-height: 30px;
+  vertical-align: middle;
+  margin-left: 10px;
+  margin-right: 10px;
+  position: relative;
+
+  &:hover {
+    background: url(../images/info-white.svg)
+  }
+
+  &:hover .package-info-text {
+    display: block;
+  }
+}
+
+.package-info-text {
+  position: absolute;
+  display: none;
+  font-size: 17px;
+  text-transform: none;
+  bottom: 40px;
+  left: -136px;
+  width: 300px;
+  line-height: 20px;
+  background: white;
+  color: black;
+  border-radius: 5px;
+  padding: 20px;
+  z-index: 99999;
+
+  p {
+    margin-top: 20px;
+  }
+
+  &:after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: calc(50% - 10px);
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid white;
+  }
+}

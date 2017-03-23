@@ -53,6 +53,12 @@ slug: contact-page
                         name="{{package.name | slugify}}"/>
                       <label for="{{package.name | slugify}}"></label>
                       <span>{{package.name}}</span>
+                      <div class="package-info">
+                        <div class="package-info-text">
+                          <strong>{{package.name}}</strong>
+                          <p>{{package.description}}</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 {% endfor %}
