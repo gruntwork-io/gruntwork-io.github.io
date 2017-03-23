@@ -49,9 +49,9 @@ slug: contact-page
                       <input
                         type="checkbox"
                         value="Interested"
-                        id="{{package.name || slugify}}"
-                        name="{{package.name || slugify}}"/>
-                      <label for="{{package.name || slugify}}"></label>
+                        id="{{package.name | slugify}}"
+                        name="{{package.name | slugify}}"/>
+                      <label for="{{package.name | slugify}}"></label>
                       <span>{{package.name}}</span>
                     </div>
                   </div>
