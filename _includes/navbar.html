@@ -7,8 +7,12 @@
       <nav class="navigation__container">
         <input type="checkbox" id="nav" /><label for="nav"></label>
         <ul class="list-inline">
-          <li>
-            <a href="#" class="navigation__menu-link">Products & Services</a>
+          <li class="{% if page.url == '/index.html' %}active{% endif %}{% if page.url == '/stacks.html' %}active{% endif %}{% if page.url == '/infrastructure.html' %}active{% endif %}{% if page.url == '/plans.html' %}active{% endif %}">
+            <a
+              href="#"
+              class="navigation__menu-link">
+                Products & Services
+            </a>
             <ul class="list-unstyled">
               <li><a href="/infrastructure" class="navigation__menu-link with-icon boxes">Infrastructure Packages</a></li>
               <li><a href="/stacks" class="navigation__menu-link with-icon stack">Stacks</a></li>
@@ -16,10 +20,18 @@
               <li><a href="/plans" class="navigation__menu-link with-icon tag">Subscription & Support</a></li>
             </ul>
           </li>
-          <li class="active"><a href="#" class="navigation__menu-link">How it works</a></li>
-          <li><a href="#" class="navigation__menu-link">Clients</a></li>
-          <li><a href="#" class="navigation__menu-link">About</a></li>
-          <li><a href="/contact" class="navigation__menu-link navigation__menu-link--emphasis">Contact us</a></li>
+          <li class="{% if page.url == '/how-it-works.html' %}active{% endif %}">
+            <a href="#" class="navigation__menu-link">How it works</a>
+          </li>
+          <li class="{% if page.url == '/clients.html' %}active{% endif %}">
+            <a href="#" class="navigation__menu-link">Clients</a>
+          </li>
+          <li class="{% if page.url == '/about.html' %}active{% endif %}">
+            <a href="#" class="navigation__menu-link">About</a>
+          </li>
+          <li class="{% if page.url == '/contact.html' %}active{% endif %}">
+            <a href="/contact" class="navigation__menu-link navigation__menu-link--emphasis">Contact us</a>
+          </li>
         </ul>
       </nav>
     </div>

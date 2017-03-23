@@ -71,7 +71,6 @@ $bp-min: 1200px;
 
 .navigation__menu-link--emphasis {
 	@media screen and (min-width: $bp-min) {
-		color: white;
 		padding: 10px 30px 8px;
 		box-shadow: 0 0 22px 0 rgba(0,0,0,0.11);
 		border-radius: 100px;
@@ -100,6 +99,7 @@ $bp-min: 1200px;
 .navigation__container ul li:hover > ul {
   display: block;
 }
+.navigation__container ul li.active > a,
 .navigation__container ul li:hover > a {
   color: rgba(255, 255, 255, 1);
 }
