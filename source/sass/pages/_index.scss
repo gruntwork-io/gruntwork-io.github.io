@@ -68,6 +68,7 @@
   font-size: 32px;
   font-weight: lighter;
   margin-bottom: 10px;
+  line-height: 40px;
 }
 
 .tech-list {
@@ -112,6 +113,9 @@
   }
 }
 
+.help {
+  @include make-row();
+}
 .help__container {
   @include make-sm-column(10);
   @include make-sm-column-offset(1);
@@ -142,4 +146,7 @@
   &:last-child {
     border: none;
   }
+}
+.img-placeholder {
+  text-align: center;
 }

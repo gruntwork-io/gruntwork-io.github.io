@@ -73,8 +73,10 @@ permalink: /plans.html
           <li><div class="plan-heading {{plan.color}}-gradient">{{plan.name}}</div></li>
           {% for value in plan.values %}
             <li>
-              <span class="plan-mobile-label">{{site.data['plan-items'][forloop.index0].name}}</span>
-              {{value}}
+              <div class="plan-mobile-container">
+                <span class="plan-mobile-label">{{site.data['plan-items'][forloop.index0].name}}</span>
+                <span class="plan-mobile-value">{{value}}</span>
+              </div>
             </li>
           {% endfor %}
           <li><a href="/contact" class="plan-cta"><span class="{{plan.color}}-gradient">Get a quote</span></a></li>

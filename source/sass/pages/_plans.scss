@@ -63,10 +63,20 @@
     color: rgba(255,255,255,0.5);
   }
 
-  @media (max-width: 991px) {
+  @media (max-width: $screen-lg) {
     margin-top: 100px;
     border: none;
   }
+}
+.plan-mobile-label,
+.plan-mobile-value {
+  @media (max-width: $screen-md) {
+    @include make-xs-column(6);
+  }
+}
+
+.plan-mobile-container {
+  @include make-row();
 }
 
 .plan-heading {
