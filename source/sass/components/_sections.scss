@@ -1,0 +1,54 @@
+.section {
+  margin-top: 100px;
+  margin-bottom: 40px;
+
+  @media (max-width: 767px) {
+    margin-top: 40px;
+  }
+}
+
+.section__paragraph {
+  line-height: 30px;
+}
+
+.heading {
+
+  &--center {
+    text-align: center;
+  }
+}
+
+.heading__lead {
+  display: inline-block;
+  font-family: 'Dosis';
+  font-size: 45px;
+  font-weight: lighter;
+  text-transform: uppercase;
+  margin-top: 100px;
+
+  @extend .purple-red-gradient;
+
+  @media (max-width: 767px) {
+    margin-top: 0;
+  }
+}
+.heading__text {
+  font-family: 'Adelle Sans';
+  font-size: 26px;
+  font-weight: lighter;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  line-height: 32px;
+}
+
+.heading__title {
+  font-size: 17px;
+  font-weight: bold;
+  border-bottom: 1px;
+  border-style: solid;
+  border-image: linear-gradient(90deg, $purple, $red) 0 30 30 21;
+  display: inline-block;
+  text-transform: uppercase;
+  padding-bottom: 7px;
+}
+

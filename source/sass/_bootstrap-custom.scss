@@ -18,6 +18,27 @@
 @import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/utilities";
 @import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/responsive-utilities";
 
+body {
+  color: white;
+
+  background-image: url(../images/background.svg);
+  background-repeat: repeat;
+  background-position: left;
+  background-size: auto;
+
+  font-family: 'Adelle Sans';
+
+  /* Hero illustration goes outside the container */
+  overflow-x: hidden;
+
+  &.index-page {
+    background-image: url(../images/diagonialx2.svg), url(../images/background.svg);
+    background-repeat: no-repeat, repeat;
+    background-position: 85% center, left;
+    background-size: cover, auto;
+  }
+}
+
 label {
   display: inline-block;
   max-width: 100%;
@@ -96,3 +117,11 @@ textarea.form-control {
 p {
   line-height: 27px;
 }
+
+a:hover,
+a:visited,
+a:active,
+a:focus {
+  text-decoration: none;
+}
+

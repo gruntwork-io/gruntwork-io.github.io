@@ -1,0 +1,34 @@
+.bordered-list {
+  list-style: none;
+  padding: 0;
+}
+
+.bordered-list li {
+  position: relative;
+}
+
+.bordered-list li:before {
+  content: '';
+  position: absolute;
+  border-left: 1px solid $orange;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: -10px;
+}
+
+.checks-list {
+  @extend .list-inline;
+
+  font-size: 13px;
+  margin-top: 60px;
+
+  li {
+    background: url(../images/check.svg);
+    background-repeat: no-repeat;
+    background-position: center left;
+    line-height: 50px;
+    padding-left: 30px;
+    margin-left: 20px;
+  }
+}

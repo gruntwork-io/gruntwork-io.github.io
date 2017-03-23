@@ -1,0 +1,19 @@
+.red-orange-gradient,
+.cyan-blue-gradient,
+.purple-red-gradient {
+  color:transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent; /* @see http://nimbupani.com/using-background-clip-for-text-with-css-fallback.html */
+  color: white;
+}
+
+.red-orange-gradient {
+  background-image: linear-gradient(90deg, $red, $orange);
+}
+.cyan-blue-gradient {
+  background-image: linear-gradient(90deg, $cyan, $blue);
+}
+.purple-red-gradient {
+  background-image: linear-gradient(90deg, $purple, $red);
+}
