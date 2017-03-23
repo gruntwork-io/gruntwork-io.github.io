@@ -77,6 +77,11 @@
 
 .plan-mobile-container {
   @include make-row();
+
+  @media (max-width: $screen-sm) {
+    text-align: left;
+    padding-left: 15px;
+  }
 }
 
 .plan-heading {
