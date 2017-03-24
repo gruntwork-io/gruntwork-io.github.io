@@ -50,6 +50,7 @@
 
   .open & {
     margin-top: 20px;
+    max-height: 500px;
   }
 }
 .package__overlay {
@@ -59,10 +60,11 @@
   right: 0;
   bottom: 0;
   background-image: linear-gradient(transparent, #161D26);
-  transition: all 0.1s;
+  transition: background-image 0.1s;
 
   .open & {
     background: none;
+    display: none;
   }
 }
 .package__link {

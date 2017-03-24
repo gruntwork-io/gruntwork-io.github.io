@@ -11,3 +11,7 @@ module.exports.removeClass = function (el, className) {
   }
   el.className = elClass;
 }
+
+module.exports.hasClass = function (el, className) {
+  return (' ' + el.className + ' ').indexOf(' ' + className + ' ') > -1;
+}
