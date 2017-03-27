@@ -16,9 +16,11 @@ const entry = {
 };
 
 const output = {
-  path: path.join(__dirname, './assets/'),
-  publicPath: '/',
+  path: path.join(__dirname, `${__DEV__ ? './' : './assets/'}`),
+  publicPath: '/assets/',
   filename: 'js/[name].js',
+  hotUpdateChunkFilename: 'assets/[id].[hash].hot-update.js',
+  hotUpdateMainFilename: 'assets/[hash].hot-update.json'
 };
 
 const sassLoader = {
@@ -126,9 +128,9 @@ module.exports = {
   plugins: plugins,
   devtool: 'eval-cheap-module-source-map',
   devServer: {
+    hotOnly: true,
     publicPath: '/assets/',
-    hot: true,
-    inline: true,
+    contentBase: '/',
     proxy: {
       "**": `${jekyllHost}`
     },
