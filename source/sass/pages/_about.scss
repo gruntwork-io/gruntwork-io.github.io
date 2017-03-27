@@ -1,0 +1,19 @@
+.about-us {
+  margin-top: 100px;
+}
+.team__member {
+  @include make-row();
+  padding-top: 30px;
+  padding-bottom: 30px;
+
+  @media (min-width: 768px) {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.avatar {
+  @extend .img-responsive;
+
+  border-radius: 50%;
+}
