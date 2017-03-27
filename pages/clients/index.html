@@ -1,0 +1,46 @@
+---
+layout: default
+title: Clients | Gruntwork
+permalink: /clients.html
+---
+
+<section class="section clients">
+  <header class="heading heading--center">
+    <h2 class="heading__lead">Our clients</h2>
+    <h2 class="heading__text">
+      You focus on your product. We’ll do the Gruntwork.
+    </h2>
+  </header>
+  <section class="">
+    <h2 class="heading__title">Clients</h2>
+    <div class="clients__container">
+      {% for client in site.data.clients %}
+        {% capture thecycle %}{% cycle 'odd', 'even' %}{% endcapture %}
+        <div class="client" id="{{ client.id }}">
+          {% if thecycle == 'odd' %}
+          <div class="client__image">
+            <img class="img-responsive" src="/assets/img/{{ client.logo }}" alt="">
+          </div>
+          <div class="client__text">
+            <div class="client__heading">{{ client.name }} <a href="#{{ client.id }}" class="permalink"></a></div>
+            <p class="paragraph-light">{{ client.description }}</p>
+          </div>
+          {% else %}
+          <div class="client__image client__image--reverse">
+            <img class="img-responsive" src="/assets/img/{{ client.logo }}" alt="">
+          </div>
+          <div class="client__text client__text--reverse">
+            <div class="client__heading">{{ client.name }} <a href="#{{ client.id }}" class="permalink"></a></div>
+            <p class="paragraph-light">{{ client.description }}</p>
+          </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+  <section class="cta-container">
+    <a href="/contact" class="link-btn">
+      <span class="purple-red-gradient">Request a quote for the packages</span>
+    </a>
+  </section>
+</section>
