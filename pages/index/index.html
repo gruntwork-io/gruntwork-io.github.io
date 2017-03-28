@@ -236,3 +236,20 @@ slug: index-page
     </div>
   </div>
 </section>
+
+<section class="section posts">
+  <header class="heading">
+    <h2 class="heading__lead">Latest blog posts</h2>
+  </header>
+  <div class="posts__container">
+    {% for post in site.data.posts limit:4 %}
+    <div class="post">
+      <div class="post__body">
+        <strong>{{ post.title }}</strong>
+        <p>{{ post.excerpt }}</p>
+        <small>{{ post.date }}</small>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>

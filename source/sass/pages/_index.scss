@@ -121,11 +121,13 @@
   @include make-sm-column-offset(1);
 }
 .help__container,
-.case-studies__container {
+.case-studies__container,
+.posts__container {
   margin-top: 50px;
 }
 
 .help,
+.posts,
 .case-studies {
   text-align: center;
   margin-top: 100px;
@@ -150,4 +152,14 @@
 }
 .img-placeholder {
   text-align: center;
+}
+
+.posts__container {
+  @include make-row();
+}
+.post {
+  @include make-sm-column(6);
+  text-align: left;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
