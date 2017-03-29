@@ -10,6 +10,7 @@ const webpackHost = 'http://localhost:8080'
 
 const entry = {
   main: `${__dirname}/source/sass/main.scss`,
+  init: ['lazysizes'],
   'index-page': `${__dirname}/source/js/index-page.js`,
   'contact-page': `${__dirname}/source/js/contact-page.js`,
   'infra-page': `${__dirname}/source/js/infra-page.js`,

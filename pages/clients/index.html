@@ -20,7 +20,7 @@ permalink: /clients.html
         <div class="client" id="{{ client.id }}">
           {% if thecycle == 'odd' %}
           <div class="client__image">
-            <img class="img-responsive" src="/assets/img/{{ client.logo }}" alt="{{ client.name }}">
+            <img class="img-responsive lazyload" data-src="/assets/img/{{ client.logo }}" alt="{{ client.name }}">
           </div>
           <div class="client__text">
             <div class="client__heading">{{ client.name }} <a href="#{{ client.id }}" class="permalink"></a></div>
@@ -28,7 +28,7 @@ permalink: /clients.html
           </div>
           {% else %}
           <div class="client__image client__image--reverse">
-            <img class="img-responsive" src="/assets/img/{{ client.logo }}" alt="{{ client.name }}">
+            <img class="img-responsive lazyload" data-src="/assets/img/{{ client.logo }}" alt="{{ client.name }}">
           </div>
           <div class="client__text client__text--reverse">
             <div class="client__heading">{{ client.name }}<a href="#{{ client.id }}" class="permalink"></a></div>

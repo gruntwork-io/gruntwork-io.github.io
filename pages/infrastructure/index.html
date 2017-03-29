@@ -90,7 +90,7 @@ slug: infra-page
         <ul class="technologies-list">
         {% for item in tech.items %}
           <li class="technologies-list__item">
-            <img src="/assets/img/technologies/grayscale/{{item.image}}" alt="{{item.text}}">
+            <img data-src="/assets/img/technologies/grayscale/{{item.image}}" alt="{{item.text}}" class="lazyload">
             <div class="technologies-list__item-text {% if item.soon %}technologies-list__item-text--fade{% endif %}">
               {{item.text}}
             </div>
@@ -100,7 +100,7 @@ slug: infra-page
       </div>
       {% if forloop.index0 == 3 %}
         <section class="section text-center">
-          <img src="/assets/img/empty-boxes.svg" alt="Placeholder boxes">
+          <img data-src="/assets/img/empty-boxes.svg" alt="Placeholder boxes" class="lazyload">
         </section>
       {% endif %}
     {% endfor %}

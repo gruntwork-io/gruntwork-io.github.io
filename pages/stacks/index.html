@@ -26,27 +26,27 @@ permalink: /stacks.html
     <h2 class="heading__title">Features</h2>
     <div class="icons-stack text-center">
       <div class="icons-stack__item grid-item grid-item--top-left">
-        <img class="icons-stack__item-icon" src="/assets/img/book.svg" alt="Gruntwork feature">
+        <img class="icons-stack__item-icon lazyload" data-src="/assets/img/book.svg" alt="Gruntwork feature">
         <p class="icons-stack__item-text">We give you 100% of the source code.</p>
       </div>
       <div class="icons-stack__item grid-item grid-item--top">
-        <img class="icons-stack__item-icon" src="/assets/img/gift.svg" alt="Gruntwork feature">
+        <img class="icons-stack__item-icon lazyload" data-src="/assets/img/gift.svg" alt="Gruntwork feature">
         <p class="icons-stack__item-text">Every Package is backed by a suite of automated tests.</p>
       </div>
       <div class="icons-stack__item grid-item grid-item--top-right">
-        <img class="icons-stack__item-icon" src="/assets/img/sync.svg" alt="Gruntwork feature">
+        <img class="icons-stack__item-icon lazyload" data-src="/assets/img/sync.svg" alt="Gruntwork feature">
         <p class="icons-stack__item-text">Commercially supported by Gruntwork, with regular updates, maintenance, patches, and new features.</p>
       </div>
       <div class="icons-stack__item grid-item grid-item--bottom-left">
-        <img class="icons-stack__item-icon" src="/assets/img/badge.svg" alt="Gruntwork feature">
+        <img class="icons-stack__item-icon lazyload" data-src="/assets/img/badge.svg" alt="Gruntwork feature">
         <p class="icons-stack__item-text">Thoroughly documented and commented.</p>
       </div>
       <div class="icons-stack__item grid-item grid-item--bottom">
-        <img class="icons-stack__item-icon" src="/assets/img/uptick.svg" alt="Gruntwork feature">
+        <img class="icons-stack__item-icon lazyload" data-src="/assets/img/uptick.svg" alt="Gruntwork feature">
         <p class="icons-stack__item-text">Proven in production across many Gruntwork customers.</p>
       </div>
       <div class="icons-stack__item grid-item grid-item--bottom-right">
-        <img class="icons-stack__item-icon" src="/assets/img/icons/time.svg" alt="Gruntwork feature">
+        <img class="icons-stack__item-icon lazyload" data-src="/assets/img/icons/time.svg" alt="Gruntwork feature">
         <p class="icons-stack__item-text">Extremely fast setup time. Everything is already assembled for you!</p>
       </div>
     </div>
@@ -57,7 +57,7 @@ permalink: /stacks.html
       {% for stack in site.data.stacks %}
         <div class="stacks-list__item">
           <div class="stacks-list__item-container">
-            <img class="stacks-list__item-img" src="/assets/img/technologies/grayscale/{{ stack.image }}" alt="{{ stack.name }}">
+            <img class="stacks-list__item-img lazyload" data-src="/assets/img/technologies/grayscale/{{ stack.image }}" alt="{{ stack.name }}">
             <div class="stacks-list__item-title">{{ stack.name }}</div>
             {% for property in stack.properties %}
               <div class="include">
@@ -71,7 +71,7 @@ permalink: /stacks.html
       {% endfor %}
       <div class="stacks-list__item">
         <div class="stacks-list__item-container">
-          <img class="stacks-list__item-img" src="/assets/img/grunty.svg" alt="Gruntwork's Grunty'">
+          <img class="stacks-list__item-img lazyload" data-src="/assets/img/grunty.svg" alt="Gruntwork's Grunty'">
           <div class="stacks-list__item-title">Something else?</div>
           <div class="include">
             <div class="include__text">
