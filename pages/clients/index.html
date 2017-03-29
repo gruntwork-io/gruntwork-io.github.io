@@ -1,12 +1,13 @@
 ---
 layout: default
 title: Clients | Gruntwork
+excerpt: Our clients
 permalink: /clients.html
 ---
 
 <section class="clients">
   <header class="heading heading--center">
-    <h2 class="heading__lead">Our clients</h2>
+    <h1 class="heading__lead">Our clients</h1>
     <h2 class="heading__text">
       You focus on your product. We’ll do the Gruntwork.
     </h2>
@@ -19,7 +20,7 @@ permalink: /clients.html
         <div class="client" id="{{ client.id }}">
           {% if thecycle == 'odd' %}
           <div class="client__image">
-            <img class="img-responsive" src="/assets/img/{{ client.logo }}" alt="">
+            <img class="img-responsive" src="/assets/img/{{ client.logo }}" alt="{{ client.name }}">
           </div>
           <div class="client__text">
             <div class="client__heading">{{ client.name }} <a href="#{{ client.id }}" class="permalink"></a></div>
@@ -27,10 +28,10 @@ permalink: /clients.html
           </div>
           {% else %}
           <div class="client__image client__image--reverse">
-            <img class="img-responsive" src="/assets/img/{{ client.logo }}" alt="">
+            <img class="img-responsive" src="/assets/img/{{ client.logo }}" alt="{{ client.name }}">
           </div>
           <div class="client__text client__text--reverse">
-            <div class="client__heading">{{ client.name }} <a href="#{{ client.id }}" class="permalink"></a></div>
+            <div class="client__heading">{{ client.name }}<a href="#{{ client.id }}" class="permalink"></a></div>
             <p class="paragraph-light">{{ client.description }}</p>
           </div>
           {% endif %}

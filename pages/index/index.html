@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Gruntwork | DevOps as a Service
+excerpt: Get the world-class AWS infrastructure and DevOps best-practices you’ve always wanted, but never had time for.
 permalink: /index.html
 slug: index-page
 ---
@@ -17,7 +18,7 @@ slug: index-page
       </header>
     </div>
     <div class="hero__right">
-      <img class="hero__img img-responsive" src="/assets/img/construction.svg" alt="">
+      <img class="hero__img img-responsive" src="/assets/img/construction.svg" alt="Gruntwork's Grunty'">
     </div>
     <div class="hero-cta">
       <a href="#" class="link-bordered link-bordered--upper read-more-btn">Learn more</a>
@@ -52,7 +53,7 @@ slug: index-page
     </div>
   </div>
   <div class="promo__wide">
-    <img class="promo__img" src="/assets/img/grunty-rest.svg" alt="">
+    <img class="promo__img" src="/assets/img/grunty-rest.svg" alt="Gruntwork's Grunty">
   </div>
 </section>
 
@@ -79,7 +80,7 @@ slug: index-page
     </div>
   </div>
   <div class="promo__wide--reverse">
-    <img class="promo__img" src="/assets/img/grunty-headset-arms-folded.svg" alt="">
+    <img class="promo__img" src="/assets/img/grunty-headset-arms-folded.svg" alt="Gruntwork's Grunty">
   </div>
 </section>
 
@@ -112,19 +113,19 @@ slug: index-page
         <img
           class="icons-stack__item-img"
           src="/assets/img/technologies/grayscale/aws.png"
-          alt="">
+          alt="AWS">
       </div>
       <div class="icons-stack__item grid-item grid-item--top">
         <img
           class="icons-stack__item-img"
           src="/assets/img/technologies/grayscale/docker.png"
-          alt="">
+          alt="Docker">
       </div>
       <div class="icons-stack__item grid-item grid-item--top-right">
         <img
           class="icons-stack__item-img"
           src="/assets/img/technologies/grayscale/mysql.png"
-          alt="">
+          alt="MySQL">
       </div>
       <div class="icons-stack__item grid-item grid-item--bottom-left">
         <img
@@ -136,21 +137,21 @@ slug: index-page
         <img
           class="icons-stack__item-img"
           src="/assets/img/technologies/grayscale/terraform.png"
-          alt="">
+          alt="Terraform">
       </div>
       <div class="icons-stack__item grid-item grid-item--bottom-right">
         <img
           class="icons-stack__item-img"
           src="/assets/img/technologies/grayscale/devops.png"
-          alt="">
+          alt="DevOps">
       </div>
     </div>
-    <img src="/assets/img/boxes.svg" alt="" class="pull-right hidden-xs">
+    <img src="/assets/img/boxes.svg" alt="Placeholder Boxes" class="pull-right hidden-xs">
   </div>
 </section>
 
 <section class="img-placeholder">
-  <img src="/assets/img/arrow.svg" alt="" class="">
+  <img src="/assets/img/arrow.svg" alt="Placeholder arrow" class="">
 </section>
 
 <section class="section help">
@@ -160,33 +161,33 @@ slug: index-page
   <div class="help__container">
     <div class="icons-stack">
       <div class="icons-stack__item">
-        <img class="icons-stack__item-icon" src="/assets/img/icons/earth.svg" alt="">
+        <img class="icons-stack__item-icon" src="/assets/img/icons/earth.svg" alt="Gruntwok feature">
         <p class="icons-stack__item-text">Launch a new startup on AWS.</p>
       </div>
       <div class="icons-stack__item">
-        <img class="icons-stack__item-icon" src="/assets/img/icons/boxes.svg" alt="">
+        <img class="icons-stack__item-icon" src="/assets/img/icons/boxes.svg" alt="Gruntwok feature">
         <p class="icons-stack__item-text">Migrate from your own data center to AWS.</p>
       </div>
       <div class="icons-stack__item">
-        <img class="icons-stack__item-icon" src="/assets/img/icons/lock.svg" alt="">
+        <img class="icons-stack__item-icon" src="/assets/img/icons/lock.svg" alt="Gruntwok feature">
         <p class="icons-stack__item-text">Implement security best practices.</p>
       </div>
       <div class="icons-stack__item">
-        <img class="icons-stack__item-icon" src="/assets/img/icons/award.svg" alt="">
+        <img class="icons-stack__item-icon" src="/assets/img/icons/award.svg" alt="Gruntwok feature">
         <p class="icons-stack__item-text">Achieve compliance (e.g. HIPAA, PCI).</p>
       </div>
       <div class="icons-stack__item">
-        <img class="icons-stack__item-icon" src="/assets/img/icons/tasklist.svg" alt="">
+        <img class="icons-stack__item-icon" src="/assets/img/icons/tasklist.svg" alt="Gruntwok feature">
         <p class="icons-stack__item-text">Achieve maintainable infrastructure-as-code with Terraform.</p>
       </div>
       <div class="icons-stack__item">
-        <img class="icons-stack__item-icon" src="/assets/img/icons/time.svg" alt="">
+        <img class="icons-stack__item-icon" src="/assets/img/icons/time.svg" alt="Gruntwok feature">
         <p class="icons-stack__item-text">Reduce the time from idea to deployment.</p>
       </div>
     </div>
     <div class="partners">
-      <div class="partners__item"><img src="/assets/img/partners/aws.png" alt=""></div>
-      <div class="partners__item"><img src="/assets/img/partners/hashicorp.png" alt=""></div>
+      <div class="partners__item"><img src="/assets/img/partners/aws.png" alt="Gruntwork parterns with AWS"></div>
+      <div class="partners__item"><img src="/assets/img/partners/hashicorp.png" alt="Gruntwork partners with Hashicorp"></div>
     </div>
     <div class="cta-container">
       <a href="#" class="link-bordered link-bordered--upper">See products & services</a>
@@ -202,14 +203,14 @@ slug: index-page
     <div class="icons-stack">
       {% for client in site.data.clients limit:6 %}
       <div class="icons-stack__item">
-        <img class="icons-stack__item-img--fixed" src="/assets/img/{{ client.logo }}" alt="">
+        <img class="icons-stack__item-img--fixed" src="/assets/img/{{ client.logo }}" alt="{{ client.name }}">
         <p class="icons-stack__item-heading">{{ client.name }}</p>
         <p class="icons-stack__item-text">{{ client.summary }}</p>
         <a href="/clients#{{ client.id }}" class="case-study__link"><span class="link-bordered">Read more</span></a>
       </div>
       {% endfor %}
       <div class="cta-container">
-        <a href="#" class="link-bordered link-bordered--upper">See all clients</a>
+        <a href="/clients" class="link-bordered link-bordered--upper">See all clients</a>
       </div>
     </div>
   </div>
