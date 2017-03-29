@@ -200,36 +200,14 @@ slug: index-page
   </header>
   <div class="case-studies__container">
     <div class="icons-stack">
+      {% for client in site.data.clients limit:6 %}
       <div class="icons-stack__item">
-        <img class="icons-stack__item-img--fixed" src="/assets/img/client-logos/adacio.png" alt="">
-        <p class="icons-stack__item-heading">EarlyWarning</p>
-        <p class="icons-stack__item-text">Delivering innovative payment and risk solutions to financial institutions nationwide.</p>
+        <img class="icons-stack__item-img--fixed" src="/assets/img/{{ client.logo }}" alt="">
+        <p class="icons-stack__item-heading">{{ client.name }}</p>
+        <p class="icons-stack__item-text">{{ client.summary }}</p>
+        <a href="/clients#{{ client.id }}" class="case-study__link"><span class="link-bordered">Read more</span></a>
       </div>
-      <div class="icons-stack__item">
-        <img class="icons-stack__item-img--fixed" src="/assets/img/client-logos/realestate.co.nz.png" alt="">
-        <p class="icons-stack__item-heading">RealEstate NZ</p>
-        <p class="icons-stack__item-text">Number one property site with the most properties for sale from every real estate brand in the country.</p>
-      </div>
-      <div class="icons-stack__item">
-        <img class="icons-stack__item-img--fixed" src="/assets/img/client-logos/intel.png" alt="">
-        <p class="icons-stack__item-heading">Intel</p>
-        <p class="icons-stack__item-text">Is an engine of change in the software manageability core platforms field.</p>
-      </div>
-      <div class="icons-stack__item">
-        <img class="icons-stack__item-img--fixed" src="/assets/img/client-logos/cybermark.png" alt="">
-        <p class="icons-stack__item-heading">Instrumental</p>
-        <p class="icons-stack__item-text">Empowering engineering teams to find and fix issues quickly.</p>
-      </div>
-      <div class="icons-stack__item">
-        <img class="icons-stack__item-img--fixed" src="/assets/img/client-logos/runtriz.png" alt="">
-        <p class="icons-stack__item-heading">DHI Group</p>
-        <p class="icons-stack__item-text">Connecting the best tech talent with job opportunities around the world.</p>
-      </div>
-      <div class="icons-stack__item">
-        <img class="icons-stack__item-img--fixed" src="/assets/img/client-logos/bolste.png" alt="">
-        <p class="icons-stack__item-heading">Bolste</p>
-        <p class="icons-stack__item-text">Collaboration software built for businesses to plan, align, communicate & accelerate success.</p>
-      </div>
+      {% endfor %}
       <div class="cta-container">
         <a href="#" class="link-bordered link-bordered--upper">See all clients</a>
       </div>
