@@ -156,10 +156,41 @@
 
 .posts__container {
   @include make-row();
+
+  @media (min-width: 768px) {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
 }
 .post {
   @include make-sm-column(6);
+
+  @media (min-width: 768px) {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
   text-align: left;
-  margin-top: 20px;
+  margin-top: 40px;
   margin-bottom: 20px;
+}
+
+.post__title {
+  font-family: 'Dosis';
+  font-weight: lighter;
+  font-size: 26px;
+  margin-bottom: 5px;
+}
+
+.post__body {
+  color: rgba(255,255,255,0.5);
+  flex: 1;
+  margin-bottom: 10px;
+}
+
+.post__date {
+  font-size: 15px;
+  margin-bottom: 10px;
 }
