@@ -121,13 +121,15 @@
   @include make-sm-column-offset(1);
 }
 .help__container,
-.case-studies__container {
+.case-studies__container,
+.posts__container {
   margin-top: 50px;
 }
 .case-study__link {
   font-size: 16px;
 }
 .help,
+.posts,
 .case-studies {
   text-align: center;
   margin-top: 100px;
@@ -152,4 +154,45 @@
 }
 .img-placeholder {
   text-align: center;
+}
+
+.posts__container {
+  @include make-row();
+
+  @media (min-width: 768px) {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+.post {
+  @include make-sm-column(6);
+
+  @media (min-width: 768px) {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  text-align: left;
+  margin-top: 40px;
+  margin-bottom: 20px;
+}
+
+.post__title {
+  font-family: 'Dosis';
+  font-weight: lighter;
+  font-size: 26px;
+  margin-bottom: 5px;
+}
+
+.post__body {
+  color: rgba(255,255,255,0.5);
+  flex: 1;
+  margin-bottom: 10px;
+}
+
+.post__date {
+  font-size: 15px;
+  margin-bottom: 10px;
 }
