@@ -1,22 +1,23 @@
 var classHelp = require('./utils/classes');
 
-var moreInfoButtons = document.querySelectorAll('.package__cta');
+var moreInfoButtons = document.querySelectorAll('.package-container');
 
 for (i = 0; i < moreInfoButtons.length; i++) {
   moreInfoButtons[i].addEventListener('click', toggle, false);
 }
 
 function toggle (e) {
-  e.preventDefault();
+  if (e.target.tagName === 'A') {
+    return true;
+  }
 
-  var package = this.parentNode.parentNode.parentNode;
+  e.preventDefault();
+  var package = this;
 
   var textContainer = package.querySelector('.package__text');
   if (classHelp.hasClass(package, 'open')) {
     classHelp.removeClass(package, 'open');
-    this.innerHTML = 'More info'
   } else {
     classHelp.addClass(package, 'open');
-    this.innerHTML = 'Less info'
   }
 }

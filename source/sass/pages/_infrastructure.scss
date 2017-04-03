@@ -8,8 +8,9 @@
   margin-top: 15px;
   background-image: linear-gradient(rgba(49, 52, 78, 0.5), #161D26);
   border: 1px solid rgba(100, 100, 100, 0.6);
-
+  position: relative;
   opacity: 0.6;
+  cursor: pointer;
 
   &:hover,
   &.open {
@@ -25,11 +26,8 @@
   @include make-row()
 }
 .package-text {
-  @include make-md-column(10);
-}
-.package-action {
-  @include make-md-column(2);
-  text-align: center;
+  @include make-md-column(11);
+  padding: 30px;
 }
 .package__cta {
   @extend .link-bordered;
@@ -55,12 +53,13 @@
 }
 .package__overlay {
   position: absolute;
-  top: 0;
+  top: 40%;
   left: 0;
   right: 0;
   bottom: 0;
   background-image: linear-gradient(transparent, #161D26);
   transition: background-image 0.1s;
+  z-index: 9999;
 
   .open & {
     background: none;

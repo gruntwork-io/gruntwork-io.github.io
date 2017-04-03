@@ -59,20 +59,17 @@ slug: infra-page
     <div class="packages">
       {% for package in site.data.packages %}
         <div class="package-container">
+          <div class="package__overlay"></div>
           <div class="package">
             <div class="package-text">
               <img src="/assets/img/blue-box.svg" alt="Placeholder box" class="package__image">
               <div class="package__title">{{package.name}}</div>
               <div class="package__text">
-                <div class="package__overlay"></div>
                 {{package.description}}
                 <div class="package__link">
                   <a target="blank" href="{{ package.docs_url }}" class="link-bordered">Documentation</a>
                 </div>
               </div>
-            </div>
-            <div class="package-action">
-              <a href="/contact" class="package__cta">More Info</a>
             </div>
           </div>
         </div>
@@ -98,11 +95,6 @@ slug: infra-page
         {% endfor %}
         </ul>
       </div>
-      {% if forloop.index0 == 3 %}
-        <section class="section text-center">
-          <img data-src="/assets/img/empty-boxes.svg" alt="Placeholder boxes" class="lazyload">
-        </section>
-      {% endif %}
     {% endfor %}
   </section>
 </section>
