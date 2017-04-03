@@ -5,5 +5,6 @@ var readMoreBtn = document.querySelector('.read-more-btn')
 readMoreBtn.addEventListener('click', function (event) {
   event.preventDefault();
 
-  scrollTo(document.body, document.querySelector('#promo').offsetTop, 300);
+  // scrollTo(document.body, document.querySelector('#promo').offsetTop, 300);
+  scrollTo(document.querySelector('#promo').offsetTop, 300);
 })
