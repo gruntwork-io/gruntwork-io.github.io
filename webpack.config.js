@@ -64,12 +64,12 @@ if (__DEV__) {
       {
         loader: 'css-loader',
         options: {
-          sourceMap: true
+          sourceMap: false
         }
       }, {
         loader: 'postcss-loader',
         options: {
-          sourceMap: true,
+          sourceMap: false,
           plugins: function () {
             return [
               require('precss'),
@@ -80,7 +80,7 @@ if (__DEV__) {
       }, {
         loader: 'sass-loader',
         options: {
-          sourceMap: true
+          sourceMap: false
         }
       }
     ]
@@ -127,7 +127,7 @@ module.exports = {
     ],
   },
   plugins: plugins,
-  devtool: 'eval-cheap-module-source-map',
+  devtool: __DEV__ ? 'eval' : 'source-map',
   devServer: {
     hotOnly: true,
     publicPath: '/assets/',
