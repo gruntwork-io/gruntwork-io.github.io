@@ -45,7 +45,7 @@ submitButton.addEventListener('click', function (e) {
 
         inCall = false;
         submitButton.innerHTML = 'Submit';
-        window.location.replace(response.data.next);
+        window.location.replace('/thanks');
       })
       .catch(function (error) {
 

@@ -16,7 +16,6 @@ slug: contact-page
   <div class="row">
     <div class="col-sm-6 col-sm-offset-3">
       <form class="contact-form" method="post" action="https://formspree.io/{{site.data.contact.email.url}}">
-        <input type="hidden" name="_next" value="{{ site.url }}/thanks/" />
         <input type="hidden" name="_subject" value="New inquiry from {{ site.url }}" />
         <input type="hidden" name="_replyto" value="{{site.data.contact.email.url}}" />
         <input type="text" name="_gotcha" style="display:none" />
