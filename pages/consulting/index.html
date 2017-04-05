@@ -69,13 +69,15 @@ permalink: /consulting-training.html
     <p>
       Here are some training resources we’ve put together that you may find helpful:
     </p>
-    <div class="icons-stack resources text-center">
+    <div class="resources">
       {% for resource in site.data.resources %}
-      <div class="icons-stack__item">
-        <img class="icons-stack__item-icon lazyload" data-src="/assets/img/{{ resource.type }}.svg" alt="{{ resource.meta }}">
+      <div class="resource">
+        <div class="resource__img-container">
+          <img class="resource__img lazyload" data-src="/assets/img/{{ resource.type }}.svg" alt="{{ resource.meta }}">
+        </div>
         <a
           href="{{ resource.link }}"
-          class="resources__link">
+          class="resource__link">
           <span class="link-bordered">{{ resource.title }}</span>
         </a>
       </div>

@@ -7,7 +7,21 @@
   margin-top: 50px;
 }
 
-.resources__link {
+.resource {
+  @include make-row();
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.resource__img-container {
+  @include make-md-column(1);
+}
+.resource__img {
+  margin: 0 auto;
+  width: 50px;
+  display: block;
+}
+.resource__link {
+  @include make-md-column(11);
   font-family: 'Dosis';
   font-weight: lighter;
   flex: 1;

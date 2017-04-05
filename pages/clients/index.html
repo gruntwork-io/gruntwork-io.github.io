@@ -16,9 +16,7 @@ permalink: /clients.html
     <h2 class="heading__title">Clients</h2>
     <div class="clients__container">
       {% for client in site.data.clients %}
-        {% capture thecycle %}{% cycle 'odd', 'even' %}{% endcapture %}
         <div class="client" id="{{ client.id }}">
-          {% if thecycle == 'odd' %}
           <div class="client__image">
             <img class="img-responsive lazyload" data-src="/assets/img/{{ client.logo }}" alt="{{ client.name }}">
           </div>
@@ -26,15 +24,6 @@ permalink: /clients.html
             <div class="client__heading">{{ client.name }} <a href="#{{ client.id }}" class="permalink"></a></div>
             <p class="paragraph-light">{{ client.description }}</p>
           </div>
-          {% else %}
-          <div class="client__image client__image--reverse">
-            <img class="img-responsive lazyload" data-src="/assets/img/{{ client.logo }}" alt="{{ client.name }}">
-          </div>
-          <div class="client__text client__text--reverse">
-            <div class="client__heading">{{ client.name }}<a href="#{{ client.id }}" class="permalink"></a></div>
-            <p class="paragraph-light">{{ client.description }}</p>
-          </div>
-          {% endif %}
         </div>
       {% endfor %}
     </div>
