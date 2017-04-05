@@ -199,13 +199,17 @@ slug: index-page
     <h2 class="heading__lead">Case Studies</h2>
   </header>
   <div class="case-studies__container">
-    <div class="icons-stack">
-      {% for client in site.data.clients limit:6 %}
-      <div class="icons-stack__item">
-        <img class="icons-stack__item-img--fixed lazyload" data-src="/assets/img/{{ client.logo }}" alt="{{ client.name }}">
-        <p class="icons-stack__item-heading">{{ client.name }}</p>
-        <p class="icons-stack__item-text">{{ client.summary }}</p>
-        <a href="/clients#{{ client.id }}" class="case-study__link"><span class="link-bordered">Read more</span></a>
+    <div class="clients__container">
+      {% for client in site.data.clients limit:5 %}
+      <div class="client">
+        <div class="client__image">
+          <img class="img-responsive lazyload" data-src="/assets/img/{{ client.logo }}" alt="{{ client.name }}">
+        </div>
+        <div class="client__text">
+          <div class="client__heading">{{ client.name }}</div>
+          <p class="paragraph-light">{{ client.summary }}</p>
+          <a href="/clients#{{ client.id }}" class="case-study__link"><span class="link-bordered">Read more</span></a>
+        </div>
       </div>
       {% endfor %}
       <div class="cta-container">
