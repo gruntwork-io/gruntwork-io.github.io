@@ -26,7 +26,7 @@
 }
 
 .promo__img {
-  width: 80%;
+  width: 120%;
   display: block;
   margin: 0 auto;
 
@@ -84,6 +84,7 @@
   @media (min-width: 1200px) {
     .heading__lead {
       white-space: nowrap;
+      margin: 0;
     }
   }
 }
@@ -94,15 +95,15 @@
   font-weight: bold;
   font-size: 14px;
   @media (min-width: 768px) {
-    margin-top: -300px;
+    margin-top: -100px;
   }
 }
 .hero__left {
-  @include make-sm-column(4);
+  @include make-sm-column(5);
   margin-top: 50px;
 }
 .hero__right {
-  @include make-sm-column(8);
+  @include make-sm-column(7);
   text-align: right;
 }
 
@@ -117,8 +118,6 @@
   @include make-row();
 }
 .help__container {
-  @include make-sm-column(10);
-  @include make-sm-column-offset(1);
 }
 .help__container,
 .case-studies__container,
