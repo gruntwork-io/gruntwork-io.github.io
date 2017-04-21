@@ -17,7 +17,6 @@ slug: contact-page
     <div class="col-sm-6 col-sm-offset-3">
       <form class="contact-form" method="post" action="https://formspree.io/{{site.data.contact.email.url}}">
         <input type="hidden" name="_subject" value="New inquiry from {{ site.url }}" />
-        <input type="hidden" name="_replyto" value="{{site.data.contact.email.url}}" />
         <input type="text" name="_gotcha" style="display:none" />
         <div class="form-group">
           <label for="name">Name*</label>
@@ -49,8 +48,8 @@ slug: contact-page
                       <input
                         type="checkbox"
                         value="Interested"
-                        id="{{package.name | slugify}}"
-                        name="{{package.name | slugify}}"/>
+                        id="infra-package-{{package.name | slugify}}"
+                        name="infra-package-{{package.name | slugify}}"/>
                       <label for="{{package.name | slugify}}"></label>
                       <span>{{package.name}}</span>
                       <div class="package-info">
