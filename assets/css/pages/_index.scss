@@ -99,17 +99,18 @@
   font-size: 14px;
 }
 .hero__left {
-  @include make-sm-column(5);
+  @include make-sm-column(4);
   margin-top: 50px;
 }
 .hero__right {
-  @include make-sm-column(7);
+  @include make-sm-column(8);
   text-align: right;
+  padding: 0;
 }
 
 .hero__img {
   @media (min-width: 768px) {
-    margin-right: -18%;
+    margin-right: -21%;
     display: inline;
   }
 }
