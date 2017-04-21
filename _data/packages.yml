@@ -25,7 +25,8 @@
     zero-downtime, rolling deployment of new Docker container versions, configures load
     balancing, health checks, and service discovery using ELBs, scales the number of nodes
     and tasks up and down based on traffic, and provides automatic recovery of failed nodes
-    and Tasks.
+    and Tasks. We even have experimental support for CUDA on ECS, which allows you to build
+    machine learning apps with Docker!
 - name: "AMI Cluster"
   fa_icon: "cubes"
   docs_url: "https://github.com/gruntwork-io/module-asg-public"
@@ -79,3 +80,14 @@
     persists data between redeploys, configures the Instance with a public IP and DNS A record
     (optional), uses an AWS Lambda job to backup the Instance on a cron schedule, and adds an
     alarm that goes off if a backup job doesn’t run within a scheduled time period.
+- name: "Static Assets"
+  fa_icon: "globe"
+  description: |
+    Deploy your static content and static websites on S3, optionally with a CloudFront distribution in front of it as a
+    CDN. Includes bucket versioning, access logging, cache settings, Route 53 DNS entries, and TLS certs.
+- name: "MongoDB Cluster"
+  fa_icon: "database"
+  description: |
+    Deploy a MongoDB cluster, including replica sets, sharding, an automated bootstrapping process, backup, recovery,
+    and OS optimizations.
+
