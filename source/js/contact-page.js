@@ -38,7 +38,7 @@ submitButton.addEventListener('click', function (e) {
     submitButton.innerHTML = 'Loading...';
     axios({
       method: 'POST',
-      url: 'https://formspree.io/konmpar@gmail.com',
+      url: 'https://formspree.io/info@gruntwork.io',
       data: data
     })
       .then(function (response) {
