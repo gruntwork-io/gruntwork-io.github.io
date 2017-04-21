@@ -21,21 +21,25 @@ extra_js: page-contact.js
         <input type="text" name="_gotcha" style="display:none" />
         <div class="form-group">
           <label for="name">Name*</label>
-          <input type="text" class="form-control" id="name" name="name">
+          <input type="text" class="form-control" id="name" name="name" required>
         </div>
         <div class="row">
           <div class="col-sm-6">
             <div class="form-group">
               <label for="email">Email Address*</label>
-              <input type="email" class="form-control" id="email" name="email">
+              <input type="email" class="form-control" id="email" name="email" required>
             </div>
           </div>
           <div class="col-sm-6">
             <div class="form-group">
-              <label for="company">Company Name</label>
-              <input type="text" class="form-control" id="company" name="company">
+              <label for="company">Company Name*</label>
+              <input type="text" class="form-control" id="company" name="company" required>
             </div>
           </div>
+        </div>
+        <div class="form-group">
+          <label for="overview">Briefly describe what you're working on*</label>
+          <textarea name="overview" id="overview" class="form-control" rows="3" required></textarea>
         </div>
         <div class="form-group">
           <label for="">Tell us what you’re interested in (optional)</label>
