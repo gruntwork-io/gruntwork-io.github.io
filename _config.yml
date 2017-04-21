@@ -11,7 +11,6 @@ highlighter: rouge
 timezone: 'America/Los_Angeles'
 
 assets_base_url: '/assets/'
-inject_styles: true
 ga_tracker: UA-76462621-1
 
 exclude:
@@ -29,6 +28,10 @@ exclude:
  - webpack.config.js
  - source
  - node_modules
+
+sass:
+  sass_dir: "/assets/css"
+  style: :compressed
 
 # Plugins (GitHub Pages only support a few)
 gems:

@@ -52,25 +52,6 @@ On OS X, using the [docker-osx-dev](https://github.com/brikis98/docker-osx-dev) 
    monitoring and metrics.
 6. We use [webpack](http://webpack.js.org) to parse and bundle CSS and JS.
 
-## Develop
-
-To start a development environment locally:
-
-1. Use Git to clone this repo
-2. Make sure you have [Jekyll](http://jekyllrb.com/docs/installation/) installed
-3. Just the first time: `bundle install && npm install`
-4. Start the webpack development server and the Jekyl server: `npm run dev`
-6. Go to `http://localhost:8080`
-
-While in development(`_config.dev.yml`), Jekyll will fetch the assets from webpack's url.
-
-Assets are kept into `assets` folder and tracked by the VCS. Do not edit those directly. Edit
-the `source` folder files and let webpack compile them.
-
-## Develop
-
-Run `npm run build` after you are satisfied with the changes you've made.
-
 ## License
 
 This code is released under the MIT License. See LICENSE.txt.
