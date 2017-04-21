@@ -6,15 +6,28 @@ description: "Get up and running on AWS with DevOps best practices and world-cla
 full_company_name: "Gruntwork, LLC"
 thumbnail_path: "logo/gruntwork-logo-standalone.png"
 
-# Jekyll build settings
-paginate: 10
-paginate_path: "/writing/page:num"
-permalink: "/writing/:year/:month/:day/:title/"
-sass:
-  sass_dir: "/assets/css"
-  style: :compressed
 highlighter: rouge
 timezone: 'America/Los_Angeles'
+
+assets_base_url: '/assets/'
+inject_styles: true
+ga_tracker: UA-76462621-1
+
+exclude:
+ - .dockerignore
+ - .editorconfig
+ - .gitignore
+ - docker-compose.yml
+ - Dockerfile
+ - Gemfile
+ - Gemfile.lock
+ - jekyll-serve.sh
+ - LICENSE.txt
+ - package.json
+ - README.md
+ - webpack.config.js
+ - source
+ - node_modules
 
 # Plugins (GitHub Pages only support a few)
 gems:

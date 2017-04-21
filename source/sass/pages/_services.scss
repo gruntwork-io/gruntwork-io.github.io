@@ -1,0 +1,43 @@
+.services {
+  margin-top: 100px;
+}
+.services__container {
+  @extend .col-md-8;
+  @extend .col-md-offset-2;
+
+  @media (min-width: 768px) {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    /* Safari fix !?!? */
+    &:before {
+      display: initial;
+    }
+  }
+}
+.service {
+  @include make-sm-column(6);
+
+  @media (min-width: 768px) {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  margin-top: 40px;
+  margin-bottom: 40px;
+  padding-bottom: 15px;
+}
+.service__title {
+  font-family: 'Dosis';
+  font-size: 32px;
+  font-weight: lighter;
+  margin-bottom: 10px;
+  line-height: 40px;
+}
+
+.service__paragraph {
+  @extend .paragraph-light;
+  flex: 1;
+}

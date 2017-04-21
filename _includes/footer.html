@@ -1,17 +1,115 @@
-<footer id="footer" class="wrapper style1-alt">
-  <div class="inner mx-auto">
-    <ul class="menu center">
-      <li>&copy; {{ site.time | date: "%Y" }} {{ site.full_company_name }}. All rights reserved.</li>
-      <li>Design: <a href="http://html5up.net" target="_blank">HTML5 UP</a></li>
-      <li>
-        {% for contact_key_value in site.data.contact %}
-          {% assign contact = contact_key_value[1] %}
-          {% if contact.type == 'social' or contact.label == 'Email' %}
-            {% capture url %}{% if contact.label == 'Email' %}mailto:{{ contact.url }}{% else %}{{ contact.url }}{% endif %}{% endcapture %}
-            <a href="{{ url }}" target="_blank" title="{{ contact.label }}" class="no-border"><i class="fa fa-fw {{ contact.icon }}"></i></a>
-          {% endif %}
-        {% endfor %}
-      </li>
-    </ul>
+<footer id="footer" class="footer">
+  {% if page.slug == "index-page" %}
+  <img data-src="/assets/img/grunty-hat.png" alt="Grunty Logo" class="footer__logo lazyload">
+  {% else %}
+  <img data-src="/assets/img/grunty.svg" alt="Grunty Logo" class="footer__logo lazyload">
+  {% endif %}
+  <div class="footer__header">
+    <h1 class="footer__heading">Take the grunt work out of DevOps.</h1>
+    <a href="/contact" class="link-btn">Contact us</a>
+  </div>
+  <div class="footer__body">
+    <div class="footer__container">
+      <div class="footer-menu">
+        <p class="footer-menu__heading">Products & Services</p>
+        <a
+          href="/infrastructure"
+          class="footer-menu__link">
+          Infrastructure Packages
+        </a>
+        <a
+          href="/stacks"
+          class="footer-menu__link">
+          Stacks
+        </a>
+        <a
+          href="/consulting-training"
+          class="footer-menu__link">
+          Consulting & Training
+        </a>
+        <a
+          href="/plans"
+          class="footer-menu__link">
+          Subscription & Support
+        </a>
+      </div>
+      <div class="footer-menu">
+        <p class="footer-menu__heading">Gruntwork</p>
+        <a
+          href="/about"
+          class="footer-menu__link">
+          About
+        </a>
+        <a
+          href="/clients"
+          class="footer-menu__link">
+          Clients
+        </a>
+        <a
+          href="{{site.data.contact.blog.url}}"
+          class="footer-menu__link">
+          Blog
+        </a>
+        <a
+          href="{{site.data.contact.careers.url}}"
+          class="footer-menu__link">
+          Careers
+        </a>
+      </div>
+      <div class="footer-menu">
+        <p class="footer-menu__heading">Support</p>
+        <a
+          href="/consulting-training"
+          class="footer-menu__link">
+          Training
+        </a>
+        <a
+          href="/consulting-training#resources"
+          class="footer-menu__link">
+          Resources
+        </a>
+        <a
+          href="mailto:support@gruntwork.io"
+          class="footer-menu__link">
+          Submit a Ticket
+        </a>
+      </div>
+      <div class="footer-menu">
+        <p class="footer-menu__heading">Connect</p>
+        <a
+          href="{{site.data.contact.github.url}}"
+          class="footer-menu__link">
+          Github
+        </a>
+        <a
+          href="{{site.data.contact.twitter.url}}"
+          class="footer-menu__link">
+          Twitter
+        </a>
+        <a
+          href="{{site.data.contact.linkedin.url}}"
+          class="footer-menu__link">
+          LinkedIn
+        </a>
+        <a
+          href="/newsletter"
+          class="footer-menu__link">
+          Newsletter
+        </a>
+        <a
+          href="{{site.data.contact.facebook.url}}"
+          class="footer-menu__link">
+          Facebook
+        </a>
+        <a
+          href="/contact"
+          class="footer-menu__link">
+          Contact Us
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="copyright">
+    © 2017 Gruntwork, LLC. All rights reserved.
   </div>
 </footer>

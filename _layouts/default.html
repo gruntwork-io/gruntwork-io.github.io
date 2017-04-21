@@ -3,11 +3,11 @@
   <head>
     {% include head.html %}
   </head>
-  <body class="is-loading">
-    {% unless page.no_sidebar or layout.no_sidebar %}
-      {% include sidebar.html %}
-    {% endunless %}
-    {{ content }}
+  <body{% if page.slug %} class="{{ page.slug }}" {% endif %}>
+    {% include navbar.html %}
+    <div class="container">
+      {{ content }}
+    </div>
     {% include footer.html %}
     {% include scripts.html %}
   </body>

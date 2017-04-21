@@ -1,0 +1,32 @@
+{
+  "name": "gruntwork-io.github.io",
+  "version": "1.0.0",
+  "description": "This is the code for the [Gruntwork website](http://www.gruntwork.io).",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently 'bundle exec jekyll serve --config _config.yml,_config.dev.yml' 'webpack-dev-server --inline --hot'",
+    "build": "NODE_ENV=production webpack -p && bundle exec jekyll build"
+  },
+  "homepage": "https://github.com/kbariotis/gruntwork-io.github.io#readme",
+  "devDependencies": {
+    "autoprefixer": "^6.7.6",
+    "bootstrap-sass": "^3.3.7",
+    "concurrently": "^3.4.0",
+    "css-loader": "^0.27.1",
+    "extract-text-webpack-plugin": "^2.1.0",
+    "file-loader": "^0.10.1",
+    "lazysizes": "^3.0.0",
+    "postcss-loader": "^1.3.3",
+    "precss": "^1.4.0",
+    "sass-loader": "^6.0.3",
+    "url-loader": "^0.5.8",
+    "webpack": "^2.2.1",
+    "webpack-dev-server": "^2.4.1",
+    "style-loader": "^0.13.2",
+    "node-sass": "^4.5.0"
+  },
+  "dependencies": {
+    "axios": "^0.15.3",
+    "form-serialize": "^0.7.1"
+  }
+}

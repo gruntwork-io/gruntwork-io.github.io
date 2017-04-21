@@ -1,4 +1,4 @@
-{% assign base_favicon_url = "/assets/img/favicon" %}
+{% assign base_favicon_url = site.assets_base_url | append: 'img/favicon' %}
 
 <link rel="icon" type="image/x-icon" href="{{ base_favicon_url }}/favicon.ico">
 <link rel="apple-touch-icon" sizes="57x57" href="{{ base_favicon_url }}/apple-icon-57x57.png">
@@ -18,3 +18,4 @@
 <meta name="msapplication-TileColor" content="#ffffff">
 <meta name="msapplication-TileImage" content="{{ base_favicon_url }}/ms-icon-144x144.png">
 <meta name="theme-color" content="#ffffff">
+<meta name="background-color" content="#161d25">

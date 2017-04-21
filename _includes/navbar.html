@@ -1,0 +1,58 @@
+<header class="navigation">
+  <div class="navigation__container">
+    <div class="navigation__logo">
+      <a href="/" class="logo-text">Gruntwork</a>
+    </div>
+    <div class="navigation__menu">
+      <nav class="navigation__container">
+        <input type="checkbox" id="nav" /><label for="nav"></label>
+        <ul class="list-inline">
+          <li class="{% if page.url == '/consulting-training.html' %}active{% endif %}{% if page.url == '/stacks.html' %}active{% endif %}{% if page.url == '/infrastructure.html' %}active{% endif %}{% if page.url == '/plans.html' %}active{% endif %}{% if page.url == '/products-services.html' %}active{% endif %}">
+            <a
+              href="/products-services"
+              class="navigation__menu-link">
+                Products & Services
+            </a>
+            <ul class="list-unstyled">
+              <li class="{% if page.url == '/infrastructure.html' %}active{% endif %}">
+                <a
+                  href="/infrastructure"
+                  class="navigation__menu-link with-icon boxes">Infrastructure Packages</a>
+              </li>
+              <li class="{% if page.url == '/stacks.html' %}active{% endif %}">
+                <a
+                  href="/stacks"
+                  class="navigation__menu-link with-icon stack">Stacks</a>
+              </li>
+              <li class="{% if page.url == '/consulting-training.html' %}active{% endif %}">
+                <a
+                  href="/consulting-training"
+                  class="navigation__menu-link with-icon book">Consulting & Training</a>
+              </li>
+              <li class="{% if page.url == '/plans.html' %}active{% endif %}">
+                <a
+                  href="/plans"
+                  class="navigation__menu-link with-icon tag">Subscription & Support</a>
+              </li>
+            </ul>
+          </li>
+          <li class="{% if page.url == '/clients.html' %}active{% endif %}">
+            <a
+              href="/clients"
+              class="navigation__menu-link">Clients</a>
+          </li>
+          <li class="{% if page.url == '/about.html' %}active{% endif %}">
+            <a
+              href="/about"
+              class="navigation__menu-link">About</a>
+          </li>
+          <li class="{% if page.url == '/contact.html' %}active{% endif %}">
+            <a
+              href="/contact"
+              class="navigation__menu-link navigation__menu-link--emphasis">Contact us</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</header>
