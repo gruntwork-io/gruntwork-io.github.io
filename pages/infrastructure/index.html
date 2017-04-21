@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Pre-assembled Stacks | Gruntwork
+title: Infrastructure Packages | Gruntwork
 excerpt: Reusable, battle-tested, production-ready solutions for common infrastructure problems.
 permalink: /infrastructure.html
 slug: infra-page
@@ -36,7 +36,7 @@ extra_js: page-infra-packages.js
       </div>
       <div class="icons-stack__item grid-item grid-item--top-right">
         <img class="icons-stack__item-icon" src="/assets/img/sync.svg" alt="Gruntwork feature">
-        <p class="icons-stack__item-text">Commercially supported by Gruntwork, with regular updates, maintenance, patches, and new features.</p>
+        <p class="icons-stack__item-text">Commercially supported by Gruntwork.</p>
       </div>
       <div class="icons-stack__item grid-item grid-item--bottom-left">
         <img class="icons-stack__item-icon" src="/assets/img/badge.svg" alt="Gruntwork feature">
@@ -48,7 +48,7 @@ extra_js: page-infra-packages.js
       </div>
       <div class="icons-stack__item grid-item grid-item--bottom-right">
         <img class="icons-stack__item-icon" src="/assets/img/icons/boxes.svg" alt="Gruntwork feature">
-        <p class="icons-stack__item-text">Customizable, configurable, and composable, so you can build your infrastructure how you want.</p>
+        <p class="icons-stack__item-text">Customizable, configurable, and composable.</p>
       </div>
     </div>
   </section>
@@ -67,9 +67,11 @@ extra_js: page-infra-packages.js
               <div class="package__title">{{package.name}}</div>
               <div class="package__text">
                 {{package.description}}
-                <div class="package__link">
-                  <a target="blank" href="{{ package.docs_url }}" class="link-bordered">Documentation</a>
-                </div>
+                {% if package.docs_url %}
+                  <div class="package__link">
+                    <a target="blank" href="{{ package.docs_url }}" class="link-bordered">Documentation</a>
+                  </div>
+                {% endif %}
               </div>
             </div>
           </div>
