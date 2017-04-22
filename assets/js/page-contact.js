@@ -3,6 +3,7 @@
 
   gruntwork.setupAccordion();
 
+  var requireFields = ['name', 'email', 'company', 'overview'];
   var inCall = false;
 
   var form = document.querySelector('.contact-form');
@@ -14,22 +15,35 @@
     if (inCall) {
       return;
     }
-    inCall = true;
 
     var data = serialize(form, { hash: true });
-    submitButton.innerHTML = 'Loading...';
+    var hasError = false;
 
-    axios({
-      method: 'POST',
-      url: 'https://formspree.io/info@gruntwork.io',
-      data: data
-    }).then(function (response) {
-      inCall = false;
-      submitButton.innerHTML = 'Submit';
-      window.location.replace('/thanks');
-    }).catch(function (error) {
-      inCall = false;
-      submitButton.innerHTML = 'Submit';
-    });
+    for (var i = 0; i < requireFields.length; i++) {
+      var fieldName = requireFields[i];
+
+      if (!(fieldName in data)) {
+        var field = form.querySelector('[name=' + fieldName + ']');
+        gruntwork.addClass(field.parentNode, 'has-error');
+        hasError = true;
+      }
+    }
+
+    if (!hasError) {
+      inCall = true;
+      submitButton.innerHTML = 'Loading...';
+      axios({
+        method: 'POST',
+        url: 'https://formspree.io/info@gruntwork.io',
+        data: data
+      }).then(function (response) {
+        inCall = false;
+        submitButton.innerHTML = 'Submit';
+        window.location.replace('/thanks');
+      }).catch(function (error) {
+        inCall = false;
+        submitButton.innerHTML = 'Submit';
+      });
+    }
   });
 })(window.gruntwork, window.serialize, window.axios);
