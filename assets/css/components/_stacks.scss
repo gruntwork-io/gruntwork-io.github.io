@@ -1,6 +1,7 @@
 
 .icons-stack {
   @include make-row();
+  margin-top: 40px;
 
   @media (min-width: 768px) {
     display: flex;
@@ -15,9 +16,16 @@
 }
 
 .icons-stack__item {
+  @include make-sm-column(4);
+  @include make-lg-column(4);
+}
+
+.icons-stack-large__item {
   @include make-sm-column(6);
   @include make-lg-column(6);
+}
 
+.icons-stack__item, .icons-stack-large__item {
   padding: 20px 40px;
 
   @media (min-width: 768px) {
@@ -29,8 +37,6 @@
 
 .icons-stack__item-text {
   color: rgba(255, 255, 255, 0.5);
-  padding-left: 20px;
-  padding-right: 20px;
   flex: 1;
 }
 .icons-stack__item-img {
