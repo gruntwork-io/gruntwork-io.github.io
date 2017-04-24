@@ -16,9 +16,9 @@
 
 .icons-stack__item {
   @include make-sm-column(6);
-  @include make-lg-column(4);
+  @include make-lg-column(6);
 
-  padding: 20px;
+  padding: 20px 40px;
 
   @media (min-width: 768px) {
     display: flex;
@@ -36,9 +36,7 @@
 .icons-stack__item-img {
   display: block;
   margin: 0 auto 20px;
-  @media (min-width: $screen-lg) {
-    width: 100%;
-  }
+  max-width: 100%;
 }
 .icons-stack__item-icon {
   display: block;

@@ -9,18 +9,18 @@
   }
 }
 
-.promo__narrow {
+.promo__left {
   @include make-sm-column(5);
 }
-.promo__wide {
+.promo__right {
   @include make-sm-column(7);
 }
 
-.promo__narrow--reverse {
+.promo__left--reverse {
   @include make-sm-column(5);
   @include make-sm-column-push(7);
 }
-.promo__wide--reverse {
+.promo__right--reverse {
   @include make-sm-column(7);
   @include make-sm-column-pull(5);
 }
@@ -38,10 +38,10 @@
   }
 }
 
-.promo__wide--reverse,
-.promo__narrow--reverse,
-.promo__narrow,
-.promo__wide {
+.promo__right--reverse,
+.promo__left--reverse,
+.promo__left,
+.promo__right {
   margin-top: 50px;
   margin-bottom: 50px;
 }
