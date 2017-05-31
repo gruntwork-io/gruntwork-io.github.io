@@ -36,6 +36,13 @@
     versions, configures load balancing, health checks, and service discovery using ELBs,
     scales the number of nodes up and down based on traffic, and provides automatic
     recovery of failed nodes.
+- name: "Lambda"
+  fa_icon: "flash"
+  description: |
+    Deploy and manage Lambda functions with Terraform. This package can automatically upload your code (Python, Java,
+    C#, or JavaScript) to AWS, configure environment variables to expose to the Lambda function, create an IAM role and
+    IAM permissions, associate the function with a VPC, subnets, and security groups, configure the function to run on
+    a scheduled basis, enable versioning/aliasing, and configure an SNS topic or SQS queue as a dead letter target.
 - name: "Security"
   fa_icon: "lock"
   docs_url: "https://github.com/gruntwork-io/module-security-public"
