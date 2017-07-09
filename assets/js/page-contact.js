@@ -33,7 +33,7 @@
       //Set the email subject to include the company name
       var company = document.getElementById('company').value;
       var subjectField = document.getElementById('_subject');
-      subjectField.value = 'New inquiry from {{ site.url }} for ' + company;
+      subjectField.value = 'New inquiry from ' + company + ' on {{ site.url }}';
 
       inCall = true;
       submitButton.innerHTML = 'Loading...';
