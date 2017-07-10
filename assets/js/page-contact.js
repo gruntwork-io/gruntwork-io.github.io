@@ -7,9 +7,9 @@
   var inCall = false;
 
   //Set the email subject to include the company name
-  var company = document.getElementById('company').value || 'Unknown';
-  var subjectField = document.getElementById('_subject');
-  subjectField.value = 'New inquiry from ' + company + ' on {{ site.url }}';
+  //var company = document.getElementById('company').value || 'Unknown';
+  //var subjectField = document.getElementById('_subject');
+  //subjectField.value = 'New inquiry from ' + company + ' on {{ site.url }}';
 
   var form = document.querySelector('.contact-form');
   var submitButton = form.querySelector('.submit-btn');
