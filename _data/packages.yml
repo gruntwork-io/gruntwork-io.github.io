@@ -102,13 +102,33 @@
   description: |
     Deploy a cluster of Apache brokers that can automatically bootstrap themselves. Includes support for automatically
     discovering a ZooKeeper cluster, EBS Volumes for better log performance, automated zero-downtime rolling deployment,
-    end-to-end encryption, OS optimizations, security groups, and IAM policies.
+    end-to-end encryption, OS optimizations, and security groups and IAM policy configuration.
 - name: "ZooKeeper"
   fa_icon: "lock"
   description: |
-    Deploy an Apache ZooKeeper cluster that can automatically bootstrap itself. Includes support for static IP
-    addresses, EBS Volumes for better transaction log performance, automated zero-downtime rolling deployment,
-    security groups, and IAM policies.
+    Deploy an Apache ZooKeeper cluster that can automatically bootstrap itself. Includes support for Exhibitor as a
+    process supervisor and management UI for ZooKeeper, static IP addresses (ENIs), EBS Volumes for better transaction
+    log performance, automated zero-downtime rolling deployment, automatic recovery of failed servers, and security
+    groups and IAM policy configuration.
+- name: "Consul"
+  fa_icon: "lock"
+  description: |
+    Deploy a HashiCorp Consul cluster that can automatically bootstrap itself. Includes support for automatically
+    discovering consul servers and consul agents, configuring dnsmasq to use Consul as a DNS server, access to the
+    Consul UI, automatic recovery of failed servers, and security groups and IAM policy configuration.
+- name: "Nomad"
+  fa_icon: "lock"
+  description: |
+    Deploy a HashiCorp Nomad cluster that can automatically bootstrap itself. Includes support for automatically
+    discovering Consul clusters, running Nomad server clusters, Nomad client clusters, automatic recovery of failed
+    servers, and security groups and IAM policy configuration.
+- name: "Vault"
+  fa_icon: "lock"
+  description: |
+    Deploy a HashiCorp Vault cluster that can automatically bootstrap itself. Includes support for automatically
+    discovering Consul clusters as a high availability backend, using S3 as a storage backend, creating self-signed
+    TLS certificates, updating the OS certificate store, configuring an ELB in front of Vault to allow public access,
+    automatic recovery of failed servers, and security groups and IAM policy configuration.
 - name: "OpenVPN Server"
   fa_icon: "lock"
   description: |
