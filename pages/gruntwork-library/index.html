@@ -25,8 +25,6 @@ footer_heading: Ready to hand off the Gruntwork?
 
             <div class="row row-library">
                 <div class="col-xs-12">
-                    <h2>Infrastructure Packages</h2>
-
                     <div class="modal fade" id="modalPublicRepo" tabindex="-1" role="dialog" aria-labelledby="modalPublicRepoTitle">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
@@ -58,6 +56,8 @@ footer_heading: Ready to hand off the Gruntwork?
                             </div> <!-- modal-content -->
                         </div> <!-- modal-dialog -->
                     </div> <!-- modal -->
+
+                    <h2>Infrastructure Packages</h2>
 
                     <div class="row row-equalize-col-height">
 
@@ -91,6 +91,12 @@ footer_heading: Ready to hand off the Gruntwork?
                             </div> <!-- col -->
                         {% endfor %}
 
+                    </div>
+
+                    <h2>Tools</h2>
+
+                    <div class="row row-equalize-col-height">
+
                         {% for package in site.data.library-tools %}
                             <div class="col-xs-12 col-md-6">
                                 <div class="panel panel-default">
@@ -120,6 +126,12 @@ footer_heading: Ready to hand off the Gruntwork?
                                 </div> <!-- panel-default -->
                             </div> <!-- col -->
                         {% endfor %}
+
+                    </div>
+
+                    <h2>Terraform Module Registry</h2>
+
+                    <div class="row row-equalize-col-height">
 
                         {% for package in site.data.library-terraform-module-registry %}
                             <div class="col-xs-12 col-md-6">
