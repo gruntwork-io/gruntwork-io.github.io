@@ -5,9 +5,7 @@
     </head>
     <body{% if page.slug %} class="{{ page.slug }}" {% endif %}>
         {% include navbar.html %}
-        <div class="container">
-            {{ content }}
-        </div>
+        {{ content }}
         {% include footer.html %}
         {% include scripts.html %}
     </body>
