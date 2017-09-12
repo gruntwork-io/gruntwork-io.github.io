@@ -7,210 +7,165 @@ slug: index-page
 extra_js: page-index.js
 ---
 
-<section class="section">
-  <div class="hero">
-    <div class="hero__left">
-      <header class="heading">
-        <h1 class="heading__lead">DevOps as a Service</h1>
-        <h2 class="heading__text">
-          Get the DevOps practices and AWS infrastructure you’ve always wanted, but never had time for.
-        </h2>
-      </header>
-    </div>
-    <div class="hero__right">
-      <img class="hero__img img-responsive lazyload" data-src="/assets/img/construction.svg" alt="Gruntwork's Grunty'">
-    </div>
-    <div class="hero-cta">
-      <a href="#promo" class="link-bordered link-bordered--upper read-more-btn">Learn more</a>
-    </div>
-  </div>
-</section>
+<div class="main">
+    <div class="section section-hero">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-md-3">
+                    <img class="floating-img-infrastructure-in-a-day" src="/assets/img/infrastructure-in-a-day.png" />
+                </div> <!-- col -->
+                <div class="col-xs-12 col-md-8 col-md-offset-1">
+                    <h1>
+                        Your entire infrastructure.
+                        <br />
+                        Defined as code. In about a day.
+                    </h1>
+                    <p class="lead">We get you up and running on AWS with Terraform. You get 100% of the code.</p>
+                    <p><a href="#" class="btn btn-info" role="button">How it Works</a></p>
+                </div> <!-- col -->
+            </div> <!-- row -->
+        </div> <!-- container -->
+    </div> <!-- section-hero -->
 
-<section class="promo" id="promo">
-  <div class="promo__left--reverse">
-    <img class="promo__img lazyload" data-src="/assets/img/grunty-rest.svg" alt="Gruntwork's Grunty">
-  </div>
-  <div class="promo__right--reverse">
-    <h2 class="promo__heading cyan-blue-gradient">World-class infrastructure code</h2>
-    <p class="promo__text">
-      Get access to battle-tested Infrastructure Packages written in Terraform, Go, and Bash that contain pre-written
-      solutions for all your infrastructure needs:
-    </p>
-    <ul class="bordered-list promo__list">
-      <li>Network topology</li>
-      <li>Docker cluster</li>
-      <li>Monitoring and alerting</li>
-      <li>Continuous delivery</li>
-      <li>Relational Database</li>
-      <li>And much more</li>
-    </ul>
-    <p class="promo__text">
-      You get 100% of the source code, which has been proven in production at many companies. If you hired a full-time
-      DevOps team for a year, this is exactly what they’d build&mdash;but now you can have it in 1-2 weeks.
-    </p>
-    <div class="promo__cta">
-      <a href="/infrastructure" class="link-bordered link-bordered--upper">
-        See all Infrastructure Packages
-      </a>
-    </div>
-  </div>
-</section>
+    <div class="section section-blue section-sub-hero">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-md-8 col-md-offset-4">
+                    <div class="row row-center-vertically">
+                        <div class="col-md-5">
+                            <img src="/assets/img/logo-hashicorp.png" />
+                        </div> <!-- col -->
+                        <div class="col-md-6 col-md-offset-1">
+                            <p>Experts in:</p>
+                            <div class="row row-center-vertically">
+                                <div class="col-xs-6">
+                                    <img src="/assets/img/logo-aws.png" />
+                                </div> <!-- col -->
+                                <div class="col-xs-6">
+                                    <img src="/assets/img/logo-terraform.png" />
+                                </div> <!-- col -->
+                            </div> <!-- row -->
+                            <p class="margin-bottom-none" style="margin-top: 10px;">Coming soon: Azure and Google Cloud!</p>
+                        </div> <!-- col -->
+                    </div> <!-- row -->
+                </div> <!-- col -->
+            </div> <!-- row -->
+        </div> <!-- container -->
+    </div> <!-- section-blue -->
 
-<section class="promo">
-  <div class="promo__left">
-    <img class="promo__img lazyload" data-src="/assets/img/grunty-headset-arms-folded.svg" alt="Gruntwork's Grunty">
-  </div>
-  <div class="promo__right">
-    <h1 class="promo__heading purple-red-gradient">Commercially-supported infrastructure code</h1>
-    <p class="promo__text">
-      As a Gruntwork subscriber, you get access to continuous updates, improvements, fixes, and security patches for
-      your Infrastructure Packages, so your infrastructure is always secure and up to date.
-    </p>
-    <p class="promo__text">
-      You also get access to the Gruntwork team of DevOps and infrastructure experts for support, maintenance,
-      questions, and code and design reviews. All for a tiny fraction of the cost of a single full-time DevOps engineer.
-    </p>
-    <div class="promo__cta">
-      <a href="/plans" class="link-bordered link-bordered--upper">
-        See our subscription plans
-      </a>
-    </div>
-  </div>
-</section>
+    <div class="section section-dark">
+        <div class="container">
 
-<section class="promo">
-  <div class="promo__left">
-    <h2 class="promo__heading red-orange-gradient">
-      Infrastructure and DevOps training from the experts.
-    </h2>
-    <p class="promo__text">
-      We offer training and consultation in:
-    </p>
-    <ul class="bordered-list promo__list">
-      <li>AWS</li>
-      <li>DevOps</li>
-      <li>Terraform (we wrote <a target="blank" class="link-bordered" href="http://www.terraformupandrunning.com/">the book</a>!)</li>
-      <li>Docker</li>
-      <li>Scalable architectures</li>
-      <li>Highly available architectures</li>
-      <li>Security</li>
-    </ul>
-    <div class="promo__cta">
-      <a href="/consulting-training" class="link-bordered link-bordered--upper">
-        See our training and consulting
-      </a>
-    </div>
-  </div>
-  <div class="promo__right">
-    <div class="icons-stack tech-list">
-      <div class="icons-stack-large__item grid-item grid-item--top-left">
-        <img
-          class="icons-stack__item-img lazyload"
-          data-src="/assets/img/technologies/grayscale/aws.png"
-          alt="AWS">
-      </div>
-      <div class="icons-stack-large__item grid-item grid-item--top-right">
-        <img
-          class="icons-stack__item-img lazyload"
-          data-src="/assets/img/technologies/grayscale/docker.png"
-          alt="Docker">
-      </div>
-      <div class="icons-stack-large__item grid-item grid-item--bottom-left">
-        <img
-          class="icons-stack__item-img lazyload"
-          data-src="/assets/img/technologies/grayscale/terraform.svg"
-          alt="Terraform">
-      </div>
-      <div class="icons-stack-large__item grid-item grid-item--bottom-right">
-        <img
-          class="icons-stack__item-img lazyload"
-          data-src="/assets/img/technologies/grayscale/devops.png"
-          alt="DevOps">
-      </div>
-    </div>
-  </div>
-</section>
+            <div class="row row-design-stack">
+                <div class="col-xs-12 col-md-6">
+                    <img src="/assets/img/infrastructure-design-your-stack.png" />
+                </div> <!-- col -->
+                <div class="col-xs-12 col-md-6">
+                    <h2>Design your entire tech stack.</h2>
+                    <p>Select the infrastructure you want from our library of battle-tested, reusable infrastructure code. Docker or Packer? MySQL or Postgres? Jenkins or CircleCI? You tell us, and we will deploy it into your AWS account and give you 100% of the code, all in about a day.</p>
+                    <p><a href="#" class="btn btn-primary" role="button">Learn More</a></p>
+                </div> <!-- col -->
+            </div> <!-- row-design-stack -->
 
-<section class="img-placeholder">
-  <img data-src="/assets/img/arrow.svg" alt="Placeholder arrow" class="lazyload">
-</section>
+            <div class="row row-expert-support">
+                <div class="col-xs-12 col-md-6">
+                    <h2>Get expert support.</h2>
+                    <p>We’ve helped dozens of companies just like yours build reliable, secure, scalable infrastructure. Contact our engineers at any time for guidance, best practices, or troubleshooting. We wrote <a href="#">the book on Terraform</a> and <a href="#">the definitive guide to AWS</a>, so you’re in good hands.</p>
+                    <p><a href="#" class="btn btn-primary" role="button">Subscriptions</a></p>
+                </div> <!-- col -->
+                <div class="col-xs-12 col-md-6 text-right">
+                    <img src="/assets/img/infrastructure-expert-support.png" />
+                </div> <!-- col -->
+            </div> <!-- row-expert-support -->
 
-<section class="section help">
-  <header class="heading">
-    <h2 class="heading__lead">How we can help</h2>
-  </header>
-  <div class="help__container">
-    <div class="icons-stack">
-      <div class="icons-stack__item">
-        <img class="icons-stack__item-icon lazyload" data-src="/assets/img/icons/earth.svg" alt="Gruntwok feature">
-        <p class="icons-stack__item-text">Launch a new startup on AWS.</p>
-      </div>
-      <div class="icons-stack__item">
-        <img class="icons-stack__item-icon lazyload" data-src="/assets/img/icons/boxes.svg" alt="Gruntwok feature">
-        <p class="icons-stack__item-text">Migrate from your own data center to AWS.</p>
-      </div>
-      <div class="icons-stack__item">
-        <img class="icons-stack__item-icon lazyload" data-src="/assets/img/icons/lock.svg" alt="Gruntwok feature">
-        <p class="icons-stack__item-text">Implement security best practices.</p>
-      </div>
-      <div class="icons-stack__item">
-        <img class="icons-stack__item-icon lazyload" data-src="/assets/img/icons/award.svg" alt="Gruntwok feature">
-        <p class="icons-stack__item-text">Achieve compliance (e.g. HIPAA, PCI).</p>
-      </div>
-      <div class="icons-stack__item">
-        <img class="icons-stack__item-icon lazyload" data-src="/assets/img/icons/tasklist.svg" alt="Gruntwok feature">
-        <p class="icons-stack__item-text">Achieve maintainable infrastructure-as-code with Terraform.</p>
-      </div>
-      <div class="icons-stack__item">
-        <img class="icons-stack__item-icon lazyload" data-src="/assets/img/icons/time.svg" alt="Gruntwok feature">
-        <p class="icons-stack__item-text">Reduce the time from idea to deployment.</p>
-      </div>
-    </div>
-    <div class="partners">
-      <div class="partners__item"><img data-src="/assets/img/partners/hashicorp.png" alt="Gruntwork partners with Hashicorp" class="lazyload"></div>
-    </div>
-    <div class="cta-container">
-      <a href="/products-services" class="link-bordered link-bordered--upper">See products & services</a>
-    </div>
-  </div>
-</section>
+            <div class="row row-automatic-updates">
+                <div class="col-xs-12 col-md-6">
+                    <img src="/assets/img/infrastructure-auto-updates.png" />
+                </div> <!-- col -->
+                <div class="col-xs-12 col-md-6">
+                    <h2>Get automatic updates.</h2>
+                    <p>When AWS, Terraform, Docker, and everyone else release updates, we update our Infrastructure Packages to reflect the latest best practices. With Gruntwork Patcher<sup>(beta)</sup>, we can automatically patch your code and submit a pull request, ensuring your infrastructure is always up-to-date.</p>
+                    <p><a href="#" class="btn btn-primary" role="button">Request Access</a></p>
+                </div> <!-- col -->
+            </div> <!-- row-automatic-updates -->
 
-<section class="section case-studies">
-  <header class="heading">
-    <h2 class="heading__lead">Case Studies</h2>
-  </header>
-  <div class="case-studies__container">
-    <div class="clients__container">
-      {% for client in site.data.clients limit:5 %}
-      <div class="client">
-        <div class="client__image">
-          <img class="img-responsive lazyload" data-src="/assets/img/{{ client.logo }}" alt="{{ client.name }}">
-        </div>
-        <div class="client__text">
-          <div class="client__heading">{{ client.name }}</div>
-          <p class="paragraph-light">{{ client.summary }}</p>
-        </div>
-      </div>
-      {% endfor %}
-      <div class="cta-container">
-        <a href="/clients" class="link-bordered link-bordered--upper">See all clients</a>
-      </div>
-    </div>
-  </div>
-</section>
+        </div> <!-- container -->
+    </div> <!-- section-dark -->
 
-<section class="section posts">
-  <header class="heading">
-    <h2 class="heading__lead">Latest blog posts</h2>
-  </header>
-  <div class="posts__container">
-    {% for post in site.data.posts limit:4 %}
-    <div class="post">
-      <a href="{{ post.url }}" target="blank" class="post__title">{{ post.title }}</a>
-      <div class="post__date">{{post.date }}</div>
-      <div class="post__body">{{ post.excerpt }}</div>
-      <a href="{{ post.url }}" target="blank" class="post__link"><span class="link-bordered">Read more</span></a>
-    </div>
-    {% endfor %}
-  </div>
-</section>
+    <div class="section section-blue">
+        <div class="container">
+
+            <div class="row row-community">
+                <div class="col-xs-12">
+                    <h2>Meet the Gruntwork Community.</h2>
+
+                    <div class="row thumbnail-group thumbnail-group-clients">
+                        <div class="col-xs-6 col-sm-3 col-md-2">
+                            <div class="thumbnail">
+                                <img src="http://www.gruntwork.io/assets/img/client-logos/stellawagen.png" alt="Stellwagen Logo">
+                            </div>
+                        </div> <!-- col -->
+                        <div class="col-xs-6 col-sm-3 col-md-2">
+                            <div class="thumbnail">
+                                <img src="http://www.gruntwork.io/assets/img/client-logos/intel.png" alt="Intel Logo">
+                            </div>
+                        </div> <!-- col -->
+                        <div class="col-xs-6 col-sm-3 col-md-2">
+                            <div class="thumbnail">
+                                <img src="http://www.gruntwork.io/assets/img/client-logos/stellawagen.png" alt="Stellwagen Logo">
+                            </div>
+                        </div> <!-- col -->
+                        <div class="col-xs-6 col-sm-3 col-md-2">
+                            <div class="thumbnail">
+                                <img src="http://www.gruntwork.io/assets/img/client-logos/intel.png" alt="Intel Logo">
+                            </div>
+                        </div> <!-- col -->
+                        <div class="col-xs-6 col-sm-3 col-md-2">
+                            <div class="thumbnail">
+                                <img src="http://www.gruntwork.io/assets/img/client-logos/stellawagen.png" alt="Stellwagen Logo">
+                            </div>
+                        </div> <!-- col -->
+                        <div class="col-xs-6 col-sm-3 col-md-2">
+                            <div class="thumbnail">
+                                <img src="http://www.gruntwork.io/assets/img/client-logos/intel.png" alt="Intel Logo">
+                            </div>
+                        </div> <!-- col -->
+                        <div class="col-xs-6 col-sm-3 col-md-2">
+                            <div class="thumbnail">
+                                <img src="http://www.gruntwork.io/assets/img/client-logos/stellawagen.png" alt="Stellwagen Logo">
+                            </div>
+                        </div> <!-- col -->
+                        <div class="col-xs-6 col-sm-3 col-md-2">
+                            <div class="thumbnail">
+                                <img src="http://www.gruntwork.io/assets/img/client-logos/intel.png" alt="Intel Logo">
+                            </div>
+                        </div> <!-- col -->
+                        <div class="col-xs-6 col-sm-3 col-md-2">
+                            <div class="thumbnail">
+                                <img src="http://www.gruntwork.io/assets/img/client-logos/intel.png" alt="Intel Logo">
+                            </div>
+                        </div> <!-- col -->
+                        <div class="col-xs-6 col-sm-3 col-md-2">
+                            <div class="thumbnail">
+                                <img src="http://www.gruntwork.io/assets/img/client-logos/intel.png" alt="Intel Logo">
+                            </div>
+                        </div> <!-- col -->
+                        <div class="col-xs-6 col-sm-3 col-md-2">
+                            <div class="thumbnail">
+                                <img src="http://www.gruntwork.io/assets/img/client-logos/intel.png" alt="Intel Logo">
+                            </div>
+                        </div> <!-- col -->
+                        <div class="col-xs-6 col-sm-3 col-md-2">
+                            <div class="thumbnail">
+                                <img src="http://www.gruntwork.io/assets/img/client-logos/intel.png" alt="Intel Logo">
+                            </div>
+                        </div> <!-- col -->
+                    </div> <!-- row -->
+
+                    <p><a href="#">See their results <i class="fa fa-fw fa-caret-right"></i></a></p>
+                </div> <!-- col -->
+            </div> <!-- row -->
+
+        </div> <!-- container -->
+    </div> <!-- section-blue -->
+</div> <!-- main -->
