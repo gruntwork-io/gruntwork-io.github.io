@@ -1,115 +1,74 @@
-<footer id="footer" class="footer">
-  {% if page.slug == "index-page" %}
-  <img data-src="/assets/img/grunty-hat.png" alt="Grunty Logo" class="footer__logo lazyload">
-  {% else %}
-  <img data-src="/assets/img/grunty.svg" alt="Grunty Logo" class="footer__logo lazyload">
-  {% endif %}
-  <div class="footer__header">
-    <h1 class="footer__heading">Take the grunt work out of DevOps.</h1>
-    <a href="/contact" class="link-btn">Contact us</a>
-  </div>
-  <div class="footer__body">
-    <div class="footer__container">
-      <div class="footer-menu">
-        <p class="footer-menu__heading">Products & Services</p>
-        <a
-          href="/infrastructure"
-          class="footer-menu__link">
-          Infrastructure Packages
-        </a>
-        <a
-          href="/stacks"
-          class="footer-menu__link">
-          Stacks
-        </a>
-        <a
-          href="/consulting-training"
-          class="footer-menu__link">
-          Consulting & Training
-        </a>
-        <a
-          href="/plans"
-          class="footer-menu__link">
-          Subscription & Support
-        </a>
-      </div>
-      <div class="footer-menu">
-        <p class="footer-menu__heading">Gruntwork</p>
-        <a
-          href="/about"
-          class="footer-menu__link">
-          About
-        </a>
-        <a
-          href="/clients"
-          class="footer-menu__link">
-          Clients
-        </a>
-        <a
-          href="{{site.data.contact.blog.url}}"
-          class="footer-menu__link">
-          Blog
-        </a>
-        <a
-          href="{{site.data.contact.careers.url}}"
-          class="footer-menu__link">
-          Careers
-        </a>
-      </div>
-      <div class="footer-menu">
-        <p class="footer-menu__heading">Support</p>
-        <a
-          href="/consulting-training"
-          class="footer-menu__link">
-          Training
-        </a>
-        <a
-          href="/consulting-training#resources"
-          class="footer-menu__link">
-          Resources
-        </a>
-        <a
-          href="mailto:support@gruntwork.io"
-          class="footer-menu__link">
-          Submit a Ticket
-        </a>
-      </div>
-      <div class="footer-menu">
-        <p class="footer-menu__heading">Connect</p>
-        <a
-          href="{{site.data.contact.github.url}}"
-          class="footer-menu__link">
-          Github
-        </a>
-        <a
-          href="{{site.data.contact.twitter.url}}"
-          class="footer-menu__link">
-          Twitter
-        </a>
-        <a
-          href="{{site.data.contact.linkedin.url}}"
-          class="footer-menu__link">
-          LinkedIn
-        </a>
-        <a
-          href="/newsletter"
-          class="footer-menu__link">
-          Newsletter
-        </a>
-        <a
-          href="{{site.data.contact.facebook.url}}"
-          class="footer-menu__link">
-          Facebook
-        </a>
-        <a
-          href="/contact"
-          class="footer-menu__link">
-          Contact Us
-        </a>
-      </div>
-    </div>
-  </div>
-  <div class="copyright">
-    © 2017 Gruntwork, LLC. All rights reserved.
-  </div>
+<footer class="footer">
+    <div class="section section-footer-content">
+        <div class="container">
+
+            <div class="row row-call-to-action">
+                <div class="col-xs-12 text-center">
+                    <h2 class="h1">[Footer Heading.]</h2>
+                    <p><a href="#" class="btn btn-info" role="button">Get Started</a></p>
+                </div> <!-- col -->
+            </div> <!-- row-call-to-action -->
+
+            <div class="row row-sitemap">
+                <div class="col-xs-12 col-sm-6 col-md-3">
+                    <h3>Products &amp; Services</h3>
+                    <hr class="hr-sm" />
+                    <ul class="list-unstyled">
+                        <li><a href="#">How it Works</a></li>
+                        <li><a href="#">Pricing</a></li>
+                        <li><a href="#">Module Library</a></li>
+                        <li><a href="#">Setup</a></li>
+                        <li><a href="#">Subscriptions</a></li>
+                    </ul>
+                </div> <!-- col -->
+                <div class="col-xs-12 col-sm-6 col-md-3">
+                    <h3>Gruntwork</h3>
+                    <hr class="hr-sm" />
+                    <ul class="list-unstyled">
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Clients</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Careers</a></li>
+                    </ul>
+                </div> <!-- col -->
+                <div class="col-xs-12 col-sm-6 col-md-3">
+                    <h3>Support</h3>
+                    <hr class="hr-sm" />
+                    <ul class="list-unstyled">
+                        <li><a href="#">Training</a></li>
+                        <li><a href="#">Resources</a></li>
+                        <li><a href="#">Submit a Ticket</a></li>
+                        <li><a href="#">Module Library</a></li>
+                    </ul>
+                </div> <!-- col -->
+                <div class="col-xs-12 col-sm-6 col-md-3">
+                    <h3>Connect</h3>
+                    <hr class="hr-sm" />
+                    <ul class="list-unstyled">
+                        <li><a href="#">Newsletter</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li>
+                            <div class="btn-group btn-group-social-icons" role="group" aria-label="Group of Social Links">
+                                <a href="#" class="btn btn-default" role="button"><i class="fa fa-fw fa-github-square"></i></a>
+                                <a href="#" class="btn btn-default" role="button"><i class="fa fa-fw fa-facebook-square"></i></a>
+                                <a href="#" class="btn btn-default" role="button"><i class="fa fa-fw fa-twitter-square"></i></a>
+                                <a href="#" class="btn btn-default" role="button"><i class="fa fa-fw fa-linkedin-square"></i></a>
+                            </div>
+                        </li>
+                    </ul>
+                </div> <!-- col -->
+            </div> <!-- row-sitemap -->
+        </div> <!-- container -->
+    </div> <!-- footer-content -->
+
+    <div class="section section-footer-copyright">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 text-center">
+                    &copy; {{ 'now' | date: "%Y" }} Gruntwork, LLC. All rights reserved.
+                </div> <!-- col -->
+            </div> <!-- row -->
+        </div> <!-- container -->
+    </div> <!-- footer-copyright -->
 </footer>
