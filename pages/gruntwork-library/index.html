@@ -60,127 +60,37 @@ footer_heading: Ready to hand off the Gruntwork?
                     </div> <!-- modal -->
 
                     <div class="row row-equalize-col-height">
-                        <div class="col-xs-12 col-md-6">
-                            <div class="panel panel-default">
-                                <div class="panel-body">
-                                    <h3 class="h2 margin-top-none">[Package Heading]</h3>
-                                    <p>[Package description... Fusce lacus sapien, feugiat in lorem et, maximus elementum lectus. Proin molestie augue orci, eleifend volutpat ante porta vel. Integer quis elementum nibh.]</p>
-                                    <p><a href="#" data-toggle="modal" data-target="#modalPublicRepo">View Public Docs</a></p>
-                                    <div class="row">
-                                        <div class="col-xs-6">
-                                            <span class="label label-default label-hollow">AWS</span>
-                                            <span class="label label-default label-hollow">OSS</span>
-                                        </div> <!-- col -->
-                                        <div class="col-xs-6 text-right">
-                                            <ul class="list-unstyled margin-bottom-none">
-                                                <li>
-                                                    <div class="btn-group btn-group-package-icons" role="group" aria-label="Group of Infrastructure Package Icons">
-                                                        <button type="button" class="btn btn-default"><img src="img/icon-terraform.png" height="24px" /></button>
-                                                        <button type="button" class="btn btn-default"><img src="img/icon-terraform.png" height="24px" /></button>
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </div> <!-- col -->
-                                    </div> <!-- row -->
-                                </div> <!-- panel-body -->
-                            </div> <!-- panel-default -->
-                        </div> <!-- col -->
 
-                        <div class="col-xs-12 col-md-6">
-                            <div class="panel panel-default">
-                                <div class="panel-body">
-                                    <h3 class="h2">[Package Heading]</h3>
-                                    <p>[Package description... Fusce lacus sapien, eleifend volutpat ante porta vel. Integer quis elementum nibh.]</p>
-                                    <p><a href="#" data-toggle="modal" data-target="#modalPublicRepo">View Public Docs</a></p>
-                                    <div class="row">
-                                        <div class="col-xs-6">
-                                            <span class="label label-default label-hollow">OSS</span>
-                                        </div> <!-- col -->
-                                        <div class="col-xs-6 text-right">
-                                            <ul class="list-unstyled margin-bottom-none">
-                                                <li>
-                                                    <div class="btn-group btn-group-package-icons" role="group" aria-label="Group of Infrastructure Package Icons">
-                                                        <button type="button" class="btn btn-default"><img src="img/icon-terraform.png" height="24px" /></button>
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </div> <!-- col -->
-                                    </div> <!-- row -->
-                                </div> <!-- panel-body -->
-                            </div> <!-- panel-default -->
-                        </div> <!-- col -->
+                        {% for package in site.data.library-infrastructure-packages %}
+                            <div class="col-xs-12 col-md-6">
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <h3 class="h2 margin-top-none">{{ package.name }}</h3>
+                                        <p>{{ package.description }}</p>
+                                        <p><a href="#" data-toggle="modal" data-target="#modalPublicRepo">View Public Docs</a></p>
+                                        <div class="row">
+                                            <div class="col-xs-6">
+                                                {% for tag in plan.tags %}
+                                                    <span class="label label-default label-hollow">{{ tag }}</span>
+                                                {% endfor %}
+                                            </div> <!-- col -->
+                                            <div class="col-xs-6 text-right">
+                                                <ul class="list-unstyled margin-bottom-none">
+                                                    <li>
+                                                        <div class="btn-group btn-group-package-icons" role="group" aria-label="Group of Infrastructure Package Icons">
+                                                            {% for icon in plan.icons %}
+                                                                <button type="button" class="btn btn-default"><img src="/assets/img/{{ icon }}" height="24px" /></button>
+                                                            {% endfor %}
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div> <!-- col -->
+                                        </div> <!-- row -->
+                                    </div> <!-- panel-body -->
+                                </div> <!-- panel-default -->
+                            </div> <!-- col -->
+                        {% endfor %}
 
-                        <div class="col-xs-12 col-md-6">
-                            <div class="panel panel-default">
-                                <div class="panel-body">
-                                    <h3 class="h2">[Package Heading]</h3>
-                                    <p>[Package description... Fusce lacus sapien, eleifend volutpat ante porta vel. Integer quis elementum nibh.]</p>
-                                    <p><a href="#" data-toggle="modal" data-target="#modalPublicRepo">View Public Docs</a></p>
-                                    <div class="row">
-                                        <div class="col-xs-6">
-                                            <span class="label label-default label-hollow">OSS</span>
-                                        </div> <!-- col -->
-                                        <div class="col-xs-6 text-right">
-                                            <ul class="list-unstyled margin-bottom-none">
-                                                <li>
-                                                    <div class="btn-group btn-group-package-icons" role="group" aria-label="Group of Infrastructure Package Icons">
-                                                        <button type="button" class="btn btn-default"><img src="img/icon-terraform.png" height="24px" /></button>
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </div> <!-- col -->
-                                    </div> <!-- row -->
-                                </div> <!-- panel-body -->
-                            </div> <!-- panel-default -->
-                        </div> <!-- col -->
-
-                        <div class="col-xs-12 col-md-6">
-                            <div class="panel panel-default">
-                                <div class="panel-body">
-                                    <h3 class="h2">[Package Heading]</h3>
-                                    <p>[Package description... Fusce lacus sapien, eleifend volutpat ante porta vel, feugiat in lorem et, maximus elementum lectus. Proin molestie augue orci, eleifend volutpat ante porta vel. Integer quis elementum nibh.]</p>
-                                    <p><a href="#" data-toggle="modal" data-target="#modalPublicRepo">View Public Docs</a></p>
-                                    <div class="row">
-                                        <div class="col-xs-6">
-                                            <span class="label label-default label-hollow">OSS</span>
-                                        </div> <!-- col -->
-                                        <div class="col-xs-6 text-right">
-                                            <ul class="list-unstyled margin-bottom-none">
-                                                <li>
-                                                    <div class="btn-group btn-group-package-icons" role="group" aria-label="Group of Infrastructure Package Icons">
-                                                        <button type="button" class="btn btn-default"><img src="img/icon-terraform.png" height="24px" /></button>
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </div> <!-- col -->
-                                    </div> <!-- row -->
-                                </div> <!-- panel-body -->
-                            </div> <!-- panel-default -->
-                        </div> <!-- col -->
-
-                        <div class="col-xs-12 col-md-6">
-                            <div class="panel panel-default">
-                                <div class="panel-body">
-                                    <h3 class="h2">[Package Heading]</h3>
-                                    <p>[Package description... Fusce lacus sapien, eleifend volutpat ante porta vel. Integer quis elementum nibh.]</p>
-                                    <p><a href="#" data-toggle="modal" data-target="#modalPublicRepo">View Public Docs</a></p>
-                                    <div class="row">
-                                        <div class="col-xs-6">
-                                            <span class="label label-default label-hollow">OSS</span>
-                                        </div> <!-- col -->
-                                        <div class="col-xs-6 text-right">
-                                            <ul class="list-unstyled margin-bottom-none">
-                                                <li>
-                                                    <div class="btn-group btn-group-package-icons" role="group" aria-label="Group of Infrastructure Package Icons">
-                                                        <button type="button" class="btn btn-default"><img src="img/icon-terraform.png" height="24px" /></button>
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </div> <!-- col -->
-                                    </div> <!-- row -->
-                                </div> <!-- panel-body -->
-                            </div> <!-- panel-default -->
-                        </div> <!-- col -->
                     </div> <!-- row -->
                 </div> <!-- col -->
             </div> <!-- row-library -->
