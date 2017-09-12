@@ -3,7 +3,7 @@
     <head>
         {% include head.html %}
     </head>
-    <body{% if page.slug %} class="{{ page.slug }}" {% endif %}>
+    <body{% if page.slug %} class="{{ page.slug }}{% if page.slug != 'index-page' %} sub-page{% endif %}" {% endif %}>
         {% include navbar.html %}
         {{ content }}
         {% include footer.html %}
