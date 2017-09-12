@@ -70,7 +70,7 @@ footer_heading: Ready to hand off the Gruntwork?
                                         <p><a href="#" data-toggle="modal" data-target="#modalPublicRepo">View Public Docs</a></p>
                                         <div class="row">
                                             <div class="col-xs-6">
-                                                {% for tag in plan.tags %}
+                                                {% for tag in package.tags %}
                                                     <span class="label label-default label-hollow">{{ tag }}</span>
                                                 {% endfor %}
                                             </div> <!-- col -->
@@ -78,7 +78,7 @@ footer_heading: Ready to hand off the Gruntwork?
                                                 <ul class="list-unstyled margin-bottom-none">
                                                     <li>
                                                         <div class="btn-group btn-group-package-icons" role="group" aria-label="Group of Infrastructure Package Icons">
-                                                            {% for icon in plan.icons %}
+                                                            {% for icon in package.icons %}
                                                                 <button type="button" class="btn btn-default"><img src="/assets/img/{{ icon }}" height="24px" /></button>
                                                             {% endfor %}
                                                         </div>
