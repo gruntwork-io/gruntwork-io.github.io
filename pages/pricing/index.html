@@ -62,57 +62,57 @@ footer_heading: Ready to hand off the Gruntwork?
                             </tr>
                             <tr>
                                 <th>Reponse Time</th>
-                                <td>2 business days</td>
-                                <td>1 business day</td>
-                                <td>2 hours</td>
+                                {% for plan in site.data.plans %}
+                                    <td>{{ plan.response_time }}</td>
+                                {% endfor %}
                             </tr>
                             <tr>
                                 <th>Email Support</th>
-                                <td>Yes</td>
-                                <td>Yes</td>
-                                <td>Yes</td>
+                                {% for plan in site.data.plans %}
+                                    <td>{{ plan.email_support }}</td>
+                                {% endfor %}
                             </tr>
                             <tr>
                                 <th>Phone/Video Chat Support</th>
-                                <td>Once per quarter</td>
-                                <td>Upon Request</td>
-                                <td>Upon Request</td>
+                                {% for plan in site.data.plans %}
+                                    <td>{{ plan.phone_video_support }}</td>
+                                {% endfor %}
                             </tr>
                             <tr>
                                 <th>Slack Support</th>
-                                <td>First month only</td>
-                                <td>First month only</td>
-                                <td>Yes</td>
+                                {% for plan in site.data.plans %}
+                                    <td>{{ plan.slack_support }}</td>
+                                {% endfor %}
                             </tr>
                             <tr>
                                 <th>Automated Infra Updates</th>
-                                <td>Coming soon</td>
-                                <td>Yes (Beta)</td>
-                                <td>Yes (Beta)</td>
+                                {% for plan in site.data.plans %}
+                                    <td>{{ plan.automated_infra_updates }}</td>
+                                {% endfor %}
                             </tr>
                             <tr>
                                 <th>Access the Gruntwork Library</th>
-                                <td>Yes</td>
-                                <td>Yes</td>
-                                <td>Yes</td>
+                                {% for plan in site.data.plans %}
+                                    <td>{{ plan.library_access }}</td>
+                                {% endfor %}
                             </tr>
                             <tr>
                                 <th>Security Alerts</th>
-                                <td>Yes</td>
-                                <td>Yes</td>
-                                <td>Yes</td>
+                                {% for plan in site.data.plans %}
+                                    <td>{{ plan.security_alerts }}</td>
+                                {% endfor %}
                             </tr>
                             <tr>
                                 <th>Newsletter</th>
-                                <td>Yes</td>
-                                <td>Yes</td>
-                                <td>Yes</td>
+                                {% for plan in site.data.plans %}
+                                    <td>{{ plan.newsletter }}</td>
+                                {% endfor %}
                             </tr>
                             <tr>
-                                <th>Price</th>
-                                <td>Yes</td>
-                                <td>Yes</td>
-                                <td>Yes</td>
+                                <th>Price<br/><em>(Includes 1 License)</em></th>
+                                {% for plan in site.data.plans %}
+                                    <td>{{ plan.price }}</td>
+                                {% endfor %}
                             </tr>
                         </tbody>
                     </table>
