@@ -79,7 +79,7 @@ footer_heading: Ready to hand off the Gruntwork?
                                                     <li>
                                                         <div class="btn-group btn-group-package-icons" role="group" aria-label="Group of Infrastructure Package Icons">
                                                             {% for icon in package.icons %}
-                                                                <img src="/assets/img/{{ icon }}" height="24px" />
+                                                                <img src="/assets/img/{{ icon }}" height="24px" data-toggle="tooltip" data-placement="top" title="{{ package.icon_tooltips[forloop.index] }}" />
                                                             {% endfor %}
                                                         </div>
                                                     </li>
