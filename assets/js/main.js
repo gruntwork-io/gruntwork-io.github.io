@@ -23,6 +23,12 @@ $('#modalPublicRepo').on('show.bs.modal', function(e) {
     $(e.currentTarget).find('.private-repo-link').attr('href', privateRepoLink);
 });
 
+/* Stop youtube video on modal close */
+$('#modalOverviewVideo').on('hidden.bs.modal', function () {
+    callPlayer('yt-player', 'stopVideo');
+});
+
+/* Dashed lines on homepage */
 var c = document.getElementById("dottedLine");
 var ctx = c.getContext("2d");
 ctx.beginPath();
