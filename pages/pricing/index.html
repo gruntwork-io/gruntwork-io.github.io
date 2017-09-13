@@ -36,8 +36,8 @@ footer_heading: Ready to hand off the Gruntwork?
                         <thead>
                             <tr>
                                 <th></th>
-                                {% for plan in site.data.plans %}
-                                    <th>{{ plan.name }}</th>
+                                {% for name in site.data.plans.names %}
+                                    <th>{{ name }}</th>
                                 {% endfor %}
                             </tr>
                         </thead>
