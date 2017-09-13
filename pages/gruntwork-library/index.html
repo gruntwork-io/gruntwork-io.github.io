@@ -39,10 +39,10 @@ footer_heading: Ready to hand off the Gruntwork?
                                         Full repo access is available to Gruntwork subscribers.
                                     </p>
                                     <p>
-                                        <a class="btn btn-info" href="">I understand, continue!</a>
+                                        <a class="btn btn-info public-repo-link" href="">I understand, continue!</a>
                                     </p>
                                     <p>
-                                        <a href="">I'm a subscriber. Take me to the full repo.</a>
+                                        <a class="private-repo-link" href="">I'm a subscriber. Take me to the full repo.</a>
                                     </p>
                                     <div style="margin-top: 30px;">
                                         <div class="checkbox">
@@ -67,7 +67,7 @@ footer_heading: Ready to hand off the Gruntwork?
                                     <div class="panel-body">
                                         <h3 class="h2 margin-top-none">{{ package.name }}</h3>
                                         <p>{{ package.description }}</p>
-                                        <p><a href="#" data-toggle="modal" data-target="#modalPublicRepo">View Public Docs</a></p>
+                                        <p><a href="#" data-toggle="modal" data-target="#modalPublicRepo" data-public-repo="{{ package.docs_url }}" data-private-repo="{{ package.full_url }}">View Public Docs</a></p>
                                         <div class="row">
                                             <div class="col-xs-6">
                                                 {% for tag in package.tags %}
@@ -103,7 +103,7 @@ footer_heading: Ready to hand off the Gruntwork?
                                     <div class="panel-body">
                                         <h3 class="h2 margin-top-none">{{ package.name }}</h3>
                                         <p>{{ package.description }}</p>
-                                        <p><a href="#" data-toggle="modal" data-target="#modalPublicRepo">View Public Docs</a></p>
+                                        <p><a href="#" data-toggle="modal" data-target="#modalPublicRepo" data-public-repo="{{ package.docs_url }}" data-private-repo="{{ package.full_url }}">View Public Docs</a></p>
                                         <div class="row">
                                             <div class="col-xs-6">
                                                 {% for tag in package.tags %}
@@ -139,7 +139,7 @@ footer_heading: Ready to hand off the Gruntwork?
                                     <div class="panel-body">
                                         <h3 class="h2 margin-top-none">{{ package.name }}</h3>
                                         <p>{{ package.description }}</p>
-                                        <p><a href="#" data-toggle="modal" data-target="#modalPublicRepo">View Public Docs</a></p>
+                                        <p><a href="#" data-toggle="modal" data-target="#modalPublicRepo" data-public-repo="{{ package.docs_url }}" data-private-repo="{{ package.full_url }}">View Public Docs</a></p>
                                         <div class="row">
                                             <div class="col-xs-6">
                                                 {% for tag in package.tags %}
