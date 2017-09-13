@@ -11,10 +11,10 @@ footer_heading: Build your infrastructure now.
     <div class="section section-hero">
         <div class="container">
             <div class="row">
-                <div class="col-xs-12 col-md-3">
-                    <img class="floating-img-infrastructure-in-a-day" src="/assets/img/infrastructure-in-a-day.png" />
+                <div class="col-xs-12 col-sm-3 col-md-3 hidden-xs">
+                    <img class="floating-img-infrastructure-in-a-day" src="/assets/img/infrastructure-in-a-day.png" width="220px" />
                 </div> <!-- col -->
-                <div class="col-xs-12 col-md-8 col-md-offset-1">
+                <div class="col-xs-12 col-sm-9 col-md-8 col-md-offset-1">
                     <h1>
                         Your entire infrastructure.
                         <br />
@@ -30,22 +30,22 @@ footer_heading: Build your infrastructure now.
     <div class="section section-blue section-sub-hero">
         <div class="container">
             <div class="row">
-                <div class="col-xs-12 col-md-8 col-md-offset-4">
-                    <div class="row row-center-vertically">
-                        <div class="col-md-5">
-                            <img src="/assets/img/logo-hashicorp.png" />
+                <div class="col-xs-8 col-xs-offset-2 col-sm-9 col-sm-offset-3">
+                    <div class="row row-partners row-center-vertically-sm">
+                        <div class="col-xs-12 col-sm-5 col-partner-hashicorp">
+                            <img src="/assets/img/logo-hashicorp.png" width="239px" />
                         </div> <!-- col -->
-                        <div class="col-md-6 col-md-offset-1">
+                        <div class="col-xs-12 col-sm-6 col-sm-offset-1 col-partner-experts">
                             <p>Experts in:</p>
-                            <div class="row row-center-vertically">
-                                <div class="col-xs-6">
-                                    <img src="/assets/img/logo-aws.png" />
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-6">
+                                    <img src="/assets/img/logo-aws.png" width="239px" />
                                 </div> <!-- col -->
-                                <div class="col-xs-6">
-                                    <img src="/assets/img/logo-terraform.png" />
+                                <div class="col-xs-12 col-sm-6">
+                                    <img src="/assets/img/logo-terraform.png" width="239px" />
                                 </div> <!-- col -->
                             </div> <!-- row -->
-                            <p class="margin-bottom-none" style="margin-top: 10px;">Coming soon: <a href="https://azure.microsoft.com" target="_blank">Azure</a> and <a href="https://cloud.google.com" target="_blank">Google Cloud</a>!</p>
+                            <p class="margin-bottom-none">Coming soon: <a href="https://azure.microsoft.com" target="_blank">Azure</a> and <a href="https://cloud.google.com" target="_blank">Google Cloud</a>!</p>
                         </div> <!-- col -->
                     </div> <!-- row -->
                 </div> <!-- col -->
@@ -57,10 +57,22 @@ footer_heading: Build your infrastructure now.
         <div class="container">
 
             <div class="row row-design-stack">
-                <div class="col-xs-12 col-md-6">
-                    <img src="/assets/img/infrastructure-design-your-stack.png" />
+                <div class="col-xs-8 col-xs-offset-2 col-sm-5 col-sm-offset-0 col-md-6 col-diagram">
+                    <canvas
+                        id="dottedLine"
+                        class="hidden-xs hidden-sm"
+                        width="2"
+                        height="200px"
+                        style="
+                            position: absolute;
+                            top: -190px;
+                            left: 166px;
+                        "
+                    >
+                    </canvas>
+                    <img src="/assets/img/infrastructure-design-your-stack.png" width="379px" style="margin-left: 3px;" />
                 </div> <!-- col -->
-                <div class="col-xs-12 col-md-6">
+                <div class="col-xs-12 col-sm-7 col-md-6 col-description">
                     <h2>Design your entire tech stack.</h2>
                     <p>Select the infrastructure you want from our library of battle-tested, reusable infrastructure code. Docker or Packer? MySQL or Postgres? Jenkins or CircleCI? You tell us, and we will deploy it into your AWS account and give you 100% of the code, all in about a day.</p>
                     <p><a href="/gruntwork-library" class="btn btn-primary" role="button">Learn More</a></p>
@@ -68,21 +80,21 @@ footer_heading: Build your infrastructure now.
             </div> <!-- row-design-stack -->
 
             <div class="row row-expert-support">
-                <div class="col-xs-12 col-md-6">
+                <div class="col-xs-10 col-xs-offset-1 col-sm-5 col-sm-push-7 col-sm-offset-0 col-md-6 col-md-push-6 col-diagram">
+                    <img src="img/infrastructure-expert-support.png" width="418px" />
+                </div> <!-- col -->
+                <div class="col-xs-12 col-sm-7 col-sm-pull-5 col-md-6 col-md-pull-6 col-description">
                     <h2>Get expert support.</h2>
                     <p>We’ve helped dozens of companies just like yours build reliable, secure, scalable infrastructure. Contact our engineers at any time for guidance, best practices, or troubleshooting. We wrote <a href="http://www.terraformupandrunning.com" target="_blank">the book on Terraform</a> and <a href="https://www.airpair.com/aws/posts/building-a-scalable-web-app-on-amazon-web-services-p1" target="_blank">the definitive guide to AWS</a>, so you’re in good hands.</p>
                     <p><a href="/subscriptions" class="btn btn-primary" role="button">Subscriptions</a></p>
                 </div> <!-- col -->
-                <div class="col-xs-12 col-md-6 text-right">
-                    <img src="/assets/img/infrastructure-expert-support.png" />
-                </div> <!-- col -->
             </div> <!-- row-expert-support -->
 
             <div class="row row-automatic-updates">
-                <div class="col-xs-12 col-md-6">
-                    <img src="/assets/img/infrastructure-auto-updates.png" />
+                <div class="col-xs-8 col-xs-offset-2 col-sm-5 col-sm-offset-0 col-md-6 col-diagram">
+                    <img src="/assets/img/infrastructure-auto-updates.png" width="297px" />
                 </div> <!-- col -->
-                <div class="col-xs-12 col-md-6">
+                <div class="col-xs-12 col-sm-7 col-md-6 col-description">
                     <h2>Get automatic updates.</h2>
                     <p>When AWS, Terraform, Docker, and everyone else release updates, we update our Infrastructure Packages to reflect the latest best practices. With Gruntwork Patcher<sup>(beta)</sup>, we can automatically patch your code and submit a pull request, ensuring your infrastructure is always up-to-date.</p>
                     <p><a href="/gruntwork-library" class="btn btn-primary" role="button">Request Access</a></p>
@@ -98,66 +110,67 @@ footer_heading: Build your infrastructure now.
             <div class="row row-community">
                 <div class="col-xs-12">
                     <h2>Meet the Gruntwork Community.</h2>
-
+                </div> <!-- col -->
+                <div class="col-xs-10 col-xs-offset-1 col-sm-12 col-sm-offset-0" style="margin-top: 25px;">
                     <div class="row thumbnail-group thumbnail-group-clients">
                         <div class="col-xs-6 col-sm-3 col-md-2">
                             <div class="thumbnail">
-                                <img src="https://www.gruntwork.io/assets/img/client-logos/stellawagen.png" alt="Stellwagen Logo">
+                                <img src="https://www.gruntwork.io/assets/img/client-logos/stellawagen.png" alt="Stellwagen Logo" width="119px">
                             </div>
                         </div> <!-- col -->
                         <div class="col-xs-6 col-sm-3 col-md-2">
                             <div class="thumbnail">
-                                <img src="https://www.gruntwork.io/assets/img/client-logos/intel.png" alt="Intel Logo">
+                                <img src="https://www.gruntwork.io/assets/img/client-logos/intel.png" alt="Intel Logo" width="119px">
                             </div>
                         </div> <!-- col -->
                         <div class="col-xs-6 col-sm-3 col-md-2">
                             <div class="thumbnail">
-                                <img src="https://www.gruntwork.io/assets/img/client-logos/stellawagen.png" alt="Stellwagen Logo">
+                                <img src="https://www.gruntwork.io/assets/img/client-logos/stellawagen.png" alt="Stellwagen Logo" width="119px">
                             </div>
                         </div> <!-- col -->
                         <div class="col-xs-6 col-sm-3 col-md-2">
                             <div class="thumbnail">
-                                <img src="https://www.gruntwork.io/assets/img/client-logos/intel.png" alt="Intel Logo">
+                                <img src="https://www.gruntwork.io/assets/img/client-logos/intel.png" alt="Intel Logo" width="119px">
                             </div>
                         </div> <!-- col -->
                         <div class="col-xs-6 col-sm-3 col-md-2">
                             <div class="thumbnail">
-                                <img src="https://www.gruntwork.io/assets/img/client-logos/stellawagen.png" alt="Stellwagen Logo">
+                                <img src="https://www.gruntwork.io/assets/img/client-logos/stellawagen.png" alt="Stellwagen Logo" width="119px">
                             </div>
                         </div> <!-- col -->
                         <div class="col-xs-6 col-sm-3 col-md-2">
                             <div class="thumbnail">
-                                <img src="https://www.gruntwork.io/assets/img/client-logos/intel.png" alt="Intel Logo">
+                                <img src="https://www.gruntwork.io/assets/img/client-logos/intel.png" alt="Intel Logo" width="119px">
                             </div>
                         </div> <!-- col -->
                         <div class="col-xs-6 col-sm-3 col-md-2">
                             <div class="thumbnail">
-                                <img src="https://www.gruntwork.io/assets/img/client-logos/stellawagen.png" alt="Stellwagen Logo">
+                                <img src="https://www.gruntwork.io/assets/img/client-logos/stellawagen.png" alt="Stellwagen Logo" width="119px">
                             </div>
                         </div> <!-- col -->
                         <div class="col-xs-6 col-sm-3 col-md-2">
                             <div class="thumbnail">
-                                <img src="https://www.gruntwork.io/assets/img/client-logos/intel.png" alt="Intel Logo">
+                                <img src="https://www.gruntwork.io/assets/img/client-logos/intel.png" alt="Intel Logo" width="119px">
                             </div>
                         </div> <!-- col -->
                         <div class="col-xs-6 col-sm-3 col-md-2">
                             <div class="thumbnail">
-                                <img src="https://www.gruntwork.io/assets/img/client-logos/intel.png" alt="Intel Logo">
+                                <img src="https://www.gruntwork.io/assets/img/client-logos/intel.png" alt="Intel Logo" width="119px">
                             </div>
                         </div> <!-- col -->
                         <div class="col-xs-6 col-sm-3 col-md-2">
                             <div class="thumbnail">
-                                <img src="https://www.gruntwork.io/assets/img/client-logos/intel.png" alt="Intel Logo">
+                                <img src="https://www.gruntwork.io/assets/img/client-logos/intel.png" alt="Intel Logo" width="119px">
                             </div>
                         </div> <!-- col -->
                         <div class="col-xs-6 col-sm-3 col-md-2">
                             <div class="thumbnail">
-                                <img src="https://www.gruntwork.io/assets/img/client-logos/intel.png" alt="Intel Logo">
+                                <img src="https://www.gruntwork.io/assets/img/client-logos/intel.png" alt="Intel Logo" width="119px">
                             </div>
                         </div> <!-- col -->
                         <div class="col-xs-6 col-sm-3 col-md-2">
                             <div class="thumbnail">
-                                <img src="https://www.gruntwork.io/assets/img/client-logos/intel.png" alt="Intel Logo">
+                                <img src="https://www.gruntwork.io/assets/img/client-logos/intel.png" alt="Intel Logo" width="119px">
                             </div>
                         </div> <!-- col -->
                     </div> <!-- row -->

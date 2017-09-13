@@ -109,25 +109,10 @@ h6 a, h6 a:focus, h6 a:hover {
     margin-bottom: 0 !important;
 }
 
-// We like more vertical spacing for horizontal rules and Bootstrap.
-hr {
-    margin: (@padding-large-horizontal * 2) 0;
-    &.hr-dim    { border-color: lighten(@hr-border, 5%); }
-    &.hr-xl     { margin: (@grid-gutter-width * 2) 0; }
-    &.hr-lg     { margin: (@grid-gutter-width * 1.5) 0; }
-    &.hr-sm     { margin: (@padding-large-vertical * 2) 0; }
-    &.hr-xs     { margin: @padding-large-vertical 0; }
-    &.hr-dashed { border-style: dashed; }
-}
-
 // Page header
 .page-header {
     padding-bottom: (@line-height-computed * 0.80);
     margin: (@grid-gutter-width * 2) 0 (@grid-gutter-width * 1.5);
-    h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6,
-    .lead {
-        margin-bottom: 0;
-    }
     &.page-header-sm {
         margin: (@line-height-computed * 1.5) 0 (@line-height-computed * 0.80);
         padding-bottom: (@line-height-computed * 0.40);
@@ -366,13 +351,6 @@ button,
 // Full width dropdown menus
 // -------------------------
 
-.navbar-collapse {
-    position: relative; // Important so that our dropdown can expand to the full width of the navbar
-}
-.navbar-header {
-    position: relative;
-    z-index: (@zindex-navbar + 1); // position: relative; on the .navbar-collapse pushes it overtop of the logo - this corrects that
-}
 .nav li.dropdown-full-width {
     position: initial;
     .dropdown-menu {

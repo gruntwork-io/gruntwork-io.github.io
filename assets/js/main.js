@@ -22,3 +22,13 @@ $('#modalPublicRepo').on('show.bs.modal', function(e) {
     $(e.currentTarget).find('.public-repo-link').attr('href', publicRepoLink);
     $(e.currentTarget).find('.private-repo-link').attr('href', privateRepoLink);
 });
+
+var c = document.getElementById("dottedLine");
+var ctx = c.getContext("2d");
+ctx.beginPath();
+ctx.setLineDash([10, 10]);
+ctx.moveTo(0, 0);
+ctx.lineTo(0, 200);
+ctx.strokeStyle = '#fff';
+ctx.lineWidth = 1.5;
+ctx.stroke();

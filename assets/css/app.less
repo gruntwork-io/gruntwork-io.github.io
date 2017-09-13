@@ -3,10 +3,10 @@
 // ==================================================
 // ==================================================
 
-@import "bootstrap/less/bootstrap.less";
-@import "user10/variables";
+@import "lib/bootstrap/less/bootstrap.less";
+@import "lib/user10/variables";
 @import "app-variable-overrides";
-@import "user10/utilities";
+@import "lib/user10/utilities";
 
 
 
@@ -222,22 +222,22 @@ label {
 // ==================================================
 
 hr {
+    margin: 45px 0;
     border-width: 2px;
     border-color: @hr-border;
+
+    // We like more vertical spacing for horizontal rules and Bootstrap.
+    &.hr-dim    { border-color: lighten(@hr-border, 5%); }
+    &.hr-xl     { margin: (@grid-gutter-width * 2.5) 0; }
+    &.hr-lg     { margin: (@grid-gutter-width * 2) 0; }
+    &.hr-sm     { margin: (@padding-large-vertical * 2) 0; }
+    &.hr-xs     { margin: @padding-large-vertical 0; }
+    &.hr-dashed { border-style: dashed; }
 }
+
 footer hr {
     border-color: @color-bg-inverse;
     border-width: 1px;
-}
-
-
-//
-// Images
-// ==================================================
-
-.floating-img-infrastructure-in-a-day {
-    position: absolute;
-    top: -(@padding-section-vertical);
 }
 
 
@@ -312,7 +312,7 @@ p a:not(.btn) {
 
 #modalPublicRepo {
     .modal-content {
-        background-image: url('../img/grunty-wave.png');
+        background-image: url('img/grunty-wave.png');
         background-repeat: no-repeat;
         background-size: 157px 141px;
         background-position-y: bottom;
@@ -340,8 +340,12 @@ p a:not(.btn) {
     padding-bottom: ((@navbar-height - 32) / 2) + 2;
 }
 .navbar-nav > li > a {
-    padding-right: 20px;
-    padding-left: 20px;
+    padding-right: 10px;
+    padding-left: 10px;
+    @media (min-width: @screen-md-min) {
+        padding-right: 20px;
+        padding-left: 20px;
+    }
 }
 
 // Navbar button styles
@@ -356,18 +360,17 @@ p a:not(.btn) {
     }
 }
 
+// Home page navbar styles
+.index-page .navbar-default {
+    border: none;
+    @media (max-width: @screen-md-max) {
+        background-color: @gradient-primary-start;
+    }
+}
+
 // Sub page navbar styles
 .sub-page .navbar-default {
     &:extend(.gradient-primary.gradient-vertical);
-}
-
-
-//
-// Page headers
-// ==================================================
-
-.page-header {
-    border-width: 2px;
 }
 
 
@@ -393,49 +396,118 @@ p a:not(.btn) {
 // Rows
 // ==================================================
 
-.container > .row + .row                { padding-top: @padding-section-vertical; }
-.index-page .container > .row + .row    { padding-top: @padding-section-large-vertical; }
-.row-design-stack                       { padding-top: @padding-section-large-vertical; }
-.row-automatic-updates                  { padding-bottom: 210px; }
+// Row styles that are global
+@padding-row-vertical-mobile:               45px;
+@padding-row-vertical-desktop:              60px;
 
+.container > .row + .row                { padding-top: @padding-row-vertical-mobile; }
+.index-page .container > .row + .row    { padding-top: @padding-row-vertical-desktop; }
+
+@media (min-width: @screen-sm-min) {
+    .container > .row + .row                { padding-top: @padding-row-vertical-desktop; }
+}
 @media (min-width: @screen-md-min) {
-    .row-equalize-col-height {
+    .index-page .section-dark .container > .row { padding-top: 90px; }
+}
+
+// Equal column heights when we want them
+.row-equalize-col-height {
+    display: flex;
+    flex-wrap: wrap;
+    > div[class*="col-"] {
         display: flex;
-        flex-wrap: wrap;
-        > div[class*="col-"] {
-            display: flex;
-        }
     }
-    .row-center-vertically {
+}
+.row-center-vertically-sm {
+    @media (min-width: @screen-sm-min) {
         display: flex;
         align-items: center;
     }
 }
 
-.row-library {
-    .row-equalize-col-height > div[class*="col-"] > .panel {
-        display: flex;
-        margin-bottom: @grid-gutter-width;
-        > .panel-body {
-            display: flex;
-            flex-direction: column;
-            > .row {
-                display: flex;
-                flex-direction: row;
-                height: 100%;
-                align-items: flex-end;
+// Specific rows
+.row-partners {
+    @media (max-width: @screen-xs-max) {
+        .col-partner-hashicorp {
+            text-align: center;
+            img {
+                margin-bottom: 30px;
             }
+        }
+        .col-partner-experts {
+            text-align: center;
+        }
+    }
+    @media (min-width: @screen-sm-min) {
+        .col-partner-experts .row + p {
+            margin-top: 15px;
+        }
+    }
+}
+
+@media (max-width: @screen-sm-max) {
+    .row-design-stack,
+    .row-expert-support,
+    .row-automatic-updates {
+        .col-diagram {
+            text-align: center;
+                img {
+                margin-bottom: 15px;
+            }
+        }
+    }
+}
+
+.row-design-stack {
+    @media (min-width: @screen-md-min) {
+        .col-diagram {
+            margin-top: -100px;
+        }
+    }
+}
+
+.row-how-it-works {
+    .col-diagram {
+        text-align: center;
+        @media (max-width: @screen-sm-max) {
+            margin-bottom: 30px;
+        }
+    }
+}
+
+.row-library {
+    .row-equalize-col-height > div[class*="col-"] {
+        > .panel {
+            display: flex;
+            margin-bottom: @grid-gutter-width;
+            > .panel-body {
+                display: flex;
+                flex-direction: column;
+                > .row {
+                    display: flex;
+                    flex-direction: row;
+                    height: 100%;
+                    align-items: flex-end;
+                }
+            }
+        }
+        &:last-child > .panel {
+            margin-bottom: 0;
         }
     }
 }
 
 .row-testimonial,
 .row-leadership {
-    @media (min-width: @screen-sm-min) {
-        > div[class*="col-"]:first-child {
+    .col-headshot {
+        text-align: center;
+        @media (min-width: @screen-sm-min) {
             padding-right: 0;
             padding-left: 0;
             margin-top: -15px;
+        }
+        @media (max-width: @screen-sm-max) {
+            margin-bottom: 15px;
         }
     }
 }
@@ -450,18 +522,43 @@ p a:not(.btn) {
     }
 }
 
+.row-community-endcap {
+    overflow-y: hidden;
+    .thumbnail-group-clients {
+        position: relative;
+        margin-bottom: -60px;
+        &::before {
+            content: "";
+            position: absolute;
+            z-index: 980;
+            display: block;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            background: -webkit-linear-gradient(top, rgba(29,37,47,0) 25%, rgba(29,37,47,1) 80%); // Chrome 10-25, Safari 5.1-6
+            background: linear-gradient(to bottom, rgba(29,37,47,0) 25%, rgba(29,37,47,1) 80%); // W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+
+        }
+    }
+}
+
 
 //
 // Sections
 // ==================================================
 
 // Section styles that are global
-@padding-section-vertical:                  60px;
-@padding-section-large-vertical:            90px;
+@padding-section-vertical-mobile:           45px;
+@padding-section-vertical-desktop:          60px;
 
 .section {
-    padding-top: @padding-section-vertical;
-    padding-bottom: @padding-section-vertical;
+    padding-top: @padding-section-vertical-mobile;
+    padding-bottom: @padding-section-vertical-mobile;
+
+    @media (min-width: @screen-sm-min) {
+        padding-top: @padding-section-vertical-desktop;
+        padding-bottom: @padding-section-vertical-desktop;
+    }
 }
 
 // Sections that have a blue background
@@ -473,27 +570,62 @@ p a:not(.btn) {
 // Hero styles on the front page
 .index-page .section-hero {
     color: #fff;
-    margin-top: -(@navbar-height + 4);
-    padding-top: (@navbar-height + 4) + @padding-section-large-vertical;
-    padding-bottom: 135px;
     &:extend(.gradient-primary.gradient-vertical);
-    background: url('../img/bg-header-squares.png') center bottom no-repeat, linear-gradient(@brand-primary, #06A2FF); // This is what we need to do in order to stack a background image on top of a background gradient
+    background: url('img/bg-header-squares.png') center bottom no-repeat, linear-gradient(@brand-primary, #06A2FF); // This is what we need to do in order to stack a background image on top of a background gradient
+    @media (min-width: @screen-sm-min) {
+        padding-top: 30px;
+        .floating-img-infrastructure-in-a-day {
+            position: absolute;
+            width: 220px;
+            top: 30px;
+            left: -60px;
+        }
+    }
+    @media (min-width: @screen-md-min) {
+        margin-top: -(@navbar-height + 4);
+        padding-top: (@navbar-height + 4) + 90px;
+        padding-bottom: 135px;
+        .floating-img-infrastructure-in-a-day {
+            position: absolute;
+            width: auto;
+            top: -60px;
+            left: 15px;
+        }
+    }
 }
 
 // Hero styles for sub pages
 .sub-page .section-hero {
-    padding-top: @padding-section-vertical;
-    padding-bottom: @padding-section-vertical;
     &:extend(.gradient-steel.gradient-vertical);
-    background: url('../img/bg-header-squares.png') center bottom no-repeat, linear-gradient(#1a232d, #2e3b4a); // This is what we need to do in order to stack a background image on top of a background gradient
+    background: url('img/bg-header-squares.png') center bottom no-repeat, linear-gradient(#1a232d, #2e3b4a); // This is what we need to do in order to stack a background image on top of a background gradient
 }
 
-// Hero styles on the front page
+// Main content section styles on the front page
 .index-page .main .section-dark {
-    background-image: url('../img/bg-content-squares.png');
+    background-image: url('img/bg-content-squares.png');
     background-position: center top;
     background-repeat: no-repeat;
+    @media (min-width: @screen-md-min) {
+        padding-bottom: 190px;
+        .container {
+            position: relative;
+            &::after {
+                content: "";
+                display: block;
+                position: absolute;
+                height: 305px;
+                width: 224px;
+                bottom: -260px;
+                right: 6px;
+                z-index: 980;
+                background: url('img/infrastructure-endcap.png') right bottom no-repeat;
+                background-size: 224px 305px;
+            }
+        }
+    }
 }
+
+// Main content styles for sub pages
 .sub-page .main {
     position: relative;
     border-bottom: 2px solid rgba(15, 192, 239, 0.25);
@@ -502,28 +634,37 @@ p a:not(.btn) {
     }
     &::after {
         content: "";
+        display: block;
+        position: absolute;
         height: 55px;
         width: 100%;
-        position: absolute;
         bottom: -34px;
-        display: block;
-        background-image: url('../img/hr-boxes.png');
+        z-index: 990;
+        background-image: url('img/hr-boxes.png');
         background-position: center bottom;
         background-repeat: no-repeat;
         background-size: 80px 55px;
     }
 }
+// Specific styles for the who's using it page
+.sub-page.whos-using-it .main {
+    > .section:last-child {
+        padding-bottom: 0;
+    }
+}
 
 // Sub-hero styles
 .section-sub-hero {
-    padding-top: 20px;
-    padding-bottom: 20px;
+    @media (min-width: @screen-sm-min) {
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
 }
 
 // Footer styles that are global
 footer {
     &:extend(.gradient-steel.gradient-vertical);
-    background: url('../img/bg-footer-squares.png') center bottom no-repeat, linear-gradient(#1a232d, #2e3b4a); // This is what we need to do in order to stack a background image on top of a background gradient
+    background: url('img/bg-footer-squares.png') center bottom no-repeat, linear-gradient(#1a232d, #2e3b4a); // This is what we need to do in order to stack a background image on top of a background gradient
 }
 .section-footer-content {
     > .container > .row {
@@ -535,13 +676,18 @@ footer {
     padding-top: 0;
     padding-bottom: 0;
     > .container > .row {
-        padding: 90px 0 30px 0;
-        background-image: url('../img/grunty-wave.png');
-        background-repeat: no-repeat;
+        padding: 0 0 170px 0;
+        background: url('img/grunty-wave.png') center bottom no-repeat;
         background-size: 157px 141px;
-        background-position-y: bottom;
-        background-position-x: ~"-webkit-calc(100% - 60px)";
-        background-position-x: ~"calc(100% - 60px)";
+
+        @media (min-width: @screen-sm-min) {
+            padding: 90px 0 30px 0;
+            background-position-x: right;
+        }
+        @media (min-width: @screen-lg-min) {
+            background-position-x: ~"-webkit-calc(100% - 60px)";
+            background-position-x: ~"calc(100% - 60px)";
+        }
     }
 }
 
@@ -584,8 +730,14 @@ footer {
                 > th { border: none; }
                 > td { border: none; }
             }
-            &:hover td {
-                color: #fff;
+            &:hover {
+                td,
+                td a,
+                td a:hover,
+                td a:focus {
+                    color: #fff;
+                    transition: none;
+                }
             }
         }
     }
@@ -653,10 +805,15 @@ h6, .h6 { .heading-margin-variant(0.68; 0.52; @line-height-h6); }
     margin-top: -15px;
 }
 
-@media (min-width: @screen-sm-min) {
-    .section > .container > .row > div[class*="col-"] > * {
-        &:first-child   { margin-top: 0; }
-        &:last-child    { margin-bottom: 0; }
+// Remove top and bottom margins from headings and paragraphs that are the first/last children in a row/column
+.section > .container > .row > div[class*="col-"] {
+    > p, > h1, > h2, > h3, > h4, > h5, > h6 {
+        &:first-child {
+            margin-top: 0;
+        }
+        &:last-child {
+            margin-bottom: 0;
+        }
     }
 }
 
@@ -675,7 +832,7 @@ h6, .h6 { .heading-margin-variant(0.68; 0.52; @line-height-h6); }
 }
 
 .row-equalize-col-height .well {
-    width: 100%;
+    width: 100%; // Not sure why this is needed, but .wells don't act like a block element so only expand as far as the content does
 }
 
 
