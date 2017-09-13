@@ -23,17 +23,19 @@ footer_heading: See how we can help you achieve similar results.
 
         <div class="container">
 
-            <div class="row row-testimonial">
-                <div class="col-xs-12 col-sm-4 col-md-2 text-center">
-                    <img src="img/headshot-venu-Javarappa.png" />
-                </div> <!-- col -->
-                <div class="col-xs-12 col-sm-8 col-md-10">
-                    <img src="img/logo-dhi.png" height="54px" alt="[Company Name] Logo" title="[Company Name]"/>
-                    <br /><br />
-                    <p>&ldquo; [Testimonial... Fusce lacus sapien, feugiat in lorem et, maximus elementum lectus. Proin molestie augue orci, eleifend volutpat ante porta vel. Integer quis elementum nibh. In porta odio ut pulvinar accumsan. Etiam id rutrum dolor. Aenean a metus sed nulla volutpat egestas. Quisque et tortor et neque semper tempor.]&rdquo;</p>
-                    <p class="text-white">[Cite Full Name, Cite Job Title]</p>
-                </div> <!-- col -->
-            </div> <!-- row-testimonial -->
+            {% for testimonial in site.data.testimonials %}
+                <div class="row row-testimonial">
+                    <div class="col-xs-12 col-sm-4 col-md-2 text-center">
+                        <img src="/assets/img/{{ testimonial.headshot }}" />
+                    </div> <!-- col -->
+                    <div class="col-xs-12 col-sm-8 col-md-10">
+                        <img src="/assets/img/{{ testimonial.logo }}" alt="{{ testimonial.name }} Logo" title="{{ testimonial.name }}"/>
+                        <br /><br />
+                        <p>&ldquo;{{ testimonial.content }}&rdquo;</p>
+                        <p class="text-white">{{ testimonial.author }}</p>
+                    </div> <!-- col -->
+                </div> <!-- row-testimonial -->
+            {% endfor %}
 
             <hr class="hr-xl" />
 
