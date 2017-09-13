@@ -20,5 +20,5 @@ $('#modalPublicRepo').on('show.bs.modal', function(e) {
     var publicRepoLink = $(e.relatedTarget).data('public-repo');
     var privateRepoLink = $(e.relatedTarget).data('private-repo');
     $(e.currentTarget).find('.public-repo-link').attr('href', publicRepoLink);
-    $(e.currentTarget).find('.public-repo-link').attr('href', privateRepoLink);
+    $(e.currentTarget).find('.private-repo-link').attr('href', privateRepoLink);
 });
