@@ -10,6 +10,16 @@ footer_heading: Become a Gruntwork Member today!
 <div class="main">
     <div class="section section-hero">
         <div class="container">
+            <div class="row">
+                <div class="col-xs-12 text-center">
+                    <h1>Become a Gruntwork Member.</h1>
+                </div> <!-- col -->
+            </div> <!-- row -->
+        </div> <!-- container -->
+    </div> <!-- section-hero -->
+
+    <div class="section section-hero">
+        <div class="container">
             <div class="row row-page-header">
                 <div class="col-xs-12">
                     <h2>A better way to manage your infrastructure.</h2>
@@ -56,6 +66,141 @@ footer_heading: Become a Gruntwork Member today!
                     <p class="text-muted">Automated infrastructure updates are currently in beta and available upon request with certain limitations.</p>
                 </div> <!-- col -->
             </div> <!-- row-how-it-works -->
+
+            <div class="row row-how-it-works">
+                <div class="col-xs-8 col-xs-offset-2 col-sm-3 col-sm-offset-0 col-md-2 col-diagram">
+                    <img src="/assets/img/box.png" width="132px" />
+                </div> <!-- col -->
+                <div class="col-xs-12 col-sm-9 col-md-10 col-explaination">
+                    <h2>Get support.</h2>
+                    <p>As a subscriber, you get access to a team of DevOps experts for a tiny fraction of the cost of hiring a single DevOps engineer full time. We are here to help you with:</p>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-4">
+                            <ul>
+                                <li>Questions</li>
+                                <li>Troubleshooting</li>
+                                <li>Code reviews</li>
+                                <li>Design reviews</li>
+                            </ul>
+                        </div>
+                        <div class="col-xs-12 col-sm-4">
+                            <ul>
+                                <li>Bug fixes</li>
+                                <li>Updating your existing infrastructure</li>
+                                <li>Building a new infrastructure</li>
+                                <li>Office hours</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div> <!-- col -->
+            </div> <!-- row-how-it-works -->
+
+            <div class="row row-how-it-works">
+                <div class="col-xs-8 col-xs-offset-2 col-sm-3 col-sm-offset-0 col-md-2 col-diagram">
+                    <img src="/assets/img/box.png" width="132px" />
+                </div> <!-- col -->
+                <div class="col-xs-12 col-sm-9 col-md-10 col-explaination">
+                    <h2>Get access to the Gruntwork Community Forum.</h2>
+                    <p>Members get access to the Gruntwork Community Forum where you can talk with the other Gruntwork customers. Since you are all using the same infrastructure, this is a great place to ask questions, discuss design decisions, and work together as a community to improve infrastructure and DevOps practices.</p>
+                </div> <!-- col -->
+            </div> <!-- row-how-it-works -->
+
+            <div class="row row-how-it-works">
+                <div class="col-xs-8 col-xs-offset-2 col-sm-3 col-sm-offset-0 col-md-2 col-diagram">
+                    <img src="/assets/img/box.png" width="132px" />
+                </div> <!-- col -->
+                <div class="col-xs-12 col-sm-9 col-md-10 col-explaination">
+                    <h2>Receive the Monthly Newsletter.</h2>
+                    <p>We invite you to mentally check out from Terraform, AWS, and DevOps industry updates for one month at a time, until we send our Monthly Newsletter! It’s a description of all the updates we’ve made the last month, how to update your infrastructure to use them, as well as general news on what’s happening in the AWS, Terraform, and Gruntwork ecosystem.</p>
+                </div> <!-- col -->
+            </div> <!-- row-how-it-works -->
+
+            <div class="row row-how-it-works">
+                <div class="col-xs-8 col-xs-offset-2 col-sm-3 col-sm-offset-0 col-md-2 col-diagram">
+                    <img src="/assets/img/box.png" width="132px" />
+                </div> <!-- col -->
+                <div class="col-xs-12 col-sm-9 col-md-10 col-explaination">
+                    <h2>Receive security alerts.</h2>
+                    <p>New security vulnerables are discovered all the time. Rarely does a month go by without at least one critical vulnerability being announced in OpenSSL, PHP, Jenkins, WordPress, or the Linux kernel. We monitor a number of security advisory lists and notify you immediately if any critical vulnerabilities are announced that may affect your infrastructure.</p>
+                </div> <!-- col -->
+            </div> <!-- row-how-it-works -->
+
+            <div class="row row-page-header">
+                <div class="col-xs-12">
+                    <h2>Choose the right membership tier for your team.</h2>
+                    <p>We offer three membership tiers. All memberships include the features listed above.</p>
+                </div> <!-- col -->
+            </div> <!-- row-page-header -->
+
+            <hr />
+
+            <div class="row row-pricing-table">
+                <div class="col-xs-12">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                {% for plan in site.data.plans %}
+                                    <th>{{ plan.name }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th>Support Hours</th>
+                                {% for plan in site.data.plans %}
+                                    <td>{{ plan.support_hours }}</td>
+                                {% endfor %}
+                            </tr>
+                            <tr>
+                                <th>Support Availability</th>
+                                {% for plan in site.data.plans %}
+                                    <td>{{ plan.support_availability }}</td>
+                                {% endfor %}
+                            </tr>
+                            <tr>
+                                <th>After-Hours Support</th>
+                                {% for plan in site.data.plans %}
+                                    <td>{{ plan.after_hour_support }}</td>
+                                {% endfor %}
+                            </tr>
+                            <tr>
+                                <th>Reponse Time</th>
+                                {% for plan in site.data.plans %}
+                                    <td>{{ plan.response_time }}</td>
+                                {% endfor %}
+                            </tr>
+                            <tr>
+                                <th>Email Support</th>
+                                {% for plan in site.data.plans %}
+                                    <td>{{ plan.email_support }}</td>
+                                {% endfor %}
+                            </tr>
+                            <tr>
+                                <th>Phone/Video Chat Support</th>
+                                {% for plan in site.data.plans %}
+                                    <td>{{ plan.phone_video_support }}</td>
+                                {% endfor %}
+                            </tr>
+                            <tr>
+                                <th>Slack Support</th>
+                                {% for plan in site.data.plans %}
+                                    <td>{{ plan.slack_support }}</td>
+                                {% endfor %}
+                            </tr>
+                            <tr>
+                                <th>Automated Infra Updates</th>
+                                {% for plan in site.data.plans %}
+                                    <td>{{ plan.automated_infra_updates }}</td>
+                                {% endfor %}
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="text-center">
+                        <p><a href="/pricing" class="btn btn-primary" role="button">See Pricing</a></p>
+                    </div>
+                </div> <!-- col -->
+            </div> <!-- row-pricing-table -->
 
         </div> <!-- container -->
     </div> <!-- section-hero -->
