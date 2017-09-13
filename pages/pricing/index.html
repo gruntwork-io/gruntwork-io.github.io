@@ -36,17 +36,17 @@ footer_heading: Ready to hand off the Gruntwork?
                         <thead>
                             <tr>
                                 <th></th>
-                                {% for name in site.data.plans.names %}
-                                    <th>{{ name }}</th>
+                                {% for plan in site.data.plans %}
+                                    <th>{{ plan.name }}</th>
                                 {% endfor %}
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <th>Support Hours</th>
-                                <td>5 hours / month</td>
-                                <td>15 hours / month</td>
-                                <td>25 hours / month</td>
+                                {% for plan in site.data.plans %}
+                                    <td>{{ plan.values.support_hours }}</td>
+                                {% endfor %}
                             </tr>
                             <tr>
                                 <th>Support Availability</th>
