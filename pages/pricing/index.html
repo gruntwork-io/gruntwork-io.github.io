@@ -50,15 +50,15 @@ footer_heading: Ready to hand off the Gruntwork?
                             </tr>
                             <tr>
                                 <th>Support Availability</th>
-                                <td>Regular business hours</td>
-                                <td>Regular business hours</td>
-                                <td>Extended hours</td>
+                                {% for plan in site.data.plans %}
+                                    <td>{{ plan.support_availability }}</td>
+                                {% endfor %}
                             </tr>
                             <tr>
                                 <th>After-Hours Support</th>
-                                <td>No</td>
-                                <td>No</td>
-                                <td>Upon request</td>
+                                {% for plan in site.data.plans %}
+                                    <td>{{ plan.after_hour_support }}</td>
+                                {% endfor %}
                             </tr>
                             <tr>
                                 <th>Reponse Time</th>
