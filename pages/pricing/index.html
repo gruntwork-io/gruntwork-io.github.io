@@ -36,9 +36,9 @@ footer_heading: Ready to hand off the Gruntwork?
                         <thead>
                             <tr>
                                 <th></th>
-                                <th>Startup</th>
-                                <th>ScaleUp</th>
-                                <th>Enterprise</th>
+                                {% for plan in site.data.plans %}
+                                    <th>{{ plan.name }}</th>
+                                {% endfor %}
                             </tr>
                         </thead>
                         <tbody>
@@ -66,12 +66,57 @@ footer_heading: Ready to hand off the Gruntwork?
                                 <td>1 business day</td>
                                 <td>2 hours</td>
                             </tr>
+                            <tr>
+                                <th>Email Support</th>
+                                <td>Yes</td>
+                                <td>Yes</td>
+                                <td>Yes</td>
+                            </tr>
+                            <tr>
+                                <th>Phone/Video Chat Support</th>
+                                <td>Once per quarter</td>
+                                <td>Upon Request</td>
+                                <td>Upon Request</td>
+                            </tr>
+                            <tr>
+                                <th>Slack Support</th>
+                                <td>First month only</td>
+                                <td>First month only</td>
+                                <td>Yes</td>
+                            </tr>
+                            <tr>
+                                <th>Automated Infra Updates</th>
+                                <td>Coming soon</td>
+                                <td>Yes (Beta)</td>
+                                <td>Yes (Beta)</td>
+                            </tr>
+                            <tr>
+                                <th>Access the Gruntwork Library</th>
+                                <td>Yes</td>
+                                <td>Yes</td>
+                                <td>Yes</td>
+                            </tr>
+                            <tr>
+                                <th>Security Alerts</th>
+                                <td>Yes</td>
+                                <td>Yes</td>
+                                <td>Yes</td>
+                            </tr>
+                            <tr>
+                                <th>Newsletter</th>
+                                <td>Yes</td>
+                                <td>Yes</td>
+                                <td>Yes</td>
+                            </tr>
+                            <tr>
+                                <th>Price</th>
+                                <td>Yes</td>
+                                <td>Yes</td>
+                                <td>Yes</td>
+                            </tr>
                         </tbody>
                     </table>
                     <p class="text-muted"><em>*Subscriptions available for a period of 12 months. One license allows for significant infrastructure usage for one software team. Our contract specifies these limits precisely.</em></p>
-                    <div class="text-center">
-                        <p><a href="#" class="btn btn-primary" role="button">See Pricing</a></p>
-                    </div>
                 </div> <!-- col -->
             </div> <!-- row-pricing-table -->
 
