@@ -24,7 +24,19 @@ footer_heading: Tell us what kind of infrastructure you need.
 
             <div class="row">
                 <div class="col-xs-12 text-center">
-                    <p><a href="#" class="btn btn-info" role="button"><i class="fa fa-fw fa-youtube-play"></i>&nbsp;&nbsp;Watch the Overview Video</a></p>
+                    <div class="modal fade" id="modalOverviewVideo" tabindex="-1" role="dialog" aria-labelledby="modalOverviewVideoTitle">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header text-center">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="fa fa-fw fa-close"></i></button>
+                                </div> <!-- modal-header -->
+                                <div class="modal-body text-center">
+                                    <h4 class="h2 modal-title margin-top-none" id="modalOverviewVideo">Video</h4>
+                                </div> <!-- modal-body -->
+                            </div> <!-- modal-content -->
+                        </div> <!-- modal-dialog -->
+                    </div> <!-- modal -->
+                    <p><btn class="btn btn-info" role="button" data-toggle="modal" data-target="#modalOverviewVideo"><i class="fa fa-fw fa-youtube-play"></i>&nbsp;&nbsp;Watch the Overview Video</btn></p>
                     <hr />
                 </div> <!-- col -->
             </div> <!-- row -->
