@@ -26,3 +26,6 @@ $("#modalOverviewVideo").on("hidden.bs.modal",function(){callPlayer("yt-player",
 
 /* Dashed lines on homepage */
 var c=document.getElementById("dottedLine");if(c){var ctx=c.getContext("2d");ctx.beginPath(),ctx.setLineDash([10,10]),ctx.moveTo(0,0),ctx.lineTo(0,200),ctx.strokeStyle="#fff",ctx.lineWidth=1.5,ctx.stroke()}
+
+/* initialize bootstrap tooltips */
+$(function () {$('[data-toggle="tooltip"]').tooltip()})
