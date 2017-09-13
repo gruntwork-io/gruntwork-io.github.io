@@ -16,105 +16,13 @@ this.activeTarget=b,this.clear();var c=this.selector+'[data-target="'+b+'"],'+th
 function serialize(a,b){"object"!=typeof b?b={hash:!!b}:void 0===b.hash&&(b.hash=!0);for(var c=b.hash?{}:"",d=b.serializer||(b.hash?hash_serializer:str_serialize),e=a&&a.elements?a.elements:[],f=Object.create(null),g=0;g<e.length;++g){var h=e[g];if((b.disabled||!h.disabled)&&h.name&&(k_r_success_contrls.test(h.nodeName)&&!k_r_submitter.test(h.type))){var i=h.name,j=h.value;if("checkbox"!==h.type&&"radio"!==h.type||h.checked||(j=void 0),b.empty){if("checkbox"!==h.type||h.checked||(j=""),"radio"===h.type&&(f[h.name]||h.checked?h.checked&&(f[h.name]=!0):f[h.name]=!1),!j&&"radio"==h.type)continue}else if(!j)continue;if("select-multiple"!==h.type)c=d(c,i,j);else{j=[];for(var k=h.options,l=!1,m=0;m<k.length;++m){var n=k[m],o=b.empty&&!n.value,p=n.value||o;n.selected&&p&&(l=!0,c=b.hash&&"[]"!==i.slice(i.length-2)?d(c,i+"[]",n.value):d(c,i,n.value))}!l&&b.empty&&(c=d(c,i,""))}}}if(b.empty)for(var i in f)f[i]||(c=d(c,i,""));return c}function parse_keys(a){var b=[],c=/^([^\[\]]*)/,d=new RegExp(brackets),e=c.exec(a);for(e[1]&&b.push(e[1]);null!==(e=d.exec(a));)b.push(e[1]);return b}function hash_assign(a,b,c){if(0===b.length)return a=c;var d=b.shift(),e=d.match(/^\[(.+?)\]$/);if("[]"===d)return a=a||[],Array.isArray(a)?a.push(hash_assign(null,b,c)):(a._values=a._values||[],a._values.push(hash_assign(null,b,c))),a;if(e){var f=e[1],g=+f;isNaN(g)?(a=a||{},a[f]=hash_assign(a[f],b,c)):(a=a||[],a[g]=hash_assign(a[g],b,c))}else a[d]=hash_assign(a[d],b,c);return a}function hash_serializer(a,b,c){if(b.match(brackets))hash_assign(a,parse_keys(b),c);else{var f=a[b];f?(Array.isArray(f)||(a[b]=[f]),a[b].push(c)):a[b]=c}return a}function str_serialize(a,b,c){return c=c.replace(/(\r)?\n/g,"\r\n"),c=encodeURIComponent(c),c=c.replace(/%20/g,"+"),a+(a?"&":"")+encodeURIComponent(b)+"="+c}var k_r_submitter=/^(?:submit|button|image|reset|file)$/i,k_r_success_contrls=/^(?:input|select|textarea|keygen)/i,brackets=/(\[[^\[\]]*\])/g;
 
 /* Repo modal link handler */
-$('#modalPublicRepo').on('show.bs.modal', function(e) {
-    var publicRepoLink = $(e.relatedTarget).data('public-repo');
-    var privateRepoLink = $(e.relatedTarget).data('private-repo');
-    $(e.currentTarget).find('.public-repo-link').attr('href', publicRepoLink);
-    $(e.currentTarget).find('.private-repo-link').attr('href', privateRepoLink);
-});
+$("#modalPublicRepo").on("show.bs.modal",function(r){var e=$(r.relatedTarget).data("public-repo"),a=$(r.relatedTarget).data("private-repo");$(r.currentTarget).find(".public-repo-link").attr("href",e),$(r.currentTarget).find(".private-repo-link").attr("href",a)});
 
 /* Youtube helper */
-function callPlayer(frame_id, func, args) {
-    if (window.jQuery && frame_id instanceof jQuery) frame_id = frame_id.get(0).id;
-    var iframe = document.getElementById(frame_id);
-    if (iframe && iframe.tagName.toUpperCase() != 'IFRAME') {
-        iframe = iframe.getElementsByTagName('iframe')[0];
-    }
-
-    // When the player is not ready yet, add the event to a queue
-    // Each frame_id is associated with an own queue.
-    // Each queue has three possible states:
-    //  undefined = uninitialised / array = queue / 0 = ready
-    if (!callPlayer.queue) callPlayer.queue = {};
-    var queue = callPlayer.queue[frame_id],
-        domReady = document.readyState == 'complete';
-
-    if (domReady && !iframe) {
-        // DOM is ready and iframe does not exist. Log a message
-        window.console && console.log('callPlayer: Frame not found; id=' + frame_id);
-        if (queue) clearInterval(queue.poller);
-    } else if (func === 'listening') {
-        // Sending the "listener" message to the frame, to request status updates
-        if (iframe && iframe.contentWindow) {
-            func = '{"event":"listening","id":' + JSON.stringify(''+frame_id) + '}';
-            iframe.contentWindow.postMessage(func, '*');
-        }
-    } else if (!domReady ||
-               iframe && (!iframe.contentWindow || queue && !queue.ready) ||
-               (!queue || !queue.ready) && typeof func === 'function') {
-        if (!queue) queue = callPlayer.queue[frame_id] = [];
-        queue.push([func, args]);
-        if (!('poller' in queue)) {
-            // keep polling until the document and frame is ready
-            queue.poller = setInterval(function() {
-                callPlayer(frame_id, 'listening');
-            }, 250);
-            // Add a global "message" event listener, to catch status updates:
-            messageEvent(1, function runOnceReady(e) {
-                if (!iframe) {
-                    iframe = document.getElementById(frame_id);
-                    if (!iframe) return;
-                    if (iframe.tagName.toUpperCase() != 'IFRAME') {
-                        iframe = iframe.getElementsByTagName('iframe')[0];
-                        if (!iframe) return;
-                    }
-                }
-                if (e.source === iframe.contentWindow) {
-                    // Assume that the player is ready if we receive a
-                    // message from the iframe
-                    clearInterval(queue.poller);
-                    queue.ready = true;
-                    messageEvent(0, runOnceReady);
-                    // .. and release the queue:
-                    while (tmp = queue.shift()) {
-                        callPlayer(frame_id, tmp[0], tmp[1]);
-                    }
-                }
-            }, false);
-        }
-    } else if (iframe && iframe.contentWindow) {
-        // When a function is supplied, just call it (like "onYouTubePlayerReady")
-        if (func.call) return func();
-        // Frame exists, send message
-        iframe.contentWindow.postMessage(JSON.stringify({
-            "event": "command",
-            "func": func,
-            "args": args || [],
-            "id": frame_id
-        }), "*");
-    }
-    /* IE8 does not support addEventListener... */
-    function messageEvent(add, listener) {
-        var w3 = add ? window.addEventListener : window.removeEventListener;
-        w3 ?
-            w3('message', listener, !1)
-        :
-            (add ? window.attachEvent : window.detachEvent)('onmessage', listener);
-    }
-}
+function callPlayer(e,n,t){function a(e,n){var t=e?window.addEventListener:window.removeEventListener;t?t("message",n,!1):(e?window.attachEvent:window.detachEvent)("onmessage",n)}window.jQuery&&e instanceof jQuery&&(e=e.get(0).id);var l=document.getElementById(e);l&&"IFRAME"!=l.tagName.toUpperCase()&&(l=l.getElementsByTagName("iframe")[0]),callPlayer.queue||(callPlayer.queue={});var o=callPlayer.queue[e],i="complete"==document.readyState;if(i&&!l)window.console&&console.log("callPlayer: Frame not found; id="+e),o&&clearInterval(o.poller);else if("listening"===n)l&&l.contentWindow&&(n='{"event":"listening","id":'+JSON.stringify(""+e)+"}",l.contentWindow.postMessage(n,"*"));else if(i&&(!l||l.contentWindow&&(!o||o.ready))&&(o&&o.ready||"function"!=typeof n)){if(l&&l.contentWindow){if(n.call)return n();l.contentWindow.postMessage(JSON.stringify({event:"command",func:n,args:t||[],id:e}),"*")}}else o||(o=callPlayer.queue[e]=[]),o.push([n,t]),"poller"in o||(o.poller=setInterval(function(){callPlayer(e,"listening")},250),a(1,function n(t){if(!l){if(!(l=document.getElementById(e)))return;if("IFRAME"!=l.tagName.toUpperCase()&&!(l=l.getElementsByTagName("iframe")[0]))return}if(t.source===l.contentWindow)for(clearInterval(o.poller),o.ready=!0,a(0,n);tmp=o.shift();)callPlayer(e,tmp[0],tmp[1])}))}
 
 /* Stop youtube video on modal close */
-$('#modalOverviewVideo').on('hidden.bs.modal', function () {
-    callPlayer('yt-player', 'stopVideo');
-});
+$("#modalOverviewVideo").on("hidden.bs.modal",function(){callPlayer("yt-player","stopVideo")});
 
 /* Dashed lines on homepage */
-var c = document.getElementById("dottedLine");
-var ctx = c.getContext("2d");
-ctx.beginPath();
-ctx.setLineDash([10, 10]);
-ctx.moveTo(0, 0);
-ctx.lineTo(0, 200);
-ctx.strokeStyle = '#fff';
-ctx.lineWidth = 1.5;
-ctx.stroke();
+var c=document.getElementById("dottedLine");if(c){var ctx=c.getContext("2d");ctx.beginPath(),ctx.setLineDash([10,10]),ctx.moveTo(0,0),ctx.lineTo(0,200),ctx.strokeStyle="#fff",ctx.lineWidth=1.5,ctx.stroke()}
