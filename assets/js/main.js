@@ -17,8 +17,8 @@ function serialize(a,b){"object"!=typeof b?b={hash:!!b}:void 0===b.hash&&(b.hash
 
 /* Repo modal link handler */
 $('#modalPublicRepo').on('show.bs.modal', function(e) {
-    var publicRepoLink = $(e.relatedTarget).data('public-repo-link');
-    var privateRepoLink = $(e.relatedTarget).data('private-repo-link');
+    var publicRepoLink = $(e.relatedTarget).data('public-repo');
+    var privateRepoLink = $(e.relatedTarget).data('private-repo');
     $(e.currentTarget).find('.public-repo-link').attr('href', publicRepoLink);
     $(e.currentTarget).find('.public-repo-link').attr('href', privateRepoLink);
 });
