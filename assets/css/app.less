@@ -168,6 +168,10 @@ p + .btn {
     border-left: 2px solid #194C5F;
 }
 
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
+
 
 //
 // Forms
@@ -491,6 +495,13 @@ p a:not(.btn) {
 }
 
 .row-library {
+    // Safari fix for column width/padding issue
+    .row-equalize-col-height>.col-sm-6 {
+        width: 49%;
+        @media (max-width: @screen-sm-max) {
+            width: 100%;
+        }
+    }
     .row-equalize-col-height > div[class*="col-"] {
         margin-bottom: @grid-gutter-width;
         > .panel {
