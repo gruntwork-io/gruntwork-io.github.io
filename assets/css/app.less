@@ -483,9 +483,10 @@ p a:not(.btn) {
 
 .row-library {
     .row-equalize-col-height > div[class*="col-"] {
+        margin-bottom: @grid-gutter-width;
         > .panel {
             display: flex;
-            margin-bottom: @grid-gutter-width;
+            height: 100%;
             > .panel-body {
                 display: flex;
                 flex-direction: column;
