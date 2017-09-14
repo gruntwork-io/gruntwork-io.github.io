@@ -517,9 +517,13 @@ p a:not(.btn) {
                 display: -ms-flexbox;
                 display: -webkit-flex;
                 flex-direction: column;
-                > .row {
-                    height: 100%;
-                }
+                justify-content: space-between;
+            }
+            > .panel-body::before {
+                display: none;
+            }
+            > .panel-body::after {
+                display: none;
             }
         }
         &:last-child > .panel {
