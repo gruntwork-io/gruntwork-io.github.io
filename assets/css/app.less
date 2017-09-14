@@ -316,7 +316,9 @@ p a:not(.btn) {
 
 #modalPublicRepo {
     .modal-content {
-        background-image: url('../img/grunty-wave.png');
+        @media (min-width: @screen-md-max) {
+            background-image: url('../img/grunty-wave.png');
+        }
         background-repeat: no-repeat;
         background-size: 157px 141px;
         background-position-y: bottom;
