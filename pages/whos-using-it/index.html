@@ -1,0 +1,172 @@
+---
+layout: default
+title: Gruntwork | Who's Using It
+excerpt: Meet some of the members of the Gruntwork Community.
+permalink: /whos-using-it
+slug: whos-using-it
+footer_heading: See how we can help you achieve similar results.
+---
+
+<div class="main">
+    <div class="section section-hero">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 text-center">
+                    <h1>Who's Using It</h1>
+                    <p>Meet some of the members of the Gruntwork Community.</p>
+                </div> <!-- col -->
+            </div> <!-- row -->
+        </div> <!-- container -->
+    </div> <!-- section-hero -->
+
+    <div class="section section-dark">
+
+        <div class="container">
+
+            {% for testimonial in site.data.testimonials %}
+                <div class="row row-testimonial">
+                    <div class="col-xs-12 col-sm-3 col-md-2 col-headshot">
+                        <img src="/assets/img/{{ testimonial.headshot }}" height="146" />
+                    </div> <!-- col -->
+                    <div class="col-xs-12 col-sm-9 col-md-10 col-testimonial">
+                        <img src="/assets/img/{{ testimonial.logo }}" alt="{{ testimonial.name }} Logo" title="{{ testimonial.name }}" height="80" />
+                        <br />
+                        <p>&ldquo;{{ testimonial.content }}&rdquo;</p>
+                        <p class="text-white">{{ testimonial.author }}</p>
+                    </div> <!-- col -->
+                </div> <!-- row-testimonial -->
+            {% endfor %}
+
+            <div class="row row-community row-community-endcap">
+                <div class="col-xs-12 text-center">
+                    <h2>And the community keeps growing!</h2>
+                </div> <!-- col -->
+                <div class="col-xs-10 col-xs-offset-1 col-sm-12 col-sm-offset-0" style="margin-top: 25px;">
+                    <div class="row thumbnail-group thumbnail-group-clients">
+                        <div class="col-xs-6 col-sm-3 col-md-2">
+                            <div class="thumbnail">
+                                <img src="/assets/img/logo-nimblerx.png" alt="NimbeRX Logo" width="119">
+                            </div>
+                        </div> <!-- col -->
+                        <div class="col-xs-6 col-sm-3 col-md-2">
+                            <div class="thumbnail">
+                                <img src="/assets/img/logo-vu-me.png" alt="Vu Me Logo" width="119">
+                            </div>
+                        </div> <!-- col -->
+                        <div class="col-xs-6 col-sm-3 col-md-2">
+                            <div class="thumbnail">
+                                <img src="/assets/img/logo-intel.png" alt="Intel Logo" width="119">
+                            </div>
+                        </div> <!-- col -->
+                        <div class="col-xs-6 col-sm-3 col-md-2">
+                            <div class="thumbnail">
+                                <img src="/assets/img/logo-bolste.png" alt="Bolste Logo" width="119">
+                            </div>
+                        </div> <!-- col -->
+                        <div class="col-xs-6 col-sm-3 col-md-2">
+                            <div class="thumbnail">
+                                <img src="/assets/img/logo-bind.png" alt="Bind Logo" width="119">
+                            </div>
+                        </div> <!-- col -->
+                        <div class="col-xs-6 col-sm-3 col-md-2">
+                            <div class="thumbnail">
+                                <img src="/assets/img/logo-healthline.png" alt="Healthline Logo" width="119">
+                            </div>
+                        </div> <!-- col -->
+                        <div class="col-xs-6 col-sm-3 col-md-2">
+                            <div class="thumbnail">
+                                <img src="/assets/img/logo-jumio.png" alt="Jumio Logo" width="119">
+                            </div>
+                        </div> <!-- col -->
+                        <div class="col-xs-6 col-sm-3 col-md-2">
+                            <div class="thumbnail">
+                                <img src="/assets/img/logo-fluo.png" alt="Fluo Logo" width="119">
+                            </div>
+                        </div> <!-- col -->
+                        <div class="col-xs-6 col-sm-3 col-md-2">
+                            <div class="thumbnail">
+                                <img src="/assets/img/logo-quid.png" alt="Quid Logo" width="119">
+                            </div>
+                        </div> <!-- col -->
+                        <div class="col-xs-6 col-sm-3 col-md-2">
+                            <div class="thumbnail">
+                                <img src="/assets/img/logo-real-estate-co-nz.png" alt="Real Estate Co NZ Logo" width="119">
+                            </div>
+                        </div> <!-- col -->
+                        <div class="col-xs-6 col-sm-3 col-md-2">
+                            <div class="thumbnail">
+                                <img src="/assets/img/logo-hbk.png" alt="HBK Logo" width="119">
+                            </div>
+                        </div> <!-- col -->
+                        <div class="col-xs-6 col-sm-3 col-md-2">
+                            <div class="thumbnail">
+                                <img src="/assets/img/logo-commscope.png" alt="Commscope Logo" width="119">
+                            </div>
+                        </div> <!-- col -->
+                        <div class="col-xs-6 col-sm-3 col-md-2">
+                            <div class="thumbnail">
+                                <img src="/assets/img/logo-early-warning.png" alt="Early Warning Logo" width="119">
+                            </div>
+                        </div> <!-- col -->
+                        <div class="col-xs-6 col-sm-3 col-md-2">
+                            <div class="thumbnail">
+                                <img src="/assets/img/logo-nauto.png" alt="Nauto Logo" width="119">
+                            </div>
+                        </div> <!-- col -->
+                        <div class="col-xs-6 col-sm-3 col-md-2">
+                            <div class="thumbnail">
+                                <img src="/assets/img/logo-tidal-migration.png" alt="Tidal Migration Logo" width="119">
+                            </div>
+                        </div> <!-- col -->
+                        <div class="col-xs-6 col-sm-3 col-md-2">
+                            <div class="thumbnail">
+                                <img src="/assets/img/logo-commonplace.png" alt="Commonplace Logo" width="119">
+                            </div>
+                        </div> <!-- col -->
+                        <div class="col-xs-6 col-sm-3 col-md-2">
+                            <div class="thumbnail">
+                                <img src="/assets/img/logo-rhumbix.png" alt="Rhumbix Logo" width="119">
+                            </div>
+                        </div> <!-- col -->
+                        <div class="col-xs-6 col-sm-3 col-md-2">
+                            <div class="thumbnail">
+                                <img src="/assets/img/logo-gridpoint.png" alt="Gridpoint Logo" width="119">
+                            </div>
+                        </div> <!-- col -->
+                        <div class="col-xs-6 col-sm-3 col-md-2">
+                            <div class="thumbnail">
+                                <img src="/assets/img/logo-tagup.png" alt="Tagup Logo" width="119">
+                            </div>
+                        </div> <!-- col -->
+                        <div class="col-xs-6 col-sm-3 col-md-2">
+                            <div class="thumbnail">
+                                <img src="/assets/img/logo-iwoca.png" alt="Iwoca Logo" width="119">
+                            </div>
+                        </div> <!-- col -->
+                        <div class="col-xs-6 col-sm-3 col-md-2">
+                            <div class="thumbnail">
+                                <img src="/assets/img/logo-blast.png" alt="Blast Logo" width="119">
+                            </div>
+                        </div> <!-- col -->
+                        <div class="col-xs-6 col-sm-3 col-md-2">
+                            <div class="thumbnail">
+                                <img src="/assets/img/logo-paf.png" alt="Paf Logo" width="119">
+                            </div>
+                        </div> <!-- col -->
+                        <div class="col-xs-6 col-sm-3 col-md-2">
+                            <div class="thumbnail">
+                                <img src="/assets/img/logo-proxy-project.png" alt="Proxy Project Logo" width="119">
+                            </div>
+                        </div> <!-- col -->
+                        <div class="col-xs-6 col-sm-3 col-md-2">
+                            <div class="thumbnail">
+                                <img src="/assets/img/logo-zola.png" alt="Zola Logo" width="119">
+                            </div>
+                        </div> <!-- col -->
+                    </div> <!-- row -->
+                </div> <!-- col -->
+            </div> <!-- row-community -->
+
+        </div>
+    </div>
+</div>

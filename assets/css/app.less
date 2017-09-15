@@ -1,0 +1,1231 @@
+//
+// Import variables
+// ==================================================
+// ==================================================
+
+@import "bootstrap/less/bootstrap.less";
+@import "user10/variables";
+@import "app-variable-overrides";
+@import "user10/utilities";
+
+
+
+//
+// Custom styles
+// ==================================================
+// ==================================================
+
+
+//
+// Buttons
+// ==================================================
+
+p + p > .btn,
+p + .btn {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+.btn {
+    padding: 6px 20px;
+    border: none;
+    box-shadow: 0 4px 6px rgba(0,0,0,.11), 0 1px 3px rgba(0,0,0,.08);
+    &:focus,
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 9px rgba(0,0,0,.10), 0 2px 5px rgba(0,0,0,.07);
+    }
+}
+.btn-link {
+    box-shadow: none;
+}
+
+.btn-primary {
+    &:extend(.gradient-primary.gradient-diagonal);
+    &:focus,
+    &:hover {
+        color: #fff;
+        &:extend(.gradient-primary-hover.gradient-diagonal);
+    }
+}
+.btn-info {
+    &:extend(.gradient-info.gradient-diagonal);
+    &:focus,
+    &:hover {
+        color: #fff;
+        &:extend(.gradient-info-hover.gradient-diagonal);
+    }
+}
+
+// Footer buttons styles
+.footer a.btn {
+    color: #fff;
+    &:hover,
+    &:focus {
+        color: #fff;
+    }
+}
+
+// Special styles for our social icon group
+.btn-group-social-icons {
+    margin-top: 6px;
+    margin-left: -4px;
+    .btn {
+        margin: 0;
+        padding: 0;
+        border: none;
+        font-size: 22px;
+        line-height: 22px;
+        background: transparent;
+        box-shadow: none;
+    }
+}
+
+// Special styles for our infrastructure package icon group
+.btn-group-package-icons {
+    .btn {
+        margin: 0;
+        padding: 0 6px;
+        border: none;
+        background: transparent;
+        box-shadow: none;
+    }
+
+    img {
+        margin-left: 6px;
+    }
+}
+
+
+//
+// Colors
+// ==================================================
+
+// Gradients
+@gradient-primary-start:                    @brand-primary;
+@gradient-primary-end:                      #06A2FF;
+@gradient-primary-start-hover:              lighten(@gradient-primary-start, 10%, relative);
+@gradient-primary-end-hover:                lighten(@gradient-primary-end, 10%, relative);
+
+@gradient-info-start:                       @brand-danger;
+@gradient-info-end:                         #FF5442;
+@gradient-info-start-hover:                 darken(@gradient-info-start, 8%, relative);
+@gradient-info-end-hover:                   darken(@gradient-info-end, 8%, relative);
+
+@gradient-steel-start:                      #1a232d;
+@gradient-steel-end:                        #2e3b4a;
+
+.gradient-mixin(@direction; @direction-to; @color-start; @color-end;) {
+    background: @color-start; // Old browsers
+    background: -webkit-linear-gradient(@direction, @color-start, @color-end); // Chrome 10-25, Safari 5.1-6
+    background: linear-gradient(@direction-to, @color-start, @color-end); // W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+
+}
+
+.gradient-primary {
+    &.gradient-vertical { .gradient-mixin( top; to bottom; @gradient-primary-start; @gradient-primary-end; ); }
+    &.gradient-diagonal { .gradient-mixin( -45deg; 135deg; @gradient-primary-start; @gradient-primary-end; ); }
+}
+.gradient-primary-hover {
+    &.gradient-vertical { .gradient-mixin( top; to bottom; @gradient-primary-start-hover; @gradient-primary-end-hover; ); }
+    &.gradient-diagonal { .gradient-mixin( -45deg; 135deg; @gradient-primary-start-hover; @gradient-primary-end-hover; ); }
+}
+
+.gradient-info {
+    &.gradient-vertical { .gradient-mixin( top; to bottom; @gradient-info-start; @gradient-info-end; ); }
+    &.gradient-diagonal { .gradient-mixin( -45deg; 135deg; @gradient-info-start; @gradient-info-end; ); }
+}
+.gradient-info-hover {
+    &.gradient-vertical { .gradient-mixin( top; to bottom; @gradient-info-start-hover; @gradient-info-end-hover; ); }
+    &.gradient-diagonal { .gradient-mixin( -45deg; 135deg; @gradient-info-start-hover; @gradient-info-end-hover; ); }
+}
+
+.gradient-steel {
+    &.gradient-vertical { .gradient-mixin( top; to bottom; @gradient-steel-start; @gradient-steel-end; ); }
+    &.gradient-diagonal { .gradient-mixin( -45deg; 135deg; @gradient-steel-start; @gradient-steel-end; ); }
+}
+
+
+//
+// Containers
+// ==================================================
+
+@media (max-width: @screen-sm-max) {
+    .container {
+        padding-right: @grid-gutter-width;
+        padding-left: @grid-gutter-width;
+    }
+}
+
+
+//
+// Dropdowns
+// ==================================================
+
+.navbar-nav > li > .dropdown-menu {
+    margin-top: -20px;
+    border-top-width: 2px;
+    border-right: 2px solid #194C5F;
+    border-bottom: 2px solid #194C5F;
+    border-left: 2px solid #194C5F;
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+
+//
+// Forms
+// ==================================================
+
+fieldset {
+    padding: (@grid-gutter-width / 2) @grid-gutter-width @grid-gutter-width @grid-gutter-width;
+    margin-bottom: @form-group-margin-bottom;
+    border: 1px solid @hr-border;
+}
+legend {
+    font-size: @font-size-small;
+    font-weight: @text-font-weight;
+    text-transform: uppercase;
+    margin-bottom: @padding-base-vertical;
+    color: @text-muted;
+    width: auto;
+    border: none;
+    margin: 0 0 0 (-(@grid-gutter-width / 2));
+    padding-left: (@grid-gutter-width / 2);
+    padding-right: (@grid-gutter-width / 2);
+}
+label {
+    font-weight: @text-font-weight;
+    margin-bottom: @padding-base-vertical;
+    color: @headings-color;
+}
+
+.form-control {
+    border-width: 2px;
+}
+
+.radio label,
+.checkbox label {
+    font-size: @font-size-base;
+    font-weight: @text-font-weight;
+    text-transform: none;
+    color: @text-color;
+}
+
+.help-block {
+    font-size: @font-size-small;
+}
+.has-error label {
+    color: @brand-danger;
+}
+
+.form-control::-webkit-input-placeholder { font-style: italic; }
+.form-control::-moz-placeholder          { font-style: italic; }
+.form-control::-ms-placeholder           { font-style: italic; }
+.form-control::placeholder               { font-style: italic; }
+
+
+//
+// Horizontal Rules
+// ==================================================
+
+hr {
+    margin: 45px 0;
+    border-width: 2px;
+    border-color: @hr-border;
+
+    // We like more vertical spacing for horizontal rules and Bootstrap.
+    &.hr-dim    { border-color: lighten(@hr-border, 5%); }
+    &.hr-xl     { margin: (@grid-gutter-width * 2.5) 0; }
+    &.hr-lg     { margin: (@grid-gutter-width * 2) 0; }
+    &.hr-sm     { margin: (@padding-large-vertical * 2) 0; }
+    &.hr-xs     { margin: @padding-large-vertical 0; }
+    &.hr-dashed { border-style: dashed; }
+}
+
+footer hr {
+    border-color: @color-bg-inverse;
+    border-width: 1px;
+}
+
+
+//
+// Labels
+// ==================================================
+
+.label-hollow {
+    color: @text-muted;
+    border: 1px solid @text-muted;
+    border-radius: 0;
+    background: transparent;
+    font-weight: @text-font-weight;
+    font-size: @font-size-base;
+    padding: 1px 8px 2px;
+    + .label-hollow {
+        margin-left: 4px;
+    }
+}
+
+
+//
+// Links
+// ==================================================
+
+p a:not(.btn) {
+    text-decoration: underline;
+    &:hover,
+    &:focus {
+        text-decoration: underline;
+    }
+}
+.section-blue a {
+    color: #fff;
+    &:hover,
+    &:focus {
+        color: @color-transparent-link;
+    }
+}
+
+
+//
+// Modals
+// ==================================================
+
+// Vertically center our modal
+.modal {
+    text-align: center;
+    padding: 0!important;
+}
+.modal:before {
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    margin-right: -4px;
+}
+.modal-dialog {
+    display: inline-block;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.modal-content {
+    border-radius: @padding-base-horizontal;
+    box-shadow: none;
+}
+
+.close {
+    opacity: 1.0;
+}
+
+#modalPublicRepo {
+    .modal-content {
+        @media (min-width: @screen-md-max) {
+            background-image: url('../img/grunty-wave.png');
+        }
+        background-repeat: no-repeat;
+        background-size: 157px 141px;
+        background-position-y: bottom;
+        background-position-x: ~"-webkit-calc(100% - 30px)";
+        background-position-x: ~"calc(100% - 30px)";
+    }
+    .modal-body {
+        padding: 0 @grid-gutter-width 60px;
+    }
+}
+
+
+//
+// Navbar
+// ==================================================
+
+.navbar-default {
+    border: none;
+}
+.navbar-brand {
+    font-size: 32px;
+    line-height: 32px;
+    letter-spacing: -1px;
+    padding-top: ((@navbar-height - 32) / 2) - 2;
+    padding-bottom: ((@navbar-height - 32) / 2) + 2;
+}
+.navbar-nav > li > a {
+    padding-right: 10px;
+    padding-left: 10px;
+    @media (min-width: @screen-md-min) {
+        padding-right: 20px;
+        padding-left: 20px;
+    }
+}
+
+// Navbar button styles
+.navbar-nav > li > a.btn {
+    padding: @padding-base-vertical @padding-base-horizontal;
+    margin-top: ((@navbar-height - 42) / 2);
+    margin-bottom: ((@navbar-height - 42) / 2);
+    margin-left: 20px;
+    &:hover,
+    &:focus {
+        color: #fff;
+    }
+}
+
+// Home page navbar styles
+.index-page .navbar-default {
+    border: none;
+    @media (max-width: @screen-md-max) {
+        background-color: @gradient-primary-start;
+    }
+}
+
+// Sub page navbar styles
+.sub-page .navbar-default {
+    &:extend(.gradient-primary.gradient-vertical);
+}
+
+
+//
+// Panels
+// ==================================================
+
+.panel {
+    border-width: 2px;
+}
+.panel-heading {
+    border-bottom-width: 2px;
+}
+.panel-body > *:first-child {
+    margin-top: 0;
+}
+.panel-body > *:last-child {
+    margin-bottom: 0;
+}
+
+
+//
+// Rows
+// ==================================================
+
+// Row styles that are global
+@padding-row-vertical-mobile:               45px;
+@padding-row-vertical-desktop:              60px;
+
+.container > .row + .row                { padding-top: @padding-row-vertical-mobile; }
+.index-page .container > .row + .row    { padding-top: @padding-row-vertical-desktop; }
+
+@media (min-width: @screen-sm-min) {
+    .container > .row + .row                { padding-top: @padding-row-vertical-desktop; }
+}
+@media (min-width: @screen-md-min) {
+    .index-page .section-dark .container > .row { padding-top: 90px; }
+}
+
+// Equal column heights when we want them
+.row-equalize-col-height {
+    display: flex;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    flex-wrap: wrap;
+    > div[class*="col-"] {
+        display: flex;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+    }
+}
+.row-center-vertically-sm {
+    @media (min-width: @screen-sm-min) {
+        display: flex;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        align-items: center;
+    }
+}
+
+// Specific rows
+.row-partners {
+    @media (max-width: @screen-xs-max) {
+        .col-partner-hashicorp {
+            text-align: center;
+            img {
+                margin-bottom: 30px;
+            }
+        }
+        .col-partner-experts {
+            text-align: center;
+            div[class*="col-"] {
+                margin-bottom: 20px;
+            }
+        }
+    }
+    @media (min-width: @screen-sm-min) {
+        .col-partner-experts .row + p {
+            margin-top: 15px;
+        }
+    }
+    @media (min-width: @screen-sm-min) {
+        margin-top: 40px;
+        margin-bottom: 40px;
+    }
+}
+
+@media (max-width: @screen-sm-max) {
+    .row-design-stack,
+    .row-expert-support,
+    .row-automatic-updates {
+        .col-diagram {
+            text-align: center;
+                img {
+                margin-bottom: 15px;
+            }
+        }
+    }
+}
+
+.row-design-stack {
+    @media (min-width: @screen-md-min) {
+        .col-diagram {
+            margin-top: -100px;
+        }
+    }
+}
+
+.row-how-it-works {
+    .col-diagram {
+        text-align: center;
+        @media (max-width: @screen-sm-max) {
+            margin-bottom: 30px;
+        }
+    }
+}
+
+.row-library {
+    // Safari fix for column width/padding issue
+    .row-equalize-col-height>.col-sm-6 {
+        width: 49%;
+        @media (max-width: @screen-sm-max) {
+            width: 100%;
+        }
+    }
+    .row-equalize-col-height > div[class*="col-"] {
+        margin-bottom: @grid-gutter-width;
+        > .panel {
+            display: flex;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: -webkit-flex;
+            height: 100%;
+            width: 100%;
+            > .panel-body {
+                display: flex;
+                display: -webkit-box;
+                display: -ms-flexbox;
+                display: -webkit-flex;
+                flex-direction: column;
+                justify-content: space-between;
+            }
+            > .panel-body::before {
+                display: none;
+            }
+            > .panel-body::after {
+                display: none;
+            }
+        }
+        &:last-child > .panel {
+            margin-bottom: 0;
+        }
+    }
+}
+
+.row-testimonial,
+.row-leadership {
+    .col-headshot {
+        text-align: center;
+        @media (min-width: @screen-sm-min) {
+            padding-right: 0;
+            padding-left: 0;
+            margin-top: -15px;
+        }
+        @media (max-width: @screen-sm-max) {
+            margin-bottom: 15px;
+        }
+    }
+}
+
+.row-form {
+    @media (min-width: @screen-md-min) {
+        div[class*="col-"] > label {
+            width: 100%;
+            text-align: right;
+            padding-top: 7px;
+        }
+    }
+}
+
+.row-community-endcap {
+    overflow-y: hidden;
+    .thumbnail-group-clients {
+        position: relative;
+        margin-bottom: -30px;
+        &::before {
+            content: "";
+            position: absolute;
+            z-index: 980;
+            display: block;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            background: -webkit-linear-gradient(top, rgba(29,37,47,0) 25%, rgba(29,37,47,1) 95%); // Chrome 10-25, Safari 5.1-6
+            background: linear-gradient(to bottom, rgba(29,37,47,0) 25%, rgba(29,37,47,1) 95%); // W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+
+        }
+    }
+}
+
+
+//
+// Sections
+// ==================================================
+
+// Section styles that are global
+@padding-section-vertical-mobile:           45px;
+@padding-section-vertical-desktop:          60px;
+
+.section {
+    padding-top: @padding-section-vertical-mobile;
+    padding-bottom: @padding-section-vertical-mobile;
+
+    @media (min-width: @screen-sm-min) {
+        padding-top: @padding-section-vertical-desktop;
+        padding-bottom: @padding-section-vertical-desktop;
+    }
+}
+
+// Sections that have a blue background
+.section-blue {
+    background-color: #0FC0EF;
+    color: #fff;
+}
+
+// Hero styles on the front page
+.index-page .section-hero {
+    color: #fff;
+    &:extend(.gradient-primary.gradient-vertical);
+    background: url('../img/bg-header-squares.png') center bottom no-repeat, linear-gradient(@brand-primary, #06A2FF); // This is what we need to do in order to stack a background image on top of a background gradient
+    @media (min-width: @screen-sm-min) {
+        padding-top: 30px;
+        .floating-img-infrastructure-in-a-day {
+            position: absolute;
+            width: 220px;
+            top: 30px;
+            left: -60px;
+        }
+    }
+    @media (min-width: @screen-md-min) {
+        margin-top: -(@navbar-height + 4);
+        padding-top: (@navbar-height + 4) + 90px;
+        padding-bottom: 135px;
+        .floating-img-infrastructure-in-a-day {
+            position: absolute;
+            width: auto;
+            top: -60px;
+            left: 15px;
+        }
+    }
+}
+
+// Hero styles for sub pages
+.sub-page .section-hero {
+    &:extend(.gradient-steel.gradient-vertical);
+    background: url('../img/bg-header-squares.png') center bottom no-repeat, linear-gradient(#1a232d, #2e3b4a); // This is what we need to do in order to stack a background image on top of a background gradient
+    border-bottom: 2px solid rgba(15,192,239,.25);
+}
+
+// Main content section styles on the front page
+.index-page .main .section-dark {
+    background-image: url('../img/bg-content-squares.png');
+    background-position: center top;
+    background-repeat: no-repeat;
+    @media (min-width: @screen-md-min) {
+        padding-bottom: 190px;
+        .container {
+            position: relative;
+            &::after {
+                content: "";
+                display: block;
+                position: absolute;
+                height: 305px;
+                width: 224px;
+                bottom: -260px;
+                right: 6px;
+                z-index: 980;
+                background: url('../img/infrastructure-endcap.png') right bottom no-repeat;
+                background-size: 224px 305px;
+            }
+        }
+    }
+}
+
+// Main content styles for sub pages
+.sub-page .main {
+    position: relative;
+    border-bottom: 2px solid rgba(15, 192, 239, 0.25);
+    > .section:last-child {
+        padding-bottom: 120px;
+    }
+    &::after {
+        content: "";
+        display: block;
+        position: absolute;
+        height: 55px;
+        width: 100%;
+        bottom: -34px;
+        z-index: 990;
+        background-image: url('../img/hr-boxes.png');
+        background-position: center bottom;
+        background-repeat: no-repeat;
+        background-size: 80px 55px;
+    }
+}
+// Specific styles for the who's using it page
+.sub-page.whos-using-it .main {
+    > .section:last-child {
+        padding-bottom: 0;
+    }
+}
+
+// Sub-hero styles
+.section-sub-hero {
+    @media (min-width: @screen-sm-min) {
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+}
+
+// Footer styles that are global
+footer {
+    &:extend(.gradient-steel.gradient-vertical);
+    background: url('../img/bg-footer-squares.png') center bottom no-repeat, linear-gradient(#1a232d, #2e3b4a); // This is what we need to do in order to stack a background image on top of a background gradient
+}
+.section-footer-content {
+    > .container > .row {
+        &.row-sitemap { padding-bottom: 0; }
+    }
+}
+.section-footer-copyright {
+    font-size: 85%;
+    padding-top: 0;
+    padding-bottom: 0;
+    > .container > .row {
+        padding: 0 0 170px 0;
+        background: url('../img/grunty-wave.png') center bottom no-repeat;
+        background-size: 157px 141px;
+
+        @media (min-width: @screen-sm-min) {
+            padding: 90px 0 30px 0;
+            background-position-x: right;
+        }
+        @media (min-width: @screen-lg-min) {
+            background-position-x: ~"-webkit-calc(100% - 60px)";
+            background-position-x: ~"calc(100% - 60px)";
+        }
+    }
+}
+
+
+//
+// Tables
+// ==================================================
+
+.table {
+    > thead,
+    > tbody,
+    > tfoot {
+        > tr {
+            > th {
+                color: #fff;
+                text-transform: none;
+                border: none;
+            }
+            > td {
+                border: none;
+            }
+        }
+        > tr:last-child {
+            > td {
+                border-bottom: none;
+            }
+        }
+    }
+    > thead > tr > th {
+        font-size: @font-size-h3;
+    }
+    > tbody > tr > th {
+        font-size: @font-size-base;
+    }
+}
+
+.table-hover {
+    > thead,
+    > tbody,
+    > tfoot {
+        > tr {
+            > th {
+                border: none;
+            }
+            > td {
+                border: none;
+            }
+            &:last-child {
+                > th { border: none; }
+                > td { border: none; }
+            }
+            &:hover {
+                td,
+                td a,
+                td a:hover,
+                td a:focus {
+                    color: #fff;
+                    transition: none;
+                }
+            }
+        }
+    }
+}
+
+
+//
+// Thumbnails
+// ==================================================
+
+.thumbnail-group-clients {
+    margin-bottom: 20px;
+    > div[class*="col-"] {
+        border-top: 1px solid rgba(255,255,255,0.35);
+        border-left: 1px solid rgba(255,255,255,0.35);
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+    @media (max-width: @screen-xs-max) {
+        > .col-xs-6 {
+            &:nth-child(-n + 2) { border-top-color: transparent; }
+            &:nth-child(odd) { border-left-color: transparent; }
+        }
+    }
+    @media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
+        > .col-sm-3 {
+            &:nth-child(-n + 4) { border-top-color: transparent; }
+            &:nth-child(4n + 1) { border-left-color: transparent; }
+        }
+    }
+    @media (min-width: @screen-md-min) {
+        > .col-md-2 {
+            &:nth-child(-n + 6) { border-top-color: transparent; }
+            &:nth-child(6n + 1) { border-left-color: transparent; }
+        }
+    }
+    .thumbnail {
+        padding: 0 15px;
+        margin: 0;
+        background-color: transparent;
+        border: none;
+    }
+}
+
+
+//
+// Typography
+// ==================================================
+
+// Improve Bootstrap's margins on large headings
+h1, .h1 { .heading-margin-variant(1.44; 1.00; @line-height-h1); }
+h2, .h2 { .heading-margin-variant(1.2; 0.80; @line-height-h2); }
+h3, .h3 { .heading-margin-variant(1.00; 0.72; @line-height-h3); }
+h4, .h4 { .heading-margin-variant(0.88; 0.64; @line-height-h4); }
+h5, .h5 { .heading-margin-variant(0.76; 0.56; @line-height-h5); }
+h6, .h6 { .heading-margin-variant(0.68; 0.52; @line-height-h6); }
+
+.heading-margin-variant(@top-multiplier; @bottom-multiplier; @line-height) {
+    margin-top: (@line-height-computed * @top-multiplier);
+    margin-bottom: (@line-height-computed * @bottom-multiplier);
+    line-height: @line-height;
+}
+
+.sub-page .section-hero h1 + p {
+    margin-top: -15px;
+}
+
+// Remove top and bottom margins from headings and paragraphs that are the first/last children in a row/column
+.section > .container > .row > div[class*="col-"] {
+    > p, > h1, > h2, > h3, > h4, > h5, > h6 {
+        &:first-child {
+            margin-top: 0;
+        }
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+}
+
+
+//
+// Wells
+// ==================================================
+
+.well {
+    border-width: 2px;
+    box-shadow: none;
+    > * {
+        &:first-child   { margin-top: 0; }
+        &:last-child    { margin-bottom: 0; }
+    }
+}
+
+.row-equalize-col-height .well {
+    width: 100%; // Not sure why this is needed, but .wells don't act like a block element so only expand as far as the content does
+}
+
+
+
+//
+// 3rd party libraries
+// ==================================================
+// ==================================================
+
+
+//
+// Awesome Bootstrap checkbox
+// https://github.com/flatlogic/awesome-bootstrap-checkbox
+// ==================================================
+
+.checkbox {
+    padding-left: 20px;
+}
+.checkbox label {
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    padding-left: 5px;
+    line-height: @font-size-base;
+}
+.checkbox label::before {
+    content: "";
+    display: inline-block;
+    position: absolute;
+    width: 17px;
+    height: 17px;
+    left: 0;
+    margin-left: -20px;
+    border: 2px solid #194C5F;
+    border-radius: 0;
+    background-color: #242E3B;
+    -webkit-transition: border 0.15s ease-in-out, color 0.15s ease-in-out;
+    -o-transition: border 0.15s ease-in-out, color 0.15s ease-in-out;
+    transition: border 0.15s ease-in-out, color 0.15s ease-in-out;
+}
+.checkbox label::after {
+    display: inline-block;
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    left: 0;
+    top: 0;
+    margin-left: -20px;
+    padding-left: 3px;
+    padding-top: 1px;
+    font-size: 11px;
+    color: @brand-success;
+    line-height: 1.4;
+}
+.checkbox input[type="checkbox"],
+.checkbox input[type="radio"] {
+    opacity: 0;
+    z-index: 1;
+    cursor: pointer;
+}
+.checkbox input[type="checkbox"]:focus + label::before,
+.checkbox input[type="radio"]:focus + label::before {
+    outline: thin dotted;
+    outline: 5px auto -webkit-focus-ring-color;
+    outline-offset: -2px;
+}
+.checkbox input[type="checkbox"]:checked + label::after,
+.checkbox input[type="radio"]:checked + label::after {
+    font-family: "FontAwesome";
+    content: "\f00c";
+}
+.checkbox input[type="checkbox"]:indeterminate + label::after,
+.checkbox input[type="radio"]:indeterminate + label::after {
+    display: block;
+    content: "";
+    width: 10px;
+    height: 3px;
+    background-color: #555555;
+    border-radius: 2px;
+    margin-left: -16.5px;
+    margin-top: 7px;
+}
+.checkbox input[type="checkbox"]:disabled,
+.checkbox input[type="radio"]:disabled {
+    cursor: not-allowed;
+}
+.checkbox input[type="checkbox"]:disabled + label,
+.checkbox input[type="radio"]:disabled + label {
+    opacity: 0.65;
+}
+.checkbox input[type="checkbox"]:disabled + label::before,
+.checkbox input[type="radio"]:disabled + label::before {
+    background-color: #eeeeee;
+    cursor: not-allowed;
+}
+.checkbox.checkbox-circle label::before {
+    border-radius: 50%;
+}
+.checkbox.checkbox-inline {
+    margin-top: 0;
+}
+
+.checkbox-primary input[type="checkbox"]:checked + label::before,
+.checkbox-primary input[type="radio"]:checked + label::before {
+    background-color: #337ab7;
+    border-color: #337ab7;
+}
+.checkbox-primary input[type="checkbox"]:checked + label::after,
+.checkbox-primary input[type="radio"]:checked + label::after {
+    color: #fff;
+}
+
+.checkbox-danger input[type="checkbox"]:checked + label::before,
+.checkbox-danger input[type="radio"]:checked + label::before {
+    background-color: #d9534f;
+    border-color: #d9534f;
+}
+.checkbox-danger input[type="checkbox"]:checked + label::after,
+.checkbox-danger input[type="radio"]:checked + label::after {
+    color: #fff;
+}
+
+.checkbox-info input[type="checkbox"]:checked + label::before,
+.checkbox-info input[type="radio"]:checked + label::before {
+    background-color: #5bc0de;
+    border-color: #5bc0de;
+}
+.checkbox-info input[type="checkbox"]:checked + label::after,
+.checkbox-info input[type="radio"]:checked + label::after {
+    color: #fff;
+}
+
+.checkbox-warning input[type="checkbox"]:checked + label::before,
+.checkbox-warning input[type="radio"]:checked + label::before {
+    background-color: #f0ad4e;
+    border-color: #f0ad4e;
+}
+.checkbox-warning input[type="checkbox"]:checked + label::after,
+.checkbox-warning input[type="radio"]:checked + label::after {
+    color: #fff;
+}
+
+.checkbox-success input[type="checkbox"]:checked + label::before,
+.checkbox-success input[type="radio"]:checked + label::before {
+    background-color: #5cb85c;
+    border-color: #5cb85c;
+}
+.checkbox-success input[type="checkbox"]:checked + label::after,
+.checkbox-success input[type="radio"]:checked + label::after {
+    color: #fff;
+}
+
+.checkbox-primary input[type="checkbox"]:indeterminate + label::before,
+.checkbox-primary input[type="radio"]:indeterminate + label::before {
+    background-color: #337ab7;
+    border-color: #337ab7;
+}
+
+.checkbox-primary input[type="checkbox"]:indeterminate + label::after,
+.checkbox-primary input[type="radio"]:indeterminate + label::after {
+    background-color: #fff;
+}
+
+.checkbox-danger input[type="checkbox"]:indeterminate + label::before,
+.checkbox-danger input[type="radio"]:indeterminate + label::before {
+    background-color: #d9534f;
+    border-color: #d9534f;
+}
+
+.checkbox-danger input[type="checkbox"]:indeterminate + label::after,
+.checkbox-danger input[type="radio"]:indeterminate + label::after {
+    background-color: #fff;
+}
+
+.checkbox-info input[type="checkbox"]:indeterminate + label::before,
+.checkbox-info input[type="radio"]:indeterminate + label::before {
+    background-color: #5bc0de;
+    border-color: #5bc0de;
+}
+
+.checkbox-info input[type="checkbox"]:indeterminate + label::after,
+.checkbox-info input[type="radio"]:indeterminate + label::after {
+    background-color: #fff;
+}
+
+.checkbox-warning input[type="checkbox"]:indeterminate + label::before,
+.checkbox-warning input[type="radio"]:indeterminate + label::before {
+    background-color: #f0ad4e;
+    border-color: #f0ad4e;
+}
+
+.checkbox-warning input[type="checkbox"]:indeterminate + label::after,
+.checkbox-warning input[type="radio"]:indeterminate + label::after {
+    background-color: #fff;
+}
+
+.checkbox-success input[type="checkbox"]:indeterminate + label::before,
+.checkbox-success input[type="radio"]:indeterminate + label::before {
+    background-color: #5cb85c;
+    border-color: #5cb85c;
+}
+
+.checkbox-success input[type="checkbox"]:indeterminate + label::after,
+.checkbox-success input[type="radio"]:indeterminate + label::after {
+    background-color: #fff;
+}
+
+.radio {
+    padding-left: 20px;
+}
+.radio label {
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    padding-left: 5px;
+}
+.radio label::before {
+    content: "";
+    display: inline-block;
+    position: absolute;
+    width: 17px;
+    height: 17px;
+    left: 0;
+    margin-left: -20px;
+    border: 1px solid #cccccc;
+    border-radius: 50%;
+    background-color: #fff;
+    -webkit-transition: border 0.15s ease-in-out;
+    -o-transition: border 0.15s ease-in-out;
+    transition: border 0.15s ease-in-out;
+}
+.radio label::after {
+    display: inline-block;
+    position: absolute;
+    content: " ";
+    width: 11px;
+    height: 11px;
+    left: 3px;
+    top: 3px;
+    margin-left: -20px;
+    border-radius: 50%;
+    background-color: #555555;
+    -webkit-transform: scale(0, 0);
+    -ms-transform: scale(0, 0);
+    -o-transform: scale(0, 0);
+    transform: scale(0, 0);
+    -webkit-transition: -webkit-transform 0.1s cubic-bezier(0.8, -0.33, 0.2, 1.33);
+    -moz-transition: -moz-transform 0.1s cubic-bezier(0.8, -0.33, 0.2, 1.33);
+    -o-transition: -o-transform 0.1s cubic-bezier(0.8, -0.33, 0.2, 1.33);
+    transition: transform 0.1s cubic-bezier(0.8, -0.33, 0.2, 1.33);
+}
+.radio input[type="radio"] {
+    opacity: 0;
+    z-index: 1;
+    cursor: pointer;
+}
+.radio input[type="radio"]:focus + label::before {
+    outline: thin dotted;
+    outline: 5px auto -webkit-focus-ring-color;
+    outline-offset: -2px;
+}
+.radio input[type="radio"]:checked + label::after {
+    -webkit-transform: scale(1, 1);
+    -ms-transform: scale(1, 1);
+    -o-transform: scale(1, 1);
+    transform: scale(1, 1);
+}
+.radio input[type="radio"]:disabled {
+    cursor: not-allowed;
+}
+.radio input[type="radio"]:disabled + label {
+    opacity: 0.65;
+}
+.radio input[type="radio"]:disabled + label::before {
+    cursor: not-allowed;
+}
+.radio.radio-inline {
+    margin-top: 0;
+}
+
+.radio-primary input[type="radio"] + label::after {
+    background-color: #337ab7;
+}
+.radio-primary input[type="radio"]:checked + label::before {
+    border-color: #337ab7;
+}
+.radio-primary input[type="radio"]:checked + label::after {
+    background-color: #337ab7;
+}
+
+.radio-danger input[type="radio"] + label::after {
+    background-color: #d9534f;
+}
+.radio-danger input[type="radio"]:checked + label::before {
+    border-color: #d9534f;
+}
+.radio-danger input[type="radio"]:checked + label::after {
+    background-color: #d9534f;
+}
+
+.radio-info input[type="radio"] + label::after {
+    background-color: #5bc0de;
+}
+.radio-info input[type="radio"]:checked + label::before {
+    border-color: #5bc0de;
+}
+.radio-info input[type="radio"]:checked + label::after {
+    background-color: #5bc0de;
+}
+
+.radio-warning input[type="radio"] + label::after {
+    background-color: #f0ad4e;
+}
+.radio-warning input[type="radio"]:checked + label::before {
+    border-color: #f0ad4e;
+}
+.radio-warning input[type="radio"]:checked + label::after {
+    background-color: #f0ad4e;
+}
+
+.radio-success input[type="radio"] + label::after {
+    background-color: #5cb85c;
+}
+.radio-success input[type="radio"]:checked + label::before {
+    border-color: #5cb85c;
+}
+.radio-success input[type="radio"]:checked + label::after {
+    background-color: #5cb85c;
+}
+
+input[type="checkbox"].styled:checked + label:after,
+input[type="radio"].styled:checked + label:after {
+    font-family: 'FontAwesome';
+    content: "\f00c";
+}
+input[type="checkbox"] .styled:checked + label::before,
+input[type="radio"] .styled:checked + label::before {
+    color: #fff;
+}
+input[type="checkbox"] .styled:checked + label::after,
+input[type="radio"] .styled:checked + label::after {
+    color: #fff;
+}
+

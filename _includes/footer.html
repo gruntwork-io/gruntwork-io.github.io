@@ -1,115 +1,76 @@
-<footer id="footer" class="footer">
-  {% if page.slug == "index-page" %}
-  <img data-src="/assets/img/grunty-hat.png" alt="Grunty Logo" class="footer__logo lazyload">
-  {% else %}
-  <img data-src="/assets/img/grunty.svg" alt="Grunty Logo" class="footer__logo lazyload">
-  {% endif %}
-  <div class="footer__header">
-    <h1 class="footer__heading">Take the grunt work out of DevOps.</h1>
-    <a href="/contact" class="link-btn">Contact us</a>
-  </div>
-  <div class="footer__body">
-    <div class="footer__container">
-      <div class="footer-menu">
-        <p class="footer-menu__heading">Products & Services</p>
-        <a
-          href="/infrastructure"
-          class="footer-menu__link">
-          Infrastructure Packages
-        </a>
-        <a
-          href="/stacks"
-          class="footer-menu__link">
-          Stacks
-        </a>
-        <a
-          href="/consulting-training"
-          class="footer-menu__link">
-          Consulting & Training
-        </a>
-        <a
-          href="/plans"
-          class="footer-menu__link">
-          Subscription & Support
-        </a>
-      </div>
-      <div class="footer-menu">
-        <p class="footer-menu__heading">Gruntwork</p>
-        <a
-          href="/about"
-          class="footer-menu__link">
-          About
-        </a>
-        <a
-          href="/clients"
-          class="footer-menu__link">
-          Clients
-        </a>
-        <a
-          href="{{site.data.contact.blog.url}}"
-          class="footer-menu__link">
-          Blog
-        </a>
-        <a
-          href="{{site.data.contact.careers.url}}"
-          class="footer-menu__link">
-          Careers
-        </a>
-      </div>
-      <div class="footer-menu">
-        <p class="footer-menu__heading">Support</p>
-        <a
-          href="/consulting-training"
-          class="footer-menu__link">
-          Training
-        </a>
-        <a
-          href="/consulting-training#resources"
-          class="footer-menu__link">
-          Resources
-        </a>
-        <a
-          href="mailto:support@gruntwork.io"
-          class="footer-menu__link">
-          Submit a Ticket
-        </a>
-      </div>
-      <div class="footer-menu">
-        <p class="footer-menu__heading">Connect</p>
-        <a
-          href="{{site.data.contact.github.url}}"
-          class="footer-menu__link">
-          Github
-        </a>
-        <a
-          href="{{site.data.contact.twitter.url}}"
-          class="footer-menu__link">
-          Twitter
-        </a>
-        <a
-          href="{{site.data.contact.linkedin.url}}"
-          class="footer-menu__link">
-          LinkedIn
-        </a>
-        <a
-          href="/newsletter"
-          class="footer-menu__link">
-          Newsletter
-        </a>
-        <a
-          href="{{site.data.contact.facebook.url}}"
-          class="footer-menu__link">
-          Facebook
-        </a>
-        <a
-          href="/contact"
-          class="footer-menu__link">
-          Contact Us
-        </a>
-      </div>
-    </div>
-  </div>
-  <div class="copyright">
-    © 2017 Gruntwork, LLC. All rights reserved.
-  </div>
+<footer class="footer">
+    <div class="section section-footer-content">
+        <div class="container">
+
+            {% if page.footer_heading %}
+                <div class="row row-call-to-action">
+                    <div class="col-xs-12 text-center">
+                        <h2 class="h1">{{ page.footer_heading }}</h2>
+                        <p><a href="/contact" class="btn btn-info" role="button">Get Started</a></p>
+                    </div> <!-- col -->
+                </div> <!-- row-call-to-action -->
+            {% endif %}
+
+            <div class="row row-sitemap">
+                <div class="col-xs-10 col-xs-offset-1 col-sm-3 col-sm-offset-0">
+                    <h3>Products</h3>
+                    <hr class="hr-sm" />
+                    <ul class="list-unstyled">
+                        <li><a href="/how-it-works">How it Works</a></li>
+                        <li><a href="/reference-architecture">Reference Architecture</a></li>
+                        <li><a href="/subscriptions">Gruntwork Subscription</a></li>
+                        <li><a href="/training">Training</a></li>
+                        <li><a href="/pricing">Pricing</a></li>
+                        <li><a href="/gruntwork-library">Gruntwork Library</a></li>
+                    </ul>
+                </div> <!-- col -->
+                <div class="col-xs-10 col-xs-offset-1 col-sm-3 col-sm-offset-0">
+                    <h3>Customers</h3>
+                    <hr class="hr-sm" />
+                    <ul class="list-unstyled">
+                        <li><a href="/whos-using-it">Who's Using It</a></li>
+                        <li><a href="/gruntwork-for-agencies">Gruntwork for Agencies</a></li>
+                    </ul>
+                </div> <!-- col -->
+                <div class="col-xs-10 col-xs-offset-1 col-sm-3 col-sm-offset-0">
+                    <h3>Company</h3>
+                    <hr class="hr-sm" />
+                    <ul class="list-unstyled">
+                        <li><a href="/about">About</a></li>
+                        <li><a href="/devops-as-a-service">DevOps as a Service</a></li>
+                        <li><a href="/alternatives">Alternatives to Gruntwork</a></li>
+                        <li><a href="/faq">FAQ</a></li>
+                        <li><a href="/careers">Careers</a></li>
+                    </ul>
+                </div> <!-- col -->
+                <div class="col-xs-10 col-xs-offset-1 col-sm-3 col-sm-offset-0">
+                    <h3>Connect</h3>
+                    <hr class="hr-sm" />
+                    <ul class="list-unstyled">
+                        <li><a href="/contact">Contact Us</a></li>
+                        <li><a href="/newsletter">Newsletter</a></li>
+                        <li><a href="/support">Get Support</a></li>
+                        <li>
+                            <div class="btn-group btn-group-social-icons" role="group" aria-label="Group of Social Links">
+                                <a href="{{site.data.contact.github.url}}" class="btn btn-default" role="button"><i class="fa fa-fw fa-github-square"></i></a>
+                                <a href="{{site.data.contact.facebook.url}}" class="btn btn-default" role="button"><i class="fa fa-fw fa-facebook-square"></i></a>
+                                <a href="{{site.data.contact.twitter.url}}" class="btn btn-default" role="button"><i class="fa fa-fw fa-twitter-square"></i></a>
+                                <a href="{{site.data.contact.linkedin.url}}" class="btn btn-default" role="button"><i class="fa fa-fw fa-linkedin-square"></i></a>
+                            </div>
+                        </li>
+                    </ul>
+                </div> <!-- col -->
+            </div> <!-- row-sitemap -->
+        </div> <!-- container -->
+    </div> <!-- footer-content -->
+
+    <div class="section section-footer-copyright">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 text-center">
+                    &copy; {{ 'now' | date: "%Y" }} Gruntwork, Inc. All rights reserved.
+                </div> <!-- col -->
+            </div> <!-- row -->
+        </div> <!-- container -->
+    </div> <!-- footer-copyright -->
 </footer>

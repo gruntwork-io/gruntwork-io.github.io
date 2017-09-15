@@ -1,129 +1,152 @@
 ---
 layout: default
-title: Contact us | Gruntwork
-excerpt: Contact Gruntwork
-permalink: /contact.html
-slug: contact-page
-extra_js: page-contact.js
+title: Gruntwork | Contact Us
+excerpt: Hand the gruntwork off to us so you can focus on what’s unique to your business.
+permalink: /contact
+slug: contact
 ---
 
-<section class="section contact">
-  <header class="heading heading--center">
-    <h2 class="heading__lead">Contact us</h2>
-    <h2 class="heading__text">
-      You focus on your product. We’ll do the Gruntwork.
-    </h2>
-  </header>
-  <div class="row">
-    <div class="col-sm-6 col-sm-offset-3">
-      <form class="contact-form" method="post" action="https://formspree.io/{{site.data.contact.email.url}}">
-        <input type="hidden" name="_subject" id="_subject" value="New inquiry from {{ site.url }}" />
-        <input type="text" name="_gotcha" style="display:none" />
-        <div class="form-group">
-          <label for="name">Name*</label>
-          <input type="text" class="form-control" id="name" name="name" required>
-        </div>
-        <div class="row">
-          <div class="col-sm-6">
-            <div class="form-group">
-              <label for="email">Email Address*</label>
-              <input type="email" class="form-control" id="email" name="email" required>
-            </div>
-          </div>
-          <div class="col-sm-6">
-            <div class="form-group">
-              <label for="company">Company Name*</label>
-              <input type="text" class="form-control" id="company" name="company" required>
-            </div>
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="overview">Briefly describe what you're working on*</label>
-          <textarea name="overview" id="overview" class="form-control" rows="3" required></textarea>
-        </div>
-        <div class="form-group">
-          <label for="">Tell us what you’re interested in (optional)</label>
-          <div class="accordionWrapper">
-            <div class="accordionItem close">
-              <div class="accordionItemHeading">Infrastructure Packages</div>
-              <div class="accordionItemContent">
-                {% for package in site.data.packages %}
-                  <div class="checkbox-container">
-                    <div class="checkbox">
-                      <input
-                        type="checkbox"
-                        value="Interested"
-                        id="infra-package-{{package.name | slugify}}"
-                        name="infra-package-{{package.name | slugify}}"/>
-                      <label for="infra-package-{{package.name | slugify}}"></label>
-                      <span>{{package.name}}</span>
-                      <div class="package-info">
-                        <div class="package-info-text">
-                          <strong>{{package.name}}</strong>
-                          <p>{{package.description}}</p>
+<div class="main">
+    <div class="section section-hero">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 text-center">
+                    <h1>Get started with Gruntwork!</h1>
+                    <p>Hand the gruntwork off to us so you can focus on what’s unique to your business. Use the form below<br /> or shoot us an email at <a href="mailto:info@gruntwork.io">info@gruntwork.io</a>.</p>
+                </div> <!-- col -->
+            </div> <!-- row -->
+        </div> <!-- container -->
+    </div> <!-- section-hero -->
+
+    <div class="section section-dark">
+
+        <div class="container">
+
+            <div class="row row-form">
+                <div class="col-xs-12 col-md-8 col-md-offset-2">
+                    <h3 class="text-danger text-center">Please fill out the required fields.</h3>
+                    <br />
+                    <form>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-xs-12 col-md-4">
+                                    <label for="contact-name">Name<sup class="text-danger">&#42;</sup></label>
+                                </div> <!-- col -->
+                                <div class="col-xs-12 col-md-8">
+                                    <input
+                                        id="contact-name"
+                                        type="text"
+                                        class="form-control"
+                                        placeholder="Enter your name"
+                                        required="required"
+                                    >
+                                </div> <!-- col -->
+                            </div> <!-- row -->
+                        </div> <!-- form-group -->
+
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-xs-12 col-md-4">
+                                    <label for="contact-email">Email<sup class="text-danger">&#42;</sup></label>
+                                </div> <!-- col -->
+                                <div class="col-xs-12 col-md-8">
+                                    <input
+                                        id="contact-email"
+                                        type="text"
+                                        class="form-control"
+                                        placeholder="Enter your email"
+                                        required="required"
+                                    >
+                                </div> <!-- col -->
+                            </div> <!-- row -->
+                        </div> <!-- form-group -->
+
+                        <div class="form-group has-error">
+                            <div class="row">
+                                <div class="col-xs-12 col-md-4">
+                                    <label for="contact-email">Email<sup class="text-danger">&#42;</sup></label>
+                                </div> <!-- col -->
+                                <div class="col-xs-12 col-md-8">
+                                    <input
+                                        id="contact-email"
+                                        type="text"
+                                        class="form-control"
+                                        placeholder="Enter your email"
+                                        required="required"
+                                    >
+                                </div> <!-- col -->
+                            </div> <!-- row -->
+                        </div> <!-- form-group -->
+
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-xs-12 col-md-4">
+                                    <label for="contact-company">Company</label>
+                                </div> <!-- col -->
+                                <div class="col-xs-12 col-md-8">
+                                    <input
+                                        id="contact-company"
+                                        type="text"
+                                        class="form-control"
+                                        placeholder="Enter your company"
+                                        required="required"
+                                    >
+                                </div> <!-- col -->
+                            </div> <!-- row -->
+                        </div> <!-- form-group -->
+
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-xs-12 col-md-4">
+                                    <label for="">Which products are you interested in?</label>
+                                </div> <!-- col -->
+                                <div class="col-xs-12 col-md-8">
+                                    <div class="checkbox">
+                                        <input type="checkbox" value="">
+                                        <label>
+                                            Reference Architecture
+                                        </label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <input type="checkbox" value="">
+                                        <label>
+                                            Gruntwork Membership
+                                        </label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <input type="checkbox" value="">
+                                        <label>
+                                            Training
+                                        </label>
+                                    </div> <!-- checkbox -->
+                                </div> <!-- col -->
+                            </div> <!-- row -->
+                        </div> <!-- form-group -->
+
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-xs-12 col-md-4">
+                                    <label for="contact-message">Anything else you'd like to share?</label>
+                                </div> <!-- col -->
+                                <div class="col-xs-12 col-md-8">
+                                    <textarea
+                                        id="contact-message"
+                                        class="form-control"
+                                        rows="3"
+                                        placeholder="Enter a message"
+                                    ></textarea>
+                                </div> <!-- col -->
+                            </div> <!-- row -->
+                        </div> <!-- form-group -->
+
+                        <div class="text-center">
+                            <br />
+                            <button type="submit" class="btn btn-primary">Get Started</button>
                         </div>
-                      </div>
-                    </div>
-                  </div>
-                {% endfor %}
-              </div>
-            </div>
-            <div class="accordionItem close">
-              <div class="accordionItemHeading">Support</div>
-              <div class="accordionItemContent">
-                <textarea
-                  name="support-request"
-                  class="form-control"
-                  rows="3"
-                  placeholder="Briefly describe what kind of support you’re looking for..."></textarea>
-              </div>
-            </div>
-            <div class="accordionItem close">
-              <div class="accordionItemHeading">Training</div>
-              <div class="accordionItemContent">
-                <textarea
-                name="training-request"
-                  class="form-control"
-                  rows="3"
-                  placeholder="Briefly describe what kind of training you’re looking for..."></textarea>
-              </div>
-            </div>
-            <div class="accordionItem close">
-              <div class="accordionItemHeading">Consulting</div>
-              <div class="accordionItemContent">
-                <textarea
-                  name="consulting-request"
-                  class="form-control"
-                  rows="3"
-                  placeholder="Briefly describe what kind of consulting you’re looking for..."></textarea>
-              </div>
-            </div>
-          </div>
+                    </form>
+                </div> <!-- col -->
+            </div> <!-- row-form -->
+
         </div>
-        <div class="text-center">
-          <a href="#" class="submit-btn">Submit</a>
-        </div>
-      </form>
     </div>
-  </div>
-  <div class="section text-center">
-    <h2 class="heading__title">Other ways to contact us</h2>
-    <ul class="social-links">
-      <li>
-        <a href="{{site.data.contact.github.url}}" class="social-links__link icon-github"></a>
-      </li>
-      <li>
-        <a href="{{site.data.contact.linkedin.url}}" class="social-links__link icon-linkedin"></a>
-      </li>
-      <li>
-        <a href="{{site.data.contact.twitter.url}}" class="social-links__link icon-twitter"></a>
-      </li>
-      <li>
-        <a href="{{site.data.contact.facebook.url}}" class="social-links__link icon-facebook"></a>
-      </li>
-      <li>
-        <a href="mailto:info@gruntwork.io" class="social-links__link icon-envelop"></a>
-      </li>
-    </ul>
-  </div>
-</section>
+</div>

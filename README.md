@@ -11,7 +11,8 @@ You focus on your product. We'll take care of the Gruntwork.
 2. Make sure you have [Jekyll](http://jekyllrb.com/docs/installation/) installed
 3. Just the first time: `bundle install`
 5. Start Jekyll server: `bundle exec jekyll serve`
-6. Go to `http://localhost:4000`
+6. Compile Less by running `lessc --clean-css app.less app.css` in `/assets/css`
+7. Go to `http://localhost:4000`
 
 See the [Jekyll](http://jekyllrb.com/) and [GitHub Pages](https://pages.github.com/) documentation for more info.
 
@@ -45,12 +46,11 @@ On OS X, using the [docker-osx-dev](https://github.com/brikis98/docker-osx-dev) 
 2. Hosted on [GitHub Pages](https://pages.github.com/). We're using the [GitHub Pages
    Gem](https://help.github.com/articles/using-jekyll-with-pages/) and only Jekyll plugins that are [available on
    GitHub Pages](https://help.github.com/articles/repository-metadata-on-github-pages/).
-3. We use [BootstrapCSS](http://www.getbootstrap.com/), [Sass](http://sass-lang.com/).
+3. We use [BootstrapCSS](http://www.getbootstrap.com/), [Less](http://lesscss.org/).
 4. The logo is built from two images on The Noun Project: [Monster](https://thenounproject.com/term/monster/184225/)
    and [Hard Hat](https://thenounproject.com/term/hard-hat/410909/).
 5. We're using [UptimeRobot](http://uptimerobot.com/) and [Google Analytics](http://www.google.com/analytics/) for
    monitoring and metrics.
-6. We use [webpack](http://webpack.js.org) to parse and bundle CSS and JS.
 
 ## License
 

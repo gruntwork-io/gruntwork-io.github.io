@@ -1,14 +1,12 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    {% include head.html %}
-  </head>
-  <body{% if page.slug %} class="{{ page.slug }}" {% endif %}>
-    {% include navbar.html %}
-    <div class="container">
-      {{ content }}
-    </div>
-    {% include footer.html %}
-    {% include scripts.html %}
-  </body>
+    <head>
+        {% include head.html %}
+    </head>
+    <body{% if page.slug %} class="{{ page.slug }}{% if page.slug != 'index-page' %} sub-page{% endif %}" {% endif %}>
+        {% include navbar.html %}
+        {{ content }}
+        {% include footer.html %}
+        {% include scripts.html %}
+    </body>
 </html>

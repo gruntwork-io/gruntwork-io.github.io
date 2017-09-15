@@ -1,0 +1,237 @@
+---
+layout: default
+title: Gruntwork | Pricing
+excerpt: Join the Gruntwork Community, a collection of companies that are all built on the same Infrastructure Packages, with support and maintenance from Gruntwork.
+permalink: /pricing
+slug: pricing
+footer_heading: Ready to hand off the Gruntwork?
+---
+
+<div class="main">
+    <div class="section section-hero">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 text-center">
+                    <h1>Pricing</h1>
+                </div> <!-- col -->
+            </div> <!-- row -->
+        </div> <!-- container -->
+    </div> <!-- section-hero -->
+
+    <div class="section section-dark">
+        <div class="container">
+
+            <div class="row row-page-header">
+                <div class="col-xs-12">
+                    <h2>Gruntwork Subscription</h2>
+                    <p>The Gruntwork Subscription gets you access to the Gruntwork Library of infrastructure code, including all updates, additions, and patches to the Library as long as you’re a subscriber. You also get commercial support from the Gruntwork team, security alerts, infrastructure updates, and more.</p>
+                </div> <!-- col -->
+            </div> <!-- row-page-header -->
+
+            <hr />
+
+            <div class="row row-pricing-table">
+                <div class="col-xs-12">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                {% for plan in site.data.plans %}
+                                    <th>{{ plan.name }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th>Support Hours</th>
+                                {% for plan in site.data.plans %}
+                                    <td>{{ plan.support_hours }}</td>
+                                {% endfor %}
+                            </tr>
+                            <tr>
+                                <th>Support Availability</th>
+                                {% for plan in site.data.plans %}
+                                    <td>{{ plan.support_availability }}</td>
+                                {% endfor %}
+                            </tr>
+                            <tr>
+                                <th>After-Hours Support</th>
+                                {% for plan in site.data.plans %}
+                                    <td>{{ plan.after_hour_support }}</td>
+                                {% endfor %}
+                            </tr>
+                            <tr>
+                                <th>Reponse Time</th>
+                                {% for plan in site.data.plans %}
+                                    <td>{{ plan.response_time }}</td>
+                                {% endfor %}
+                            </tr>
+                            <tr>
+                                <th>Email Support</th>
+                                {% for plan in site.data.plans %}
+                                    <td>{{ plan.email_support }}</td>
+                                {% endfor %}
+                            </tr>
+                            <tr>
+                                <th>Phone/Video Chat Support</th>
+                                {% for plan in site.data.plans %}
+                                    <td>{{ plan.phone_video_support }}</td>
+                                {% endfor %}
+                            </tr>
+                            <tr>
+                                <th>Slack Support</th>
+                                {% for plan in site.data.plans %}
+                                    <td>{{ plan.slack_support }}</td>
+                                {% endfor %}
+                            </tr>
+                            <tr>
+                                <th>Automated Infra Updates</th>
+                                {% for plan in site.data.plans %}
+                                    <td>{{ plan.automated_infra_updates }}</td>
+                                {% endfor %}
+                            </tr>
+                            <tr>
+                                <th>Access the Gruntwork Library</th>
+                                {% for plan in site.data.plans %}
+                                    <td>{{ plan.library_access }}</td>
+                                {% endfor %}
+                            </tr>
+                            <tr>
+                                <th>Security Alerts</th>
+                                {% for plan in site.data.plans %}
+                                    <td>{{ plan.security_alerts }}</td>
+                                {% endfor %}
+                            </tr>
+                            <tr>
+                                <th>Newsletter</th>
+                                {% for plan in site.data.plans %}
+                                    <td>{{ plan.newsletter }}</td>
+                                {% endfor %}
+                            </tr>
+                            <tr>
+                                <th>Price<br/><em>(Includes 1 License)</em></th>
+                                {% for plan in site.data.plans %}
+                                    <td><strong>{{ plan.price }}</strong></td>
+                                {% endfor %}
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p class="text-muted"><em>*Subscriptions available for a period of 12 months. One license allows for significant infrastructure usage for one software team. Our contract specifies these limits precisely.</em></p>
+                </div> <!-- col -->
+            </div> <!-- row-pricing-table -->
+
+            <div class="row row-page-header">
+                <div class="col-xs-12">
+                    <h2>Reference Architecture</h2>
+                    <p>We use the code from the Gruntwork Library to assemble an opinionated, end-to-end infrastructure for you that includes everything a typical company needs: server cluster, load balancer, database, cache, DNS, TLS, monitoring, alerting, log aggregation, CI, CD, and much more.</p>
+                </div> <!-- col -->
+            </div> <!-- row-page-header -->
+
+            <hr />
+
+            <div class="row row-pricing-table">
+                <div class="col-xs-12 col-md-6">
+                    <h3>Standard Setup <span class="pull-right">$3,950</span></h3>
+                    <div class="well">
+                        <ul>
+                            <li>Some high level features bullets</li>
+                            <li>Sed eu enim sed tellus</li>
+                            <li>Mauris dictum varius purus</li>
+                            <li>Aenean nec euismod ex, at pretium</li>
+                            <li>Nam sollicitudin interdum orci sit amet</li>
+                            <li>Quisque nec nulla justo</li>
+                        </ul>
+                    </div> <!-- well -->
+                </div> <!-- col -->
+                <div class="col-xs-12 col-md-6">
+                    <h3>Upgrade Options</h3>
+                    <table class="table table-striped">
+                        <tbody>
+                            <tr>
+                                <th>Use multiple AWS accounts</th>
+                                <td class="text-right"><strong>+$2,500</strong></td>
+                            </tr>
+                            <tr>
+                                <th>Each additional database</th>
+                                <td class="text-right"><strong>+$500 / database</strong></td>
+                            </tr>
+                            <tr>
+                                <th>CloudWatch Alerts on Slack</th>
+                                <td class="text-right"><strong>+$500</strong></td>
+                            </tr>
+                            <tr>
+                                <th>OpenVPN Setup</th>
+                                <td class="text-right"><strong>+$500</strong></td>
+                            </tr>
+                            <tr>
+                                <th>End-to-end TLS Setup</th>
+                                <td class="text-right"><strong>+$1,000</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div> <!-- col -->
+                <div class="col-xs-12">
+                    <p class="text-muted" style="margin-top: 20px;"><em>All setups require a Gruntwork Subscription</em></p>
+                </div>
+            </div> <!-- row-pricing-table -->
+
+            <div class="row row-page-header">
+                <div class="col-xs-12">
+                    <h2>Training</h2>
+                    <p>We offer 2-hour crash courses done via video conferences as well as 2-day, on-site workshops.</p>
+                </div> <!-- col -->
+            </div> <!-- row-page-header -->
+
+            <hr />
+
+            <div class="row row-pricing-table">
+                <div class="col-xs-12 col-md-6">
+                    <h3>Crash Courses</h3>
+                    <table class="table table-striped">
+                        <tbody>
+                            <tr>
+                                <th>Terraform</th>
+                                <td class="text-right"><strong>$400 / Person</strong></td>
+                            </tr>
+                            <tr>
+                                <th>Packer, Docker, and ECS</th>
+                                <td class="text-right"><strong>$400 / Person</strong></td>
+                            </tr>
+                            <tr>
+                                <th>AWS Fundamentals</th>
+                                <td class="text-right"><strong>$400 / Person</strong></td>
+                            </tr>
+                            <tr>
+                                <th>DevOps Fundamentals</th>
+                                <td class="text-right"><strong>$400 / Person</strong></td>
+                            </tr>
+                            <tr>
+                                <th>Security Fundamentals</th>
+                                <td class="text-right"><strong>$400 / Person</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div> <!-- col -->
+                <div class="col-xs-12 col-md-6">
+                    <h3>Workshops</h3>
+                    <table class="table table-striped">
+                        <tbody>
+                            <tr>
+                                <th>Infrastructure as Code with Terraform (2 Days)</th>
+                                <td class="text-right"><strong>$2,000 / Person</strong></td>
+                            </tr>
+                            <tr>
+                                <th>The modern end-to-end tech stack (2 Days)</th>
+                                <td class="text-right"><strong>$2,000 / Person</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div> <!-- col -->
+                <div class="col-xs-12">
+                    <p class="text-muted" style="margin-top: 20px;"><em>Above pricing does not include travel reimbursement. All travel charges are billed at cost.</em></p>
+                </div>
+            </div> <!-- row-pricing-table -->
+
+        </div>
+    </div>
+</div>
