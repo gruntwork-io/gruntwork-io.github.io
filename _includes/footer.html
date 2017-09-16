@@ -1,76 +1,47 @@
 <footer class="footer">
-    <div class="section section-footer-content">
-        <div class="container">
-
-            {% if page.footer_heading %}
-                <div class="row row-call-to-action">
-                    <div class="col-xs-12 text-center">
-                        <h2 class="h1">{{ page.footer_heading }}</h2>
-                        <p><a href="/contact" class="btn btn-info" role="button">Get Started</a></p>
-                    </div> <!-- col -->
-                </div> <!-- row-call-to-action -->
+  <div class="section section-footer-content">
+    <div class="container">
+      {% if page.footer_heading %}
+      <div class="row row-call-to-action">
+        <div class="col-xs-12 text-center">
+          <h2 class="h1">{{ page.footer_heading }}</h2>
+          <p><a href="/contact" class="btn btn-info" role="button">Get Started</a></p>
+        </div>
+      </div>
+      {% endif %}
+      <div class="row row-sitemap">
+        {% for category in site.data.footer %}
+        <div class="col-xs-10 col-xs-offset-1 col-sm-3 col-sm-offset-0">
+          <h3>{{ category.title }}</h3>
+          <hr class="hr-sm" />
+          <ul class="list-unstyled">
+            {% for link in category.links %}
+            <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+            {% endfor %}
+            {% if category.title == "Connect" %}
+            <li>
+              <div class="btn-group btn-group-social-icons" role="group" aria-label="Group of Social Links">
+                <a href="{{site.data.contact.github.url}}" class="btn btn-default" role="button"><i class="fa fa-fw fa-github-square"></i></a>
+                <a href="{{site.data.contact.facebook.url}}" class="btn btn-default" role="button"><i class="fa fa-fw fa-facebook-square"></i></a>
+                <a href="{{site.data.contact.twitter.url}}" class="btn btn-default" role="button"><i class="fa fa-fw fa-twitter-square"></i></a>
+                <a href="{{site.data.contact.linkedin.url}}" class="btn btn-default" role="button"><i class="fa fa-fw fa-linkedin-square"></i></a>
+                <a href="{{site.data.contact.youtube.url}}" class="btn btn-default" role="button"><i class="fa fa-fw fa-youtube-square"></i></a>
+              </div>
+            </li>
             {% endif %}
-
-            <div class="row row-sitemap">
-                <div class="col-xs-10 col-xs-offset-1 col-sm-3 col-sm-offset-0">
-                    <h3>Products</h3>
-                    <hr class="hr-sm" />
-                    <ul class="list-unstyled">
-                        <li><a href="/how-it-works">How it Works</a></li>
-                        <li><a href="/reference-architecture">Reference Architecture</a></li>
-                        <li><a href="/subscriptions">Gruntwork Subscription</a></li>
-                        <li><a href="/training">Training</a></li>
-                        <li><a href="/pricing">Pricing</a></li>
-                        <li><a href="/gruntwork-library">Gruntwork Library</a></li>
-                    </ul>
-                </div> <!-- col -->
-                <div class="col-xs-10 col-xs-offset-1 col-sm-3 col-sm-offset-0">
-                    <h3>Customers</h3>
-                    <hr class="hr-sm" />
-                    <ul class="list-unstyled">
-                        <li><a href="/customers">Customers</a></li>
-                        <li><a href="/gruntwork-for-agencies">Gruntwork for Agencies</a></li>
-                    </ul>
-                </div> <!-- col -->
-                <div class="col-xs-10 col-xs-offset-1 col-sm-3 col-sm-offset-0">
-                    <h3>Company</h3>
-                    <hr class="hr-sm" />
-                    <ul class="list-unstyled">
-                        <li><a href="/about">About</a></li>
-                        <li><a href="/devops-as-a-service">DevOps as a Service</a></li>
-                        <li><a href="/alternatives">Alternatives to Gruntwork</a></li>
-                        <li><a href="/faq">FAQ</a></li>
-                        <li><a href="/careers">Careers</a></li>
-                    </ul>
-                </div> <!-- col -->
-                <div class="col-xs-10 col-xs-offset-1 col-sm-3 col-sm-offset-0">
-                    <h3>Connect</h3>
-                    <hr class="hr-sm" />
-                    <ul class="list-unstyled">
-                        <li><a href="/contact">Contact Us</a></li>
-                        <li><a href="/newsletter">Newsletter</a></li>
-                        <li><a href="/support">Get Support</a></li>
-                        <li>
-                            <div class="btn-group btn-group-social-icons" role="group" aria-label="Group of Social Links">
-                                <a href="{{site.data.contact.github.url}}" class="btn btn-default" role="button"><i class="fa fa-fw fa-github-square"></i></a>
-                                <a href="{{site.data.contact.facebook.url}}" class="btn btn-default" role="button"><i class="fa fa-fw fa-facebook-square"></i></a>
-                                <a href="{{site.data.contact.twitter.url}}" class="btn btn-default" role="button"><i class="fa fa-fw fa-twitter-square"></i></a>
-                                <a href="{{site.data.contact.linkedin.url}}" class="btn btn-default" role="button"><i class="fa fa-fw fa-linkedin-square"></i></a>
-                            </div>
-                        </li>
-                    </ul>
-                </div> <!-- col -->
-            </div> <!-- row-sitemap -->
-        </div> <!-- container -->
-    </div> <!-- footer-content -->
-
-    <div class="section section-footer-copyright">
-        <div class="container">
-            <div class="row">
-                <div class="col-xs-12 text-center">
-                    &copy; {{ 'now' | date: "%Y" }} Gruntwork, Inc. All rights reserved.
-                </div> <!-- col -->
-            </div> <!-- row -->
-        </div> <!-- container -->
-    </div> <!-- footer-copyright -->
+          </ul>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="section section-footer-copyright">
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12 text-center">
+          &copy; {{ 'now' | date: "%Y" }} Gruntwork, Inc. All rights reserved.
+        </div>
+      </div>
+    </div>
+  </div>
 </footer>
