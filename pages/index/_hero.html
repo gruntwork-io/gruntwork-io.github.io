@@ -1,0 +1,22 @@
+<div class="col-xs-12 col-sm-3 col-md-3 hidden-xs">
+  <img class="floating-img-infrastructure-in-a-day" src="/assets/img/infrastructure-in-a-day.png" style="width: 220px;" />
+</div>
+<div class="col-xs-12 col-sm-9 col-md-8 col-md-offset-1">
+  <h1>
+    Your entire infrastructure.
+    <br />
+    Defined as code. In about a day.
+  </h1>
+  <div class="clearfix">
+    <div class="pull-left lead" style="margin-right: 6px; margin-bottom: 0;">We get you up and running on AWS with</div>
+    <div id="tech-carousel-text" class="pull-left lead carousel slide" data-ride="carousel" data-interval="4000" style="margin-right: 6px; margin-bottom: 0;">
+      <div class="carousel-inner vertical">
+        {% for tech in site.data.technologies %}
+        <u class="item{% if forloop.index0 == 0 %} active{% endif %}">{{ tech.name }}.</u>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <p class="lead">You get 100% of the code.</p>
+  <p><a href="#learn-more" class="btn btn-info" role="button">Learn More</a></p>
+</div>

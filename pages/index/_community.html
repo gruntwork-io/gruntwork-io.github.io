@@ -1,0 +1,15 @@
+<div class="col-xs-12">
+  <h2>Meet the Gruntwork Community.</h2>
+</div>
+<div class="col-xs-10 col-xs-offset-1 col-sm-12 col-sm-offset-0" style="margin-top: 25px;">
+  <div class="row thumbnail-group thumbnail-group-clients">
+    {% for company in site.data.community %}
+      <div class="col-xs-6 col-sm-3 col-md-2">
+        <div class="thumbnail">
+          <img src="{{ company.logo }}" alt="{{ company.name }}" width="119px">
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+  <p><a href="/whos-using-it">See their results <i class="fa fa-fw fa-caret-right"></i></a></p>
+</div>
