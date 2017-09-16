@@ -5,6 +5,7 @@ web:
   ports:
     - "4000:4000"
   environment:
+    - JEKYLL_ENV=development
     # Pass your AWS credentials as env vars through to the Docker container for uploading the website to S3
     - AWS_ACCESS_KEY_ID
     - AWS_SECRET_ACCESS_KEY
