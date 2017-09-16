@@ -4,3 +4,8 @@ web:
     - .:/src
   ports:
     - "4000:4000"
+  environment:
+    # Pass your AWS credentials as env vars through to the Docker container for uploading the website to S3
+    - AWS_ACCESS_KEY_ID
+    - AWS_SECRET_ACCESS_KEY
+    - AWS_SESSION_TOKEN
