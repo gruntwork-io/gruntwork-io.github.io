@@ -34,11 +34,32 @@ $(function () {$('[data-toggle="tooltip"]').tooltip()});
 $("a[href^='#']").on('click', function(e) {
 
   e.preventDefault();
+
   var hash = this.hash;
+  var el = $(hash);
+  if (el.length === 0) {
+    return true;
+  }
 
   $('html, body').animate({
-    scrollTop: $(hash).offset().top
+    scrollTop: el.offset().top
   }, 500, function(){
     window.location.hash = hash;
   });
 });
+
+/* Start videos in modals and stop videos when the modal is closed */
+$('.modal .video').each(function(index, el) {
+  var url = $(el).attr('data-src');
+
+  var modal = $(el).closest('.modal');
+
+  modal.on('hide.bs.modal', function() {
+    $(el).attr('src', '');
+  });
+
+  modal.on('show.bs.modal', function() {
+    $(el).attr('src', url);
+  });
+});
+
