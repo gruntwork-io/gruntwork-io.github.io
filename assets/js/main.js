@@ -28,4 +28,17 @@ $("#modalOverviewVideo").on("hidden.bs.modal",function(){callPlayer("yt-player",
 var c=document.getElementById("dottedLine");if(c){var ctx=c.getContext("2d");ctx.beginPath(),ctx.setLineDash([10,10]),ctx.moveTo(0,0),ctx.lineTo(0,200),ctx.strokeStyle="#fff",ctx.lineWidth=1.5,ctx.stroke()}
 
 /* initialize bootstrap tooltips */
-$(function () {$('[data-toggle="tooltip"]').tooltip()})
+$(function () {$('[data-toggle="tooltip"]').tooltip()});
+
+/* Smooth scrolling for anchor links */
+$("a[href^='#']").on('click', function(e) {
+
+  e.preventDefault();
+  var hash = this.hash;
+
+  $('html, body').animate({
+    scrollTop: $(hash).offset().top
+  }, 500, function(){
+    window.location.hash = hash;
+  });
+});
