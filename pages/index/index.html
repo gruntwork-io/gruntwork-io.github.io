@@ -13,13 +13,23 @@ footer_heading: Build your infrastructure now.
                     <img class="floating-img-infrastructure-in-a-day" src="/assets/img/infrastructure-in-a-day.png" style="width: 220px;" />
                 </div> <!-- col -->
                 <div class="col-xs-12 col-sm-9 col-md-8 col-md-offset-1">
-                    <h1>
-                        Your entire infrastructure.
-                        <br />
-                        Defined as code. In about a day.
-                    </h1>
-                    <p class="lead">We get you up and running on AWS with Terraform. You get 100% of the code.</p>
-                    <p><a href="/how-it-works" class="btn btn-info" role="button">How it Works</a></p>
+                  <h1>
+                      Your entire infrastructure.
+                      <br />
+                      Defined as code. In about a day.
+                  </h1>
+                  <div class="clearfix">
+                    <div class="pull-left lead" style="margin-right: 6px; margin-bottom: 0;">We get you up and running on AWS with</div>
+                    <div id="tech-carousel-text" class="pull-left lead carousel slide" data-ride="carousel" data-interval="3000" style="margin-right: 6px; margin-bottom: 0;">
+                      <div class="carousel-inner vertical">
+                        {% for tech in site.data.technologies %}
+                          <u class="item{% if forloop.index0 == 0 %} active{% endif %}">{{ tech.name }}.</u>
+                        {% endfor %}
+                      </div>
+                    </div>
+                  </div>
+                  <p class="lead">You get 100% of the code.</p>
+                  <p><a href="/how-it-works" class="btn btn-info" role="button">How it Works</a></p>
                 </div> <!-- col -->
             </div> <!-- row -->
         </div> <!-- container -->
@@ -35,12 +45,24 @@ footer_heading: Build your infrastructure now.
                         </div> <!-- col -->
                         <div class="col-xs-12 col-sm-6 col-sm-offset-1 col-partner-experts">
                             <div class="row">
-                                <div class="col-xs-12 col-sm-6">
-                                    <img src="/assets/img/logos-technologies/logo-aws.png" width="132" />
+                              <div id="tech-carousel" class="col-xs-12 col-sm-5 carousel slide" data-ride="carousel" data-interval="3000">
+                                <div class="carousel-inner vertical">
+                                  {% for tech in site.data.technologies %}
+                                    <img src="{{ tech.logo }}" alt="{{ tech.name }}" class="item{% if forloop.index0 == 0 %} active{% endif %}" />
+                                  {% endfor %}
+                                </div>
+                              </div>
+                              <div class="col-xs-12 col-sm-2" style="line-height: 45px; font-size: 35px">
+                                +
+                              </div>
+                              <div id="cloud-carousel" class="col-xs-12 col-sm-5 carousel slide" data-ride="carousel" data-interval="12000">
+                                <div class="carousel-inner vertical">
+                                  {% for cloud in site.data.clouds %}
+                                    <img src="{{ cloud.logo }}" alt="{{ cloud.name }}" class="item{% if forloop.index0 == 0 %} active{% endif %}" width="132"/>
+                                  {% endfor %}
                                 </div> <!-- col -->
-                                <div class="col-xs-12 col-sm-6">
-                                    <img src="/assets/img/logos-technologies/logo-terraform.png" />
-                                </div> <!-- col -->
+                              </div> <!-- col -->
+
                             </div> <!-- row -->
                         </div> <!-- col -->
                     </div> <!-- row -->
