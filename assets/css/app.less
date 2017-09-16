@@ -1236,27 +1236,10 @@ input[type="radio"] .styled:checked + label::after {
 
 //// YouTube button
 
-.video .play-button-wrapper {
-    background: rgba(0,0,0,0.55);
-    width: 50px;
-    height: 35px;
-    border-radius: 5px;
-    padding-top: 10px;
-    position: relative;
-    margin: 0 auto;
-    top: 50%;
-    -webkit-transform: translateY(-50%);
-    -ms-transform: translateY(-50%);
-    transform: translateY(-50%);
+.video-thumbnail {
+    opacity: 0.5;
 }
-.video:hover .play-button-wrapper {
-    background: #cd201f;
-}
-.video .play-button {
-    width: 0;
-    height: 0;
-    border-style: solid;
-    border-width: 7px 0 7px 14px;
-    border-color: transparent transparent transparent #ffffff;
-    margin: 0 auto;
+
+.video-thumbnail:hover {
+    opacity: 1.0;
 }
