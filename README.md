@@ -29,10 +29,21 @@ The fastest way to launch this site is to use [Docker](https://www.docker.com/).
 
 
 
+## Deploying
+
+To deploy the site to S3/CloudFront:
+
+1. Configure your AWS credentials as environment variables.
+1. `docker-compose run web s3_website push`
+
+
+
+
 ## Technologies
 
 1. Built with [Jekyll](http://jekyllrb.com/). This website is completely static and we use basic HTML or Markdown for
    everything.
+1. Hosted on Amazon S3, with CloudFront as a CDN.   
 1. We use [Bootstrap](http://www.getbootstrap.com/) and [Less](http://lesscss.org/).
 1. We're using [UptimeRobot](http://uptimerobot.com/) and [Google Analytics](http://www.google.com/analytics/) for
    monitoring and metrics.
