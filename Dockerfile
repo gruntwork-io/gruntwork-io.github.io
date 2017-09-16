@@ -8,6 +8,12 @@ ADD Gemfile Gemfile
 ADD Gemfile.lock Gemfile.lock
 RUN bundle install
 
+# Install Java, which is required for s3_website, and then install s3_website
+RUN apt-get update && \
+    apt-get install -y default-jre && \
+    rm -rf /var/lib/apt/lists/*
+RUN s3_website install
+
 # Copy source
 RUN mkdir -p /src
 VOLUME ["/src"]
