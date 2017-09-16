@@ -12,5 +12,6 @@ To deploy changes:
 
 1. Make sure [Terraform](https://www.terraform.io/) is installed.
 1. Configure the secrets specified at the top of `vars.tf` as environment variables.
+1. Run `terraform init`.
 1. Run `terraform plan` to see the changes you're about to apply.
 1. If the plan looks good, run `terraform apply`.

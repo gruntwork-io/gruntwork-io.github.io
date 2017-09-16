@@ -4,7 +4,16 @@
 
 provider "aws" {
   region              = "us-east-1"
-  allowed_account_ids = ["681375574961"]
+}
+
+terraform {
+  backend "s3" {
+    bucket         = "gruntwork-website-terraform-state"
+    key            = "terraform.tfstate"
+    region         = "us-east-1"
+    encrypt        = true
+    dynamodb_table = "terraform-locks"
+  }
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -53,8 +62,9 @@ module "cloudfront" {
   default_ttl = 300
 
   # Note: We configure the alias and TLS cert here, but the domain name is managed in the Phoenix DevOps account!!
-  domain_name         = "redesign.gruntwork.io" # TODO: change this to the final domain name when ready to launch!!
-  acm_certificate_arn = "${data.aws_acm_certificate.cert.arn}"
+  domain_name            = "redesign.gruntwork.io" # TODO: change this to the final domain name when ready to launch!!
+  acm_certificate_arn    = "${data.aws_acm_certificate.cert.arn}"
+  viewer_protocol_policy = "redirect-to-https"
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
