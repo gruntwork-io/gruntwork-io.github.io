@@ -5,8 +5,13 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-sm-6 video-thumbnail" style="cursor: pointer; margin-bottom: 15px;" data-toggle="modal" data-target="#modalOverviewVideo">
-      <img src="/assets/img/video-thumbnail-play.png" alt="Gruntwork Overview" class="img-responsive">
+    <div class="col-sm-6 video-thumbnail" style="margin-bottom: 15px">
+      <a href="{{ site.overview_video_embed_url }}" data-lity>
+        <img src="/assets/img/video-thumbnail.png" alt="Gruntwork Overview" class="col-sm-12" style="padding: 0">
+        <div class="play">
+          <div class="tri"></div>
+        </div>
+      </a>
     </div>
     <div class="col-sm-6 lead">
       <p>
@@ -14,9 +19,9 @@
         Here's how it works.
       </p>
       <p>
-        <button class="btn btn-info" role="button" data-toggle="modal" data-target="#modalOverviewVideo">
-          <i class="fa fa-fw fa-youtube-play"></i>&nbsp;&nbsp;Watch the Overview Video
-        </button>
+        <a href="{{ site.overview_video_embed_url }}" class="btn btn-info" data-lity>
+          <i class="fa fa-youtube-play"></i>&nbsp;&nbsp;Watch the Overview Video
+        </a>
       </p>
     </div>
   </div>

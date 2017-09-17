@@ -12,6 +12,7 @@
 @import "app-variable-overrides";
 @import "user10/utilities";
 @import "vertical-carousel";
+@import "lity";
 
 
 
@@ -1234,12 +1235,78 @@ input[type="radio"] .styled:checked + label::after {
     color: #fff;
 }
 
-//// YouTube button
+////// Youtube video
+
+@play-button-width: 70px;
+@play-button-height: 44px;
 
 .video-thumbnail {
-    opacity: 0.5;
+    position: relative;
+    cursor: pointer;
 }
 
-.video-thumbnail:hover {
+.video-thumbnail .play {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 100;
+    width: @play-button-width;
+    height: @play-button-height;
+    margin-left: -1 * (@play-button-width / 2);
+    margin-top: -1 * (@play-button-height / 2);
+    background: rgba(0, 0, 0, 0.55);
+    border-radius: 5px;
+    padding-top: 15px;
+}
+
+.video-thumbnail .play .tri {
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 7px 0 7px 14px;
+    border-color: transparent transparent transparent #ffffff;
+    margin: 0 auto;
+}
+
+.video-thumbnail:hover .play {
     opacity: 1.0;
+    background: #ff0000;
+}
+
+////// Modal fix for mobile: https://github.com/jschr/bootstrap-modal/blob/master/css/bootstrap-modal-bs3patch.css
+
+body.modal-open,
+.modal-open .navbar-fixed-top,
+.modal-open .navbar-fixed-bottom {
+    margin-right: 0;
+}
+
+.modal {
+    left: 50%;
+    bottom: auto;
+    right: auto;
+    z-index: 1050;
+    padding: 0;
+    width: 500px;
+    margin-left: -250px;
+    background-color: #ffffff;
+    border: 1px solid #999999;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    -webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
+    background-clip: padding-box;
+}
+
+.modal.container {
+    max-width: none;
+}
+
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1040;
 }
