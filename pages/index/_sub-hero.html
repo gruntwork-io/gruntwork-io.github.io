@@ -3,22 +3,28 @@
     <div class="col-xs-12 col-sm-5 col-partner-hashicorp">
       <img src="/assets/img/logos-technologies/logo-hashicorp.png" width="239" />
     </div>
-    <div class="col-xs-12 col-sm-6 col-sm-offset-1 col-partner-experts">
+    <div class="col-xs-12 col-sm-7 col-partner-experts">
       <div class="row">
-        <div id="tech-carousel" class="col-xs-12 col-sm-5 carousel slide" data-ride="carousel" data-interval="3000">
-          <div class="carousel-inner vertical">
-            {% for tech in site.data.technologies %}
-              <img src="{{ tech.logo }}" alt="{{ tech.name }}" class="item{% if forloop.index0 == 0 %} active{% endif %}" />
-            {% endfor %}
+        <div class="col-xs-12 col-sm-6">
+          <div class="row">
+            <div class="col-sm-11">
+              <div id="tech-carousel" class="carousel slide" data-ride="carousel" data-interval="3000">
+                <div class="carousel-inner vertical">
+                {% for tech in site.data.technologies %}
+                  <img src="{{ tech.logo }}" alt="{{ tech.name }}" class="item{% if forloop.index0 == 0 %} active{% endif %}" />
+                {% endfor %}
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-1" style="font-size: 30px; padding: 7px 0 0 0">
+              +
+            </div>
           </div>
         </div>
-        <div class="col-xs-12 col-sm-2" style="line-height: 45px; font-size: 35px">
-          +
-        </div>
-        <div id="cloud-carousel" class="col-xs-12 col-sm-5 carousel slide" data-ride="carousel" data-interval="14000">
+        <div id="cloud-carousel" class="col-xs-12 col-sm-6 carousel slide" data-ride="carousel" data-interval="14000">
           <div class="carousel-inner vertical">
             {% for cloud in site.data.clouds %}
-              <img src="{{ cloud.logo }}" alt="{{ cloud.name }}" class="item{% if forloop.index0 == 0 %} active{% endif %}" width="132"/>
+              <img src="{{ cloud.logo }}" alt="{{ cloud.name }}" class="item{% if forloop.index0 == 0 %} active{% endif %}"/>
             {% endfor %}
           </div>
         </div>

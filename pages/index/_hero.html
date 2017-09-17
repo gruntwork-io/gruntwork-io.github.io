@@ -8,15 +8,23 @@
     Defined as code. In about a day.
   </h1>
   <div class="clearfix">
-    <div class="pull-left lead" style="margin-right: 6px; margin-bottom: 0;">We get you up and running on AWS with</div>
-    <div id="tech-carousel-text" class="pull-left lead carousel slide" data-ride="carousel" data-interval="4000" style="margin-right: 6px; margin-bottom: 0;">
+    <div class="pull-left lead" style="margin-right: 15px;">We get you up and running on</div>
+    <div id="cloud-carousel-text" class="pull-left col-xs-4 lead carousel slide" style="max-width: 150px; margin-top: -15px; margin-right: 15px; padding: 0;" data-ride="carousel" data-interval="14000">
       <div class="carousel-inner vertical">
-        {% for tech in site.data.technologies %}
-        <u class="item{% if forloop.index0 == 0 %} active{% endif %}">{{ tech.name }}.</u>
+        {% for cloud in site.data.clouds %}
+          <img src="{{ cloud.logo }}" alt="{{ cloud.name }}" class="img-responsive item{% if forloop.index0 == 0 %} active{% endif %}"/>
         {% endfor %}
       </div>
     </div>
+    <div class="pull-left lead" style="margin-right: 15px;">with</div>
+    <div id="tech-carousel-text" class="pull-left col-xs-4 lead carousel slide" style="max-width: 150px; margin-top: -12px; margin-right: 15px; padding: 0;" data-ride="carousel" data-interval="4000">
+      <div class="carousel-inner vertical">
+        {% for tech in site.data.technologies %}
+          <img src="{{ tech.logo }}" alt="{{ tech.name }}" class="img-responsive item{% if forloop.index0 == 0 %} active{% endif %}"/>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="pull-left lead" style="">and you get 100% of the code.</div>
   </div>
-  <p class="lead">You get 100% of the code.</p>
-  <p><a href="#learn-more" class="btn btn-info" role="button">Learn More</a></p>
+  <p style="margin-top: 20px;"><a href="#learn-more" class="btn btn-info" role="button">Learn More</a></p>
 </div>
