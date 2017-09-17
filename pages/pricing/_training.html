@@ -1,39 +1,42 @@
+<hr />
+<div class="row row-page-header">
+  <div class="col-xs-12">
+    <h2>Training</h2>
+    <p>
+      We offer two types of <a href="/training">training</a>: <strong>Crash Courses</strong>, which are 1-2 hours each
+      and done via video call, and <strong>Workshops</strong>, which are 1-2 days each and are done on-site. See
+      the <a href="/training">Gruntwork Training</a> page for the details.
+    </p>
+  </div>
+</div>
 <div class="row row-pricing-table">
-  <div class="col-xs-12 col-md-6">
+  <div class="col-xs-12 col-md-5">
     <h3>Crash Courses</h3>
     <table class="table table-striped">
       <tbody>
         {% for crash_course in site.data.training.crash_courses %}
           <tr>
             <th>{{ crash_course.title }}</th>
-            <td>{{ crash_course.description }}</td>
-            {% if include.pricing %}
-              <td class="text-right"><strong>{{ crash_course.price }}</strong></td>
-            {% endif %}
+            <td class="text-right"><strong>{{ crash_course.price }}</strong></td>
           </tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
-  <div class="col-xs-12 col-md-6">
+  <div class="col-xs-12 col-md-7">
     <h3>Workshops</h3>
     <table class="table table-striped">
       <tbody>
         {% for workshop in site.data.training.workshops %}
         <tr>
           <th>{{ workshop.title }}</th>
-          <td>{{ workshop.description }}</td>
-          {% if include.pricing %}
-            <td class="text-right"><strong>{{ workshop.price }}</strong></td>
-          {% endif %}
+          <td class="text-right"><strong>{{ workshop.price }}</strong></td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
-  {% if include.pricing %}
   <div class="col-xs-12">
-    <p class="text-muted" style="margin-top: 20px;"><em>Above pricing does not include travel reimbursement. All travel charges are billed at cost.</em></p>
+    <p class="text-muted" style="margin-top: 20px;"><em>Above pricing does not include travel reimbursement fork Workshops. All travel charges are billed at cost.</em></p>
   </div>
-  {% endif %}
 </div>

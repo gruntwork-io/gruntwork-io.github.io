@@ -1,0 +1,119 @@
+<div class="row row-page-header">
+  <div class="col-xs-12">
+    <h2>Gruntwork Subscription</h2>
+    <p>
+      The <a href="/subscription">Gruntwork Subscription</a> gets you access to 100% of the source code in the
+      <a href="/gruntwork-library">Gruntwork Library</a>, including all updates, additions, and patches to the Library
+      as long as you’re a subscriber. You also get commercial support from the Gruntwork team, security alerts,
+      infrastructure updates, and more. Check out the <a href="/subscription">Gruntwork Subscription</a> page the
+      details.
+    </p>
+    <p>
+      We offer three Subscription plans:
+      {% for plan in site.data.plans %}{% if forloop.index0 > 0 %}, {% endif %}<strong>{{ plan.name }}</strong>{% endfor %}.
+    </p>
+  </div>
+</div>
+<div class="row row-pricing-table">
+  <div class="col-xs-12">
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th></th>
+            {% for plan in site.data.plans %}
+              <th>{{ plan.name }}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>Support Hours</th>
+            {% for plan in site.data.plans %}
+              <td>{{ plan.support_hours }}</td>
+            {% endfor %}
+          </tr>
+          <tr>
+            <th>Support Availability</th>
+            {% for plan in site.data.plans %}
+              <td>{{ plan.support_availability }}</td>
+            {% endfor %}
+          </tr>
+          <tr>
+            <th>After-Hours Support</th>
+            {% for plan in site.data.plans %}
+              <td>{{ plan.after_hour_support }}</td>
+            {% endfor %}
+          </tr>
+          <tr>
+            <th>Reponse Time</th>
+            {% for plan in site.data.plans %}
+              <td>{{ plan.response_time }}</td>
+            {% endfor %}
+          </tr>
+          <tr>
+            <th>Email Support</th>
+            {% for plan in site.data.plans %}
+              <td>{{ plan.email_support }}</td>
+            {% endfor %}
+          </tr>
+          <tr>
+            <th>Slack Support</th>
+            {% for plan in site.data.plans %}
+            <td>{{ plan.slack_support }}</td>
+            {% endfor %}
+          </tr>
+          <tr>
+            <th>Phone/Video Chat Support</th>
+            {% for plan in site.data.plans %}
+              <td>{{ plan.phone_video_support }}</td>
+            {% endfor %}
+          </tr>
+          <tr>
+            <th>Automated Infra Updates</th>
+            {% for plan in site.data.plans %}
+              <td>{{ plan.automated_infra_updates }}</td>
+            {% endfor %}
+          </tr>
+          <tr>
+            <th>Production Readiness Review</th>
+            {% for plan in site.data.plans %}
+            <td>{{ plan.prodution_readiness_review }}</td>
+            {% endfor %}
+          </tr>
+          <tr>
+            <th>Access the Gruntwork Library</th>
+            {% for plan in site.data.plans %}
+              <td>{{ plan.library_access }}</td>
+            {% endfor %}
+          </tr>
+          <tr>
+            <th>Security Alerts</th>
+            {% for plan in site.data.plans %}
+              <td>{{ plan.security_alerts }}</td>
+            {% endfor %}
+          </tr>
+          <tr>
+            <th>Newsletter</th>
+            {% for plan in site.data.plans %}
+              <td>{{ plan.newsletter }}</td>
+            {% endfor %}
+          </tr>
+          <tr>
+            <th>Minimum subscription</th>
+            {% for plan in site.data.plans %}
+            <td>12 months</td>
+            {% endfor %}
+          </tr>
+          <tr>
+            <th>Price<br/><em>(Includes 1 License*)</em></th>
+            {% for plan in site.data.plans %}
+              <td><strong>{{ plan.price }}</strong></td>
+            {% endfor %}
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="text-muted"><em>*One License should be enough for most small and medium deployments. See the <a href="/faq">FAQ</a> for details.</em></p>
+  </div>
+</div>
