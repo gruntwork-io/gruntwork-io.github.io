@@ -1,0 +1,16 @@
+<div class="row row-page-header">
+  <div class="col-xs-12">
+    <h2>What's included</h2>
+    <p>The Reference Architecture includes the following:</p>
+    <table class="table table-striped">
+      <tbody>
+        {% for feature in site.data.reference-architecture %}
+          <tr>
+            <th style="width: 200px">{{ feature.title }}</th>
+            <td>{{ feature.description }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>

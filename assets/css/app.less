@@ -1272,3 +1272,34 @@ input[type="radio"] .styled:checked + label::after {
     opacity: 1.0;
     background: #ff0000;
 }
+
+
+/////// Reference architecture
+
+.ref-arch {
+    position: relative;
+}
+
+.ref-arch .ref-arch-overlay {
+    background: rgba(0,0,0,.75);
+    text-align: center;
+    opacity: 0;
+    -webkit-transition: opacity .25s ease;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+.ref-arch .ref-arch-overlay .fa {
+    height: 54px;
+    margin-top: -27px;
+    position: relative;
+    top: 50%;
+}
+
+.ref-arch:hover .ref-arch-overlay {
+    opacity: 1;
+    color: #fff;
+}
