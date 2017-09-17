@@ -1,0 +1,39 @@
+<div class="row row-pricing-table">
+  <div class="col-xs-12 col-md-6">
+    <h3>Crash Courses</h3>
+    <table class="table table-striped">
+      <tbody>
+        {% for crash_course in site.data.training.crash_courses %}
+          <tr>
+            <th>{{ crash_course.title }}</th>
+            <td>{{ crash_course.description }}</td>
+            {% if include.pricing %}
+              <td class="text-right"><strong>{{ crash_course.price }}</strong></td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="col-xs-12 col-md-6">
+    <h3>Workshops</h3>
+    <table class="table table-striped">
+      <tbody>
+        {% for workshop in site.data.training.workshops %}
+        <tr>
+          <th>{{ workshop.title }}</th>
+          <td>{{ workshop.description }}</td>
+          {% if include.pricing %}
+            <td class="text-right"><strong>{{ workshop.price }}</strong></td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% if include.pricing %}
+  <div class="col-xs-12">
+    <p class="text-muted" style="margin-top: 20px;"><em>Above pricing does not include travel reimbursement. All travel charges are billed at cost.</em></p>
+  </div>
+  {% endif %}
+</div>
