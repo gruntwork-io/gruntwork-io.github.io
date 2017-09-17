@@ -1,152 +1,21 @@
 ---
 layout: default
-title: Gruntwork | Contact Us
-excerpt: Hand the gruntwork off to us so you can focus on what’s unique to your business.
+title: Contact Us
 permalink: /contact/
 slug: contact
 ---
 
 <div class="main">
-    <div class="section section-hero">
-        <div class="container">
-            <div class="row">
-                <div class="col-xs-12 text-center">
-                    <h1>Get started with Gruntwork!</h1>
-                    <p>Hand the gruntwork off to us so you can focus on what’s unique to your business. Use the form below<br /> or shoot us an email at <a href="mailto:info@gruntwork.io">info@gruntwork.io</a>.</p>
-                </div> <!-- col -->
-            </div> <!-- row -->
-        </div> <!-- container -->
-    </div> <!-- section-hero -->
-
-    <div class="section section-dark">
-
-        <div class="container">
-
-            <div class="row row-form">
-                <div class="col-xs-12 col-md-8 col-md-offset-2">
-                    <h3 class="text-danger text-center">Please fill out the required fields.</h3>
-                    <br />
-                    <form>
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-xs-12 col-md-4">
-                                    <label for="contact-name">Name<sup class="text-danger">&#42;</sup></label>
-                                </div> <!-- col -->
-                                <div class="col-xs-12 col-md-8">
-                                    <input
-                                        id="contact-name"
-                                        type="text"
-                                        class="form-control"
-                                        placeholder="Enter your name"
-                                        required="required"
-                                    >
-                                </div> <!-- col -->
-                            </div> <!-- row -->
-                        </div> <!-- form-group -->
-
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-xs-12 col-md-4">
-                                    <label for="contact-email">Email<sup class="text-danger">&#42;</sup></label>
-                                </div> <!-- col -->
-                                <div class="col-xs-12 col-md-8">
-                                    <input
-                                        id="contact-email"
-                                        type="text"
-                                        class="form-control"
-                                        placeholder="Enter your email"
-                                        required="required"
-                                    >
-                                </div> <!-- col -->
-                            </div> <!-- row -->
-                        </div> <!-- form-group -->
-
-                        <div class="form-group has-error">
-                            <div class="row">
-                                <div class="col-xs-12 col-md-4">
-                                    <label for="contact-email">Email<sup class="text-danger">&#42;</sup></label>
-                                </div> <!-- col -->
-                                <div class="col-xs-12 col-md-8">
-                                    <input
-                                        id="contact-email"
-                                        type="text"
-                                        class="form-control"
-                                        placeholder="Enter your email"
-                                        required="required"
-                                    >
-                                </div> <!-- col -->
-                            </div> <!-- row -->
-                        </div> <!-- form-group -->
-
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-xs-12 col-md-4">
-                                    <label for="contact-company">Company</label>
-                                </div> <!-- col -->
-                                <div class="col-xs-12 col-md-8">
-                                    <input
-                                        id="contact-company"
-                                        type="text"
-                                        class="form-control"
-                                        placeholder="Enter your company"
-                                        required="required"
-                                    >
-                                </div> <!-- col -->
-                            </div> <!-- row -->
-                        </div> <!-- form-group -->
-
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-xs-12 col-md-4">
-                                    <label for="">Which products are you interested in?</label>
-                                </div> <!-- col -->
-                                <div class="col-xs-12 col-md-8">
-                                    <div class="checkbox">
-                                        <input type="checkbox" value="">
-                                        <label>
-                                            Reference Architecture
-                                        </label>
-                                    </div>
-                                    <div class="checkbox">
-                                        <input type="checkbox" value="">
-                                        <label>
-                                            Gruntwork Membership
-                                        </label>
-                                    </div>
-                                    <div class="checkbox">
-                                        <input type="checkbox" value="">
-                                        <label>
-                                            Training
-                                        </label>
-                                    </div> <!-- checkbox -->
-                                </div> <!-- col -->
-                            </div> <!-- row -->
-                        </div> <!-- form-group -->
-
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-xs-12 col-md-4">
-                                    <label for="contact-message">Anything else you'd like to share?</label>
-                                </div> <!-- col -->
-                                <div class="col-xs-12 col-md-8">
-                                    <textarea
-                                        id="contact-message"
-                                        class="form-control"
-                                        rows="3"
-                                        placeholder="Enter a message"
-                                    ></textarea>
-                                </div> <!-- col -->
-                            </div> <!-- row -->
-                        </div> <!-- form-group -->
-
-                        <div class="text-center">
-                            <br />
-                            <button type="submit" class="btn btn-primary">Get Started</button>
-                        </div>
-                    </form>
-                </div> <!-- col -->
-            </div> <!-- row-form -->
-
+  <div class="section section-hero">
+    {% include_relative _hero.html %}
+  </div>
+  <div class="section section-dark">
+    <div class="container">
+      <div class="row row-form">
+        <div class="col-xs-12 col-md-8 col-md-offset-2">
+          {% include_relative _form.html %}
         </div>
+      </div>
     </div>
+  </div>
 </div>

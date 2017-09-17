@@ -63,3 +63,39 @@ $('.modal .video').each(function(index, el) {
   });
 });
 
+/* Contact form */
+$(function () {
+  var inCall = false;
+
+  var submitButton = $('#submit-button');
+  submitButton.on('click', function(e) {
+    e.preventDefault();
+
+    if (inCall) {
+      return;
+    }
+    inCall = true;
+
+    var form = $('#contact-form');
+    var data = serialize(form.get(0), {hash: true});
+
+    submitButton.innerHTML = 'Loading...';
+
+    var postParams = {
+      url: 'https://formspree.io/info@gruntwork.io',
+      type: "POST",
+      data: data,
+      dataType: "json"
+    };
+
+    $.ajax(postParams).done(function() {
+      inCall = false;
+      submitButton.innerHTML = 'Submit';
+      window.location.replace('/thanks');
+    }).fail(function(error) {
+      $('#error-message').html('<h3 class="text-danger text-center">Oops, something went wrong! Please try again.</h3>');
+      inCall = false;
+      submitButton.innerHTML = 'Submit';
+    });
+  });
+});
