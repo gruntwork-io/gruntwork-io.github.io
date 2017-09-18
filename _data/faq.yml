@@ -45,6 +45,62 @@
           as much as you want.
         </p>
 
+    - question: Gruntwork vs open source modules (e.g. Ansible Galaxy, Terraform Module Registry, Puppet Forge, etc.)
+      answer: |
+        <p>
+          You can find open source infrastructure code in registries such as Ansible Galaxy, Terraform Module Registry,
+          Puppet Forge, and Chef Marketplace. So why use a paid, commercial product such as the
+          <a href="/gruntwork-library">Gruntwork Library</a> instead of this open source code?
+        </p>
+        <p>
+          First, it's worth mentioning that parts of the Gruntwork Library are also open source (e.g., look for our
+          Consul, Nomad, and Vault modules in the Terraform Module Registry), so it's not an either-or-choice!
+          Second, if your business depends on this infrastructure code, here are some reasons you should consider a
+          commercial product like the Gruntwork Library instead of random code you find online:
+        </p>
+        <table class="table table-striped">
+          <tbody>
+            <tr>
+              <th style="width: 20%">Maintenance</th>
+              <td>
+                Most of the open source modules are not well maintained. Technologies like Terraform, Docker, and AWS
+                are changing constantly, and the creators of those modules rarely have any incentive to invest the
+                large amount of time necessary to keep that code up to date. At Gruntwork, keeping up with these
+                changes is the core of our business, so we regularly update and maintain all the code in the Gruntwork
+                Library.
+              </td>
+            </tr>
+            <tr>
+              <th style="width: 20%">Testing</th>
+              <td>
+                The open source modules almost never have automated tests. As a result, many of them are buggy or
+                don't work at all. Every module in the Gruntwork Library is thoroughly tested. After every single
+                commit, we kick off a suite of automated tests that deploy the code into a real AWS account and
+                verify that it behaves as expected.
+              </td>
+            </tr>
+            <tr>
+              <th style="width: 20%">Integration</th>
+              <td>
+                The modules in the Gruntwork Library are all designed to be highly configurable, composable, and to
+                work together. In fact, we even offer a <a href="/reference-architecture">Reference Architecture</a> as
+                a way to put all the modules together into an end-to-end, integrated tech stack in about a day. With
+                open source code, all the integration work is up to you, and you'll find many of the modules are too
+                inflexibile to fit your needs or incompatible with other modules.
+              </td>
+            </tr>
+            <tr>
+              <th style="width: 20%">Support</th>
+              <td>
+                With the <a href="/subscription">Gruntwork Subscription</a>, you get commercial support for all the
+                code in the Gruntwork Library. We're there to help you via email, chat, and phone/video call any time
+                you need a bug fixed, or help with troubleshooting, or a code or design review. With open source code,
+                if something goes wrong, you're typically on your own.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
     - question: Gruntwork vs doing it yourself (DIY)
       answer: |
         <p>
