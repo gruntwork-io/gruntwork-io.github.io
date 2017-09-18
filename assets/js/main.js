@@ -65,10 +65,40 @@ $('.modal .video').each(function(index, el) {
 
 /* Contact form */
 $(function () {
+  var submitButton = $('#submit-button');
+  var form = $('#contact-form');
   var inCall = false;
 
-  var submitButton = $('#submit-button');
-  submitButton.on('click', function(e) {
+  var validateForm = function() {
+    var isValid = true;
+
+    clearErrors();
+
+    form.find('[required]').each(function(index, el) {
+      if (!$(el).val()) {
+        isValid = false;
+        showInputError(el);
+        showFormError('Please fill in all required fields');
+      }
+    });
+
+    return isValid;
+  };
+
+  var showFormError = function(message) {
+    $('#error-message').html('<h3 class="text-danger text-center">' + message + '</h3>');
+  };
+
+  var showInputError = function(el) {
+    $(el).closest('.form-group').addClass('has-error');
+  };
+
+  var clearErrors = function() {
+    $('#error-message').html('');
+    form.find('*').removeClass('has-error');
+  };
+
+  var submitForm = function(e) {
     e.preventDefault();
 
     if (inCall) {
@@ -76,10 +106,16 @@ $(function () {
     }
     inCall = true;
 
-    var form = $('#contact-form');
     var data = serialize(form.get(0), {hash: true});
+    if (validateForm()) {
+      submitToFormSpree(data);
+    } else {
+      inCall = false;
+    }
+  };
 
-    submitButton.innerHTML = 'Loading...';
+  var submitToFormSpree = function (data) {
+    submitButton.html('Loading...');
 
     var postParams = {
       url: 'https://formspree.io/info@gruntwork.io',
@@ -90,12 +126,14 @@ $(function () {
 
     $.ajax(postParams).done(function() {
       inCall = false;
-      submitButton.innerHTML = 'Submit';
+      submitButton.html('Submit');
       window.location.replace('/thanks');
     }).fail(function(error) {
-      $('#error-message').html('<h3 class="text-danger text-center">Oops, something went wrong! Please try again.</h3>');
+      showFormError('Oops, something went wrong! Please try again.');
       inCall = false;
-      submitButton.innerHTML = 'Submit';
+      submitButton.html('Submit');
     });
-  });
+  };
+
+  submitButton.on('click', submitForm);
 });
