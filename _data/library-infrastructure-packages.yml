@@ -7,9 +7,8 @@
   docs_url: "https://github.com/gruntwork-io/module-vpc-public"
   full_url: "https://github.com/gruntwork-io/module-vpc"
   description: |
-    Set up a best practices network topology in your AWS account. This Package creates an isolated VPC for each
-    environment (staging, production, mgmt), and within each environment, sets up multiple tiers of isolated subnets
-    (public, private, persistence) network ACLs, security groups, NAT gateways, and VPC peering connections.
+    Create a best-practices Virtual Private Cloud (VPC). Includes multiple subnet tiers, network ACLs, security groups,
+    NAT gateways, and VPC peering.
 
 - name: "Monitoring &amp; Alerting"
   tags:
@@ -24,12 +23,9 @@
   docs_url: "https://github.com/gruntwork-io/module-vpc-public"
   full_url: "https://github.com/gruntwork-io/module-vpc"
   description: |
-    Set up monitoring and alerting using AWS CloudWatch. This Package exposes metrics not available in the AWS
-    hypervisor (e.g. memory and disk space utilization), configures Route 53 health checks for your public endpoints,
-    installs a default set of alerts (e.g. for CPU usage, disk space, 5xx errors) that notify you via email or text
-    message, and aggregates logs from all your applications so you can see them in the CloudWatch console.
+    Configure monitoring, log aggregation, and alerting using CloudWatch, SNS, and S3. Includes Slack integration.
 
-- name: "Docker Cluster"
+- name: "Amazon ECS Docker Cluster"
   tags:
     - AWS
   icons:
@@ -40,11 +36,8 @@
   docs_url: "https://github.com/gruntwork-io/module-vpc-public"
   full_url: "https://github.com/gruntwork-io/module-vpc"
   description: |
-    Deploy your Docker containers on top of the AWS EC2 Container Service (ECS). This Package creates the ECS Cluster,
-    runs your Docker containers as ECS services, supports zero-downtime, rolling deployment of new Docker container
-    versions, configures load balancing, health checks, and service discovery using ELBs, scales the number of nodes
-    and tasks up and down based on traffic, and provides automatic recovery of failed nodes and Tasks. We even have
-    experimental support for CUDA on ECS, which allows you to build machine learning apps with Docker!
+    Deploy a best-practices ECS Cluster. Includes zero-downtime, rolling deployments, auto scaling, and experimental
+    support for CUDA on ECS.
 
 - name: "AMI Cluster"
   tags:
@@ -57,11 +50,8 @@
   docs_url: "https://github.com/gruntwork-io/module-asg-public"
   full_url: "https://github.com/gruntwork-io/module-asg"
   description: |
-    Deploy your Amazon Machine Images (AMIs) on top of an AWS Auto Scaling Group (ASG). This
-    Package creates the ASG Cluster, supports zero-downtime, rolling deployment of new AMI
-    versions, configures load balancing, health checks, and service discovery using ELBs,
-    scales the number of nodes up and down based on traffic, and provides automatic
-    recovery of failed nodes.
+    Deploy Amazon Machine Images (AMIs) on top of an Auto Scaling Group. Supports zero-downtime, rolling deployment of
+    new AMI versions, load balancing, health checks, service discovery, and auto scaling.
 
 - name: "Lambda"
   tags:
@@ -70,10 +60,9 @@
     - title: Terraform
       image: icon-terraform.png
   description: |
-    Deploy and manage Lambda functions with Terraform. This package can automatically upload your code (Python, Java,
-    C#, or JavaScript) to AWS, configure environment variables to expose to the Lambda function, create an IAM role and
-    IAM permissions, associate the function with a VPC, subnets, and security groups, configure the function to run on
-    a scheduled basis, enable versioning/aliasing, and configure an SNS topic or SQS queue as a dead letter target.
+    Deploy and manage Lambda functions with Terraform. Automatically upload source code, configure environment variables,
+    create an IAM Role, associate with a VPC. enable versioning/aliasing. Also supports scheduled Lambdas and dead letter
+    targets.
 
 - name: "Security"
   tags:
@@ -90,12 +79,8 @@
   docs_url: "https://github.com/gruntwork-io/module-security-public"
   full_url: "https://github.com/gruntwork-io/module-security"
   description: |
-    Set up security best practices for managing secrets, credentials, and servers. This
-    Package uses AWS Key Management Service (KMS) to encrypt and decypt secrets so you can
-    securely store them in version control, configures servers to accept SSH connections
-    from an authorized list of IAM users that updates automatically, configures IAM Groups
-    according to best practices, enables CloudTrail with encrypted events, and implements
-    server hardening with automated security updates and tools like fail2ban.
+    A collection of security best practices for managing secrets, credentials, and servers. Includes streamlined support
+    for CloudTrail, KMS, SSH key management via IAM, IAM Groups, and OS hardening.
 
 - name: "Continuous Delivery"
   tags:
@@ -107,17 +92,12 @@
       image: icon-terraform.png
     - title: Bash
       image: icon-bash.png
-    - title: Go
-      image: icon-go.png
   docs_url: "https://github.com/gruntwork-io/module-ci-public"
   full_url: "https://github.com/gruntwork-io/module-ci"
   description: |
-    Set up an automated pipeline to build and deploy code using a self-hosted CI server (e.g.
-    Jenkins) or cloud-based CI service (e.g. CircleCI, or Travis). After every commit, this
-    Package builds your code, runs your tests, and packages your app into a deployable,
-    versioned artifact (e.g. Docker image or Amazon Machine Image). You can kick off an
-    automated deployment by pushing to a specific branch, creating a new tag, manually running
-    a CI job, or even after every single commit (continuous deployment).
+    A collection of bash scripts and Terraform code that implement common CI tasks including building a Docker image,
+    building a Packer image, updating Terraform code, pushing to git, sharing or making AMIs public, and configuring
+    the build environment.
 
 - name: "Relational Database"
   tags:
@@ -130,10 +110,8 @@
   docs_url: "https://github.com/gruntwork-io/module-data-storage-public"
   full_url: "https://github.com/gruntwork-io/module-data-storage"
   description: |
-    Run MySQL, Postgres, MariaDB, or Amazon Aurora on Amazon’s Relational Database Service
-    (RDS). This Packages creates the database, sets up replicas, configures automatic
-    failover to a standby in a separate Availability Zone in case of problems, and configures
-    automatic backup.
+    Run MySQL, Postgres, MariaDB, or Amazon Aurora on Amazon’s Relational Database Service (RDS). Creates the database,
+    sets up replicas, configures multi-zone automatic failover and automatic backup.
 
 - name: "Distributed Cache"
   tags:
@@ -144,9 +122,8 @@
   docs_url: "https://github.com/gruntwork-io/module-cache-public"
   full_url: "https://github.com/gruntwork-io/module-cache"
   description: |
-    Run Redis or Memcached clusters using Amazon’s ElastiCache Service. This Packages
-    creates the cluster, sets up replicas, configures automatic failover to a standby in
-    a separate Availability Zone in case of problems, and configures automatic backup.
+    Run Redis or Memcached clusters using Amazon’s ElastiCache Service. Creates the cluster, sets up replicas, configures
+    multi-zone automatic failover and automatic backup.
 
 - name: "Stateful Server"
   tags:
@@ -159,11 +136,9 @@
   docs_url: "https://github.com/gruntwork-io/module-server-public"
   full_url: "https://github.com/gruntwork-io/module-server"
   description: |
-    Set up a best-practices deployment of a single, stateful server on top of AWS, such as
-    Jenkins or WordPress. This Package deploys an EC2 Instance, attaches an EBS volume that
-    persists data between redeploys, configures the Instance with a public IP and DNS A record
-    (optional), uses an AWS Lambda job to backup the Instance on a cron schedule, and adds an
-    alarm that goes off if a backup job doesn’t run within a scheduled time period.
+    Set up a best-practices deployment of a single, stateful server on top of AWS, such as Jenkins or WordPress. Supports
+    EBS volume re-attachment, and a scheduled Lambda job to backup the Instance on a cron schedule. Includes alarm if
+    backup jobs fail.
 
 - name: "Static Assets"
   tags:
@@ -214,52 +189,6 @@
     log performance, automated zero-downtime rolling deployment, automatic recovery of failed servers, and security
     groups and IAM policy configuration.
 
-- name: "Consul"
-  tags:
-    - AWS
-    - GCP
-    - Azure
-  icons:
-    - title: Terraform
-      image: icon-terraform.png
-    - title: Bash
-      image: icon-bash.png
-  description: |
-    Deploy a HashiCorp Consul cluster that can automatically bootstrap itself. Includes support for automatically
-    discovering consul servers and consul agents, configuring dnsmasq to use Consul as a DNS server, access to the
-    Consul UI, automatic recovery of failed servers, and security groups and IAM policy configuration.
-
-- name: "Nomad"
-  tags:
-    - AWS
-    - GCP
-    - Azure
-  icons:
-    - title: Terraform
-      image: icon-terraform.png
-    - title: Bash
-      image: icon-bash.png
-  description: |
-    Deploy a HashiCorp Nomad cluster that can automatically bootstrap itself. Includes support for automatically
-    discovering Consul clusters, running Nomad server clusters, Nomad client clusters, automatic recovery of failed
-    servers, and security groups and IAM policy configuration.
-
-- name: "Vault"
-  tags:
-    - AWS
-    - GCP
-    - Azure
-  icons:
-    - title: Terraform
-      image: icon-terraform.png
-    - title: Bash
-      image: icon-bash.png
-  description: |
-    Deploy a HashiCorp Vault cluster that can automatically bootstrap itself. Includes support for automatically
-    discovering Consul clusters as a high availability backend, using S3 as a storage backend, creating self-signed
-    TLS certificates, updating the OS certificate store, configuring an ELB in front of Vault to allow public access,
-    automatic recovery of failed servers, and security groups and IAM policy configuration.
-
 - name: "OpenVPN Server"
   tags:
     - AWS
@@ -271,10 +200,9 @@
     - title: Go
       image: icon-go.png
   description: |
-    Deploy an OpenVPN server and manage user accounts using IAM groups. Includes modules to automatically install and
-    configure a high-availability OpenVPN server, public key infrastructure (PKI), data backup, IAM policies, security
-    groups, and cross-platform apps to automatically request and revoke credentials. Works with most popular OpenVPN
-    clients.
+    Deploy an OpenVPN server and manage user accounts using IAM groups. Includes automatic install and configuration of
+    a high-availability OpenVPN server, public key infrastructure (PKI), data backup, IAM policies, security groups, and
+    cross-platform apps to automatically request and revoke credentials.
 
 - name: "Messaging"
   tags:
