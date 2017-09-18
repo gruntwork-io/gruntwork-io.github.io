@@ -17,7 +17,7 @@
         {% for crash_course in site.data.training.crash_courses %}
           <tr>
             <th>{{ crash_course.title }}</th>
-            <td class="text-right"><strong>{{ crash_course.price }}</strong></td>
+            <td class="text-right">{{ crash_course.price }}</td>
           </tr>
         {% endfor %}
       </tbody>
@@ -30,13 +30,13 @@
         {% for workshop in site.data.training.workshops %}
         <tr>
           <th>{{ workshop.title }}</th>
-          <td class="text-right"><strong>{{ workshop.price }}</strong></td>
+          <td class="text-right">{{ workshop.price }}</td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
   <div class="col-xs-12">
-    <p class="text-muted" style="margin-top: 20px;"><em>Above pricing does not include travel reimbursement fork Workshops. All travel charges are billed at cost.</em></p>
+    <p class="text-muted" style="margin-top: 20px;"><em>Above pricing does not include travel reimbursement for Workshops. All travel charges are billed at cost.</em></p>
   </div>
 </div>
