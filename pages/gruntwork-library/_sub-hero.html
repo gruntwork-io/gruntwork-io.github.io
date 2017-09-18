@@ -7,9 +7,9 @@
       <a href="/subscription">Gruntwork Subscriber</a>, you get to leverage the thousands of hours the Gruntwork team
       has spent writing infrastructure code for the Gruntwork Library:
     </p>
-    <div class="row text-center" style="margin-top: 30px">
+    <div class="row text-center" style="margin-top: 50px">
       {% for feature in site.data.library-features %}
-      <div class="col-xs-6 col-sm-3" style="height: 145px">
+      <div class="col-xs-6 col-sm-4" style="height: 145px">
         <div>
           {% for icon in feature.icons %}
           <i class="fa {{ icon }} fa-lg" aria-hidden="true"></i>
@@ -18,7 +18,7 @@
           <img src="{{ image }}" height="24px" data-toggle="tooltip" data-placement="top" />
           {% endfor %}
         </div>
-        <p style="font-size: 14px; line-height: 20px; margin-top: 10px;">{{ feature.title }}</p>
+        <p style="font-size: 14px; line-height: 20px; margin-top: 10px; margin-left: 14%; margin-right: 14%;">{{ feature.title }}</p>
       </div>
       {% endfor %}
     </div>
