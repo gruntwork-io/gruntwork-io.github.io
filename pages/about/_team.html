@@ -6,10 +6,10 @@
 {% for grunt in site.data.team %}
   <div class="row row-leadership">
     <div class="col-xs-12 col-sm-3 col-md-2 col-headshot">
-      <img src="{{ grunt.image }}" width="146" />
+      <div><a href="{{ grunt.url }}" target="_blank"><img src="{{ grunt.image }}" width="146" /></a></div>
     </div>
     <div class="col-xs-12 col-sm-9 col-md-10 col-bio">
-      <h3>{{ grunt.name }}</h3>
+      <h3 style="margin-bottom: 5px;"><a href="{{ grunt.url }}" target="_blank">{{ grunt.name }}</a></h3>
       {% if grunt.title %}
         <p class="text-white">{{ grunt.title }}</p>
       {% endif %}
