@@ -8,6 +8,20 @@
       management, VPN, and more. We can deploy the Reference Architecture into your AWS account(s), give you 100% of
       the code, and do a walkthrough training, all in about a day.
     </p>
+    <h2>Reference Architecture Features</h2>
+    <div class="row" style="margin-top: 50px;">
+      {% for feature in site.data.reference-architecture-features %}
+      <div class="col-xs-6 col-sm-4">
+        <div class="pull-left text-center" style="width: 100px; margin-right: 10px;">
+          <img src="/assets/img/reference-architecture-icons/reference-architecture-feature-{{ forloop.index }}.png" alt="{{ feature.title }}" />
+        </div>
+        <div class="pull-left" style="max-width: 170px; font-size: 16px; line-height: 20px; height: 160px"> 
+          <h6 style="margin: 5px 0 10px 0">{{ feature.title }}</h6>
+          <p>{{ feature.description }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
     <h2>Architecture Diagram</h2>
     <p>
       We customize the architecture to your specific needs (see <a href="how-it-works">How it Works</a>). Here's an
