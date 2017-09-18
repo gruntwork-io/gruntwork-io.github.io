@@ -1,42 +1,17 @@
 ---
 layout: default
-title: Gruntwork | FAQ
-excerpt: FAQ.
+title: Gruntwork FAQ
+excerpt: Frequently Asked Questions.
 permalink: /faq/
 slug: faq
 footer_heading: Ready to hand off the Gruntwork?
 ---
 
 <div class="main">
-    <div class="section section-hero">
-        <div class="container">
-            <div class="row">
-                <div class="col-xs-12 text-center">
-                    <h1>FAQ</h1>
-                </div> <!-- col -->
-            </div> <!-- row -->
-        </div> <!-- container -->
-    </div> <!-- section-hero -->
-
-  <!--
-
-  TODO:
-
-  1. What if you don't have something I want in the Gruntwork Library?
-  2. What if the ref arch doesn't have something I want?
-
-  -->
-
-    <div class="section section-dark">
-        <div class="container">
-
-            <div class="row">
-                <div class="col-xs-12 text-center">
-                    <p>Content</p>
-                </div> <!-- col -->
-            </div> <!-- row -->
-
-        </div>
-    </div>
-
-</div>
+  <div class="section section-hero">
+    {% include_relative _hero.html %}
+  </div>
+  <div class="section section-dark">
+    {% include_relative _questions.html %}
+  </div>
+</div> 
