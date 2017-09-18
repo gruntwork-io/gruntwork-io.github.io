@@ -5,21 +5,20 @@
       Most teams have the same basic infrastructure needs: server cluster, load balancer, database, cache, CI/CD,
       monitoring, secrets management, and so on. Why waste time building it all from scratch? As a
       <a href="/subscription">Gruntwork Subscriber</a>, you get to leverage the thousands of hours the Gruntwork team
-      has spent writing infrastructure code for the Gruntwork Library:
+      has spent writing infrastructure code for the Gruntwork Library.
     </p>
-    <div class="row text-center" style="margin-top: 30px">
+    <h2>Gruntwork Library Features</h2>
+    <div class="row" style="margin-top: 50px;">
       {% for feature in site.data.library-features %}
-      <div class="col-xs-6 col-sm-2" style="height: 145px; width: 160px;">
-        <div>
-          {% for icon in feature.icons %}
-          <i class="fa {{ icon }} fa-lg" aria-hidden="true"></i>
-          {% endfor %}
-          {% for image in feature.images %}
-          <img src="{{ image }}" height="24px" data-toggle="tooltip" data-placement="top" />
-          {% endfor %}
+        <div class="col-xs-6 col-sm-4" style="margin-bottom: 40px; max-height: 200px">
+          <div class="pull-left text-center" style="width: 100px; margin-right: 10px;">
+            <img src="{{ feature.image }}" alt="{{ feature.title }}" />
+          </div>
+          <div class="pull-left" style="max-width: 170px; font-size: 16px; line-height: 20px;">
+            <h6 style="margin: 5px 0 10px 0">{{ feature.title }}</h6>
+            <p>{{ feature.description }}</p>
+          </div>
         </div>
-        <p style="font-size: 14px; line-height: 20px; margin-top: 10px;">{{ feature.title }}</p>
-      </div>
       {% endfor %}
     </div>
   </div>
