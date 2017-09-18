@@ -136,4 +136,11 @@ $(function () {
   };
 
   submitButton.on('click', submitForm);
+
+  $('#ref-arch-accordion').on('show.bs.collapse', function () {
+    $(this).parent().find(".fa-caret-right").removeClass("fa-caret-right").addClass("fa-caret-down");
+  })
+  $('#ref-arch-accordion').on('hide.bs.collapse', function () {
+    $(this).parent().find(".fa-caret-down").removeClass("fa-caret-down").addClass("fa-caret-right");
+  })
 });

@@ -2,15 +2,11 @@
   <div class="col-xs-12">
     <h2>What's included</h2>
     <p>The Reference Architecture includes the following:</p>
-    <table class="table table-striped">
-      <tbody>
-        {% for feature in site.data.reference-architecture %}
-          <tr>
-            <th style="width: 200px">{{ feature.title }}</th>
-            <td>{{ feature.description }}</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+    <div class="panel-group" id="ref-arch-accordion" role="tablist" aria-multiselectable="true">
+      {% include_relative _panel.html id="infrastructure" title="Infrastructure" features=site.data.reference-architecture.infrastructure expanded="false" %}
+      {% include_relative _panel.html id="configuration" title="Configuration" features=site.data.reference-architecture.configuration expanded="false" %}
+      {% include_relative _panel.html id="security" title="Security" features=site.data.reference-architecture.security expanded="false" %}
+      {% include_relative _panel.html id="design" title="Design" features=site.data.reference-architecture.design expanded="false" %}
+    </div>
   </div>
 </div>
