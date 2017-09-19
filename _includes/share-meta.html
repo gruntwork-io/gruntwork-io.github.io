@@ -6,12 +6,12 @@
 <meta name="twitter:title" content="{{ title }}" />
 <meta name="twitter:url" content="{% include canonical-url.html %}" />
 <meta name="twitter:description" content="{{ description }}" />
-<meta name="twitter:image" content="{{ site.thumbnail_path }}" />
+<meta name="twitter:image" content="{{ site.url }}{{ site.thumbnail_path }}" />
 
 <meta property="og:title" content="{{ title }}"/>
 <meta property="og:url" content="{% include canonical-url.html %}"/>
 <meta property="og:site_name" content="{{ site.name }}"/>
 <meta property="article:author" content="{{ site.data.contact.facebook.url }}"/>
 <meta property="og:description" content="{{ description }}"/>
-<meta property="og:image" content="{{ site.thumbnail_path }}"/>
+<meta property="og:image" content="{{ site.url }}{{ site.thumbnail_path }}"/>
 
