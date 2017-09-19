@@ -118,7 +118,7 @@ $(function () {
     submitButton.html('Loading...');
 
     var postParams = {
-      url: 'https://formspree.io/info@gruntwork.io',
+      url: 'https://api.formbucket.com/f/buk_7iB8j7vEJPW9ad2ClJwFfm5M',
       type: "POST",
       data: data,
       dataType: "json"
