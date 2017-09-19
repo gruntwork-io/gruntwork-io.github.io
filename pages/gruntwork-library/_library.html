@@ -5,7 +5,7 @@
       <div class="panel panel-default">
         <div class="panel-body">
           <div>
-            <h3 class="margin-top-none">{{ package.name }}</h3>
+            <h4 class="margin-top-none">{{ package.name }}</h4>
             <p>{{ package.description }}</p>
             <p>
               {% if package.docs_url %}
@@ -41,7 +41,7 @@
 
 
 
-<h2 class="margin-top-none">Tools</h2>
+<h2>Tools</h2>
 <div class="row row-equalize-col-height">
   {% for package in site.data.library-tools %}
   <div class="col-xs-12 col-sm-6">
@@ -84,7 +84,7 @@
 
 
 
-<h2 class="margin-top-none">Open Source Terraform Modules</h2>
+<h2>Open Source Terraform Modules</h2>
 <div class="row row-equalize-col-height">
   {% for package in site.data.library-terraform-modules %}
   <div class="col-xs-12 col-sm-6">
