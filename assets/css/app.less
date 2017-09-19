@@ -1328,11 +1328,13 @@ input[type="radio"] .styled:checked + label::after {
 ////////// Get Started
 
 #get-started .call-to-action {
-    border:1px solid #a2a2a2;
-    padding-bottom:15px;
-
-    margin-left:30px;
-    margin-right:30px;
+    .cta-contents {
+        display: block;
+        margin: 20px;
+        padding: 20px;
+        border: 1px solid #a2a2a2;
+        height: 380px;
+    }
 
     img {
         margin-top:50px;
@@ -1341,7 +1343,7 @@ input[type="radio"] .styled:checked + label::after {
 
     h4 {
         margin-top:0;
-        margin-bottom:0;
+        margin-bottom:10px;
     }
 
     p {
@@ -1349,7 +1351,8 @@ input[type="radio"] .styled:checked + label::after {
     }
 }
 
-#get-started .call-to-action:hover {
+#get-started .call-to-action a:hover {
     background-color: #123845;
     cursor: pointer;
+    text-decoration: none;
 }
