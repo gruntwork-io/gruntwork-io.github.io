@@ -10,8 +10,6 @@
             <p>
               {% if package.docs_url %}
                 <a href="#" data-toggle="modal" data-target="#modalPublicRepo" data-public-repo="{{ package.docs_url }}" data-private-repo="{{ package.full_url }}">View Public Docs</a>
-              {% else %}
-                <span style="color: #676767;">View Public Docs</span> (coming soon)
               {% endif %}
             </p>
           </div>
