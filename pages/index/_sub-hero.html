@@ -1,0 +1,14 @@
+<div class="col-xs-8 col-xs-offset-2 col-sm-9 col-sm-offset-3">
+  <div class="row row-partners row-center-vertically-sm">
+    <div class="col-xs-12 col-sm-4 col-partner-hashicorp">
+      <img src="/assets/img/logos-technologies/logo-hashicorp.png" width="239" />
+    </div>
+    <div class="col-xs-12 col-sm-8 col-partner-experts">
+      <div class="row">
+        {% for cloud in site.data.clouds %}
+          <img src="{{ cloud.logo }}" alt="{{ cloud.name }}" class="col-sm-4"/>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>

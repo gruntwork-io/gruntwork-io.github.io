@@ -1,0 +1,28 @@
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12">
+      {% for category in site.data.faq %}
+        <h3>{{ category.category_name }}</h3>
+        <ol>
+          {% for item in category.items %}
+            <li><a href="#{{ item.question | slugify }}">{{ item.question}}</a></li>
+          {% endfor %}
+        </ol>
+      {% endfor %}
+    </div>
+  </div>
+  {% for category in site.data.faq %}
+    <hr>
+    <div class="row">
+      <div class="col-xs-12">
+        <h2 id="{{ category.category_name | slugify}}">{{ category.category_name}}</h2>
+        {% for item in category.items %}
+        <div>
+          <h4 id="{{ item.question | slugify }}">{{ item.question }}</h4>
+          {{ item.answer }}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% endfor %}
+</div>

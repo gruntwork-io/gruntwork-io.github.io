@@ -1,0 +1,249 @@
+- category_name: Gruntwork alternatives
+  items:
+    - question: Gruntwork vs consulting companies
+      answer: |
+        <p>
+          Most consulting companies are focused on one thing: billable hours. They build everything from scratch for
+          every customer, so the code is completely unproven, the timeline is unpredictable, projects stretch on for
+          months, and costs spiral out of control. And when the whole thing is done, you're left with a bunch of code
+          someone else wrote, typically with no documentation and tests, and no way to ask questions without paying
+          even more money.
+        </p>
+        <p>
+          At Gruntwork, our focus is on creating reusable, high quality infrastructure code, such as the
+          <a href="/gruntwork-library">Gruntwork Library</a> and <a href="/reference-architecture">Reference Architecture</a>.
+          Because all the code is <i>already written</i>, we can get you up and running 10-100x faster than a
+          consulting company (typically in just a single day!) on top of code that is thoroughly documented, tested,
+          and has been proven in production at dozens of other customer deployments. We do all of this for a price
+          that's a tiny fraction of what consultants charge, and we provide commercial support, maintenance, and
+          updates for our work over the long term.
+        </p>
+
+    - question: Gruntwork vs Platform as a Service (PaaS) and Infrastructure as a Service (IaaS)
+      answer: |
+        <p>
+          A Platform as a Service (PaaS) such as Heroku or Docker Cloud can be a great way to get started, as they
+          hide all the infrastructure details from you, and provide a simple API for deploying your code. Unfortunately,
+          for this very same reason, a PaaS tends to be a big bottleneck as you try to grow: without the ability to
+          see and control the underlying infrastructure details, it becomes difficult to debug, scale, customize your
+          infrastructure, and keep costs under control.
+        </p>
+        <p>
+          As a result, most software companies eventually migrate to an Infrastructure as a Service provider (IaaS)
+          such as AWS, Google Cloud, or Azure. This gives you full control over your infrastructure, but the downside
+          is a massive increase in complexity. Suddenly, you have to deal with thousands of little infrastructure
+          details—how to set up your network topology, how to run a highly available and scalable server cluster, how
+          to set up CI/CD, how to configure monitoring &amp; alerting, how to manage secrets, and so on—and very few
+          companies have the time, resources, or expertise to do this well.
+        </p>
+        <p>
+          Our goal at Gruntwork is to allow you to take advantage of the full control and power of an IaaS while still
+          having the ease-of-use of a PaaS. By using the <a href="/gruntwork-library">Gruntwork Library</a>, you get a
+          simple API for complicated infrastructure; for example, you can deploy a Kafka cluster or configure CI/CD
+          or even deploy your entire <a href="/reference-architecture">Architecture</a> in just a few lines of code.
+          And since all of this infrastructure is backed by code, you can easily debug, scale, and customize things
+          as much as you want.
+        </p>
+
+    - question: Gruntwork vs open source modules (e.g. Ansible Galaxy, Terraform Module Registry, Puppet Forge, etc.)
+      answer: |
+        <p>
+          You can find open source infrastructure code in registries such as Ansible Galaxy, Terraform Module Registry,
+          Puppet Forge, and Chef Marketplace. So why use a paid, commercial product such as the
+          <a href="/gruntwork-library">Gruntwork Library</a> instead of this open source code?
+        </p>
+        <p>
+          First, we love open source at Gruntwork, and parts of the Gruntwork Library actually are open source (e.g.,
+          look for our Consul, Nomad, and Vault modules in the Terraform Module Registry), so it's not an
+          either-or-choice! Second, if your business depends on this infrastructure code, here are some reasons you
+          should consider a commercial partner like Gruntwork in addition to using open source:
+        </p>
+        <table class="table table-striped">
+          <tbody>
+            <tr>
+              <th style="width: 20%">Maintenance</th>
+              <td>
+                Most of the open source modules are not well maintained. Technologies like Terraform, Docker, and AWS
+                are changing constantly, and the creators of those modules rarely have any incentive to invest the
+                large amount of time necessary to keep that code up to date. At Gruntwork, keeping up with these
+                changes is the core of our business, so we regularly update and maintain all the code in the Gruntwork
+                Library.
+              </td>
+            </tr>
+            <tr>
+              <th style="width: 20%">Testing</th>
+              <td>
+                The open source modules almost never have automated tests. As a result, many of them are buggy or
+                don't work at all. Every module in the Gruntwork Library is thoroughly tested. After every single
+                commit, we kick off a suite of automated tests that deploy the code into a real AWS account and
+                verify that it behaves as expected.
+              </td>
+            </tr>
+            <tr>
+              <th style="width: 20%">Integration</th>
+              <td>
+                The modules in the Gruntwork Library are all designed to be highly configurable, composable, and to
+                work together. In fact, we even offer a <a href="/reference-architecture">Reference Architecture</a> as
+                a way to put all the modules together into an end-to-end, integrated tech stack in about a day. With
+                open source code, all the integration work is up to you, and you'll find many of the modules are too
+                inflexibile to fit your needs or incompatible with other modules.
+              </td>
+            </tr>
+            <tr>
+              <th style="width: 20%">Support</th>
+              <td>
+                With the <a href="/subscription">Gruntwork Subscription</a>, you get commercial support for all the
+                code in the Gruntwork Library. We're there to help you via email, chat, and phone/video call any time
+                you need a bug fixed, or help with troubleshooting, or a code or design review. With open source code,
+                if something goes wrong, you're typically on your own.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+    - question: Gruntwork vs doing it yourself (DIY)
+      answer: |
+        <p>
+          DevOps is a classic case of "death by a thousand cuts." To ship software, there are a
+          thousand little details you have to get just right—how to set up your network topology, how to run a highly
+          available and scalable server cluster, how to set up CI/CD, how to configure monitoring &amp; alerting, how
+          to manage secrets, and so on—and very few companies have the time, resources, or expertise to do this well.
+        </p>
+        <p>
+          At Gruntwork, we've already created all the infrastructure you need. In fact, if you hired a team of
+          DevOps experts and had them do nothing but work on your infrastructure for several years, you'd most likely
+          end up with code that looks almost exactly like the <a href="/gruntwork-library">Gruntwork Library</a> and
+          <a href="/reference-architecture">Reference Architecture</a>. But why waste all that time reinventing the
+          wheel? For a fraction of the cost of a single full-time developer, you can get access to a library of
+          proven, battle-tested code, as well as support, updates, and maintenance. You focus on your product; let us
+          take care of the grunt work.
+        </p>
+
+
+- category_name: Gruntwork Subscription
+  items:
+    - question: What is the Gruntwork Client License?
+      answer: |
+        <p>
+          When you sign up for the <a href="/subscription">Gruntwork Subscription</a>, you get one
+          <i>Client License</i> for the code. A Client License gives you access to 100% of the source code, allows you
+          to fork and modify the code as much as you want, and is perpetual, so you can keep using the code even if
+          you cancel the Subscription.
+        </p>
+        <p>
+          A single Client License allows you to use the code up to the following limits (see the
+          <a href="/gruntwork-library">Gruntwork Library</a> for a description of each item):
+        </p>
+        <table class="table table-striped">
+          <tbody>
+            <tr>
+              <th>Network Topology</th>
+              <td>10 VPCs</td>
+            </tr>
+            <tr>
+              <th>Monitoring &amp; Alerting</th>
+              <td>Unlimited</td>
+            </tr>
+            <tr>
+              <th>Docker Cluster</th>
+              <td>75 servers</td>
+            </tr>
+            <tr>
+              <th>AMI Cluster</th>
+              <td>75 servers</td>
+            </tr>
+            <tr>
+              <th>Lambda</th>
+              <td>75 functions</td>
+            </tr>
+            <tr>
+              <th>Security</th>
+              <td>Unlimited</td>
+            </tr>
+            <tr>
+              <th>Continuous Delivery</th>
+              <td>Unlimited</td>
+            </tr>
+            <tr>
+              <th>Relational Database</th>
+              <td>10 databases</td>
+            </tr>
+            <tr>
+              <th>Distributed Cache</th>
+              <td>10 caches</td>
+            </tr>
+            <tr>
+              <th>Stateful Server</th>
+              <td>75 servers</td>
+            </tr>
+            <tr>
+              <th>Static Assets</th>
+              <td>75 static websites</td>
+            </tr>
+            <tr>
+              <th>MongoDB</th>
+              <td>10 clusters</td>
+            </tr>
+            <tr>
+              <th>OpenVPN</th>
+              <td>10 servers</td>
+            </tr>
+            <tr>
+              <th>Messaging</th>
+              <td>Unlimited</td>
+            </tr>
+            <tr>
+              <th>ZooKeeper</th>
+              <td>10 clusters</td>
+            </tr>
+            <tr>
+              <th>Kafka</th>
+              <td>10 clusters</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          A single Client License should be enough to run most small to medium deployments. If you exceed any of these
+          limits, you must purchase another Client License. If your company has a non-standard usage pattern (e.g. you
+          use many VPCs, but few servers), let us know, and we can try to work out a licensing arrangement that better
+          fits your needs. Bulk discounts on Client Lcienses are available for enterprises, resellers, and agencies.
+        </p>
+
+    - question: What happens to my code if I cancel my subscription?
+      answer: |
+        <p>
+          The Gruntwork Client License gives you perpetual rights to the code, so even if you cancel your Subscription,
+          you can keep using the code! You'll have one month to fork all the repos in the Gruntwork Library into your
+          own version control system, after which you'll no longer have access to the updates, additions, and fixes we
+          make to the Gruntwork Library, support from the Gruntwork team, or any of the other features of the
+          <a href="/subscription">Gruntwork Subscription</a>. However, your infrastructure will continue to work just
+          fine and you'll still have all the code you were using up to that point, so there is no lock-in whatsoever.
+        </p>
+
+    - question: What if I want to use the code with my own customers?
+      answer:
+        <p>
+          The Gruntwork Client License is valid for <i>one</i> company to use to manage its own infrastructure. If you
+          are an agency or reseller that manages infrastructure for other companies, please
+          <a href="/get-started">contact us</a> to discuss licensing options.
+        </p>
+
+- category_name: Gruntwork Library and Reference Architecture
+  items:
+    - question: What do I do if I need infrastructure that isn't in the Gruntwork Library?
+      answer: |
+        <p>
+          If the infrastructure you need is something general-purpose that applies to many companies (i.e., isn't a
+          custom, one-off project completely unique to your company), we'd be happy to build it, add it  to the
+          Gruntwork Library, and provide support, maintenance, and updates for it long-term! For example, we're
+          currently looking into adding ElasticSearch, Kubernetes, and DataDog to our Library and are looking for
+          companies willing to fund those projects. We charge an hourly consulting rate for our work and if more than
+          one customer is interested in the same project, we're happy to split the cost amongst all of you to make it
+          cheaper for everyone! Please <a href="/contact">contact us</a> to let us know what you're looking for!
+        </p>
+
+    - question: What do I do if I need infrastructure that isn't in the Reference Architecture?
+      answer: |
+        <p>
+          See <a href="#what-do-i-do-if-i-need-infrastructure-that-isn-t-in-the-gruntwork-library">What do I do if I need infrastructure that isn't in the Gruntwork Library?</a>.
+        </p>

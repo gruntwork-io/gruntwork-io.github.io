@@ -1,0 +1,15 @@
+<div class="row row-page-header">
+  <div class="col-xs-12">
+    <h3>Available Workshops</h3>
+    <table class="table table-striped">
+      <tbody>
+      {% for workshop in site.data.training.workshops %}
+        <tr>
+          <th style="width: 35%">{{ workshop.title }}</th>
+          <td style="width: 65%">{{ workshop.description }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -22,5 +22,5 @@ variable "index_document" {
 
 variable "error_document" {
   description = "The path to the error document in the S3 bucket (e.g. error.html)."
-  default     = "error.html"
+  default     = "404.html"
 }

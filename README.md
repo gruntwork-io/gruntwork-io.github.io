@@ -34,7 +34,7 @@ The fastest way to launch this site is to use [Docker](https://www.docker.com/).
 To deploy the site to S3/CloudFront:
 
 1. Configure your AWS credentials as environment variables.
-1. `docker-compose run web s3_website push`
+1. `docker-compose run web ./push-to-s3.sh`
 
 
 

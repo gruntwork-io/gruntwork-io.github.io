@@ -1,109 +1,23 @@
 ---
 layout: default
-title: Gruntwork | Reference Architecture
-excerpt: Reference Architecture.
+title: Gruntwork Reference Architecture
+excerpt: An opinionated, end-to-end tech stack built on top of the Gruntwork Library.
 permalink: /reference-architecture/
 slug: reference-architecture
-footer_heading: Ready to hand off the Gruntwork?
+footer_heading: Design your architecture now!
+redirect_from:
+  - /stacks
 ---
 
 <div class="main">
-    <div class="section section-hero">
-        <div class="container">
-            <div class="row">
-                <div class="col-xs-12 text-center">
-                    <h1>Reference Architecture</h1>
-                </div> <!-- col -->
-            </div> <!-- row -->
-        </div> <!-- container -->
-    </div> <!-- section-hero -->
-
-    <div class="section section-dark">
-        <div class="container">
-
-            <div class="row row-page-header">
-                <div class="col-xs-12">
-                    <h2>Most software teams share a common set of needs.</h2>
-                    <p>If your team is like most, you need some combination of a Docker cluster, CI/CD, database, cache, secrets management, monitoring, log aggregation plus a few other items. Once you tell us which tools we should use for each of these (e.g. Amazon ECS or Hashicorp Nomad? Jenkins or CircleCI?) we’ll write battle-tested, best-practices infrastructure-as-code that implements a Reference Architecture built specifically for your team.</p>
-                </div> <!-- col -->
-            </div> <!-- row-page-header -->
-
-            <hr />
-
-            <div class="row row-page-header">
-                <div class="col-xs-12">
-                    <h2>How to Use It</h2>
-                    <p>Once you see the code for the Reference Architecture, it’s often straightforward to adapt these patterns to your unique needs, including:</p>
-                    <ul>
-                        <li>Setup your microservices</li>
-                        <li>Add additional AWS resources</li>
-                        <li>Customize your CI builds</li>
-                        <li>Tweak monitoring alerts</li>
-                        <li>Build custom dashboards for your infrastructure</li>
-                    </ul>
-                </div> <!-- col -->
-            </div> <!-- row-page-header -->
-
-            <div class="row row-page-header">
-                <div class="col-xs-12">
-                    <h2>Available Options</h2>
-                    <p>With your reference architecture, choose from the following options:</p>
-                    <h3>Single AWS account or multiple AWS accounts</h3>
-                    <p>We support both single-account and multi-account setups.</p>
-                    <h3>Create any number of environments</h3>
-                    <p>Most customers need dev, stage, and prod, but add any environments you want.</p>
-                    <h3>Select your database</h3>
-                    <p>Select any RDS database (PostgreSQL, MySQL, MariaDB, Amazon Aurora, Oracle, SQL Server), or use our MongoDB Infrastructure Package.</p>
-                    <h3>Select your cache</h3>
-                    <p>Select any ElastiCache coaching engine (Redis or Memcached).</p>
-                    <h3>Select your Docker cluster</h3>
-                    <p>Choose Amazon ECS, HashiCorp Nomad, soon Kubernetes, or no Docker Cluster.</p>
-                    <h3>Bastion Host, Open VPN, or both?</h3>
-                    <p>Do you prefer to enter your network via a hardened Bastion Host, or via Open VPN? Either way, you can easily manage user access with Amazon IAM Groups.</p>
-                    <h3>Many more!</h3>
-                    <p>As part of our process, we’ll ask you to fill out a simple online form that presents a full range of options and takes about 5 minutes to complete.</p>
-                </div> <!-- col -->
-            </div> <!-- row-page-header -->
-
-            <div class="row row-page-header">
-                <div class="col-xs-12">
-                    <h2>What if I want something that’s not in your Reference Architecture?</h2>
-                    <p>If you want an option that we don’t yet support, if it’s a generic piece of infrastructure that other teams might also want, then we’ll build it for you. Additional fees may apply depending on your needs.</p>
-                </div> <!-- col -->
-            </div> <!-- row-page-header -->
-
-            <div class="row row-page-header">
-                <div class="col-xs-12">
-                    <h2>What does the Reference Architecure code look like?</h2>
-                    <p>All cose is written in open source, industry-standard tooling like Terraform, Bash, Go, or Python. The code is well-commented, well-documented, and written to best practices. By learning our code patterns, you’ll also learn best practices that will serve you in any position, whether Gruntwork is involved or not.</p>
-                </div> <!-- col -->
-            </div> <!-- row-page-header -->
-
-            <div class="row row-page-header">
-                <div class="col-xs-12">
-                    <h2>What’s included in the Reference Architecture?</h2>
-                    <p>Our deliverables to you will include:</p>
-                    <ul>
-                        <li>A complete, customized reference architecture implemented in infrastructure-as-code</li>
-                        <li>All code lives in your team’s git repo</li>
-                        <li>The architecture is applied to your AWS account(s)</li>
-                        <li>Comprehensive, personalized documentation</li>
-                        <li>Live walkthrough with a Gruntwork engineer</li>
-                    </ul>
-                </div> <!-- col -->
-            </div> <!-- row-page-header -->
-
-            <div class="row row-page-header">
-                <div class="col-xs-12">
-                    <h2>What does a typical reference architecture look like? See for yourself!</h2>
-                </div> <!-- col -->
-            </div> <!-- row-page-header -->
-
-            <div class="text-center" style="margin-top: 40px;">
-                <img src="/assets/img/reference-architecture-example.png" alt="Reference Architecture Example" height="550" />
-            </div>
-
-        </div>
+  <div class="section section-hero">
+    {% include_relative _hero.html %}
+  </div>
+  <div class="section section-dark">
+    <div class="container">
+      {% include_relative _sub-hero.html %}
+      {% include_relative _whats-included.html %}
+      {% include_relative _process.html %}
     </div>
-
+  </div>
 </div>

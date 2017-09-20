@@ -1,0 +1,10 @@
+<div class="form-group">
+  <div class="row">
+    <div class="col-xs-12 col-md-4">
+      <label for="{{ include.id }}">{{ include.label }}{% if include.required %}<sup>&#42;</sup>{% endif %}</label>
+    </div>
+    <div class="col-xs-12 col-md-8">
+      <input id="{{ include.id }}" name="{{ include.id }}" type="{% if include.type %}{{ include.type }}{% else %}text{% endif %}" class="form-control" placeholder="{{ include.placeholder }}"{% if include.required %} required="required"{% endif %}>
+    </div>
+  </div>
+</div>

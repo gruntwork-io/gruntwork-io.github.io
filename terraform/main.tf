@@ -62,7 +62,7 @@ module "cloudfront" {
   default_ttl = 300
 
   # Note: We configure the alias and TLS cert here, but the domain name is managed in the Phoenix DevOps account!!
-  domain_name            = "redesign.gruntwork.io" # TODO: change this to the final domain name when ready to launch!!
+  domain_name            = "www.gruntwork.io"
   acm_certificate_arn    = "${data.aws_acm_certificate.cert.arn}"
   viewer_protocol_policy = "redirect-to-https"
 }

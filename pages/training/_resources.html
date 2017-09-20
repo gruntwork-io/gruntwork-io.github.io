@@ -1,0 +1,19 @@
+<div class="row row-page-header">
+  <div class="col-xs-12">
+    <h2>Training resources</h2>
+    <p>Check out some of the books, blog posts, and talks we've done.</p>
+  </div>
+</div>
+<div class="row row-equalize-col-height">
+  {% for resource in site.data.training-resources %}
+    <div class="col-xs-12 col-sm-6">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <div class="text-center" style="height: 250px;"><a href="{{ resource.url }}" target="_blank"><img src="{{ resource.image }}" alt="{{ resource.title }}" style="max-height: 250px;"/></a></div>
+          <h4><a href="{{ resource.url }}" target="_blank">{{ resource.title }}</a></h4> 
+          <p>{{ resource.description }}</p>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
