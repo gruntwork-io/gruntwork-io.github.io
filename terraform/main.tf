@@ -21,7 +21,7 @@ terraform {
 # ---------------------------------------------------------------------------------------------------------------------
 
 module "static_website" {
-  source = "git::git@github.com:gruntwork-io/package-static-assets.git//modules/s3-static-website?ref=v0.0.1"
+  source = "git::git@github.com:gruntwork-io/package-static-assets.git//modules/s3-static-website?ref=v0.1.0"
 
   website_domain_name = "${var.domain_name}"
 
@@ -35,7 +35,7 @@ module "static_website" {
 # ---------------------------------------------------------------------------------------------------------------------
 
 module "redirect" {
-  source = "git::git@github.com:gruntwork-io/package-static-assets.git//modules/s3-static-website?ref=v0.0.1"
+  source = "git::git@github.com:gruntwork-io/package-static-assets.git//modules/s3-static-website?ref=v0.1.0"
 
   website_domain_name          = "gruntwork.io"
   should_redirect_all_requests = true
@@ -47,7 +47,7 @@ module "redirect" {
 # ---------------------------------------------------------------------------------------------------------------------
 
 module "cloudfront" {
-  source = "git::git@github.com:gruntwork-io/package-static-assets.git//modules/s3-cloudfront?ref=v0.0.1"
+  source = "git::git@github.com:gruntwork-io/package-static-assets.git//modules/s3-cloudfront?ref=v0.1.0"
 
   bucket_name                 = "${var.domain_name}"
   bucket_website_endpoint     = "${module.static_website.website_bucket_endpoint}"
@@ -62,7 +62,7 @@ module "cloudfront" {
   default_ttl = 300
 
   # Note: We configure the alias and TLS cert here, but the domain name is managed in the Phoenix DevOps account!!
-  domain_name            = "www.gruntwork.io"
+  domain_names           = ["www.gruntwork.io", "gruntwork.io"]
   acm_certificate_arn    = "${data.aws_acm_certificate.cert.arn}"
   viewer_protocol_policy = "redirect-to-https"
 }
