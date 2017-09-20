@@ -1,5 +1,5 @@
-output "cloudfront_domain_name" {
-  value = "${module.cloudfront.cloudfront_domain_name}"
+output "cloudfront_domain_names" {
+  value = "${module.cloudfront.cloudfront_domain_names}"
 }
 
 output "cloudfront_id" {
