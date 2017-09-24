@@ -1,6 +1,6 @@
 # gruntwork.io website
 
-This is the code for the [Gruntwork website](http://www.gruntwork.io).
+This is the code for the [Gruntwork website](https://www.gruntwork.io).
 
 Gruntwork can help you get your entire infrastructure, defined as code, in about a day. You focus on your product. 
 We'll take care of the Gruntwork.
