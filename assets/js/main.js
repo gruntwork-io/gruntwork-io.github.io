@@ -31,7 +31,7 @@ var c=document.getElementById("dottedLine");if(c){var ctx=c.getContext("2d");ctx
 $(function () {$('[data-toggle="tooltip"]').tooltip()});
 
 /* Smooth scrolling for anchor links */
-$("a[href^='#']").on('click', function(e) {
+$("a[href^='#']:not(.no-scroll)").on('click', function(e) {
 
   e.preventDefault();
 
