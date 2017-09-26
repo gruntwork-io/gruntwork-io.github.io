@@ -1,0 +1,105 @@
+<div id="support" class="row row-page-header">
+  <div class="col-xs-12">
+    <h2>Support</h2>
+    <p>
+      <a href="/support">Gruntwork Support</a> gives you access to a team of DevOps experts for a tiny fraction of the
+      cost of hiring a single DevOps engineer full time. We provide support, automatic updates, and security alerts for
+      the Infrastructure as Code Library and Reference Architecture and we're here to help you with questions, code
+      reviews, design reviews, bug fixing, and troubleshooting.
+    </p>
+    <p>
+      Choose from one of three support plans: <strong>Startup</strong>, <strong>ScaleUp</strong>, or <strong>Enterprise</strong>.
+    </p>
+  </div>
+</div>
+<div class="row row-pricing-table">
+  <div class="col-xs-12">
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th></th>
+            {% for plan in site.data.support-plans %}
+              <th>{{ plan.name }}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>Email Support</th>
+            {% for plan in site.data.support-plans %}
+            <td>{{ plan.email_support }}</td>
+            {% endfor %}
+          </tr>
+          <tr>
+            <th>Slack Support</th>
+            {% for plan in site.data.support-plans %}
+            <td>{{ plan.slack_support }}</td>
+            {% endfor %}
+          </tr>
+          <tr>
+            <th>Phone/Video Chat Support</th>
+            {% for plan in site.data.support-plans %}
+            <td>{{ plan.phone_video_support }}</td>
+            {% endfor %}
+          </tr>
+          <tr>
+            <th>Support Availability</th>
+            {% for plan in site.data.support-plans %}
+              <td>{{ plan.support_availability }}</td>
+            {% endfor %}
+          </tr>
+          <tr>
+            <th>After-Hours Support</th>
+            {% for plan in site.data.support-plans %}
+              <td>{{ plan.after_hour_support }}</td>
+            {% endfor %}
+          </tr>
+          <tr>
+            <th>Response Time</th>
+            {% for plan in site.data.support-plans %}
+              <td>{{ plan.response_time }}</td>
+            {% endfor %}
+          </tr>
+          <tr>
+            <th>Automated Infra Updates</th>
+            {% for plan in site.data.support-plans %}
+              <td>{{ plan.automated_infra_updates }}</td>
+            {% endfor %}
+          </tr>
+          <tr>
+            <th>Production Readiness Review</th>
+            {% for plan in site.data.support-plans %}
+            <td>{{ plan.prodution_readiness_review }}</td>
+            {% endfor %}
+          </tr>
+          <tr>
+            <th>Security Alerts</th>
+            {% for plan in site.data.support-plans %}
+              <td>{{ plan.security_alerts }}</td>
+            {% endfor %}
+          </tr>
+          <tr>
+            <th>Newsletter</th>
+            {% for plan in site.data.support-plans %}
+              <td>{{ plan.newsletter }}</td>
+            {% endfor %}
+          </tr>
+          <tr>
+            <th>Minimum subscription</th>
+            {% for plan in site.data.support-plans %}
+            <td>12 months</td>
+            {% endfor %}
+          </tr>
+          <tr>
+            <th>Price*</th>
+            {% for plan in site.data.support-plans %}
+              <td><strong>{{ plan.price }}</strong></td>
+            {% endfor %}
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="text-muted" style="margin-top: 20px;"><em>Note: All support plans require that you have at least one License for the Infrastructure as Code Library</em></p>
+  </div>
+</div>
