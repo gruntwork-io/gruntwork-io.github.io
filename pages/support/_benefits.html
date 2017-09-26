@@ -1,10 +1,15 @@
+<div class="row row-page-header">
+  <div class="col-xs-12">
+    <h2>Support benefits</h2>
+  </div>
+</div>
 {% for benefit in site.data.subscription-benefits %}
   <div class="row row-how-it-works">
     <div class="col-xs-8 col-xs-offset-2 col-sm-3 col-sm-offset-0 col-md-2 col-diagram">
       <img src="/assets/img/subscription-icons/subscriptions-{{ forloop.index }}.png" width="240" />
     </div>
     <div class="col-xs-12 col-sm-9 col-md-10 col-explaination">
-      <h2>{{ benefit.title }}</h2>
+      <h3>{{ benefit.title }}</h3>
       {{ benefit.description }}
     </div>
   </div>

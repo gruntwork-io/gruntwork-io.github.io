@@ -1,5 +1,5 @@
 <div class="col-xs-12 col-sm-3 col-md-3 hidden-xs">
-  <img class="floating-img-infrastructure-in-a-day" src="/assets/img/infrastructure-in-a-day.png" style="width: 220px;" />
+  <img class="floating-img-infrastructure-in-a-day" src="/assets/img/infrastructure-cube-icons/infrastructure-in-a-day.png" style="width: 220px;" />
 </div>
 <div class="col-xs-12 col-sm-9 col-md-8 col-md-offset-1">
   <h1 style="margin-bottom: 15px">
@@ -8,17 +8,8 @@
     Defined as code. In about a day.
   </h1>
   <div class="clearfix">
-    <div class="pull-left lead up-and-running-text">We get you up and running on</div>
-    <div class="pull-left up-and-running-carousel">
-      <div id="cloud-carousel-text" class="carousel slide" data-ride="carousel" data-interval="14000">
-        <div class="carousel-inner vertical">
-          {% for cloud in site.data.clouds %}
-            <img src="{{ cloud.logo }}" alt="{{ cloud.name }}" class="img-responsive item{% if forloop.index0 == 0 %} active{% endif %}"/>
-          {% endfor %}
-        </div>
-      </div>
-    </div>
-    <div class="pull-left lead up-and-running-text">with</div>
+    <div class="pull-left lead up-and-running-text">We get you up and running</div>
+    <div class="pull-left lead up-and-running-text">on AWS with</div>
     <div class="pull-left up-and-running-carousel">
       <div id="tech-carousel-text" class="carousel slide" data-ride="carousel" data-interval="4000">
         <div class="carousel-inner vertical">
@@ -30,5 +21,5 @@
     </div>
     <div class="pull-left lead up-and-running-text">and you get 100% of the code.</div>
   </div>
-  <p style="margin-top: 30px;"><a href="#learn-more" class="btn btn-info" role="button">Learn More</a></p>
+  <p style="margin-top: 30px;"><a href="#learn-more" class="btn btn-info" role="button" ga-on="click" ga-event-category="home" ga-event-action="learn-more">Learn More</a></p>
 </div>

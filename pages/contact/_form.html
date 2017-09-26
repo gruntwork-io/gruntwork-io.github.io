@@ -9,6 +9,19 @@
   <div class="form-group">
     <div class="row">
       <div class="col-xs-12 col-md-4">
+        <label>Which products are you interested in?</label>
+      </div>
+      <div class="col-xs-12 col-md-8">
+        {% include_relative _input-check.html id="interested-library" label="Infrastructure as Code Library" %}
+        {% include_relative _input-check.html id="interested-reference-architecture" label="Reference Architecture" %}
+        {% include_relative _input-check.html id="interested-support" label="Support" %}
+        {% include_relative _input-check.html id="interested-training" label="Training" %}
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="row">
+      <div class="col-xs-12 col-md-4">
         <label for="contact-message">How can we help?</label>
       </div>
       <div class="col-xs-12 col-md-8">
@@ -18,6 +31,6 @@
   </div>
   <div class="text-center">
     <br />
-    <button type="submit" id="submit-button" class="btn btn-primary">Submit</button>
+    <button type="submit" id="submit-button" class="btn btn-primary" ga-on="click" ga-event-category="contact" ga-event-action="submit">Submit</button>
   </div>
 </form>
