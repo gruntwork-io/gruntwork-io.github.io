@@ -50,27 +50,21 @@
             {% endfor %}
           </tr>
           <tr>
-            <th>After-Hours Support</th>
-            {% for plan in site.data.support-plans %}
-              <td>{{ plan.after_hour_support }}</td>
-            {% endfor %}
-          </tr>
-          <tr>
             <th>Response Time</th>
             {% for plan in site.data.support-plans %}
               <td>{{ plan.response_time }}</td>
             {% endfor %}
           </tr>
           <tr>
-            <th>Automated Infra Updates</th>
-            {% for plan in site.data.support-plans %}
-              <td>{{ plan.automated_infra_updates }}</td>
-            {% endfor %}
-          </tr>
-          <tr>
             <th>Production Readiness Review</th>
             {% for plan in site.data.support-plans %}
             <td>{{ plan.prodution_readiness_review }}</td>
+            {% endfor %}
+          </tr>
+          <tr>
+            <th>Automated Infra Updates (beta)</th>
+            {% for plan in site.data.support-plans %}
+              <td>{{ plan.automated_infra_updates }}</td>
             {% endfor %}
           </tr>
           <tr>
@@ -86,13 +80,13 @@
             {% endfor %}
           </tr>
           <tr>
-            <th>Minimum subscription</th>
+            <th>Subscription period</th>
             {% for plan in site.data.support-plans %}
-            <td>12 months</td>
+            <td>Annual</td>
             {% endfor %}
           </tr>
           <tr>
-            <th>Price*</th>
+            <th>Price</th>
             {% for plan in site.data.support-plans %}
               <td><strong>{{ plan.price }}</strong></td>
             {% endfor %}
@@ -100,6 +94,6 @@
         </tbody>
       </table>
     </div>
-    <p class="text-muted" style="margin-top: 20px;"><em>Note: All support plans require that you have at least one License for the Infrastructure as Code Library</em></p>
+    <p class="text-muted" style="margin-top: 20px;"><em>Note: All support plans require that you have a License for the Infrastructure as Code Library</em></p>
   </div>
 </div>
