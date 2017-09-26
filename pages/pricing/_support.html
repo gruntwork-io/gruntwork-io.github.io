@@ -27,73 +27,79 @@
         </thead>
         <tbody>
           <tr>
-            <th>Email Support</th>
+            <th><i class="fa fa-info-circle info-icon" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Email us for help with questions, code reviews, design reviews, bug fixes, etc."></i> Email Support</th>
             {% for plan in site.data.support-plans %}
             <td>{{ plan.email_support }}</td>
             {% endfor %}
           </tr>
           <tr>
-            <th>Slack Support</th>
+            <th><i class="fa fa-info-circle info-icon" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Use Slack to have a real-time chat with engineers from the Gruntwork team."></i> Slack Support</th>
             {% for plan in site.data.support-plans %}
             <td>{{ plan.slack_support }}</td>
             {% endfor %}
           </tr>
           <tr>
-            <th>Phone/Video Chat Support</th>
+            <th><i class="fa fa-info-circle info-icon" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Set up a live phone or video call with a Gruntwork engineer."></i> Phone/Video Chat Support</th>
             {% for plan in site.data.support-plans %}
             <td>{{ plan.phone_video_support }}</td>
             {% endfor %}
           </tr>
           <tr>
-            <th>Support Availability</th>
+            <th><i class="fa fa-info-circle info-icon" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="We are a distributed company, so we cover all US time zones."></i> Support Availability</th>
             {% for plan in site.data.support-plans %}
               <td>{{ plan.support_availability }}</td>
             {% endfor %}
           </tr>
           <tr>
-            <th>Response Time</th>
+            <th><i class="fa fa-info-circle info-icon" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="We typically respond to all inquiries very quickly, but higher support tiers get higher priority."></i> Response Time</th>
             {% for plan in site.data.support-plans %}
               <td>{{ plan.response_time }}</td>
             {% endfor %}
           </tr>
           <tr>
-            <th>Production Readiness Review</th>
+            <th><i class="fa fa-info-circle info-icon" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Work with the Gruntwork team to design a highly available, scalable, and secure infrastructure."></i> Production Readiness Review</th>
             {% for plan in site.data.support-plans %}
             <td>{{ plan.prodution_readiness_review }}</td>
             {% endfor %}
           </tr>
           <tr>
-            <th>Community Forum</th>
+            <th><i class="fa fa-info-circle info-icon" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="A forum where you can ask questions and discuss design decisions with other Gruntwork customers who are also using the Infrastructure as Code Library and Reference Architecture"></i> Community Forum</th>
             {% for plan in site.data.support-plans %}
               <td>{{ plan.community_forum }}</td>
             {% endfor %}
           </tr>
           <tr>
-            <th>Automated Infra Updates (beta)</th>
+            <th><i class="fa fa-info-circle info-icon" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Patcher (beta) can keep your infrastructure up-to-date, patching your code and submitting a pull request completely automatically."></i> Automated Infra Updates (beta)</th>
             {% for plan in site.data.support-plans %}
               <td>{{ plan.automated_infra_updates }}</td>
             {% endfor %}
           </tr>
           <tr>
-            <th>Security Alerts</th>
+            <th><i class="fa fa-info-circle info-icon" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="We monitor a number of security advisory lists and notify you immediately if any critical vulnerabilities are announced that may affect your infrastructure."></i> Security Alerts</th>
             {% for plan in site.data.support-plans %}
               <td>{{ plan.security_alerts }}</td>
             {% endfor %}
           </tr>
           <tr>
-            <th>Newsletter</th>
+            <th><i class="fa fa-info-circle info-icon" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="We send out a monthly newsletter that describes all the updates we've made to the Infrastructure as Code Library as well as general news on what's happening in the AWS, Terraform, and Gruntwork ecosystem."></i> Newsletter</th>
             {% for plan in site.data.support-plans %}
               <td>{{ plan.newsletter }}</td>
             {% endfor %}
           </tr>
           <tr>
-            <th>Subscription period</th>
+            <th><i class="fa fa-info-circle info-icon" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="The minimum sign-up period."></i> Subscription Period</th>
             {% for plan in site.data.support-plans %}
             <td>Annual</td>
             {% endfor %}
           </tr>
           <tr>
-            <th>Price</th>
+            <th><i class="fa fa-info-circle info-icon" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="An Authorized User is anyone who takes advantage of support benefits (i.e., submits support requests, uses the Community Forum, receives security alerts) or has access to the Infrastructure as Code Library."></i> Authorized Users</th>
+            {% for plan in site.data.support-plans %}
+              <td>{{ plan.users }}</td>
+            {% endfor %}
+          </tr>
+          <tr>
+            <th><i class="fa fa-info-circle info-icon" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Billing is done automatically on the first of every month via credit card or ACH transfer."></i> Price</th>
             {% for plan in site.data.support-plans %}
               <td><strong>{{ plan.price }}</strong></td>
             {% endfor %}
