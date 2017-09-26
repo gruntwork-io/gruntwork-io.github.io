@@ -63,6 +63,12 @@
             {% endfor %}
           </tr>
           <tr>
+            <th>Community Forum</th>
+            {% for plan in site.data.support-plans %}
+              <td>{{ plan.community_forum }}</td>
+            {% endfor %}
+          </tr>
+          <tr>
             <th>Automated Infra Updates (beta)</th>
             {% for plan in site.data.support-plans %}
               <td>{{ plan.automated_infra_updates }}</td>
