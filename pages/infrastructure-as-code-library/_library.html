@@ -10,6 +10,8 @@
             <p>
               {% if package.docs_url %}
                 <a href="#" data-toggle="modal" data-target="#modalPublicRepo" data-public-repo="{{ package.docs_url }}" data-private-repo="{{ package.full_url }}">View Public Docs</a>
+              {% elsif package.full_url %}
+                <a href="#" data-toggle="modal" data-target="#modalPrivateRepo" data-private-repo="{{ package.full_url }}">View Full Repo</a> <small style="color: #757575;">(subscribers only)</small>
               {% endif %}
             </p>
           </div>
@@ -51,6 +53,10 @@
           <p>
             {% if package.docs_url %}
             <a href="#" data-toggle="modal" data-target="#modalPublicRepo" data-public-repo="{{ package.docs_url }}" data-private-repo="{{ package.full_url }}">View Public Docs</a>
+            {% elsif package.full_url %}
+            <a href="#" data-toggle="modal" data-target="#modalPrivateRepo" data-private-repo="{{ package.full_url }}">View Tool</a> <small style="color: #757575;">(subscribers only)</small>
+            {% elsif package.public_url %}
+            <a href="{{ package.public_url }}">View Tool</a>
             {% else %}
             <span style="color: #676767;">View Public Docs</span> (coming soon)
             {% endif %}

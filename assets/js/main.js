@@ -24,6 +24,8 @@ function serialize(a,b){"object"!=typeof b?b={hash:!!b}:void 0===b.hash&&(b.hash
 /* Repo modal link handler */
 $("#modalPublicRepo").on("show.bs.modal",function(r){var e=$(r.relatedTarget).data("public-repo"),a=$(r.relatedTarget).data("private-repo");$(r.currentTarget).find(".public-repo-link").attr("href",e),$(r.currentTarget).find(".private-repo-link").attr("href",a)});
 
+$("#modalPrivateRepo").on("show.bs.modal",function(r){var a=$(r.relatedTarget).data("private-repo");$(r.currentTarget).find(".private-repo-link").attr("href",a)});
+
 /* Dashed lines on homepage */
 var c=document.getElementById("dottedLine");if(c){var ctx=c.getContext("2d");ctx.beginPath(),ctx.setLineDash([10,10]),ctx.moveTo(0,0),ctx.lineTo(0,200),ctx.strokeStyle="#fff",ctx.lineWidth=1.5,ctx.stroke()}
 
