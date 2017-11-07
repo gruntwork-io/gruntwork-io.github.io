@@ -87,9 +87,15 @@
             {% endfor %}
           </tr>
           <tr>
-            <th><i class="fa fa-info-circle info-icon" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="The minimum sign-up period."></i> Subscription Period</th>
+            <th><i class="fa fa-info-circle info-icon" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="The minimum sign-up period. Note that billing may be done monthly."></i> Subscription Period</th>
             {% for plan in site.data.support-plans %}
             <td>Annual</td>
+            {% endfor %}
+          </tr>
+          <tr>
+            <th><i class="fa fa-info-circle info-icon" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="How often we bill for this service."></i> Billing Frequency</th>
+            {% for plan in site.data.support-plans %}
+            <td>Monthly</td>
             {% endfor %}
           </tr>
           <tr>
