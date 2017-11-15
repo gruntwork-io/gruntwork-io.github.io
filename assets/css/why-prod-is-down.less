@@ -1,0 +1,137 @@
+---
+# We need this frontmatter for Jekyll to compile the less code
+---
+
+body {
+  font-family: 'Nunito Sans', sans-serif;
+  font-weight: 400;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: 'Lato', sans-serif;
+  color: #5849a6;
+}
+
+h1 {
+  font-size: 30px;
+  font-weight: 300;
+}
+
+h2, h3, h4, h5 {
+  font-weight: 400;
+}
+
+h4 {
+  font-size: 16px;
+}
+
+.container {
+  width: 3.66in;
+  height: 8.5in;
+  font-size: 12px;
+  position: relative;
+}
+
+footer {
+  bottom: 0;
+  height: 60px;
+  left: 0;
+  position: absolute;
+}
+
+.mr05 {
+  margin-right: 4px;
+}
+
+.pl1 {
+  padding-left: 0.5rem;
+}
+
+.pb1 {
+  padding-bottom: 0.5rem;
+}
+
+.pt1 {
+  padding-top: 0.5rem;
+}
+
+.pt2 {
+  padding-top: 1rem;
+}
+
+.tiny-text {
+  font-size: 10px;
+}
+
+.light-gray {
+  color: #fff;
+}
+
+.border-black {
+  border-color: #000;
+}
+
+.border-purple {
+  border-color: #5849a6;
+}
+
+.bg-purple {
+  background-color: #5849a6;
+}
+
+p {
+  margin-bottom: 0.5rem;
+}
+
+.fixed-underline { text-decoration: underline; white-space: pre; }
+
+.small-text { font-size: 10px; line-height: 10px; }
+
+input[type=checkbox] { margin-right: 4px; margin-left: 0; vertical-align: middle}
+label { vertical-align: top; font-weight: 600; }
+
+.pt25 {
+  padding-top: 0.25in;
+}
+
+.pl25 {
+  padding-left: 0.25in;
+}
+
+.pr25 {
+  padding-right: 0.25in;
+}
+
+.pb25 {
+  padding-bottom: 0in;
+}
+
+@media print {
+  /* Normal checkboxes look very blurry when printed, so replace them with CSS */
+
+  input[type=checkbox] { display:none; }
+  label:before { content: ''; border: 1px solid #000; margin-right: 3px; margin-bottom: -3px; display: inline-block; width: 11px; height: 11px; }
+  input[type=checkbox]:checked + label:before { content: "✓"; font-size: 10px; text-align: center; }
+
+  .no-print {
+    display: none;
+  }
+
+  /* We need a quarter inch margin on all sides for printing */
+
+  .pt25 {
+    padding-top: 0.25in;
+  }
+
+  .pl25 {
+    padding-left: 0.25in;
+  }
+
+  .pr25 {
+    padding-right: 0.25in;
+  }
+
+  .pb25 {
+    padding-bottom: 0.25in;
+  }
+}
