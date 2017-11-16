@@ -1,4 +1,8 @@
 infrastructure:
+  - title: AWS Account(s)
+    description: |
+      Choose from a single AWS account configuration, or a multi-account setup where each AWS account represents a distinct environment.
+      
   - title: Network Topology
     description: |
       For each environment, create a VPC with multiple subnet tiers, route tables, NAT Gateways, Network ACLs, etc.
@@ -21,7 +25,7 @@ infrastructure:
 
   - title: Static content
     description: |
-      Deploy your images, CSS, and JS into an S3 bucke tand and CloudFront as a CDN in front of it.
+      Deploy your images, CSS, and JS into an S3 bucket and and CloudFront as a CDN in front of it.
 
   - title: Bastion host
     description: |
