@@ -1,6 +1,7 @@
 <script>
   $(document).ready(function() {
 
+    // Scroll the page to the selected element
     // Copied from https://stackoverflow.com/a/4801719/2308858
     (function($) {
       $.fn.scrollTo = function() {
@@ -11,22 +12,21 @@
       }
     })(jQuery);
 
-    // Implement references
-    $("#ref-1").click(function() {
-      $('#citation-1').scrollTo();
-    });
+    // When the user clicks a reference, scroll to the corresponding citation.
+    (function($) {
+      $.fn.addScrollForCitation = function(num) {
+        $("#ref-" + num ).click(function() {
+          $("#citation-" + num).scrollTo();
+        });
+        return this; // for chaining...
+      }
+    })(jQuery);
 
-    $("#ref-2").click(function() {
-      $('#citation-2').scrollTo();
-    });
-
-    $("#ref-3").click(function() {
-      $('#citation-3').scrollTo();
-    });
-
-    $("#ref-4").click(function() {
-      $('#citation-4').scrollTo();
-    });
+    $().addScrollForCitation(1);
+    $().addScrollForCitation(2);
+    $().addScrollForCitation(3);
+    $().addScrollForCitation(4);
+    $().addScrollForCitation(5);
 
   });
 </script>
