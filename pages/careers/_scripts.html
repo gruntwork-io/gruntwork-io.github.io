@@ -1,0 +1,32 @@
+<script>
+  $(document).ready(function() {
+
+    // Copied from https://stackoverflow.com/a/4801719/2308858
+    (function($) {
+      $.fn.scrollTo = function() {
+        $('html, body').animate({
+          scrollTop: $(this).offset().top + 'px'
+        }, 'fast');
+        return this; // for chaining...
+      }
+    })(jQuery);
+
+    // Implement references
+    $("#ref-1").click(function() {
+      $('#citation-1').scrollTo();
+    });
+
+    $("#ref-2").click(function() {
+      $('#citation-2').scrollTo();
+    });
+
+    $("#ref-3").click(function() {
+      $('#citation-3').scrollTo();
+    });
+
+    $("#ref-4").click(function() {
+      $('#citation-4').scrollTo();
+    });
+
+  });
+</script>
