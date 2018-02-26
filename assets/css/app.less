@@ -174,8 +174,10 @@ p + .btn {
     border-left: 2px solid #194C5F;
 }
 
-.dropdown:hover .dropdown-menu {
-    display: block;
+@media (min-width: @screen-sm-min) {
+    .dropdown:hover .dropdown-menu {
+        display: block;
+    }
 }
 
 
@@ -337,6 +339,9 @@ p a:not(.btn) {
     }
     .modal-body {
         padding: 0 @grid-gutter-width 60px;
+    }
+    .btn {
+        white-space: nowrap;
     }
 }
 
