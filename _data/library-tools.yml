@@ -1,28 +1,43 @@
-- name: "Network Topology"
+- name: "GruntKMS"
   tags:
     - AWS
-    - OSS
   icons:
-    - icon-terraform.png
-    - icon-python.png
-  icon_tooltips:
-    - Terraform
-    - Python
-  docs_url: "https://github.com/gruntwork-io/module-vpc-public"
-  full_url: "https://github.com/gruntwork-io/module-vpc"
+    - title: Go
+      image: icon-go.png
+  full_url: "https://github.com/gruntwork-io/gruntkms"
   description: |
-    Create a best-practices VPC furhter protected by Network ACLs. Setup VPC Peering with internal or external VPCs.
+    A command-line tool that makes it easy to encrypt and decrypt data using Amazon Key Management Service (KMS).
 
-- name: "Monitoring &amp Alerting"
+- name: "ssh-iam"
   tags:
     - AWS
   icons:
-    - icon-bash.png
-    - icon-go.png
-  icon_tooltips:
-    - Bash
-    - GO
-  docs_url: "https://github.com/gruntwork-io/module-vpc-public"
-  full_url: "https://github.com/gruntwork-io/module-vpc"
+    - title: Terraform
+      image: icon-terraform.png
+    - title: Go
+      image: icon-go.png
+  docs_url: "https://github.com/gruntwork-io/module-security-public/tree/master/modules/ssh-iam"
+  full_url: "https://github.com/gruntwork-io/module-security/tree/master/modules/ssh-iam"
   description: |
-    Create a best-practices VPC furhter protected by Network ACLs. Setup VPC Peering with internal or external VPCs.
+    A tool that allows you to manage SSH access to EC2 Instances using AWS IAM. Developers can use their personal SSH
+    keys to log in.
+
+- name: "aws-auth"
+  tags:
+    - AWS
+  icons:
+    - title: Bash
+      image: icon-bash.png
+  docs_url: "https://github.com/gruntwork-io/module-security-public/tree/master/modules/aws-auth"
+  full_url: "https://github.com/gruntwork-io/module-security/tree/master/modules/aws-auth"
+  description: |
+    A small wrapper script for the AWS CLI that makes it much easier to authenticate to AWS with Multi-factor
+    authentication (MFA), or when you want to assume an IAM Role in another AWS account.
+
+- name: "gruntwork-installer"
+  icons:
+    - title: Bash
+      image: icon-bash.png
+  public_url: "https://github.com/gruntwork-io/gruntwork-installer"
+  description: |
+    A simple, lightweight package manager for installing Gruntwork modules.

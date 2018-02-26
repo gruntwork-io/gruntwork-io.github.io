@@ -1,0 +1,140 @@
+infrastructure:
+  - title: AWS Account(s)
+    description: |
+      Choose from a single AWS account configuration, or a multi-account setup where each AWS account represents a distinct environment.
+      
+  - title: Network Topology
+    description: |
+      For each environment, create a VPC with multiple subnet tiers, route tables, NAT Gateways, Network ACLs, etc.
+
+  - title: Server cluster
+    description: |
+      Choose from a Docker Cluster (backed by Amazon EC2 Container Service) or Auto Scaling Groups.
+
+  - title: Load balancer
+    description: |
+      Choose from the Application Load Balancer (HTTP/HTTPS) or the Load Balancer Classic (TCP).
+
+  - title: Database
+    description: |
+      Choose from MySQL, PostgreSQL, MariaDB, Oracle, SQL Server, or Aurora.
+
+  - title: Cache
+    description: |
+      Choose from Redis or Memcached.
+
+  - title: Static content
+    description: |
+      Deploy your images, CSS, and JS into an S3 bucket and and CloudFront as a CDN in front of it.
+
+  - title: Bastion host
+    description: |
+      Choose from either a plain bastion host or an OpenVPN server as the sole entrypoint to your AWS network.
+
+  - title: CI server
+    description: |
+      Choose from Jenkins, CircleCI, or TravisCI.
+
+  - title: Sample frontend app
+    description: |
+      A sample frontend application that shows how to package the code using Docker or Packer, how to manage
+      configuration across multiple environments, how to store application secrets, how to do service discovery to talk
+      to a backend app, and how to run the entire stack in the dev environment.
+
+  - title: Sample backend app
+    description: |
+      A sample backend application that shows how to package the code using Docker or Packer, how to manage
+      configuration across multiple environments, how to store application secrets, how to talk to the database and cache,
+      and how to apply schema migrations.
+
+  - title: SQS, Kinesis
+    description: |
+      Optionally include queues in SQS and streams in Kinesis.
+
+  - title: Lambda
+    description: |
+      Optionally deploy Lambda functions using Terraform and run and test your Lambda functions locally using Docker.
+
+configuration:
+  - title: Environments
+    description: |
+      Choose the isolated environments you want to create: e.g., dev, qa, stage, prod.
+
+  - title: Account setup
+    description: |
+      Choose to deploy all environments into a single AWS account (more convenient) or to deploy each environment into
+      a separate AWS account (more secure).
+
+  - title: Encryption
+    description: |
+      Choose if you want to enable end-to-end encryption for all data at rest and in transit. Mandatory for compliance
+      use-cases (e.g., HIPAA, PCI, SOX, etc).
+
+  - title: Automated build &amp; deployment (CI / CD)
+    description: |
+      Run a build after every commit to test your code, package it using Docker or Packer, and, for commits to
+      certain branches or tags, automatically deploy that Docker or Packer image to specific environments.
+
+  - title: Monitoring
+    description: |
+      Configure CloudWatch with extra metrics not visible to the AWS hypervisor, including memory and disk space usage.
+
+  - title: Alerting
+    description: |
+      Configure alerts on key CloudWatch metrics: e.g., high CPU usage on EC2 instances, too many 4xx or 5xx errors on
+      load balancers, low disk space on RDS instances. Configure Route 53 health checks on public endpoints.
+
+  - title: Log aggregation
+    description: |
+      Configure all servers to send logs to the CloudWatch Logs UI.
+
+  - title: DNS
+    description: |
+      Configure your domain name(s) using Route 53.
+
+security:
+  - title: SSL/TLS
+    description: |
+      Create SSL/TLS certificates for your domain names using AWS Certificate Manager.
+
+  - title: Server hardening
+    description: |
+      Configure every server to run fail2ban and to automatically install critical security patches on a nightly basis.
+
+  - title: SSH management
+    description: |
+      Install ssh-iam on every server, which allows admins to grant or revoke SSH access using IAM groups and for
+      each developer to be able to use their own username and SSH key to connect to servers.
+
+  - title: Secrets management
+    description: |
+      Use KMS to securely encrypt and decrypt application secrets, such as database passwords.
+
+  - title: Account security
+    description: |
+      Enable CloudTrail to audit all API calls in your AWS account(s). Create best practices IAM groups and policies for
+      user and permissions management.
+
+design:
+  - title: High Availability
+    description: |
+      All aspects of the architecture are designed for high availability: e.g., all servers are deployed across multiple
+      Availability Zones; load balancers perform health checks and automatically replace failed servers; the load
+      balancers themselves run multiple servers and do automatic failover; the database and cache can also do automatic
+      failover to standby servers in another Availability Zone; data is automatically backed up on a nightly basis.
+
+  - title: Scalability
+    description: |
+      All aspects of the architecture support easy vertical and horizontal scalability: e.g., you can use auto scaling
+      policies to resize the server cluster in response to load; the load balancers will automatically scale up and down
+      in response to load; you can configure read replicas for your database and cache.
+
+  - title: Infrastructure as code
+    description: |
+      You get 100% of the source code for everything in the Reference Architecture. It is written using a variety of
+      tools, including Terraform, Packer, Docker, Go, Python, and Bash.
+
+  - title: Documentation
+    description: |
+      Comprehensive walkthrough documentation of everything included in the reference architecture.
+

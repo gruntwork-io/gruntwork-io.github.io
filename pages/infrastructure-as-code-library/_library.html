@@ -1,0 +1,128 @@
+<h2 class="margin-top-none">Infrastructure Packages</h2>
+<div class="row row-equalize-col-height">
+  {% for package in site.data.library-infrastructure-packages %}
+    <div class="col-xs-12 col-sm-6">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <div>
+            <h4 class="margin-top-none">{{ package.name }}</h4>
+            <p>{{ package.description }}</p>
+            <p>
+              {% if package.docs_url %}
+                <a href="#" data-toggle="modal" data-target="#modalPublicRepo" data-public-repo="{{ package.docs_url }}" data-private-repo="{{ package.full_url }}">View Public Docs</a>
+              {% elsif package.full_url %}
+                <a href="#" data-toggle="modal" data-target="#modalPrivateRepo" data-private-repo="{{ package.full_url }}">View Full Repo</a> <small style="color: #757575;">(subscribers only)</small>
+              {% endif %}
+            </p>
+          </div>
+          <div class="row">
+            <div class="col-xs-6">
+              {% for tag in package.tags %}
+                <span class="label label-default label-hollow">{{ tag }}</span>
+              {% endfor %}
+            </div>
+            <div class="col-xs-6 text-right">
+              <ul class="list-unstyled margin-bottom-none">
+                <li>
+                  <div class="btn-group btn-group-package-icons" role="group" aria-label="Group of Infrastructure Package Icons">
+                    {% for icon in package.icons %}
+                      <img src="/assets/img/logos-technologies/{{ icon.image }}" height="24px" data-toggle="tooltip" data-placement="top" title="{{ icon.title }}" />
+                    {% endfor %}
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+
+
+<h2>Tools</h2>
+<div class="row row-equalize-col-height">
+  {% for package in site.data.library-tools %}
+  <div class="col-xs-12 col-sm-6">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <div>
+          <h3 class="margin-top-none">{{ package.name }}</h3>
+          <p>{{ package.description }}</p>
+          <p>
+            {% if package.docs_url %}
+            <a href="#" data-toggle="modal" data-target="#modalPublicRepo" data-public-repo="{{ package.docs_url }}" data-private-repo="{{ package.full_url }}">View Public Docs</a>
+            {% elsif package.full_url %}
+            <a href="#" data-toggle="modal" data-target="#modalPrivateRepo" data-private-repo="{{ package.full_url }}">View Tool</a> <small style="color: #757575;">(subscribers only)</small>
+            {% elsif package.public_url %}
+            <a href="{{ package.public_url }}">View Tool</a>
+            {% else %}
+            <span style="color: #676767;">View Public Docs</span> (coming soon)
+            {% endif %}
+          </p>
+        </div>
+        <div class="row">
+          <div class="col-xs-6">
+            {% for tag in package.tags %}
+            <span class="label label-default label-hollow">{{ tag }}</span>
+            {% endfor %}
+          </div>
+          <div class="col-xs-6 text-right">
+            <ul class="list-unstyled margin-bottom-none">
+              <li>
+                <div class="btn-group btn-group-package-icons" role="group" aria-label="Group of Infrastructure Package Icons">
+                  {% for icon in package.icons %}
+                  <img src="/assets/img/logos-technologies/{{ icon.image }}" height="24px" data-toggle="tooltip" data-placement="top" title="{{ icon.title }}" />
+                  {% endfor %}
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+
+
+<h2>Open Source Terraform Modules</h2>
+<div class="row row-equalize-col-height">
+  {% for package in site.data.library-terraform-modules %}
+  <div class="col-xs-12 col-sm-6">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <div>
+          <h3 class="margin-top-none">{{ package.name }}</h3>
+          <p>{{ package.description }}</p>
+          <p>
+            View Repo: {% if package.aws_url %}<a href="{{ package.aws_url }}">AWS</a>{% endif %}
+            {% if package.gcp_url %} | <a href="{{ package.gcp_url }}">GCP</a>{% endif %}
+            {% if package.azure_url %} | <a href="{{ package.azure_url }}">Azure</a>{% endif %}
+          </p>
+        </div>
+        <div class="row">
+          <div class="col-xs-6">
+            {% for tag in package.tags %}
+            <span class="label label-default label-hollow">{{ tag }}</span>
+            {% endfor %}
+          </div>
+          <div class="col-xs-6 text-right">
+            <ul class="list-unstyled margin-bottom-none">
+              <li>
+                <div class="btn-group btn-group-package-icons" role="group" aria-label="Group of Infrastructure Package Icons">
+                  {% for icon in package.icons %}
+                  <img src="/assets/img/logos-technologies/{{ icon.image }}" height="24px" data-toggle="tooltip" data-placement="top" title="{{ icon.title }}" />
+                  {% endfor %}
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>

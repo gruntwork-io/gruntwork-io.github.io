@@ -1,96 +1,18 @@
 ---
 layout: default
-title: Gruntwork | How it Works
-excerpt: We’ll write the code for an entire end-to-end reference architecture that implements the infrastructure you selected. The code incorporates a wealth of best practices.
-permalink: /how-it-works
+title: "Gruntwork: How it Works"
+excerpt: Gruntwork can help you get your entire infrastructure defined as code, in about a day. Here's how it works.
+permalink: /how-it-works/
 slug: how-it-works
 footer_heading: Tell us what kind of infrastructure you need.
 ---
 
 <div class="main">
-    <div class="section section-hero">
-        <div class="container">
-            <div class="row">
-                <div class="col-xs-12 text-center">
-                    <h1>How it Works</h1>
-                </div> <!-- col -->
-            </div> <!-- row -->
-        </div> <!-- container -->
-    </div> <!-- section-hero -->
+  <div class="section section-hero">
+    {% include_relative _hero.html %}
+  </div>
 
-    <div class="section section-dark">
-
-        <div class="container">
-
-            <div class="row">
-                <div class="col-xs-12 text-center">
-                    <div class="modal fade" id="modalOverviewVideo" tabindex="-1" role="dialog" aria-labelledby="modalOverviewVideoTitle">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header text-center">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="fa fa-fw fa-close"></i></button>
-                                </div> <!-- modal-header -->
-                                <div class="modal-body text-center" id="yt-player">
-                                    <iframe width="726" height="408" src="https://www.youtube-nocookie.com/embed/0bth0BtXZN0?rel=0&amp;showinfo=0&showsearch=0&iv_load_policy=3&color=white&enablejsapi=1" frameborder="0" allowfullscreen style="max-width: 100%;"></iframe>
-                                </div> <!-- modal-body -->
-                            </div> <!-- modal-content -->
-                        </div> <!-- modal-dialog -->
-                    </div> <!-- modal -->
-                    <p><btn class="btn btn-info" role="button" data-toggle="modal" data-target="#modalOverviewVideo"><i class="fa fa-fw fa-youtube-play"></i>&nbsp;&nbsp;Watch the Overview Video</btn></p>
-                    <hr />
-                </div> <!-- col -->
-            </div> <!-- row -->
-
-            <div class="row row-how-it-works" style="padding-top: 0;">
-                <div class="col-xs-8 col-xs-offset-2 col-sm-3 col-sm-offset-0 col-md-2 col-diagram">
-                    <img src="/assets/img/how-it-works-1.png" width="240" />
-                </div> <!-- col -->
-                <div class="col-xs-12 col-sm-9 col-md-10 col-explaination">
-                    <h2>1. Tell us your infrastructure needs with our free online form.</h2>
-                    <p>Fill out our simple, <a href="/contact">free online form</a> to tell us what infrastructure from the <a href="/gruntwork-library">Gruntwork Library</a> and <a href="/reference-architecture">Reference Architecture</a> you want to use: Docker or Packer? MySQL or PostgreSQL? Jenkins or CircleCI? CloudWatch or DataDog? KMS or Vault? Bastion host or VPN server?</p>
-                </div> <!-- col -->
-            </div> <!-- row-how-it-works -->
-
-            <div class="row row-how-it-works">
-                <div class="col-xs-8 col-xs-offset-2 col-sm-3 col-sm-offset-0 col-md-2 col-diagram">
-                    <img src="/assets/img/how-it-works-2.png" width="240" />
-                </div> <!-- col -->
-                <div class="col-xs-12 col-sm-9 col-md-10 col-explaination">
-                    <h2>2. Schedule a free live walkthrough.</h2>
-                    <p>We’ll create the infrastructure you requested in Terraform, Go, Bash, and Python using code from the <a href="/gruntwork-library">Gruntwork Library</a> and our <a href="/reference-architecture">Reference Architecture</a>, and set up a free video call with you to walk you through the code you’d be getting. You’ll be able to see exactly how the code looks, how it’s documented, how it’s tested, the different ways you can configure, compose, and reuse it, and how it works when running in an AWS account.</p>
-                </div> <!-- col -->
-            </div> <!-- row-how-it-works -->
-
-            <div class="row row-how-it-works">
-                <div class="col-xs-8 col-xs-offset-2 col-sm-3 col-sm-offset-0 col-md-2 col-diagram">
-                    <img src="/assets/img/how-it-works-3.png" width="240" />
-                </div> <!-- col -->
-                <div class="col-xs-12 col-sm-9 col-md-10 col-explaination">
-                    <h2>3. If you like what you see, become a Gruntwork Subscriber.</h2>
-                    <p>If the code looks like a good fit, we’ll sign you up as a Gruntwork subscriber, get your payment details, transfer the code into your Git repos, and deploy it into your AWS account, getting you up and running with a battle-tested, end-to-end infrastructure—all in about a day! If the code doesn’t fit your needs, <strong>you don’t pay a cent.</strong></p>
-                </div> <!-- col -->
-            </div> <!-- row-how-it-works -->
-
-            <div class="row row-how-it-works">
-                <div class="col-xs-8 col-xs-offset-2 col-sm-3 col-sm-offset-0 col-md-2 col-diagram">
-                    <img src="/assets/img/how-it-works-4.png" width="240" />
-                </div> <!-- col -->
-                <div class="col-xs-12 col-sm-9 col-md-10 col-explaination">
-                    <h2>4. Learn how to use your new infrastructure.</h2>
-                    <p>The infrastructure code comes with written and video documentation of how to do all the common DevOps tasks: how to run the code in dev, how to build and test, how to deploy changes, where to find metrics, logs, and alerts, how to SSH to servers, and so on. If you want to go even deeper, sign up for one of the <a href="/training">Gruntwork Training Course</a> on Terraform, AWS, Docker, Packer, Security, and so on.</p>
-                </div> <!-- col -->
-            </div> <!-- row-how-it-works -->
-
-            <div class="row row-how-it-works">
-                <div class="col-xs-8 col-xs-offset-2 col-sm-3 col-sm-offset-0 col-md-2 col-diagram">
-                    <img src="/assets/img/how-it-works-5.png" width="240" />
-                </div> <!-- col -->
-                <div class="col-xs-12 col-sm-9 col-md-10 col-explaination">
-                    <h2>5. Keep your infrastructure up to date.</h2>
-                    <p>As a Gruntwork Subscriber, you get access to all the updates and additions we make to the Gruntwork Library, so better infrastructure is just a version number bump away. Moreover, if you sign up for Gruntwork Patcher(beta), we will automatically update your code and submit pull requests to ensure you stay up to date with the latest changes from the Gruntwork Library, as well as AWS, Terraform, Docker, and other critical infrastructure technologies.</p>
-                </div> <!-- col -->
-            </div> <!-- row-how-it-works -->
-
-        </div>
-    </div>
+  <div class="section section-dark">
+    {% include_relative _steps.html %}
+  </div>
 </div>

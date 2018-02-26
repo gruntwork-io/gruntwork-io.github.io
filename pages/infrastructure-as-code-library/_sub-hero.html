@@ -1,0 +1,25 @@
+<div class="row row-page-header">
+  <div class="col-xs-12">
+    <h2>You don't have to reinvent the wheel</h2>
+    <p>
+      Most teams have the same basic infrastructure needs: server cluster, load balancer, database, cache, CI/CD,
+      monitoring, secrets management, and so on. Why waste time building it all from scratch? At Gruntwork, we are a
+      team of DevOps experts who have spent thousands of hours writing reusable infrastructure code, and now you can
+      leverage all of it with the Infrastructure as Code Library.
+    </p>
+    <h2>Infrastructure as Code Library Features</h2>
+    <div class="row" style="margin-top: 50px;">
+      {% for feature in site.data.library-features %}
+        <div class="col-xs-6 col-sm-4" style="margin-bottom:20px;">
+          <div class="pull-left text-center" style="width: 100px; margin-right: 10px;">
+            <img src="/assets/img/library-icons/library-feature-{{ forloop.index }}.png" alt="{{ feature.title }}" />
+          </div>
+          <div class="pull-left" style="max-width: 170px; font-size: 16px; line-height: 20px; height: 140px;">
+            <h6 style="margin: 5px 0 5px 0">{{ feature.title }}</h6>
+            <p>{{ feature.description }}</p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>

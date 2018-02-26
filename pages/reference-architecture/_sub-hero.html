@@ -1,0 +1,44 @@
+<div class="row row-page-header">
+  <div class="col-xs-12">
+    <h2>A new standard for architecture on AWS</h2>
+    <p>
+      The Reference Architecture is an opinionated, battle-tested, best practices way to assemble the code from the
+      <a href="/infrastructure-as-code-library">Infrastructure as Code Library</a> into an end-to-end tech stack that
+      has just about everything you need: server cluster, load balancer, database, cache, network topology, monitoring,
+      alerting, CI/CD, secrets management, VPN, and more.
+    </p>
+    <p>
+      The Reference Architecture is highly customizable. You get to specify the type of server cluster, load balancer,
+      database, cache, CI server, network settings, DNS settings, service discovery mechanism, and so on, from a list
+      of supported options. We create the architecture to your specifications, deploy it into your AWS account(s), and
+      give you 100% of the code, all in about a day.
+    </p>
+    <h2>Reference Architecture Features</h2>
+    <div class="row" style="margin-top: 50px;">
+      {% for feature in site.data.reference-architecture-features %}
+      <div class="col-xs-6 col-sm-4">
+        <div class="pull-left text-center" style="width: 100px; margin-right: 10px;">
+          <img src="/assets/img/reference-architecture-icons/reference-architecture-feature-{{ forloop.index }}.png" alt="{{ feature.title }}" />
+        </div>
+        <div class="pull-left" style="max-width: 170px; font-size: 16px; line-height: 20px; height: 160px">
+          <h6 style="margin: 5px 0 10px 0">{{ feature.title }}</h6>
+          <p>{{ feature.description }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <h2>Example Architecture Diagram</h2>
+    <p>
+      We customize the architecture to your specific needs (see <a href="how-it-works">How it Works</a>). Here's an
+      example of what the architecture looks like for a typical customer:
+    </p>
+    <div class="text-center ref-arch" style="margin-top: 30px">
+      <a href="/assets/img/ref-arch/ref-arch-full.png" title="Click to see the full size image" target="_blank">
+        <img src="/assets/img/ref-arch/ref-arch-full-medium.png" alt="Gruntwork Reference Architecture">
+        <div class="ref-arch-overlay">
+          <i class="fa fa-search fa-3x" aria-hidden="true"></i>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>

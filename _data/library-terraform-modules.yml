@@ -1,0 +1,51 @@
+- name: "Consul"
+  tags:
+    - AWS
+    - GCP
+    - Azure
+  icons:
+    - title: Terraform
+      image: icon-terraform.png
+    - title: Bash
+      image: icon-bash.png
+  aws_url: "https://github.com/hashicorp/terraform-aws-consul"
+  gcp_url: "https://github.com/hashicorp/terraform-google-consul"
+  azure_url: "https://github.com/hashicorp/terraform-azurerm-consul"
+  description: |
+    Deploy a best-practices HashiCorp Consul cluster. Includes support for automatic bootstrapping, configuring dnsmasq
+    to use Consul as a DNS server, access to the Consul UI, and automatic recovery of failed servers.
+
+- name: "Nomad"
+  tags:
+    - AWS
+    - GCP
+    - Azure
+  icons:
+    - title: Terraform
+      image: icon-terraform.png
+    - title: Bash
+      image: icon-bash.png
+  aws_url: "https://github.com/hashicorp/terraform-aws-nomad"
+  gcp_url: "https://github.com/hashicorp/terraform-google-nomad"
+  azure_url: "https://github.com/hashicorp/terraform-azurerm-nomad"
+  description: |
+    Deploy a HashiCorp Nomad cluster. Includes support for automatic bootstrapping and automatic recovery of failed
+    servers.
+
+- name: "Vault"
+  tags:
+    - AWS
+    - GCP
+    - Azure
+  icons:
+    - title: Terraform
+      image: icon-terraform.png
+    - title: Bash
+      image: icon-bash.png
+  aws_url: "https://github.com/hashicorp/terraform-aws-vault"
+  gcp_url: "https://github.com/hashicorp/terraform-google-vault"
+  azure_url: "https://github.com/hashicorp/terraform-azurerm-vault"
+  description: |
+    Deploy a HashiCorp Vault cluster. Includes support for automatically discovering Consul clusters as a high availability
+    backend, using S3 as a storage backend, creating self-signed TLS certificates, updating the OS certificate store,
+    configuring an ELB in front of Vault to allow public access, and automatic recovery of failed servers.

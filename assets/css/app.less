@@ -1,3 +1,7 @@
+---
+# We need this frontmatter for Jekyll to compile the less code
+---
+
 //
 // Import variables
 // ==================================================
@@ -7,6 +11,8 @@
 @import "user10/variables";
 @import "app-variable-overrides";
 @import "user10/utilities";
+@import "vertical-carousel";
+@import "lity";
 
 
 
@@ -661,7 +667,7 @@ p a:not(.btn) {
                 bottom: -260px;
                 right: 6px;
                 z-index: 980;
-                background: url('../img/infrastructure-endcap.png') right bottom no-repeat;
+                background: url('../img/infrastructure-cube-icons/infrastructure-endcap.png') right bottom no-repeat;
                 background-size: 224px 305px;
             }
         }
@@ -689,8 +695,8 @@ p a:not(.btn) {
         background-size: 80px 55px;
     }
 }
-// Specific styles for the who's using it page
-.sub-page.whos-using-it .main {
+// Specific styles for the customers page
+.sub-page.customers .main {
     > .section:last-child {
         padding-bottom: 0;
     }
@@ -1229,3 +1235,139 @@ input[type="radio"] .styled:checked + label::after {
     color: #fff;
 }
 
+////// Youtube video
+
+@play-button-width: 70px;
+@play-button-height: 44px;
+
+.video-thumbnail {
+    position: relative;
+    cursor: pointer;
+}
+
+.video-thumbnail .play {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 100;
+    width: @play-button-width;
+    height: @play-button-height;
+    margin-left: -1 * (@play-button-width / 2);
+    margin-top: -1 * (@play-button-height / 2);
+    background: rgba(0, 0, 0, 0.55);
+    border-radius: 5px;
+    padding-top: 15px;
+}
+
+.video-thumbnail .play .tri {
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 7px 0 7px 14px;
+    border-color: transparent transparent transparent #ffffff;
+    margin: 0 auto;
+}
+
+.video-thumbnail:hover .play {
+    opacity: 1.0;
+    background: #ff0000;
+}
+
+
+/////// Reference architecture
+
+.ref-arch {
+    position: relative;
+}
+
+.ref-arch .ref-arch-overlay {
+    background: rgba(0,0,0,.75);
+    text-align: center;
+    opacity: 0;
+    -webkit-transition: opacity .25s ease;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+.ref-arch .ref-arch-overlay .fa {
+    height: 54px;
+    margin-top: -27px;
+    position: relative;
+    top: 50%;
+}
+
+.ref-arch:hover .ref-arch-overlay {
+    opacity: 1;
+    color: #fff;
+}
+
+
+#ref-arch-accordion .panel-title a:hover {
+    color: #fff;
+}
+
+
+////////// Home page carousels
+
+.up-and-running-text {
+    padding: 0;
+    margin: 0 6px 0 0;
+    line-height: 50px
+}
+
+.up-and-running-carousel {
+    padding: 0;
+    margin: 0 10px 0 0;
+    max-width: 135px;
+    width: 35%;
+}
+
+////////// Get Started
+
+#get-started .call-to-action {
+    .cta-contents {
+        display: block;
+        margin: 20px;
+        padding: 20px;
+        border: 1px solid #a2a2a2;
+        height: 380px;
+    }
+
+    img {
+        margin-top:50px;
+        width: 150px;
+    }
+
+    h4 {
+        margin-top:0;
+        margin-bottom:10px;
+    }
+
+    p {
+        color:gray;
+    }
+}
+
+#get-started .call-to-action a:hover {
+    background-color: #123845;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+//// Pricing page
+
+.info-icon {
+    color: rgba(191,191,191,0.6);
+    margin-right: 10px;
+}
+
+.info-icon:hover {
+    color: #fff;
+}
+
+.tooltip-inner {
+    text-align: left;
+}

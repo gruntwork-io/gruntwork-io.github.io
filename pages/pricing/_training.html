@@ -1,0 +1,41 @@
+<hr />
+<div id="training" class="row row-page-header">
+  <div class="col-xs-12">
+    <h2>Training</h2>
+    <p>
+      We offer two types of <a href="/training">training</a>: <strong>Crash Courses</strong>, which are 1-2 hours each
+      and done via video call, and <strong>Workshops</strong>, which are 1-2 days each and are done on-site.
+    </p>
+  </div>
+</div>
+<div class="row row-pricing-table">
+  <div class="col-xs-12 col-md-5">
+    <h3>Crash Courses</h3>
+    <table class="table table-striped">
+      <tbody>
+        {% for crash_course in site.data.training.crash_courses %}
+          <tr>
+            <th>{{ crash_course.title }}</th>
+            <td class="text-right">{{ crash_course.price }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="col-xs-12 col-md-7">
+    <h3>Workshops</h3>
+    <table class="table table-striped">
+      <tbody>
+        {% for workshop in site.data.training.workshops %}
+        <tr>
+          <th>{{ workshop.title }}</th>
+          <td class="text-right">{{ workshop.price }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="col-xs-12">
+    <p class="text-muted" style="margin-top: 20px;"><em>Minimum sign-up for any training is 5 students. Above pricing does not include travel reimbursement for Workshops. All travel charges are billed at cost.</em></p>
+  </div>
+</div>

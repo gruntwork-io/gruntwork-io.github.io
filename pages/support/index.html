@@ -1,33 +1,25 @@
 ---
 layout: default
-title: Gruntwork | Support
-excerpt: Support.
-permalink: /support
-slug: support
-footer_heading: Ready to hand off the Gruntwork?
+title: Gruntwork Support
+excerpt: Expert support, automatic updates, and security alerts for the Infrastructure as Code Library and Reference Architecture.
+permalink: /support/
+slug: subscriptions
+footer_heading: Talk with our team of DevOps experts now!
+redirect_from:
+  - /products-services/
+  - /plans/
+  - /subscription/
 ---
 
 <div class="main">
-    <div class="section section-hero">
-        <div class="container">
-            <div class="row">
-                <div class="col-xs-12 text-center">
-                    <h1>Support</h1>
-                </div> <!-- col -->
-            </div> <!-- row -->
-        </div> <!-- container -->
-    </div> <!-- section-hero -->
-
-    <div class="section section-dark">
-        <div class="container">
-
-            <div class="row">
-                <div class="col-xs-12 text-center">
-                    <p>Content</p>
-                </div> <!-- col -->
-            </div> <!-- row -->
-
-        </div>
+  <div class="section section-hero">
+    {% include_relative _hero.html %}
+  </div>
+  <div class="section section-dark">
+    <div class="container">
+      {% include_relative _sub-hero.html %}
+      {% include_relative _benefits.html %}
+      {% include_relative _options.html %}
     </div>
-
+  </div>
 </div>
