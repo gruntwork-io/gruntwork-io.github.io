@@ -14,15 +14,21 @@
         <ul class="nav navbar-nav navbar-right">
           <li><a href="/how-it-works" ga-on="click" ga-event-category="nav-{{ page.path | slugify }}" ga-event-action="how-it-works">How it Works</a></li>
           <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Products &amp; Services <i class="fa fa-caret-down" aria-hidden="true"></i></a>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Products <i class="fa fa-caret-down" aria-hidden="true"></i></a>
             <ul class="dropdown-menu dropdown-menu-left" role="menu">
               <li><a href="/infrastructure-as-code-library" ga-on="click" ga-event-category="nav-{{ page.path | slugify }}" ga-event-action="infrastructure-as-code-library">Infrastructure as Code Library</a></li>
-              <li><a href="/reference-architecture" ga-event-category="nav-{{ page.path | slugify }}" ga-event-action="ref-arch">Reference Architecture</a></li>
+              <li><a href="/usage-patterns-library" ga-event-category="nav-{{ page.path | slugify }}" ga-event-action="ref-arch">Usage Patterns Library</a></li>
+              <li><a href="/training" ga-event-category="nav-{{ page.path | slugify }}" ga-event-action="training">DevOps Training Library</a></li>
               <li><a href="/support" ga-event-category="nav-{{ page.path | slugify }}" ga-event-action="support">Support</a></li>
-              <li><a href="/training" ga-event-category="nav-{{ page.path | slugify }}" ga-event-action="training">Training</a></li>
             </ul>
           </li>
-          <li><a href="/about" ga-event-category="nav-{{ page.path | slugify }}" ga-event-action="about">About</a></li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Services <i class="fa fa-caret-down" aria-hidden="true"></i></a>
+            <ul class="dropdown-menu dropdown-menu-left" role="menu">
+              <li><a href="/devops-bootcamp" ga-on="click" ga-event-category="nav-{{ page.path | slugify }}" ga-event-action="infrastructure-as-code-library">DevOps Bootcamp</a></li>
+              <li><a href="/custom-module-development" ga-event-category="nav-{{ page.path | slugify }}" ga-event-action="ref-arch">Custom Module Development</a></li>
+            </ul>
+          </li>
           <li><a href="/contact" class="btn btn-info" role="button" ga-event-category="nav-{{ page.path | slugify }}" ga-event-action="get-started">Get Started</a></li>
         </ul>
       </div>
