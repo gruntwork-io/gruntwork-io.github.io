@@ -402,6 +402,9 @@ p a:not(.btn) {
 .panel {
     border-width: 2px;
 }
+.panel-light {
+    background-color: #242e3a;
+}
 .panel-heading {
     border-bottom-width: 2px;
 }
@@ -412,6 +415,21 @@ p a:not(.btn) {
     margin-bottom: 0;
 }
 
+// Lists
+.check-list {
+    list-style-type: none;
+    padding-left: 2em;
+}
+.check-list li {
+    margin-bottom: 1em;
+}
+.check-list li:before {
+    font-family: 'FontAwesome';
+    content: '\f00c';
+    margin: 0 0.7em 0 -1.7em;;
+    color: #f92e64;
+}
+
 
 //
 // Rows
@@ -420,6 +438,133 @@ p a:not(.btn) {
 // Row styles that are global
 @padding-row-vertical-mobile:               45px;
 @padding-row-vertical-desktop:              60px;
+
+.training-purple-bg {
+    background: url('../img/purple-bg-training.jpg') no-repeat;
+    background-size: cover;
+    height: 100%;
+
+    img {
+        margin: 0 auto;
+    }
+}
+
+.training-orange-bg {
+    background: url('../img/orange-bg-training.jpg') no-repeat;
+    background-size: cover;
+    height: 100%;
+
+    img {
+        margin: 0 auto;
+    }
+}
+
+.training-blue-bg {
+    background: url('../img/blue-bg-training.jpg') no-repeat;
+    background-size: cover;
+    height: 100%;
+
+    img {
+        margin: 0 auto;
+    }
+}
+
+.row-pricing-get-started, .row-training-devops, .row-training-resources {
+    padding-bottom: 30px;
+}
+
+.row-pricing-get-started .panel, .row-training-devops .panel, .row-training-resources .panel {
+    width: 100%;
+    margin-bottom: 0px;
+}
+
+.row-pricing-get-started .col-pricing .panel {
+    border-top-width: 0;
+}
+
+.row-training-devops .col-pricing .panel {
+    border-bottom-width: 0;
+}
+
+.row-training-resources .icon-panel {
+    text-align: center;
+
+    .panel-body {
+        padding: 25px 0 0 0;
+    }
+
+    .fa {
+        font-size: 36px;
+        color: #194C5F;
+    }
+}
+
+@media (min-width: @screen-sm-min) {
+    .row-training-resources .col-pricing-detail .panel {
+        border-left: 0;
+    }
+}
+
+.row-training-resources .col-pricing-detail {
+    padding-left: 0;
+    font-size: 16px;
+    line-height: 1.4;
+}
+
+.row-training-resources .col-pricing {
+    padding-right: 0;
+}
+
+.pricing-dotted-fork {
+    width: 33px;
+    height: 283px;
+    position: absolute;
+    top: 0;
+    left: 30px;
+}
+
+@media (min-width: @screen-md-min) {
+    .grunty-price-bg {
+        height: 100%;
+        background: url('../img/grunty-pricing.png') no-repeat bottom center;
+        background-size: 119px 144px;
+    }
+
+    .row-pricing-get-started, .row-training-devops, .row-training-resources {
+        padding-bottom: 10px;
+    }
+
+    .row-pricing-get-started .panel, .row-training-devops .panel {
+        margin-bottom: 10px;
+    }
+
+    .row-pricing-get-started .col-pricing .panel {
+        border-top-width: 2px;
+    }
+
+    .row-training-devops .col-pricing .panel {
+        border-bottom-width: 2px;
+    }
+
+    .row-pricing-get-started .col-pricing .panel-body, .row-training-devops .col-pricing .panel-body {
+        padding-right: 10px;
+        padding-left: 10px;
+        font-size: 16px;
+        line-height: 1.4;
+    }
+
+    .row-pricing-get-started .col-pricing-detail, .row-training-devops .col-pricing-detail {
+        padding-left: 0;
+    }
+
+    .row-pricing-get-started .col-pricing, .row-training-devops .col-pricing {
+        padding-right: 0;
+    }
+
+    .row-pricing-get-started .col-pricing-detail .panel, .row-training-devops .col-pricing-detail .panel {
+        border-left: 0;
+    }
+}
 
 .container > .row + .row                { padding-top: @padding-row-vertical-mobile; }
 .index-page .container > .row + .row    { padding-top: @padding-row-vertical-desktop; }
@@ -445,6 +590,21 @@ p a:not(.btn) {
         display: -webkit-flex;
     }
 }
+
+// Safari fix for misplaced columns - Safari treats :before and :after pseudo-elements as if they were real elements
+.row-equalize-col-height.row:before,
+.row-equalize-col-height.row:after {
+    content: normal; // IE doesn't support `initial`
+}
+
+.row-center-vertically {
+    display: flex;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    align-items: center;
+}
+
 .row-center-vertically-sm {
     @media (min-width: @screen-sm-min) {
         display: flex;
@@ -806,6 +966,14 @@ footer {
     }
 }
 
+#additional-services .table, #additional-services .table tr {
+    border: 2px solid @table-border-color !important;
+}
+
+#additional-services .table a {
+    text-decoration: underline;
+}
+
 
 //
 // Thumbnails
@@ -868,6 +1036,32 @@ h6, .h6 { .heading-margin-variant(0.68; 0.52; @line-height-h6); }
     margin-top: -15px;
 }
 
+.panel-training-preview {
+    font-size: 16px;
+    line-height: 1.4;
+
+    a {
+        color: #0FC0EF;
+        text-decoration: underline;
+    }
+
+    .author-thumbnail {
+        margin-right: 10px;
+    }
+}
+
+.training-sub-text {
+    .fa {
+        color: #194C5F;
+        margin-right: 5px;
+        margin-left: 30px;
+    }
+
+    .fa:first-child {
+        margin-left: 0px;
+    }
+}
+
 // Remove top and bottom margins from headings and paragraphs that are the first/last children in a row/column
 .section > .container > .row > div[class*="col-"] {
     > p, > h1, > h2, > h3, > h4, > h5, > h6 {
@@ -878,6 +1072,25 @@ h6, .h6 { .heading-margin-variant(0.68; 0.52; @line-height-h6); }
             margin-bottom: 0;
         }
     }
+}
+
+.big-price {
+    font-size: 72px;
+}
+
+.medium-price {
+    font-size: 36px;
+}
+
+.big-price, .medium-price {
+    font-weight: 700;
+    color: #FFF;
+    margin-bottom: 10px;
+    line-height: 1;
+}
+
+.big-price span, .medium-price span {
+    font-weight: 300;
 }
 
 
