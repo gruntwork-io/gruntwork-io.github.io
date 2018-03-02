@@ -443,6 +443,7 @@ p a:not(.btn) {
     background: url('../img/purple-bg-training.jpg') no-repeat;
     background-size: cover;
     height: 100%;
+    min-height: 213px;
 
     img {
         margin: 0 auto;
@@ -453,6 +454,7 @@ p a:not(.btn) {
     background: url('../img/orange-bg-training.jpg') no-repeat;
     background-size: cover;
     height: 100%;
+    min-height: 213px;
 
     img {
         margin: 0 auto;
@@ -463,9 +465,14 @@ p a:not(.btn) {
     background: url('../img/blue-bg-training.jpg') no-repeat;
     background-size: cover;
     height: 100%;
+    min-height: 213px;
+    position: relative;
 
     img {
-        margin: 0 auto;
+        position: absolute;
+        left: 50%;
+        bottom: 0;
+        margin-left: -56px;
     }
 }
 
@@ -1034,6 +1041,19 @@ h6, .h6 { .heading-margin-variant(0.68; 0.52; @line-height-h6); }
 
 .sub-page .section-hero h1 + p {
     margin-top: -15px;
+}
+
+.additional-services-pricing {
+    width: 50%;
+}
+
+.additional-services-link {
+    display: block;
+
+    @media (min-width: @screen-sm-min) {
+        display: inline;
+        margin-left: 30px;
+    }
 }
 
 .panel-training-preview {
