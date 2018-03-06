@@ -36,10 +36,10 @@
   docs_url: "https://github.com/gruntwork-io/module-ecs-public"
   full_url: "https://github.com/gruntwork-io/module-ecs"
   description: |
-    Deploy a best-practices ECS Cluster. Includes zero-downtime, rolling deployments, auto scaling, and experimental
-    support for CUDA on ECS.
+    Deploy a best-practices ECS Cluster and run Docker containers on it as ECS Services. Includes zero-downtime,
+    rolling deployments, auto scaling, and experimental support for CUDA on ECS.
 
-- name: "AMI Cluster"
+- name: "Auto Scaling Group"
   tags:
     - AWS
   icons:
@@ -50,8 +50,8 @@
   docs_url: "https://github.com/gruntwork-io/module-asg-public"
   full_url: "https://github.com/gruntwork-io/module-asg"
   description: |
-    Deploy Amazon Machine Images (AMIs) on top of an Auto Scaling Group. Supports zero-downtime, rolling deployment of
-    new AMI versions, load balancing, health checks, service discovery, and auto scaling.
+    Run stateless and stateful services on top of an Auto Scaling Group. Supports zero-downtime, rolling deployment,
+    attaching EBS volumes and ENIs, load balancing, health checks, service discovery, and auto scaling.
 
 - name: "Lambda"
   tags:
@@ -64,6 +64,18 @@
     Deploy and manage Lambda functions with Terraform. Automatically upload source code, configure environment variables,
     create an IAM Role, associate with a VPC. enable versioning/aliasing. Also supports scheduled Lambdas and dead letter
     targets.
+
+- name: "API Gateway"
+  tags:
+    - AWS
+  icons:
+    - title: Terraform
+      image: icon-terraform.png
+    - title: Go
+      image: icon-go.png
+  full_url: "https://github.com/gruntwork-io/package-sam"
+  description: |
+    Define APIs in Swagger, run them locally using SAM, and deploy them to production using Terraform and API Gateway.
 
 - name: "Security"
   tags:
@@ -81,7 +93,7 @@
   full_url: "https://github.com/gruntwork-io/module-security"
   description: |
     A collection of security best practices for managing secrets, credentials, and servers. Includes streamlined support
-    for CloudTrail, KMS, SSH key management via IAM, IAM Groups, and OS hardening.
+    for CloudTrail, KMS, SSH key management via IAM, IAM Groups, fail2ban, NTP, and OS hardening.
 
 - name: "Continuous Delivery"
   tags:
@@ -96,9 +108,9 @@
   docs_url: "https://github.com/gruntwork-io/module-ci-public"
   full_url: "https://github.com/gruntwork-io/module-ci"
   description: |
-    A collection of bash scripts and Terraform code that implement common CI tasks including building a Docker image,
-    building a Packer image, updating Terraform code, pushing to git, sharing or making AMIs public, and configuring
-    the build environment.
+    A collection of scripts and Terraform code that implement common CI tasks including running Jenkins, configuring
+    CircleCi, building a Docker image, building a Packer image, updating Terraform code, pushing to git, sharing or
+    making AMIs public, and configuring the build environment.
 
 - name: "Relational Database"
   tags:
