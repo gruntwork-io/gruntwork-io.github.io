@@ -117,7 +117,8 @@ $(function () {
   };
 
   var submitToFormSpree = function (data) {
-    submitButton.html('Loading...');
+    submitButton.html('Sending...');
+    submitButton.prop("disabled", true);
 
     var postParams = {
       url: 'https://api.formbucket.com/f/buk_7iB8j7vEJPW9ad2ClJwFfm5M',
@@ -128,12 +129,12 @@ $(function () {
 
     $.ajax(postParams).done(function() {
       inCall = false;
-      submitButton.html('Submit');
       window.location.replace('/thanks');
     }).fail(function(error) {
-      showFormError('Oops, something went wrong! Please try again.');
+      showFormError('Oops, something went wrong! Please try again. If the issue persists please email us directly at info@gruntwork.io');
       inCall = false;
       submitButton.html('Submit');
+      submitButton.prop("disabled", false);
     });
   };
 

@@ -1,0 +1,19 @@
+{% for resource in site.data.training-resources %}
+  <div class="row row-equalize-col-height row-training-devops{% if forloop.index0 > 0 %} padding-top-none{% endif %}">
+    <div class="col-xs-12 col-md-4 col-pricing text-center">
+      <a href="{{ resource.url }}" target="_blank" class="panel panel-default" style="display: block;">
+        <div class="panel-body training-{{ resource.bg_color }}-bg row-center-vertically">
+          <img src="{{ resource.image }}" alt="{{ resource.title }}" style="margin: 0 auto" />
+        </div>
+      </a>
+    </div>
+    <div class="col-xs-12 col-md-8 col-pricing-detail">
+      <div class="panel panel-default panel-light panel-training-preview">
+        <div class="panel-body">
+          <h2><a href="{{ resource.url }}" target="_blank">{{ resource.title }}</a></h2>
+          <p class="text-white">{{ resource.description }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endfor %}

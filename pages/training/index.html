@@ -1,12 +1,13 @@
 ---
 layout: default
-title: Gruntwork Training
-excerpt: Learn DevOps and infrastructure practices from the experts.
+title: DevOps Training Library
+excerpt: A collection of training video courses that teach you DevOps.
 permalink: /training/
 slug: training
-footer_heading: Sign up for Gruntwork Training now!
+footer_heading: Get access to the DevOps Training Library now!
 redirect_from:
   - /consulting-training/
+  - /devops-training-library/
 ---
 
 <div class="main">
@@ -15,11 +16,9 @@ redirect_from:
   </div>
   <div class="section section-dark">
     <div class="container">
+      {% include_relative _sub-hero.html %}
       {% include_relative _courses.html %}
-      {% include_relative _crash-courses.html %}
-      {% include_relative _workshops.html %}
-      {% include_relative _process.html %}
-      {% include_relative _resources.html %}
+      {% include_relative _more-info.html %}
     </div>
   </div>
 </div>

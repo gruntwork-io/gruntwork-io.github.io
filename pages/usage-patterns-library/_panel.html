@@ -6,7 +6,7 @@
       </a>
     </h3>
   </div>
-  <div id="{{ include.id }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="{{ include.id }}-heading">
+  <div id="{{ include.id }}" class="panel-collapse{% unless include.expanded == "true" %} collapse{% endunless %}" role="tabpanel" aria-labelledby="{{ include.id }}-heading">
     <div class="panel-body">
       <table class="table table-striped">
         <tbody>

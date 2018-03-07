@@ -1,52 +1,22 @@
-<div class="row row-page-header">
-  <div class="col-xs-12">
-    <h2>Types of training we offer</h2>
-    <p>We offer two types of training: <strong>Crash Courses</strong> and <strong>Workshops</strong>.</p>
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th style="width: 20%"></th>
-          <th style="width: 40%">Crash Course</th>
-          <th style="width: 40%">Workshop</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th>Overview</th>
-          <td>The fastest way to get started with a new technology</td>
-          <td>Longer, hands-on training sessions that allow you to go deeper with a new technology</td>
-        </tr>
-        <tr>
-          <th>Duration</th>
-          <td>1 - 2 hours</td>
-          <td>1 - 2 days</td>
-        </tr>
-        <tr>
-          <th>Location</th>
-          <td>Remotely via video conference</td>
-          <td>In person at your office</td>
-        </tr>
-        <tr>
-          <th>Training type</th>
-          <td>Instructor-led lectures and live-coding demonstrations</td>
-          <td>Instructor-led lectures, live coding demonstrations, and coding exercises you try on your own computer</td>
-        </tr>
-        <tr>
-          <th>Deep-dive</th>
-          <td>Not included</td>
-          <td>At the end of the workshop, spend 2 hours with the instructor doing a deep-dive on your company’s infrastructure to discuss how you can apply what you learned to your use cases</td>
-        </tr>
-        <tr>
-          <th>Support</th>
-          <td>Not included</td>
-          <td>Includes 5 hours of email support for follow-up questions, request code reviews, and so on</td>
-        </tr>
-        <tr>
-          <th>Resources</th>
-          <td>At the end of the course, you get the slide deck, sample code, a list of further reading, and a recording of the training session</td>
-          <td>At the end of the workshop, you get the slide deck, sample code, a list of further reading, and a recording of the training session</td>
-        </tr>
-      </tbody>
-    </table>
+<h2>Available courses</h2>
+{% for course in site.data.training-recorded %}
+  <div class="row row-equalize-col-height row-training-devops{% if forloop.index0 > 0 %} padding-top-none{% endif %}">
+      <div class="col-xs-12 col-md-4 col-pricing text-center">
+          <div class="panel panel-default">
+              <div class="panel-body training-{{ course.bg_color }}-bg row-center-vertically">
+                  <img src="{{ course.course_thumbnail }}" alt="{{ course.title }}" class="training-{{course.bg_color}}" style="height: {{ course.course_thumbnail_height }}px" />
+              </div>
+          </div>
+      </div>
+      <div class="col-xs-12 col-md-8 col-pricing-detail">
+          <div class="panel panel-default panel-light panel-training-preview">
+              <div class="panel-body training-panel-body">
+                  <h2 class="margin-bottom-none">{{ course.title }}</h2>
+                  <p class="training-sub-text text-muted"><i class="fa fa-play-circle-o" aria-hidden="true"></i> {{ course.videos }} Micro Videos <i class="fa fa-clock-o" aria-hidden="true"></i> {{ course.duration }}</p>
+                  <p class="text-white">{{ course.description }} <a href="{{ course.url }}" target="_blank">Preview the course</a></p>
+                  <p class="text-muted"><img src="{{ course.author_thumbnail }}" class="author-thumbnail" alt="{{ course.author }}" /> {{ course.author }}</p>
+              </div>
+          </div>
+      </div>
   </div>
-</div>
+{% endfor %}

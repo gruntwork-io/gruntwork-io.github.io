@@ -1,0 +1,43 @@
+<div class="row row-page-header">
+  <div class="col-xs-12">
+    <h2>The world experts in building reusable infrastructure modules</h2>
+    <p>
+      Need to deploy infrastructure (e.g., Elasticsearch, Kubernetes, DataDog) that's not already part of
+      the <a href="/infrastructure-as-code-library">Infrastructure as Code Library</a>? Gruntwork can help. We've built dozens of modules
+      across multiple clouds that are used in production by hundreds of companies and thousands of engineers. We can develop a new, reusable module for you, complete with documentation, example code, and automated
+      tests, and best of all, we'll provide support and maintenance for the module long-term!
+    </p>
+    <h3>Who requests custom modules?</h3>
+    <p>We build modules for:</p>
+    <ul>
+      <li><strong>Gruntwork Subscribers</strong> who need to run a new type of infrastructure.</li>
+      <li><strong>Independent Software Vendors</strong> who want to make it easy to install their software.</li>
+      <li><strong>Cloud Providers</strong> who want to make it easy to run infrastructure on their cloud.</li>
+    </ul>
+    <h3>Module design patterns</h3>
+    <p>
+      Check out the <a href="https://blog.gruntwork.io/reusable-composable-battle-tested-terraform-modules-9c2fb53bc034" target="_blank">Reusable,
+      composable, battle-tested Terraform modules</a> talk to learn how we design, build, and test modules. Or better
+      yet, have a look at our <a href="/infrastructure-as-code-library#open-source">open source modules</a>, and try
+      them out yourself!
+    </p>
+    <h2>Features</h2>
+    <div class="row" style="margin-top: 50px;">
+      {% for feature in site.data.library-features %}
+      <div class="col-xs-6 col-sm-4" style="margin-bottom:20px;">
+        <div class="pull-left text-center" style="width: 100px; margin-right: 10px;">
+          <img src="/assets/img/library-icons/library-feature-{{ forloop.index }}.png" alt="{{ feature.title }}" />
+        </div>
+        <div class="pull-left" style="max-width: 170px; font-size: 16px; line-height: 20px; height: 140px;">
+          <h6 style="margin: 5px 0 5px 0">{{ feature.title }}</h6>
+          <p>{{ feature.description }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <h2>Get started</h2>
+    <p>
+      <a href="/contact">Contact us</a> to let us know what modules you'd like us to build!
+    </p>
+  </div>
+</div>

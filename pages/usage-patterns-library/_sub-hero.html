@@ -1,0 +1,40 @@
+<div class="row row-page-header">
+  <div class="col-xs-12">
+    <h2>A new standard for architecture on AWS</h2>
+    <p>
+      The Usage Patterns Library is a collection of opinionated, production-ready patterns for building an
+      end-to-end tech stack on top of the <a href="/infrastructure-as-code-library">Infrastructure as Code Library</a>.
+      It includes patterns for just about everything you need—server cluster, load balancer, database, cache, network
+      topology, monitoring, alerting, CI/CD, secrets management, VPN, and more—all already wired together, 100%
+      backed by code, and tested in production with more than 50 customers.
+    </p>
+    <p>
+      You can either copy the patterns, customize them, and deploy everything yourself, or you can have Gruntwork do
+      the <a href="/initial-setup">initial setup and deployment</a> for you, setting up a standardized Reference
+      Architecture for you in just 1 day! Here's an example of the type of Architecture you can deploy from the Usage
+      Patterns Library:
+    </p>
+    <div class="text-center ref-arch" style="margin-top: 30px">
+      <a href="/assets/img/ref-arch/ref-arch-full.png" title="Click to see the full size image" target="_blank">
+        <img src="/assets/img/ref-arch/ref-arch-full-medium.png" alt="Gruntwork Reference Architecture">
+        <div class="ref-arch-overlay">
+          <i class="fa fa-search fa-3x" aria-hidden="true"></i>
+        </div>
+      </a>
+    </div>
+    <h2>Usage Patterns Library Features</h2>
+    <div class="row" style="margin-top: 50px;">
+      {% for feature in site.data.reference-architecture-features %}
+      <div class="col-xs-6 col-sm-4">
+        <div class="pull-left text-center" style="width: 100px; margin-right: 10px;">
+          <img src="/assets/img/reference-architecture-icons/reference-architecture-feature-{{ forloop.index }}.png" alt="{{ feature.title }}" />
+        </div>
+        <div class="pull-left" style="max-width: 170px; font-size: 16px; line-height: 20px; height: 160px">
+          <h6 style="margin: 5px 0 10px 0">{{ feature.title }}</h6>
+          <p>{{ feature.description }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
