@@ -29,7 +29,7 @@
             <th>Monthly cost</th>
             <td>$16,000 – $32,000 per month<br>(2 devs, $100k – $200k / year)</td>
             <td>$32,000 – $64,000 per month<br>(2 devs, $100 – $200 / hour)</td>
-            <td>$500 – $2,995 per month</td>
+            <td>$790 – $1,240 per month</td>
           </tr>
           <tr>
             <th>Docs, tests</th>
@@ -177,92 +177,6 @@
 
 - category_name: Licensing
   items:
-    - question: What is the Gruntwork Client License?
-      answer: |
-        <p>
-          When you subscribe to the <a href="/infrastructure-as-code-library">Infrastructure as Code Library</a>, you get one
-          <i>Client License</i> for the code. A Client License gives you access to 100% of the source code, allows you
-          to fork and modify the code as much as you want, and is perpetual, so you can keep using the code even if
-          you cancel your subscription.
-        </p>
-        <p>
-          A single Client License allows you to use the code up to the following limits (see the
-          <a href="/infrastructure-as-code-library">Infrastructure as Code Library</a> for a description of each item):
-        </p>
-        <table class="table table-striped">
-          <tbody>
-            <tr>
-              <th>Network Topology</th>
-              <td>10 VPCs</td>
-            </tr>
-            <tr>
-              <th>Monitoring &amp; Alerting</th>
-              <td>Unlimited</td>
-            </tr>
-            <tr>
-              <th>Docker Cluster</th>
-              <td>75 servers</td>
-            </tr>
-            <tr>
-              <th>AMI Cluster</th>
-              <td>75 servers</td>
-            </tr>
-            <tr>
-              <th>Lambda</th>
-              <td>75 functions</td>
-            </tr>
-            <tr>
-              <th>Security</th>
-              <td>Unlimited</td>
-            </tr>
-            <tr>
-              <th>Continuous Delivery</th>
-              <td>Unlimited</td>
-            </tr>
-            <tr>
-              <th>Relational Database</th>
-              <td>10 databases</td>
-            </tr>
-            <tr>
-              <th>Distributed Cache</th>
-              <td>10 caches</td>
-            </tr>
-            <tr>
-              <th>Stateful Server</th>
-              <td>75 servers</td>
-            </tr>
-            <tr>
-              <th>Static Assets</th>
-              <td>75 static websites</td>
-            </tr>
-            <tr>
-              <th>MongoDB</th>
-              <td>10 clusters</td>
-            </tr>
-            <tr>
-              <th>OpenVPN</th>
-              <td>10 servers</td>
-            </tr>
-            <tr>
-              <th>Messaging</th>
-              <td>Unlimited</td>
-            </tr>
-            <tr>
-              <th>ZooKeeper</th>
-              <td>10 clusters</td>
-            </tr>
-            <tr>
-              <th>Kafka</th>
-              <td>10 clusters</td>
-            </tr>
-          </tbody>
-        </table>
-        <p>
-          A single Client License should be enough to run most small to medium deployments. If you exceed any of these
-          limits, you must purchase another Client License. If your company has a non-standard usage pattern (e.g. you
-          use many VPCs, but few servers), let us know, and we can try to work out a licensing arrangement that better
-          fits your needs. Bulk discounts on Client Licenses are available for enterprises, resellers, and agencies.
-        </p>
 
     - question: What happens to my code if I cancel my subscription?
       answer: |
@@ -283,7 +197,7 @@
           <a href="/contact">contact us</a> to discuss licensing options.
         </p>
 
-- category_name: Infrastructure as Code Library and Reference Architecture
+- category_name: Infrastructure as Code Library and Usage Patterns Library
   items:
     - question: What do I do if I need infrastructure that isn't in the Infrastructure as Code Library?
       answer: |
@@ -292,13 +206,6 @@
           custom, one-off project completely unique to your company), we'd be happy to build it, add it to the
           Infrastructure as Code Library, and provide support, maintenance, and updates for it long-term! For example, we're
           currently looking into adding ElasticSearch, Kubernetes, and DataDog to our Library and are looking for
-          companies willing to fund those projects. We charge an hourly consulting rate for our work and if more than
-          one customer is interested in the same project, we're happy to split the cost amongst all of you to make it
-          cheaper for everyone! Please <a href="/contact">contact us</a> to let us know what you're looking for!
-        </p>
-
-    - question: What do I do if I need infrastructure that isn't in the Reference Architecture?
-      answer: |
-        <p>
-          See <a href="#what-do-i-do-if-i-need-infrastructure-that-isn-t-in-the-infrastructure-as-code-library">What do I do if I need infrastructure that isn't in the Infrastructure as Code Library?</a>.
+          companies willing to fund those projects. See <a href="/custom-module-development">Custom Module Development</a>
+          for more info.
         </p>
