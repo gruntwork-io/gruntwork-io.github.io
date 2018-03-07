@@ -443,7 +443,7 @@ p a:not(.btn) {
     background: url('../img/purple-bg-training.jpg') no-repeat;
     background-size: cover;
     height: 100%;
-    min-height: 213px;
+    min-height: 260px;
 
     img {
         margin: 0 auto;
@@ -454,7 +454,7 @@ p a:not(.btn) {
     background: url('../img/orange-bg-training.jpg') no-repeat;
     background-size: cover;
     height: 100%;
-    min-height: 213px;
+    min-height: 260px;
 
     img {
         margin: 0 auto;
@@ -462,17 +462,25 @@ p a:not(.btn) {
 }
 
 .training-blue-bg {
-    background: url('../img/blue-bg-training.jpg') no-repeat;
+    background: url('../img/blue-bg-training.jpg') no-repeat center center;
     background-size: cover;
     height: 100%;
-    min-height: 213px;
+    min-height: 260px;
     position: relative;
 
     img.training-blue {
         position: absolute;
         left: 50%;
         bottom: 0;
-        margin-left: -56px;
+        margin-left: -72px;
+    }
+}
+
+.training-panel-body {
+    padding: 20px;
+
+    @media (min-width: @screen-sm-min) {
+        padding: 40px;
     }
 }
 
