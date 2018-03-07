@@ -12,43 +12,13 @@
       delivery, Terraform, AWS, Packer, Docker, and much more. And not only that, by the end of the course, you'll also
       have a fully working end-to-end infrastructure defined as code and deployed in your AWS account!
     </p>
-    <h2>Agenda</h2>
-    <h3>Day 1</h3>
-    <table class="table table-striped">
-      {% for item in site.data.devops-bootcamp.day_one %}
-        <tr>
-          <th style="width: 30%;">{{ item.title }}</th>
-          <td>{{ item.description }}</td>
-        </tr>
-      {% endfor %}
-    </table>
-    <h3>Day 2</h3>
-    <table class="table table-striped">
-      {% for item in site.data.devops-bootcamp.day_two %}
-        <tr>
-          <th style="width: 30%;">{{ item.title }}</th>
-          <td>{{ item.description }}</td>
-        </tr>
-      {% endfor %}
-    </table>
-    <h3>Day 3</h3>
-    <table class="table table-striped">
-      {% for item in site.data.devops-bootcamp.day_three %}
-        <tr>
-          <th style="width: 30%;">{{ item.title }}</th>
-          <td>{{ item.description }}</td>
-        </tr>
-      {% endfor %}
-    </table>
-    <h2>Requirements</h2>
-    <table class="table table-striped">
-      {% for item in site.data.devops-bootcamp.requirements %}
-        <tr>
-          <th style="width: 30%;">{{ item.title }}</th>
-          <td>{{ item.description }}</td>
-        </tr>
-      {% endfor %}
-    </table>
+    <h2>Curriculum</h2>
+    <div class="panel-group" id="bootcamp-accordion" role="tablist" aria-multiselectable="true">
+      {% include_relative _panel.html id="day_one" title="Day 1" features=site.data.devops-bootcamp.day_one expanded="true" %}
+      {% include_relative _panel.html id="day_two" title="Day 2" features=site.data.devops-bootcamp.day_two expanded="false" %}
+      {% include_relative _panel.html id="day_three" title="Day 3" features=site.data.devops-bootcamp.day_three expanded="false" %}
+      {% include_relative _panel.html id="requirements" title="Requirements" features=site.data.devops-bootcamp.requirements expanded="false" %}
+    </div>
     <h2>Pricing</h2>
     <p>
       You can find the pricing for the DevOps Bootcamp on our <a href="/pricing">pricing page</a>.
