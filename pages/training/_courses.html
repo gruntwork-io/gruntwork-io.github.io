@@ -1,0 +1,22 @@
+<h2>Available courses</h2>
+{% for course in site.data.training-recorded %}
+  <div class="row row-equalize-col-height row-training-devops{% if forloop.index0 > 0 %} padding-top-none{% endif %}">
+      <div class="col-xs-12 col-md-4 col-pricing text-center">
+          <div class="panel panel-default">
+              <div class="panel-body training-{{ course.bg_color }}-bg row-center-vertically">
+                  <img src="{{ course.course_thumbnail }}" alt="{{ course.title }}" class="training-{{course.bg_color}}" />
+              </div>
+          </div>
+      </div>
+      <div class="col-xs-12 col-md-8 col-pricing-detail">
+          <div class="panel panel-default panel-light panel-training-preview">
+              <div class="panel-body">
+                  <h2 class="margin-bottom-none">{{ course.title }}</h2>
+                  <p class="training-sub-text text-muted"><i class="fa fa-play-circle-o" aria-hidden="true"></i> {{ course.videos }} Micro Videos <i class="fa fa-clock-o" aria-hidden="true"></i> {{ course.duration }}</p>
+                  <p class="text-white">{{ course.description }} <a href="{{ course.url }}" target="_blank">Preview the course</a></p>
+                  <p class="text-muted"><img src="{{ course.author_thumbnail }}" class="author-thumbnail" alt="{{ course.author }}" /> {{ course.author }}</p>
+              </div>
+          </div>
+      </div>
+  </div>
+{% endfor %}
