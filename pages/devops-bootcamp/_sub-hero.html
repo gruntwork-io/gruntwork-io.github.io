@@ -1,0 +1,57 @@
+<div class="row row-page-header">
+  <div class="col-xs-12">
+    <h2>The fastest way to DevOps</h2>
+    <p>
+      Migrating to the cloud? Going through a DevOps transformation? Launching a new product and want to "do it right"
+      this time? The Gruntwork DevOps Bootcamp is the fastest way to make it happen. It's an intense, 3-day program
+      that will transform how you run your infrastructure and deliver software.
+    </p>
+    <p>
+      This is not a fluffy, high-level, theoretical course, but a hands-on session where you will be coding all day
+      long with a Gruntwork engineer. You'll learn about infrastructure as code, continuous integration, continuous
+      delivery, Terraform, AWS, Packer, Docker, and much more. And not only that, by the end of the course, you'll also
+      have a fully working end-to-end infrastructure defined as code and deployed in your AWS account!
+    </p>
+    <h2>Agenda</h2>
+    <h3>Day 1</h3>
+    <table class="table table-striped">
+      {% for item in site.data.devops-bootcamp.day_one %}
+        <tr>
+          <th style="width: 30%;">{{ item.title }}</th>
+          <td>{{ item.description }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+    <h3>Day 2</h3>
+    <table class="table table-striped">
+      {% for item in site.data.devops-bootcamp.day_two %}
+        <tr>
+          <th style="width: 30%;">{{ item.title }}</th>
+          <td>{{ item.description }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+    <h3>Day 3</h3>
+    <table class="table table-striped">
+      {% for item in site.data.devops-bootcamp.day_three %}
+        <tr>
+          <th style="width: 30%;">{{ item.title }}</th>
+          <td>{{ item.description }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+    <h2>Requirements</h2>
+    <table class="table table-striped">
+      {% for item in site.data.devops-bootcamp.requirements %}
+        <tr>
+          <th style="width: 30%;">{{ item.title }}</th>
+          <td>{{ item.description }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+    <h2>Pricing</h2>
+    <p>
+      You can find the pricing for the DevOps Bootcamp on our <a href="/pricing">pricing page</a>.
+    </p>
+  </div>
+</div>
