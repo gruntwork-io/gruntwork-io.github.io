@@ -1,50 +1,66 @@
 <div class="row row-pricing-subscription" style="padding-top: 30px;">
   <div class="col-xs-12">
-    <ul id="tabs-pricing" class="nav nav-tabs tabs-pricing">
+    <ul id="tabs-pricing" class="nav nav-tabs tabs-pricing" role="tablist">
       <li class="active">
-        <a href="#" data-toggle="tab" data-target="#tab-gruntwork-subscription">Gruntwork Subscription</a>
+        <a href="#" role="tab" data-toggle="tab" data-target="#tab-gruntwork-subscription" aria-controls="tab-gruntwork-subscription" aria-selected="true">Gruntwork Subscription</a>
       </li>
       <li>
-        <a href="#" data-toggle="tab" data-target="#tab-subscription-dedicated-support">Subscription + Dedicated Support</a>
+        <a href="#" role="tab" data-toggle="tab" data-target="#tab-subscription-dedicated-support" aria-controls="tab-subscription-dedicated-support">Subscription + Dedicated Support</a>
       </li>
     </ul>
-    <div id="tabs-pricing-content" class="tab-content tabs-pricing-content">
-      <div class="tab-pane active" id="tab-gruntwork-subscription">
-        <h2>For teams of all sizes:</h2>
-        <p>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi qui.</p>
-        <p>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi qui.</p>
+    <div id="tabs-pricing-content" class="tab-content tabs-pricing-content panel-light">
+      <div class="tab-pane active" id="tab-gruntwork-subscription" role="tabpanel">
+        <h2 class="text-center" style="margin-top: 0;">For teams of all sizes:</h2>
+        <div class="row">
+          <div class="col-xs-12 col-md-6">
+            <div class="panel panel-default panel-dark">
+              <div class="panel-body text-center">
+                <h3 style="margin-bottom: 10px;">Up to 10 users</h3>
+                <p class="big-price"><span>$</span>500</p>
+                <h6 class="help-block" style="margin-bottom: 0;">monthly flat fee</h6>
+                <p class="text-muted small">special price for small teams</p>
+                <p style="margin-bottom: 10px;"><a href="/contact" class="btn btn-info" role="button">Get Started</a></p>
+                <p class="text-muted small">Annual contract, billed monthly.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-xs-12 col-md-6">
+            <div class="panel panel-default panel-dark">
+              <div class="panel-body text-center">
+                <h3 style="margin-bottom: 10px;">Users 11 - 50</h3>
+                <p class="big-price"><span>+ $</span>79</p>
+                <h6 class="help-block" style="margin-bottom: 0;">per user* per month</h6>
+                <p class="text-muted small">for larger and expanding teams</p>
+                <p style="margin-bottom: 10px;"><a href="/contact" class="btn btn-info" role="button">Get Started</a></p>
+                <p class="text-muted small">Annual contract, billed monthly.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-xs-12">
+            <div class="panel panel-default panel-dark">
+              <div class="panel-body text-center">
+                <h3 style="margin-bottom: 10px;">Reference Architecture</h3>
+                <p class="big-price"><span>+ $</span>4950</p>
+                <h6 class="help-block" style="margin-bottom: 0;">one-time, flat fee</h6>
+                <p class="text-muted small">We deploy your end-to-end tech stack in AWS in 1 day.</p>
+                <p style="margin-bottom: 0;"><a href="/contact" class="btn btn-info" role="button">Get Started</a></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="text-muted text-center small" style="margin-bottom: 0;">*A user is any human or machine user that makes use of Gruntwork's services</p>
       </div>
-      <div class="tab-pane" id="tab-subscription-dedicated-support">
+      <div class="tab-pane" id="tab-subscription-dedicated-support" role="tabpanel">
         <p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee. Qui photo booth letterpress, commodo enim craft beer mlkshk aliquip jean shorts ullamco ad vinyl cillum PBR. Homo nostrud organic, assumenda labore aesthetic magna delectus mollit. Keytar helvetica VHS salvia yr, vero magna velit sapiente labore stumptown. Vegan fanny pack odio cillum wes anderson 8-bit, sustainable jean shorts beard ut DIY ethical culpa terry richardson biodiesel. Art party scenester stumptown, tumblr butcher vero sint qui sapiente accusamus tattooed echo park.</p>
         <p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee. Qui photo booth letterpress, commodo enim craft beer mlkshk aliquip jean shorts ullamco ad vinyl cillum PBR. Homo nostrud organic, assumenda labore aesthetic magna delectus mollit. Keytar helvetica VHS salvia yr, vero magna velit sapiente labore stumptown. Vegan fanny pack odio cillum wes anderson 8-bit, sustainable jean shorts beard ut DIY ethical culpa terry richardson biodiesel. Art party scenester stumptown, tumblr butcher vero sint qui sapiente accusamus tattooed echo park.</p>
       </div>
     </div>
   </div>
-</div>
-
-<div class="row row-equalize-col-height row-pricing-get-started" style="padding-top: 30px;">
-    <div class="col-xs-12 col-md-9 col-md-push-3 col-pricing-detail">
-        <div class="panel panel-default panel-light">
-            <div class="panel-body">
-                <h2>Gruntwork Subscription</h2>
-                <ul class="check-list">
-                    <li><a href="/infrastructure-as-code-library" class="text-white">Infrastructure as Code Library</a><br />A collection of reusable, battle-tested, production-ready infrastructure code.</li>
-                    <li><a href="/usage-patterns-library" class="text-white">Usage Patterns Library</a><br />A collection of opinionated, production-ready patterns for building an end-to-end tech stack on top of the Infrastructure as Code Library.</li>
-                    <li><a href="/training" class="text-white">Training Library</a><br />A collection of training video courses that teach you DevOps.</li>
-                    <li><a href="https://community.gruntwork.io/" target="_blank" class="text-white">Community Forum</a><br />Get support via our public community forum. 2 Business Day SLA.</li>
-                </ul>
-            </div>
-        </div>
+  <div class="col-xs-12" style="margin-top: 30px;">
+    <div class="panel panel-default panel-light">
+      <div class="panel-body text-center text-white" style="padding: 30px;">
+        <p>51+ users? We offer discounts for enterprise teams. <a href="/contact">Contact Us</a></p>
+      </div>
     </div>
-    <div class="col-xs-12 col-md-3 col-md-pull-9 col-pricing text-center">
-        <div class="panel panel-default">
-            <div class="panel-body grunty-price-bg">
-                <p class="big-price"><span>$</span>79</p>
-                <p class="text-white" style="margin-bottom: 0;">/ user / month</p>
-                <p style="color: #999;">10 users minimum<br /> annual contract</p>
-                <a href="/contact" class="btn btn-info" role="button">Get Started</a>
-            </div>
-        </div>
-    </div>
+  </div>
 </div>
-

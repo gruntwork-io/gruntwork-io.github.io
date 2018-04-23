@@ -402,6 +402,9 @@ p a:not(.btn) {
 .panel {
     border-width: 2px;
 }
+.panel-dark {
+    background-color: #1d252f;
+}
 .panel-light {
     background-color: #242e3a;
 }
@@ -512,7 +515,7 @@ p a:not(.btn) {
 .tabs-pricing > li.active > a:focus {
     border-width: 2px;
     border-color: #194c5f;
-    background-color: #202933;
+    background-color: #242e3a;
     border-bottom: 0 none;
     color: #fff;
 }
@@ -524,10 +527,12 @@ p a:not(.btn) {
 
 .tabs-pricing-content {
     margin-top: 0;
-    padding: 30px;
-    background-color: #202933;
     border: 2px solid #194C5F;
     border-top: 0 none;
+}
+
+.tabs-pricing-content .tab-pane {
+    padding: 50px;
 }
 
 .row-pricing-get-started, .row-training-devops, .row-training-resources {
