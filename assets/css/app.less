@@ -484,6 +484,52 @@ p a:not(.btn) {
     }
 }
 
+.tabs-pricing {
+    margin-bottom: 0;
+    display: flex;
+    justify-content: space-evenly;
+    border-width: 2px;
+    border-color: #194c5f;
+}
+
+.tabs-pricing > li {
+    margin-bottom: -2px;
+    flex: 1;
+}
+
+.tabs-pricing > li + li {
+    margin-left: -2px;
+}
+
+.tabs-pricing > li > a {
+    margin-right: 0;
+    text-align: center;
+    font-size: 22px;
+}
+
+.tabs-pricing > li.active > a,
+.tabs-pricing > li.active > a:hover,
+.tabs-pricing > li.active > a:focus {
+    border-width: 2px;
+    border-color: #194c5f;
+    background-color: #202933;
+    border-bottom: 0 none;
+    color: #fff;
+}
+
+.tabs-pricing > li:not(.active) > a {
+    border-width: 2px;
+    border-color: #194c5f;
+}
+
+.tabs-pricing-content {
+    margin-top: 0;
+    padding: 30px;
+    background-color: #202933;
+    border: 2px solid #194C5F;
+    border-top: 0 none;
+}
+
 .row-pricing-get-started, .row-training-devops, .row-training-resources {
     padding-bottom: 30px;
 }
