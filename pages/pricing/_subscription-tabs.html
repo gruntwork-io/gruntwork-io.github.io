@@ -10,15 +10,15 @@
     </ul>
     <div id="tabs-pricing-content" class="tab-content tabs-primary-content panel-light">
       <div class="tab-pane active" id="tab-gruntwork-subscription" role="tabpanel">
-        <h2 class="text-center" style="margin-top: 0;">For teams of all sizes:</h2>
+        <h2 class="text-center" style="margin-top: 0;">For teams of all sizes: {{ page.test }}</h2>
         <div class="row">
           <div class="col-xs-12 col-md-6">
             <div class="panel panel-default panel-dark">
               <div class="panel-body text-center">
-                <h3 style="margin-bottom: 10px;">Up to 10 users</h3>
-                <p class="big-price"><span>$</span>500</p>
-                <h6 class="help-block" style="margin-bottom: 0;">monthly flat fee</h6>
-                <p class="text-muted small">special price for small teams</p>
+                <h3 style="margin-bottom: 10px;">{{ site.data.pricing.tier1.title }}</h3>
+                <p class="big-price"><span>$</span>{{ site.data.pricing.tier1.price[0] }}</p>
+                <h6 class="help-block" style="margin-bottom: 0;">{{ site.data.pricing.tier1.details }}</h6>
+                <p class="text-muted small">{{ site.data.pricing.tier1.description }}</p>
                 <p style="margin-bottom: 10px;"><a href="/contact" class="btn btn-info" role="button">Get Started</a></p>
                 <p class="text-muted small">Annual contract, billed monthly.</p>
               </div>
@@ -27,10 +27,10 @@
           <div class="col-xs-12 col-md-6">
             <div class="panel panel-default panel-dark">
               <div class="panel-body text-center">
-                <h3 style="margin-bottom: 10px;">Users 11 - 50</h3>
-                <p class="big-price"><span>+ $</span>79</p>
-                <h6 class="help-block" style="margin-bottom: 0;">per user* per month</h6>
-                <p class="text-muted small">for larger and expanding teams</p>
+                <h3 style="margin-bottom: 10px;">{{ site.data.pricing.tier2.title }}</h3>
+                <p class="big-price"><span>+ $</span>{{ site.data.pricing.tier2.price[0] }}</p>
+                <h6 class="help-block" style="margin-bottom: 0;">{{ site.data.pricing.tier2.details }}</h6>
+                <p class="text-muted small">{{ site.data.pricing.tier2.description }}</p>
                 <p style="margin-bottom: 10px;"><a href="/contact" class="btn btn-info" role="button">Get Started</a></p>
                 <p class="text-muted small">Annual contract, billed monthly.</p>
               </div>
@@ -39,10 +39,10 @@
           <div class="col-xs-12">
             <div class="panel panel-default panel-dark">
               <div class="panel-body text-center">
-                <h3 style="margin-bottom: 10px;">Reference Architecture</h3>
-                <p class="big-price"><span>+ $</span>4950</p>
-                <h6 class="help-block" style="margin-bottom: 0;">one-time, flat fee</h6>
-                <p class="text-muted small">We deploy your end-to-end tech stack in AWS in 1 day.</p>
+                <h3 style="margin-bottom: 10px;">{{ site.data.pricing.tier3.title }}</h3>
+                <p class="big-price"><span>+ $</span>{{ site.data.pricing.tier3.price }}</p>
+                <h6 class="help-block" style="margin-bottom: 0;">{{ site.data.pricing.tier3.details }}</h6>
+                <p class="text-muted small">{{ site.data.pricing.tier3.description }}</p>
                 <p style="margin-bottom: 0;"><a href="/contact" class="btn btn-info" role="button">Get Started</a></p>
               </div>
             </div>
@@ -56,10 +56,10 @@
           <div class="col-xs-12 col-md-6">
             <div class="panel panel-default panel-dark">
               <div class="panel-body text-center">
-                <h3 style="margin-bottom: 10px;">Up to 10 users</h3>
-                <p class="big-price"><span>$</span>890</p>
-                <h6 class="help-block" style="margin-bottom: 0;">monthly flat fee</h6>
-                <p class="text-muted small">special price for small teams</p>
+                <h3 style="margin-bottom: 10px;">{{ site.data.pricing.tier1.title }}</h3>
+                <p class="big-price"><span>$</span>{{ site.data.pricing.tier1.price[1] }}</p>
+                <h6 class="help-block" style="margin-bottom: 0;">{{ site.data.pricing.tier1.details }}</h6>
+                <p class="text-muted small">{{ site.data.pricing.tier1.description }}</p>
                 <p style="margin-bottom: 10px;"><a href="/contact" class="btn btn-info" role="button">Get Started</a></p>
                 <p class="text-muted small">Annual contract, billed monthly.</p>
               </div>
@@ -68,10 +68,10 @@
           <div class="col-xs-12 col-md-6">
             <div class="panel panel-default panel-dark">
               <div class="panel-body text-center">
-                <h3 style="margin-bottom: 10px;">Users 11 - 50</h3>
-                <p class="big-price"><span>+ $</span>104</p>
-                <h6 class="help-block" style="margin-bottom: 0;">per user* per month</h6>
-                <p class="text-muted small">for larger and expanding teams</p>
+                <h3 style="margin-bottom: 10px;">{{ site.data.pricing.tier2.title }}</h3>
+                <p class="big-price"><span>+ $</span>{{ site.data.pricing.tier2.price[1] }}</p>
+                <h6 class="help-block" style="margin-bottom: 0;">{{ site.data.pricing.tier2.details }}</h6>
+                <p class="text-muted small">{{ site.data.pricing.tier2.description }}</p>
                 <p style="margin-bottom: 10px;"><a href="/contact" class="btn btn-info" role="button">Get Started</a></p>
                 <p class="text-muted small">Annual contract, billed monthly.</p>
               </div>
@@ -80,10 +80,10 @@
           <div class="col-xs-12">
             <div class="panel panel-default panel-dark">
               <div class="panel-body text-center">
-                <h3 style="margin-bottom: 10px;">Reference Architecture</h3>
-                <p class="big-price"><span>+ $</span>4950</p>
-                <h6 class="help-block" style="margin-bottom: 0;">one-time, flat fee</h6>
-                <p class="text-muted small">We deploy your end-to-end tech stack in AWS in 1 day.</p>
+                <h3 style="margin-bottom: 10px;">{{ site.data.pricing.tier3.title }}</h3>
+                <p class="big-price"><span>+ $</span>{{ site.data.pricing.tier3.price }}</p>
+                <h6 class="help-block" style="margin-bottom: 0;">{{ site.data.pricing.tier3.details }}</h6>
+                <p class="text-muted small">{{ site.data.pricing.tier3.description }}</p>
                 <p style="margin-bottom: 0;"><a href="/contact" class="btn btn-info" role="button">Get Started</a></p>
               </div>
             </div>
