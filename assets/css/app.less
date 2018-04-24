@@ -487,54 +487,6 @@ p a:not(.btn) {
     }
 }
 
-.tabs-pricing {
-    margin-bottom: 0;
-    display: flex;
-    justify-content: space-evenly;
-    border-width: 2px;
-    border-color: #194c5f;
-}
-
-.tabs-pricing > li {
-    margin-bottom: -2px;
-    flex: 1;
-}
-
-.tabs-pricing > li + li {
-    margin-left: -2px;
-}
-
-.tabs-pricing > li > a {
-    margin-right: 0;
-    text-align: center;
-    font-size: 22px;
-}
-
-.tabs-pricing > li.active > a,
-.tabs-pricing > li.active > a:hover,
-.tabs-pricing > li.active > a:focus {
-    border-width: 2px;
-    border-color: #194c5f;
-    background-color: #242e3a;
-    border-bottom: 0 none;
-    color: #fff;
-}
-
-.tabs-pricing > li:not(.active) > a {
-    border-width: 2px;
-    border-color: #194c5f;
-}
-
-.tabs-pricing-content {
-    margin-top: 0;
-    border: 2px solid #194C5F;
-    border-top: 0 none;
-}
-
-.tabs-pricing-content .tab-pane {
-    padding: 50px;
-}
-
 .row-pricing-get-started, .row-training-devops, .row-training-resources {
     padding-bottom: 30px;
 }
@@ -563,6 +515,11 @@ p a:not(.btn) {
         font-size: 36px;
         color: #194C5F;
     }
+}
+
+.pricing-calc-results {
+    background-color: #194C5F;
+    padding: 30px;
 }
 
 @media (min-width: @screen-sm-min) {
@@ -971,6 +928,77 @@ footer {
     }
 }
 
+//
+// Tabs
+// ==================================================
+
+.tabs-primary {
+    margin-bottom: 0;
+    display: flex;
+    justify-content: space-evenly;
+    border-width: 2px;
+    border-color: #194c5f;
+}
+
+.tabs-primary > li {
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+    flex: 1 1 auto;
+    margin-bottom: -2px;
+}
+
+.tabs-primary > li + li {
+    margin-left: -2px;
+}
+
+.tabs-primary > li > a {
+    margin-right: 0;
+    text-align: center;
+    font-size: 17px;
+    flex: 1 1 auto;
+    @media (min-width: @screen-md-min) {
+        font-size: 22px;
+    }
+}
+.tabs-primary.tabs-small > li > a {
+    font-size: 18px;
+}
+
+.tabs-primary > li.active > a,
+.tabs-primary > li.active > a:hover,
+.tabs-primary > li.active > a:focus {
+    border-width: 2px;
+    border-color: #194c5f;
+    background-color: #242e3a;
+    border-bottom: 0 none;
+    color: #fff;
+}
+
+.tabs-primary > li:not(.active) > a {
+    border-width: 2px;
+    border-color: #194c5f;
+}
+
+.tabs-primary-content {
+    margin-top: 0;
+    border: 2px solid #194C5F;
+    border-top: 0 none;
+}
+
+.tabs-primary-content .tab-pane {
+    padding: 15px;
+    @media (min-width: @screen-sm-min) {
+       padding: 50px;
+    }
+}
+
+.tab-content.tab-content-small .tab-pane {
+    padding: 25px;
+    @media (min-width: @screen-sm-min) {
+        padding: 30px;
+    }
+}
 
 //
 // Tables
@@ -1170,14 +1198,18 @@ h6, .h6 { .heading-margin-variant(0.68; 0.52; @line-height-h6); }
     font-size: 36px;
 }
 
-.big-price, .medium-price {
+.small-price {
+    font-size: 26px;
+}
+
+.big-price, .medium-price, .small-price {
     font-weight: 700;
     color: #FFF;
     margin-bottom: 10px;
     line-height: 1;
 }
 
-.big-price span, .medium-price span {
+.big-price span, .medium-price span, .small-price span {
     font-weight: 300;
 }
 
@@ -1676,6 +1708,13 @@ input[type="radio"] .styled:checked + label::after {
 
 .tooltip-inner {
     text-align: left;
+}
+
+.number-input {
+    font-size: 125%;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 
