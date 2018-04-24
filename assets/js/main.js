@@ -148,3 +148,56 @@ $('#ref-arch-accordion').on('show.bs.collapse', function (event) {
 $('#ref-arch-accordion').on('hide.bs.collapse', function (event) {
   $(event.target).parent().find(".fa-caret-down").removeClass("fa-caret-down").addClass("fa-caret-right");
 });
+
+/* Pricing calculator */
+$(function () {
+  var current = '#tab-subscription'
+  var data = {
+    "#tab-subscription": {
+      "total": 0,
+      "average": 0
+    },
+    "#tab-support": {
+      "total": 0,
+      "average": 0
+    }
+  }
+
+  function updateResults(key='') {
+    if (!key) key = current;
+    else current = key;
+    $('[data-pricing-calc="total"]').text(data[key]['total'] || 0);
+    $('[data-pricing-calc="average"]').text(data[key]['average'] || 0);
+  }
+
+  $('[data-pricing-calc="button"]').on('click', function (event) {
+    event.preventDefault();
+    var users = $(current).find('[data-pricing-calc="input"]').val();
+    calculate(users);
+    updateResults();
+  });
+
+  $('#pricing-calc-tabs').on('show.bs.tab', function (event) {
+    updateResults(event.target.dataset['target']);
+  });
+
+  function calculate(users=0) {
+    if (users < 1) return;
+    var total = 0;
+    switch (current) {
+      case '#tab-support':
+        if (users <= 10) total = 890;
+        else if (users <= 50) total = 890 + (users - 10) * 104;
+        else alert('Enterprise');
+        break;
+      default:
+        if (users <= 10) total = 500;
+        else if (users <= 50) total = 500 + (users - 10) * 79;
+        else alert('Enterprise');
+    }
+    data[current]['total'] = total;
+    data[current]['average'] = Math.floor(total / users);
+  }
+
+  updateResults();
+});

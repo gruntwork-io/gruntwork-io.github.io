@@ -6,7 +6,7 @@
         <h5>What will my Gruntwork Subscription cost?</h5>
         <p>Calculate your monthly price for your team size.</p>
         <br>
-        <ul id="tabs-pricing-calc" class="nav nav-tabs tabs-primary tabs-small" role="tablist">
+        <ul id="pricing-calc-tabs" class="nav nav-tabs tabs-primary tabs-small" role="tablist">
           <li class="active">
             <a href="#" role="tab" data-toggle="tab" data-target="#tab-subscription" aria-controls="tab-subscription" aria-selected="true">Subscription</a>
           </li>
@@ -14,24 +14,24 @@
             <a href="#" role="tab" data-toggle="tab" data-target="#tab-support" aria-controls="tab-support">+ Dedicated Support</a>
           </li>
         </ul>
-        <div id="tabs-pricing-calc" class="tab-content tab-content-small tabs-primary-content panel-light">
+        <div id="pricing-calc" class="tab-content tab-content-small tabs-primary-content panel-light">
           <div class="tab-pane text-center active" id="tab-subscription" role="tabpanel">
             <h3 style="margin: 0;">Pricing Calculator</h3>
             <p>How many users on on your team?</p>
-            <input type="number" class="form-control number-input text-center" value="0" style="margin-bottom: 20px;">
-            <button type="button" class="btn btn-primary">Calculate Price</button>
+            <input type="number" class="form-control number-input text-center" min="0" data-pricing-calc="input" value="0" style="margin-bottom: 20px;">
+            <button type="button" class="btn btn-primary" data-pricing-calc="button">Calculate Price</button>
           </div>
           <div class="tab-pane text-center" id="tab-support" role="tabpanel">
             <h3 style="margin: 0;">Pricing Calculator</h3>
             <p>How many users on on your team?</p>
-            <input type="number" class="form-control number-input text-center" value="0" style="margin-bottom: 20px;">
-            <button type="button" class="btn btn-primary">Calculate Price</button>
+            <input type="number" class="form-control number-input text-center" min="0" data-pricing-calc="input" value="0" style="margin-bottom: 20px;">
+            <button type="button" class="btn btn-primary" data-pricing-calc="button">Calculate Price</button>
           </div>
           <div class="pricing-calc-results text-center">
             <h5 style="margin-top: 0;"><strong>Your Price</strong></h5>
-            <p class="medium-price" style="margin-bottom: 0;"><span>$</span> 500</p>
+            <p class="medium-price" style="margin-bottom: 0;"><span>$</span> <span data-pricing-calc="total"></span></p>
             <p class="text-muted small">total per month</p>
-            <p class="small-price" style="margin-bottom: 0;"><span>$</span> 71.43</p>
+            <p class="small-price" style="margin-bottom: 0;"><span>$</span> <span data-pricing-calc="average"></span></p>
             <p class="text-muted small">average price per user</p>
           </div>
         </div>
