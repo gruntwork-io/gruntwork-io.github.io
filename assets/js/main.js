@@ -184,16 +184,17 @@ $(function () {
   function calculate(users=0) {
     if (users < 1) return;
     var total = 0;
+    $('[data-pricing-calc="alert"]').hide();
     switch (current) {
       case '#tab-support':
         if (users <= 10) total = 890;
         else if (users <= 50) total = 890 + (users - 10) * 104;
-        else alert('Enterprise');
+        else $('[data-pricing-calc="alert"]').show();
         break;
       default:
         if (users <= 10) total = 500;
         else if (users <= 50) total = 500 + (users - 10) * 79;
-        else alert('Enterprise');
+        else $('[data-pricing-calc="alert"]').show();
     }
     data[current]['total'] = total;
     data[current]['average'] = Math.floor(total / users);
