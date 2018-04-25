@@ -981,6 +981,7 @@ footer {
 }
 
 .tabs-primary-content {
+    position: relative;
     margin-top: 0;
     border: 2px solid #194C5F;
     border-top: 0 none;
@@ -1715,6 +1716,38 @@ input[type="radio"] .styled:checked + label::after {
     width: 50%;
     margin-left: auto;
     margin-right: auto;
+}
+
+.grunty-confident {
+    margin: 30px auto -15px auto;
+    display: block;
+    width: 119px;
+    height: auto;
+    @media (min-width: @screen-sm-min) {
+        margin-bottom: -50px;
+    }
+    @media (min-width: @screen-md-min) {
+        position: absolute;
+        left: 50px;
+        bottom: 0;
+        margin: 0;
+    }
+}
+
+.grunty-support {
+    margin: 30px auto -15px auto;
+    display: block;
+    width: 232px;
+    height: auto;
+    @media (min-width: @screen-sm-min) {
+        margin-bottom: -50px;
+    }
+    @media (min-width: @screen-md-min) {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        margin: 0;
+    }
 }
 
 
