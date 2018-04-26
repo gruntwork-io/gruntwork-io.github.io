@@ -1756,3 +1756,21 @@ input[type="radio"] .styled:checked + label::after {
 .training-list li {
     margin-bottom: 10px;
 }
+
+//// Team page
+
+.about .row-leadership {
+    img {
+        border-width: 2px;
+        padding: 0;
+        margin: 0 auto;
+        width: 130px;
+        height: 130px;
+        transform: rotate(-3deg);
+    }
+    &:nth-child(even) {
+        img:nth-child(odd) {
+            transform: rotate(3deg);
+        }
+    }
+}
