@@ -150,55 +150,55 @@ $('#ref-arch-accordion').on('hide.bs.collapse', function (event) {
 });
 
 /* Pricing calculator */
-$(function () {
-  var current = '#tab-subscription'
-  var data = {
-    "#tab-subscription": {
-      "total": 0,
-      "average": 0
-    },
-    "#tab-support": {
-      "total": 0,
-      "average": 0
-    }
+$(function () { // This prevents global vars
+  var $pricingInput = $('[data-pricing-calc="input"]');
+  var defaultTab = '#tab-subscription'
+
+  function changeTab(key='') {
+    if (!key) key = defaultTab;
+    else defaultTab = key;
   }
 
-  function updateResults(key='') {
-    if (!key) key = current;
-    else current = key;
-    $('[data-pricing-calc="total"]').text(data[key]['total'] || 0);
-    $('[data-pricing-calc="average"]').text(data[key]['average'] || 0);
+  // Get/set number of users
+  function numUsers(newVal=null) {
+    if (!newVal) return $pricingInput.val();
+    else if (newVal % 1 === 0) return $pricingInput.val(newVal);
+    return 0;
   }
 
-  $('[data-pricing-calc="button"]').on('click', function (event) {
-    event.preventDefault();
-    var users = $(current).find('[data-pricing-calc="input"]').val();
-    calculate(users);
-    updateResults();
+  $pricingInput.on('keyup mouseup', function (event) {
+    var newVal = event.currentTarget.value;
+    numUsers(newVal);
+    calculate(newVal);
   });
 
+  // Detect when user changes tabs
   $('#pricing-calc-tabs').on('show.bs.tab', function (event) {
-    updateResults(event.target.dataset['target']);
+    changeTab(event.target.dataset['target']);
+    calculate(numUsers());
   });
 
-  function calculate(users=0) {
-    if (users < 1) return;
+  function calculate(numUsers=0) {
+    if (numUsers < 1 || numUsers % 1 !== 0) return;
     var total = 0;
     $('[data-pricing-calc="alert"]').hide();
-    switch (current) {
+    switch (defaultTab) {
       case '#tab-support':
-        if (users <= 10) total = 890;
-        else if (users <= 50) total = 890 + (users - 10) * 104;
+        if (numUsers <= 5) total = pricing.tier1.price[1];
+        else if (numUsers <= 50) total = pricing.tier1.price[1] + (numUsers - 5) * pricing.tier2.price[1];
         else $('[data-pricing-calc="alert"]').show();
+        $('[data-pricing-calc="title"]').text('Your Subscription + Support Price');
         break;
       default:
-        if (users <= 10) total = 500;
-        else if (users <= 50) total = 500 + (users - 10) * 79;
+        if (numUsers <= 5) total = pricing.tier1.price[0];
+        else if (numUsers <= 50) total = pricing.tier1.price[0] + (numUsers - 5) * pricing.tier2.price[0];
         else $('[data-pricing-calc="alert"]').show();
+        $('[data-pricing-calc="title"]').text('Your Subscription Price');
     }
-    data[current]['total'] = total;
-    data[current]['average'] = Math.floor(total / users);
+    // Updates results
+    $('[data-pricing-calc="total"]').text(total);
+    $('[data-pricing-calc="average"]').text(Math.floor(total / numUsers));
   }
 
-  updateResults();
+  calculate($pricingInput.val()); // Calculates default number of users
 });
