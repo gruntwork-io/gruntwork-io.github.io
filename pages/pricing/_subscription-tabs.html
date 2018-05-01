@@ -13,12 +13,12 @@
         <div class="row">
           <div class="col-md-6">
 
-            {% include subscription.html content=site.data.pricing.tier1 tab=0 %}
+            {% include subscription.html content=site.data.pricing.tier1 tab=0 annual=true %}
 
           </div>
           <div class="col-md-6">
 
-            {% include subscription.html content=site.data.pricing.tier2 tab=0 tooltip=true %}
+            {% include subscription.html content=site.data.pricing.tier2 tab=0 tooltip=true annual=true %}
 
           </div>
           <div class="col-xs-12">
@@ -27,8 +27,9 @@
 
           </div>
         </div>
-        <p class="text-muted text-center small" style="margin-bottom: 0; text-decoration: underline">A user is any human or machine user that makes use of Gruntwork's services</p>
-        <p class="text-muted text-center small" style="margin-bottom: 0;">*Gruntwork Subscription requires annual contract, Dedicated Support is month-to-month.</p>
+        <div class="text-white text-center" style="margin-top: 20px;">
+          <p style="margin-bottom: 0;">51+ users? We offer volume discounts for enterprise teams. <a href="/contact">Contact Us</a></p>
+        </div>
         <img class="grunty-confident" src="/assets/img/grunty-pricing.png" width="238" height="288" alt="Grunty confident">
       </div>
       <div class="tab-pane" id="tab-subscription-dedicated-support" role="tabpanel">
@@ -49,16 +50,10 @@
 
           </div>
         </div>
-        <p class="text-muted text-center small" style="margin-bottom: 0; text-decoration: underline">A user is any human or machine user that makes use of Gruntwork's services</p>
-        <p class="text-muted text-center small" style="margin-bottom: 0;">*Gruntwork Subscription requires annual contract, Dedicated Support is month-to-month.</p>
+        <div class="text-white text-center" style="margin-top: 20px;">
+          <p style="margin-bottom: 0;">51+ users? We offer volume discounts for enterprise teams. <a href="/contact">Contact Us</a></p>
+        </div>
         <img class="grunty-support" src="/assets/img/grunty-support.png" width="464" height="293" alt="Grunty support">
-      </div>
-    </div>
-  </div>
-  <div class="col-xs-12" style="margin-top: 30px;">
-    <div class="panel panel-default panel-light">
-      <div class="panel-body text-center text-white" style="padding: 30px;">
-        <p>51+ users? We offer volume discounts for enterprise teams. <a href="/contact">Contact Us</a></p>
       </div>
     </div>
   </div>
