@@ -18,7 +18,7 @@
           </div>
           <div class="col-md-6">
 
-            {% include subscription.html content=site.data.pricing.tier2 tab=0 tooltip=true annual=true %}
+            {% include subscription.html content=site.data.pricing.tier2 tab=0 tooltip=false annual=true %}
 
           </div>
           <div class="col-xs-12">
@@ -36,12 +36,12 @@
         <div class="row">
           <div class="col-md-6">
 
-            {% include subscription.html content=site.data.pricing.tier1 tab=1 %}
+            {% include subscription.html content=site.data.pricing.tier1 tab=1 annual=true %}
 
           </div>
           <div class="col-md-6">
 
-            {% include subscription.html content=site.data.pricing.tier2 tab=1 tooltip=true %}
+            {% include subscription.html content=site.data.pricing.tier2 tab=1 tooltip=true annual=true %}
 
           </div>
           <div class="col-xs-12">
