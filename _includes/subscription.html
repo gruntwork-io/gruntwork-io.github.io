@@ -2,9 +2,9 @@
   <div class="panel-body text-center">
     <h3 style="margin-bottom: 10px;">{{ include.content.title }}</h3>
     <p class="big-price"><span>$</span>{{ include.content.price[include.tab] }}</p>
-    <h6 class="help-block" style="margin-bottom: 0;">{{ include.content.details }}{% if include.tooltip %} <sup title="A user is any human or machine user that makes use of Gruntwork's services" data-toggle="tooltip"><i class="fa fa-question" aria-hidden="true"></i></sup>{% endif %}</h6>
+    <h6 class="help-block" style="margin-bottom: 0;">{{ include.content.details }}</h6>
     <p class="text-muted small">{{ include.content.description }}</p>
     <p style="margin-bottom: 10px;"><a href="/contact" class="btn btn-info" role="button">Get Started</a></p>
-    {% if include.annual %}<p class="text-muted small">Annual contract, billed monthly. <sup title="Only Gruntwork Subscription requires annual contract. Dedicated support add-on is month-to-month agreement." data-toggle="tooltip"><i class="fa fa-question" aria-hidden="true"></i></sup></p>{% endif %}
+    {% if include.annual %}<p class="text-muted small"><span class="help-text" title="Only Gruntwork Subscription requires annual contract. Dedicated support add-on is month-to-month agreement." data-toggle="tooltip">Annual contract</span>, billed monthly.</p>{% endif %}
   </div>
 </div>

@@ -21,11 +21,6 @@
             {% include subscription.html content=site.data.pricing.tier2 tab=0 tooltip=false annual=true %}
 
           </div>
-          <div class="col-xs-12">
-
-            {% include reference-architecture.html content=site.data.pricing.tier3 %}
-
-          </div>
         </div>
         <div class="text-white text-center" style="margin-top: 20px;">
           <p style="margin-bottom: 0;">51+ users? We offer volume discounts for enterprise teams. <a href="/contact">Contact Us</a></p>
@@ -44,16 +39,20 @@
             {% include subscription.html content=site.data.pricing.tier2 tab=1 tooltip=true annual=true %}
 
           </div>
-          <div class="col-xs-12">
-
-            {% include reference-architecture.html content=site.data.pricing.tier3 %}
-
-          </div>
         </div>
         <div class="text-white text-center" style="margin-top: 20px;">
           <p style="margin-bottom: 0;">51+ users? We offer volume discounts for enterprise teams. <a href="/contact">Contact Us</a></p>
         </div>
         <img class="grunty-support" src="/assets/img/grunty-support.png" width="464" height="293" alt="Grunty support">
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-12" style="margin-top: 30px">
+    <div class="tab-content tabs-secondary-content panel-light">
+      <div class="tab-pane active">
+
+        {% include reference-architecture.html content=site.data.pricing.tier3 %}
+
       </div>
     </div>
   </div>

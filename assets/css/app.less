@@ -987,7 +987,14 @@ footer {
     border-top: 0 none;
 }
 
-.tabs-primary-content .tab-pane {
+.tabs-secondary-content {
+    position: relative;
+    margin-top: 0;
+    border: 2px solid #194C5F;
+}
+
+.tabs-primary-content .tab-pane,
+.tabs-secondary-content .tab-pane {
     padding: 15px;
     @media (min-width: @screen-sm-min) {
        padding: 50px;
@@ -1125,6 +1132,14 @@ h6, .h6 { .heading-margin-variant(0.68; 0.52; @line-height-h6); }
     margin-top: (@line-height-computed * @top-multiplier);
     margin-bottom: (@line-height-computed * @bottom-multiplier);
     line-height: @line-height;
+}
+
+.help-text {
+    border-bottom: 1px dotted @gray-light;
+
+    &.light {
+        border-bottom-color: @gray-lighter;
+    }
 }
 
 .sub-page .section-hero h1 + p {
