@@ -1,0 +1,49 @@
+<div class="row row-pricing-subscription" style="padding-top: 30px;">
+  <div class="col-xs-12">
+    <ul id="tabs-pricing" class="nav nav-tabs tabs-primary" role="tablist">
+      <li class="active">
+        <a href="#" role="tab" data-toggle="tab" data-target="#tab-gruntwork-subscription" aria-controls="tab-gruntwork-subscription" aria-selected="true">Gruntwork Subscription</a>
+      </li>
+      <li>
+        <a href="#" role="tab" data-toggle="tab" data-target="#tab-subscription-dedicated-support" aria-controls="tab-subscription-dedicated-support">Subscription + Dedicated Support</a>
+      </li>
+    </ul>
+    <div id="tabs-pricing-content" class="tab-content tabs-primary-content panel-light">
+      <div class="tab-pane active" id="tab-gruntwork-subscription" role="tabpanel">
+        <div class="row">
+          <div class="col-md-6">
+            {% include_relative _subscription.html content=site.data.pricing.tier1 tab=0 annual=true %}
+          </div>
+          <div class="col-md-6">
+            {% include_relative _subscription.html content=site.data.pricing.tier2 tab=0 tooltip=false annual=true %}
+          </div>
+        </div>
+        <div class="text-white text-center" style="margin-top: 20px;">
+          <p style="margin-bottom: 0;">51+ users? We offer volume discounts for enterprise teams. <a href="/contact">Contact Us</a></p>
+        </div>
+        <img class="grunty-confident" src="/assets/img/grunty-pricing.png" width="238" height="288" alt="Grunty confident">
+      </div>
+      <div class="tab-pane" id="tab-subscription-dedicated-support" role="tabpanel">
+        <div class="row">
+          <div class="col-md-6">
+            {% include_relative _subscription.html content=site.data.pricing.tier1 tab=1 annual=true %}
+          </div>
+          <div class="col-md-6">
+            {% include_relative _subscription.html content=site.data.pricing.tier2 tab=1 tooltip=true annual=true %}
+          </div>
+        </div>
+        <div class="text-white text-center" style="margin-top: 20px;">
+          <p style="margin-bottom: 0;">51+ users? We offer volume discounts for enterprise teams. <a href="/contact">Contact Us</a></p>
+        </div>
+        <img class="grunty-support" src="/assets/img/grunty-support.png" width="464" height="293" alt="Grunty support">
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-12" style="margin-top: 30px">
+    <div class="tab-content tabs-secondary-content panel-light">
+      <div class="tab-pane active">
+        {% include_relative _reference-architecture.html content=site.data.pricing.tier3 %}
+      </div>
+    </div>
+  </div>
+</div>

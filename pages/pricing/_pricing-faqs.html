@@ -1,0 +1,35 @@
+<div id="pricing-faqs" class="row row-page-header">
+  <div class="col-xs-12">
+    <h2 class="text-center">Pricing FAQ's</h2>
+    <div class="row">
+      <div class="col-md-6">
+        <h4>What will my Gruntwork Subscription cost?</h4>
+        <ul id="pricing-calc-tabs" class="nav nav-tabs tabs-primary tabs-small" role="tablist">
+          <li class="active">
+            <a href="#" role="tab" data-toggle="tab" data-target="#tab-subscription" aria-controls="tab-subscription" aria-selected="true">Subscription</a>
+          </li>
+          <li>
+            <a href="#" role="tab" data-toggle="tab" data-target="#tab-support" aria-controls="tab-support">+ Dedicated Support</a>
+          </li>
+        </ul>
+        {% include_relative _calculator.html %}
+        {% comment %} Pull FAQs from Licensing category and offset by 1 {% endcomment %}
+        {% assign category = site.data.faq[1] %}
+        {% for item in category.items offset:1 %}
+          <h4 id="{{ item.question | slugify }}">{{ item.question }}</h4>
+          {{ item.answer }}
+        {% endfor %}
+      </div>
+      <div class="col-md-6">
+        {% comment %} Pull all FAQs from Pricing category {% endcomment %}
+        {% assign category = site.data.faq[2] %}
+        {% for item in category.items %}
+          <h4 id="{{ item.question | slugify }}">{{ item.question }}</h4>
+          {{ item.answer }}
+        {% endfor %}
+        <h4>Still have questions?</h4>
+        <p>Check out our <a href="/faq/">Full FAQ's</a>.</p>
+      </div>
+    </div>
+  </div>
+</div>

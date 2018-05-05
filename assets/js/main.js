@@ -148,3 +148,57 @@ $('#ref-arch-accordion').on('show.bs.collapse', function (event) {
 $('#ref-arch-accordion').on('hide.bs.collapse', function (event) {
   $(event.target).parent().find(".fa-caret-down").removeClass("fa-caret-down").addClass("fa-caret-right");
 });
+
+/* Pricing calculator */
+$(function () { // This prevents global vars
+  var $pricingInput = $('[data-pricing-calc="input"]');
+  var defaultTab = '#tab-subscription'
+
+  function changeTab(key='') {
+    if (!key) key = defaultTab;
+    else defaultTab = key;
+  }
+
+  // Get or set number of users
+  function numUsers(newVal=undefined) {
+    if (!newVal) return $pricingInput.val();
+    // Checks if newVal is an integer
+    else if (newVal % 1 === 0) $pricingInput.val(newVal);
+    return 0; // Default if newVal is not an integer
+  }
+
+  $pricingInput.on('keyup mouseup', function (event) {
+    var newVal = event.currentTarget.value;
+    numUsers(newVal);
+    calculate(newVal);
+  });
+
+  // Detect when user changes tabs
+  $('#pricing-calc-tabs').on('show.bs.tab', function (event) {
+    changeTab(event.target.dataset['target']);
+    calculate(numUsers());
+  });
+
+  function calculate(numUsers=0) {
+    if (numUsers < 1 || numUsers % 1 !== 0) return;
+    var total = 0;
+    $('[data-pricing-calc="alert"]').hide();
+    switch (defaultTab) {
+      case '#tab-support':
+        if (numUsers <= pricing.tier1.users_max) total = pricing.tier1.price[1];
+        else if (numUsers <= pricing.tier2.users_max) total = pricing.tier1.price[1] + (numUsers - pricing.tier1.users_max) * pricing.tier2.price[1];
+        else $('[data-pricing-calc="alert"]').show();
+        $('[data-pricing-calc="title"]').text('Your Subscription + Support Price');
+        break;
+      default:
+        if (numUsers <= pricing.tier1.users_max) total = pricing.tier1.price[0];
+        else if (numUsers <= pricing.tier2.users_max) total = pricing.tier1.price[0] + (numUsers - pricing.tier1.users_max) * pricing.tier2.price[0];
+        else $('[data-pricing-calc="alert"]').show();
+        $('[data-pricing-calc="title"]').text('Your Subscription Price');
+    }
+    // Updates results
+    $('[data-pricing-calc="total"]').text(total.toLocaleString());
+  }
+
+  calculate($pricingInput.val()); // Calculates default number of users
+});

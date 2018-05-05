@@ -402,6 +402,9 @@ p a:not(.btn) {
 .panel {
     border-width: 2px;
 }
+.panel-dark {
+    background-color: #1d252f;
+}
 .panel-light {
     background-color: #242e3a;
 }
@@ -512,6 +515,11 @@ p a:not(.btn) {
         font-size: 36px;
         color: #194C5F;
     }
+}
+
+.pricing-calc-results {
+    background-color: #194C5F;
+    padding: 30px;
 }
 
 @media (min-width: @screen-sm-min) {
@@ -920,6 +928,85 @@ footer {
     }
 }
 
+//
+// Tabs
+// ==================================================
+
+.tabs-primary {
+    margin-bottom: 0;
+    display: flex;
+    justify-content: space-evenly;
+    border-width: 2px;
+    border-color: #194c5f;
+}
+
+.tabs-primary > li {
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+    flex: 1 1 auto;
+    margin-bottom: -2px;
+}
+
+.tabs-primary > li + li {
+    margin-left: -2px;
+}
+
+.tabs-primary > li > a {
+    margin-right: 0;
+    text-align: center;
+    font-size: 17px;
+    flex: 1 1 auto;
+    @media (min-width: @screen-md-min) {
+        font-size: 22px;
+    }
+}
+.tabs-primary.tabs-small > li > a {
+    font-size: 18px;
+}
+
+.tabs-primary > li.active > a,
+.tabs-primary > li.active > a:hover,
+.tabs-primary > li.active > a:focus {
+    border-width: 2px;
+    border-color: #194c5f;
+    background-color: #242e3a;
+    border-bottom: 0 none;
+    color: #fff;
+}
+
+.tabs-primary > li:not(.active) > a {
+    border-width: 2px;
+    border-color: #194c5f;
+}
+
+.tabs-primary-content {
+    position: relative;
+    margin-top: 0;
+    border: 2px solid #194C5F;
+    border-top: 0 none;
+}
+
+.tabs-secondary-content {
+    position: relative;
+    margin-top: 0;
+    border: 2px solid #194C5F;
+}
+
+.tabs-primary-content .tab-pane,
+.tabs-secondary-content .tab-pane {
+    padding: 15px;
+    @media (min-width: @screen-sm-min) {
+       padding: 50px;
+    }
+}
+
+.tab-content.tab-content-small .tab-pane {
+    padding: 25px;
+    @media (min-width: @screen-sm-min) {
+        padding: 30px;
+    }
+}
 
 //
 // Tables
@@ -1047,6 +1134,14 @@ h6, .h6 { .heading-margin-variant(0.68; 0.52; @line-height-h6); }
     line-height: @line-height;
 }
 
+.help-text {
+    border-bottom: 1px dotted @gray-light;
+
+    &.light {
+        border-bottom-color: @gray-lighter;
+    }
+}
+
 .sub-page .section-hero h1 + p {
     margin-top: -15px;
 }
@@ -1119,14 +1214,18 @@ h6, .h6 { .heading-margin-variant(0.68; 0.52; @line-height-h6); }
     font-size: 36px;
 }
 
-.big-price, .medium-price {
+.small-price {
+    font-size: 26px;
+}
+
+.big-price, .medium-price, .small-price {
     font-weight: 700;
     color: #FFF;
     margin-bottom: 10px;
     line-height: 1;
 }
 
-.big-price span, .medium-price span {
+.big-price span, .medium-price span, .small-price span {
     font-weight: 300;
 }
 
@@ -1627,9 +1726,66 @@ input[type="radio"] .styled:checked + label::after {
     text-align: left;
 }
 
+.number-input {
+    font-size: 125%;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.grunty-confident {
+    margin: 30px auto -15px auto;
+    display: block;
+    width: 119px;
+    height: auto;
+    @media (min-width: @screen-sm-min) {
+        margin-bottom: -50px;
+    }
+    @media (min-width: @screen-md-min) {
+        position: absolute;
+        left: 50px;
+        bottom: 0;
+        margin: 0;
+    }
+}
+
+.grunty-support {
+    margin: 30px auto -15px auto;
+    display: block;
+    width: 232px;
+    height: auto;
+    @media (min-width: @screen-sm-min) {
+        margin-bottom: -50px;
+    }
+    @media (min-width: @screen-md-min) {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        margin: 0;
+    }
+}
+
 
 //// DevOps Bootcamp
 
 .training-list li {
     margin-bottom: 10px;
+}
+
+//// Team page
+
+.about .row-leadership {
+    img {
+        border-width: 2px;
+        padding: 0;
+        margin: 0 auto;
+        width: 130px;
+        height: 130px;
+        transform: rotate(-3deg);
+    }
+    &:nth-child(even) {
+        img:nth-child(odd) {
+            transform: rotate(3deg);
+        }
+    }
 }
