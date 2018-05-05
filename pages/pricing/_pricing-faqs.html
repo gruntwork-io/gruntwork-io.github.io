@@ -4,7 +4,6 @@
     <div class="row">
       <div class="col-md-6">
         <h4>What will my Gruntwork Subscription cost?</h4>
-        <p>Calculate your monthly price for your team size.</p>
         <ul id="pricing-calc-tabs" class="nav nav-tabs tabs-primary tabs-small" role="tablist">
           <li class="active">
             <a href="#" role="tab" data-toggle="tab" data-target="#tab-subscription" aria-controls="tab-subscription" aria-selected="true">Subscription</a>
@@ -13,30 +12,7 @@
             <a href="#" role="tab" data-toggle="tab" data-target="#tab-support" aria-controls="tab-support">+ Dedicated Support</a>
           </li>
         </ul>
-        <div id="pricing-calc" class="tab-content tab-content-small tabs-primary-content panel-light">
-          <div class="tab-pane text-center active" id="tab-subscription" role="tabpanel">
-            <p class="text-danger" style="display: none" data-pricing-calc="alert">For enterprise pricing, please <a href="/contact/">contact us</a>.</p>
-            <h3 style="margin: 0;">Pricing Calculator</h3>
-            <p>How many users on on your team?</p>
-            <input type="number" class="form-control number-input text-center" min="0" data-pricing-calc="input" value="5" style="margin-bottom: 20px;">
-            <!--<button type="button" class="btn btn-primary" data-pricing-calc="button">Calculate Price</button>-->
-          </div>
-          <div class="tab-pane text-center" id="tab-support" role="tabpanel">
-            <p class="text-danger" style="display: none" data-pricing-calc="alert">For enterprise pricing, please <a href="/contact/">contact us</a>.</p>
-            <h3 style="margin: 0;">Pricing Calculator</h3>
-            <p>How many users on on your team?</p>
-            <input type="number" class="form-control number-input text-center" min="0" data-pricing-calc="input" value="5" style="margin-bottom: 20px;">
-            <!--<button type="button" class="btn btn-primary" data-pricing-calc="button">Calculate Price</button>-->
-          </div>
-          <div class="pricing-calc-results text-center">
-            <h5 style="margin-top: 0;"><strong data-pricing-calc="title"></strong></h5>
-            <p class="medium-price" style="margin-bottom: 0;"><span>$</span> <span data-pricing-calc="total"></span></p>
-            <p class="text-muted small">total per month</p>
-            <p class="small-price" style="margin-bottom: 0;"><span>$</span> <span data-pricing-calc="average"></span></p>
-            <p class="text-muted small">average price per user</p>
-            <p style="margin-bottom: 0;"><a href="/contact" class="btn btn-info" role="button">Get Started</a></p>
-          </div>
-        </div>
+        {% include_relative _calculator.html %}
         {% comment %} Pull FAQs from Licensing category and offset by 1 {% endcomment %}
         {% assign category = site.data.faq[1] %}
         {% for item in category.items offset:1 %}
