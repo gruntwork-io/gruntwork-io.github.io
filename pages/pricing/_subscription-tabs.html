@@ -10,6 +10,7 @@
     </ul>
     <div id="tabs-pricing-content" class="tab-content tabs-primary-content panel-light">
       <div class="tab-pane active" id="tab-gruntwork-subscription" role="tabpanel">
+        {% include_relative _benefits.html dedicated_support=false %}
         <div class="row">
           <div class="col-md-6">
             {% include_relative _subscription.html content=site.data.pricing.tier1 tab=0 annual=true %}
@@ -24,6 +25,7 @@
         <img class="grunty-confident" src="/assets/img/grunty-pricing.png" width="238" height="288" alt="Grunty confident">
       </div>
       <div class="tab-pane" id="tab-subscription-dedicated-support" role="tabpanel">
+        {% include_relative _benefits.html dedicated_support=true %}
         <div class="row">
           <div class="col-md-6">
             {% include_relative _subscription.html content=site.data.pricing.tier1 tab=1 annual=true %}
@@ -42,6 +44,13 @@
   <div class="col-xs-12" style="margin-top: 30px">
     <div class="tab-content tabs-secondary-content panel-light">
       <div class="tab-pane active">
+        <ul class="check-list">
+          <li>
+            <a href="/reference-architecture/" class="text-white">Reference Architecture</a>: An opinionated,
+            best-practices, end-to-end tech stack that we customize to your needs, deploy into into your AWS accounts,
+            and give you 100% of the code—all in about one day.
+          </li>
+        </ul>
         {% include_relative _reference-architecture.html content=site.data.pricing.tier3 %}
       </div>
     </div>
