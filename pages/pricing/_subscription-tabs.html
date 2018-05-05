@@ -12,14 +12,10 @@
       <div class="tab-pane active" id="tab-gruntwork-subscription" role="tabpanel">
         <div class="row">
           <div class="col-md-6">
-
-            {% include subscription.html content=site.data.pricing.tier1 tab=0 annual=true %}
-
+            {% include_relative _subscription.html content=site.data.pricing.tier1 tab=0 annual=true %}
           </div>
           <div class="col-md-6">
-
-            {% include subscription.html content=site.data.pricing.tier2 tab=0 tooltip=false annual=true %}
-
+            {% include_relative _subscription.html content=site.data.pricing.tier2 tab=0 tooltip=false annual=true %}
           </div>
         </div>
         <div class="text-white text-center" style="margin-top: 20px;">
@@ -30,14 +26,10 @@
       <div class="tab-pane" id="tab-subscription-dedicated-support" role="tabpanel">
         <div class="row">
           <div class="col-md-6">
-
-            {% include subscription.html content=site.data.pricing.tier1 tab=1 annual=true %}
-
+            {% include_relative _subscription.html content=site.data.pricing.tier1 tab=1 annual=true %}
           </div>
           <div class="col-md-6">
-
-            {% include subscription.html content=site.data.pricing.tier2 tab=1 tooltip=true annual=true %}
-
+            {% include_relative _subscription.html content=site.data.pricing.tier2 tab=1 tooltip=true annual=true %}
           </div>
         </div>
         <div class="text-white text-center" style="margin-top: 20px;">
@@ -50,9 +42,7 @@
   <div class="col-xs-12" style="margin-top: 30px">
     <div class="tab-content tabs-secondary-content panel-light">
       <div class="tab-pane active">
-
-        {% include reference-architecture.html content=site.data.pricing.tier3 %}
-
+        {% include_relative _reference-architecture.html content=site.data.pricing.tier3 %}
       </div>
     </div>
   </div>

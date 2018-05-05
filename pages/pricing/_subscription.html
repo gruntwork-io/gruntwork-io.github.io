@@ -1,0 +1,9 @@
+<div class="panel panel-default panel-dark">
+  <div class="panel-body text-center">
+    <h3 style="margin-bottom: 10px;">{{ include.content.title }}</h3>
+    <p class="big-price"><span>$</span>{{ include.content.price[include.tab] }}</p>
+    <h6 class="help-block" style="margin-bottom: 20px;">{{ include.content.details }}</h6>
+    <p style="margin-bottom: 20px;"><a href="/contact" class="btn btn-info" role="button">Get Started</a></p>
+    {% if include.annual %}<p class="text-muted small"><span class="help-text" title="Only the Gruntwork Subscription requires annual contract. The Dedicated Support add-on is a month-to-month agreement." data-toggle="tooltip">Annual contract</span>, billed monthly.</p>{% endif %}
+  </div>
+</div>
