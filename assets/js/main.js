@@ -198,7 +198,6 @@ $(function () { // This prevents global vars
     }
     // Updates results
     $('[data-pricing-calc="total"]').text(total.toLocaleString());
-    $('[data-pricing-calc="average"]').text(Math.floor(total / numUsers));
   }
 
   calculate($pricingInput.val()); // Calculates default number of users
