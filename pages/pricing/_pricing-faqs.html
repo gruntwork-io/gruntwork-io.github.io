@@ -4,15 +4,19 @@
     <div class="row">
       <div class="col-md-6">
         <h4>What will my Gruntwork Subscription cost?</h4>
-        <ul id="pricing-calc-tabs" class="nav nav-tabs tabs-primary tabs-small" role="tablist">
-          <li class="active">
-            <a href="#" role="tab" data-toggle="tab" data-target="#tab-subscription" aria-controls="tab-subscription" aria-selected="true">Subscription</a>
-          </li>
-          <li>
-            <a href="#" role="tab" data-toggle="tab" data-target="#tab-support" aria-controls="tab-support">+ Dedicated Support</a>
-          </li>
-        </ul>
         {% include_relative _calculator.html %}
+        <p style="margin-top: 20px">
+          Some perspective: the Gruntwork Subscription gets you access to a library of over 250,000 lines of
+          <a href="/infrastructure-as-code-library" target="_blank">infrastructure code</a> that has been proven
+          in production at hundreds of companies over the last 2+ years,
+          <a href="https://blog.gruntwork.io/tagged/gruntwork-newsletter" target="_blank">ongoing maintenance and
+          updates</a> for that code, a library of <a href="/training" target="_blank">DevOps training videos</a>, and
+          support from a team of DevOps experts, all starting at just ${{site.data.pricing.tier1.price[0]}} per month.
+        </p>
+        <p>
+          The math is pretty simple: if you spend even one day a month reimplementing any of this stuff, you're
+          already wasting more money than that, and all you're doing is reinventing the wheel.
+        </p>
         {% comment %} Pull FAQs from Licensing category and offset by 1 {% endcomment %}
         {% assign category = site.data.faq[1] %}
         {% for item in category.items offset:1 %}

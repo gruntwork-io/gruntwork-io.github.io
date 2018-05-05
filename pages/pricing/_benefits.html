@@ -1,17 +1,9 @@
-<div id="benefits" class="row row-page-header">
-  <div class="col-xs-12">
-    <h2 class="text-center">You get access to:</h2>
-    <div class="row">
-      <div class="col-md-10 col-md-offset-1">
-        <ul class="check-list">
-          <li><a href="/infrastructure-as-code-library" class="text-white">Infrastructure as Code Library</a>: Reusable, battle-tested, production-ready infrastructure code.</li>
-          <li><a href="/usage-patterns-library" class="text-white">Usage Patterns Library</a>: Production-ready patterns for building an end-to-end tech stack.</li>
-          <li><a href="/training" class="text-white">DevOps Training Library</a>: A collection of training video courses that teach you DevOps.</li>
-          <li><a href="https://community.gruntwork.io/" target="_blank" class="text-white">Community Forum</a>: Get support via our public community forum. 2 Business Day SLA.</li>
-          <li><a href="/support/" class="text-white">Dedicated Support</a>: Get help via email, chat, and phone/video from a team of DevOps experts.</li>
-          <li><a href="/initial-setup/" class="text-white">Reference Architecture</a>: We define your entire infrastructure as code and deploy it into your AWS accounts in about 1 day.</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
+<ul class="check-list">
+  <li><a href="/infrastructure-as-code-library" class="text-white">Infrastructure as Code Library</a>: 250,000+ lines of reusable, battle-tested infrastructure code.</li>
+  <li><a href="/training" class="text-white">DevOps Training Library</a>: A collection of training video courses that teach you DevOps.</li>
+  {% if include.dedicated_support %}
+    <li><a href="/support" target="_blank" class="text-white">Dedicated Support</a>: Get support via email, chat, and phone/video from Gruntwork. 1 Business Day SLA.</li>
+  {% else %}
+    <li><a href="https://community.gruntwork.io/" target="_blank" class="text-white">Community Forum</a>: Get support via our public community forum. 2 Business Day SLA.</li>
+  {% endif %}
+</ul>
