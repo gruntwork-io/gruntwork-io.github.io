@@ -5,7 +5,7 @@
         If you want to run your apps directly on EC2 Instances, you should package them as
         <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html" target="_blank">Amazon Machine Images (AMIs)</a>
         using a tool such as <a href="https://www.packer.io/" target="_blank">Packer</a>. Although we recommend Docker
-        for all stateful apps (see below), we recommend directly using AMIs and EC2 Instances for all stateful apps,
+        for all stateless apps (see below), we recommend directly using AMIs and EC2 Instances for all stateful apps,
         such as any data store (MySQL, MongoDB, Kafka), and app that writes to its local disk (e.g., WordPress, Jenkins).
 
     - title: Deploy AMIs using Auto Scaling Groups
@@ -31,22 +31,22 @@
         <a href="https://aws.amazon.com/eks/" target="_blank">Elasic Kubernetes Service (EKS)</a>, which is a Amazon's
         managed <a href="https://kubernetes.io/" target="_blank">Kubernetes</a> (note, EKS is still in preview mode
         as of May, 2018). A third option is <a href="https://aws.amazon.com/fargate/" target="_blank">AWS Fargate</a>,
-        a service where AWS manages and scales the underlying Instances for you and you just hand it Docker containers
-        to run.
+        a service where AWS manages and scales the underlying EC2 Instances for you and you just hand it Docker
+        containers to run.
 
     - title: Deploy serverless apps using Lambda and API Gateway
       description: |
-        If want to build serverless apps, you should package them as
+        If you want to build serverless apps, you should package them as
         <a href="https://docs.aws.amazon.com/lambda/latest/dg/deployment-package-v2.html" target="_blank">deployment packages</a>
         for <a href="https://aws.amazon.com/lambda/" target="_blank">AWS Lambda</a>. You can expose your Lambda
         functions as HTTP endpoints using <a href="https://aws.amazon.com/api-gateway/" target="_blank">API Gateway</a>.
 
     - title: Configure CPU, memory, and GC settings
       description: |
-        Configure memory settings CPU settings (e.g., ensure your app uses all available CPU cores using tools such
+        Configure CPU settings (e.g., ensure your app uses all available CPU cores using tools such
         as Node Cluster), memory settings (e.g., <code>-Xmx, -Xms</code> settings for the JVM), and GC settings (if
         applicable) for your app. If you're deploying directly on EC2 Instances, these should be configured based on
-        the available CPU and memory on your Instance (see
+        the available CPU and memory on your EC2 Instance (see
         <a href="https://aws.amazon.com/ec2/instance-types/" target="_blank">Instance Types</a>). If you are deploying
         Docker containers, then tell the scheduler the resources your app needs (e.g., in the
         <a href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definition_parameters.html" target="_blank">ECS Task Definition</a>),
@@ -140,7 +140,7 @@
         Use <a href="https://aws.amazon.com/elasticache/" target="_blank">Elasticache</a> if you want to use Redis or
         Memcached for key-value storage. Use <a href="https://aws.amazon.com/dynamodb/" target="_blank">DynamoDB</a> if
         you need a managed, eventually consistent document store. If you need other NoSQL databases, such as MongoDB
-        or Couchbase, you'll need to run it yoruself (see the
+        or Couchbase, you'll need to run it yourself (see the
         <a href="https://gruntwork.io/infrastructure-as-code-library/" target="_blank">Gruntwork Library</a>).
 
     - title: Deploy queues
@@ -221,7 +221,7 @@
   items:
     - title: Choose between a Monolith and Microservices
       description: |
-        Ignore the hype and stick with a monolithic architecture as long as you possibly can. Microservices have a
+        Ignore the hype and stick with a monolithic architecture as long as you possibly can. Microservices have
         massive costs (operational overhead, performance overhead, more failure modes, loss of
         transactions/atomicity/consistency, difficulty in making global changes, backwards compatibility requirements),
         so only use them when your company grows large enough that you can't live without one of the benefits they
@@ -315,7 +315,9 @@
       description: |
         Your build systems should allow you to explicitly define all the of the dependencies for your apps. Each
         dependency should be versioned, and ideally, the versions of all dependencies, including transitive
-        dependencies, are captured in a lock file.
+        dependencies, are captured in a lock file (e.g., read about
+        <a href="" target="_blank">Yarn's lock file</a> and
+        <a href="https://github.com/golang/dep/blob/master/docs/FAQ.md#what-is-the-difference-between-gopkgtoml-the-manifest-and-gopkglock-the-lock" target="_blank">Go's dep lock file</a>.
 
     - title: Configure static analysis
       description: |
@@ -401,7 +403,7 @@
     - title: Roll back in case of failure
       description: |
         If you use immutable, versioned artifacts as your unit of deployment, then any time something goes wrong, you
-        have the option to roll back to a known-good state by rolling out the previous version. If your infrastructure
+        have the option to roll back to a known-good state by deploying a previous version. If your infrastructure
         is defined as code, you can also see what changed between versions by looking at the diffs in version control.
 
     - title: Automate your deployments
@@ -477,7 +479,7 @@
         traffic is allowed in or out. Follow the
         <a href="https://en.wikipedia.org/wiki/Principle_of_least_privilege" target="_blank">Principle of Least Privilege</a>
         and open up the absolute minimum number of ports you can for each resource. When opening up a port, you can
-        also specify either the CIDR block (IP address range) or ID of another Security Group that are allowed to
+        also specify either the CIDR block (IP address range) or ID of another Security Group that is allowed to
         access that port. Reduce these to solely trusted servers where possible. For example, EC2 Instances should only
         allow SSH access (port 22) from the Security Group of a single, locked-down, trusted server (the
         <a href="https://en.wikipedia.org/wiki/Bastion_host" target="_blank">Bastion Host</a>).
