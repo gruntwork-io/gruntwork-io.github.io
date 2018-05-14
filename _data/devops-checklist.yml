@@ -1,0 +1,690 @@
+- category: Server-side apps
+  items:
+    - title: Build AMIs
+      description: |
+        If you want to run your apps directly on EC2 Instances, you should package them as
+        <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html" target="_blank">Amazon Machine Images (AMIs)</a>
+        using a tool such as <a href="https://www.packer.io/" target="_blank">Packer</a>. Although we recommend Docker
+        for all stateful apps (see below), we recommend directly using AMIs and EC2 Instances for all stateful apps,
+        such as any data store (MySQL, MongoDB, Kafka), and app that writes to its local disk (e.g., WordPress, Jenkins).
+
+    - title: Deploy AMIs using Auto Scaling Groups
+      description: |
+        The best way to deploy an AMI is typically to run it as an
+        <a href="https://docs.aws.amazon.com/autoscaling/ec2/userguide/AutoScalingGroup.html" target="_blank">Auto Scaling Group</a>.
+        This will allow you to spin up multiple EC2 Instances that run your AMI, scale the number of Instances up and
+        down in response to load, and automatically replace failed Instances.
+
+    - title: Build Docker images
+      description: |
+        If want to run your apps as containers, you should package your apps as
+        <a href="http://docker.com/" target="_blank">Docker</a> images and push those images to Amazon's
+        <a href="https://aws.amazon.com/ecr/" target="_blank">Elastic Container Registry (ECR)</a>. We recommend
+        Docker for all stateless apps and for local development (along with
+        <a href="https://docs.docker.com/compose/" target="_blank">Docker Compose</a>).
+
+    - title: Deploy Docker images using ECS, EKS, or Fargate
+      description: |
+        You have several options for running Docker containers in AWS. One is to use the
+        <a href="https://aws.amazon.com/ecs/" target="_blank">Elastic Container Service (ECS)</a>, where you run a
+        cluster of EC2 Instances, and Amazon takes care of scheduling containers across them. Another is
+        <a href="https://aws.amazon.com/eks/" target="_blank">Elasic Kubernetes Service (EKS)</a>, which is a Amazon's
+        managed <a href="https://kubernetes.io/" target="_blank">Kubernetes</a> (note, EKS is still in preview mode
+        as of May, 2018). A third option is <a href="https://aws.amazon.com/fargate/" target="_blank">AWS Fargate</a>,
+        a service where AWS manages and scales the underlying Instances for you and you just hand it Docker containers
+        to run.
+
+    - title: Deploy serverless apps using Lambda and API Gateway
+      description: |
+        If want to build serverless apps, you should package them as
+        <a href="https://docs.aws.amazon.com/lambda/latest/dg/deployment-package-v2.html" target="_blank">deployment packages</a>
+        for <a href="https://aws.amazon.com/lambda/" target="_blank">AWS Lambda</a>. You can expose your Lambda
+        functions as HTTP endpoints using <a href="https://aws.amazon.com/api-gateway/" target="_blank">API Gateway</a>.
+
+    - title: Configure CPU, memory, and GC settings
+      description: |
+        Configure memory settings CPU settings (e.g., ensure your app uses all available CPU cores using tools such
+        as Node Cluster), memory settings (e.g., <code>-Xmx, -Xms</code> settings for the JVM), and GC settings (if
+        applicable) for your app. If you're deploying directly on EC2 Instances, these should be configured based on
+        the available CPU and memory on your Instance (see
+        <a href="https://aws.amazon.com/ec2/instance-types/" target="_blank">Instance Types</a>). If you are deploying
+        Docker containers, then tell the scheduler the resources your app needs (e.g., in the
+        <a href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definition_parameters.html" target="_blank">ECS Task Definition</a>),
+        and it will automatically try to find an EC2 Instance that has those resources.
+
+    - title: Configure hard drives
+      description: |
+        Configure the <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/RootDeviceStorage.html" target="_blank">root volume</a>
+        on each EC2 Instance with enough space for your app and log files. Note that root volumes are deleted when an
+        Instance is terminated, so if you are running stateful apps that need to persist data between redeploys (or
+        between crashes), attach one or more
+        <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSVolumes.html" target="_blank">EBS Volumes</a>.
+
+- category: Client-side apps
+  items:
+    - title: Pick a JavaScript framework
+      description: |
+        If you are building client-side applications in the browser, you may wish to use a JavaScript framework such as
+        <a href="https://reactjs.org/" target="_blank">React</a>,
+        <a href="https://angular.io/" target="_blank">Angular</a>, or
+        <a href="https://www.emberjs.com/" target="_blank">Ember</a>. You'll need to update your build system to
+        build and package the code appropriately (see <a href="#continuous-integration">continuous integration</a>).
+
+    - title: Pick a compile-to-JS language
+      description: |
+        JavaScript has a number of problems and limitations, so you may wish to use a compile-to-JS language, such as
+        <a href="https://www.typescriptlang.org/" target="_blank">TypeScript</a>,
+        <a href="https://www.scala-js.org/" target="_blank">Scala.js</a>,
+        <a href="https://github.com/paf31/purescript" target="_blank">PureScript</a>,
+        <a href="http://elm-lang.org/" target="_blank">Elm</a>, or
+        <a href="https://github.com/clojure/clojurescript" target="_blank">ClojureScript</a>. You'll need to update
+        your build system to build and package the code appropriately (see
+        <a href="#continuous-integration">continuous integration</a>).
+
+    - title: Pick a compile-to-CSS language
+      description: |
+        CSS has a number of problems and limitations, so you may wish to use a compile-to-CSS language, such as
+        <a href="https://sass-lang.com/" target="_blank">SASS</a>,
+        <a href="http://lesscss.org/" target="_blank">less</a>,
+        <a href="http://cssnext.io/" target="_blank">cssnext</a>, or
+        <a href="https://github.com/postcss/postcss" target="_blank">postcss</a>. You'll need to update
+        your build system to build and package the code appropriately (see
+        <a href="#continuous-integration">continuous integration</a>).
+
+    - title: Optimize your assets
+      description: |
+        All CSS and JavaScript should be minified and all images should be compressed. You may wish to concatenate
+        your CSS and JavaScript files and <a href="https://css-tricks.com/css-sprites/" target="_blank">sprite images</a>
+        to reduce the number of requests the browser has to make. Make sure to enable gzip compression. Much of this
+        can be done using a build system such as
+        <a href="https://gruntjs.com/" target="_blank">Grunt</a>,
+        <a href="https://gulpjs.com/" target="_blank">Gulp</a>,
+        <a href="https://github.com/broccolijs/broccoli" target="_blank">Broccoli</a>, or
+        <a href="https://webpack.js.org/" target="_blank">webpack</a>.
+
+    - title: Use a static content server
+      description: |
+        You should serve all your static content (CSS, JS, images, fonts) from a static content server so that your
+        dynamic web framework (e.g., from Rails, Node.js, or Django) can focus solely on processing dynamic requests.
+        The best static content host to use with AWS is <a href="https://aws.amazon.com/s3/" target="_blank">S3</a>.
+
+    - title: Use a CDN
+      description: |
+        Use <a href="https://aws.amazon.com/cloudfront/" target="_blank">CloudFront</a> as a
+        <a href="https://en.wikipedia.org/wiki/Content_delivery_network" target="_blank">Content Distribution Network (CDN)</a>
+        to cache and distribute your content across servers all over the world. This signicantly reduces latency for
+        users and is especially effective for static content.
+
+    - title: Configure caching
+      description: |
+        Think carefully about versioning, caching, and cache-busting for your static content. One option is to
+        put the version number of each release directly in the URL (e.g., <code>/static/v3/foo.js</code>), which
+        is easy to implement, but means 100% of your content is "cache buested" each release. Another option is "asset
+        fingerprinting," where the build system renames each static content file with a hash of that files contents
+        (e.g., <code>foo.js</code> becomes <code>908e25f4bf641868d8683022a5b62f54.js</code>), which is more complicated
+        to implement (note: many build systems have built-in support), but ensures that only content that has changed
+        is ever cache busted.
+
+- category: Data storage
+  items:
+    - title: Deploy relational databases
+      description: |
+        Use Amazon's <a href="https://aws.amazon.com/rds/" target="_blank">Relational Database Service (RDS)</a> to run
+        MySQL, PostgreSQL, Oracle, SQL Server, or MariaDB. Consider
+        <a href="https://aws.amazon.com/rds/aurora/" target="_blank">Amazon Aurora</a> as a highly scalable,
+        cloud-native, MySQL and PostgreSQL compatible database. Both RDS and Aurora support automatic failover, read
+        replicas, and automated backup.
+
+    - title: Deploy NoSQL databases
+      description: |
+        Use <a href="https://aws.amazon.com/elasticache/" target="_blank">Elasticache</a> if you want to use Redis or
+        Memcached for key-value storage. Use <a href="https://aws.amazon.com/dynamodb/" target="_blank">DynamoDB</a> if
+        you need a managed, eventually consistent document store. If you need other NoSQL databases, such as MongoDB
+        or Couchbase, you'll need to run it yoruself (see the
+        <a href="https://gruntwork.io/infrastructure-as-code-library/" target="_blank">Gruntwork Library</a>).
+
+    - title: Deploy queues
+      description: |
+        Use <a href="https://aws.amazon.com/sqs/" target="_blank">Amazon Simple Queue Service (SQS)</a> as a managed,
+        distributed queue.
+
+    - title: Deploy search tools
+      description: |
+        Use <a href="https://aws.amazon.com/elasticsearch-service/" target="_blank">Amazon Elasticsearch</a> for log
+        analysis and full text search. Note that Amazon Elasticsearch has some
+        <a href="https://code972.com/blog/2017/12/111-why-you-shouldnt-use-aws-elasticsearch-service" target="_blank">significant limitations</a>,
+        so if you need to work around those, you'll need to run the ELK stack yourself (see the
+        <a href="https://gruntwork.io/infrastructure-as-code-library/" target="_blank">Gruntwork Library</a>).
+
+    - title: Deploy stream processing tools
+      description: |
+        Use <a href="https://aws.amazon.com/kinesis/" target="_blank">Amazon Kinesis</a> to process streaming data.
+        Note that Kinesis has some
+        <a href="https://docs.aws.amazon.com/streams/latest/dev/service-sizes-and-limits.html" target="_blank">significant limitations</a>,
+        so if you need to work around those, you'll need to instead run
+        <a href="https://kafka.apache.org/" target="_blank">Kafka</a> yourself (see the
+        <a href="https://gruntwork.io/infrastructure-as-code-library/" target="_blank">Gruntwork Library</a>).
+
+    - title: Deploy a data warehouse
+      description: |
+        Use <a href="https://aws.amazon.com/redshift/" target="_blank">Amazon Redshift</a> for data warehousing.
+
+    - title: Deploy big data systems
+      description: |
+        Use <a href="https://aws.amazon.com/emr/" target="_blank">Amazon EMR</a> to run Hadoop, Spark, HBase, Presto,
+        and Hive.
+
+    - title: Set up cron jobs
+      description: |
+        Use <a href="https://docs.aws.amazon.com/lambda/latest/dg/with-scheduled-events.html" target="_blank">AWS Lambda Scheduled Events</a>
+        or <a href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/scheduled_tasks.html" target="_blank">ECS Scheduled Tasks</a>
+        to reliably run background jobs on a schedule (cron jobs). Look into
+        <a href="https://aws.amazon.com/step-functions/" target="_blank">AWS Step Functions</a> to build reliable,
+        multi-step, distributed workflows.
+
+    - title: Configure disk space
+      description: |
+        Configure enough disk space on your system for all the data you plan to store. If you are running a data
+        storage system yourself, you'll probably want to store the data on one or more
+        <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSVolumes.html" target="_blank">EBS Volumes</a>
+        that can be attached and detached as Instances are replaced. Note: using EBS Volumes with Auto Scaling Groups
+        (ASGs) is very tricky, as ASGs can launch an Instance in any Availability Zone, but an EBS Volume can only be
+        attached from the same Availability Zone (see the
+        <a href="https://gruntwork.io/infrastructure-as-code-library/" target="_blank">Gruntwork Library</a> for
+        solutions).
+
+    - title: Configure backup
+      description: |
+        Configure backup for all of your data stores. Most Amazon-managed data stores, such as RDS and Elasticache,
+        support automated nightly snapshots. For backing up EC2 Instances and EBS Volumes, consider running
+        <a href="https://github.com/josh-padnick/ec2-snapper" target="_blank">ec2-snapper</a> on a scheduled basis.
+
+    - title: Configure cross-account backup
+      description: |
+        Copy all of your backups to a separate AWS account for extra redundancy. This ensures that if a disaster
+        happens in one AWS account—e.g., an attacker gets in or someone accidentally deletes all the backups—you still
+        have a copy of your data available elsewhere.
+
+    - title: Test your backups
+      description: |
+        If you never test your backups, they probably don't work. Create automated tests that periodically restore from
+        your backups to check they are actually working.
+
+    - title: Set up schema management
+      description: |
+        For data stores that use a schema, such as relational databases, define the schema in schema migration files,
+        check those files into version control, and apply the migrations as part of the deployment process. See
+        <a href="https://flywaydb.org/" target="_blank">Flyway</a> and
+        <a href="https://www.liquibase.org/" target="_blank">Liquibase</a>.
+
+- category: Architecture, Scalability, High Availability
+  items:
+    - title: Choose between a Monolith and Microservices
+      description: |
+        Ignore the hype and stick with a monolithic architecture as long as you possibly can. Microservices have a
+        massive costs (operational overhead, performance overhead, more failure modes, loss of
+        transactions/atomicity/consistency, difficulty in making global changes, backwards compatibility requirements),
+        so only use them when your company grows large enough that you can't live without one of the benefits they
+        provide (support for different technologies, support for teams working more independently from each other). See
+        <a href="https://www.youtube.com/watch?v=-czp0Y4Z36Y" target="_blank">Don't Build a Distributed Monolith</a>,
+        <a href="https://blog.rapid7.com/2016/09/15/microservices-please-dont/" target="_blank">Microservices — please, don't</a>, and
+        <a href="https://martinfowler.com/articles/microservice-trade-offs.html" target="_blank">Microservice trade-offs</a> for more info.
+
+    - title: Configure service discovery
+      description: |
+        If you do go with microservices, one of the problems you'll need to solve is how services can discover the IPs
+        and ports of other services they depend on. Some of the solutions you can use include
+        <a href="https://aws.amazon.com/elasticloadbalancing/" target="_blank">Load Balancers</a>,
+        <a href="https://aws.amazon.com/blogs/aws/amazon-ecs-service-discovery/" target="_blank">ECS Service Discovery</a>, and
+        <a href="https://www.consul.io/" target="_blank">Consul</a>.
+
+    - title: Use multiple Instances
+      description: |
+        Always run more than one copy (i.e., more than one EC2 Instance or Docker container) of each stateless
+        application. This allows you to tolerate the app crashing, allows you to scale the number of copies up and
+        down in response to load, and makes it possible to do zero-downtime deployments.
+
+    - title: Use multiple Availability Zones
+      description: |
+        Configure your <a href="https://docs.aws.amazon.com/autoscaling/ec2/userguide/AutoScalingGroup.html" target="_blank">Auto Scaling Groups</a>
+        and <a href="https://aws.amazon.com/elasticloadbalancing/" target="_blank">Load Balancers</a> to make use of all
+        <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html" target="_blank">Availability Zones (AZs)</a>
+        in your AWS account so you can tolerate the failure of an entire AZ.
+
+    - title: Set up load balancing
+      description: |
+        Distribute load across your apps and Availability Zones using Amazon's managed
+        <a href="https://aws.amazon.com/elasticloadbalancing/" target="_blank">Load Balancers</a>, which are designed
+        for high availability and scalability. Use the
+        <a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html" target="_blank">Application Load Balancer (ALB)</a>
+        for all HTTP/HTTPS traffic and the
+        <a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/network/introduction.html" target="_blank">Network Load Balancer (NLB)</a>
+        for everything else.
+
+    - title: Use Auto Scaling
+      description: |
+        Use <a href="https://aws.amazon.com/autoscaling/" target="_blank">auto scaling</a> to automatically scale the
+        number of resources you're using up to handle higher load and down to save money when load is lower.
+
+    - title: Configure Auto Recovery
+      description: |
+        Configure a process supervisor such as <a href="https://github.com/systemd/systemd" target="_blank">systemd</a>
+        or <a href="http://supervisord.org/" target="_blank">supervisord</a> to automatically restart failed processes.
+        Configure your <a href="https://docs.aws.amazon.com/autoscaling/ec2/userguide/AutoScalingGroup.html" target="_blank">Auto Scaling Groups</a>
+        to use a <a href="https://aws.amazon.com/elasticloadbalancing/" target="_blank">Load Balancer</a> for health
+        checks and to automatically replace failed EC2 Instances. Use your Docker orchestration tool to monitor the
+        health of your Docker containers and automatically restart failed ones (e.g.,
+        <a href="https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_HealthCheck.html" target="_blank">ECS Health Checks</a>).
+
+    - title: Configure graceful degradation
+      description: |
+        Handle failures in your dependencies (e.g., a service not responding) by using
+        <a href="https://twitter.com/copyconstruct/status/994138694582812672" target="_blank">graceful degradation patterns</a>,
+        such as retries (with exponential backoff and jitter), circuit breaking, timeouts, deadlines, and rate limiting.
+
+    - title: Perform load tests and use chaos engineering
+      description: |
+        Run load tests against your infrastructure to figure out when it falls over and what the bottlenecks are. Use
+        <a href="https://principlesofchaos.org/" target="_blank">chaos engineering</a> to continuously test the
+        resilience of your infrastructure (see also
+        <a href="https://github.com/Netflix/chaosmonkey" target="_blank">chaos monkey</a>).
+
+- category: Continuous Integration
+  items:
+    - title: Pick a Version Control System
+      description: |
+        Check all code into a Version Control System (VCS). The most popular choice these days is
+        <a href="https://git-scm.com/" target="_blank">Git</a>. You can use
+        <a href="https://github.com/" target="_blank">GitHub</a>, <a href="https://gitlab.com/" target="_blank">GitLab</a>,
+        or <a href="https://bitbucket.org/" target="_blank">BitBucket</a> to host your Git repo.
+
+    - title: Do code reviews
+      description: |
+        Set up a code review process in your team to ensure all commits are reviewed.
+        <a href="https://help.github.com/articles/about-pull-requests/" target="_blank">Pull requests</a> are an easy
+        way to do this.
+
+    - title: Configure a build system
+      description: |
+        Set up a build system for your project, such as <a href="https://gradle.org/" target="_blank">Gradle</a> (for
+        Java), <a href="https://github.com/ruby/rake" target="_blank">Rake</a> (for Ruby), or
+        <a href="https://yarnpkg.com/en/" target="_blank">Yarn</a> (for Node.js). The build system is responsible for
+        compiling your app, as well as many other tasks described below.
+
+    - title: Use dependency management
+      description: |
+        Your build systems should allow you to explicitly define all the of the dependencies for your apps. Each
+        dependency should be versioned, and ideally, the versions of all dependencies, including transitive
+        dependencies, are captured in a lock file.
+
+    - title: Configure static analysis
+      description: |
+        Configure your build system so it can run
+        <a href="https://en.wikipedia.org/wiki/List_of_tools_for_static_code_analysis" target="_blank">static analysis tools</a>
+        on your code, such as linters and code coverage.
+
+    - title: Set up automatic code formatting
+      description: |
+        Configure your build system to automatically format the code according to a well-defined style (e.g., with Go,
+        you can run <code>go fmt</code>; with Terraform, you can run <code>terraform fmt</code>). This way, all your
+        code has a consistent style, and your team doesn't have to spend any time arguing about tabs vs spaces or curly
+        brace placement.
+
+    - title: Set up automated tests
+      description: |
+        Configure your build system so it can run automated tests on your code, with tools such as
+        <a href="https://junit.org/junit5/" target="_blank">JUnit</a> (for Java),
+        <a href="http://rspec.info/" target="_blank">RSpec</a> (for Ruby), or
+        <a href="https://mochajs.org/" target="_blank">Mocha</a> (for Node.js).
+
+    - title: Publish versioned artifacts
+      description: |
+        Configure your build system so it can package your app into a deployable "artifact," such as an AMI or Docker
+        image. Each artifact should be immutable and have a unique version number that makes it easy to figure out
+        where it came from (e.g., tag Docker images with the Git commit ID). Push the artifact to an artifact
+        repository (e.g., ECR for Docker images) form which it can be deployed.
+
+    - title: Set up a build server
+      description: |
+        Set up a server to automatically run builds, static analysis, automated tests, etc. after every commit. You can
+        use a hosted system such as <a href="https://circleci.com/" target="_blank">CircleCI</a> or
+        <a href="https://travis-ci.org/" target="_blank">Travis CI</a>, or run your a build server yourself with a tool
+        such as <a href="https://jenkins.io/" target="_blank">Jenkins</a>.
+
+- category: Continuous Delivery
+  items:
+    - title: Create deployment environments
+      description: |
+        Define separate "environments" such as dev, stage, and prod. Each environment can either be a separate AWS
+        account (recommended for larger teams and security-sensitive and compliance use cases) or a separate VPC within
+        a single AWS account (recommended only for smaller teams).
+
+    - title: Set up per-environment configuration
+      description: |
+        Your apps may need different configuration settings in each environment: e.g., different memory settings,
+        different features on or off. Define these in config files that get checked into version control (e.g.,
+        dev-config.yml, stage-config.yml, prod-config.yml) and packaged with your app artifact (i.e., packaged directly
+        into the Docker image for your app), and have your app boot up code pick the proper config file for the current
+        environment during boot.
+
+    - title: Define your infrastructure as code
+      description: |
+        Do not deploy anything by hand, by using the AWS Console, or the AWS CLI. Instead, define all of your
+        <a href="https://blog.gruntwork.io/a-comprehensive-guide-to-terraform-b3d32832baca" target="_blank">infrastructure as code</a>
+        using tools such as <a href="https://www.terraform.io/" target="_blank">Terraform</a>,
+        <a href="https://www.packer.io/" target="_blank">Packer</a>, and
+        <a href="https://www.docker.com/" target="_blank">Docker</a>.
+
+    - title: Test your infrastructure code
+      description: |
+        If all of your infrastructure is defined as code, you can create automated tests for it. The goal is to verify
+        your infrastructure works as expected after every single commit, long before those infrastructure changes
+        affect prod. See <a href="https://github.com/gruntwork-io/terratest" target="_blank">Terratest</a> for more
+        info.
+
+    - title: Set up immutable infrastructure
+      description: |
+        Don't update EC2 Instance or Docker containers in place. Instead, launch completely new EC2 Instances and new
+        Docker containers and, once those are up and healthy, remove the old EC2 Instances and Docker images. Since we
+        never "modify" anything, but simply replace, this is known as
+        <a href="https://www.oreilly.com/ideas/an-introduction-to-immutable-infrastructure" target="_blank">immutable infrastructure</a>,
+        and it makes it easier to reason about what's deployed and to manage that infrastructure.
+
+    - title: Promote artifacts
+      description: |
+        Deploy immutable artifacts to one environment at a time, and promote it to the next environment after testing.
+        For example, you might deploy v0.3.2 to dev, and test it there. If it works well, you promote the exact same
+        artifact, v0.3.2, to stage, and test it there. If all goes well, you finally promote v0.3.2 to prod. Since it's
+        the exact same code in every environment, there's a good chance that if it works in one environment, it'll
+        also work in the others.
+
+    - title: Roll back in case of failure
+      description: |
+        If you use immutable, versioned artifacts as your unit of deployment, then any time something goes wrong, you
+        have the option to roll back to a known-good state by rolling out the previous version. If your infrastructure
+        is defined as code, you can also see what changed between versions by looking at the diffs in version control.
+
+    - title: Automate your deployments
+      description: |
+        One of the advantages of defining your entire infrastructure as code is that you can fully automate the
+        deployment process, making deployments faster, more reliable, and less stressful.
+
+    - title: Do zero-downtime deployments
+      description: |
+        There are several strategies you can use for Zero-downtime deployments, such as
+        <a href="https://martinfowler.com/bliki/BlueGreenDeployment.html" target="_blank">blue-green deployment</a>
+        (works best for stateless apps) or
+        <a href="http://hintcafe.net/post/56948449558/rolling-deployment-with-no-downtime" target="_blank">rolling deployment</a>
+        (works best for stateful apps).
+
+    - title: Use canary deployments
+      description: |
+        Instead of deploying the new version of your code to all servers, and risking a bug affecting all users at
+        once, you limit the possible damage by first deploying te new code to a single "canary" server. You then
+        compare the canary to a "control" server running the old code and make sure there are no unexpected errors,
+        performance issues, or other problems. If the canary looks healthy, roll out the new version of your code to
+        the rest of the servers. If not, roll back the canary.
+
+    - title: Use feature toggles
+      description: |
+        Wrap all new functionality in an if-statement that only evaluates to true if a the
+        <a href="https://martinfowler.com/articles/feature-toggles.html" target="_blank">feature toggle</a> is enabled.
+        By default, all feature toggles are disabled, so you can safely check in and even deploy code that isn't
+        completely finished (as long as it compiles!), and it won't affect any user. When the feature is done, you can
+        use a UI to gradually enable the feature toggle for specific users: e.g., initially just for your company's
+        employees, then for 1% of all users, then 10% of all users, and so on. At any stage, if anything goes wrong,
+        you can turn the feature toggle off again. Feature toggles allow you to separate <em>deployment</em> of new
+        code from the <em>release</em> of new features in that code. They also allow you to do
+        <a href="https://en.wikipedia.org/wiki/A/B_testing" target="_blank">bucket testing</a>. See
+        <a href="https://launchdarkly.com/" target="_blank">LaunchDarkly</a>,
+        <a href="https://www.split.io/" target="_blank">Split</a>, and
+        <a href="https://www.optimizely.com/" target="_blank">Optimizely</a> for more info.
+
+- category: Networking
+  items:
+    - title: Set up VPCs
+      description: |
+        Don't use the Default VPC, as everything in it is publicly accessible by default. Instead, create one or more
+        custom <a href="https://aws.amazon.com/vpc/" target="_blank">Virtual Private Clouds (VPC)</a>, each with their
+        own IP address range (see
+        <a href="https://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Subnets.html#VPC_Sizing" target="_blank">VPC and subnet sizing</a>),
+        and deploy all of your apps into those VPCs.
+
+    - title: Set up subnets
+      description: |
+        Create three "tiers" of
+        <a href="https://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Subnets.html" target="_blank">subnets</a>
+        in each VPC: public, private-app, private-persistence. The public subnets are directly accessible from the
+        public Internet and should only be used for a small number of highly locked down, user-facing services, such as
+        load balancers and Bastion Hosts. The private-apps subnets are only accessible from within the VPC from the
+        public subnets and should be used to run your apps (Auto Scaling Groups, Docker containers, etc.). The
+        private-persistence subnets are also only accessible from within the VPC from the private-app subnets (but NOT
+        the public subnets) and should be used to run all your data stores (RDS, ElastiCache, etc.). See
+        <a href="https://www.whaletech.co/2014/10/02/reference-vpc-architecture.html" target="_blank">A Reference VPC Architecture</a>.
+
+    - title: Configure Network ACLs
+      description: |
+        Create <a href="https://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_ACLs.html" target="_blank">Network Access Control Lists (NACLs)</a>
+        to control what traffic can go between different subnets. We recommend allowing the public subnets to receive
+        traffic from anywhere, the private-app subnets to only receive traffic from the public subnets, and the
+        private-persistence subnets to only receive traffic from the private-app subnets.
+
+    - title: Configure Security Groups
+      description: |
+        Every AWS resource (e.g., EC2 Instances, Load Balancers, RDS DBs, etc.) has a
+        <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html" target="_blank">Security Group</a>
+        that acts as a firewall, controlling what traffic is allowed in and out of that resource. By default, no
+        traffic is allowed in or out. Follow the
+        <a href="https://en.wikipedia.org/wiki/Principle_of_least_privilege" target="_blank">Principle of Least Privilege</a>
+        and open up the absolute minimum number of ports you can for each resource. When opening up a port, you can
+        also specify either the CIDR block (IP address range) or ID of another Security Group that are allowed to
+        access that port. Reduce these to solely trusted servers where possible. For example, EC2 Instances should only
+        allow SSH access (port 22) from the Security Group of a single, locked-down, trusted server (the
+        <a href="https://en.wikipedia.org/wiki/Bastion_host" target="_blank">Bastion Host</a>).
+
+    - title: Configure Static IPs
+      description: |
+        By default, all AWS resources (e.g., EC2 Instances, Load Balancers, RDS DBs, etc.) have dynamic IP addresses
+        that could change over time (e.g., after a redeploy). When possible, use
+        <a href="#architecture-scalability-high-availability-service-discovery">Service Discovery</a> to find
+        the IPs of services you depend on. If that's not possible, you can create static IP addresses that can be
+        attached and detached from resources using
+        <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html" target="_blank">Elastic IP Addresses (EIPs)</a>
+        for public IPs or
+        <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-eni.html" target="_blank">Elastic Network Interfaces (ENIs)</a>
+        for private IPs.
+
+    - title: Configure DNS using Route 53
+      description: |
+        Manage DNS entries using <a href="https://aws.amazon.com/route53/" target="_blank">Route 53</a>. You can buy
+        public domain names using the
+        <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/registrar.html" target="_blank">Route 53 Registrar</a>
+        or create custom private domain names, accessible only from within your VPC, using
+        <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/hosted-zones-private.html" target="_blank">Route 53 Private Hosted Zones</a>.
+
+- category: Security
+  items:
+    - title: Configure encryption in transit
+      description: |
+        Encrypt all network connections using <a href="https://en.wikipedia.org/wiki/Transport_Layer_Security" target="_blank">TLS</a>.
+        Many AWS services support TLS connections by default (e.g., RDS) or if you enable them (e.g., ElastiCache).
+        You can get free, auto-renewing TLS certificates for your public domain names from
+        <a href="https://aws.amazon.com/certificate-manager/" target="_blank">AWS Certificate Manager (ACM)</a>. You
+        can also use the
+        <a href="https://aws.amazon.com/certificate-manager/private-certificate-authority/" target="_blank">ACM Private Certificate Authority</a>
+        to get auto-renewing TLS certificates for private domain names within your VPC.
+
+    - title: Configure encryption at rest
+      description: |
+        Encrypt the root volume of each EC2 Instance by using the
+        <a href="https://www.packer.io/docs/builders/amazon-ebs.html#encrypt_boot" target="_blank">encrypt_boot</a>
+        setting in Packer. Enable encryption for each
+        <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSEncryption.html" target="_blank">EBS Volume</a>
+        too. Many AWS services optionally support disk encryption: e.g., see
+        <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Overview.Encryption.html" target="_blank">Encrypting Amazon RDS Resources</a>
+        and
+        <a href="https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/at-rest-encryption.html" target="_blank">ElastiCache for Redis At-Rest Encryption</a>.
+
+    - title: Set up SSH access
+      description: |
+        Do NOT share <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html" target="_blank">EC2 KeyPairs</a>
+        with your team! Otherwise, everyone will be using the same username and key for server acesss (so there's no
+        audit trail), the key may easily be compromised, and if it is, or someone leaves the company, you'll have to
+        redeploy ALL your EC2 Instances to change the KeyPair. Instead, configure your EC2 Instances so that each
+        developer can use their own username and SSH key, and if that developer leaves the company, the key can be
+        invalidated immediately (see the
+        <a href="https://gruntwork.io/infrastructure-as-code-library/" target="_blank">Gruntwork Library</a> for
+        solutions).
+
+    - title: Deploy a Bastion Host
+      description: |
+        All EC2 Instances should be in a private subnet and NOT accessible directly from the public Internet. Only a
+        single, locked-down EC2 Instance, known as the Bastion Host, should run in the public subnets. You must first
+        connect to the Bastion Host, which gets you "in" to the network, and then you can use it as a "jump host" to
+        connect to the other EC2 Instances.
+
+    - title: Deploy a VPN Server
+      description: |
+        We typically recommend running a VPN Server as the entrypoint to your network (as the Bastion Host).
+        <a href="https://openvpn.net/" target="_blank">OpenVPN</a> is the most popular option for running a VPN server.
+
+    - title: Set up a secrets management solution
+      description: |
+        NEVER store secrets in plaintext. Developers should store their secrets in a secure secrets manager, such as
+        <a href="https://www.passwordstore.org/" target="_blank">pass</a>,
+        <a href="https://1password.com/" target="_blank">1Password</a>, or
+        <a href="https://www.lastpass.com/" target="_blank">LastPass</a>. Applications should store all their secrets
+        (such as DB passwords and API keys) either in files encrypted with
+        <a href="https://aws.amazon.com/kms/" target="_blank">KMS</a> or in a secret store such as
+        <a href="https://www.vaultproject.io/" target="_blank">Vault</a>.
+
+    - title: Use server hardening practices
+      description: |
+        Every server should be hardened to protect against attackers. This may include: running
+        <a href="https://www.cisecurity.org/services/hardened-virtual-images/" target="_blank">CIS Hardened Images</a>,
+        <a href="https://www.fail2ban.org/wiki/index.php/Main_Page" target="_blank">fail2ban</a> to protect against malicious access,
+        <a href="https://help.ubuntu.com/community/AutomaticSecurityUpdates" target="_blank">unattended upgrades</a> to automatically install critical security patches,
+        <a href="https://en.wikipedia.org/wiki/Firewall_(computing)" target="_blank">firewall software</a>,
+        <a href="https://en.wikipedia.org/wiki/Antivirus_software" target="_blank">anti-virus software</a>, and
+        <a href="https://en.wikipedia.org/wiki/File_integrity_monitoring" target="_blank">file integrity monitoring software</a>.
+        See also
+        <a href="https://www.codelitt.com/blog/my-first-10-minutes-on-a-server-primer-for-securing-ubuntu/" target="_blank">My First 10 Minutes On a Server</a> and
+        <a href="https://www.inversoft.com/guides/2016-guide-to-user-data-security" target="_blank">Guide to User Data Security</a>.
+
+    - title: Go through the OWASP Top 10
+      description: |
+        Browse through the <a href="https://www.owasp.org/index.php/Top_10-2017_Top_10" target="_blank">Top 10 Application Security Risks</a>
+        list from the <a href="https://www.owasp.org/index.php/Main_Page" target="_blank">Open Web Application Security Project (OWASP)</a>
+        and check your app for vulnerabilities such as injection attacks, CSRF, and XSS.
+
+    - title: Go through a security audit
+      description: |
+        Have a third party security service perform a security audit and do penetration testing on your services. Fix
+        any issues they uncover.
+
+    - title: Sign up for security advisories
+      description: |
+        Join the security advisory mailing lists for any software you use and monitor those lists for announcements of
+        critical security vulnerabilities.
+
+    - title: Create IAM Users
+      description: |
+        Create an <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html" target="_blank">IAM User</a>
+        for each developer. The developer will have a web console login for accessing AWS from a web browser and a set
+        of API keys for accessing AWS from the CLI. Note that the
+        <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html" target="_blank">root user</a>
+        on your AWS account should only be used to create an initial admin IAM User; after that, do all your work from
+        that IAM user account and never use the root user account again!
+
+    - title: Create IAM Groups
+      description: |
+        Manage permissions for IAM users using
+        <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_groups.html" target="_blank">IAM Groups</a>. Follow
+        the <a href="https://en.wikipedia.org/wiki/Principle_of_least_privilege" target="_blank">Principle of Least Privilege</a>,
+        assigning the minimum permissions possible to each IAM Group and User.
+
+    - title: Create IAM Roles
+      description: |
+        Give your AWS resources (e.g., EC2 Instances, Lambda Functions) access to other resources by attacing
+        <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html" target="_blank">IAM Roles</a>. All
+        AWS SDK and CLI tools automatically know how to use IAM Roles, so you should never have to copy AWS access keys
+        to a server.
+
+    - title: Create cross-account IAM Roles
+      description: |
+        If you are using multiple AWS accounts (e.g., one for dev and one for prod), you should define all of the IAM
+        Users in one account, and use
+        <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/tutorial_cross-account-with-roles.html" target="_blank">IAM Roles</a>
+        to provide access to the other AWS accounts. This way, developers have only one set of credentials to manage,
+        and you can have very fine-grained permissions control over what IAM Users can do in any given account.
+
+    - title: Create a password policy and enforce MFA
+      description: |
+        Set a <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_passwords_account-policy.html" target="_blank">password policy<a>
+        that requires a long password for all IAM users and require every user to enable
+        <a href="https://aws.amazon.com/iam/details/mfa/" target="_blank">Multi-Factor Authentication (MFA)</a>.
+
+    - title: Record audit Logs
+      description: |
+        Enable <a href="https://aws.amazon.com/cloudtrail/" target="_blank">CloudTrail</a> to maintain an audit log of
+        all changes happening in your AWS account.
+
+- category: Monitoring
+  items:
+    - title: Track availability metrics
+      description: |
+        The most basic set of metrics: can a user access your product or not? Useful tools:
+        <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover.html" target="_blank">Route 53 Health Checks</a> and
+        <a href="https://www.pingdom.com/" target="_blank">Pingdom</a>.
+
+    - title: Track business metrics
+      description: |
+        Metrics around what users are doing with your product, such as what pages they are viewing, what items they
+        are buying, and so on. Useful tools:
+        <a href="https://www.google.com/analytics" target="_blank">Google Analytics</a>,
+        <a href="https://www.kissmetrics.com/" target="_blank">Kissmetrics</a>, and
+        <a href="https://mixpanel.com/" target="_blank">Mixpanel</a>.
+
+    - title: Track application metrics
+      description: |
+        Metrics around what your application is doing, such as QPS, latency, and throughput. Useful tools:
+        <a href="https://aws.amazon.com/cloudwatch/" target="_blank">CloudWatch</a>,
+        <a href="https://www.datadoghq.com/" target="_blank">DataDog</a>, and
+        <a href="https://newrelic.com/" target="_blank">New Relic</a>.
+
+    - title: Track server metrics
+      description: |
+        Metrics around what your hardware is doing, such as CPU, memory, and disk usage. Useful tools:
+        <a href="https://aws.amazon.com/cloudwatch/" target="_blank">CloudWatch</a>,
+        <a href="https://www.datadoghq.com/" target="_blank">DataDog</a>,
+        <a href="https://newrelic.com/" target="_blank">New Relic</a>,
+        <a href="https://www.nagios.org/" target="_blank">Nagios</a>,
+        <a href="https://www.icinga.com/" target="_blank">Icinga</a>, and
+        <a href="https://collectd.org/" target="_blank">collectd</a>.
+
+    - title: Configure services for observability
+      description: |
+        Record events stream data from all services and slice and dice it using tools such as
+        <a href="https://kafka.apache.org/" target="_blank">Kafka</a> and
+        <a href="https://www.confluent.io/product/ksql/" target="_blank">KSQL</a>,
+        <a href="https://honeycomb.io/" target="_blank">Honeycomb</a>, and
+        <a href="http://opentracing.io/" target="_blank">OpenTracing</a>.
+
+    - title: Store logs
+      description: |
+        To prevent log files from taking up too much disk space, configure log rotation on every server using a tool
+        such as <a href="https://linux.die.net/man/8/logrotate" target="_blank">logrotate</a>. To be able to view and
+        search all log data from a central location (i.e., a web UI), set up log aggregation using tools such as
+        <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/WhatIsCloudWatchLogs.html" target="_blank">CloudWatch Logs</a>,
+        <a href="https://www.elastic.co/products/beats/filebeat" target="_blank">Filebeat</a>,
+        <a href="https://www.elastic.co/products/logstash" target="_blank">Logstash</a>,
+        <a href="https://www.loggly.com/" target="_blank">Loggly</a>, and
+        <a href="https://papertrailapp.com/" target="_blank">Papertrail</a>.
+
+    - title: Set up alerts
+      description: |
+        Configure alerts when critical metrics cross pre-defined thresholds, such as CPU usage getting too high or
+        available disk space getting too low. Most of the metrics and logs tools listed earlier in this section support
+        alerting. Set up an on-call rotation using tools such as
+        <a href="https://www.pagerduty.com/" target="_blank">PagerDuty</a> and
+        <a href="https://victorops.com/" target="_blank">VictorOps</a>.

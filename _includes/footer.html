@@ -16,18 +16,18 @@
           <hr class="hr-sm" />
           <ul class="list-unstyled">
             {% for link in category.links %}
-            <li><a href="{{ link.url }}" ga-on="click" ga-event-category="footer-{{ page.path | slugify }}" ga-event-action="link-{{ link.title | slugify }}">{{ link.title }}</a></li>
+              <li><a href="{{ link.url }}" ga-on="click" ga-event-category="footer-{{ page.path | slugify }}" ga-event-action="link-{{ link.title | slugify }}">{{ link.title }}</a></li>
             {% endfor %}
             {% if category.title == "Connect" %}
-            <li>
-              <div class="btn-group btn-group-social-icons" role="group" aria-label="Group of Social Links">
-                <a href="{{site.data.contact.github.url}}" class="btn btn-default" role="button"><i class="fa fa-fw fa-github-square"></i></a>
-                <a href="{{site.data.contact.facebook.url}}" class="btn btn-default" role="button"><i class="fa fa-fw fa-facebook-square"></i></a>
-                <a href="{{site.data.contact.twitter.url}}" class="btn btn-default" role="button"><i class="fa fa-fw fa-twitter-square"></i></a>
-                <a href="{{site.data.contact.linkedin.url}}" class="btn btn-default" role="button"><i class="fa fa-fw fa-linkedin-square"></i></a>
-                <a href="{{site.data.contact.youtube.url}}" class="btn btn-default" role="button"><i class="fa fa-fw fa-youtube-square"></i></a>
-              </div>
-            </li>
+              <li>
+                <div class="btn-group btn-group-social-icons" role="group" aria-label="Group of Social Links">
+                  <a href="{{site.data.contact.github.url}}" class="btn btn-default" role="button"><i class="fa fa-fw fa-github-square"></i></a>
+                  <a href="{{site.data.contact.facebook.url}}" class="btn btn-default" role="button"><i class="fa fa-fw fa-facebook-square"></i></a>
+                  <a href="{{site.data.contact.twitter.url}}" class="btn btn-default" role="button"><i class="fa fa-fw fa-twitter-square"></i></a>
+                  <a href="{{site.data.contact.linkedin.url}}" class="btn btn-default" role="button"><i class="fa fa-fw fa-linkedin-square"></i></a>
+                  <a href="{{site.data.contact.youtube.url}}" class="btn btn-default" role="button"><i class="fa fa-fw fa-youtube-square"></i></a>
+                </div>
+              </li>
             {% endif %}
           </ul>
         </div>

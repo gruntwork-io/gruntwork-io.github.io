@@ -149,6 +149,42 @@ $('#ref-arch-accordion').on('hide.bs.collapse', function (event) {
   $(event.target).parent().find(".fa-caret-down").removeClass("fa-caret-down").addClass("fa-caret-right");
 });
 
+/* DevOps Checklist */
+$('.js-toggle-truncate-text').on('click', function(event) {
+  event.preventDefault();
+
+  var el = $(event.target);
+  var target = el.attr('href');
+  var targetEl = $(target);
+  targetEl.toggleClass('truncate-text');
+
+  if (el.text() === "more") {
+    el.text("less");
+  } else {
+    el.text("more");
+  }
+});
+
+if (window.localStorage) {
+  $('.js-save-to-local-storage').on('click', function(event) {
+    var el = $(event.target);
+    var id = el.attr('id');
+    var checked = el.prop('checked');
+
+    window.localStorage.setItem(id, checked);
+  });
+
+  $('.js-save-to-local-storage').each(function(index, item) {
+    var el = $(item);
+    var id = el.attr('id');
+    var checked = window.localStorage.getItem(id);
+
+    if (checked === "true") {
+      el.prop('checked', true);
+    }
+  });
+}
+
 /* Pricing calculator */
 $(function () { // This prevents global vars
   var $pricingInput = $('[data-pricing-calc="input"]');
