@@ -150,40 +150,97 @@ $('#ref-arch-accordion').on('hide.bs.collapse', function (event) {
 });
 
 /* DevOps Checklist */
-$('.js-toggle-truncate-text').on('click', function(event) {
-  event.preventDefault();
 
-  var el = $(event.target);
-  var target = el.attr('href');
-  var targetEl = $(target);
-  targetEl.toggleClass('truncate-text');
+var moreClicked = function(item) {
+  var el = $(item);
 
   if (el.text() === "more") {
-    el.text("less");
+    showMore(el);
   } else {
-    el.text("more");
+    showLess(el);
+  }
+};
+
+var showMore = function(el) {
+  el = $(el);
+  var target = el.attr('href');
+  var targetEl = $(target);
+
+  el.text('less');
+  targetEl.removeClass('truncate-text');
+};
+
+var showLess = function(el) {
+  el = $(el);
+  var target = el.attr('href');
+  var targetEl = $(target);
+
+  el.text('more');
+  if (!targetEl.hasClass('truncate-text')) {
+    targetEl.addClass('truncate-text');
+  }
+};
+
+$('.js-toggle-truncate-text').on('click', function(event) {
+  event.preventDefault();
+  moreClicked(event.target);
+});
+
+var checkClicked = function(check) {
+  if (!window.localStorage) {
+    return
+  }
+
+  var el = $(check);
+  var id = el.attr('id');
+  var checked = el.prop('checked');
+
+  window.localStorage.setItem(id, checked);
+};
+
+$('.js-save-to-local-storage').on('click', function(event) {
+  checkClicked(event.target);
+});
+
+$('.js-save-to-local-storage').each(function(index, item) {
+  var el = $(item);
+  var id = el.attr('id');
+  var checked = window.localStorage.getItem(id);
+
+  if (checked === "true") {
+    el.prop('checked', true);
   }
 });
 
-if (window.localStorage) {
-  $('.js-save-to-local-storage').on('click', function(event) {
-    var el = $(event.target);
-    var id = el.attr('id');
-    var checked = el.prop('checked');
-
-    window.localStorage.setItem(id, checked);
-  });
-
+$('.js-check-all').on('click', function(event) {
   $('.js-save-to-local-storage').each(function(index, item) {
-    var el = $(item);
-    var id = el.attr('id');
-    var checked = window.localStorage.getItem(id);
-
-    if (checked === "true") {
-      el.prop('checked', true);
-    }
+    $(item).prop('checked', true);
+    checkClicked(item);
   });
-}
+});
+
+$('.js-uncheck-all').on('click', function(event) {
+  $('.js-save-to-local-storage').each(function(index, item) {
+    $(item).prop('checked', false);
+    checkClicked(item);
+  });
+});
+
+$('.js-expand-all').on('click', function(event) {
+  $('.js-toggle-truncate-text').each(function(index, item) {
+    showMore(item);
+  });
+});
+
+$('.js-collapse-all').on('click', function(event) {
+  $('.js-toggle-truncate-text').each(function(index, item) {
+    showLess(item);
+  });
+});
+
+$('.js-print').on('click', function(event) {
+  window.print();
+});
 
 /* Pricing calculator */
 $(function () { // This prevents global vars

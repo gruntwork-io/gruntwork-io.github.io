@@ -1,28 +1,31 @@
-<form>
-  {% for category in site.data.devops-checklist %}
+{% for category in site.data.devops-checklist %}
+  {% if forloop.index0 == 0 %}
+    <hr style="margin-bottom: 20px;">
+    {% include_relative _checklist-controls.html %}
+  {% else %}
     <hr>
-    <div class="row">
-      <div class="col-xs-12">
-        <h2 id="{{ category.category | slugify}}" style="margin-top: 0;">{{ category.category}}</h2>
-        <table class="table table-striped">
-          {% for item in category.items %}
-            {% capture item_id %}{{ category.category | slugify}}-{{ item.title | slugify }}{% endcapture %}
-            {% capture description_id %}{{ item_id }}-description{% endcapture %}
-            <tr>
-              <td style="width: 10px">
-                <input type="checkbox" value="" id="{{ item_id }}" class="form-check-input js-save-to-local-storage">
-              </td>
-              <td style="max-width: 0;">
-                <label class="form-check-label h5" for="{{ item_id }}" style="margin: 0;">{{ item.title }}</label>
-                <div id="{{ description_id }}" class="truncate-text">{{ item.description }}</div>
-              </td>
-              <td style="width: 10px; vertical-align: bottom;">
-                [<a href="#{{ description_id }}" class="js-toggle-truncate-text no-scroll">more</a>]
-              </td>
-            </tr>
-          {% endfor %}
-        </table>
-      </div>
+  {% endif %}
+  <div class="row">
+    <div class="col-xs-12">
+      <h2 id="{{ category.category | slugify}}" style="margin-top: 0;">{{ category.category}}</h2>
+      <table class="table table-striped">
+        {% for item in category.items %}
+        {% capture item_id %}{{ category.category | slugify}}-{{ item.title | slugify }}{% endcapture %}
+        {% capture description_id %}{{ item_id }}-description{% endcapture %}
+        <tr>
+          <td style="width: 10px">
+            <input type="checkbox" value="" id="{{ item_id }}" class="form-check-input js-save-to-local-storage">
+          </td>
+          <td style="max-width: 0;">
+            <label class="form-check-label h5" for="{{ item_id }}" style="margin: 0;">{{ item.title }}</label>
+            <div id="{{ description_id }}" class="truncate-text">{{ item.description }}</div>
+          </td>
+          <td style="width: 10px; vertical-align: bottom;">
+            [<a href="#{{ description_id }}" class="js-toggle-truncate-text no-scroll">more</a>]
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
     </div>
-  {% endfor %}
-</form>
+  </div>
+{% endfor %}
