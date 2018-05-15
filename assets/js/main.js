@@ -149,6 +149,99 @@ $('#ref-arch-accordion').on('hide.bs.collapse', function (event) {
   $(event.target).parent().find(".fa-caret-down").removeClass("fa-caret-down").addClass("fa-caret-right");
 });
 
+/* DevOps Checklist */
+
+var moreClicked = function(item) {
+  var el = $(item);
+
+  if (el.text() === "more") {
+    showMore(el);
+  } else {
+    showLess(el);
+  }
+};
+
+var showMore = function(el) {
+  el = $(el);
+  var target = el.attr('href');
+  var targetEl = $(target);
+
+  el.text('less');
+  targetEl.removeClass('truncate-text');
+};
+
+var showLess = function(el) {
+  el = $(el);
+  var target = el.attr('href');
+  var targetEl = $(target);
+
+  el.text('more');
+  if (!targetEl.hasClass('truncate-text')) {
+    targetEl.addClass('truncate-text');
+  }
+};
+
+$('.js-toggle-truncate-text').on('click', function(event) {
+  event.preventDefault();
+  moreClicked(event.target);
+});
+
+var checkClicked = function(check) {
+  if (!window.localStorage) {
+    return
+  }
+
+  var el = $(check);
+  var id = el.attr('id');
+  var checked = el.prop('checked');
+
+  window.localStorage.setItem(id, checked);
+};
+
+$('.js-save-to-local-storage').on('click', function(event) {
+  checkClicked(event.target);
+});
+
+$('.js-save-to-local-storage').each(function(index, item) {
+  var el = $(item);
+  var id = el.attr('id');
+  var checked = window.localStorage.getItem(id);
+
+  if (checked === "true") {
+    el.prop('checked', true);
+  }
+});
+
+$('.js-check-all').on('click', function(event) {
+  $('.js-save-to-local-storage').each(function(index, item) {
+    $(item).prop('checked', true);
+    checkClicked(item);
+  });
+});
+
+$('.js-uncheck-all').on('click', function(event) {
+  $('.js-save-to-local-storage').each(function(index, item) {
+    $(item).prop('checked', false);
+    checkClicked(item);
+  });
+});
+
+$('.js-expand-all').on('click', function(event) {
+  $('.js-toggle-truncate-text').each(function(index, item) {
+    showMore(item);
+  });
+});
+
+$('.js-collapse-all').on('click', function(event) {
+  $('.js-toggle-truncate-text').each(function(index, item) {
+    showLess(item);
+  });
+});
+
+$('.js-print').on('click', function(event) {
+  window.print();
+});
+
 /* Pricing calculator */
 $(function () { // This prevents global vars
   var $pricingInput = $('[data-pricing-calc="input"]');
