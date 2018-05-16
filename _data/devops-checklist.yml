@@ -316,7 +316,7 @@
         Your build systems should allow you to explicitly define all the of the dependencies for your apps. Each
         dependency should be versioned, and ideally, the versions of all dependencies, including transitive
         dependencies, are captured in a lock file (e.g., read about
-        <a href="" target="_blank">Yarn's lock file</a> and
+        <a href="https://yarnpkg.com/lang/en/docs/yarn-lock/" target="_blank">Yarn's lock file</a> and
         <a href="https://github.com/golang/dep/blob/master/docs/FAQ.md#what-is-the-difference-between-gopkgtoml-the-manifest-and-gopkglock-the-lock" target="_blank">Go's dep lock file</a>.
 
     - title: Configure static analysis
@@ -622,7 +622,7 @@
 
     - title: Create a password policy and enforce MFA
       description: |
-        Set a <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_passwords_account-policy.html" target="_blank">password policy<a>
+        Set a <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_passwords_account-policy.html" target="_blank">password policy</a>
         that requires a long password for all IAM users and require every user to enable
         <a href="https://aws.amazon.com/iam/details/mfa/" target="_blank">Multi-Factor Authentication (MFA)</a>.
 
@@ -690,3 +690,102 @@
         alerting. Set up an on-call rotation using tools such as
         <a href="https://www.pagerduty.com/" target="_blank">PagerDuty</a> and
         <a href="https://victorops.com/" target="_blank">VictorOps</a>.
+
+- category: Cost optimization
+  items:
+    - title: Pick proper EC2 Instance types and sizes
+      description: |
+        AWS offers a number of different <a href="https://aws.amazon.com/ec2/instance-types/" target="_blank">Instance Types</a>,
+        each optimized for different purposes: compute, memory, storage, GPU, etc. Use
+        <a href="https://www.ec2instances.info/" target="_blank">EC2Instances.info</a> to slice and dice the different
+        Instance Types across a variety of parameters. Try out a variety of Instance sizes by load testing your app on
+        each type and picking the best balance of performance and cost. In general, running a larger number of smaller
+        Instances ("horizontal scaling") is going to be cheaper, more performant, and more reliable than a smaller
+        number of larger Instances ("vertical scaling"). See also
+        <a href="https://www.slideshare.net/brendangregg/how-netflix-tunes-ec2-instances-for-performance" target="_blank">How Netflix Tunes EC2 Instances for Performance</a>.
+
+    - title: Use Spot EC2 Instances for background jobs
+      description: |
+        <a href="https://aws.amazon.com/ec2/spot/" target="_blank">EC2 Spot Instances</a> allow you to "bid" a much
+        lower price for EC2 Instances than what you'd pay on-demand (as much as 90% lower!), and when there is capacity
+        to fulfill your request, AWS will give you the EC2 Instances at that price. Note that if AWS needs to relcaim
+        that capacity, it may terminate the EC2 Instance at any time with a 2-minute notice. This makes Spot Instances
+        a great way to save money on any workload that is non-urgent (e.g., all background jobs, machine learning, image
+        processing) and pre-production environments (e.g., run an ECS cluster on spot instances by just setting a
+        single extra param!).
+
+    - title: Use Reserved EC2 Instances for dedicated work
+      description: |
+        <a href="https://aws.amazon.com/ec2/pricing/reserved-instances/" target="_blank">EC2 Reserved Instances</a>
+        allow you to reserve capacity ahead of time in exchange for a significant discount (up to 75%) over on-demand
+        pricing. This makes Reserved Instances a great way to save money when you know for sure that you are going to
+        be using a certain number of Instances consistently for a long time period. For example, if you knew you were
+        going to run a 3-node ZooKeeper cluster all year long, you could reserve three `r4.large` Instances for one
+        year, at a discount of 75%. Reserved Instances are a billing optimization, so no code changes are required:
+        just reserve the Instance Type, and next time you use it, AWS will charge you less for it.
+
+    - title: Shut down EC2 Instances and RDS DBs when not using them
+      description: |
+        You can shut down (but not terminate!) EC2 Instances and RDS DBs when you're not using them, such as in your
+        pre-prod environments at night and on weekends. You could even create a Lambda function that does this on a
+        regular schedule. For more info, see
+        <a href="https://aws.amazon.com/answers/infrastructure-management/instance-scheduler/" target="_blank">AWS Instance Scheduler</a>.
+
+    - title: Use Auto Scaling
+      description: |
+        Use <a href="https://aws.amazon.com/autoscaling/" target="_blank">Auto Scaling</a> to increase the number of
+        EC2 Instances when load is high and then to decrease it again—and thereby save money—when load is low.
+
+    - title: Use Docker when possible
+      description: |
+        If you deploy everything as an AMI directly on your EC2 Instances, then you will typically run exactly one type
+        of app per EC2 Instance. If you use a Docker orchestration tool (e.g.,
+        <a href="https://aws.amazon.com/ecs/" target="_blank">ECS</a>), you can give it a cluster of EC2 Instances to
+        manage, and it will deploy Docker containers across the cluster as efficiently as possible, potentially running
+        multiple apps on the same Instances when resources are available.
+
+    - title: Use Lambda when possible
+      description: |
+        For all short (5 min or less) background jobs, cron jobs, ETL jobs, event processing jobs, and other glue code,
+        use <a href="https://aws.amazon.com/lambda/" target="_blank">AWS Lambda</a>. You not only have no servers to
+        manage, but AWS Lambda pricing is incredibly cheap, with the first 1 million requests and 400,000 GB-seconds
+        per month being completely free! After that, it's just $0.0000002 per request and $0.00001667 for every
+        GB-second.
+
+    - title: Clean up old data with S3 Lifecycle settings
+      description: |
+        If you have a lot of data in S3, make sure to take advantage of
+        <a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/object-lifecycle-mgmt.html" target="_blank">S3 Object Lifecycle Management</a>
+        to save money. You can configure the S3 bucket to move files older than a certain age either to cheaper
+        <a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/storage-class-intro.html" target="_blank">storage classes</a>
+        or to delete those files entirely.
+
+    - title: Clean up unused resources
+      description: |
+        Use tools such as <a href="https://github.com/gruntwork-io/cloud-nuke" target="_blank">cloud-nuke</a> and
+        <a href="https://medium.com/netflix-techblog/janitor-monkey-keeping-the-cloud-tidy-and-clean-d517ad74d648" target="_blank">Janitor Monkey</a>
+        to clean up unused AWS resources, such as old EC2 Instances or ELBs that no one is using any more. You can run
+        these tools on a regular schedule by using your CI server or
+        <a href="https://docs.aws.amazon.com/lambda/latest/dg/with-scheduled-events.html" target="_blank">scheduled lambda functions</a>.
+
+    - title: Learn to analyze your AWS bill
+      description: |
+        Learn to use tools such as
+        <a href="https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/billing-reports-costusage.html" target="_blank">Cost and Usage Report</a>,
+        <a href="https://aws.amazon.com/aws-cost-management/aws-cost-explorer/" target="_blank">Cost Explorer</a>,
+        <a href="https://github.com/Teevity/ice" target="_blank">Ice</a>,
+        <a href="https://aws.amazon.com/fr/premiumsupport/trustedadvisor/" target="_blank">Trusted Advisor</a>, and
+        <a href="https://aws.amazon.com/answers/account-management/cost-optimization-monitor/" target="_blank">Cost Optimization Monitor</a> to
+        understand where you're spending money. Make sure you understand what each category means (e.g., the
+        delightfully vague "EC2 Other" often means EBS Volumes, AMIs, and Load Balancers). If you find something you
+        can't explain, reach out to AWS Support, and they will help you track it down. Using multiple AWS accounts
+        with <a href="https://aws.amazon.com/organizations/" target="_blank">AWS Organizations</a> and consolidated
+        billing can make it easier to isolate certain types of costs from others (e.g., break down costs by environment
+        or team).
+
+    - title: Create billing alarms
+      description: |
+        Create <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/monitor_estimated_charges_with_cloudwatch.html" target="_blank">billing alerts</a>
+        to notify you when your AWS bill crosses important thresholds. Make sure to have several levels of alerts: e.g.,
+        at the very least, one when the bill is a little high, one when it's really high, and one when it is
+        approaching bankruptcy levels.
