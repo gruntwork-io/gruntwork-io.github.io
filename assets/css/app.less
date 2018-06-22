@@ -249,6 +249,7 @@ hr {
     &.hr-sm     { margin: (@padding-large-vertical * 2) 0; }
     &.hr-xs     { margin: @padding-large-vertical 0; }
     &.hr-dashed { border-style: dashed; }
+    &.hr-reset  { border-color: initial; border-width: 1px; }
 }
 
 footer hr {
@@ -428,6 +429,12 @@ p a:not(.btn) {
     content: '\f00c';
     margin: 0 0.5em 0 -1.7em;;
     color: #f92e64;
+}
+.check-list li.check-list-disabled {
+    color: @gray;
+}
+.check-list li.check-list-disabled:before {
+    display: none;
 }
 
 @media (min-width: @screen-sm-min) {
@@ -1150,6 +1157,10 @@ h6, .h6 { .heading-margin-variant(0.68; 0.52; @line-height-h6); }
     }
 }
 
+.text-tiny {
+    font-size: 12px;
+}
+
 .sub-page .section-hero h1 + p {
     margin-top: -15px;
 }
@@ -1822,4 +1833,29 @@ input[type="radio"] .styled:checked + label::after {
 /* Flex Direction - IE Fix */
 .row-library .row-equalize-col-height > div[class*='col-'] > .panel > .panel-body{
     width: 100%;
+}
+
+.checkout-panel {
+    margin-bottom: 40px;
+    margin-top: 40px;
+
+    @media (min-width: @screen-md-min) {
+        display: flex;
+    }
+}
+.checkout-panel-left {
+    margin-bottom: 0;
+    padding: 25px;
+
+    @media (min-width: @screen-md-min) {
+        border-right: 0 none;
+    }
+}
+.checkout-panel-right {
+    padding: 25px;
+
+    @media (min-width: @screen-md-min) {
+        margin-top: -40px;
+        margin-bottom: -40px;
+    }
 }
