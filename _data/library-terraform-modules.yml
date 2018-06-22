@@ -29,8 +29,8 @@
   gcp_url: "https://github.com/hashicorp/terraform-google-nomad"
   azure_url: "https://github.com/hashicorp/terraform-azurerm-nomad"
   description: |
-    Deploy a HashiCorp Nomad cluster. Includes support for automatic bootstrapping and automatic recovery of failed
-    servers.
+    Deploy a best-practices HashiCorp Nomad cluster. Includes support for automatic bootstrapping, automatic discovery
+    of Consul servers (for cluster coordination), automatic recovery of failed servers.
 
 - name: "Vault"
   tags:
@@ -46,6 +46,20 @@
   gcp_url: "https://github.com/hashicorp/terraform-google-vault"
   azure_url: "https://github.com/hashicorp/terraform-azurerm-vault"
   description: |
-    Deploy a HashiCorp Vault cluster. Includes support for automatically discovering Consul clusters as a high availability
-    backend, using S3 as a storage backend, creating self-signed TLS certificates, updating the OS certificate store,
-    configuring an ELB in front of Vault to allow public access, and automatic recovery of failed servers.
+    Deploy a best-practices HashiCorp Vault cluster. Includes support for automatic bootstrapping, automatic discovery
+    of Consul clusters (for HA cluster coordination), using S3 as a storage backend, creating self-signed TLS
+    certificates, updating the OS certificate store, configuring an ELB in front of Vault to allow public access, and
+    automatic recovery of failed servers.
+
+- name: "Couchbase"
+  tags:
+    - AWS
+  icons:
+    - title: Terraform
+      image: icon-terraform.png
+    - title: Bash
+      image: icon-bash.png
+  aws_url: "https://github.com/hashicorp/terraform-aws-couchbase"
+  description: |
+    Deploy a best-practices Couchbase cluster. Includes support for automatic bootstrapping, running Sync Gateway,
+    Web Console UI, cross-region replication, and automatic recovery of failed servers.

@@ -423,16 +423,24 @@ p a:not(.btn) {
     list-style-type: none;
     padding-left: 2em;
 }
-.check-list li {
-    margin-bottom: 1em;
-}
 .check-list li:before {
     font-family: 'FontAwesome';
     content: '\f00c';
-    margin: 0 0.7em 0 -1.7em;;
+    margin: 0 0.5em 0 -1.7em;;
     color: #f92e64;
 }
 
+@media (min-width: @screen-sm-min) {
+  .check-list {
+    margin-bottom: 40px;
+  }
+}
+
+@media (max-width: @screen-sm-max) {
+  .check-list li {
+    font-size: 16px;
+  }
+}
 
 //
 // Rows
@@ -1788,4 +1796,30 @@ input[type="radio"] .styled:checked + label::after {
             transform: rotate(3deg);
         }
     }
+}
+
+
+
+//// DevOps Checklist
+
+.truncate-text {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.fa-rotate-135 {
+    -webkit-transform: rotate(135deg);
+    -ms-transform: rotate(135deg);
+    transform: rotate(135deg);
+}
+
+.checklist-button {
+    width: 50px;
+    padding: 5px;
+}
+
+/* Flex Direction - IE Fix */
+.row-library .row-equalize-col-height > div[class*='col-'] > .panel > .panel-body{
+    width: 100%;
 }
