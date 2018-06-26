@@ -10,7 +10,7 @@
           <p class="h1">We have <span class="text-cyan">7</span> users</p>
           <div class="row">
             <div class="col-sm-6">
-              <h4 class="text-center">Every Subscription Includes:</h4>
+              <h4 class="h5 text-center text-bold">Every Subscription Includes:</h4>
               <ul class="check-list margin-bottom-none">
                 <li>Infrastructure as Code Library</li>
                 <li>DevOps Training Library</li>
@@ -18,10 +18,26 @@
               </ul>
             </div>
             <div class="col-sm-6">
-              <h4 class="text-center">Add-on:</h4>
+              <h4 class="h5 text-center text-bold">Add-on:</h4>
+              <div class="switch-group">
+                <label class="switch">
+                  <input type="checkbox" data-switch name="addon" data-value="dedicated-support">
+                  <span class="slider round"></span>
+                </label>
+                <span class="switch-label">Dedicated Support</span>
+              </div>
+              <div class="switch-group">
+                <label class="switch">
+                  <input type="checkbox" data-switch name="addon" data-value="setup-deployment">
+                  <span class="slider round"></span>
+                </label>
+                <span class="switch-label">Setup &amp; Deployment</span>
+              </div>
             </div>
           </div>
           <p class="text-muted text-tiny text-center">A User is any human or machine user that accesses our library repos or submits a support request.</p>
+          <h5>Need help deciding?</h5>
+          <a class="btn btn-primary-hollow btn-sm" href="/contact/">Ask a Grunty</a>
         </div>
       </div>
       <div class="col-md-4 panel panel-default checkout-panel-right">
@@ -44,13 +60,24 @@
         </ul>
         <hr class="hr-sm hr-reset">
         <p class="text-muted small text-center">Annual Contract Required</p>
-        <button type="button" class="btn btn-info btn-block">Checkout</button>
-        <p class="text-muted small text-center">View our <span><a href="#">Terms of Service</a></span></p>
+        <button
+          type="button"
+          class="btn btn-info btn-block"
+          data-cb-type="checkout"
+          data-cb-plan-id="gruntwork-subscription-5users"
+          data-cb-addons_id_0="additional-user"
+          data-cb-addons_id_1="reference-architecture"
+          data-cb-addons_quantity_0="7">
+          Checkout
+        </button>
+        <p class="text-muted text-tiny text-center margin-bottom-none">View our <span><a href="#">Terms of Service</a></span></p>
       </div>
     </div>
-    <h2>How our pricing works</h2>
-    <p>
-      Our pricing is an annual subscription with monthly and one-time service add-ons available. <a href="/pricing/">Learn More</a>
-    </p>
+    <div class="text-center">
+      <h2 style="display: inline-block;">How our pricing works</h2>
+      <p>Our pricing is an annual subscription with monthly and one-time service add-ons available. <a href="/pricing/">Learn More</a></p>
+    </div>
   </div>
 </div>
+
+<script src="https://js.chargebee.com/v2/chargebee.js" data-cb-site="akosweb-test"></script>
