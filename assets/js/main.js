@@ -308,28 +308,113 @@ $(function () { // This prevents global vars
   calculate($pricingInput.val()); // Calculates default number of users
 });
 
+/**
+ * Checkout JS using Chargebee.
+ *
+ * @docs: https://www.chargebee.com/checkout-portal-docs/dropIn.html#chargebee-object
+ */
 $(function () {
-  var uri = '';
-  $('[data-switch]').on('change', function (event) {
-    if (event.target.checked) uri = $.query.set(event.target.name, event.target.dataset.value);
-    else uri = $.query.REMOVE(event.target.name);
-    console.log(uri);
-    //window.history.replaceState(null, null, uri);
+  var timeout, $checkout = $('[data-cb-type="checkout"]');
+
+  // The checkout state
+  var checkoutOptions = {
+    dedicated_support: false,
+    setup_deployment: false,
+    users: 1
+  };
+
+  // Auto toggles addons based on the URI
+  switch ($.query.get('addon')) {
+    case 'setup-deployment': _updateCheckout({ setup_deployment: true }); break;
+    case 'dedicated-support': _updateCheckout({ dedicated_support: true }); break;
+    default: // do nothing
+  }
+
+  // Listen to the switchers
+  $('#slider-users').on('input', function (event) {
+    _updateCheckout({ users: parseInt(event.target.value) });
   });
+  $('[data-switch]').on('change', function () {
+    _updateCheckout({ [this.name]: this.checked });
+  });
+
+  // Updates the UI of the checkout
+  function _updateCheckout(newOptions) {
+    checkoutOptions = Object.assign({}, checkoutOptions, newOptions);
+
+    $('[data-switch]'+'[name="dedicated_support"]').attr('checked', checkoutOptions.dedicated_support); // updates addon switch
+    $('[data-switch]'+'[name="setup_deployment"]').attr('checked', checkoutOptions.setup_deployment); // updates addon switch
+    $('#slider-users-count').text(checkoutOptions.users); // updates user count
+
+    if (checkoutOptions.dedicated_support) {
+      $('#subscription-addon-1').removeClass('check-list-disabled');
+    } else {
+      $('#subscription-addon-1').addClass('check-list-disabled');
+    }
+
+    if (checkoutOptions.setup_deployment) {
+      $('#checkout-price-addon').show();
+      $('#subscription-addon-2').removeClass('check-list-disabled');
+    } else {
+      $('#checkout-price-addon').hide();
+      $('#subscription-addon-2').addClass('check-list-disabled');
+    }
+
+    _calculatePrice();
+  }
+
+  function _updateAttrs() {
+    if (checkoutOptions.users > 5) {
+      $checkout.attr({'data-cb-addons_id_2': 'chargebee-addon-user', 'data-cb-addons_quantity_2': checkoutOptions.users - 5});
+    } else {
+      $checkout.removeAttr('data-cb-addons_id_2');
+      $checkout.removeAttr('data-cb-addons_quantity_2');
+    }
+
+    if (checkoutOptions.dedicated_support) {
+      $checkout.attr({ 'data-cb-addons_id_1': 'chargebee-addon-support', 'data-cb-addons_quantity_1': checkoutOptions.users });
+    } else {
+      $checkout.removeAttr('data-cb-addons_id_1');
+      $checkout.removeAttr('data-cb-addons_quantity_1');
+    }
+
+    if (checkoutOptions.setup_deployment) {
+      $checkout.attr({ 'data-cb-addons_id_3': 'chargebee-refarch' });
+    } else {
+      $checkout.removeAttr('data-cb-addons_id_3');
+    }
+  }
+
+  function _calculatePrice() {
+    var total, additionalUsers = checkoutOptions.users > 5 ? checkoutOptions.users - 5 : 0;
+
+    if (checkoutOptions.dedicated_support) {
+      if (additionalUsers > 0) total = pricing.tier1.price[1] + (additionalUsers * pricing.tier2.price[1]);
+      else total = pricing.tier1.price[1]; // 5 or less users
+
+    } else {
+      // Without dedicated support
+      if (additionalUsers > 0) total = pricing.tier1.price[0] + (additionalUsers * pricing.tier2.price[0]);
+      else total = pricing.tier1.price[0]; // 5 or less users
+    }
+
+    $('#subscription-price').text(total.toLocaleString());
+
+    _deferCheckout();
+  }
+
+  // Prevents spamming Chargebee registerAgain on every change
+  function _deferCheckout() {
+    if (typeof timeout !== 'undefined') clearTimeout(timeout);
+    $checkout.attr('disabled', true);
+    timeout = setTimeout(function () {
+      $checkout.attr('disabled', false);
+      clearTimeout(timeout);
+      _updateAttrs();
+      // TODO: This causes a bug that keeps the body overflow: hidden even after the modal is closed.
+      Chargebee.registerAgain();
+    }, 1500);
+  }
+
+  _updateCheckout();
 });
-
-switch ($.query.get('addon')) {
-  case 'setup-deployment':
-    $('[data-switch]'+'[data-value="setup-deployment"]').attr('checked', true);
-    break;
-  case 'dedicated-support':
-    $('[data-switch]'+'[data-value="dedicated-support"]').attr('checked', true);
-    break;
-  default:
-  //
-}
-
-// $('[data-cb-type="checkout"]').attr('data-cb-addons_quantity_0', 15);
-// $('[data-cb-type="checkout"]').removeAttr('data-cb-addons_id_1');
-
-$('[data-slider]').Slider();
