@@ -1,16 +1,19 @@
-<div class="row row-page-header">
+<div class="row">
   <div class="col-xs-12">
-    <h1>{{ page.title }}</h1>
-    <p class="lead">
-      {{ page.excerpt }}
-    </p>
     <div class="row checkout-panel">
       <div class="col-md-8 panel panel-default panel-light checkout-panel-left">
         <div class="panel-body">
-          <p class="h1">We have <span class="text-cyan">7</span> users</p>
-          <div class="row">
+          <div class="row checkout-users">
+            <div class="col-sm-8 col-sm-offset-2">
+              <p class="checkout-users-text h1 text-center">We have <span class="text-cyan" id="slider-users-count"></span> users</p>
+              <div class="range">
+                <input type="range" min="1" max="50" value="1" class="range-input" id="slider-users">
+              </div>
+            </div>
+          </div>
+          <div class="row row-divider">
             <div class="col-sm-6">
-              <h4 class="h5 text-center text-bold">Every Subscription Includes:</h4>
+              <h4 class="h5 text-center text-bold margin-top-none">Every Subscription Includes:</h4>
               <ul class="check-list margin-bottom-none">
                 <li>Infrastructure as Code Library</li>
                 <li>DevOps Training Library</li>
@@ -18,35 +21,36 @@
               </ul>
             </div>
             <div class="col-sm-6">
-              <h4 class="h5 text-center text-bold">Add-on:</h4>
+              <h4 class="h5 text-center text-bold margin-top-none">Add-on:</h4>
               <div class="switch-group">
                 <label class="switch">
-                  <input type="checkbox" data-switch name="addon" data-value="dedicated-support">
+                  <input type="checkbox" data-switch name="dedicated_support">
                   <span class="slider round"></span>
                 </label>
                 <span class="switch-label">Dedicated Support</span>
               </div>
               <div class="switch-group">
                 <label class="switch">
-                  <input type="checkbox" data-switch name="addon" data-value="setup-deployment">
+                  <input type="checkbox" data-switch name="setup_deployment">
                   <span class="slider round"></span>
                 </label>
                 <span class="switch-label">Setup &amp; Deployment</span>
               </div>
             </div>
           </div>
-          <p class="text-muted text-tiny text-center">A User is any human or machine user that accesses our library repos or submits a support request.</p>
-          <h5>Need help deciding?</h5>
-          <a class="btn btn-primary-hollow btn-sm" href="/contact/">Ask a Grunty</a>
+          <p class="text-muted text-tiny text-center margin-bottom-none">A User is any human or machine user that accesses our library repos or submits a support request.</p>
+          <div class="side-by-side text-center">
+            <h5 class="d-inline-block">Need help deciding?</h5>
+            <a class="btn btn-primary-hollow btn-sm d-inline-block" href="/contact/">Ask a Grunty</a>
+          </div>
         </div>
       </div>
       <div class="col-md-4 panel panel-default checkout-panel-right">
         <h6 class="margin-top-none text-center">
           <strong>Your Subscription</strong>
         </h6>
-        <p class="text-center">
-          <span class="big-price"><span>$</span>742</span>&nbsp; / month
-        </p>
+        <p class="text-center"><span class="big-price"><span>$</span><strong id="subscription-price">742</strong></span>&nbsp; / month</p>
+        <p class="text-center" id="checkout-price-addon" style="display: none;"><span class="big-price big-price-sub"><span>+$</span>4,950</span>&nbsp; flat fee</p>
         <hr class="hr-sm hr-reset">
         <h5 class="margin-top-none text-center">
           <strong>Your Subscription Includes</strong>
@@ -55,8 +59,8 @@
           <li>Infrastructure as Code Library</li>
           <li>DevOps Training Library</li>
           <li>Community Forum</li>
-          <li class="check-list-disabled">Dedicated Support</li>
-          <li class="check-list-disabled">Setup &amp; Deployment</li>
+          <li class="check-list-disabled" id="subscription-addon-1">Dedicated Support</li>
+          <li class="check-list-disabled" id="subscription-addon-2">Setup &amp; Deployment</li>
         </ul>
         <hr class="hr-sm hr-reset">
         <p class="text-muted small text-center">Annual Contract Required</p>
@@ -64,20 +68,18 @@
           type="button"
           class="btn btn-info btn-block"
           data-cb-type="checkout"
-          data-cb-plan-id="gruntwork-subscription-5users"
-          data-cb-addons_id_0="additional-user"
-          data-cb-addons_id_1="reference-architecture"
-          data-cb-addons_quantity_0="7">
+          data-cb-plan-id="chargebee-subscription">
           Checkout
         </button>
         <p class="text-muted text-tiny text-center margin-bottom-none">View our <span><a href="#">Terms of Service</a></span></p>
       </div>
     </div>
-    <div class="text-center">
-      <h2 style="display: inline-block;">How our pricing works</h2>
-      <p>Our pricing is an annual subscription with monthly and one-time service add-ons available. <a href="/pricing/">Learn More</a></p>
-    </div>
   </div>
 </div>
 
-<script src="https://js.chargebee.com/v2/chargebee.js" data-cb-site="akosweb-test"></script>
+<script src="https://js.chargebee.com/v2/chargebee.js" data-cb-site="gruntwork-test"></script>
+<script type="text/javascript">
+  window.onload = function() {
+    var cbInstance = Chargebee.getInstance();
+  };
+</script>
