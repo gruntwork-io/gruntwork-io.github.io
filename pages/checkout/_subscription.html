@@ -7,17 +7,26 @@
             <div class="col-sm-8 col-sm-offset-2">
               <p class="checkout-users-text h1 text-center">We have <span class="text-cyan" id="slider-users-count"></span> users</p>
               <div class="range">
-                <input type="range" min="1" max="51" value="1" class="range-input" id="slider-users">
+                <input type="range" min="5" max="51" value="5" class="range-input" id="slider-users">
               </div>
             </div>
           </div>
-          <div class="row row-divider">
+          <div class="row row-divider checkout-addons">
             <div class="col-sm-6">
               <h4 class="h5 text-center text-bold margin-top-none">Every Subscription Includes:</h4>
               <ul class="check-list margin-bottom-none">
-                <li>Infrastructure as Code Library</li>
-                <li>DevOps Training Library</li>
-                <li>Community Forum</li>
+                <li class="text-nowrap">
+                  Infrastructure as Code Library
+                  <span class="text-primary" title="250,000+ lines of reusable, battle-tested infrastructure code."><i class="fa fa-question-circle-o" aria-hidden="true"></i></span>
+                </li>
+                <li class="text-nowrap">
+                  DevOps Training Library
+                  <span class="text-primary" title="A collection of training video courses that teach you DevOps."><i class="fa fa-question-circle-o" aria-hidden="true"></i></span>
+                </li>
+                <li class="text-nowrap">
+                  Community Forum
+                  <span class="text-primary" title="Get support via our public community forum. 2 Business Day SLA."><i class="fa fa-question-circle-o" aria-hidden="true"></i></span>
+                </li>
               </ul>
             </div>
             <div class="col-sm-6">
@@ -50,12 +59,12 @@
           <strong>Your Subscription</strong>
         </h6>
         <div class="checkout-price-view">
-          <div class="checkout-price" data-checkout-price="default">
+          <div class="checkout-price" data-checkout-total="default">
             <p class="text-center" style="white-space: nowrap;"><span class="big-price"><span>$</span><strong id="subscription-price">742</strong></span>&nbsp; / month</p>
             <p class="text-center" id="checkout-price-addon" style="display: none;"><span class="big-price big-price-sub"><span>+$</span>4,950</span>&nbsp; flat fee</p>
           </div>
-          <div class="checkout-price-enterprise" data-checkout-price="enterprise" style="display: none;">
-            <h5 class="h1 big-price big-price-sub text-center"><span>Enterprise</span></h5>
+          <div class="checkout-price-enterprise" data-checkout-total="enterprise" style="display: none;">
+            <h5 class="h1 big-price big-price-sub text-center margin-top-none"><span>Enterprise</span></h5>
           </div>
         </div>
         <hr class="hr-sm hr-reset">
@@ -80,6 +89,9 @@
         </button>
         <p><a id="checkout-contact-btn" class="btn btn-primary btn-block" href="/contact/" style="display: none;">Contact Us</a></p>
         <p class="text-muted text-tiny text-center margin-bottom-none">View our <span><a href="#">Terms of Service</a></span></p>
+        <figure class="grunty-sprite" data-sprite="0">
+          <figcaption class="sr-only">Grunt sprite</figcaption>
+        </figure>
       </div>
     </div>
   </div>

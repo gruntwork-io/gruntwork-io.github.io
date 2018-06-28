@@ -528,15 +528,15 @@ p a:not(.btn) {
 }
 
 @media (min-width: @screen-sm-min) {
-  .check-list {
-    margin-bottom: 40px;
-  }
+    .check-list {
+        margin-bottom: 40px;
+    }
 }
 
 @media (max-width: @screen-sm-max) {
-  .check-list li {
-    font-size: 16px;
-  }
+    .check-list li {
+        font-size: 16px;
+    }
 }
 
 //
@@ -776,7 +776,7 @@ p a:not(.btn) {
     .row-automatic-updates {
         .col-diagram {
             text-align: center;
-                img {
+            img {
                 margin-bottom: 15px;
             }
         }
@@ -1118,7 +1118,7 @@ footer {
 .tabs-secondary-content .tab-pane {
     padding: 15px;
     @media (min-width: @screen-sm-min) {
-       padding: 50px;
+        padding: 50px;
     }
 }
 
@@ -1925,9 +1925,9 @@ input[type="radio"] .styled:checked + label::after {
 //// DevOps Checklist
 
 .truncate-text {
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .fa-rotate-135 {
@@ -1947,10 +1947,10 @@ input[type="radio"] .styled:checked + label::after {
 }
 
 .checkout-panel {
-    margin-bottom: 40px;
     margin-top: 40px;
 
     @media (min-width: @screen-md-min) {
+        margin-bottom: 40px;
         display: flex;
     }
 }
@@ -1963,6 +1963,7 @@ input[type="radio"] .styled:checked + label::after {
     }
 }
 .checkout-panel-right {
+    position: relative;
     padding: 25px;
 
     @media (min-width: @screen-md-min) {
@@ -1972,6 +1973,13 @@ input[type="radio"] .styled:checked + label::after {
 
     @media (min-width: @screen-sm-min) and (max-width: @screen-md-max) {
         margin-top: -2px;
+    }
+}
+.checkout-addons {
+    > div {
+        @media (max-width: @screen-sm-max) {
+            margin-bottom: 30px;
+        }
     }
 }
 
@@ -2031,4 +2039,22 @@ input[type="radio"] .styled:checked + label::after {
             box-shadow: 0 4px 6px rgba(0,0,0,0.11), 0 1px 3px rgba(0,0,0,0.08);
         }
     }
+}
+
+.grunty-sprite {
+    position: absolute;
+    top: -180px;
+    left: 50%;
+    width: 216px;
+    height: 180px;
+    background: url('/assets/img/grunty-sprites@2x.png') no-repeat;
+    background-size: auto 100%;
+    //background-position-x: -240px;
+    z-index: 1;
+    transform: translateX(-50%);
+
+    &[data-sprite="0"] { background-position-x: 0px; }
+    &[data-sprite="1"] { background-position-x: -216px; }
+    &[data-sprite="2"] { background-position-x: -432px; }
+    &[data-sprite="3"] { background-position-x: -648px; }
 }

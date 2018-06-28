@@ -321,7 +321,7 @@ $(function () {
   var checkoutOptions = {
     dedicated_support: false,
     setup_deployment: false,
-    users: 1,
+    users: 5,
     enterprise: false
   };
 
@@ -345,6 +345,7 @@ $(function () {
     checkoutOptions = Object.assign({}, checkoutOptions, newOptions);
     checkoutOptions.enterprise = (checkoutOptions.users > 50);
 
+    $('.grunty-sprite').attr('data-sprite', 0);
     $('[data-switch]'+'[name="dedicated_support"]').attr('checked', checkoutOptions.dedicated_support); // updates addon switch
     $('[data-switch]'+'[name="setup_deployment"]').attr('checked', checkoutOptions.setup_deployment); // updates addon switch
 
@@ -354,23 +355,42 @@ $(function () {
       $checkout.hide();
       $('#checkout-contact-btn').show();
     } else {
-      $('#slider-users-count').text(checkoutOptions.users);
+      if (checkoutOptions.users <= 5) {
+        $('#slider-users-count').text('1-5');
+      } else {
+        $('#slider-users-count').text(checkoutOptions.users);
+      }
+
       $checkout.show();
       $('#checkout-contact-btn').hide();
     }
 
     if (checkoutOptions.dedicated_support) {
+      $('.grunty-sprite').attr('data-sprite', 2);
       $('#subscription-addon-1').removeClass('check-list-disabled');
     } else {
       $('#subscription-addon-1').addClass('check-list-disabled');
     }
 
     if (checkoutOptions.setup_deployment) {
+      $('.grunty-sprite').attr('data-sprite', 1);
       $('#checkout-price-addon').show();
       $('#subscription-addon-2').removeClass('check-list-disabled');
     } else {
       $('#checkout-price-addon').hide();
       $('#subscription-addon-2').addClass('check-list-disabled');
+    }
+
+    if (checkoutOptions.dedicated_support && checkoutOptions.setup_deployment) {
+      $('.grunty-sprite').attr('data-sprite', 3);
+    }
+
+    if (checkoutOptions.enterprise) {
+      $('[data-checkout-total="default"]').hide();
+      $('[data-checkout-total="enterprise"]').show();
+    } else {
+      $('[data-checkout-total="default"]').show();
+      $('[data-checkout-total="enterprise"]').hide();
     }
 
     _calculatePrice();
@@ -388,11 +408,17 @@ $(function () {
     }
 
     if (checkoutOptions.dedicated_support) {
-      $checkout.attr({
-        'data-cb-addons_id_0': 'chargebee-support',
-        'data-cb-addons_id_1': 'chargebee-addon-support',
-        'data-cb-addons_quantity_1': checkoutOptions.users - 5
-      });
+      if (checkoutOptions.users > 5) {
+        $checkout.attr({
+          'data-cb-addons_id_0': 'chargebee-support',
+          'data-cb-addons_id_1': 'chargebee-addon-support',
+          'data-cb-addons_quantity_1': checkoutOptions.users - 5
+        });
+      } else {
+        $checkout.attr({
+          'data-cb-addons_id_0': 'chargebee-support'
+        });
+      }
     } else {
       $checkout.removeAttr('data-cb-addons_id_0');
       $checkout.removeAttr('data-cb-addons_id_1');
@@ -432,10 +458,10 @@ $(function () {
   function _deferCheckout() {
     var cbInstance;
     if (typeof timeout !== 'undefined') clearTimeout(timeout);
-    $checkout.attr('disabled', true);
+    $checkout.attr('disabled', true).text('Please wait...');
 
     timeout = setTimeout(function () {
-      $checkout.attr('disabled', false);
+      $checkout.attr('disabled', false).text('Checkout');
       clearTimeout(timeout);
       _updateAttrs();
       Chargebee.registerAgain();
