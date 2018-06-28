@@ -315,12 +315,14 @@ $(function () { // This prevents global vars
  */
 $(function () {
   var timeout, $checkout = $('[data-cb-type="checkout"]');
+  var $body = $('body');
 
   // The checkout state
   var checkoutOptions = {
     dedicated_support: false,
     setup_deployment: false,
-    users: 1
+    users: 1,
+    enterprise: false
   };
 
   // Auto toggles addons based on the URI
@@ -341,10 +343,21 @@ $(function () {
   // Updates the UI of the checkout
   function _updateCheckout(newOptions) {
     checkoutOptions = Object.assign({}, checkoutOptions, newOptions);
+    checkoutOptions.enterprise = (checkoutOptions.users > 50);
 
     $('[data-switch]'+'[name="dedicated_support"]').attr('checked', checkoutOptions.dedicated_support); // updates addon switch
     $('[data-switch]'+'[name="setup_deployment"]').attr('checked', checkoutOptions.setup_deployment); // updates addon switch
-    $('#slider-users-count').text(checkoutOptions.users); // updates user count
+
+    // updates user count
+    if (checkoutOptions.users > 50) {
+      $('#slider-users-count').text('50+');
+      $checkout.hide();
+      $('#checkout-contact-btn').show();
+    } else {
+      $('#slider-users-count').text(checkoutOptions.users);
+      $checkout.show();
+      $('#checkout-contact-btn').hide();
+    }
 
     if (checkoutOptions.dedicated_support) {
       $('#subscription-addon-1').removeClass('check-list-disabled');
@@ -365,27 +378,39 @@ $(function () {
 
   function _updateAttrs() {
     if (checkoutOptions.users > 5) {
-      $checkout.attr({'data-cb-addons_id_2': 'chargebee-addon-user', 'data-cb-addons_quantity_2': checkoutOptions.users - 5});
+      $checkout.attr({
+        'data-cb-addons_id_2': 'chargebee-addon-user',
+        'data-cb-addons_quantity_2': checkoutOptions.users - 5
+      });
     } else {
       $checkout.removeAttr('data-cb-addons_id_2');
       $checkout.removeAttr('data-cb-addons_quantity_2');
     }
 
     if (checkoutOptions.dedicated_support) {
-      $checkout.attr({ 'data-cb-addons_id_1': 'chargebee-addon-support', 'data-cb-addons_quantity_1': checkoutOptions.users });
+      $checkout.attr({
+        'data-cb-addons_id_0': 'chargebee-support',
+        'data-cb-addons_id_1': 'chargebee-addon-support',
+        'data-cb-addons_quantity_1': checkoutOptions.users - 5
+      });
     } else {
+      $checkout.removeAttr('data-cb-addons_id_0');
       $checkout.removeAttr('data-cb-addons_id_1');
       $checkout.removeAttr('data-cb-addons_quantity_1');
     }
 
     if (checkoutOptions.setup_deployment) {
-      $checkout.attr({ 'data-cb-addons_id_3': 'chargebee-refarch' });
+      $checkout.attr({
+        'data-cb-addons_id_3': 'chargebee-refarch'
+      });
     } else {
       $checkout.removeAttr('data-cb-addons_id_3');
     }
   }
 
   function _calculatePrice() {
+    if (checkoutOptions.enterprise) return; // Don't calculate on enterprise
+
     var total, additionalUsers = checkoutOptions.users > 5 ? checkoutOptions.users - 5 : 0;
 
     if (checkoutOptions.dedicated_support) {
@@ -405,15 +430,27 @@ $(function () {
 
   // Prevents spamming Chargebee registerAgain on every change
   function _deferCheckout() {
+    var cbInstance;
     if (typeof timeout !== 'undefined') clearTimeout(timeout);
     $checkout.attr('disabled', true);
+
     timeout = setTimeout(function () {
       $checkout.attr('disabled', false);
       clearTimeout(timeout);
       _updateAttrs();
-      // TODO: This causes a bug that keeps the body overflow: hidden even after the modal is closed.
       Chargebee.registerAgain();
-    }, 1500);
+      cbInstance = Chargebee.getInstance();
+      cbInstance.setCheckoutCallbacks(function(cart) {
+        // you can define a custom callbacks based on cart object
+        return {
+          close: function() {
+            // Required to remove overflow set by the modal
+            // Same as: https://lodash.com/docs/4.17.10#debounce
+            setTimeout(function() { $body.removeAttr('style'); }, 0);
+          }
+        }
+      });
+    }, 1250);
   }
 
   _updateCheckout();

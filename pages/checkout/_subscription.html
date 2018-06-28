@@ -7,7 +7,7 @@
             <div class="col-sm-8 col-sm-offset-2">
               <p class="checkout-users-text h1 text-center">We have <span class="text-cyan" id="slider-users-count"></span> users</p>
               <div class="range">
-                <input type="range" min="1" max="50" value="1" class="range-input" id="slider-users">
+                <input type="range" min="1" max="51" value="1" class="range-input" id="slider-users">
               </div>
             </div>
           </div>
@@ -49,8 +49,15 @@
         <h6 class="margin-top-none text-center">
           <strong>Your Subscription</strong>
         </h6>
-        <p class="text-center"><span class="big-price"><span>$</span><strong id="subscription-price">742</strong></span>&nbsp; / month</p>
-        <p class="text-center" id="checkout-price-addon" style="display: none;"><span class="big-price big-price-sub"><span>+$</span>4,950</span>&nbsp; flat fee</p>
+        <div class="checkout-price-view">
+          <div class="checkout-price" data-checkout-price="default">
+            <p class="text-center" style="white-space: nowrap;"><span class="big-price"><span>$</span><strong id="subscription-price">742</strong></span>&nbsp; / month</p>
+            <p class="text-center" id="checkout-price-addon" style="display: none;"><span class="big-price big-price-sub"><span>+$</span>4,950</span>&nbsp; flat fee</p>
+          </div>
+          <div class="checkout-price-enterprise" data-checkout-price="enterprise" style="display: none;">
+            <h5 class="h1 big-price big-price-sub text-center"><span>Enterprise</span></h5>
+          </div>
+        </div>
         <hr class="hr-sm hr-reset">
         <h5 class="margin-top-none text-center">
           <strong>Your Subscription Includes</strong>
@@ -71,6 +78,7 @@
           data-cb-plan-id="chargebee-subscription">
           Checkout
         </button>
+        <p><a id="checkout-contact-btn" class="btn btn-primary btn-block" href="/contact/" style="display: none;">Contact Us</a></p>
         <p class="text-muted text-tiny text-center margin-bottom-none">View our <span><a href="#">Terms of Service</a></span></p>
       </div>
     </div>
