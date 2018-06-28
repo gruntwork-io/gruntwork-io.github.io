@@ -2,6 +2,11 @@ tier1:
   title: Up to 5 users
   users_max: 5
   price: [500, 795]
+  checkout:
+    - price: 500
+      url: /checkout/?plan=1
+    - price: 795
+      url: /checkout/?plan=1&addon=dedicated-support
   details: |
     monthly flat fee
 
@@ -9,11 +14,19 @@ tier2:
   title: Users 6 - 50
   users_max: 50
   price: [79, 99]
+  checkout:
+      - price: 79
+        url: /checkout/?plan=2
+      - price: 99
+        url: /checkout/?plan=2&addon=dedicated-support
   details: |
     per <span class="help-text light" title="A user is any human or machine that makes use of any of Gruntwork's services (Infrastructure as Code Library, DevOps Training Library, Dedicated Support)" data-toggle="tooltip">user</span> per month
 
 tier3:
   title: Reference Architecture
   price: "4,950"
+  checkout:
+      - price: "4,950"
+        url: /checkout/?addon=setup-deployment
   details: |
     one-time, flat fee
