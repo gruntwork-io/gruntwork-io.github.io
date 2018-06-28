@@ -1961,6 +1961,10 @@ input[type="radio"] .styled:checked + label::after {
     @media (min-width: @screen-md-min) {
         border-right: 0 none;
     }
+
+    @media (max-width: @screen-xs-max) {
+        padding-bottom: 140px;
+    }
 }
 .checkout-panel-right {
     position: relative;
@@ -1973,6 +1977,18 @@ input[type="radio"] .styled:checked + label::after {
 
     @media (min-width: @screen-sm-min) and (max-width: @screen-md-max) {
         margin-top: -2px;
+    }
+
+    @media (max-width: @screen-xs-max) {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1111;
+        background-color: #1d252f;
+        margin: 0;
+        border: 0 none;
+        border-top: 2px solid #13CFE7;
     }
 }
 .checkout-addons {
@@ -2044,17 +2060,51 @@ input[type="radio"] .styled:checked + label::after {
 .grunty-sprite {
     position: absolute;
     top: -180px;
-    left: 50%;
+    right: 54px;
     width: 216px;
     height: 180px;
     background: url('/assets/img/grunty-sprites@2x.png') no-repeat;
     background-size: auto 100%;
-    //background-position-x: -240px;
     z-index: 1;
-    transform: translateX(-50%);
 
+    // Grunty sprite variations
     &[data-sprite="0"] { background-position-x: 0px; }
     &[data-sprite="1"] { background-position-x: -216px; }
     &[data-sprite="2"] { background-position-x: -432px; }
     &[data-sprite="3"] { background-position-x: -648px; }
+
+    @media (min-width: @screen-xs-min) and (max-width: @screen-md-max) {
+        top: -140px;
+        right: 0;
+    }
+    @media (max-width: @screen-xs-max) {
+        top: auto;
+        bottom: 0;
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+    }
+}
+
+.checkout-price {
+    p {
+        @media (max-width: @screen-xs-max) {
+            margin-bottom: 0;
+            text-align: left;
+        }
+    }
+    .big-price {
+        @media (max-width: @screen-xs-max) {
+            font-size: 40px;
+            margin-bottom: 0;
+        }
+    }
+}
+.checkout-price-enterprise {
+    .big-price {
+        @media (max-width: @screen-xs-max) {
+            font-size: 40px;
+            margin-bottom: 0;
+        }
+    }
 }

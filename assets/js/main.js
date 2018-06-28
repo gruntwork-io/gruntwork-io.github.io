@@ -437,19 +437,24 @@ $(function () {
   function _calculatePrice() {
     if (checkoutOptions.enterprise) return; // Don't calculate on enterprise
 
-    var total, additionalUsers = checkoutOptions.users > 5 ? checkoutOptions.users - 5 : 0;
+    var total, subtotal, additionalUsers = checkoutOptions.users > 5 ? checkoutOptions.users - 5 : 0;
 
     if (checkoutOptions.dedicated_support) {
-      if (additionalUsers > 0) total = pricing.tier1.price[1] + (additionalUsers * pricing.tier2.price[1]);
-      else total = pricing.tier1.price[1]; // 5 or less users
+      if (additionalUsers > 0) total = subtotal = pricing.tier1.price[1] + (additionalUsers * pricing.tier2.price[1]);
+      else total = subtotal = pricing.tier1.price[1]; // 5 or less users
 
     } else {
       // Without dedicated support
-      if (additionalUsers > 0) total = pricing.tier1.price[0] + (additionalUsers * pricing.tier2.price[0]);
-      else total = pricing.tier1.price[0]; // 5 or less users
+      if (additionalUsers > 0) total = subtotal = pricing.tier1.price[0] + (additionalUsers * pricing.tier2.price[0]);
+      else total = subtotal = pricing.tier1.price[0]; // 5 or less users
+    }
+
+    if (checkoutOptions.setup_deployment) {
+      subtotal += 4950;
     }
 
     $('#subscription-price').text(total.toLocaleString());
+    $('#subscription-subtotal').text(subtotal.toLocaleString());
 
     _deferCheckout();
   }

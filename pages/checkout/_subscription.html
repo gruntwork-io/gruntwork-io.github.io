@@ -55,44 +55,59 @@
         </div>
       </div>
       <div class="col-md-4 panel panel-default checkout-panel-right">
-        <h6 class="margin-top-none text-center">
-          <strong>Your Subscription</strong>
-        </h6>
-        <div class="checkout-price-view">
-          <div class="checkout-price" data-checkout-total="default">
-            <p class="text-center" style="white-space: nowrap;"><span class="big-price"><span>$</span><strong id="subscription-price">742</strong></span>&nbsp; / month</p>
-            <p class="text-center" id="checkout-price-addon" style="display: none;"><span class="big-price big-price-sub"><span>+$</span>4,950</span>&nbsp; flat fee</p>
+        <div class="row">
+          <div class="col-xs-6 col-sm-12">
+            <h6 class="margin-top-none text-center visible-sm-block visible-md-block visible-lg-block">
+              <strong>Your Subscription</strong>
+            </h6>
+            <div class="checkout-price-view">
+              <div class="checkout-price text-center" data-checkout-total="default" style="white-space: nowrap;">
+                <span class="big-price visible-xs-block"><span>$</span><strong id="subscription-subtotal"></strong></span>
+                <div class="visible-sm-block visible-md-block visible-lg-block">
+                  <span class="big-price"><span>$</span><strong id="subscription-price"></strong></span>&nbsp; / month
+                  <p class="text-center" id="checkout-price-addon" style="display: none;"><span class="big-price big-price-sub"><span>+$</span>4,950</span>&nbsp; flat fee</p>
+                </div>
+              </div>
+              <div class="checkout-price-enterprise" data-checkout-total="enterprise" style="display: none;">
+                <h5 class="h1 big-price big-price-sub text-center margin-top-none"><span>Enterprise</span></h5>
+              </div>
+            </div>
+            <hr class="hr-sm hr-reset visible-sm-block visible-md-block visible-lg-block">
+            <div class="visible-sm-block visible-sm-block visible-md-block visible-lg-block">
+              <h5 class="margin-top-none text-center">
+                <strong>Your Subscription Includes</strong>
+              </h5>
+              <div class="row">
+                <div class="col-xs-12 col-sm-6 col-sm-offset-3 col-md-12 col-md-offset-0">
+                  <ul class="check-list small text-white margin-bottom-none">
+                    <li>Infrastructure as Code Library</li>
+                    <li>DevOps Training Library</li>
+                    <li>Community Forum</li>
+                    <li class="check-list-disabled" id="subscription-addon-1">Dedicated Support</li>
+                    <li class="check-list-disabled" id="subscription-addon-2">Setup &amp; Deployment</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="checkout-price-enterprise" data-checkout-total="enterprise" style="display: none;">
-            <h5 class="h1 big-price big-price-sub text-center margin-top-none"><span>Enterprise</span></h5>
+          <div class="col-xs-6 col-sm-12">
+            <hr class="hr-sm hr-reset visible-sm-block visible-md-block visible-lg-block">
+            <p class="text-muted small text-center visible-sm-block visible-md-block visible-lg-block">Annual Contract Required</p>
+            <button
+              type="button"
+              class="btn btn-info btn-block"
+              data-cb-type="checkout"
+              data-cb-plan-id="chargebee-subscription">
+              Checkout
+            </button>
+            <p><a id="checkout-contact-btn" class="btn btn-primary btn-block" href="/contact/" style="display: none;">Contact Us</a></p>
+            <p class="text-muted text-tiny text-center margin-bottom-none visible-sm-block visible-md-block visible-lg-block">View our <span><a href="#">Terms of Service</a></span></p>
+          </div>
           </div>
         </div>
-        <hr class="hr-sm hr-reset">
-        <h5 class="margin-top-none text-center">
-          <strong>Your Subscription Includes</strong>
-        </h5>
-        <ul class="check-list small text-white margin-bottom-none">
-          <li>Infrastructure as Code Library</li>
-          <li>DevOps Training Library</li>
-          <li>Community Forum</li>
-          <li class="check-list-disabled" id="subscription-addon-1">Dedicated Support</li>
-          <li class="check-list-disabled" id="subscription-addon-2">Setup &amp; Deployment</li>
-        </ul>
-        <hr class="hr-sm hr-reset">
-        <p class="text-muted small text-center">Annual Contract Required</p>
-        <button
-          type="button"
-          class="btn btn-info btn-block"
-          data-cb-type="checkout"
-          data-cb-plan-id="chargebee-subscription">
-          Checkout
-        </button>
-        <p><a id="checkout-contact-btn" class="btn btn-primary btn-block" href="/contact/" style="display: none;">Contact Us</a></p>
-        <p class="text-muted text-tiny text-center margin-bottom-none">View our <span><a href="#">Terms of Service</a></span></p>
-        <figure class="grunty-sprite" data-sprite="0">
-          <figcaption class="sr-only">Grunt sprite</figcaption>
-        </figure>
-      </div>
+      <figure class="grunty-sprite" data-sprite="0">
+        <figcaption class="sr-only">Grunt sprite</figcaption>
+      </figure>
     </div>
   </div>
 </div>
