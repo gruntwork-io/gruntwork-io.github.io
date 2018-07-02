@@ -259,13 +259,13 @@ $(function () { // This prevents global vars
   var $pricingInput = $('[data-pricing-calc="input"]');
   var defaultTab = '#tab-subscription'
 
-  function changeTab(key='') {
+  function changeTab(key) {
     if (!key) key = defaultTab;
     else defaultTab = key;
   }
 
   // Get or set number of users
-  function numUsers(newVal=undefined) {
+  function numUsers(newVal) {
     if (!newVal) return $pricingInput.val();
     // Checks if newVal is an integer
     else if (newVal % 1 === 0) $pricingInput.val(newVal);
@@ -284,7 +284,8 @@ $(function () { // This prevents global vars
     calculate(numUsers());
   });
 
-  function calculate(numUsers=0) {
+  function calculate(numUsers) {
+    if (!numUsers) numUsers = 0;
     if (numUsers < 1 || numUsers % 1 !== 0) return;
     var total = 0;
     $('[data-pricing-calc="alert"]').hide();
@@ -331,13 +332,35 @@ $(function () {
     case 'dedicated-support': _updateCheckout({ dedicated_support: true }); break;
     default: // do nothing
   }
+	if (typeof Object.assign != 'function') {
+		Object.assign = function(target) {
+			'use strict';
+			if (target == null) {
+				throw new TypeError('Cannot convert undefined or null to object');
+			}
 
+			target = Object(target);
+			for (var index = 1; index < arguments.length; index++) {
+				var source = arguments[index];
+				if (source != null) {
+					for (var key in source) {
+						if (Object.prototype.hasOwnProperty.call(source, key)) {
+							target[key] = source[key];
+						}
+					}
+				}
+			}
+			return target;
+		};
+	}
   // Listen to the switchers
-  $('#slider-users').on('input', function (event) {
+  $('#slider-users').on('input change mousemove', function (event) {
     _updateCheckout({ users: parseInt(event.target.value) });
   });
   $('[data-switch]').on('change', function () {
-    _updateCheckout({ [this.name]: this.checked });
+    var tmp = {};
+    tmp[this.name] = this.checked;
+    _updateCheckout(tmp);
   });
 
   // Updates the UI of the checkout
