@@ -1989,6 +1989,7 @@ input[type="radio"] .styled:checked + label::after {
         margin: 0;
         border: 0 none;
         border-top: 2px solid #13CFE7;
+        padding: 10px;
     }
 }
 .checkout-addons {
@@ -2124,10 +2125,12 @@ input[type="radio"] .styled:checked + label::after {
 }
 
 .checkout-price {
+    @media (max-width: @screen-xs-max) {
+        text-align: left;
+    }
     p {
         @media (max-width: @screen-xs-max) {
             margin-bottom: 0;
-            text-align: left;
         }
     }
     .big-price {
