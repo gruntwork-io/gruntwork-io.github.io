@@ -1989,6 +1989,7 @@ input[type="radio"] .styled:checked + label::after {
         margin: 0;
         border: 0 none;
         border-top: 2px solid #13CFE7;
+        padding: 10px;
     }
 }
 .checkout-addons {
@@ -2035,6 +2036,7 @@ input[type="radio"] .styled:checked + label::after {
         border-radius: 5px;
         background: #44576e;
         border: 1px solid #13CFE7;
+        padding:0;
         outline: none;
         &::-webkit-slider-thumb {
             .gradient-mixin( top; to bottom; @gradient-primary-start; @gradient-primary-end; );
@@ -2053,6 +2055,42 @@ input[type="radio"] .styled:checked + label::after {
             border-radius: 50%;
             cursor: pointer;
             box-shadow: 0 4px 6px rgba(0,0,0,0.11), 0 1px 3px rgba(0,0,0,0.08);
+        }
+        &::-ms-track {
+            width: 300px;
+            height: 5px;
+
+            /*remove bg colour from the track, we'll use ms-fill-lower and ms-fill-upper instead */
+            background: #44576E;
+
+            /*leave room for the larger thumb to overflow with a transparent border */
+            border-color: transparent;
+            border-width: 6px 0;
+
+            /*remove default tick marks*/
+            color: transparent;
+        }
+        &::-ms-fill-lower {
+            background: #777;
+            border-radius: 10px;
+        }
+        &::-ms-fill-upper {
+            background: #ddd;
+            border-radius: 10px;
+        }
+        &::-ms-thumb {
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background:  #0DB9F3;
+            .gradient-mixin( top; to bottom; @gradient-primary-start; @gradient-primary-end; );
+        }
+        &:focus::-ms-fill-lower {
+            background: #888;
+        }
+        &:focus::-ms-fill-upper {
+            background: #ccc;
         }
     }
 }
@@ -2087,10 +2125,12 @@ input[type="radio"] .styled:checked + label::after {
 }
 
 .checkout-price {
+    @media (max-width: @screen-xs-max) {
+        text-align: left;
+    }
     p {
         @media (max-width: @screen-xs-max) {
             margin-bottom: 0;
-            text-align: left;
         }
     }
     .big-price {
