@@ -7,28 +7,30 @@
 - id: sso-for-aws-web-console
   title: SSO for the AWS Web Console
   caption: |
-    Houston gives you single sign-on to the web console for any of your AWS accounts, allowing you to login to AWS
-    using any SAML provider, including Google, ADFS, and Okta.
+    Houston gives you single sign-on Single sign-on to the AWS web console, allowing you to login to any of your AWS
+    accounts using any SAML provider, including Google, ADFS, and Okta.
   url: "/assets/img/houston/gruntwork-houston-aws-login.mp4"
 
 - id: sso-for-aws-cli
   title: SSO for AWS CLI tools
   caption: |
-    Houston single sign-on even works with command-line tools such as a aws, terraform, and packer! No more fussing
-    around with access keys, profiles, and tokens; just login using any SAML provider, including Google, ADFS,
-    and Okta.
+    Single sign-on for AWS CLI tools, allowing you to authenticate CLI tools such as <code>aws</code>,
+    <code>terraform</code>, and <code>packer</code> to your AWS account using any SAML provider (including Google, AWS
+    SSO, ADFS, and Okta) instead of fussing around with access keys, profiles, and STS API calls.
   url: "/assets/img/houston/gruntwork-houston-aws-cli-login.mp4"
 
 - id: vpn-access
-  title: VPN access
+  title: SSO for VPN access
   caption: |
-    Finally, self-service VPN certificates! If you use Gruntwork's IaC Library to deploy an OpenVPN server, your team
-    members can request their own VPN certificates through the Houston UI.
+    Finally, self-service VPN certificates! If you use <a href="/infrastructure-as-code-library">Gruntwork's IaC Library</a>
+    to deploy an OpenVPN server, your team members will be able to request their own VPN certificates through the
+    Houston UI.
   url: "/assets/img/houston/gruntwork-houston-vpn.mp4"
 
 - id: ssh-access
-  title: SSH access
+  title: SSO for SSH access
   caption: |
-    Upload your public SSH key to Houston and use your own username and that key to connect to your EC2 Instances over
-    SSH.
+    If you run <code>ssh-grunt</code> from <a href="/infrastructure-as-code-library">Gruntwork's IaC Library</a> on your
+    EC2 Instances, your team members will be able to upload their public SSH keys to Houston and then SSH to those EC2
+    Instances using their own usernames and keys.
   url: "/assets/img/houston/gruntwork-houston-ssh.mp4"
