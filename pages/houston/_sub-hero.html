@@ -1,0 +1,28 @@
+<h2>Platform as a Service, meet Infrastructure as Code</h2>
+<p>
+  Gruntwork Houston gives you DevOps super powers. On the surface, it's a <strong>simple web interface</strong>
+  that your Dev team can use to deploy and manage its infrastructure. Under the hood, the web interface and how it
+  manages infrastructure are completely defined and controlled by your Ops team using <strong>infrastructure as
+  code</strong>.
+</p>
+<p class="text-center">
+  <img src="/assets/img/houston/houston-login-small.jpg" class="img-fluid" style="padding: 15px 0;" alt="Gruntwork Houston login page">
+</p>
+<p>
+  It's the best of both worlds: your Dev team gets an easy-to-use, self-service experience, while your Ops team
+  still has all the power and control they need to ensure reliability, security, and compliance.
+</p>
+<h2>Gruntwork Houston Features</h2>
+<div class="row" style="margin-top: 50px;">
+  {% for feature in site.data.houston-features %}
+  <div class="col-xs-6 col-sm-4" style="margin-bottom:20px;">
+    <div class="pull-left text-center" style="width: 100px; margin-right: 10px;">
+      <img src="/assets/img/houston/houston-feature-{{ forloop.index }}.png" alt="{{ feature.title }}" />
+    </div>
+    <div class="pull-left" style="max-width: 170px; font-size: 16px; line-height: 20px; height: 140px;">
+      <h6 style="margin: 5px 0 5px 0">{{ feature.title }}</h6>
+      <p>{{ feature.description }}</p>
+    </div>
+  </div>
+  {% endfor %}
+</div>

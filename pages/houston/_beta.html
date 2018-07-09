@@ -1,0 +1,18 @@
+<h2>Gruntwork Houston Beta</h2>
+<p>
+  Gruntwork Houston is currently in private beta. A few of the early features available are highlighted below. If you'd
+  like early access, <a href="/contact">Contact Us</a> and we'll add you to the waiting list!
+</p>
+{% for video in site.data.houston-videos %}
+  <div id="{{ title.id }}" style="margin-bottom: 40px">
+    <h4 style="margin-bottom: 5px">{{ video.title }}</h4>
+    <p>{{ video.caption }}</p>
+    <div class="embed-responsive embed-responsive-16by9">
+      <video controls autoplay loop muted class="embed-responsive-item">
+        <source src="{{ video.url }}" type="video/mp4">
+        Your browser does not support the video tag or this video format. You can <a href="{{ video.url }}">download
+        the video instead</a>.
+      </video>
+    </div>
+  </div>
+{% endfor %}
