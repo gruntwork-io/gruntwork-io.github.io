@@ -1334,7 +1334,9 @@ h6, .h6 { .heading-margin-variant(0.68; 0.52; @line-height-h6); }
 .big-price {
     font-size: 72px;
 }
-
+.large-price{
+    font-size: 66px;
+}
 .medium-price {
     font-size: 36px;
 }
@@ -1343,14 +1345,14 @@ h6, .h6 { .heading-margin-variant(0.68; 0.52; @line-height-h6); }
     font-size: 26px;
 }
 
-.big-price, .medium-price, .small-price {
+.big-price, .large-price, .medium-price, .small-price {
     font-weight: 700;
     color: #FFF;
     margin-bottom: 10px;
     line-height: 1;
 }
 
-.big-price span, .medium-price span, .small-price span {
+.big-price span, .large-price span, .medium-price span, .small-price span {
     font-weight: 300;
 }
 
@@ -1359,6 +1361,10 @@ h6, .h6 { .heading-margin-variant(0.68; 0.52; @line-height-h6); }
     font-weight: normal;
 }
 
+.big-price-sub {
+    font-size: 48px;
+    font-weight: normal;
+}
 
 //
 // Wells
@@ -1993,6 +1999,7 @@ input[type="radio"] .styled:checked + label::after {
     }
 }
 .checkout-addons {
+    padding-top: 0;
     > div {
         @media (max-width: @screen-sm-max) {
             margin-bottom: 30px;
@@ -2005,7 +2012,10 @@ input[type="radio"] .styled:checked + label::after {
 }
 
 .side-by-side {
+    margin: 10px 0;
+    padding: 0 0 10px;
     > * {
+        vertical-align: sub;
         margin-left: 6px;
         margin-right: 6px;
     }
@@ -2055,6 +2065,12 @@ input[type="radio"] .styled:checked + label::after {
             border-radius: 50%;
             cursor: pointer;
             box-shadow: 0 4px 6px rgba(0,0,0,0.11), 0 1px 3px rgba(0,0,0,0.08);
+        }
+        &::-moz-range-track{
+            background: #44576e;
+        }
+        &::-moz-focus-outer {
+            border: 0;
         }
         &::-ms-track {
             width: 300px;
