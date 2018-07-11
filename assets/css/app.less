@@ -1361,7 +1361,7 @@ h6, .h6 { .heading-margin-variant(0.68; 0.52; @line-height-h6); }
     font-weight: normal;
 }
 
-.big-price-sub {
+.large-price-sub {
     font-size: 48px;
     font-weight: normal;
 }
@@ -1977,8 +1977,8 @@ input[type="radio"] .styled:checked + label::after {
     padding: 25px;
 
     @media (min-width: @screen-md-min) {
-        margin-top: -40px;
-        margin-bottom: -40px;
+        margin-top: -20px;
+        margin-bottom: -20px;
     }
 
     @media (min-width: @screen-sm-min) and (max-width: @screen-md-max) {
@@ -2057,6 +2057,13 @@ input[type="radio"] .styled:checked + label::after {
             border-radius: 50%;
             cursor: pointer;
             box-shadow: 0 4px 6px rgba(0,0,0,0.11), 0 1px 3px rgba(0,0,0,0.08);
+            border: 1px solid #0096BD;
+            &::after{
+                content: "";
+                background: white;
+                width: 8px;
+                height: 8px;
+            }
         }
         &::-moz-range-thumb {
             .gradient-mixin( top; to bottom; @gradient-primary-start; @gradient-primary-end; );
@@ -2065,6 +2072,7 @@ input[type="radio"] .styled:checked + label::after {
             border-radius: 50%;
             cursor: pointer;
             box-shadow: 0 4px 6px rgba(0,0,0,0.11), 0 1px 3px rgba(0,0,0,0.08);
+            border: 1px solid #0096BD;
         }
         &::-moz-range-track{
             background: #44576e;

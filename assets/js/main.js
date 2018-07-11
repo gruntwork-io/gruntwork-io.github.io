@@ -460,7 +460,7 @@ $(function () {
   function _calculatePrice() {
     if (checkoutOptions.enterprise) return; // Don't calculate on enterprise
 
-    var total, subtotal, additionalUsers = checkoutOptions.users > 5 ? checkoutOptions.users - 5 : 0;
+    var total, subtotal, subscriptionTotal, additionalUsers = checkoutOptions.users > 5 ? checkoutOptions.users - 5 : 0;
 
     if (checkoutOptions.dedicated_support) {
       if (additionalUsers > 0) total = subtotal = pricing.tier1.price[1] + (additionalUsers * pricing.tier2.price[1]);
@@ -473,17 +473,18 @@ $(function () {
     }
 
     if (checkoutOptions.setup_deployment) {
-      subtotal += 4950;
+      subscriptionTotal = subtotal;
+        subtotal += 4950;
     }
 
     $('#subscription-price').text(total.toLocaleString());
     $('#subscription-subtotal').text(subtotal.toLocaleString());
 
-    _deferCheckout();
+    _deferCheckout(checkoutOptions.users, checkoutOptions.dedicated_support, checkoutOptions.setup_deployment);
   }
 
   // Prevents spamming Chargebee registerAgain on every change
-  function _deferCheckout() {
+  function _deferCheckout(users, support, setup) {
     var cbInstance;
     if (typeof timeout !== 'undefined') clearTimeout(timeout);
     $checkout.attr('disabled', true).text('Please wait...');
@@ -491,11 +492,30 @@ $(function () {
     timeout = setTimeout(function () {
       $checkout.attr('disabled', false).text('Checkout');
       clearTimeout(timeout);
-      _updateAttrs();
+      //_updateAttrs();
       Chargebee.registerAgain();
       cbInstance = Chargebee.getInstance();
-      cbInstance.setCheckoutCallbacks(function(cart) {
+      function htmlEncode(value){
+        if (value) {
+          return jQuery('<div />').text(value).html();
+        } else {
+          return '';
+        }
+      }
+      cbInstance.setCheckoutCallbacks(function(cart, product) {
+        var subscriptionDetails = ("Gruntwork Subscribers: " + users);
+        if (support){
+          subscriptionDetails += " • Dedicated Support";
+        }
+        if (setup){
+          subscriptionDetails += " • Setup and Deployment";
+        }
+        console.log(subscriptionDetails);
         // you can define a custom callbacks based on cart object
+        var customer = {cf_subscription_details: subscriptionDetails};
+
+        cart.setCustomer(customer);
+
         return {
           close: function() {
             // Required to remove overflow set by the modal
