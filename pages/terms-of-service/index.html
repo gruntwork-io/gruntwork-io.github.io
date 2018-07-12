@@ -1,0 +1,42 @@
+---
+layout: default
+title: Terms of Service
+permalink: /terms-of-service/
+custom_js:
+- tos.min
+---
+
+<div class="main">
+  <div class="section section-hero">
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12">
+          <h1>{{ page.title }}</h1>
+          <h2 class="h3 text-muted">This page outlines the terms of service and use of  Gruntwork’s product.</h2>
+        </div>
+        <div class="col-xs-12">
+        <div class="switch-group">
+          <label class="switch">
+            <input type="checkbox" data-switch="" name="humanese">
+            <span class="slider round"></span>
+          </label>
+          <span class="switch-label light" title="">Translate legalese to human-friendly</span>
+          </div>
+        </div>
+        <div class="col-xs-12 tos-table">
+          {% for step in site.data.terms-of-service %}
+            <div class="row">
+              <div class="col-md-4 tos-table__plain">
+                <p>{{ step.plain }}</p>
+              </div>
+              <div class="col-md-7 col-md-offset-1 tos-table__legal">
+                <h3>{{ step.title }}</h3>
+                {{ step.legalese }}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
