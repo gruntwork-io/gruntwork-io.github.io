@@ -1,0 +1,16 @@
+<h2 id="tour">A Tour of Gruntwork Houston</h2>
+<p>
+  Here's a quick tour of some of the DevOps superpowers you get when you use Gruntwork Houston:
+</p>
+{% for video in site.data.houston-videos %}
+<div id="{{ title.id }}" style="margin-bottom: 40px">
+  <p><strong>{{ video.title }}</strong>: b{{ video.caption }}</p>
+  <div class="embed-responsive embed-responsive-16by9">
+    <video controls loop muted class="embed-responsive-item">
+      <source src="{{ video.url }}" type="video/mp4">
+      Your browser does not support the video tag or this video format. You can <a href="{{ video.url }}">download
+      the video instead</a>.
+    </video>
+  </div>
+</div>
+{% endfor %}
