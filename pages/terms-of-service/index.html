@@ -2,8 +2,6 @@
 layout: default
 title: Terms of Service
 permalink: /terms-of-service/
-custom_js:
-- tos.min
 ---
 
 <div class="main">
@@ -12,25 +10,29 @@ custom_js:
       <div class="row">
         <div class="col-xs-12">
           <h1>{{ page.title }}</h1>
-          <h2 class="h3 text-muted">This page outlines the terms of service and use of  Gruntwork’s product.</h2>
+          <h2 class="h3">This page outlines the terms of service and use of  Gruntwork’s product.</h2>
         </div>
-        <div class="col-xs-12">
+      </div>
+      <div class="row ">
+        <div class="col-xs-12 col-sm-offset-3 col-sm-9 visible-xs-block visible-sm-block">
         <div class="switch-group">
           <label class="switch">
-            <input type="checkbox" data-switch="" name="humanese">
+            <input type="checkbox" id="human" data-switch="" name="humanese">
             <span class="slider round"></span>
           </label>
-          <span class="switch-label light" title="">Translate legalese to human-friendly</span>
+          <span class="switch-label small bold" title="">Translate legalese to human-friendly</span>
           </div>
         </div>
         <div class="col-xs-12 tos-table">
           {% for step in site.data.terms-of-service %}
-            <div class="row">
-              <div class="col-md-4 tos-table__plain">
-                <p>{{ step.plain }}</p>
+            <div class="row terms-row">
+              <h3 class="col-md-7 col-md-offset-5">{{ step.title }}</h3>
+              <div class="tos-table__plain col-md-5">
+                <div class="tos-table__plain-block">
+                  <p>{{ step.plain }}</p>
+                </div>
               </div>
-              <div class="col-md-7 col-md-offset-1 tos-table__legal">
-                <h3>{{ step.title }}</h3>
+              <div class="col-md-7 tos-table__legal">
                 {{ step.legalese }}
               </div>
             </div>

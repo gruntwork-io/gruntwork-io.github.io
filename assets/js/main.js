@@ -308,3 +308,26 @@ $(function () { // This prevents global vars
 
   calculate($pricingInput.val()); // Calculates default number of users
 });
+/* Pricing calculator */
+$(function () { // This prevents global vars
+  var humanese = false;
+  $('#human[data-switch]').on('change', function () {
+    var tmp = {};
+    tmp[this.name] = this.checked;
+    $(this).children('.tos-table__legalese').hide();
+    if(tmp[this.name] == true){
+      console.log(tmp[this.name]);
+      $('.terms-row').each(function( index ){
+        $(this).children('.tos-table__plain').fadeIn('fast');
+        $(this).children('.tos-table__legal').hide();
+
+      });
+    }
+    else{
+      $('.terms-row').each(function( index ){
+        $(this).children('.tos-table__legal').fadeIn('fast');
+        $(this).children('.tos-table__plain').hide();
+      });
+    }
+  });
+});
