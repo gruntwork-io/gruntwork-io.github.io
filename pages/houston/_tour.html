@@ -4,7 +4,7 @@
 </p>
 {% for video in site.data.houston-videos %}
 <div id="{{ title.id }}" style="margin-bottom: 40px">
-  <p><strong>{{ video.title }}</strong>: b{{ video.caption }}</p>
+  <p><strong>{{ video.title }}</strong>: {{ video.caption }}</p>
   <div class="embed-responsive embed-responsive-16by9">
     <video controls loop muted class="embed-responsive-item">
       <source src="{{ video.url }}" type="video/mp4">
