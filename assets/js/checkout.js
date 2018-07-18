@@ -197,7 +197,7 @@ $(function () {
           subscriptionDetails += " • Dedicated Support";
         }
         if (setup){
-          subscriptionDetails += " • Setup and Deployment";
+          subscriptionDetails += " • Reference Architecture";
         }
         console.log(subscriptionDetails);
         // you can define a custom callbacks based on cart object
