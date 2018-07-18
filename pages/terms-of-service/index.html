@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Terms of Service
+modified_date: July 15, 2018
 permalink: /terms-of-service/
 ---
 
@@ -11,31 +12,46 @@ permalink: /terms-of-service/
         <div class="col-xs-12">
           <h1>{{ page.title }}</h1>
           <h2 class="h3">This page outlines the terms of service and use of  Gruntwork’s product.</h2>
+          <p>Last Modified: {{ page.modified_date }}</p>
         </div>
       </div>
       <div class="row ">
         <div class="col-xs-12 col-sm-offset-3 col-sm-9 visible-xs-block visible-sm-block">
-        <div class="switch-group">
-          <label class="switch">
-            <input type="checkbox" id="human" data-switch="" name="humanese">
-            <span class="slider round"></span>
-          </label>
-          <span class="switch-label small bold" title="">Translate legalese to human-friendly</span>
+          <div class="switch-group">
+            <label class="switch">
+              <input type="checkbox" id="human" data-switch="" name="humanese">
+              <span class="slider round"></span>
+            </label>
+            <span class="switch-label small bold" title="">Translate legalese to human-friendly</span>
           </div>
         </div>
+        <div class="col-xs-12">
+            <p></p>
+        </div>
         <div class="col-xs-12 tos-table">
-          {% for step in site.data.terms-of-service %}
-            <div class="row terms-row">
-              <h3 class="col-md-7 col-md-offset-5">{{ step.title }}</h3>
-              <div class="tos-table__plain col-md-5">
-                <div class="tos-table__plain-block">
-                  <p>{{ step.plain }}</p>
+          {% for category in site.data.terms-of-service %}
+            {% if category.category_name != nil %}
+                <h3 id="{{ category.category_id }}">{{ category.category_name }}</h3>
+            {% endif %}
+            {% if category.category_description != nil %}
+                <p>{{ category.category_description }}</p>
+            {% endif %}
+            {% for step in category.items %}
+              <div class="row terms-row">
+                {% if step.title != nil %}
+                  <h3 class="col-md-7 col-md-offset-5">{{ step.title }}</h3>
+                {% endif %}
+                <div class="tos-table__plain col-md-5">
+                  <div class="tos-table__plain-block">
+                    <p>{{ step.plain }}</p>
+                  </div>
+                </div>
+                <div class="col-md-7 tos-table__legal">
+                  {{ step.legalese }}
                 </div>
               </div>
-              <div class="col-md-7 tos-table__legal">
-                {{ step.legalese }}
-              </div>
-            </div>
+            {% endfor %}
+            <hr />
           {% endfor %}
         </div>
       </div>
