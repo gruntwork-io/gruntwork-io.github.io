@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Terms of Service
-modified_date: July 15, 2018
+modified_date: July 18, 2018
 permalink: /terms/
 ---
 
@@ -12,7 +12,12 @@ permalink: /terms/
         <div class="col-xs-12">
           <h1>{{ page.title }}</h1>
           <h2 class="h3">This page outlines the terms of service and use of Gruntwork’s product.</h2>
-          <p>Last Modified: {{ page.modified_date }}</p>
+          <p><strong>Our Terms of Service are really important in defining our rights and your rights in our relationship.</strong>
+             But trust us, we understand that it's not the easiest document to read. That's why we've put together these
+             "plain English" summaries to help you understand the key parts. Remember that we're providing you
+             these summaries for informational purposes only. Our actual Terms are the ones that will apply if we ever
+             need to work through any issues.</p>
+          <p><em>Last Modified: {{ page.modified_date }}</em></p>
         </div>
       </div>
       <div class="row ">
@@ -34,7 +39,7 @@ permalink: /terms/
         <div class="col-xs-12 tos-table">
           {% for category in site.data.terms-of-service %}
             {% if category.category_name != nil %}
-                <h3 id="{{ category.category_id }}">{{ category.category_name }}</h3>
+                <h2 id="{{ category.category_id }}">{{ category.category_name }}</h2>
             {% endif %}
             {% if category.category_description != nil %}
                 <p>{{ category.category_description }}</p>
