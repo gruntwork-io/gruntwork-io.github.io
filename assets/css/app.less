@@ -82,6 +82,11 @@ p + .btn {
 }
 .btn-primary-hollow {
     border: 1px solid #13cfe7;
+    &:hover{
+        background: #13cfe7;
+        background: -webkit-linear-gradient(-45deg, #13cfe7, #06a2ff);
+        background: linear-gradient(135deg, #13cfe7, #06a2ff);
+    }
 }
 
 // Footer buttons styles
@@ -1263,6 +1268,7 @@ h6, .h6 { .heading-margin-variant(0.68; 0.52; @line-height-h6); }
 
 .help-text {
     border-bottom: 1px dotted @gray-light;
+    cursor: help;
 
     &.light {
         border-bottom-color: @gray-lighter;
@@ -1350,7 +1356,9 @@ h6, .h6 { .heading-margin-variant(0.68; 0.52; @line-height-h6); }
 .small-price {
     font-size: 26px;
 }
-
+.smaller{
+    font-size: 0.8em;
+}
 .big-price, .large-price, .medium-price, .small-price {
     font-weight: 700;
     color: #FFF;

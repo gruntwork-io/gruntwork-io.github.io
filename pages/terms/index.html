@@ -50,9 +50,11 @@ permalink: /terms/
                   <h3 class="col-md-7 col-md-offset-5">{{ step.title }}</h3>
                 {% endif %}
                 <div class="tos-table__plain col-md-5">
+                {% if step.plain != nil %}
                   <div class="tos-table__plain-block">
                     <p>{{ step.plain }}</p>
                   </div>
+                {% endif %}
                 </div>
                 <div class="col-md-7 tos-table__legal">
                   {{ step.legalese }}
