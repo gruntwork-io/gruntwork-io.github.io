@@ -254,6 +254,29 @@ $('.js-print').on('click', function(event) {
   window.print();
 });
 
+var tolerancePixel = 40;
+
+// Auto play html5 videos when they scroll into view
+// https://stackoverflow.com/a/26508106/483528
+var checkMedia = function() {
+  // Get current browser top and bottom
+  var scrollTop = $(window).scrollTop() + tolerancePixel;
+  var scrollBottom = $(window).scrollTop() + $(window).height() - tolerancePixel;
+
+  $('video').each(function(index, el) {
+    var yTopMedia = $(this).offset().top;
+    var yBottomMedia = $(this).height() + yTopMedia;
+
+    if(scrollTop < yBottomMedia && scrollBottom > yTopMedia){
+      $(this).get(0).play();
+    } else {
+      $(this).get(0).pause();
+    }
+  });
+};
+
+$(document).on('scroll', checkMedia);
+
 /* Pricing calculator */
 $(function () { // This prevents global vars
   var $pricingInput = $('[data-pricing-calc="input"]');
