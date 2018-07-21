@@ -1,0 +1,14 @@
+---
+layout: null
+permalink: robots.txt
+---
+# filter pages and documents for the noindex key
+{% assign noindexPages = site.pages | where: 'noindex', true %}
+# filter pages and documents for the noindex key
+User-agent: *
+{% if noindexPages {% for node in noindexPages %}
+Disallow: {{ node.url }}
+    {% endfor %}
+{% endif %}
+Sitemap: {{ site.url }}/sitemap.xml
+
