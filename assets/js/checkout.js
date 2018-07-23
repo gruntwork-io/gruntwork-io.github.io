@@ -65,6 +65,7 @@ $(function () {
     if (checkoutOptions.users > 50) {
       $('#slider-users-count').text('50+');
       $checkout.hide();
+      $('#deposit-due').hide();
       $('#checkout-contact-btn').show();
     } else {
       if (checkoutOptions.users <= 5) {
@@ -74,6 +75,7 @@ $(function () {
       }
 
       $checkout.show();
+      $('#deposit-due').show();
       $('#checkout-contact-btn').hide();
     }
 

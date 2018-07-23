@@ -6,9 +6,10 @@ permalink: robots.txt
 {% assign noindexPages = site.pages | where: 'noindex', true %}
 # filter pages and documents for the noindex key
 User-agent: *
-{% if noindexPages {% for node in noindexPages %}
-Disallow: {{ node.url }}
-    {% endfor %}
+{% if noindexPages %}
+  {% for node in noindexPages %}
+  Disallow: {{ node.url }}
+  {% endfor %}
 {% endif %}
 Sitemap: {{ site.url }}/sitemap.xml
 
