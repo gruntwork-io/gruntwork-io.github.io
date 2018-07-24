@@ -339,7 +339,7 @@ $(function () { // This prevents global vars
     tmp[this.name] = this.checked;
     $(this).children('.tos-table__legalese').hide();
     if(tmp[this.name] == true){
-      console.log(tmp[this.name]);
+      // console.log(tmp[this.name]);
       $('.terms-row').each(function( index ){
         $(this).children('.tos-table__plain').fadeIn('fast');
         $(this).children('.tos-table__legal').hide();
