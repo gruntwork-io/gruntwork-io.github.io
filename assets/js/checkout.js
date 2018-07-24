@@ -201,7 +201,7 @@ $(function () {
         if (setup){
           subscriptionDetails += " • Reference Architecture";
         }
-        console.log(subscriptionDetails);
+        //console.log(subscriptionDetails);
         // you can define a custom callbacks based on cart object
         var customer = {cf_subscription_details: subscriptionDetails};
 
