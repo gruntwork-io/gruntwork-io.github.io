@@ -2212,3 +2212,31 @@ input[type="radio"] .styled:checked + label::after {
     border-bottom: 1px solid #0096BD;
     margin-bottom: 20px;
 }
+
+@media print{
+    .col-print-12{
+        width:100%;
+        float:left;
+        text-align: left;
+        margin-left: 0;
+    }
+    a, a:visited{
+        color: #000;
+        text-decoration: none;
+    }
+    a[rel="internal"]:after{
+        content: " "!important;
+    }
+    a[rel="external"]:after{
+        content:" (" attr(href) ") ";
+        font-size:0.8em;
+        font-weight:normal;
+        word-wrap: word-break;
+    }
+    h2 {
+        page-break-before: always;
+    }
+    p{
+        page-break-inside: avoid;
+    }
+}
