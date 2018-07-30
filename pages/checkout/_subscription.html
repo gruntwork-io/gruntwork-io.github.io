@@ -62,21 +62,21 @@
       </div>
       <div class="col-md-4 panel panel-default checkout-panel-right">
         <div class="row">
-          <div class="col-xs-6 col-sm-12">
+          <div class="col-xs-5 col-sm-12">
             <h6 class="margin-top-none text-center visible-sm-block visible-md-block visible-lg-block">
               <strong>Your Subscription</strong>
             </h6>
             <div class="checkout-price-view">
               <div class="checkout-price text-center" data-checkout-total="default">
-                <small class="visible-xs-block" style="margin-bottom: -4px">Your Total Today</small>
-                <span class="large-price visible-xs-block" style="white-space: nowrap;"><span>$</span><strong id="subscription-subtotal"></strong></span>
+                <span class="large-price visible-xs-inline large-price--mobile" style="white-space: nowrap;"><span>$</span><strong id="subscription-subtotal"></strong></span><span class="small text-muted visible-xs-inline" style="white-space: nowrap;"> / month</span>
+                <span id="checkout-price-addon--mobile"><span class="medium-price medium-price--mobile medium-price-sub"><span>+$</span>4,950</span><span class="text-muted visible-xs-inline small">  one-time</span></span>
                 <div class="visible-sm-block visible-md-block visible-lg-block">
                   <span class="large-price"><span>$</span><strong id="subscription-price"></strong></span>&nbsp; / month
                   <p class="text-center" id="checkout-price-addon" style="display: none;"><span class="large-price large-price-sub"><span>+$</span>4,950</span>&nbsp; flat fee</p>
                 </div>
               </div>
               <div class="checkout-price-enterprise" data-checkout-total="enterprise" style="display: none;">
-                <h5 class="h1 large-price large-price-sub text-center margin-top-none"><span>Enterprise</span></h5>
+                <h5 class="h1 large-price large-price--mobile large-price-sub text-center margin-top-none"><span>Enterprise</span></h5>
               </div>
             </div>
             <hr class="hr-sm hr-reset visible-sm-block visible-md-block visible-lg-block">
@@ -98,15 +98,15 @@
               </div>
             </div>
           </div>
-          <div class="col-xs-6 col-sm-12">
+          <div class="col-xs-7 col-sm-12">
             <hr class="hr-sm hr-reset visible-sm-block visible-md-block visible-lg-block">
             <p class="text-muted small text-center margin-bottom-none visible-sm-block visible-md-block visible-lg-block">
               Annual Contract. Billed monthly.
             </p>
-            <p class="h5 text-bold margin-top-none text-center" id="deposit-due">Deposit Due Today: $500</p>
+            <p class="small text-white text-bold margin-top-none text-center" id="deposit-due" style="margin-bottom: 0">Deposit Due Today: $500</p>
             <button
               type="button"
-              class="btn btn-info btn-block"
+              class="btn btn-info btn-block btn-checkout"
               data-cb-type="checkout"
               data-cb-plan-id="chargebee-subscription">
               Checkout
