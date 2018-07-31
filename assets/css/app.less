@@ -1356,12 +1356,22 @@ h6, .h6 { .heading-margin-variant(0.68; 0.52; @line-height-h6); }
             font-size: 32px;
         }
     }
+    @media (max-width: 320px) {
+        &.large-price--mobile{
+            font-size: 28px;
+        }
+    }
 }
 .medium-price {
     font-size: 36px;
     @media (max-width: @screen-sm-min) {
         &.medium-price--mobile{
             font-size: 24px;
+        }
+    }
+    @media (max-width: 320px) {
+        &.medium-price--mobile{
+            font-size: 20px;
         }
     }
 }
@@ -1992,6 +2002,11 @@ input[type="radio"] .styled:checked + label::after {
         margin-bottom: 40px;
         display: flex;
     }
+    .panel-body{
+        @media (max-width: @screen-xs-max) {
+            padding: 23px 0px 20px 0px;
+        }
+    }
 }
 #checkout-price-addon--mobile{
     display: none;
@@ -2023,7 +2038,7 @@ input[type="radio"] .styled:checked + label::after {
     }
 
     @media (max-width: @screen-xs-max) {
-        padding: 16px;
+        padding: 16px 8px;
         padding-bottom: 140px;
     }
 }
@@ -2069,7 +2084,11 @@ input[type="radio"] .styled:checked + label::after {
 }
 .btn-checkout{
     @media (max-width: @screen-xs-max) {
-        max-width: 200px;
+        max-width: 180px;
+        margin: 5px auto;
+    }
+    @media (max-width: 320px) {
+        max-width: 150px;
         margin: 5px auto;
     }
 }
@@ -2099,7 +2118,11 @@ input[type="radio"] .styled:checked + label::after {
         font-size: 30px;
     }
 }
-
+span.hide-on-tiny{
+    @media (max-width: 320px) {
+        display: none;
+    }
+}
 //
 // Custom range input
 // ==================================================
