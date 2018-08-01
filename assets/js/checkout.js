@@ -88,10 +88,14 @@ $(function () {
 
     if (checkoutOptions.setup_deployment) {
       $('.grunty-sprite').attr('data-sprite', 1);
+      $('.checkout-price-view').addClass('move-up');
       $('#checkout-price-addon').show();
+      $('#checkout-price-addon--mobile').show().css('display', 'block');
       $('#subscription-addon-2').removeClass('check-list-disabled');
     } else {
+      $('.checkout-price-view').removeClass('move-up');
       $('#checkout-price-addon').hide();
+      $('#checkout-price-addon--mobile').hide();
       $('#subscription-addon-2').addClass('check-list-disabled');
     }
 
@@ -165,7 +169,7 @@ $(function () {
 
     if (checkoutOptions.setup_deployment) {
       subscriptionTotal = subtotal;
-      subtotal += 4950;
+      //subtotal += 4950;
     }
 
     $('#subscription-price').text(total.toLocaleString());

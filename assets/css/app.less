@@ -528,11 +528,14 @@ p a:not(.btn) {
 .check-list li:before {
     font-family: 'FontAwesome';
     content: '\f00c';
-    margin: 0 0.5em 0 -1.7em;;
+    margin: 0 0.5em 0 -1.5em;;
     color: #f92e64;
 }
 .check-list li.check-list-disabled {
     color: @gray;
+    .help-text{
+        border-bottom: 1px dotted @gray;
+    }
 }
 .check-list li.check-list-disabled:before {
     display: none;
@@ -1348,9 +1351,29 @@ h6, .h6 { .heading-margin-variant(0.68; 0.52; @line-height-h6); }
 }
 .large-price{
     font-size: 66px;
+    @media (max-width: @screen-sm-min) {
+        &.large-price--mobile{
+            font-size: 32px;
+        }
+    }
+    @media (max-width: 320px) {
+        &.large-price--mobile{
+            font-size: 28px;
+        }
+    }
 }
 .medium-price {
     font-size: 36px;
+    @media (max-width: @screen-sm-min) {
+        &.medium-price--mobile{
+            font-size: 24px;
+        }
+    }
+    @media (max-width: 320px) {
+        &.medium-price--mobile{
+            font-size: 20px;
+        }
+    }
 }
 
 .small-price {
@@ -1979,16 +2002,43 @@ input[type="radio"] .styled:checked + label::after {
         margin-bottom: 40px;
         display: flex;
     }
+    .panel-body{
+        @media (max-width: @screen-xs-max) {
+            padding: 23px 0px 20px 0px;
+        }
+    }
+}
+#checkout-price-addon--mobile{
+    display: none;
+    line-height: 1;
+    @media (min-width: @screen-sm-min) {
+        display: none!important;
+    }
+}
+.checkout-price-view{
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    -ms-transition: all 0.5s;
+    -o-transition: all 0.5s;
+    transition: all 0.5s;
+    @media (max-width: @screen-sm-min){
+        padding-top: 24px;
+    }
+    &.move-up{
+        @media (max-width: @screen-sm-min){
+            padding-top: 12px;
+        }
+    }
 }
 .checkout-panel-left {
     margin-bottom: 0;
     padding: 25px;
-
     @media (min-width: @screen-md-min) {
         border-right: 0 none;
     }
 
     @media (max-width: @screen-xs-max) {
+        padding: 16px 8px;
         padding-bottom: 140px;
     }
 }
@@ -1997,8 +2047,8 @@ input[type="radio"] .styled:checked + label::after {
     padding: 25px;
 
     @media (min-width: @screen-md-min) {
-        margin-top: -20px;
-        margin-bottom: -20px;
+        margin-top: -10px;
+        margin-bottom: -10px;
     }
 
     @media (min-width: @screen-sm-min) and (max-width: @screen-md-max) {
@@ -2015,7 +2065,13 @@ input[type="radio"] .styled:checked + label::after {
         margin: 0;
         border: 0 none;
         border-top: 2px solid #13CFE7;
-        padding: 10px;
+        padding: 10px 10px 0;
+        > .row > div:first-child{
+            padding-right: 0;
+        }
+        > .row > div:last-child{
+            padding-left: 0;
+        }
     }
 }
 .checkout-addons {
@@ -2024,6 +2080,16 @@ input[type="radio"] .styled:checked + label::after {
         @media (max-width: @screen-sm-max) {
             margin-bottom: 30px;
         }
+    }
+}
+.btn-checkout{
+    @media (max-width: @screen-xs-max) {
+        max-width: 180px;
+        margin: 5px auto;
+    }
+    @media (max-width: 320px) {
+        max-width: 150px;
+        margin: 5px auto;
     }
 }
 
@@ -2052,7 +2118,11 @@ input[type="radio"] .styled:checked + label::after {
         font-size: 30px;
     }
 }
-
+span.hide-on-tiny{
+    @media (max-width: 320px) {
+        display: none;
+    }
+}
 //
 // Custom range input
 // ==================================================
@@ -2141,7 +2211,7 @@ input[type="radio"] .styled:checked + label::after {
 
 .grunty-sprite {
     position: absolute;
-    top: -160px;
+    top: -150px;
     right: 54px;
     width: 216px;
     height: 180px;
@@ -2211,4 +2281,35 @@ input[type="radio"] .styled:checked + label::after {
 .terms-head{
     border-bottom: 1px solid #0096BD;
     margin-bottom: 20px;
+}
+
+@media print{
+    .col-print-12{
+        width:100%;
+        float:left;
+        text-align: left;
+        margin-left: 0;
+    }
+    a, a:visited{
+        color: #000;
+        text-decoration: none;
+    }
+    a[rel="internal"]:after{
+        content: " "!important;
+    }
+    a[rel="external"]:after{
+        content:" (" attr(href) ") ";
+        font-size:0.8em;
+        font-weight:normal;
+        word-wrap: word-break;
+    }
+    h2 {
+        page-break-before: always;
+    }
+    p{
+        page-break-inside: avoid;
+    }
+    .sub-page .main{
+        border-bottom: 0;
+    }
 }
