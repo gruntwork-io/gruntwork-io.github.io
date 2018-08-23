@@ -369,4 +369,5 @@ $(function() {
     placement: 'left'
   };
   anchors.add();
+  anchors.add('.terms .terms-row strong');
 });
