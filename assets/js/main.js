@@ -369,5 +369,5 @@ $(function() {
     placement: 'left'
   };
   anchors.add();
-  anchors.add('.terms .terms-row strong');
+  anchors.add('body.terms .terms-row .tos-table__legal p strong');
 });
