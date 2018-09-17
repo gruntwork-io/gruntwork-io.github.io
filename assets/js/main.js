@@ -371,3 +371,55 @@ $(function() {
   anchors.add();
   anchors.add('body.terms .terms-row .tos-table__legal p strong');
 });
+
+(function(){
+
+  var linkText = "cookie policy";
+  var linkUrl = "/cookie-policy/";
+  var dismissBtn = "Dismiss";
+  var msg = "By using this website you agree to our " + linkText.link(linkUrl);
+
+
+  //check if cookie already exists
+  if(document.cookie){
+    var cookieString = document.cookie;
+    var cookieList = cookieString.split(";");
+    // if cookie named GruntyCookie is found, return
+    for(x = 0; x < cookieList.length; x++){
+      if (cookieList[x].indexOf("GruntyCookie") != -1){return};
+    }
+  }
+
+  // variables
+  var docRoot = document.body;
+  var elmoC = document.createElement("div");
+  elmoC.setAttribute("id", "gruntyCookie");
+  var elmoCp = document.createElement("p");
+  elmoCp.innerHTML = msg;
+  // var elmoCText = document.createTextNode(msg);
+
+  //dismiss button
+  var elmoCclose = document.createElement("a");
+  var elmoCloseText = document.createTextNode(dismissBtn);
+  elmoCclose.setAttribute("href", "#");
+  elmoCclose.setAttribute("id", "elmoClose");
+  elmoCclose.setAttribute("class", "btn btn-primary");
+  elmoCclose.appendChild(elmoCloseText);
+  elmoCclose.addEventListener("click", closeCookie, false);
+
+
+  //add to DOM
+  //elmoCp.appendChild(elmoCText);
+  elmoC.appendChild(elmoCp);
+  elmoC.appendChild(elmoCclose);
+  docRoot.appendChild(elmoC);
+
+  elmoC.classList.add("elmoCBeginAnimate");
+
+  function closeCookie(){
+    var cookieExpire = new Date();
+    cookieExpire.setFullYear(cookieExpire.getFullYear() +2);
+    document.cookie="GruntyCookie=1; expires=" + cookieExpire.toGMTString() + ";";
+    docRoot.removeChild(elmoC);
+  }
+})();
