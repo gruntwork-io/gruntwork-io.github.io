@@ -2323,7 +2323,7 @@ span.hide-on-tiny{
 /* Elmo - The Grunty Cookie Policy Gatekeeper */
 
 #gruntyCookie{
-    background-color:#FFFFFF;
+    background: rgba(255,255,255,0.85);
     display: block;
     color:#333333;
     position:fixed;
@@ -2337,39 +2337,50 @@ span.hide-on-tiny{
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
-    z-index:1000;
+    z-index:1112;
     box-shadow: 0 8px 16px 0 rgba(34,50,84,.06);
     border-radius: 8px;
     text-align: center;
-}
+    p {
+        margin: 0;
+        float: left;
+        padding: 15px 0 10px;
+        font-size: 18px;
+        line-height: 22px;
+        a {
+            &:link, &:visited, &:hover, &:active {
+                color: @color-blue;
+            }
+        }
+    }
 
-#gruntyCookie p{
-    margin:0;
-    float:left;
-    padding:10px 0px;
-    font-size: 18px;
-
-    a{
-        &:link, &:visited, &:hover, &:active {
-            color: @color-blue;
+    #cookieModalClose{
+        float:right;
+        margin-left:10px;
+    }
+    @media (max-width: @screen-xs-max) {
+        width: 100%;
+        max-width: none;
+        border-radius: 0;
+        bottom: 0;
+        padding: 4px 10px;
+        p{
+            width: 78%;
+            display: inline-block;
+            text-align: left;
+        }
+        #cookieModalClose{
+            width: 20%;
+            display: inline-block;
+            float: none;
+            margin: 18px 0 10px;
         }
     }
 }
-
-#gruntyCookie #elmoClose{
-    float:right;
-    margin-left:10px;
-    @media (max-width: @screen-xs-max) {
-        float: none;
-        text-align: center;
-    }
-}
-
-.elmoCBeginAnimate{
+.cookieModalCBeginAnimate{
     -webkit-animation: gruntyCookieModal 0.5s;
     animation: gruntyCookieModal 0.5s;
 }
-
 /* Chrome, Safari, Opera */
 @-webkit-keyframes gruntyCookieModal {
     from {
@@ -2381,7 +2392,6 @@ span.hide-on-tiny{
         transform:  translate(0px,0px)
     }
 }
-
 /* Standard syntax */
 @keyframes gruntyCookieModal {
     from {
