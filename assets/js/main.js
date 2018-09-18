@@ -23,11 +23,11 @@ function serialize(a,b){"object"!=typeof b?b={hash:!!b}:void 0===b.hash&&(b.hash
 
 /**
  * jQuery.query - Query String Modification and Creation for jQuery
- * Written by Blair Mitchelmore (blair DOT mitchelmore AT gmail DOT com)
+ * Written by Blair MitchcookieModalre (blair DOT mitchcookieModalre AT gmail DOT com)
  * Licensed under the WTFPL (http://sam.zoy.org/wtfpl/).
  * Date: 2009/8/13
  *
- * @author Blair Mitchelmore
+ * @author Blair MitchcookieModalre
  * @version 2.2.3
  **/
 new function(e){var t=e.separator||"&",s=!1!==e.spaces,n=(e.suffix,!1!==e.prefix?!0===e.hash?"#":"?":""),i=!1!==e.numbers;jQuery.query=new function(){var c=function(e,t){return null!=e&&null!==e&&(!t||e.constructor==t)},o=function(e){for(var t,n=/\[([^[]*)\]/g,r=/^([^[]+)(\[.*\])?$/.exec(e),i=r[1],u=[];t=n.exec(r[2]);)u.push(t[1]);return[i,u]},a=function(e,t,n){var r=t.shift();if("object"!=typeof e&&(e=null),""===r)if(e||(e=[]),c(e,Array))e.push(0==t.length?n:a(null,t.slice(0),n));else if(c(e,Object)){for(var i=0;null!=e[i++];);e[--i]=0==t.length?n:a(e[i],t.slice(0),n)}else(e=[]).push(0==t.length?n:a(null,t.slice(0),n));else if(r&&r.match(/^\s*[0-9]+\s*$/)){e||(e=[]),e[u=parseInt(r,10)]=0==t.length?n:a(e[u],t.slice(0),n)}else{if(!r)return n;var u=r.replace(/^\s*|\s*$/g,"");if(e||(e={}),c(e,Array)){var s={};for(i=0;i<e.length;++i)s[i]=e[i];e=s}e[u]=0==t.length?n:a(e[u],t.slice(0),n)}return e},r=function(e){var n=this;return n.keys={},e.queryObject?jQuery.each(e.get(),function(e,t){n.SET(e,t)}):n.parseNew.apply(n,arguments),n};return r.prototype={queryObject:!0,parseNew:function(){var n=this;return n.keys={},jQuery.each(arguments,function(){var e=""+this;e=(e=e.replace(/^[?#]/,"")).replace(/[;&]$/,""),s&&(e=e.replace(/[+]/g," ")),jQuery.each(e.split(/[&;]/),function(){var e=decodeURIComponent(this.split("=")[0]||""),t=decodeURIComponent(this.split("=")[1]||"");e&&(i&&(/^[+-]?[0-9]+\.[0-9]*$/.test(t)?t=parseFloat(t):/^[+-]?[1-9][0-9]*$/.test(t)&&(t=parseInt(t,10))),t=!t&&0!==t||t,n.SET(e,t))})}),n},has:function(e,t){var n=this.get(e);return c(n,t)},GET:function(e){if(!c(e))return this.keys;for(var t=o(e),n=t[0],r=t[1],i=this.keys[n];null!=i&&0!=r.length;)i=i[r.shift()];return"number"==typeof i?i:i||""},get:function(e){var t=this.GET(e);return c(t,Object)?jQuery.extend(!0,{},t):c(t,Array)?t.slice(0):t},SET:function(e,t){var n=c(t)?t:null,r=o(e),i=r[0],u=r[1],s=this.keys[i];return this.keys[i]=a(s,u.slice(0),n),this},set:function(e,t){return this.copy().SET(e,t)},REMOVE:function(e,t){if(t){var n=this.GET(e);if(c(n,Array)){for(tval in n)n[tval]=n[tval].toString();var r=$.inArray(t,n);if(!(0<=r))return;e=(e=n.splice(r,1))[r]}else if(t!=n)return}return this.SET(e,null).COMPACT()},remove:function(e,t){return this.copy().REMOVE(e,t)},EMPTY:function(){var n=this;return jQuery.each(n.keys,function(e,t){delete n.keys[e]}),n},load:function(e){var t=e.replace(/^.*?[#](.+?)(?:\?.+)?$/,"$1"),n=e.replace(/^.*?[?](.+?)(?:#.+)?$/,"$1");return new r(e.length==n.length?"":n,e.length==t.length?"":t)},empty:function(){return this.copy().EMPTY()},copy:function(){return new r(this)},COMPACT:function(){return this.keys=function u(e){var s="object"==typeof e?c(e,Array)?[]:{}:e;"object"==typeof e&&jQuery.each(e,function(e,t){if(!c(t))return!0;var n,r,i;n=s,r=e,i=u(t),c(n,Array)?n.push(i):n[r]=i});return s}(this.keys),this},compact:function(){return this.copy().COMPACT()},toString:function(){var e=[],r=[],i=function(e){return e+="",e=encodeURIComponent(e),s&&(e=e.replace(/%20/g,"+")),e},u=function(e,t){var n=function(e){return t&&""!=t?[t,"[",e,"]"].join(""):[e].join("")};jQuery.each(e,function(e,t){"object"==typeof t?u(t,n(e)):function(e,t,n){if(c(n)&&!1!==n){var r=[i(t)];!0!==n&&(r.push("="),r.push(i(n))),e.push(r.join(""))}}(r,n(e),t)})};return u(this.keys),0<r.length&&e.push(n),e.push(r.join(t)),e.join("")}},new r(location.search,location.hash)}}(jQuery.query||{});
@@ -371,3 +371,54 @@ $(function() {
   anchors.add().remove('.no-anchor');
   anchors.add('body.terms .terms-row .tos-table__legal p strong');
 });
+
+/* Add cookie prompt functionality */
+(function(){
+  var linkText = "cookie policy";
+  var linkUrl = "/cookie-policy/";
+  var dismissBtn = "OK";
+  var msg = "By using this website you agree to our " + linkText.link(linkUrl);
+
+
+  //check if cookie already exists
+  if(document.cookie){
+    var cookieString = document.cookie;
+    var cookieList = cookieString.split(";");
+    // if cookie named GruntyCookie is found, return
+    for(x = 0; x < cookieList.length; x++){
+      if (cookieList[x].indexOf("GruntyCookie") != -1){return};
+    }
+  }
+
+  // variables
+  var docRoot = document.body;
+  var cookieModalC = document.createElement("div");
+  cookieModalC.setAttribute("id", "gruntyCookie");
+  var cookieModalCp = document.createElement("p");
+  cookieModalCp.innerHTML = msg;
+  // var cookieModalCText = document.createTextNode(msg);
+
+  //dismiss button
+  var cookieModalCclose = document.createElement("button");
+  var cookieModalCloseText = document.createTextNode(dismissBtn);
+  cookieModalCclose.setAttribute("id", "cookieModalClose");
+  cookieModalCclose.setAttribute("class", "btn btn-primary");
+  cookieModalCclose.appendChild(cookieModalCloseText);
+  cookieModalCclose.addEventListener("click", closeCookie, false);
+
+
+  //add to DOM
+  //cookieModalCp.appendChild(cookieModalCText);
+  cookieModalC.appendChild(cookieModalCp);
+  cookieModalC.appendChild(cookieModalCclose);
+  docRoot.appendChild(cookieModalC);
+
+  cookieModalC.classList.add("cookieModalCBeginAnimate");
+
+  function closeCookie(){
+    var cookieExpire = new Date();
+    cookieExpire.setFullYear(cookieExpire.getFullYear() +2);
+    document.cookie="GruntyCookie=1; expires=" + cookieExpire.toGMTString() + ";";
+    docRoot.removeChild(cookieModalC);
+  }
+})();
