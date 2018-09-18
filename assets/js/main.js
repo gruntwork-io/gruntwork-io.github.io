@@ -368,6 +368,6 @@ $(function() {
   anchors.options = {
     placement: 'left'
   };
-  anchors.add();
+  anchors.add().remove('.no-anchor');
   anchors.add('body.terms .terms-row .tos-table__legal p strong');
 });
