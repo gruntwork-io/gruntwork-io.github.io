@@ -376,7 +376,7 @@ $(function() {
 
   var linkText = "cookie policy";
   var linkUrl = "/cookie-policy/";
-  var dismissBtn = "Dismiss";
+  var dismissBtn = "OK";
   var msg = "By using this website you agree to our " + linkText.link(linkUrl);
 
 

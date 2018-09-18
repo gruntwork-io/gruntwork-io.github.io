@@ -2331,9 +2331,9 @@ span.hide-on-tiny{
     left:50%;
     transform: translateX(-50%);
     margin: 0 auto;
-    width:560px;
+    width:502px;
     max-width: 80vw;
-    padding: 4px 12px;
+    padding: 4px 19px;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
@@ -2348,6 +2348,12 @@ span.hide-on-tiny{
     float:left;
     padding:10px 0px;
     font-size: 18px;
+
+    a{
+        &:link, &:visited, &:hover, &:active {
+            color: @color-blue;
+        }
+    }
 }
 
 #gruntyCookie #elmoClose{
