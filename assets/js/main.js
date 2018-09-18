@@ -372,8 +372,8 @@ $(function() {
   anchors.add('body.terms .terms-row .tos-table__legal p strong');
 });
 
+/* Add cookie prompt functionality */
 (function(){
-
   var linkText = "cookie policy";
   var linkUrl = "/cookie-policy/";
   var dismissBtn = "OK";
