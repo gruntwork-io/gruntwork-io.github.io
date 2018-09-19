@@ -386,7 +386,10 @@ $(function() {
     var cookieList = cookieString.split(";");
     // if cookie named GruntyCookie is found, return
     for(x = 0; x < cookieList.length; x++){
-      if (cookieList[x].indexOf("GruntyCookie") != -1){return};
+      if (cookieList[x].indexOf("GruntyCookie") != -1){
+        console.log(cookieList[x].indexOf("GruntyCookie"));
+        return
+      };
     }
   }
 
@@ -418,7 +421,7 @@ $(function() {
   function closeCookie(){
     var cookieExpire = new Date();
     cookieExpire.setFullYear(cookieExpire.getFullYear() +2);
-    document.cookie="GruntyCookie=1; expires=" + cookieExpire.toGMTString() + ";";
+    document.cookie="GruntyCookie=1; path=/; expires=" + cookieExpire.toGMTString() + ";";
     docRoot.removeChild(cookieModalC);
   }
 })();
