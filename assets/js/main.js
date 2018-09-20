@@ -387,7 +387,6 @@ $(function() {
     // if cookie named GruntyCookie is found, return
     for(x = 0; x < cookieList.length; x++){
       if (cookieList[x].indexOf("GruntyCookie") != -1){
-        console.log(cookieList[x].indexOf("GruntyCookie"));
         return
       };
     }
