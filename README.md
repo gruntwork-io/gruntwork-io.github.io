@@ -16,8 +16,6 @@ The fastest way to launch this site is to use [Docker](https://www.docker.com/).
 1. Go to `http://localhost:4000` to test
 
 
-
-
 ## Manual quick start
 
 1. `git clone` this repo
@@ -25,6 +23,13 @@ The fastest way to launch this site is to use [Docker](https://www.docker.com/).
 1. Just the first time: `bundle install`
 1. Start Jekyll server: `bundle exec jekyll serve`
 1. Go to `http://localhost:4000`
+
+## Updating Terms of service Docx using Pandoc
+
+- **Using Docker:** `docker-compose up`. If docker is already running, stop and restart as new ToS Docx creation requires a pre-built `/terms/word/`.
+- **Manually:** `pandoc -s --from html _site/terms/word.html --reference-doc=reference.docx -o Gruntwork-TermsOfService.docx`
+
+**NOTE:** DO NOT edit, update, delete or share reference.docx in web root, it is a reference only file used for formatting.
 
 
 
@@ -43,6 +48,7 @@ To deploy the site to S3/CloudFront:
 
 1. Built with [Jekyll](http://jekyllrb.com/). This website is completely static and we use basic HTML or Markdown for
    everything.
+1. Gruntwork Terms Of Service Word Document is generated using [Pandoc](http://pandoc.org/index.html) right after `jekyll build` when running `docker-compose up`.
 1. Hosted on Amazon S3, with CloudFront as a CDN. Using [s3_website](https://github.com/laurilehmijoki/s3_website) to
    automatically upload static content to S3.
 1. We use [Bootstrap](http://www.getbootstrap.com/) and [Less](http://lesscss.org/).
