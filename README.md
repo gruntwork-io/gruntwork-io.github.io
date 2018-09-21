@@ -26,10 +26,10 @@ The fastest way to launch this site is to use [Docker](https://www.docker.com/).
 
 ## Updating Terms of service Docx using Pandoc
 
-- **Using Docker:** `docker-compose up` (If docker is already running, stop and restart)
+- **Using Docker:** `docker-compose up`. If docker is already running, stop and restart as new ToS Docx creation requires a pre-built `/terms/word/`.
 - **Manually:** `pandoc -s --from html _site/terms/word.html --reference-doc=reference.docx -o Gruntwork-TermsOfService.docx`
 
-**NOTE:** DO NOT edit, update, delete or share reference.docx in web root, it is a reference only file used for formatting. It is NOT the most up-to-date Terms of Service document.
+**NOTE:** DO NOT edit, update, delete or share reference.docx in web root, it is a reference only file used for formatting.
 
 
 
