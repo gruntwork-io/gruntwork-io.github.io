@@ -372,55 +372,37 @@ $(function() {
   anchors.add('body.terms .terms-row .tos-table__legal p strong');
 });
 
-/* Add cookie prompt functionality */
-(function(){
-  var linkText = "cookie policy";
-  var linkUrl = "/cookie-policy/";
-  var dismissBtn = "OK";
-  var msg = "By using this website you agree to our " + linkText.link(linkUrl);
 
 
-  //check if cookie already exists
-  if(document.cookie){
-    var cookieString = document.cookie;
-    var cookieList = cookieString.split(";");
-    // if cookie named GruntyCookie is found, return
-    for(x = 0; x < cookieList.length; x++){
-      if (cookieList[x].indexOf("GruntyCookie") != -1){
-        return
-      };
+(function () {
+  var cookieModal = document.getElementById('gruntyCookie'),
+      cookieModalCloseBtn = document.getElementById('cookieModalClose');
+  // get cookie by regex
+  var getCookiebyName = function(name){
+      var pair = document.cookie.match(new RegExp(name + '=([^;]+)'));
+      return !!pair ? pair[1] : null;
+  };
+  // Set cookie
+  function setCookie(name,value,days) {
+    var expires = "";
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days*24*60*60*1000));
+        expires = "; expires=" + date.toUTCString();
     }
+    document.cookie = name + "=" + (value || "")  + expires + "; path=/";
   }
-
-  // variables
-  var docRoot = document.body;
-  var cookieModalC = document.createElement("div");
-  cookieModalC.setAttribute("id", "gruntyCookie");
-  var cookieModalCp = document.createElement("p");
-  cookieModalCp.innerHTML = msg;
-  // var cookieModalCText = document.createTextNode(msg);
-
-  //dismiss button
-  var cookieModalCclose = document.createElement("button");
-  var cookieModalCloseText = document.createTextNode(dismissBtn);
-  cookieModalCclose.setAttribute("id", "cookieModalClose");
-  cookieModalCclose.setAttribute("class", "btn btn-primary");
-  cookieModalCclose.appendChild(cookieModalCloseText);
-  cookieModalCclose.addEventListener("click", closeCookie, false);
-
-
-  //add to DOM
-  //cookieModalCp.appendChild(cookieModalCText);
-  cookieModalC.appendChild(cookieModalCp);
-  cookieModalC.appendChild(cookieModalCclose);
-  docRoot.appendChild(cookieModalC);
-
-  cookieModalC.classList.add("cookieModalCBeginAnimate");
-
-  function closeCookie(){
-    var cookieExpire = new Date();
-    cookieExpire.setFullYear(cookieExpire.getFullYear() +2);
-    document.cookie="GruntyCookie=1; path=/; expires=" + cookieExpire.toGMTString() + ";";
-    docRoot.removeChild(cookieModalC);
+  // Check if cookie already exists & don't add to DOM if it already does
+  if (getCookiebyName("GruntyCookie")){
+    return
+  };
+  // Set the cookie and close modal
+  function cookieModalClose(){
+      setCookie("GruntyCookie", "1", 365);
+      cookieModal.style.display = "none";
   }
+  cookieModal.style.display = "block";
+  cookieModal.classList.add("cookieModalCBeginAnimate");
+  cookieModalCloseBtn.addEventListener("click", cookieModalClose, false);
+
 })();

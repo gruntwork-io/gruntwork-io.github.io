@@ -1,3 +1,6 @@
+<div id="gruntyCookie" style="display:none">
+  <p>By using this website you agree to our <a href="/cookie-policy/">cookie policy</a></p><button id="cookieModalClose" class="btn btn-primary">OK</button>
+</div>
 <script>window.pricing = {{ site.data.pricing | jsonify }}</script>
 <script src="{{ site.assets_base_url }}js/main.js"></script>
 {% if page.custom_js %}
@@ -6,6 +9,7 @@
   {% endfor %}
 {% endif %}
 {% if site.ga_tracker %}
+
 <script>
   window.ga = window.ga || function () { (ga.q = ga.q || []).push(arguments) }; ga.l = +new Date;
   ga('create', '{{ site.ga_tracker }}', 'auto');
