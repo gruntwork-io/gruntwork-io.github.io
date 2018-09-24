@@ -8,10 +8,6 @@ ADD Gemfile Gemfile
 ADD Gemfile.lock Gemfile.lock
 RUN bundle install
 
-RUN curl -sSL https://github.com/jgm/pandoc/releases/download/2.2.3.2/pandoc-2.2.3.2-1-amd64.deb -o/tmp/pandoc.deb && \
-    dpkg -i /tmp/pandoc.deb && \
-    rm -f /tmp/pandoc.deb
-
 # Install Java, which is required for s3_website, and then install s3_website
 RUN apt-get update && \
     apt-get install -y default-jre && \
@@ -22,8 +18,9 @@ RUN apt-get update && \
     apt-get install -y texlive texlive-xetex texlive-latex-recommended texlive-latex-extra texlive-lang-cjk
 
 # Install Pandoc
-RUN wget https://github.com/jgm/pandoc/releases/download/2.2.3.2/pandoc-2.2.3.2-1-amd64.deb
-RUN dpkg -i pandoc-2.2.3.2-1-amd64.deb
+RUN curl -sSL https://github.com/jgm/pandoc/releases/download/2.2.3.2/pandoc-2.2.3.2-1-amd64.deb -o/tmp/pandoc.deb && \
+    dpkg -i /tmp/pandoc.deb && \
+    rm -f /tmp/pandoc.deb
 
 # Copy source
 RUN mkdir -p /src
