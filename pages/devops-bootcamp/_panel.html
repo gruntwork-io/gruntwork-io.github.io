@@ -1,12 +1,12 @@
 <div class="panel panel-default">
   <div class="panel-heading" role="tab" id="{{ include.id }}-heading">
-    <h3 class="panel-title">
-      <a role="button" data-toggle="collapse" href="#{{ include.id }}" aria-expanded="{{ include.expanded }}" aria-controls="{{ include.id }}" class="no-scroll">
-        <i class="fa fa-caret-right" aria-hidden="true"></i> {{ include.title }}
+    <h3 class="panel-title" data-anchor-id="{{ include.id }}">
+      <a role="button"  data-toggle="collapse" href="#{{ include.id }}" aria-expanded="{{ include.expanded }}" class="no-scroll">
+        <i class="fa fa-caret-right {% if include.expanded == "true" %}panel-isOpen{% endif %}" aria-hidden="true"></i> {{ include.title }}
       </a>
     </h3>
   </div>
-  <div id="{{ include.id }}" class="panel-collapse{% unless include.expanded == "true" %} collapse{% endunless %}" role="tabpanel" aria-labelledby="{{ include.id }}-heading">
+  <div id="{{ include.id }}" data-parent="#bootcamp-accordion" class="panel-collapse collapse{% unless include.expanded == "false" %} in{% endunless %}" role="tabpanel" aria-labelledby="{{ include.id }}-heading">
     <div class="panel-body">
       <table class="table table-striped">
         <tbody>

@@ -406,3 +406,26 @@ $(function() {
   cookieModalCloseBtn.addEventListener("click", cookieModalClose, false);
 
 })();
+// If Panel with fa-caret is clicked, turn the caret down, and turn it back up on others
+$(function(){
+  $('.panel-title a.no-scroll').on('click', function(){
+    $('.panel-title a.no-scroll').not($(this)).find('i.fa').removeClass('panel-isOpen');
+    $(this).find('i.fa').toggleClass('panel-isOpen');
+  });
+});
+// open accordion for direct links to panel id
+$(document).ready(function() {
+  var getHash = location.hash; //get hash from js object location
+  function activateAccordion(id) {
+    if (id.length)//check if hash isn't empty
+    {
+      var accordion = $('a[href="' + id + '"]');
+      $('html,body').animate({
+          scrollTop: accordion.parents('.panel').offset().top //scroll to accordion
+      }, 500, function () {
+          accordion.click(); //simulate click
+      });
+    }
+  };
+  activateAccordion(getHash);
+});
