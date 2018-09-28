@@ -414,17 +414,25 @@ $(function(){
   });
 });
 // open accordion for direct links to panel id
-$(document).ready(function() {
+$(window).load(function() {
   var getHash = location.hash; //get hash from js object location
   function activateAccordion(id) {
     if (id.length)//check if hash isn't empty
     {
       var accordion = $('a[href="' + id + '"]');
+      $panelHeight = accordion.parents('.panel').height();
+      console.log('Offset Top: ' + accordion.parents('.panel').offset().top);
       $('html,body').animate({
           scrollTop: accordion.parents('.panel').offset().top //scroll to accordion
-      }, 500, function () {
+      }, 100, function () {
           accordion.click(); //simulate click
+          accordion.parents('.panel').find('.panel-title a.no-scroll i.fa').addClass('panel-isOpen'); //point caret down for oepned panel
       });
+    }
+    else{
+      //if no hash is called, open first panel
+      $('.panel-group .panel:first-child .panel-collapse').addClass('in');
+      $('.panel-group .panel:first-child .panel-title a.no-scroll i.fa').addClass('panel-isOpen');
     }
   };
   activateAccordion(getHash);
