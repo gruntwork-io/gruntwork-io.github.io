@@ -9,7 +9,7 @@ $(function () {
 
   // The checkout state
   var checkoutOptions = {
-    dedicated_support: false,
+    dedicated_support: true,
     setup_deployment: false,
     users: 5,
     enterprise: false

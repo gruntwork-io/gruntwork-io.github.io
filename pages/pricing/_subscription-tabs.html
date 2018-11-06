@@ -1,15 +1,15 @@
 <div class="row row-pricing-subscription" style="padding-top: 30px;">
   <div class="col-xs-12">
     <ul id="tabs-pricing" class="nav nav-tabs tabs-primary" role="tablist">
-      <li class="active">
+      <li>
         <a href="#" role="tab" data-toggle="tab" data-target="#tab-gruntwork-subscription" aria-controls="tab-gruntwork-subscription" aria-selected="true">Gruntwork Subscription</a>
       </li>
-      <li>
+      <li class="active">
         <a href="#" role="tab" data-toggle="tab" data-target="#tab-subscription-dedicated-support" aria-controls="tab-subscription-dedicated-support">Subscription + Dedicated Support</a>
       </li>
     </ul>
     <div id="tabs-pricing-content" class="tab-content tabs-primary-content panel-light">
-      <div class="tab-pane active" id="tab-gruntwork-subscription" role="tabpanel">
+      <div class="tab-pane" id="tab-gruntwork-subscription" role="tabpanel">
         {% include_relative _benefits.html dedicated_support=false %}
         <div class="row">
           <div class="col-md-6">
@@ -24,7 +24,7 @@
         </div>
         <img class="grunty-confident" src="/assets/img/grunty-pricing.png" width="238" height="288" alt="Grunty confident">
       </div>
-      <div class="tab-pane" id="tab-subscription-dedicated-support" role="tabpanel">
+      <div class="tab-pane active" id="tab-subscription-dedicated-support" role="tabpanel">
         {% include_relative _benefits.html dedicated_support=true %}
         <div class="row">
           <div class="col-md-6">
