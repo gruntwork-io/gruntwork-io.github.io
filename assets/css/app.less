@@ -2403,3 +2403,17 @@ span.hide-on-tiny{
         transform:  translate(-50%,0px);
     }
 }
+/* Anchor Fixes for Panels */
+.panel-heading{
+  h3{
+    padding-left: 0.5em;
+  }
+}
+.panel-title{
+  i.fa{
+    transition: all 0.2s ease;
+      &.panel-isOpen{
+        transform: rotate(90deg);
+      }
+  }
+}
