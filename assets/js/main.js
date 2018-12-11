@@ -402,21 +402,9 @@ $(function() {
       setCookie("GruntyCookie", "1", 365);
       cookieModal.style.display = "none";
   }
-  /* Get Country Code from USER IP */
-  var country_code = null;
-  $euList = [
-      "BE", "BG", "CZ", "DK", "DE", "EE", "IE", "EL", "ES", "FR", "HR", "IT", "CY",
-      "LV", "LT", "LU", "HU", "MT", "NL", "AT", "PL", "PT", "RO", "SI", "SK", "FI",
-      "SE", "UK", "IS", "NO", "LI"
-  ];
-  $.getJSON('http://ipinfo.io/', function(data){
-    country_code = data.country;
-    if($euList.includes(country_code)){
-      cookieModal.style.display = "block";
-      cookieModal.classList.add("cookieModalCBeginAnimate");
-      cookieModalCloseBtn.addEventListener("click", cookieModalClose, false);
-    }
-  });
+  cookieModal.style.display = "block";
+  cookieModal.classList.add("cookieModalCBeginAnimate");
+  cookieModalCloseBtn.addEventListener("click", cookieModalClose, false);
 })();
 
 // If Panel with fa-caret is clicked, turn the caret down, and turn it back up on others
