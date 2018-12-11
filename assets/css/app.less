@@ -2136,3 +2136,87 @@ input[type="radio"] .styled:checked + label::after {
     background-image: linear-gradient(to bottom, #ff5c3b, #ff2b67);
     border: 2px solid #1d252e;
 }
+
+/* Elmo - The Grunty Cookie Policy Gatekeeper */
+
+#gruntyCookie{
+    background: rgba(255,255,255,0.85);
+    display: block;
+    color:#333333;
+    position:fixed;
+    bottom: 8px;
+    left:50%;
+    transform: translateX(-50%);
+    margin: 0 auto;
+    width:502px;
+    max-width: 80vw;
+    padding: 4px 19px;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    z-index:1112;
+    box-shadow: 0 8px 16px 0 rgba(34,50,84,.06);
+    border-radius: 8px;
+    text-align: center;
+    p {
+        margin: 0;
+        float: left;
+        padding: 15px 0 10px;
+        font-size: 18px;
+        line-height: 22px;
+        a {
+            &:link, &:visited, &:hover, &:active {
+                color: @color-blue;
+            }
+        }
+    }
+
+    #cookieModalClose{
+        float:right;
+        margin-left:10px;
+    }
+    @media (max-width: @screen-xs-max) {
+        width: 100%;
+        max-width: none;
+        border-radius: 0;
+        bottom: 0;
+        padding: 4px 10px;
+        p{
+            width: 78%;
+            display: inline-block;
+            text-align: left;
+        }
+        #cookieModalClose{
+            width: 20%;
+            display: inline-block;
+            float: none;
+            margin: 18px 0 10px;
+        }
+    }
+}
+.cookieModalCBeginAnimate{
+    -webkit-animation: gruntyCookieModal 0.5s;
+    animation: gruntyCookieModal 0.5s;
+}
+/* Chrome, Safari, Opera */
+@-webkit-keyframes gruntyCookieModal {
+    from {
+        opacity: 0;
+        transform:  translate(0px,40px);
+    }
+    to {
+        opacity: 1;
+        transform:  translate(0px,0px)
+    }
+}
+/* Standard syntax */
+@keyframes gruntyCookieModal {
+    from {
+        opacity: 0;
+        transform:  translate(-50%,40px);
+    }
+    to {
+        opacity: 1;
+        transform:  translate(-50%,0px);
+    }
+}
