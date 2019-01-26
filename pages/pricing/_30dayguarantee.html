@@ -1,0 +1,14 @@
+{% if include.panel %}
+<div class="row">
+  <div class="col-md-12">
+      <div class="panel panel-default panel-light">
+          <div class="panel-body text-center" style="padding: 10px 0">
+              <h3 class="no-anchor text-center">30-Day Money Back Guarantee<i class="fa fa-info-circle" data-toggle="tooltip" data-original-title="If you're not happy for any reason, we'll refund 100% of your money within the first 30 days." style="font-size: 22px;margin-left: 16px;cursor: help;" title=""></i></h3>
+          </div>
+      </div>
+    </div>
+</div>
+
+{% else%}
+<p class="text-muted small"><span class="help-text" title="If you're not happy for any reason, we'll refund all of your money within the first 30 days." data-toggle="tooltip">30-Day Money Back Guarantee</span></p>
+{% endif %}

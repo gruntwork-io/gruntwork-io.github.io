@@ -387,6 +387,16 @@ p a:not(.btn) {
     &:focus {
         text-decoration: underline;
     }
+    &.caret-right{
+        text-decoration: none;
+    }
+}
+a.caret-right{
+    &::after{
+        font-family: 'FontAwesome';
+        content:"\f0da";
+        margin-left: 4px;
+    }
 }
 .section-blue a {
     color: #fff;
@@ -2046,8 +2056,8 @@ input[type="radio"] .styled:checked + label::after {
     padding: 25px;
 
     @media (min-width: @screen-md-min) {
-        margin-top: -40px;
-        margin-bottom: -40px;
+        margin-top: -20px;
+        margin-bottom: -20px;
     }
 
     @media (min-width: @screen-sm-min) and (max-width: @screen-md-max) {
@@ -2075,6 +2085,7 @@ input[type="radio"] .styled:checked + label::after {
 }
 .checkout-addons {
     padding-top: 10px;
+    padding-bottom: 10px;
     > div {
         @media (max-width: @screen-sm-max) {
             margin-bottom: 30px;
@@ -2106,7 +2117,7 @@ input[type="radio"] .styled:checked + label::after {
 }
 
 .checkout-users {
-    margin-bottom: 30px;
+    margin-bottom: 15px;
     margin-top: -15px;
 }
 .checkout-users-text {
@@ -2202,7 +2213,7 @@ span.hide-on-tiny{
 
 .grunty-sprite {
     position: absolute;
-    top: -180px;
+    top: -160px;
     right: 54px;
     width: 216px;
     height: 180px;
