@@ -1,37 +1,33 @@
 /**
- * Fetch the user's locale and write it to the contact us form submission. This is useful because we'll use the
- * user's locale to assign inbound leads.
+ * Fetch the user's timezone (expressed in UTC) and write it to the contact us form submission. This is useful because
+ * we'll use the user's timezone to assign inbound leads.
  */
-$(function () {
 
-  // Inspired by https://stackoverflow.com/a/31135571
-  function getUserLocale()
-  {
-    if (navigator.languages !== undefined)
-      return navigator.languages[0];
-    else
-      return navigator.language;
-  }
+(function () {
 
-  // In Safari on macOS and iOS prior to 10.2, the country code returned is lowercase: "en-us", "fr-fr" etc.
-  // This function will take a locale and normalize its country code to "en-US", "fr-FR", etc.
-  function normalizeLocale(localeRaw) {
-    var localeTokens = localeRaw.split("-");
+  // Given an offset in mins, return a well-formatted time zone string.
+  //
+  // Example:
+  //   formatOffset(420)
+  //   returns "UTC+7"
+  function getUtcTimezone(offsetMins) {
+    var offsetHrs = offsetMins / 60;
 
-    var countryCodeRaw = "";
-    var countryCodeNormalized = countryCodeRaw;
-
-    if (localeTokens.length > 1) {
-       countryCodeRaw = localeTokens[1];
-       countryCodeNormalized = countryCodeRaw.toUpperCase();
-       localeTokens[1] = countryCodeNormalized;
+    if (offsetHrs > 0) {
+      return "UTC+" + offsetHrs;
+    } else if (offsetHrs == 0) {
+      return "UTC(0)";
+    } else {
+      return "UTC" + offsetHrs;
     }
-
-    return localeTokens.join("-");
   }
 
-  var localeRaw = getUserLocale();
-  var localeNormalized = normalizeLocale(localeRaw);
+  // Per https://stackoverflow.com/a/34602679, the main limitation of using Javascript's builtin getTimezoneOffset() to
+  // calculate Timezone is that daylight saving rules may change on several occasions during a year. But this doesn't
+  // matter for our purposes, where we only need to know the approximate time zone to assign the lead to the right person.
+  var offsetMins = new Date().getTimezoneOffset();
+  var utcTimeZone = getUtcTimezone(offsetMins);
 
-  $('input#user-locale').val(localeNormalized);
-});
+  $('input#user-timezone').val(utcTimeZone);
+
+}());
