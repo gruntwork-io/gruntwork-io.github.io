@@ -158,13 +158,13 @@ $(function () {
     var total, subtotal, subscriptionTotal, additionalUsers = checkoutOptions.users > 5 ? checkoutOptions.users - 5 : 0;
 
     if (checkoutOptions.dedicated_support) {
-      if (additionalUsers > 0) total = subtotal = pricing.tier1.price[1] + (additionalUsers * pricing.tier2.price[1]);
-      else total = subtotal = pricing.tier1.price[1]; // 5 or less users
+      if (additionalUsers > 0) total = subtotal = pricing.dedicated_support.tier1.price + (additionalUsers * pricing.dedicated_support.tier2.price);
+      else total = subtotal = pricing.dedicated_support.tier1.price; // 5 or less users
 
     } else {
       // Without dedicated support
-      if (additionalUsers > 0) total = subtotal = pricing.tier1.price[0] + (additionalUsers * pricing.tier2.price[0]);
-      else total = subtotal = pricing.tier1.price[0]; // 5 or less users
+      if (additionalUsers > 0) total = subtotal = pricing.subscription_only.tier1.price + (additionalUsers * pricing.subscription_only.tier2.price);
+      else total = subtotal = pricing.subscription_only.tier1.price; // 5 or less users
     }
 
     if (checkoutOptions.setup_deployment) {
