@@ -1,22 +1,22 @@
 <div class="row row-pricing-subscription" style="padding-top: 30px;">
   <div class="col-xs-12">
     <ul id="tabs-pricing" class="nav nav-tabs tabs-primary" role="tablist">
-      <li>
+      <li class="active">
         <a href="#" role="tab" data-toggle="tab" data-target="#tab-gruntwork-subscription" aria-controls="tab-gruntwork-subscription" aria-selected="true">Gruntwork Subscription</a>
       </li>
-      <li class="active">
+      <li>
         <a href="#" role="tab" data-toggle="tab" data-target="#tab-subscription-dedicated-support" aria-controls="tab-subscription-dedicated-support">Subscription + Dedicated Support</a>
       </li>
     </ul>
     <div id="tabs-pricing-content" class="tab-content tabs-primary-content panel-light">
-      <div class="tab-pane" id="tab-gruntwork-subscription" role="tabpanel">
+      <div class="tab-pane active" id="tab-gruntwork-subscription" role="tabpanel">
         {% include_relative _benefits.html dedicated_support=false %}
         <div class="row">
           <div class="col-md-6">
-            {% include_relative _subscription.html content=site.data.pricing.tier1 tab=0 annual=true %}
+            {% include_relative _subscription.html content=site.data.pricing.subscription-only.tier1 tab=0 annual=true %}
           </div>
           <div class="col-md-6">
-            {% include_relative _subscription.html content=site.data.pricing.tier2 tab=0 tooltip=false annual=true %}
+            {% include_relative _subscription.html content=site.data.pricing.subscription-only.tier2 tab=0 tooltip=false annual=true %}
           </div>
         </div>
         {% include_relative _30dayguarantee.html panel=true %}
@@ -25,14 +25,14 @@
         </div>
         <img class="grunty-confident" src="/assets/img/grunty-pricing.png" width="238" height="288" alt="Grunty confident">
       </div>
-      <div class="tab-pane active" id="tab-subscription-dedicated-support" role="tabpanel">
+      <div class="tab-pane" id="tab-subscription-dedicated-support" role="tabpanel">
         {% include_relative _benefits.html dedicated_support=true %}
         <div class="row">
           <div class="col-md-6">
-            {% include_relative _subscription.html content=site.data.pricing.tier1 tab=1 annual=true %}
+            {% include_relative _subscription.html content=site.data.pricing.dedicated-support.tier1 tab=1 annual=true %}
           </div>
           <div class="col-md-6">
-            {% include_relative _subscription.html content=site.data.pricing.tier2 tab=1 tooltip=true annual=true %}
+            {% include_relative _subscription.html content=site.data.pricing.dedicated-support.tier2 tab=1 tooltip=true annual=true %}
           </div>
         </div>
         {% include_relative _30dayguarantee.html panel=true %}
