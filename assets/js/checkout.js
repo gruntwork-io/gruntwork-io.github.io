@@ -9,7 +9,7 @@ $(function () {
 
   // The checkout state
   var checkoutOptions = {
-    dedicated_support: true,
+    dedicated_support: false,
     setup_deployment: false,
     users: 5,
     enterprise: false
@@ -68,7 +68,9 @@ $(function () {
       $('#deposit-due').hide();
       $('#checkout-contact-btn').show();
     } else {
-      if (checkoutOptions.users <= 5) {
+      if (checkoutOptions.users <= 10 && checkoutOptions.dedicated_support) {
+        $('#slider-users-count').text('1-10');
+      } else if (checkoutOptions.users <= 5 && ! checkoutOptions.dedicated_support) {
         $('#slider-users-count').text('1-5');
       } else {
         $('#slider-users-count').text(checkoutOptions.users);
@@ -126,11 +128,11 @@ $(function () {
     }
 
     if (checkoutOptions.dedicated_support) {
-      if (checkoutOptions.users > 5) {
+      if (checkoutOptions.users > 10) {
         $checkout.attr({
           'data-cb-addons_id_0': 'chargebee-support',
           'data-cb-addons_id_1': 'chargebee-addon-support',
-          'data-cb-addons_quantity_1': checkoutOptions.users - 5
+          'data-cb-addons_quantity_1': checkoutOptions.users - 10
         });
       } else {
         $checkout.attr({
@@ -155,11 +157,20 @@ $(function () {
   function _calculatePrice() {
     if (checkoutOptions.enterprise) return; // Don't calculate on enterprise
 
-    var total, subtotal, subscriptionTotal, additionalUsers = checkoutOptions.users > 5 ? checkoutOptions.users - 5 : 0;
+    var additionalUsers = 0;
+    if (checkoutOptions.dedicated_support && checkoutOptions.users > 10) {
+      additionalUsers = checkoutOptions.users - 10;
+    } else if (! checkoutOptions.dedicated_support && checkoutOptions.users > 5) {
+      additionalUsers = checkoutOptions.users - 5;
+    } else {
+      additionalUsers = 0;
+    }
+
+    var total, subtotal, subscriptionTotal;
 
     if (checkoutOptions.dedicated_support) {
       if (additionalUsers > 0) total = subtotal = pricing.dedicated_support.tier1.price + (additionalUsers * pricing.dedicated_support.tier2.price);
-      else total = subtotal = pricing.dedicated_support.tier1.price; // 5 or less users
+      else total = subtotal = pricing.dedicated_support.tier1.price; // 10 or less users
 
     } else {
       // Without dedicated support
