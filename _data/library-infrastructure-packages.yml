@@ -39,21 +39,43 @@
     Deploy a best-practices ECS Cluster and run Docker containers on it as ECS Services. Includes zero-downtime,
     rolling deployments, auto scaling, and experimental support for CUDA on ECS.
 
-- name: "Kubernetes / EKS"
+- name: "EKS"
   tags:
     - AWS
+    - K8S
   icons:
     - title: Terraform
       image: icon-terraform.png
     - title: Python
       image: icon-python.png
   private_beta: true
-  full_url: "https://github.com/gruntwork-io/package-k8s"
+  full_url: "https://github.com/gruntwork-io/terraform-aws-eks"
+  description: |
+    Deploy a best-practices EKS cluster. Supports zero-downtime, rolling deployment, IAM to RBAC mapping, auto scaling,
+    IAM roles for Pods, deploying Helm securely with automated TLS certificate management, and heterogenous worker
+    groups.
+
+- name: "Kubernetes Helm Server"
+  tags:
+    - K8S
+  icons:
+    - title: Terraform
+      image: icon-terraform.png
+  private_beta: true
+  full_url: "https://github.com/gruntwork-io/terraform-kubernetes-helm"
+  description: |
+    Deploy a best-practices Tiller (Helm Server) to your Kubernetes cluster. Supports namespaces, service accounts,
+    least privilege RBAC roles, and automated TLS management.
+
+- name: "Kubernetes Services"
+  tags:
+    - K8S
+  private_beta: true
+  full_url: "https://github.com/gruntwork-io/terraform-aws-eks"
   description: |
     Package services into a best-practices deployment for Kubernetes. Supports zero-downtime, rolling deployment, RBAC
-    roles and groups, auto scaling, secrets management, and centralized logging. Also includes support for management of
-    Kubernetes clusters, such as deploying a best-practices EKS cluster with autoscaling groups and rolling deployments,
-    deploying Helm securely with automated TLS certificate management, and managing IAM roles for Kubernetes Pods. 
+    roles and groups, auto scaling, secrets management, and centralized logging. Includes support for web services,
+    daemon sets, and tasks / jobs.
 
 - name: "Auto Scaling Group"
   tags:
