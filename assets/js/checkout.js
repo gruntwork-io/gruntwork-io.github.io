@@ -11,7 +11,7 @@ $(function () {
   var checkoutOptions = {
     dedicated_support: false,
     setup_deployment: false,
-    users: 5,
+    users: 10,
     enterprise: false
   };
 
@@ -70,8 +70,8 @@ $(function () {
     } else {
       if (checkoutOptions.users <= 10 && checkoutOptions.dedicated_support) {
         $('#slider-users-count').text('1-10');
-      } else if (checkoutOptions.users <= 5 && ! checkoutOptions.dedicated_support) {
-        $('#slider-users-count').text('1-5');
+      } else if (checkoutOptions.users <= 10 && ! checkoutOptions.dedicated_support) {
+        $('#slider-users-count').text('1-10');
       } else {
         $('#slider-users-count').text(checkoutOptions.users);
       }
@@ -117,10 +117,10 @@ $(function () {
   }
 
   function _updateAttrs() {
-    if (checkoutOptions.users > 5) {
+    if (checkoutOptions.users > 10) {
       $checkout.attr({
         'data-cb-addons_id_2': 'chargebee-addon-user',
-        'data-cb-addons_quantity_2': checkoutOptions.users - 5
+        'data-cb-addons_quantity_2': checkoutOptions.users - 10
       });
     } else {
       $checkout.removeAttr('data-cb-addons_id_2');
@@ -160,8 +160,8 @@ $(function () {
     var additionalUsers = 0;
     if (checkoutOptions.dedicated_support && checkoutOptions.users > 10) {
       additionalUsers = checkoutOptions.users - 10;
-    } else if (! checkoutOptions.dedicated_support && checkoutOptions.users > 5) {
-      additionalUsers = checkoutOptions.users - 5;
+    } else if (! checkoutOptions.dedicated_support && checkoutOptions.users > 10) {
+      additionalUsers = checkoutOptions.users - 10;
     } else {
       additionalUsers = 0;
     }
@@ -175,7 +175,7 @@ $(function () {
     } else {
       // Without dedicated support
       if (additionalUsers > 0) total = subtotal = pricing.subscription_only.tier1.price + (additionalUsers * pricing.subscription_only.tier2.price);
-      else total = subtotal = pricing.subscription_only.tier1.price; // 5 or less users
+      else total = subtotal = pricing.subscription_only.tier1.price; // 10 or less users
     }
 
     if (checkoutOptions.setup_deployment) {
