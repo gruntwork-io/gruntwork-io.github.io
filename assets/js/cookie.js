@@ -10,11 +10,13 @@
 (function ($) { "use strict";
   var cookieInnerHtml = '<div><p>By using this website you agree to our <a href="/cookie-policy/">cookie policy</a></p><button id="cookieModalClose" class="btn btn-primary">OK</button></div>';
 
+  // Use regular expression to find the cookie we made.
   var getCookiebyName = function (name){
     var pair = document.cookie.match(new RegExp(name + '=([^;]+)'));
     return !!pair ? pair[1] : null;
   };
 
+  // Sets a cookie that expires after a year.
   var setCookie = function (name, value, days) {
     var expires = '';
     if (days) {
@@ -48,14 +50,16 @@
 
   // Checks for the global Intercom object is set from the Intercom script.
   if (!!window.Intercom) {
-    // Perform multiple checks on Intercom.booted property and the injected container element.
     var cookieInterval;
     cookieInterval = setInterval(function () {
 
+      // Perform multiple checks on Intercom.booted property.
+      // https://gist.github.com/FokkeZB/033d4a9089fff392f7990a452e1d323d#gistcomment-2653218
       if (!window.Intercom.booted) {
         return;
       }
 
+      // Try to find the Intercom container element.
       if (document.getElementById('intercom-container') === null) {
         return;
       }
