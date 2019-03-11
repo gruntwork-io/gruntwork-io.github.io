@@ -46,6 +46,7 @@
     $('body').append($cookieModal);
   };
 
+  // Checks for the global Intercom object is set from the Intercom script.
   if (window.hasOwnProperty('Intercom')) {
     // Perform multiple checks on Intercom.booted property and the injected container element.
     var cookieInterval;
