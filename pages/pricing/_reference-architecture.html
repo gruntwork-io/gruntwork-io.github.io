@@ -1,11 +1,8 @@
-<div class="panel panel-default panel-dark">
-  <div class="panel-body text-center">
-    <h3 class="no-anchor" style="margin-bottom: 10px;">{{ include.content.title }}</h3>
-    <p class="big-price"><span>+ $</span>{{ include.content.price }}</p>
-    <h6 class="help-block no-anchor" style="margin-bottom: 0;">{{ include.content.details }}</h6>
-    <p class="text-muted small">{{ include.content.description }}</p>
-    <p style="margin-bottom: 20px;"><a href="{{ include.content.checkout[0].url }}" class="btn btn-info" role="button">Get Started</a></p>
-    <p class="text-muted small">You must have a Gruntwork Subscription to use the Reference Architecture.</p>
-  </div>
+<div class="text-center">
+  <p class="big-price"><span>+ $</span>{{ include.content.price }}</p>
+  <h6 class="help-block no-anchor" style="margin-bottom: 0;">{{ include.content.details }}</h6>
+  <p class="text-muted small">{{ include.content.description }}</p>
+  <p class="text-muted small">You must have a Gruntwork Subscription to use the Reference Architecture.</p>
+  <p style="margin-bottom: 20px;"><a href="{{ include.content.checkout[0].url }}" class="btn btn-info" role="button">Get Started</a></p>
+  <p class="text-muted small">30-Day Money Back Guarantee</p>
 </div>
-{% include_relative _30dayguarantee.html panel=true %}

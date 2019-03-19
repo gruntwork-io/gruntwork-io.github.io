@@ -532,7 +532,9 @@ a.caret-right{
   }
 }
 .check-list li.check-list-disabled:before {
-  display: none;
+  //display: none;
+  content: '\f00d';
+  color: @gray;
 }
 
 @media (min-width: @screen-sm-min) {
@@ -888,6 +890,23 @@ a.caret-right{
       background: -webkit-linear-gradient(top, rgba(29,37,47,0) 25%, rgba(29,37,47,1) 95%); // Chrome 10-25, Safari 5.1-6
       background: linear-gradient(to bottom, rgba(29,37,47,0) 25%, rgba(29,37,47,1) 95%); // W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+
     }
+  }
+}
+
+.row-panels {
+  > * + * {
+    @media (min-width: @screen-sm-min) {
+      border-left: 0 none;
+    }
+  }
+}
+
+.row-collapse {
+  margin-left: 0;
+  margin-right: 0;
+  > div[class*="col-"] {
+    padding-left: 0;
+    padding-right: 0;
   }
 }
 
@@ -1933,6 +1952,12 @@ input[type="radio"] .styled:checked + label::after {
     left: 0;
     bottom: 0;
     margin: 0;
+  }
+}
+
+.pricing-columns {
+  > * > .panel-body {
+    width: 100%;
   }
 }
 
