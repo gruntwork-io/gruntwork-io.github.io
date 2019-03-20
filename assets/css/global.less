@@ -894,10 +894,14 @@ a.caret-right{
 }
 
 .row-panels {
-  > * + * {
+  > * + *:not(.last) {
     @media (min-width: @screen-sm-min) {
       border-left: 0 none;
     }
+  }
+  > .last {
+    margin-top: -30px;
+    border-top: 0 none;
   }
 }
 
