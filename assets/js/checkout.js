@@ -3,7 +3,7 @@
  *
  * @docs: https://www.chargebee.com/checkout-portal-docs/dropIn.html#chargebee-object
  */
-$(function () {
+$(function () { "use strict";
   var timeout, $checkout = $('[data-cb-type="checkout"]');
   var $body = $('body');
 
@@ -12,36 +12,27 @@ $(function () {
     dedicated_support: false,
     setup_deployment: false,
     users: 10,
-    enterprise: false
+    enterprise: false,
+    subscription: 'community',
+    addons: [],
+    houston_auth: false
   };
 
   // Auto toggles addons based on the URI
   switch ($.query.get('addon')) {
     case 'setup-deployment': _updateCheckout({ setup_deployment: true }); break;
     case 'dedicated-support': _updateCheckout({ dedicated_support: true }); break;
+    case 'houston-auth': _updateCheckout({ houston_auth: true }); break;
     default: // do nothing
   }
-  if (typeof Object.assign != 'function') {
-    Object.assign = function(target) {
-      'use strict';
-      if (target == null) {
-        throw new TypeError('Cannot convert undefined or null to object');
-      }
 
-      target = Object(target);
-      for (var index = 1; index < arguments.length; index++) {
-        var source = arguments[index];
-        if (source != null) {
-          for (var key in source) {
-            if (Object.prototype.hasOwnProperty.call(source, key)) {
-              target[key] = source[key];
-            }
-          }
-        }
-      }
-      return target;
-    };
+  switch ($.query.get('subscription')) {
+    case 'community': _updateCheckout({ subscription: 'community' }); break;
+    case 'professional': _updateCheckout({ subscription: 'professional' }); break;
+    case 'enterprise': _updateCheckout({ subscription: 'enterprise' }); break;
+    default: // do nothing
   }
+
   // Listen to the switchers
   $('#slider-users').on('input change mousemove', function (event) {
     _updateCheckout({ users: parseInt(event.target.value) });
@@ -52,17 +43,27 @@ $(function () {
     _updateCheckout(tmp);
   });
 
+  // Subscription tabs functionality
+  $(document).on('click', '[data-subscription]', function (event) {
+    event.preventDefault();
+    _handleTabChange(
+      checkoutOptions.subscription,
+      event.currentTarget.dataset.subscription
+    );
+  });
+
   // Updates the UI of the checkout
   function _updateCheckout(newOptions) {
-    checkoutOptions = Object.assign({}, checkoutOptions, newOptions);
-    checkoutOptions.enterprise = (checkoutOptions.users > 50);
+    checkoutOptions = $.extend({}, checkoutOptions, newOptions);
+    //checkoutOptions.enterprise = (checkoutOptions.users > 50);
+    checkoutOptions.enterprise = (checkoutOptions.subscription === 'enterprise');
 
     $('.grunty-sprite').attr('data-sprite', 0);
-    $('[data-switch]'+'[name="dedicated_support"]').attr('checked', checkoutOptions.dedicated_support); // updates addon switch
+    // $('[data-switch]'+'[name="dedicated_support"]').attr('checked', checkoutOptions.dedicated_support); // updates addon switch
     $('[data-switch]'+'[name="setup_deployment"]').attr('checked', checkoutOptions.setup_deployment); // updates addon switch
 
     // updates user count
-    if (checkoutOptions.users > 50) {
+    if (checkoutOptions.subscription === 'enterprise') {
       $('#slider-users-count').text('50+');
       $checkout.hide();
       $('#deposit-due').hide();
@@ -83,9 +84,9 @@ $(function () {
 
     if (checkoutOptions.dedicated_support) {
       $('.grunty-sprite').attr('data-sprite', 2);
-      $('#subscription-addon-1').removeClass('check-list-disabled');
+      // $('#subscription-addon-1').removeClass('check-list-disabled');
     } else {
-      $('#subscription-addon-1').addClass('check-list-disabled');
+      // $('#subscription-addon-1').addClass('check-list-disabled');
     }
 
     if (checkoutOptions.setup_deployment) {
@@ -93,19 +94,19 @@ $(function () {
       $('.checkout-price-view').addClass('move-up');
       $('#checkout-price-addon').show();
       $('#checkout-price-addon--mobile').show().css('display', 'block');
-      $('#subscription-addon-2').removeClass('check-list-disabled');
+      // $('#subscription-addon-2').removeClass('check-list-disabled');
     } else {
       $('.checkout-price-view').removeClass('move-up');
       $('#checkout-price-addon').hide();
       $('#checkout-price-addon--mobile').hide();
-      $('#subscription-addon-2').addClass('check-list-disabled');
+      // $('#subscription-addon-2').addClass('check-list-disabled');
     }
 
     if (checkoutOptions.dedicated_support && checkoutOptions.setup_deployment) {
       $('.grunty-sprite').attr('data-sprite', 3);
     }
 
-    if (checkoutOptions.enterprise) {
+    if (checkoutOptions.subscription === 'enterprise') {
       $('[data-checkout-total="default"]').hide();
       $('[data-checkout-total="enterprise"]').show();
     } else {
@@ -155,36 +156,16 @@ $(function () {
   }
 
   function _calculatePrice() {
-    if (checkoutOptions.enterprise) return; // Don't calculate on enterprise
+    if (checkoutOptions.enterprise || checkoutOptions.subscription === 'enterprise') return; // Don't calculate on enterprise
 
-    var additionalUsers = 0;
-    if (checkoutOptions.dedicated_support && checkoutOptions.users > 10) {
-      additionalUsers = checkoutOptions.users - 10;
-    } else if (! checkoutOptions.dedicated_support && checkoutOptions.users > 10) {
-      additionalUsers = checkoutOptions.users - 10;
-    } else {
-      additionalUsers = 0;
-    }
+    var total = 0;
 
-    var total, subtotal, subscriptionTotal;
+    var subscriptionData = window.pricing.subscriptions[checkoutOptions.subscription];
 
-    if (checkoutOptions.dedicated_support) {
-      if (additionalUsers > 0) total = subtotal = pricing.dedicated_support.tier1.price + (additionalUsers * pricing.dedicated_support.tier2.price);
-      else total = subtotal = pricing.dedicated_support.tier1.price; // 10 or less users
-
-    } else {
-      // Without dedicated support
-      if (additionalUsers > 0) total = subtotal = pricing.subscription_only.tier1.price + (additionalUsers * pricing.subscription_only.tier2.price);
-      else total = subtotal = pricing.subscription_only.tier1.price; // 10 or less users
-    }
-
-    if (checkoutOptions.setup_deployment) {
-      subscriptionTotal = subtotal;
-      //subtotal += 4950;
-    }
+    total = subscriptionData.price.value;
 
     $('#subscription-price').text(total.toLocaleString());
-    $('#subscription-subtotal').text(subtotal.toLocaleString());
+    // $('#subscription-subtotal').text(subtotal.toLocaleString());
 
     _deferCheckout(checkoutOptions.users, checkoutOptions.dedicated_support, checkoutOptions.setup_deployment);
   }
@@ -234,4 +215,26 @@ $(function () {
   }
 
   _updateCheckout();
+
+  function _handleTabChange(oldTab, newTab) {
+    // Remove active state from current subscription.
+    var oldSubscription = '[data-subscription="'+ oldTab +'"]';
+    $(document).find(oldSubscription).removeClass('is-active');
+
+    // Sets active state to new subscription.
+    var currentSubscription = '[data-subscription="'+ newTab +'"]';
+    $(document).find(currentSubscription).addClass('is-active');
+
+    // Replace current subscription.
+    checkoutOptions.subscription = newTab;
+
+    _updateCheckout({});
+  }
+
+  $(document).ready(function () {
+
+    _handleTabChange(checkoutOptions.subscription, checkoutOptions.subscription);
+
+  });
+
 });

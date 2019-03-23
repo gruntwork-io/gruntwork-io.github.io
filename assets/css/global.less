@@ -1783,6 +1783,28 @@ input[type="radio"] .styled:checked + label::after {
   color: #fff;
 }
 
+// Checkbox sizes
+.checkbox.checkbox-lg {
+  padding-left: 40px;
+  label {
+    padding-left: 15px;
+  }
+  label::before {
+    width: 37px;
+    height: 37px;
+    margin-left: -40px;
+  }
+  label::after {
+    width: 26px;
+    height: 26px;
+    line-height: 26px;
+    font-size: 24px;
+    margin-left: -40px;
+    padding-left: 7px;
+    padding-top: 5px;
+  }
+}
+
 ////// Youtube video
 
 @play-button-width: 70px;
@@ -1906,6 +1928,24 @@ input[type="radio"] .styled:checked + label::after {
 }
 
 //// Pricing page
+
+.pricing-checkbox {
+  label > span {
+    display: block;
+  }
+}
+.pricing-checkbox-heading {
+  margin-bottom: 12px;
+}
+.pricing-checkbox-users {
+  input.form-control {
+    width: 68px;
+    display: inline-block;
+    font-size: 26px;
+    margin-left: 15px;
+    text-align: center;
+  }
+}
 
 .info-icon {
   color: rgba(191,191,191,0.6);
@@ -2480,4 +2520,51 @@ body.checkout {
 .flex-middle {
   justify-content: center;
   -webkit-justify-content: center;
+}
+
+.flex-1 {
+  flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  -webkit-flex: 1 1 auto;
+}
+
+.checkout-tabs {
+  > a {
+    padding: 0;
+    .checkout-tabs-heading {
+      color: white;
+    }
+    .checkout-tabs-subtext {
+      color: @text-muted;
+    }
+  }
+  > a.is-active {
+    background: linear-gradient(135deg, #13cfe7, #06a2ff);
+    .checkout-tabs-subtext {
+      color: white;
+    }
+  }
+}
+
+.checkout-tabs-pane {
+  display: none;
+  &.is-active {
+    display: block;
+  }
+}
+
+.checkout-sidebar {
+  > * {
+    margin-left: -50px;
+  }
+  > * + * {
+    margin-top: -30px;
+    border-top: 0 none;
+  }
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
