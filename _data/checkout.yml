@@ -1,0 +1,20 @@
+#
+# Checkout state
+# Sets default options for new checkouts inside global "Gruntwork" object.
+#
+
+# Available options: "community", "professional", "enterprise"
+subscription: 'community'
+
+# Available addon packages
+addons:
+  reference_architecture:
+    enabled: false
+    options: {}
+  houston_auth:
+    enabled: false
+    options:
+      users: 8
+  houston_pro:
+    enabled: false
+    options: {}
