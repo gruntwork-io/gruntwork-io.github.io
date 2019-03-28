@@ -1,4 +1,9 @@
 <script>window.pricing = {{ site.data.pricing | jsonify }}</script>
+<script type="text/javascript">
+  window.Gruntwork = window.Gruntwork || {};
+  // Store checkout state in Gruntwork global object.
+  window.Gruntwork.checkout = {{ site.data.checkout | jsonify }};
+</script>
 <script src="{{ site.assets_base_url }}js/main.js"></script>
 {% if page.custom_js %}
   {% for js_file in page.custom_js %}

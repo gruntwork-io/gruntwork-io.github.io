@@ -45,9 +45,13 @@ tier3:
   price: "4950"
   checkout:
       - price: "4950"
-        url: /checkout/?addon=setup-deployment
+        url: /checkout/?addon=reference-architecture
   details: |
     one-time, flat fee
+
+#
+# New pricing
+#
 
 subscriptions:
   community:
@@ -55,13 +59,36 @@ subscriptions:
     price:
       label: "795"
       value: 795
+      monthly: true
   professional:
     name: Professional
     price:
       label: "2,745"
       value: 2745
+      monthly: true
   enterprise:
     name: Enterprise
     price:
       label: "Contact Us"
       value: 0
+      monthly: true
+
+addons:
+  reference_architecture:
+    name: Reference Architecture
+    price:
+      label: "4,950"
+      value: 4950
+      monthly: false
+  houston_auth:
+    name: Houston Auth
+    price:
+      label: "9"
+      value: 9
+      monthly: true
+  houston_pro:
+    name: Houston Pro
+    price:
+      label: "0"
+      value: 0
+      monthly: true
