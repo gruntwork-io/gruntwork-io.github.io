@@ -5,20 +5,10 @@
  */
 $(function () { "use strict";
   /** @var Gruntwork window.Gruntwork */
-  var timeout, $checkout = $('[data-cb-type="checkout"]');
+  var timeout, total, $checkout = $('[data-cb-type="checkout"]');
   var $body = $('body');
 
-  // Auto toggles addons based on the URI
-  switch ($.query.get('addon')) {
-    case 'reference-architecture':
-      Gruntwork.checkout.addons.reference_architecture.enabled = true;
-      break;
-    case 'houston-auth':
-      Gruntwork.checkout.addons.houston_auth.enabled = true;
-      break;
-    default: // do nothing
-  }
-
+  // Auto toggles subscription based on the URL parameters.
   switch ($.query.get('subscription')) {
     case 'community':
       Gruntwork.checkout.subscription = 'community';
@@ -32,13 +22,25 @@ $(function () { "use strict";
     default: // do nothing
   }
 
-  // Listen to the switchers
+  // Auto toggles addons based on the URL parameters.
+  switch ($.query.get('addon')) {
+    case 'reference-architecture':
+      Gruntwork.checkout.addons.reference_architecture.enabled = true;
+      break;
+    case 'houston-auth':
+      Gruntwork.checkout.addons.houston_auth.enabled = true;
+      break;
+    default: // do nothing
+  }
+
+  // Listen to the switchers.
   $(document).on('change', '[data-switch]', function () {
     Gruntwork.checkout.addons[this.name].enabled = this.checked || false;
     _calculatePrice();
     _updateCheckout();
   });
 
+  // Listens to all input events on total users.
   $('.js-checkout-users').change(function (event) {
     var addonName = event.currentTarget.dataset.addon;
     var addonOption = event.currentTarget.dataset.addonOption;
@@ -47,7 +49,7 @@ $(function () { "use strict";
     _calculatePrice();
   });
 
-  // Subscription tabs functionality
+  // Subscription tabs functionality.
   $(document).on('click', '[data-subscription]', function (event) {
     event.preventDefault();
     _handleTabChange(
@@ -62,6 +64,9 @@ $(function () { "use strict";
     Gruntwork.checkout = $.extend({}, Gruntwork.checkout, newOptions);
 
     var $switch = $('[data-switch]');
+
+    // Show the active tab panel.
+    $('[data-subscription="'+ Gruntwork.checkout.subscription +'"]').tab('show');
 
     $('.gw-sprite-grunty').attr('data-sprite', Gruntwork.checkout.subscription);
     // $('[data-switch]'+'[name="dedicated_support"]').attr('checked', checkoutOptions.dedicated_support); // updates addon switch
@@ -84,68 +89,34 @@ $(function () { "use strict";
     }
 
     if (Gruntwork.checkout.addons.reference_architecture.enabled) {
-      // $('.grunty-sprite').attr('data-sprite', 1);
-      $('.grunty-sprite').attr('data-sprite', 3);
       $('.checkout-price-view').addClass('move-up');
       $('#checkout-price-addon').show();
       $('#checkout-price-addon--mobile').show().css('display', 'block');
-      // $('#subscription-addon-2').removeClass('check-list-disabled');
     } else {
       $('.checkout-price-view').removeClass('move-up');
       $('#checkout-price-addon').hide();
       $('#checkout-price-addon--mobile').hide();
-      // $('#subscription-addon-2').addClass('check-list-disabled');
+    }
+
+    if (Gruntwork.checkout.addons.houston_auth.enabled) {
+      $('[data-addon="houston_auth"]').attr('disabled', false);
+    } else {
+      $('[data-addon="houston_auth"]').attr('disabled', true);
     }
   }
-
-  /*function _updateAttrs() {
-    if (checkoutOptions.users > 10) {
-      $checkout.attr({
-        'data-cb-addons_id_2': 'chargebee-addon-user',
-        'data-cb-addons_quantity_2': checkoutOptions.users - 10
-      });
-    } else {
-      $checkout.removeAttr('data-cb-addons_id_2');
-      $checkout.removeAttr('data-cb-addons_quantity_2');
-    }
-
-    if (checkoutOptions.dedicated_support) {
-      if (checkoutOptions.users > 10) {
-        $checkout.attr({
-          'data-cb-addons_id_0': 'chargebee-support',
-          'data-cb-addons_id_1': 'chargebee-addon-support',
-          'data-cb-addons_quantity_1': checkoutOptions.users - 10
-        });
-      } else {
-        $checkout.attr({
-          'data-cb-addons_id_0': 'chargebee-support'
-        });
-      }
-    } else {
-      $checkout.removeAttr('data-cb-addons_id_0');
-      $checkout.removeAttr('data-cb-addons_id_1');
-      $checkout.removeAttr('data-cb-addons_quantity_1');
-    }
-
-    if (checkoutOptions.setup_deployment) {
-      $checkout.attr({
-        'data-cb-addons_id_3': 'chargebee-refarch'
-      });
-    } else {
-      $checkout.removeAttr('data-cb-addons_id_3');
-    }
-  }*/
 
   function _calculatePrice() {
     // Don't calculate on enterprise.
     if (Gruntwork.checkout.subscription === 'enterprise') return;
 
-    var total = 0;
+    // Resets the total.
+    total = 0;
 
     var subscriptionData = window.pricing.subscriptions[Gruntwork.checkout.subscription];
 
     total = subscriptionData.price.value;
 
+    // Validation
     if (Gruntwork.checkout.addons.houston_auth.enabled) {
       var users = Gruntwork.checkout.addons.houston_auth.options.users;
       if (users < 1) {
@@ -153,58 +124,53 @@ $(function () { "use strict";
       } else {
         $('.js-checkout-addon-houston_auth').removeClass('has-error');
       }
-      total = total + (users * window.pricing.addons.houston_auth.price.value);
+
+      total = total + ((users - 1) * window.pricing.addons.houston_auth.price.value);
     }
 
     $('#subscription-price').text(total.toLocaleString());
     // $('#subscription-subtotal').text(subtotal.toLocaleString());
 
-    //_deferCheckout();
+    _prepareCheckout();
   }
 
-  // Prevents spamming Chargebee registerAgain on every change
-  /*function _deferCheckout() {
+  // Pass subscription details to Chargebee.
+  function _prepareCheckout() {
     var cbInstance;
-    if (typeof timeout !== 'undefined') clearTimeout(timeout);
-    $checkout.attr('disabled', true).text('Please wait...');
 
-    timeout = setTimeout(function () {
-      $checkout.attr('disabled', false).text('Checkout');
-      clearTimeout(timeout);
-      //_updateAttrs();
-      Chargebee.registerAgain();
-      cbInstance = Chargebee.getInstance();
-      function htmlEncode(value){
-        if (value) {
-          return jQuery('<div />').text(value).html();
-        } else {
-          return '';
+    Chargebee.registerAgain();
+    cbInstance = Chargebee.getInstance();
+    cbInstance.setCheckoutCallbacks(function(cart, product) {
+      var subscriptionDetails = '';
+
+      // Subscription plan
+      subscriptionDetails += (' • Subscription: ' + window.pricing.subscriptions[Gruntwork.checkout.subscription].name);
+
+      // Addons
+      if (Gruntwork.checkout.addons.reference_architecture.enabled){
+        subscriptionDetails += ' • Reference Architecture';
+      }
+      if (Gruntwork.checkout.addons.houston_auth.enabled){
+        subscriptionDetails += (' • Houston Auth: ' + Gruntwork.checkout.addons.houston_auth.options.users + ' user(s)');
+      }
+      /*if (Gruntwork.checkout.addons.houston_pro.enabled){
+        subscriptionDetails += (' • Houston Pro: ' + Gruntwork.checkout.addons.houston_pro.options.users + ' users');
+      }*/
+
+      // you can define a custom callbacks based on cart object
+      var customer = {cf_subscription_details: subscriptionDetails};
+
+      cart.setCustomer(customer);
+
+      return {
+        close: function() {
+          // Required to remove overflow set by the modal
+          // Same as: https://lodash.com/docs/4.17.10#debounce
+          setTimeout(function() { $body.removeAttr('style'); }, 0);
         }
       }
-      cbInstance.setCheckoutCallbacks(function(cart, product) {
-        var subscriptionDetails = ("Gruntwork Subscribers: " + users);
-        if (support){
-          subscriptionDetails += " • Dedicated Support";
-        }
-        if (setup){
-          subscriptionDetails += " • Reference Architecture";
-        }
-        //console.log(subscriptionDetails);
-        // you can define a custom callbacks based on cart object
-        var customer = {cf_subscription_details: subscriptionDetails};
-
-        cart.setCustomer(customer);
-
-        return {
-          close: function() {
-            // Required to remove overflow set by the modal
-            // Same as: https://lodash.com/docs/4.17.10#debounce
-            setTimeout(function() { $body.removeAttr('style'); }, 0);
-          }
-        }
-      });
-    }, 1250);
-  }*/
+    });
+  }
 
   function _handleTabChange(oldTab, newTab) {
     // Remove active state from current subscription.
@@ -225,10 +191,7 @@ $(function () { "use strict";
   }
 
   $(document).ready(function () {
-
-    _updateCheckout();
-    _calculatePrice();
-
+    // Sets the default subscription.
     _handleTabChange(
       Gruntwork.checkout.subscription,
       Gruntwork.checkout.subscription

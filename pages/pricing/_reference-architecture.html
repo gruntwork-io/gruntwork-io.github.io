@@ -1,8 +1,7 @@
 <div class="text-center">
-  <p class="big-price"><span>+ $</span>{{ include.content.price }}</p>
+  <p class="big-price"><span>+ $</span>{{ include.content.price.label }}</p>
   <h6 class="help-block no-anchor" style="margin-bottom: 0;">{{ include.content.details }}</h6>
-  <p class="text-muted small">{{ include.content.description }}</p>
   <p class="text-muted small">You must have a Gruntwork Subscription to use the Reference Architecture.</p>
-  <p style="margin-bottom: 20px;"><a href="{{ include.content.checkout[0].url }}" class="btn btn-info" role="button">Get Started</a></p>
-  <p class="text-muted small">30-Day Money Back Guarantee</p>
+  <p style="margin-bottom: 20px;"><a href="/checkout/?addon=reference-architecture" class="btn btn-info" role="button">Get Started</a></p>
+  <p class="text-muted small"><em>30-Day Money Back Guarantee</em></p>
 </div>

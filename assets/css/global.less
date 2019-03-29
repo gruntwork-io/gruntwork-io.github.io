@@ -72,6 +72,14 @@ p + .btn {
     background: linear-gradient(135deg, #3c3c3c, #5e5e5e);
   }
 }
+.btn-light {
+  background: #fff;
+  &:focus,
+  &:hover {
+    color: #13cfe7;
+    background: #fff;
+  }
+}
 
 // Footer buttons styles
 .footer a.btn {
@@ -1549,6 +1557,7 @@ code{
 .checkbox input[type="radio"]:disabled + label::before {
   background-color: #eeeeee;
   cursor: not-allowed;
+  opacity: 0.65;
 }
 .checkbox.checkbox-circle label::before {
   border-radius: 50%;
@@ -1958,8 +1967,12 @@ input[type="radio"] .styled:checked + label::after {
     width: 68px;
     display: inline-block;
     font-size: 26px;
-    margin-left: 15px;
     text-align: center;
+    margin-top: 15px;
+    @media (min-width: @screen-md-min) {
+      margin-left: 15px;
+      margin-top: 0;
+    }
   }
 }
 
@@ -2641,7 +2654,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 .gw-sprite-grunty {
   background-image: url(/assets/img/gw-grunty-sprites@2x.png);
-  background-size: 180px 300px;
+  background-size: 180px 400px;
   background-repeat: no-repeat;
   width: 180px;
   height: 100px;
@@ -2651,8 +2664,11 @@ input[type=number]::-webkit-outer-spin-button {
   &--cheer, &[data-sprite="professional"] {
     background-position: 0 -100px;
   }
-  &--cheer-extra, &[data-sprite="enterprise"] {
+  /*&--cheer-extra, &[data-sprite="enterprise"] {
     background-position: 0 -200px;
+  }*/
+  &--cheer-extra, &[data-sprite="enterprise"] {
+    background-position: 0 -300px;
   }
 }
 
@@ -2673,5 +2689,8 @@ input[type=number]::-webkit-outer-spin-button {
     @media (min-width: @screen-md-min) {
       text-align: right;
     }
+  }
+  &-input {
+    background-color: red;
   }
 }
