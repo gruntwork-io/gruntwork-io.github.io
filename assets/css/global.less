@@ -761,6 +761,14 @@ a.caret-right{
   }
 }
 
+.row-sm-gutters {
+  > * {
+    @media (max-width: @screen-sm-max) {
+      margin-bottom: 40px;
+    }
+  }
+}
+
 // Specific rows
 .row-partners {
   @media (max-width: @screen-xs-max) {
@@ -1969,8 +1977,8 @@ input[type="radio"] .styled:checked + label::after {
     font-size: 26px;
     text-align: center;
     margin-top: 15px;
+    margin-left: 15px;
     @media (min-width: @screen-md-min) {
-      margin-left: 15px;
       margin-top: 0;
     }
   }
@@ -2614,7 +2622,7 @@ body.checkout .section-heading .gw-icon {
     }
   }
   > * + * {
-    margin-top: -30px;
+    //margin-top: -30px;
     border-top: 0 none;
   }
   > *:last-child {
@@ -2653,8 +2661,8 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .gw-sprite-grunty {
-  background-image: url(/assets/img/gw-grunty-sprites@2x.png);
-  background-size: 180px 400px;
+  background-image: url(/assets/img/gw-grunty-sprites-3@2x.png);
+  background-size: 180px 500px;
   background-repeat: no-repeat;
   width: 180px;
   height: 100px;
@@ -2668,7 +2676,7 @@ input[type=number]::-webkit-outer-spin-button {
     background-position: 0 -200px;
   }*/
   &--cheer-extra, &[data-sprite="enterprise"] {
-    background-position: 0 -300px;
+    background-position: 0 -400px;
   }
 }
 

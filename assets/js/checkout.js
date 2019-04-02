@@ -8,6 +8,17 @@ $(function () { "use strict";
   var timeout, total, $checkout = $('[data-cb-type="checkout"]');
   var $body = $('body');
 
+  // Make checkout sidebar sticky for desktop only.
+  $(document).ready(function() {
+    if (window.matchMedia("(min-width: 991px)").matches) {
+      $('.js-checkout-sidebar').sticky({
+        bottomSpacing: $('body').height() - $('.js-checkout-end').offset().top,
+      });
+    } else {
+      $('.js-checkout-sidebar').unstick();
+    }
+  });
+
   // Auto toggles subscription based on the URL parameters.
   switch ($.query.get('subscription')) {
     case 'community':
@@ -128,7 +139,7 @@ $(function () { "use strict";
       total = total + ((users - 1) * window.pricing.addons.houston_auth.price.value);
     }
 
-    $('#subscription-price').text(total.toLocaleString());
+    $('#subscription-price').html((total.toLocaleString()).replace(/,/g, "<span class='small'>,</span>"));
     // $('#subscription-subtotal').text(subtotal.toLocaleString());
 
     _prepareCheckout();
