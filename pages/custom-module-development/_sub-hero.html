@@ -14,7 +14,7 @@
       <li><strong>Independent Software Vendors</strong> who want to make it easy to install their software.</li>
       <li><strong>Cloud Providers</strong> who want to make it easy to run infrastructure on their cloud.</li>
     </ul>
-    <h3>Module design patterns</h3>
+    <h2 class="h3">Module design patterns</h2>
     <p>
       Check out the <a href="https://blog.gruntwork.io/reusable-composable-battle-tested-terraform-modules-9c2fb53bc034" target="_blank">Reusable,
       composable, battle-tested Terraform modules</a> talk to learn how we design, build, and test modules. Or better
@@ -25,8 +25,8 @@
     <div class="row" style="margin-top: 50px;">
       {% for feature in site.data.library-features %}
       <div class="col-xs-6 col-sm-4" style="margin-bottom:20px;">
-        <div class="pull-left text-center" style="width: 100px; margin-right: 10px;">
-          <img src="/assets/img/library-icons/library-feature-{{ forloop.index }}.png" alt="{{ feature.title }}" />
+        <div class="pull-left text-center hidden-print" style="width: 100px; margin-right: 10px;">
+          <img class="hidden-print" src="/assets/img/library-icons/library-feature-{{ forloop.index }}.png" alt="{{ feature.title }}" />
         </div>
         <div class="pull-left" style="max-width: 170px; font-size: 16px; line-height: 20px; height: 140px;">
           <h6 style="margin: 5px 0 5px 0">{{ feature.title }}</h6>
@@ -35,9 +35,11 @@
       </div>
       {% endfor %}
     </div>
-    <h2>Get started</h2>
-    <p>
-      <a href="/contact/">Contact us</a> to let us know what modules you'd like us to build!
-    </p>
+    <div class="hidden-print">
+      <h2>Get started</h2>
+      <p>
+        <a href="/contact/">Contact us</a> to let us know what modules you'd like us to build!
+      </p>
+    </div>
   </div>
 </div>
