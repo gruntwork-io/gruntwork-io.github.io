@@ -1,8 +1,14 @@
 @media only print {
+  a[href]:after{
+    font-size: small;
+  }
   .panel {
     page-break-inside: avoid;
   }
   .panel-collapse {
     display: block !important;
+  }
+  .clearfix::before, #gruntyCookie{
+    display: none!important;
   }
 }
