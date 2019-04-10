@@ -18,4 +18,19 @@
   h2{
     page-break-before: unset;
   }
+  /* Only display the logo from the header, overwriting bootstrap defaults*/
+  .navbar{
+    display: block;
+    .navbar-toggle{
+      display: none!important;
+    }
+    .navbar-collapse{
+      display: none!important;
+    }
+    .navbar-brand{
+      &::after{
+        display: none!important;
+      }
+    }
+  }
 }
