@@ -372,41 +372,6 @@ $(function() {
   anchors.add('body.terms .terms-row .tos-table__legal p strong');
 });
 
-
-
-(function () {
-
-  var cookieModal = document.getElementById('gruntyCookie'),
-      cookieModalCloseBtn = document.getElementById('cookieModalClose');
-  // get cookie by regex
-  var getCookiebyName = function(name){
-      var pair = document.cookie.match(new RegExp(name + '=([^;]+)'));
-      return !!pair ? pair[1] : null;
-  };
-  // Set cookie
-  function setCookie(name,value,days) {
-    var expires = "";
-    if (days) {
-        var date = new Date();
-        date.setTime(date.getTime() + (days*24*60*60*1000));
-        expires = "; expires=" + date.toUTCString();
-    }
-    document.cookie = name + "=" + (value || "")  + expires + "; path=/";
-  }
-  // Check if cookie already exists & don't add to DOM if it already does
-  if (getCookiebyName("GruntyCookie")){
-    return
-  };
-  // Set the cookie and close modal
-  function cookieModalClose(){
-      setCookie("GruntyCookie", "1", 365);
-      cookieModal.style.display = "none";
-  }
-  cookieModal.style.display = "block";
-  cookieModal.classList.add("cookieModalCBeginAnimate");
-  cookieModalCloseBtn.addEventListener("click", cookieModalClose, false);
-})();
-
 // If Panel with fa-caret is clicked, turn the caret down, and turn it back up on others
 $(function(){
   $('.panel-title a.no-scroll').on('click', function(){
