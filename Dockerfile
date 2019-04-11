@@ -9,7 +9,8 @@ RUN bundle install
 
 # Install Java, which is required for s3_website
 # Install texlive libraries, which are required for Pandoc
-RUN apt-get update && \
+RUN printf "deb http://archive.debian.org/debian/ jessie main\ndeb-src http://archive.debian.org/debian/ jessie main\ndeb http://security.debian.org jessie/updates main\ndeb-src http://security.debian.org jessie/updates main" > /etc/apt/sources.list &&\
+    apt-get update && \
     apt-get install -y default-jre && \
     apt-get install -y texlive texlive-xetex texlive-latex-recommended texlive-latex-extra texlive-lang-cjk && \
     rm -rf /var/lib/apt/lists/*
