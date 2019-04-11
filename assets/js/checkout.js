@@ -5,7 +5,7 @@
  */
 $(function () { "use strict";
   /** @var Gruntwork window.Gruntwork */
-  var timeout, total, $checkout = $('[data-cb-type="checkout"]');
+  var timeout, total, users, $checkout = $('[data-cb-type="checkout"]');
   var $body = $('body');
 
   // Make checkout sidebar sticky for desktop only.
@@ -55,7 +55,7 @@ $(function () { "use strict";
   $('.js-checkout-users').change(function (event) {
     var addonName = event.currentTarget.dataset.addon;
     var addonOption = event.currentTarget.dataset.addonOption;
-    Gruntwork.checkout.addons[addonName].options[addonOption] = this.value;
+    Gruntwork.checkout.addons[addonName].options[addonOption] = parseInt(this.value, 10);
     _updateCheckout();
     _calculatePrice();
   });
@@ -81,6 +81,7 @@ $(function () { "use strict";
 
     $('.gw-sprite-grunty').attr('data-sprite', Gruntwork.checkout.subscription);
     // $('[data-switch]'+'[name="dedicated_support"]').attr('checked', checkoutOptions.dedicated_support); // updates addon switch
+    $switch.closest('[name="additional_users"]').attr('checked', Gruntwork.checkout.addons.additional_users.enabled);
     $switch.closest('[name="reference_architecture"]').attr('checked', Gruntwork.checkout.addons.reference_architecture.enabled);
     $switch.closest('[name="houston_auth"]').attr('checked', Gruntwork.checkout.addons.houston_auth.enabled);
 
@@ -97,6 +98,12 @@ $(function () { "use strict";
       $checkout.show();
       $('#deposit-due').show();
       $('#checkout-contact-btn').hide();
+    }
+
+    if (Gruntwork.checkout.addons.additional_users.enabled) {
+      $('[data-addon="additional_users"]').attr('disabled', false);
+    } else {
+      $('[data-addon="additional_users"]').attr('disabled', true);
     }
 
     if (Gruntwork.checkout.addons.reference_architecture.enabled) {
@@ -123,20 +130,34 @@ $(function () { "use strict";
     // Resets the total.
     total = 0;
 
+    // Retrieves read-only subscription data.
     var subscriptionData = window.pricing.subscriptions[Gruntwork.checkout.subscription];
 
+    // Sets the default total based on selected subscription.
     total = subscriptionData.price.value;
 
-    // Validation
+    // Validates addon fields.
+    if (Gruntwork.checkout.addons.additional_users.enabled) {
+      var additionalUsers = Gruntwork.checkout.addons.additional_users.options.users;
+      if (additionalUsers < 1) {
+        $('.js-checkout-addon-additional_users').addClass('has-error');
+        return; // Prevent price calculation on fail.
+      } else {
+        $('.js-checkout-addon-additional_users').removeClass('has-error');
+      }
+
+      total = total + (additionalUsers * window.pricing.addons.additional_users.price.value);
+    }
     if (Gruntwork.checkout.addons.houston_auth.enabled) {
-      var users = Gruntwork.checkout.addons.houston_auth.options.users;
-      if (users < 1) {
+      var addonUsers = Gruntwork.checkout.addons.houston_auth.options.users;
+      if (addonUsers < 1) {
         $('.js-checkout-addon-houston_auth').addClass('has-error');
+        return; // Prevent price calculation on fail.
       } else {
         $('.js-checkout-addon-houston_auth').removeClass('has-error');
       }
 
-      total = total + ((users - 1) * window.pricing.addons.houston_auth.price.value);
+      total = total + ((addonUsers - 1) * window.pricing.addons.houston_auth.price.value);
     }
 
     $('#subscription-price').html((total.toLocaleString()).replace(/,/g, "<span class='small'>,</span>"));
@@ -149,6 +170,16 @@ $(function () { "use strict";
   function _prepareCheckout() {
     var cbInstance;
 
+    users = 0;
+
+    // Appends total users.
+    if (Gruntwork.checkout.subscription !== 'enterprise') {
+      users += window.pricing.subscriptions[Gruntwork.checkout.subscription].users;
+      if (Gruntwork.checkout.addons.additional_users.enabled){
+        users +=  Gruntwork.checkout.addons.additional_users.options.users;
+      }
+    }
+
     Chargebee.registerAgain();
     cbInstance = Chargebee.getInstance();
     cbInstance.setCheckoutCallbacks(function(cart, product) {
@@ -156,8 +187,12 @@ $(function () { "use strict";
 
       // Subscription plan
       subscriptionDetails += (' • Subscription: ' + window.pricing.subscriptions[Gruntwork.checkout.subscription].name);
+      subscriptionDetails += (' • Total Users: ' + users + ' user(s)');
 
-      // Addons
+      // Appends addon information to ChargeBee modal.
+      /*if (Gruntwork.checkout.addons.additional_users.enabled){
+        subscriptionDetails += (' • Additional Users: ' + Gruntwork.checkout.addons.additional_users.options.users + ' user(s)');
+      }*/
       if (Gruntwork.checkout.addons.reference_architecture.enabled){
         subscriptionDetails += ' • Reference Architecture';
       }

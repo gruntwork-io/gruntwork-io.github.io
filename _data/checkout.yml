@@ -6,8 +6,12 @@
 # Available options: "community", "professional", "enterprise"
 subscription: 'community'
 
-# Available addon packages: "reference_architecture", "houston_auth", "houston_pro"
+# Available addon packages: "additional_users", "reference_architecture", "houston_auth", "houston_pro"
 addons:
+  additional_users:
+    enabled: false
+    options:
+      users: 1
   reference_architecture:
     enabled: false
     options: {}
