@@ -1,4 +1,4 @@
-FROM ruby:2.4.2
+FROM ruby:2.6.2-stretch
 MAINTAINER Gruntwork <info@gruntwork.io>
 
 # Copy the Gemfile and Gemfile.lock into the image and run bundle install in a way that will be cached
@@ -9,8 +9,7 @@ RUN bundle install
 
 # Install Java, which is required for s3_website
 # Install texlive libraries, which are required for Pandoc
-RUN printf "deb http://archive.debian.org/debian/ jessie main\ndeb-src http://archive.debian.org/debian/ jessie main\ndeb http://security.debian.org jessie/updates main\ndeb-src http://security.debian.org jessie/updates main" > /etc/apt/sources.list &&\
-    apt-get update && \
+RUN apt-get update && \
     apt-get install -y default-jre && \
     apt-get install -y texlive texlive-xetex texlive-latex-recommended texlive-latex-extra texlive-lang-cjk && \
     rm -rf /var/lib/apt/lists/*
