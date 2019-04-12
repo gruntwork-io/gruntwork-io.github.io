@@ -45,23 +45,23 @@ If you want to edit the styles used to generate `/assets/msword/gruntwork-terms.
 To deploy the site to S3/CloudFront:
 
 1. Configure your AWS credentials as environment variables.
-2. `docker-compose run web ./push-to-s3.sh`
+1. `docker-compose run web ./push-to-s3.sh`
 
 To Deploy via Houston
 1. Authenticate via [houston](https://app.houston.gruntwork.io/login)
-2. Follow the steps given in the CLI Login
-3. Run `houston exec web -- docker-compose run web ./push-to-s3.sh`
+1. Follow the steps given in the CLI Login
+1. Run `houston exec web -- docker-compose run web ./push-to-s3.sh`
 
 
 ## Technologies
 
 1. Built with [Jekyll](http://jekyllrb.com/). This website is completely static and we use basic HTML or Markdown for
    everything.
-2. Gruntwork Terms Of Service Word Document is generated using [Pandoc](http://pandoc.org/index.html) right after `jekyll build` when running `docker-compose up`.
-3. Hosted on Amazon S3, with CloudFront as a CDN. Using [s3_website](https://github.com/laurilehmijoki/s3_website) to
+1. Gruntwork Terms Of Service Word Document is generated using [Pandoc](http://pandoc.org/index.html) right after `jekyll build` when running `docker-compose up`.
+1. Hosted on Amazon S3, with CloudFront as a CDN. Using [s3_website](https://github.com/laurilehmijoki/s3_website) to
    automatically upload static content to S3.
-4. We use [Bootstrap](http://www.getbootstrap.com/) and [Less](http://lesscss.org/).
-5. We're using [UptimeRobot](http://uptimerobot.com/) and [Google Analytics](http://www.google.com/analytics/) for
+1. We use [Bootstrap](http://www.getbootstrap.com/) and [Less](http://lesscss.org/).
+1. We're using [UptimeRobot](http://uptimerobot.com/) and [Google Analytics](http://www.google.com/analytics/) for
    monitoring and metrics.
 
 
