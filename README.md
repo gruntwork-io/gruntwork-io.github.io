@@ -47,6 +47,11 @@ To deploy the site to S3/CloudFront:
 1. Configure your AWS credentials as environment variables.
 1. `docker-compose run web ./push-to-s3.sh`
 
+To Deploy via Houston
+1. Authenticate via [houston](https://app.houston.gruntwork.io/login)
+1. Follow the steps given in the CLI Login
+1. Run `houston exec web -- docker-compose run web ./push-to-s3.sh`
+
 
 ## Technologies
 
