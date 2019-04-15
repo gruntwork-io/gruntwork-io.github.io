@@ -947,7 +947,9 @@ a.caret-right{
 .sub-page .section-hero {
   &:extend(.gradient-steel.gradient-vertical);
   background: url('../img/bg-header-squares.png') center bottom no-repeat, linear-gradient(#1a232d, #2e3b4a); // This is what we need to do in order to stack a background image on top of a background gradient
-  border-bottom: 2px solid rgba(15,192,239,.25);
+  @media only screen {
+    border-bottom: 2px solid rgba(15,192,239,.25);
+  }
 }
 
 // Main content section styles on the front page

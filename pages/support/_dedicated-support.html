@@ -13,8 +13,8 @@
 </p>
 {% for benefit in site.data.support-benefits %}
   <div class="row row-how-it-works">
-    <div class="col-xs-8 col-xs-offset-2 col-sm-3 col-sm-offset-0 col-md-2 col-diagram">
-      <img src="/assets/img/support-icons/support-{{ forloop.index }}.png" width="240" />
+    <div class="col-xs-8 col-xs-offset-2 col-sm-3 col-sm-offset-0 col-md-2 col-diagram hidden-print">
+      <img class="hidden-print" src="/assets/img/support-icons/support-{{ forloop.index }}.png" width="240" />
     </div>
     <div class="col-xs-12 col-sm-9 col-md-10 col-explanation">
       <h3>{{ benefit.title }}</h3>
