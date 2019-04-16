@@ -10,7 +10,7 @@
             {% if package.private_beta %}
             <p><small><em>This package is in private beta.<br/>Contact support@gruntwork.io for more information.</em></small></p>
             {% endif %}
-            <p>
+            <p class="hidden-print">
               {% if package.docs_url %}
                 <a href="#" data-toggle="modal" data-target="#modalPublicRepo" data-public-repo="{{ package.docs_url }}" data-private-repo="{{ package.full_url }}">View Public Docs</a>
               {% elsif package.full_url %}
@@ -56,6 +56,7 @@
             View Repo: {% if package.aws_url %}<a href="{{ package.aws_url }}">AWS</a>{% endif %}
             {% if package.gcp_url %} | <a href="{{ package.gcp_url }}">GCP</a>{% endif %}
             {% if package.azure_url %} | <a href="{{ package.azure_url }}">Azure</a>{% endif %}
+            {% if package.k8s_url %} <a href="{{ package.k8s_url }}">K8S</a>{% endif %}
           </p>
         </div>
         <div class="row">

@@ -1,0 +1,36 @@
+@media only print {
+  a[href]:after{
+    font-size: small;
+  }
+  .panel {
+    page-break-inside: avoid;
+  }
+  .panel-collapse {
+    display: block !important;
+  }
+  .clearfix::before, #gruntyCookie{
+    display: none!important;
+  }
+  .section{
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+  h2{
+    page-break-before: unset;
+  }
+  /* Only display the logo from the header, overwriting bootstrap defaults*/
+  .navbar{
+    display: block;
+    .navbar-toggle{
+      display: none!important;
+    }
+    .navbar-collapse{
+      display: none!important;
+    }
+    .navbar-brand{
+      &::after{
+        display: none!important;
+      }
+    }
+  }
+}

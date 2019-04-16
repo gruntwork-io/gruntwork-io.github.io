@@ -9,7 +9,7 @@
       <a href="/devops-checklist/">Production Readiness Checklist</a> to see what it takes to go to prod on AWS).
     </p>
     <p>
-      We customize the Reference Architecture to your needs, deploy into into your AWS accounts, and give you 100% of
+      We customize the Reference Architecture to your needs, deploy into your AWS accounts, and give you 100% of
       the code—all in about one day.
     </p>
     <div class="text-center ref-arch" style="margin-top: 30px">
@@ -23,15 +23,17 @@
     </div>
     {% include_relative _how-it-works.html %}
     <h2>Reference Architecture Features</h2>
-    <div class="row" style="margin-top: 50px;">
+    <div class="row" style="margin-top: 50px; display: flex; flex-wrap: wrap;">
       {% for feature in site.data.reference-architecture-features %}
-      <div class="col-xs-6 col-sm-4">
-        <div class="pull-left text-center" style="width: 100px; margin-right: 10px;">
-          <img src="/assets/img/reference-architecture-icons/reference-architecture-feature-{{ forloop.index }}.png" alt="{{ feature.title }}" />
-        </div>
-        <div class="pull-left" style="max-width: 170px; font-size: 16px; line-height: 20px; height: 160px">
-          <h6 style="margin: 5px 0 10px 0">{{ feature.title }}</h6>
-          <p>{{ feature.description }}</p>
+      <div class="col-xs-6 col-md-4" style="margin-bottom:20px;">
+        <div class="row" style="display: flex; flex-wrap: wrap;">
+          <div class="col-xs-12 col-sm-4 hidden-print" style="padding-right: 0; padding-left: 0;">
+            <img src="/assets/img/reference-architecture-icons/reference-architecture-feature-{{ forloop.index }}.png" alt="{{ feature.title }}" style="max-width: 105px;" />
+          </div>
+          <div class="col-xs-12 col-sm-8" style="line-height: 1.4;">
+            <h4 class="h6 text-bold" style="margin: 5px 0 5px 0">{{ feature.title }}</h4>
+            <p>{{ feature.description }}</p>
+          </div>
         </div>
       </div>
       {% endfor %}

@@ -1,10 +1,10 @@
 <h2>Available courses</h2>
 {% for course in site.data.training-recorded %}
   <div class="row row-equalize-col-height row-training-devops{% if forloop.index0 > 0 %} padding-top-none{% endif %}">
-      <div class="col-xs-12 col-md-4 col-pricing text-center">
+      <div class="col-xs-12 col-md-4 col-pricing text-center hidden-print">
           <div class="panel panel-default">
               <div class="panel-body training-{{ course.bg_color }}-bg row-center-vertically">
-                  <img src="{{ course.course_thumbnail }}" alt="{{ course.title }}" class="training-{{course.bg_color}}" style="height: {{ course.course_thumbnail_height }}px" />
+                  <img src="{{ course.course_thumbnail }}" alt="{{ course.title }}" class="training-{{course.bg_color}} hidden-print" style="height: {{ course.course_thumbnail_height }}px" />
               </div>
           </div>
       </div>
