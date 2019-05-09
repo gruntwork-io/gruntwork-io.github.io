@@ -35,12 +35,12 @@
           </p>
           <h5>Links</h5>
           <ul>
-          {% if package.docs_url %}<li><a href="{{ package.docs_url }}">Public Docs</a></li>{% endif %}
-          {% if package.subscriber_url %}<li><a href="{{ package.subscriber_url }}">Full Repo</a> (<strong>ONLY accessible to Gruntwork subscribers!</strong> Everyone else will get a 404.)</li>{% endif %}
-          {% if package.aws_url %}<li><a href="{{ package.aws_url }}">AWS Version</a></li>{% endif %}
-          {% if package.gcp_url %}<li><a href="{{ package.gcp_url }}">GCP Version</a></li>{% endif %}
-          {% if package.azure_url %}<li><a href="{{ package.azure_url }}">Azure Version</a></li>{% endif %}
-          {% if package.public_url %}<li><a href="{{ package.public_url }}">Full Repo</a></li>{% endif %}
+          {% if package.docs_url %}<li><a href="{{ package.docs_url }}" target="_blank" rel="noopener">Public Docs</a></li>{% endif %}
+          {% if package.subscriber_url %}<li><a href="{{ package.subscriber_url }}" target="_blank" rel="noopener">Full Repo</a> (<strong>ONLY accessible to Gruntwork subscribers!</strong> Everyone else will get a 404.)</li>{% endif %}
+          {% if package.aws_url %}<li><a href="{{ package.aws_url }}" target="_blank" rel="noopener">AWS Version</a></li>{% endif %}
+          {% if package.gcp_url %}<li><a href="{{ package.gcp_url }}" target="_blank" rel="noopener">GCP Version</a></li>{% endif %}
+          {% if package.azure_url %}<li><a href="{{ package.azure_url }}" target="_blank" rel="noopener">Azure Version</a></li>{% endif %}
+          {% if package.public_url %}<li><a href="{{ package.public_url }}" target="_blank" rel="noopener">Full Repo</a></li>{% endif %}
           </ul>
         </div>
       </div>
