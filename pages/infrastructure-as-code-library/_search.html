@@ -1,0 +1,20 @@
+<form style="margin: 30px 0 10px">
+  <div class="form-group row">
+    <label for="js-search-library" class="col-sm-1 col-form-label" style="padding-top: 8px">
+      Search:
+    </label>
+    <div class="col-sm-11">
+      <input type="text" id="js-search-library" class="form-control" placeholder="E.g., Try searching for Kubernetes, Vault, Jenkins, Kafka, Lambda, AWS, GCP, Azure, etc..."/>
+      <script>
+        window.libraryEntries = [
+          {% for package in site.data.library %}
+            {
+              id: "{{ package.name | replace: " ", "_" | replace: ")", "_" |  replace: "(", "_" }}",
+              text: "{{ package | remove: '"' | downcase }}"
+            },
+          {% endfor %}
+        ];
+      </script>
+    </div>
+  </div>
+</form>

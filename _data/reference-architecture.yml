@@ -1,7 +1,7 @@
 infrastructure:
-  - title: AWS Account(s)
+  - title: Account configuration
     description: |
-      Choose from a single AWS account configuration, or a multi-account setup where each AWS account represents a distinct environment.
+      Choose from a single or multi account/project setup where each account/project represents a distinct environment.
 
   - title: Network Topology
     description: |
@@ -9,31 +9,31 @@ infrastructure:
 
   - title: Server cluster
     description: |
-      Choose from a Docker Cluster (backed by Amazon EC2 Container Service) or Auto Scaling Groups.
+      Choose from a Docker Cluster (backed by Amazon EC2 Container Service, Amazon EC2 Kubernetes Service, or Google Kubernetes Engine) or Auto Scaling Groups.
 
   - title: Load balancer
     description: |
-      Choose from the Application Load Balancer (HTTP/HTTPS) or the Load Balancer Classic (TCP).
+      Choose your load balancer for distributing traffic across your server cluster.
 
   - title: Database
     description: |
-      Choose from MySQL, PostgreSQL, MariaDB, Oracle, SQL Server, or Aurora.
+      Choose a supported relational database, such as MySQL, PostgreSQL, MariaDB, Oracle, or SQL Server.
 
   - title: Cache
     description: |
-      Choose from Redis or Memcached.
+      Choose a supported distributed cache, such as Redis or Memcached.
 
   - title: Other data stores
     description: |
-      We have support for Kafka, ZooKeeper, MongoDB, ELK (Elasticsearch, Logstash, Kibana), and more.
+      We have support for Kafka, ZooKeeper, MongoDB, ELK (Elasticsearch, Logstash, Kibana), SQS, Kinesis, and more.
 
   - title: Static content
     description: |
-      Deploy your images, CSS, and JS into an S3 bucket and and CloudFront as a CDN in front of it.
+      Deploy your images, CSS, and JS into an S3 or GCS bucket and configure a CDN in front of it.
 
   - title: Bastion host
     description: |
-      Choose from either a plain bastion host or an OpenVPN server as the sole entrypoint to your AWS network.
+      Choose from either a plain bastion host or an OpenVPN server as the sole entrypoint to your network.
 
   - title: CI server
     description: |
@@ -51,23 +51,14 @@ infrastructure:
       configuration across multiple environments, how to store application secrets, how to talk to the database and cache,
       and how to apply schema migrations.
 
-  - title: SQS, Kinesis
+  - title: Serverless
     description: |
-      Optionally include queues in SQS and streams in Kinesis.
-
-  - title: Lambda
-    description: |
-      Optionally deploy Lambda functions using Terraform and run and test your Lambda functions locally using Docker.
+      Optionally deploy serverless functions using Terraform.
 
 configuration:
   - title: Environments
     description: |
       Choose the isolated environments you want to create: e.g., dev, qa, stage, prod.
-
-  - title: Account setup
-    description: |
-      Choose to deploy all environments into a single AWS account (more convenient) or to deploy each environment into
-      a separate AWS account (more secure).
 
   - title: Encryption
     description: |
@@ -81,25 +72,25 @@ configuration:
 
   - title: Monitoring
     description: |
-      Configure CloudWatch with extra metrics not visible to the AWS hypervisor, including memory and disk space usage.
+      Configure metrics in CloudWatch or StackDriver.
 
   - title: Alerting
     description: |
-      Configure alerts on key CloudWatch metrics: e.g., high CPU usage on EC2 instances, too many 4xx or 5xx errors on
-      load balancers, low disk space on RDS instances. Configure Route 53 health checks on public endpoints.
+      Configure alerts on key metrics: e.g., high CPU usage on EC2 instances, too many 4xx or 5xx errors on
+      load balancers, low disk space on your database.
 
   - title: Log aggregation
     description: |
-      Configure all servers to send logs to the CloudWatch Logs UI.
+      Configure all servers to send logs to a central location for easier searching and filtering.
 
   - title: DNS
     description: |
-      Configure your domain name(s) using Route 53.
+      Configure your domain name(s).
 
 security:
   - title: SSL/TLS
     description: |
-      Create SSL/TLS certificates for your domain names using AWS Certificate Manager.
+      Create SSL/TLS certificates for your domain names.
 
   - title: Server hardening
     description: |
@@ -107,8 +98,9 @@ security:
 
   - title: SSH management
     description: |
-      Install ssh-iam on every server, which allows admins to grant or revoke SSH access using IAM groups and for
-      each developer to be able to use their own username and SSH key to connect to servers.
+      Install ssh-grunt on every server, which allows admins to grant or revoke SSH access using your identity provider
+      (e.g., IAM, Google, Active Directory) and for each developer to be able to use their own username and SSH key to
+      connect to servers.
 
   - title: Secrets management
     description: |
@@ -116,8 +108,8 @@ security:
 
   - title: Account security
     description: |
-      Enable CloudTrail to audit all API calls in your AWS account(s). Create best practices IAM groups and policies for
-      user and permissions management.
+      Enable audit logging for all of your API calls. Create best practices IAM groups and policies for user and
+      permissions management.
 
 design:
   - title: High Availability
