@@ -3,20 +3,20 @@
     <div class="gw-pricing-columns row row-collapse row-equalize-col-height row-panels row-panels-sm">
       <div class="col-xs-12 col-sm-4 panel panel-default panel-light" style="position: relative; margin-top: 100px;">
         <div class="gw-pricing-columns__panel panel-body">
-          <div class="text-center" data-mh="plans-heading">
+          <div class="plans-heading text-center" data-mh="plans-heading">
             <h3 class="h2 no-anchor margin-top-none" style="margin-bottom: 8px;">Gruntwork for AWS</h3>
             <p class="margin-bottom-none" style="margin-top:48px">AWS solution for small &amp; medium businesses for up
               to 20 users</p>
           </div>
           <hr>
           <div class="flex flex-middle flex-column text-center">
-            <div data-mh="plans-pricing-top">
+            <div data-mh="plans-pricing-top" style="height:150px">
               <p class="help-block" style="margin-top:0;margin-bottom:0;">from</p>
               <p class="big-price"><span>$</span>795</p>
               <p class="help-block" style="margin-top:0;">per month</p>
             </div>
-            <div data-mh="plans-pricing-bottom">
-              <p><a class="btn btn-info" href="/checkout/?subscription=professional">Get Started</a></p>
+            <div data-mh="plans-pricing-bottom" style="height:100px">
+              <p><a class="btn btn-info" href="{{ site.data.pricing.subscriptions.aws.checkout_url }}">Get Started</a></p>
               <p class="text-muted small"><em>Annual contact, billed monthly.</em></p>
             </div>
           </div>
@@ -47,20 +47,20 @@
       </div>
       <div class="col-xs-12 col-sm-4 panel panel-default panel-light" style="position: relative; margin-top: 100px;">
         <div class="gw-pricing-columns__panel panel-body">
-          <div class="text-center" data-mh="plans-heading">
+          <div class="plans-heading text-center" data-mh="plans-heading">
             <h3 class="h2 no-anchor margin-top-none" style="margin-bottom: 8px;">Gruntwork for GCP <span
                 class="badge badge-secondary">New</span></h3>
             <p class="margin-bottom-none">GCP solution for small &amp; medium businesses for up to 20 users</p>
           </div>
           <hr>
           <div class="flex flex-middle flex-column text-center">
-            <div data-mh="plans-pricing-top">
+            <div data-mh="plans-pricing-top" style="height:150px">
               <p class="help-block" style="margin-top:0;margin-bottom:0;">from</p>
               <p class="big-price"><span>$</span>500</p>
               <p class="help-block" style="margin-top:0;">per month</p>
             </div>
-            <div data-mh="plans-pricing-bottom">
-              <p><a class="btn btn-info" href="/checkout/">Get Started</a></p>
+            <div data-mh="plans-pricing-bottom" style="height:100px">
+              <p><a class="btn btn-info" href="{{ site.data.pricing.subscriptions.gcp.checkout_url }}">Get Started</a></p>
               <p class="text-muted small"><em>Annual contact, billed monthly.<br>Special introductory pricing.</em></p>
             </div>
           </div>
@@ -91,18 +91,17 @@
       </div>
       <div class="col-xs-12 col-sm-4 panel panel-default panel-light" style="position: relative; margin-top: 100px;">
         <div class="gw-pricing-columns__panel panel-body">
-          <div class="text-center" data-mh="plans-heading">
+          <div class="plans-heading text-center" data-mh="plans-heading">
             <h3 class="h2 no-anchor margin-top-none" style="margin-bottom: 8px;">Gruntwork for Enterprise</h3>
-            <p class="margin-bottom-none">Enterprise-grade support for larger companies for unlimited users and multiple
-              cloud support</p>
+            <p class="margin-bottom-none">Multi-cloud support for larger companies with unlimited users</p>
           </div>
           <hr>
           <div class="flex flex-middle flex-column text-center">
-            <div data-mh="plans-pricing-top">
+            <div data-mh="plans-pricing-top" style="height:150px">
               <p class="h1">Contact Us</p>
               <p class="help-block"></p>
             </div>
-            <div data-mh="plans-pricing-bottom">
+            <div data-mh="plans-pricing-bottom" style="height:100px">
               <p><a class="btn btn-primary" href="/contact/">Contact Us</a></p>
               <p class="text-muted small"><em>Annual contact, billed monthly.</em></p>
             </div>
@@ -165,10 +164,9 @@
             <div class="flex flex-middle text-center" data-mh="houston-footer">
               <div>
                 <p>Get support via email, chat, and phone/video from Gruntwork. 2 Business Day SLA.</p>
-                <p class="h2 big-price"><span>+$</span>{{ site.data.pricing.subscriptions.aws.pro_support_price.label }}
-                </p>
+                <p class="h2 big-price"><span>+$</span>{{ site.data.pricing.subscriptions.aws.pro_support_price.label }}</p>
                 <p class="help-block">billed monthly</p>
-                <p><a class="btn btn-info" href="/checkout/">Get Started</a></p>
+                <p><a class="btn btn-info" href="{{ site.data.pricing.subscriptions.aws.checkout_url }}&dedicated-support=true">Get Started</a></p>
               </div>
             </div>
           </div>
@@ -182,10 +180,9 @@
             <div class="flex flex-middle text-center" data-mh="houston-footer">
               <div>
                 <p>Get support via email, chat, and phone/video from Gruntwork. 2 Business Day SLA.</p>
-                <p class="h2 big-price"><span>+$</span>{{ site.data.pricing.subscriptions.gcp.pro_support_price.label }}
-                </p>
-                <p class="help-block">introductory pricing. billed monthly</p>
-                <p><a class="btn btn-info" href="/checkout/">Get Started</a></p>
+                <p class="h2 big-price"><span>+$</span>{{ site.data.pricing.subscriptions.gcp.pro_support_price.label }}</p>
+                <p class="help-block">billed monthly</p>
+                <p><a class="btn btn-info" href="{{ site.data.pricing.subscriptions.gcp.checkout_url }}&dedicated-support=true">Get Started</a></p>
               </div>
             </div>
           </div>
