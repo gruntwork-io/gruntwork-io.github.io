@@ -4,15 +4,19 @@
       <th>Name</th>
       <th>Description</th>
       <th>Clouds</th>
+      <th>Type</th>
     </tr>
   </thead>
   <tbody>
     {% for package in site.data.library %}
       <tr id="{{ package.name | replace: " ", "_" | replace: ")", "_" |  replace: "(", "_" }}" class="table-clickable-row" data-toggle="modal" data-target="#modal-{{ package.name | replace: " ", "_" |  replace: "(", "_" |  replace: ")", "_" }}">
-        <th style="width: 30%">{{ package.name }}</th>
-        <td style="width: 55%">{{ package.description | truncate: 60 }}</td>
+        <th style="width: 20%">{{ package.name }}</th>
+        <td style="width: 50%">{{ package.description | truncate: 100 }}</td>
         <td style="width: 15%">
           <small>{% for cloud in package.clouds %}{% if forloop.index0 > 0 %}, {% endif %}{{ cloud }}{% endfor %}</small>
+        </td>
+        <td style="width: 15%">
+          <small>{{ package.type }}</small>
         </td>
       </tr>
     {% endfor %}

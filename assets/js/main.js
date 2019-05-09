@@ -52,14 +52,26 @@ $('#js-search-library').on("keyup", function(event) {
   var text = target.val();
 
   $('#no-matches').hide();
+
   if (text && text.length > 0) {
     var lowerText = text.toLowerCase();
+    var words = lowerText.split(" ");
+
     $('.table-clickable-row').hide();
 
     var matches = 0;
     for (var i = 0; i < libraryEntries.length; i++) {
       var entry = libraryEntries[i];
-      if (entry.text.indexOf(lowerText) >= 0) {
+      var matchesAll = true;
+      for (var j = 0; j < words.length; j++) {
+        var word = words[j];
+        if (entry.text.indexOf(word) < 0) {
+          matchesAll = false;
+          break;
+        }
+      }
+
+      if (matchesAll) {
         $("#" + entry.id).show();
         matches++;
       }

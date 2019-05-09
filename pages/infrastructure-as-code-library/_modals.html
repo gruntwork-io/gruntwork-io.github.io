@@ -2,22 +2,22 @@
   <div class="modal fade" id="modal-{{ package.name | replace: " ", "_" | replace: ")", "_" |  replace: "(", "_" }}" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
-        <div class="modal-header text-center">
+        <div class="modal-header text-center" style="margin-bottom: 0">
+          <h4 class="h2 modal-title margin-top-none" style="float: left">{{ package.name }}</h4>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="fa fa-fw fa-close"></i></button>
         </div>
-        <div class="modal-body">
-          <h4 class="h2 modal-title margin-top-none">{{ package.name }}</h4>
-          <h6>Description</h6>
+        <div class="modal-body" style="padding-top: 0">
+          <h5 style="margin-top: 0">Description</h5>
           <p>
             {{ package.description }}
           </p>
-          <h6>Clouds</h6>
+          <h5>Clouds</h5>
           <ul>
             {% for cloud in package.clouds %}
               <li>{{ cloud }}</li>
             {% endfor %}
           </ul>
-          <h6>Technologies</h6>
+          <h5>Technologies</h5>
           <ul>
             {% for icon in package.icons %}
               <li>
@@ -25,10 +25,18 @@
               </li>
             {% endfor %}
           </ul>
-          <h6>Links</h6>
+          <h5>Type</h5>
+          <p>
+            {% if package.type == "Open Source" %}
+              This repo is open source!
+            {% else %}
+              This repo is only accessible to <a href="/pricing">Gruntwork Subscribers</a>.
+            {% endif %}
+          </p>
+          <h5>Links</h5>
           <ul>
           {% if package.docs_url %}<li><a href="{{ package.docs_url }}">Public Docs</a></li>{% endif %}
-          {% if package.full_url %}<li><a href="{{ package.docs_url }}">Full Repo</a> (<strong>ONLY accessible to subscribers!</strong> Everyone else will get a 404.)</li>{% endif %}
+          {% if package.subscriber_url %}<li><a href="{{ package.subscriber_url }}">Full Repo</a> (<strong>ONLY accessible to Gruntwork subscribers!</strong> Everyone else will get a 404.)</li>{% endif %}
           {% if package.aws_url %}<li><a href="{{ package.aws_url }}">AWS Version</a></li>{% endif %}
           {% if package.gcp_url %}<li><a href="{{ package.gcp_url }}">GCP Version</a></li>{% endif %}
           {% if package.azure_url %}<li><a href="{{ package.azure_url }}">Azure Version</a></li>{% endif %}

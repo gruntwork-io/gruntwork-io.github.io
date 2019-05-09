@@ -5,7 +5,8 @@
     - title: Terraform
       image: icon-terraform.png
   docs_url: "https://github.com/gruntwork-io/module-vpc-public"
-  full_url: "https://github.com/gruntwork-io/module-vpc"
+  subscriber_url: "https://github.com/gruntwork-io/module-vpc"
+  type: Subscriber-Only
   description: |
     Create a best-practices Virtual Private Cloud (VPC) on AWS. Includes multiple subnet tiers, network ACLs, security
     groups, NAT gateways, Internet Gateways, and VPC peering.
@@ -21,7 +22,8 @@
     - title: Python
       image: icon-python.png
   docs_url: "https://github.com/gruntwork-io/module-aws-monitoring-public"
-  full_url: "https://github.com/gruntwork-io/module-aws-monitoring"
+  subscriber_url: "https://github.com/gruntwork-io/module-aws-monitoring"
+  type: Subscriber-Only
   description: |
     Configure monitoring, log aggregation, and alerting using CloudWatch, SNS, and S3. Includes Slack integration.
 
@@ -34,7 +36,8 @@
     - title: Bash
       image: icon-bash.png
   docs_url: "https://github.com/gruntwork-io/module-ecs-public"
-  full_url: "https://github.com/gruntwork-io/module-ecs"
+  subscriber_url: "https://github.com/gruntwork-io/module-ecs"
+  type: Subscriber-Only
   description: |
     Deploy a best-practices ECS Cluster and run Docker containers on it as ECS Services. Includes zero-downtime,
     rolling deployments, and auto scaling.
@@ -48,7 +51,8 @@
     - title: Python
       image: icon-python.png
   private_beta: true
-  full_url: "https://github.com/gruntwork-io/terraform-aws-eks"
+  subscriber_url: "https://github.com/gruntwork-io/terraform-aws-eks"
+  type: Subscriber-Only
   description: |
     Deploy a best-practices EKS cluster and run Docker containers on it as Kubernetes services. Supports zero-downtime,
     rolling deployment, IAM to RBAC mapping, auto scaling, IAM roles for Pods, deploying Helm securely with automated
@@ -62,7 +66,8 @@
   icons:
     - title: Terraform
       image: icon-terraform.png
-  full_url: "https://github.com/gruntwork-io/terraform-kubernetes-helm"
+  public_url: "https://github.com/gruntwork-io/terraform-kubernetes-helm"
+  type: Open Source
   description: |
     Deploy a best-practices Tiller (Helm Server) to your Kubernetes cluster. Supports namespaces, service accounts,
     least privilege RBAC roles, and automated TLS management.
@@ -76,18 +81,20 @@
     - title: Python
       image: icon-python.png
   docs_url: "https://github.com/gruntwork-io/module-asg-public"
-  full_url: "https://github.com/gruntwork-io/module-asg"
+  subscriber_url: "https://github.com/gruntwork-io/module-asg"
+  type: Subscriber-Only
   description: |
     Run stateless and stateful services on top of an Auto Scaling Group. Supports zero-downtime, rolling deployment,
     attaching EBS volumes and ENIs, load balancing, health checks, service discovery, and auto scaling.
 
-- name: "Load Balancer"
+- name: "AWS Load Balancer"
   clouds:
     - AWS
   icons:
     - title: Terraform
       image: icon-terraform.png
-  full_url: "https://github.com/gruntwork-io/module-load-balancer"
+  subscriber_url: "https://github.com/gruntwork-io/module-load-balancer"
+  type: Subscriber-Only
   description: |
     Run the highly-available and scalable load balancers in AWS: Application Load Balancer (ALB), Network Load Balancer
     (NLB), and the Classic Load Balancer (CLB).
@@ -98,7 +105,8 @@
   icons:
     - title: Terraform
       image: icon-terraform.png
-  full_url: "https://github.com/gruntwork-io/package-lambda"
+  subscriber_url: "https://github.com/gruntwork-io/package-lambda"
+  type: Subscriber-Only
   description: |
     Deploy and manage Lambda functions with Terraform and build serverless apps. Automatically upload source code,
     configure environment variables, create an IAM Role, associate with a VPC. enable versioning/aliasing. Also
@@ -112,7 +120,8 @@
       image: icon-terraform.png
     - title: Go
       image: icon-go.png
-  full_url: "https://github.com/gruntwork-io/package-sam"
+  subscriber_url: "https://github.com/gruntwork-io/package-sam"
+  type: Subscriber-Only
   description: |
     Build serverless applications by defining APIs in Swagger, running your app locally using SAM, and deploying the
     app to production using Terraform and API Gateway.
@@ -130,7 +139,8 @@
     - title: Go
       image: icon-go.png
   docs_url: "https://github.com/gruntwork-io/module-security-public"
-  full_url: "https://github.com/gruntwork-io/module-security"
+  subscriber_url: "https://github.com/gruntwork-io/module-security"
+  type: Subscriber-Only
   description: |
     A collection of security best practices for managing secrets, credentials, and servers. Includes streamlined support
     for CloudTrail, KMS, SSH key management via IAM, IAM Groups, fail2ban, NTP, and OS hardening.
@@ -146,7 +156,8 @@
     - title: Bash
       image: icon-bash.png
   docs_url: "https://github.com/gruntwork-io/module-ci-public"
-  full_url: "https://github.com/gruntwork-io/module-ci"
+  subscriber_url: "https://github.com/gruntwork-io/module-ci"
+  type: Subscriber-Only
   description: |
     A collection of scripts and Terraform code that implement common CI and build pipeline tasks including running
     Jenkins, configuring CircleCi, building a Docker image, building a Packer image, updating Terraform code, pushing
@@ -161,7 +172,8 @@
     - title: Python
       image: icon-python.png
   docs_url: "https://github.com/gruntwork-io/module-data-storage-public"
-  full_url: "https://github.com/gruntwork-io/module-data-storage"
+  subscriber_url: "https://github.com/gruntwork-io/module-data-storage"
+  type: Subscriber-Only
   description: |
     Run MySQL, Postgres, MariaDB, or Amazon Aurora on Amazon’s Relational Database Service (RDS). Creates the database,
     sets up replicas, configures multi-zone automatic failover and automatic backup.
@@ -173,7 +185,8 @@
     - title: Terraform
       image: icon-terraform.png
   docs_url: "https://github.com/gruntwork-io/module-cache-public"
-  full_url: "https://github.com/gruntwork-io/module-cache"
+  subscriber_url: "https://github.com/gruntwork-io/module-cache"
+  type: Subscriber-Only
   description: |
     Run Redis or Memcached clusters using Amazon’s ElastiCache Service. Creates the cluster, sets up replicas, configures
     multi-zone automatic failover and automatic backup.
@@ -187,7 +200,8 @@
     - title: Bash
       image: icon-bash.png
   docs_url: "https://github.com/gruntwork-io/module-server-public"
-  full_url: "https://github.com/gruntwork-io/module-server"
+  subscriber_url: "https://github.com/gruntwork-io/module-server"
+  type: Subscriber-Only
   description: |
     Set up a best-practices deployment of a single, stateful server on top of AWS, such as Jenkins or WordPress. Supports
     EBS volume re-attachment, and a scheduled Lambda job to backup the Instance on a cron schedule. Includes alarm if
@@ -199,7 +213,8 @@
   icons:
     - title: Terraform
       image: icon-terraform.png
-  full_url: "https://github.com/gruntwork-io/package-static-assets"
+  subscriber_url: "https://github.com/gruntwork-io/package-static-assets"
+  type: Subscriber-Only
   description: |
     Deploy your static content and static websites on S3, optionally with a CloudFront distribution in front of it as a
     CDN. Includes bucket versioning, access logging, cache settings, Route 53 DNS entries, and TLS certs.
@@ -212,7 +227,8 @@
       image: icon-terraform.png
     - title: Bash
       image: icon-bash.png
-  full_url: "https://github.com/gruntwork-io/package-mongodb"
+  subscriber_url: "https://github.com/gruntwork-io/package-mongodb"
+  type: Subscriber-Only
   description: |
     Deploy a MongoDB cluster, including replica sets, sharding, an automated bootstrapping process, backup, recovery,
     and OS optimizations.
@@ -225,7 +241,8 @@
       image: icon-terraform.png
     - title: Bash
       image: icon-bash.png
-  full_url: "https://github.com/gruntwork-io/package-kafka"
+  subscriber_url: "https://github.com/gruntwork-io/package-kafka"
+  type: Subscriber-Only
   description: |
     Deploy a cluster of Apache brokers that can automatically bootstrap themselves. Includes support for automatically
     discovering a ZooKeeper cluster, EBS Volumes for better log performance, automated zero-downtime rolling deployment,
@@ -239,7 +256,8 @@
       image: icon-terraform.png
     - title: Bash
       image: icon-bash.png
-  full_url: "https://github.com/gruntwork-io/package-zookeeper"
+  subscriber_url: "https://github.com/gruntwork-io/package-zookeeper"
+  type: Subscriber-Only
   description: |
     Deploy an Apache ZooKeeper cluster that can automatically bootstrap itself. Includes support for Exhibitor as a
     process supervisor and management UI for ZooKeeper, static IP addresses (ENIs), EBS Volumes for better transaction
@@ -254,7 +272,8 @@
       image: icon-terraform.png
     - title: Bash
       image: icon-bash.png
-  full_url: "https://github.com/gruntwork-io/package-elk"
+  subscriber_url: "https://github.com/gruntwork-io/package-elk"
+  type: Subscriber-Only
   description: |
     Deploy and manage an ELK cluster. Includes support for deploying separate Elasticsearch, Logstash and Kibana clusters,
     each with automated zero-downtime rolling deployment, automatic recovery of failed servers, and security
@@ -271,7 +290,8 @@
       image: icon-bash.png
     - title: Go
       image: icon-go.png
-  full_url: "https://github.com/gruntwork-io/package-openvpn"
+  subscriber_url: "https://github.com/gruntwork-io/package-openvpn"
+  type: Subscriber-Only
   description: |
     Deploy an OpenVPN server and manage user accounts using IAM groups. Includes automatic install and configuration of
     a high-availability OpenVPN server, public key infrastructure (PKI), data backup, IAM policies, security groups, and
@@ -283,7 +303,8 @@
   icons:
     - title: Terraform
       image: icon-terraform.png
-  full_url: "https://github.com/gruntwork-io/package-messaging"
+  subscriber_url: "https://github.com/gruntwork-io/package-messaging"
+  type: Subscriber-Only
   description: |
     Create SQS queues with support for FIFO, message retention, message delays, content-based deduplication,
     dead-letter queues, and IP-based access controls. Create SNS topics with configurable IAM and delivery policies.
@@ -296,6 +317,7 @@
     - title: Terraform
       image: icon-terraform.png
   public_url: "https://github.com/gruntwork-io/terraform-google-gke"
+  type: Open Source
   description: |
     Terraform modules for running a Kubernetes cluster on Google Cloud Platform (GCP) using Google Kubernetes Engine
     (GKE).
@@ -307,17 +329,19 @@
     - title: Terraform
       image: icon-terraform.png
   public_url: "https://github.com/gruntwork-io/terraform-google-network"
+  type: Open Source
   description: |
     Create a best-practices Virtual Private Cloud (VPC) on GCP. Includes multiple subnet tiers, firewall rules,
     NAT gateways, and VPC peering.
 
-- name: "Cloud SQL"
+- name: "Google Cloud SQL"
   clouds:
     - GCP
   icons:
     - title: Terraform
       image: icon-terraform.png
   public_url: "https://github.com/gruntwork-io/terraform-google-sql"
+  type: Open Source
   description: |
     Run relational databases such as MySQL and PostgreSQL on Google Cloud Platform (GCP) using Cloud SQL.
 
@@ -328,6 +352,7 @@
     - title: Terraform
       image: icon-terraform.png
   public_url: "https://github.com/gruntwork-io/terraform-google-static-assets"
+  type: Open Source
   description: |
     Manage static assets (CSS, JS, images) on GCP using Google Cloud Storage and HTTP Load Balancers.
 
@@ -338,6 +363,7 @@
     - title: Terraform
       image: icon-terraform.png
   public_url: "https://github.com/gruntwork-io/terraform-google-load-balancer"
+  type: Open Source
   description: |
     Perform load balancing on GCP using Google Cloud Load Balancer, with support for HTTP, HTTPs, and global forwarding
     rules.
@@ -350,6 +376,7 @@
     - title: Go
       image: icon-go.png
   public_url: "https://github.com/gruntwork-io/kubergrunt"
+  type: Open Source
   description: |
     kubergrunt is a standalone go binary with a collection of commands that attempts to fill in the gaps between
     Terraform, Helm, and Kubectl for managing a Kubernetes Cluster. It includes support for authenticating to EKS
@@ -364,6 +391,7 @@
     - title: Go
       image: icon-go.png
   public_url: "https://github.com/gruntwork-io/helm-kubernetes-services"
+  type: Open Source
   description: |
     Package services into a best-practices deployment for Kubernetes. Supports zero-downtime, rolling deployment, RBAC
     roles and groups, auto scaling, secrets management, and centralized logging. Includes support for web services,
@@ -382,6 +410,7 @@
   aws_url: "https://github.com/hashicorp/terraform-aws-consul"
   gcp_url: "https://github.com/hashicorp/terraform-google-consul"
   azure_url: "https://github.com/hashicorp/terraform-azurerm-consul"
+  type: Open Source
   description: |
     Deploy a best-practices HashiCorp Consul cluster. Includes support for automatic bootstrapping, configuring dnsmasq
     to use Consul as a DNS server, access to the Consul UI, and automatic recovery of failed servers.
@@ -399,6 +428,7 @@
   aws_url: "https://github.com/hashicorp/terraform-aws-nomad"
   gcp_url: "https://github.com/hashicorp/terraform-google-nomad"
   azure_url: "https://github.com/hashicorp/terraform-azurerm-nomad"
+  type: Open Source
   description: |
     Deploy a best-practices HashiCorp Nomad cluster. Includes support for automatic bootstrapping, automatic discovery
     of Consul servers (for cluster coordination), automatic recovery of failed servers.
@@ -416,6 +446,7 @@
   aws_url: "https://github.com/hashicorp/terraform-aws-vault"
   gcp_url: "https://github.com/hashicorp/terraform-google-vault"
   azure_url: "https://github.com/hashicorp/terraform-azurerm-vault"
+  type: Open Source
   description: |
     Deploy a best-practices HashiCorp Vault cluster for secrets management. Includes support for automatic
     bootstrapping, automatic discovery of Consul clusters (for HA cluster coordination), using S3 as a storage backend,
@@ -431,6 +462,7 @@
     - title: Bash
       image: icon-bash.png
   aws_url: "https://github.com/gruntwork-io/terraform-aws-couchbase"
+  type: Open Source
   description: |
     Deploy a best-practices Couchbase cluster. Includes support for automatic bootstrapping, running Sync Gateway,
     Web Console UI, cross-region replication, and automatic recovery of failed servers.
@@ -444,6 +476,7 @@
     - title: Bash
       image: icon-bash.png
   aws_url: "https://github.com/gruntwork-io/terraform-aws-influx"
+  type: Open Source
   description: |
     Deploy a best-practices InfluxDB Enterprise cluster. Includes support for automatic bootstrapping, automatic node discovery,
     and automatic recovery of failed servers.
@@ -459,6 +492,7 @@
     - title: Go
       image: icon-go.png
   public_url: "https://github.com/gruntwork-io/terratest"
+  type: Open Source
   description: |
     Terratest is a Go library that makes it easier to write automated tests for your infrastructure code. It provides
     a variety of helper functions and patterns for common infrastructure testing tasks, including testing Terraform
@@ -470,7 +504,8 @@
   icons:
     - title: Go
       image: icon-go.png
-  full_url: "https://github.com/gruntwork-io/gruntkms"
+  subscriber_url: "https://github.com/gruntwork-io/gruntkms"
+  type: Open Source
   description: |
     Make secrets management easy using this command-line tool that can encrypt and decrypt data using Amazon Key
     Management Service (KMS).
@@ -484,7 +519,8 @@
     - title: Go
       image: icon-go.png
   docs_url: "https://github.com/gruntwork-io/module-security-public/tree/master/modules/ssh-grunt"
-  full_url: "https://github.com/gruntwork-io/module-security/tree/master/modules/ssh-grunt"
+  subscriber_url: "https://github.com/gruntwork-io/module-security/tree/master/modules/ssh-grunt"
+  type: Subscriber-Only
   description: |
     A tool that allows you to manage SSH access to EC2 Instances using either AWS IAM or your Identity Provider (e.g.,
     ADFS, Google, Okta, etc). Developers can use their personal SSH keys to log in.
@@ -496,7 +532,8 @@
     - title: Bash
       image: icon-bash.png
   docs_url: "https://github.com/gruntwork-io/module-security-public/tree/master/modules/aws-auth"
-  full_url: "https://github.com/gruntwork-io/module-security/tree/master/modules/aws-auth"
+  subscriber_url: "https://github.com/gruntwork-io/module-security/tree/master/modules/aws-auth"
+  type: Subscriber-Only
   description: |
     A small wrapper script for the AWS CLI that makes it much easier to authenticate to AWS with Multi-factor
     authentication (MFA), or when you want to assume an IAM Role in another AWS account.
@@ -510,6 +547,7 @@
     - title: Bash
       image: icon-bash.png
   public_url: "https://github.com/gruntwork-io/bash-commons"
+  type: Open Source
   description: |
     A collection of reusable Bash functions for handling common tasks such as logging, assertions, string manipulation,
     and more.
@@ -521,6 +559,7 @@
     - title: Go
       image: icon-go.png
   public_url: "https://github.com/gruntwork-io/cloud-nuke"
+  type: Open Source
   description: |
     A tool for cleaning up your cloud accounts by nuking (deleting) all resources within it.
 
@@ -533,6 +572,7 @@
     - title: Bash
       image: icon-bash.png
   public_url: "https://github.com/gruntwork-io/gruntwork-installer"
+  type: Open Source
   description: |
     A simple, lightweight package manager for installing Gruntwork modules.
 
@@ -547,6 +587,7 @@
     - title: Python
       image: icon-python.png
   public_url: "https://github.com/gruntwork-io/package-terraform-utilities"
+  type: Open Source
   description: |
     A collection of miscellaneous utilities and helper modules for use with Terraform. Includes modules for determining
     the current operating system and running Python/PEX executables from Terraform.
