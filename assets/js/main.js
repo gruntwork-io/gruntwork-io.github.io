@@ -46,6 +46,33 @@ $("#modalPublicRepo").on("show.bs.modal",function(r){var e=$(r.relatedTarget).da
 
 $("#modalPrivateRepo").on("show.bs.modal",function(r){var a=$(r.relatedTarget).data("private-repo");$(r.currentTarget).find(".private-repo-link").attr("href",a)});
 
+/* Search box on library page */
+$('#js-search-library').on("keyup", function(event) {
+  var target = $(event.currentTarget);
+  var text = target.val();
+
+  $('#no-matches').hide();
+  if (text && text.length > 0) {
+    var lowerText = text.toLowerCase();
+    $('.table-clickable-row').hide();
+
+    var matches = 0;
+    for (var i = 0; i < libraryEntries.length; i++) {
+      var entry = libraryEntries[i];
+      if (entry.text.indexOf(lowerText) >= 0) {
+        $("#" + entry.id).show();
+        matches++;
+      }
+    }
+
+    if (matches === 0) {
+      $('#no-matches').show();
+    }
+  } else {
+    $('.table-clickable-row').show();
+  }
+});
+
 /* Dashed lines on homepage */
 var c=document.getElementById("dottedLine");if(c){var ctx=c.getContext("2d");ctx.beginPath(),ctx.setLineDash([10,10]),ctx.moveTo(0,0),ctx.lineTo(0,200),ctx.strokeStyle="#fff",ctx.lineWidth=1.5,ctx.stroke()}
 

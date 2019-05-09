@@ -1,5 +1,5 @@
 - name: "Network Topology"
-  tags:
+  clouds:
     - AWS
   icons:
     - title: Terraform
@@ -10,8 +10,8 @@
     Create a best-practices Virtual Private Cloud (VPC). Includes multiple subnet tiers, network ACLs, security groups,
     NAT gateways, and VPC peering.
 
-- name: "Monitoring &amp; Alerting"
-  tags:
+- name: "Monitoring and Alerting"
+  clouds:
     - AWS
   icons:
     - title: Terraform
@@ -25,8 +25,8 @@
   description: |
     Configure monitoring, log aggregation, and alerting using CloudWatch, SNS, and S3. Includes Slack integration.
 
-- name: "Amazon ECS Docker Cluster"
-  tags:
+- name: "EC2 Container Service (ECS)"
+  clouds:
     - AWS
   icons:
     - title: Terraform
@@ -37,12 +37,11 @@
   full_url: "https://github.com/gruntwork-io/module-ecs"
   description: |
     Deploy a best-practices ECS Cluster and run Docker containers on it as ECS Services. Includes zero-downtime,
-    rolling deployments, auto scaling, and experimental support for CUDA on ECS.
+    rolling deployments, and auto scaling.
 
-- name: "EKS"
-  tags:
+- name: "EC2 Kubernetes Service (EKS)"
+  clouds:
     - AWS
-    - K8S
   icons:
     - title: Terraform
       image: icon-terraform.png
@@ -51,13 +50,15 @@
   private_beta: true
   full_url: "https://github.com/gruntwork-io/terraform-aws-eks"
   description: |
-    Deploy a best-practices EKS cluster. Supports zero-downtime, rolling deployment, IAM to RBAC mapping, auto scaling,
-    IAM roles for Pods, deploying Helm securely with automated TLS certificate management, and heterogeneous worker
-    groups.
+    Deploy a best-practices EKS cluster and run Docker containers on it as Kubernetes services. Supports zero-downtime,
+    rolling deployment, IAM to RBAC mapping, auto scaling, IAM roles for Pods, deploying Helm securely with automated
+    TLS certificate management, and heterogeneous worker groups.
 
 - name: "Kubernetes Helm Server"
-  tags:
-    - K8S
+  clouds:
+    - AWS
+    - GCP
+    - Azure
   icons:
     - title: Terraform
       image: icon-terraform.png
@@ -67,7 +68,7 @@
     least privilege RBAC roles, and automated TLS management.
 
 - name: "Auto Scaling Group"
-  tags:
+  clouds:
     - AWS
   icons:
     - title: Terraform
@@ -80,20 +81,31 @@
     Run stateless and stateful services on top of an Auto Scaling Group. Supports zero-downtime, rolling deployment,
     attaching EBS volumes and ENIs, load balancing, health checks, service discovery, and auto scaling.
 
+- name: "Load Balancer"
+  clouds:
+    - AWS
+  icons:
+    - title: Terraform
+      image: icon-terraform.png
+  full_url: "https://github.com/gruntwork-io/module-load-balancer"
+  description: |
+    Run the highly-available and scalable load balancers in AWS: Application Load Balancer (ALB), Network Load Balancer
+    (NLB), and the Classic Load Balancer (CLB).
+
 - name: "Lambda"
-  tags:
+  clouds:
     - AWS
   icons:
     - title: Terraform
       image: icon-terraform.png
   full_url: "https://github.com/gruntwork-io/package-lambda"
   description: |
-    Deploy and manage Lambda functions with Terraform. Automatically upload source code, configure environment variables,
-    create an IAM Role, associate with a VPC. enable versioning/aliasing. Also supports scheduled Lambdas and dead letter
-    targets.
+    Deploy and manage Lambda functions with Terraform and build serverless apps. Automatically upload source code,
+    configure environment variables, create an IAM Role, associate with a VPC. enable versioning/aliasing. Also
+    supports scheduled Lambdas and dead letter targets.
 
 - name: "API Gateway"
-  tags:
+  clouds:
     - AWS
   icons:
     - title: Terraform
@@ -102,10 +114,11 @@
       image: icon-go.png
   full_url: "https://github.com/gruntwork-io/package-sam"
   description: |
-    Define APIs in Swagger, run them locally using SAM, and deploy them to production using Terraform and API Gateway.
+    Build serverless applications by defining APIs in Swagger, running your app locally using SAM, and deploying the
+    app to production using Terraform and API Gateway.
 
 - name: "Security"
-  tags:
+  clouds:
     - AWS
     - GCP
     - Azure
@@ -123,7 +136,7 @@
     for CloudTrail, KMS, SSH key management via IAM, IAM Groups, fail2ban, NTP, and OS hardening.
 
 - name: "Continuous Delivery"
-  tags:
+  clouds:
     - AWS
     - GCP
     - Azure
@@ -135,12 +148,12 @@
   docs_url: "https://github.com/gruntwork-io/module-ci-public"
   full_url: "https://github.com/gruntwork-io/module-ci"
   description: |
-    A collection of scripts and Terraform code that implement common CI tasks including running Jenkins, configuring
-    CircleCi, building a Docker image, building a Packer image, updating Terraform code, pushing to git, sharing or
-    making AMIs public, and configuring the build environment.
+    A collection of scripts and Terraform code that implement common CI and build pipeline tasks including running
+    Jenkins, configuring CircleCi, building a Docker image, building a Packer image, updating Terraform code, pushing
+    to git, sharing or making AMIs public, and configuring the build environment.
 
 - name: "Relational Database"
-  tags:
+  clouds:
     - AWS
   icons:
     - title: Terraform
@@ -154,7 +167,7 @@
     sets up replicas, configures multi-zone automatic failover and automatic backup.
 
 - name: "Distributed Cache"
-  tags:
+  clouds:
     - AWS
   icons:
     - title: Terraform
@@ -166,7 +179,7 @@
     multi-zone automatic failover and automatic backup.
 
 - name: "Stateful Server"
-  tags:
+  clouds:
     - AWS
   icons:
     - title: Terraform
@@ -181,7 +194,7 @@
     backup jobs fail.
 
 - name: "Static Assets"
-  tags:
+  clouds:
     - AWS
   icons:
     - title: Terraform
@@ -192,7 +205,7 @@
     CDN. Includes bucket versioning, access logging, cache settings, Route 53 DNS entries, and TLS certs.
 
 - name: "MongoDB Cluster"
-  tags:
+  clouds:
     - AWS
   icons:
     - title: Terraform
@@ -205,7 +218,7 @@
     and OS optimizations.
 
 - name: "Kafka"
-  tags:
+  clouds:
     - AWS
   icons:
     - title: Terraform
@@ -219,7 +232,7 @@
     end-to-end encryption, OS optimizations, and security groups and IAM policy configuration.
 
 - name: "ZooKeeper"
-  tags:
+  clouds:
     - AWS
   icons:
     - title: Terraform
@@ -234,7 +247,7 @@
     groups and IAM policy configuration.
 
 - name: "ELK"
-  tags:
+  clouds:
     - AWS
   icons:
     - title: Terraform
@@ -249,7 +262,7 @@
     server to ship off logs and machine metrics to Elasticsearch.
 
 - name: "OpenVPN Server"
-  tags:
+  clouds:
     - AWS
   icons:
     - title: Terraform
@@ -265,7 +278,7 @@
     cross-platform apps to automatically request and revoke credentials.
 
 - name: "Messaging"
-  tags:
+  clouds:
     - AWS
   icons:
     - title: Terraform
@@ -275,3 +288,182 @@
     Create SQS queues with support for FIFO, message retention, message delays, content-based deduplication,
     dead-letter queues, and IP-based access controls. Create SNS topics with configurable IAM and delivery policies.
     Create Kinesis streams with configurable or auto-calculated shard and retention settings.
+
+- name: "Kubernetes Services"
+  clouds:
+    - AWS
+    - GCP
+    - Azure
+  full_url: "https://github.com/gruntwork-io/helm-kubernetes-services"
+  description: |
+    Package services into a best-practices deployment for Kubernetes. Supports zero-downtime, rolling deployment, RBAC
+    roles and groups, auto scaling, secrets management, and centralized logging. Includes support for web services,
+    daemon sets, and tasks / jobs.
+
+- name: "Consul"
+  clouds:
+    - AWS
+    - GCP
+    - Azure
+  icons:
+    - title: Terraform
+      image: icon-terraform.png
+    - title: Bash
+      image: icon-bash.png
+  aws_url: "https://github.com/hashicorp/terraform-aws-consul"
+  gcp_url: "https://github.com/hashicorp/terraform-google-consul"
+  azure_url: "https://github.com/hashicorp/terraform-azurerm-consul"
+  description: |
+    Deploy a best-practices HashiCorp Consul cluster. Includes support for automatic bootstrapping, configuring dnsmasq
+    to use Consul as a DNS server, access to the Consul UI, and automatic recovery of failed servers.
+
+- name: "Nomad"
+  clouds:
+    - AWS
+    - GCP
+    - Azure
+  icons:
+    - title: Terraform
+      image: icon-terraform.png
+    - title: Bash
+      image: icon-bash.png
+  aws_url: "https://github.com/hashicorp/terraform-aws-nomad"
+  gcp_url: "https://github.com/hashicorp/terraform-google-nomad"
+  azure_url: "https://github.com/hashicorp/terraform-azurerm-nomad"
+  description: |
+    Deploy a best-practices HashiCorp Nomad cluster. Includes support for automatic bootstrapping, automatic discovery
+    of Consul servers (for cluster coordination), automatic recovery of failed servers.
+
+- name: "Vault"
+  clouds:
+    - AWS
+    - GCP
+    - Azure
+  icons:
+    - title: Terraform
+      image: icon-terraform.png
+    - title: Bash
+      image: icon-bash.png
+  aws_url: "https://github.com/hashicorp/terraform-aws-vault"
+  gcp_url: "https://github.com/hashicorp/terraform-google-vault"
+  azure_url: "https://github.com/hashicorp/terraform-azurerm-vault"
+  description: |
+    Deploy a best-practices HashiCorp Vault cluster for secrets management. Includes support for automatic
+    bootstrapping, automatic discovery of Consul clusters (for HA cluster coordination), using S3 as a storage backend,
+    creating self-signed TLS certificates, updating the OS certificate store, configuring an ELB in front of Vault to
+    allow public access, and automatic recovery of failed servers.
+
+- name: "Couchbase"
+  clouds:
+    - AWS
+  icons:
+    - title: Terraform
+      image: icon-terraform.png
+    - title: Bash
+      image: icon-bash.png
+  aws_url: "https://github.com/gruntwork-io/terraform-aws-couchbase"
+  description: |
+    Deploy a best-practices Couchbase cluster. Includes support for automatic bootstrapping, running Sync Gateway,
+    Web Console UI, cross-region replication, and automatic recovery of failed servers.
+
+- name: "Influx"
+  clouds:
+    - AWS
+  icons:
+    - title: Terraform
+      image: icon-terraform.png
+    - title: Bash
+      image: icon-bash.png
+  aws_url: "https://github.com/gruntwork-io/terraform-aws-influx"
+  description: |
+    Deploy a best-practices InfluxDB Enterprise cluster. Includes support for automatic bootstrapping, automatic node discovery,
+    and automatic recovery of failed servers.
+
+- name: "Terratest"
+  clouds:
+    - AWS
+    - GCP
+    - Azure
+  icons:
+    - title: Terraform
+      image: icon-terraform.png
+    - title: Go
+      image: icon-go.png
+  public_url: "https://github.com/gruntwork-io/terratest"
+  description: |
+    Terratest is a Go library that makes it easier to write automated tests for your infrastructure code. It provides
+    a variety of helper functions and patterns for common infrastructure testing tasks, including testing Terraform
+    code, Packer templates, Docker images, working with AWS, executing commands over SSH, and much more.
+
+- name: "gruntkms"
+  clouds:
+    - AWS
+  icons:
+    - title: Go
+      image: icon-go.png
+  full_url: "https://github.com/gruntwork-io/gruntkms"
+  description: |
+    Make secrets management easy using this command-line tool that can encrypt and decrypt data using Amazon Key
+    Management Service (KMS).
+
+- name: "ssh-grunt"
+  clouds:
+    - AWS
+  icons:
+    - title: Terraform
+      image: icon-terraform.png
+    - title: Go
+      image: icon-go.png
+  docs_url: "https://github.com/gruntwork-io/module-security-public/tree/master/modules/ssh-grunt"
+  full_url: "https://github.com/gruntwork-io/module-security/tree/master/modules/ssh-grunt"
+  description: |
+    A tool that allows you to manage SSH access to EC2 Instances using either AWS IAM or your Identity Provider (e.g.,
+    ADFS, Google, Okta, etc). Developers can use their personal SSH keys to log in.
+
+- name: "aws-auth"
+  clouds:
+    - AWS
+  icons:
+    - title: Bash
+      image: icon-bash.png
+  docs_url: "https://github.com/gruntwork-io/module-security-public/tree/master/modules/aws-auth"
+  full_url: "https://github.com/gruntwork-io/module-security/tree/master/modules/aws-auth"
+  description: |
+    A small wrapper script for the AWS CLI that makes it much easier to authenticate to AWS with Multi-factor
+    authentication (MFA), or when you want to assume an IAM Role in another AWS account.
+
+- name: "bash-commons"
+  clouds:
+    - AWS
+    - GCP
+    - Azure
+  icons:
+    - title: Bash
+      image: icon-bash.png
+  public_url: "https://github.com/gruntwork-io/bash-commons"
+  description: |
+    A collection of reusable Bash functions for handling common tasks such as logging, assertions, string manipulation,
+    and more.
+
+- name: "cloud-nuke"
+  clouds:
+    - AWS
+  icons:
+    - title: Go
+      image: icon-go.png
+  public_url: "https://github.com/gruntwork-io/cloud-nuke"
+  description: |
+    A tool for cleaning up your cloud accounts by nuking (deleting) all resources within it.
+
+- name: "gruntwork-installer"
+  clouds:
+    - AWS
+    - GCP
+    - Azure
+  icons:
+    - title: Bash
+      image: icon-bash.png
+  public_url: "https://github.com/gruntwork-io/gruntwork-installer"
+  description: |
+    A simple, lightweight package manager for installing Gruntwork modules.
+
