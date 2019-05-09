@@ -1,50 +1,60 @@
-subscription_only:
-  tier1:
-    title: Up to 10 users
-    users_max: 10
-    price: 795
-    checkout:
-      - price: 795
-        url: /checkout/?plan=1
-    details: |
-      monthly flat fee
+#
+# New pricing
+# See checkout.yml for defaults.
+#
+subscriptions:
+  aws:
+    name: Gruntwork for AWS
+    users: 20
+    checkout_url: /checkout/?subscription-type=aws
+    price:
+      label: "795"
+      value: 795
+      monthly: true
+    pro_support_price:
+      label: "1<span class='small'>,</span>950"
+      value: 1950
+      monthly: true
+  gcp:
+    name: Gruntwork for GCP
+    users: 20
+    checkout_url: /checkout/?subscription-type=gcp
+    price:
+      label: "500"
+      value: 500
+      monthly: true
+    pro_support_price:
+      label: "1<span class='small'>,</span>950"
+      value: 1950
+      monthly: true
+  enterprise:
+    name: Gruntwork for Enterprise
+    users: 0
+    checkout_url: /checkout/?subscription-type=enterprise
+    price:
+      label: "Contact Us"
+      value: 0
+      monthly: true
 
-  tier2:
-    title: Users 11 - 50
-    users_max: 50
-    price: 79
-    checkout:
-        - price: 79
-          url: /checkout/?plan=2
-    details: |
-      per <span class="help-text light" title="A user is any human or machine that makes use of any of Gruntwork's services (Infrastructure as Code Library, DevOps Training Library, Dedicated Support)" data-toggle="tooltip">user</span> per month
-
-dedicated_support:
-  tier1:
-    title: Up to 10 users
-    users_max: 10
-    price: 2745
-    checkout:
-      - price: "2745"
-        url: /checkout/?plan=1&addon=dedicated-support
-    details: |
-      monthly flat fee
-
-  tier2:
-    title: Users 11 - 50
-    users_max: 50
-    price: 79
-    checkout:
-      - price: 79
-        url: /checkout/?plan=2&addon=dedicated-support
-    details: |
-      per <span class="help-text light" title="A user is any human or machine that makes use of any of Gruntwork's services (Infrastructure as Code Library, DevOps Training Library, Dedicated Support)" data-toggle="tooltip">user</span> per month
-
-tier3:
-  title: Reference Architecture
-  price: "4950"
-  checkout:
-      - price: "4950"
-        url: /checkout/?addon=setup-deployment
-  details: |
-    one-time, flat fee
+addons:
+  reference_architecture:
+    name: Reference Architecture
+    details: one-time, flat fee
+    price:
+      label: "4<span class='small'>,</span>950"
+      value: 4950
+      monthly: false
+  houston_auth:
+    name: Houston Auth
+    details: per user / per month
+    price:
+      label: "9"
+      value: 9
+      monthly: true
+  houston_pro:
+    name: Houston Pro
+    details: per user / per month
+    price:
+      label: "0"
+      value: 0
+      monthly: true

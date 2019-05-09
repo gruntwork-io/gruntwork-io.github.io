@@ -3,14 +3,6 @@
     <div class="row checkout-panel">
       <div class="col-md-8 panel panel-default panel-light checkout-panel-left">
         <div class="panel-body">
-          <div class="row checkout-users">
-            <div class="col-sm-10 col-sm-offset-1">
-              <p class="checkout-users-text h1 text-center">We have <span class="text-cyan" id="slider-users-count"></span> <span class="help-text light" title="A User is any human or machine user that accesses our library repos or submits a support request." data-toggle="tooltip">users</span></p>
-              <div class="range">
-                <input type="range" min="10" max="51" value="10" class="range-input" id="slider-users">
-              </div>
-            </div>
-          </div>
           <div class="row row-divider checkout-addons">
             {{!--
             <div class="col-sm-6">
@@ -31,6 +23,75 @@
               </ul>
             </div>
             --}}
+<style type="text/css">
+  /* HIDE RADIO */
+  input[name=subscription_type] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  /* IMAGE STYLES */
+  input[name=subscription_type] + img {
+    cursor: pointer;
+  }
+
+  /* CHECKED STYLES
+  input[name=subscription_type]:checked + img {
+    outline: 2px solid #f00;
+    border-width: 2px;
+    background-color: #ff0000;
+  } */
+
+  .subscription-type {
+    margin-bottom: 20px;
+  }
+
+  .subscription-type-option {
+    font-size: 90%;
+    padding: 5px;
+  }
+
+  .subscription-type-option &:focus,
+  .subscription-type-option &:hover {
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: all 200ms ease-in-out 0s;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 9px rgba(0,0,0,.10), 0 2px 5px rgba(0,0,0,.07);
+  }
+
+  .subscription-type-checked {
+    border: 2px solid rgba(255,255,255,0.1);
+    background-color: #242e3b;
+  }
+
+</style>
+            <div class="col-sm-12 subscription-type">
+              <div class="row">
+                <div class="col-md-4">
+                  <label id="subscription-type-aws" class="subscription-type-option text-center subscription-type-checked">
+                    <input type="radio" name="subscription_type" value="aws" checked>
+                    <img src="/assets/img/aws-logo@2x.png" alt="AWS Logo" width="108" height="100">
+                    {{ site.data.pricing.subscriptions.aws.name }}
+                  </label>
+                </div>
+                <div class="col-md-4">
+                  <label id="subscription-type-gcp" class="subscription-type-option text-center">
+                    <input type="radio" name="subscription_type" value="gcp">
+                    <img src="/assets/img/gcp-logo@2x.png" alt="GCP Logo" width="120" height="100">
+                    {{ site.data.pricing.subscriptions.gcp.name }}
+                  </label>
+                </div>
+                <div class="col-md-4">
+                  <label id="subscription-type-enterprise" class="subscription-type-option text-center">
+                    <input type="radio" name="subscription_type" value="enterprise">
+                    <img src="/assets/img/grunty-enterprise@2x.png" alt="Grunty Enterprise Mascot" width="171" height="100">
+                    {{ site.data.pricing.subscriptions.enterprise.name }}
+                  </label>
+                </div>
+              </div>
+            </div>
             <div class="col-sm-7 col-sm-offset-2">
               <div class="visible-xs-block text-left" style="margin-bottom: 16px">
                 <h4 class="h5 text-bold margin-top-none margin-bottom-none">Legal:</h4>
@@ -104,6 +165,8 @@
                     <li><span class="help-text light" title="A collection of training video courses that teach you DevOps." data-toggle="tooltip">DevOps Training Library</span></li>
                     <li><span class="help-text light" title="Mission Control for your infrastructure. Currently in private beta." data-toggle="tooltip">Gruntwork Houston</span></li>
                     <li><span class="help-text light" title="Chat with fellow customers and occasionally Gruntwork engineers via Slack." data-toggle="tooltip">Community Support</span></li>
+                    <li id="subscription-20-users"><span class="help-text light" title="Your subscription supports up to 20 users." data-toggle="tooltip">Up to 20 Users</span></li>
+                    <li id="subscription-unlimited-users" style="display:none"><span class="help-text light" title="Your subscription supports unlimited users." data-toggle="tooltip">Unlimited Users</span></li>
                     <li class="check-list-disabled" id="subscription-addon-1"><span class="help-text light" title="Our paid support program where you can contact us via email, Slack, or phone/video. 2 Business Day SLA." data-toggle="tooltip">Dedicated Support</span></li>
                     <li class="check-list-disabled" id="subscription-addon-2"><span class="help-text light" title="An opinionated, best-practices, end-to-end tech stack that we customize to your needs, deploy into your AWS accounts, and give you 100% of the code—all in about one day." data-toggle="tooltip">Reference Architecture</span></li>
                   </ul>

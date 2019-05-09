@@ -9,14 +9,23 @@ $(function () {
 
   // The checkout state
   var checkoutOptions = {
+    subscription_type: 'aws',
     dedicated_support: false,
     setup_deployment: false,
-    users: 10,
-    enterprise: false
+    users: 20
   };
+
+  // Auto toggles the subscription type based on the URI
+  switch ($.query.get('subscription-type')) {
+    case 'aws': _updateCheckout({ subscription_type: 'aws' }); break;
+    case 'gcp': _updateCheckout({ subscription_type: 'gcp' }); break;
+    case 'enterprise': _updateCheckout({ subscription_type: 'enterprise' }); break;
+    default: // do nothing
+  }
 
   // Auto toggles addons based on the URI
   switch ($.query.get('addon')) {
+    case 'subscription-type': _updateCheckout({ subscription_type: true }); break;
     case 'setup-deployment': _updateCheckout({ setup_deployment: true }); break;
     case 'dedicated-support': _updateCheckout({ dedicated_support: true }); break;
     default: // do nothing
@@ -42,9 +51,11 @@ $(function () {
       return target;
     };
   }
-  // Listen to the switchers
-  $('#slider-users').on('input change mousemove', function (event) {
-    _updateCheckout({ users: parseInt(event.target.value) });
+  // Listen to the radios
+  $('[name="subscription_type"]').on('change', function () {
+    var tmp = {};
+    tmp[this.name] = $(this).val();
+    _updateCheckout(tmp);
   });
   $('[data-switch]').on('change', function () {
     var tmp = {};
@@ -55,27 +66,41 @@ $(function () {
   // Updates the UI of the checkout
   function _updateCheckout(newOptions) {
     checkoutOptions = Object.assign({}, checkoutOptions, newOptions);
-    checkoutOptions.enterprise = (checkoutOptions.users > 50);
 
     $('.grunty-sprite').attr('data-sprite', 0);
+    $('#subscription_type').val(checkoutOptions.subscription_type);
     $('[data-switch]'+'[name="dedicated_support"]').attr('checked', checkoutOptions.dedicated_support); // updates addon switch
     $('[data-switch]'+'[name="setup_deployment"]').attr('checked', checkoutOptions.setup_deployment); // updates addon switch
 
-    // updates user count
-    if (checkoutOptions.users > 50) {
-      $('#slider-users-count').text('50+');
+    // update the subscription type radios
+    $('.subscription-type-option').removeClass('subscription-type-checked');
+    switch (checkoutOptions.subscription_type) {
+      case 'aws': $('#subscription-type-aws').addClass('subscription-type-checked'); break;
+      case 'gcp': $('#subscription-type-gcp').addClass('subscription-type-checked'); break;
+      case 'enterprise': $('#subscription-type-enterprise').addClass('subscription-type-checked'); break;
+      default: // do nothing
+    }
+
+    // updates subscription summary box
+    if (checkoutOptions.subscription_type == 'enterprise') {
       $checkout.hide();
       $('#deposit-due').hide();
       $('#checkout-contact-btn').show();
-    } else {
-      if (checkoutOptions.users <= 10 && checkoutOptions.dedicated_support) {
-        $('#slider-users-count').text('1-10');
-      } else if (checkoutOptions.users <= 10 && ! checkoutOptions.dedicated_support) {
-        $('#slider-users-count').text('1-10');
-      } else {
-        $('#slider-users-count').text(checkoutOptions.users);
-      }
 
+      $('#subscription-20-users').hide();
+      $('#subscription-unlimited-users').show();
+
+      $('[data-checkout-total="default"]').hide();
+      $('[data-checkout-total="enterprise"]').show();
+    } else {
+      // aws or gcp
+      $('#subscription-unlimited-users').hide();
+      $('#subscription-20-users').show();
+
+      $('[data-checkout-total="default"]').show();
+      $('[data-checkout-total="enterprise"]').hide();
+
+      // show the checkout
       $checkout.show();
       $('#deposit-due').show();
       $('#checkout-contact-btn').hide();
@@ -105,40 +130,18 @@ $(function () {
       $('.grunty-sprite').attr('data-sprite', 3);
     }
 
-    if (checkoutOptions.enterprise) {
-      $('[data-checkout-total="default"]').hide();
-      $('[data-checkout-total="enterprise"]').show();
-    } else {
-      $('[data-checkout-total="default"]').show();
-      $('[data-checkout-total="enterprise"]').hide();
-    }
-
     _calculatePrice();
   }
 
   function _updateAttrs() {
-    if (checkoutOptions.users > 10) {
-      $checkout.attr({
-        'data-cb-addons_id_2': 'chargebee-addon-user',
-        'data-cb-addons_quantity_2': checkoutOptions.users - 10
-      });
-    } else {
-      $checkout.removeAttr('data-cb-addons_id_2');
-      $checkout.removeAttr('data-cb-addons_quantity_2');
-    }
+    // dont allow variable users
+    $checkout.removeAttr('data-cb-addons_id_2');
+    $checkout.removeAttr('data-cb-addons_quantity_2');
 
     if (checkoutOptions.dedicated_support) {
-      if (checkoutOptions.users > 10) {
-        $checkout.attr({
-          'data-cb-addons_id_0': 'chargebee-support',
-          'data-cb-addons_id_1': 'chargebee-addon-support',
-          'data-cb-addons_quantity_1': checkoutOptions.users - 10
-        });
-      } else {
-        $checkout.attr({
-          'data-cb-addons_id_0': 'chargebee-support'
-        });
-      }
+      $checkout.attr({
+        'data-cb-addons_id_0': 'chargebee-support'
+      });
     } else {
       $checkout.removeAttr('data-cb-addons_id_0');
       $checkout.removeAttr('data-cb-addons_id_1');
@@ -155,29 +158,25 @@ $(function () {
   }
 
   function _calculatePrice() {
-    if (checkoutOptions.enterprise) return; // Don't calculate on enterprise
-
-    var additionalUsers = 0;
-    if (checkoutOptions.dedicated_support && checkoutOptions.users > 10) {
-      additionalUsers = checkoutOptions.users - 10;
-    } else if (! checkoutOptions.dedicated_support && checkoutOptions.users > 10) {
-      additionalUsers = checkoutOptions.users - 10;
-    } else {
-      additionalUsers = 0;
-    }
+    if (checkoutOptions.subscription_type == 'enterprise') return; // Don't calculate on enterprise
 
     var total, subtotal, subscriptionTotal;
 
-    if (checkoutOptions.dedicated_support) {
-      if (additionalUsers > 0) total = subtotal = pricing.dedicated_support.tier1.price + (additionalUsers * pricing.dedicated_support.tier2.price);
-      else total = subtotal = pricing.dedicated_support.tier1.price; // 10 or less users
-
-    } else {
-      // Without dedicated support
-      if (additionalUsers > 0) total = subtotal = pricing.subscription_only.tier1.price + (additionalUsers * pricing.subscription_only.tier2.price);
-      else total = subtotal = pricing.subscription_only.tier1.price; // 10 or less users
+    switch (checkoutOptions.subscription_type) {
+      case 'aws': total = subtotal = pricing.subscriptions.aws.price.value; break;
+      case 'gcp': total = subtotal = pricing.subscriptions.gcp.price.value; break;
+      default: // do nothing
     }
 
+    if (checkoutOptions.dedicated_support) {
+      switch (checkoutOptions.subscription_type) {
+        case 'aws': total += subtotal = pricing.subscriptions.aws.pro_support_price.value; break;
+        case 'gcp': total += subtotal = pricing.subscriptions.gcp.pro_support_price.value; break;
+        default: // do nothing
+      }
+    }
+
+    // Only AWS supports the Ref Arch
     if (checkoutOptions.setup_deployment) {
       subscriptionTotal = subtotal;
       //subtotal += 4950;
