@@ -1,94 +1,10 @@
 <h2>What's in the Library?</h2>
 <p>
-  The Infrastructure as Code Library consists of 45+ GitHub repos, some open source, some private, each of which
-  contains reusable infrastructure code written in Terraform, Go, Bash, and Python.
+  The Infrastructure as Code Library consists of 50+ GitHub repos, some open source, some private, each of which
+  contains reusable, battle-tested infrastructure code for AWS, GCP, and Azure, written in Terraform, Go, Bash, and
+  Python.
 </p>
-<form style="margin: 30px 0 10px">
-  <div class="form-group row">
-    <label for="js-search-library" class="col-sm-1 col-form-label" style="padding-top: 8px">Search:</label>
-    <div class="col-sm-11">
-      <input type="text" id="js-search-library" class="form-control" placeholder="E.g., Try searching for Kubernetes, Vault, Jenkins, Kafka, Lambda, AWS, GCP, etc..."/>
-      <script>
-        window.libraryEntries = [
-          {% for package in site.data.library %}
-            {
-              id: "{{ package.name | replace: " ", "_" | replace: ")", "_" |  replace: "(", "_" }}",
-              text: "{{ package | remove: '"' | downcase }}"
-            },
-          {% endfor %}
-        ];
-      </script>
-    </div>
-  </div>
-</form>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Description</th>
-      <th>Clouds</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for package in site.data.library %}
-      <tr id="{{ package.name | replace: " ", "_" | replace: ")", "_" |  replace: "(", "_" }}" class="table-clickable-row" data-toggle="modal" data-target="#modal-{{ package.name | replace: " ", "_" |  replace: "(", "_" |  replace: ")", "_" }}">
-        <th style="width: 30%">{{ package.name }}</th>
-        <td style="width: 55%">{{ package.description | truncate: 60 }}</td>
-        <td style="width: 15%">
-          <small>{% for cloud in package.clouds %}{% if forloop.index0 > 0 %}, {% endif %}{{ cloud }}{% endfor %}</small>
-        </td>
-      </tr>
-    {% endfor %}
-  </tbody>
-</table>
-<div id="no-matches" class="text-center panel panel-default panel-light" style="display: none;">
-  <div class="panel-body text-center" style="padding: 40px">
-    <h3 class="no-anchor text-center">No matches for your search query!</h3>
-    <p style="text-align: left;">
-      Need a module not already in the Infrastructure as Code Library? We can build it for you! Check out our
-      <a href="custom-module-development">Custom Module Development</a> service and <a href="/contact">Contact Us</a>
-      to let us know your requirements.
-    </p>
-  </div>
-</div>
-{% for package in site.data.library %}
-  <div class="modal fade" id="modal-{{ package.name | replace: " ", "_" | replace: ")", "_" |  replace: "(", "_" }}" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header text-center">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="fa fa-fw fa-close"></i></button>
-        </div>
-        <div class="modal-body">
-          <h4 class="h2 modal-title margin-top-none">{{ package.name }}</h4>
-          <h6>Description</h6>
-          <p>
-            {{ package.description }}
-          </p>
-          <h6>Clouds</h6>
-          <ul>
-            {% for cloud in package.clouds %}
-              <li>{{ cloud }}</li>
-            {% endfor %}
-          </ul>
-          <h6>Technologies</h6>
-          <ul>
-            {% for icon in package.icons %}
-              <li>
-                <img src="/assets/img/logos-technologies/{{ icon.image }}" height="24px" alt="{{ icon.title }}" /> {{ icon.title }}
-              </li>
-            {% endfor %}
-          </ul>
-          <h6>Links</h6>
-          <ul>
-          {% if package.docs_url %}<li><a href="{{ package.docs_url }}">Public Docs</a></li>{% endif %}
-          {% if package.full_url %}<li><a href="{{ package.docs_url }}">Full Repo</a> (<strong>ONLY accessible to subscribers!</strong> Everyone else will get a 404.)</li>{% endif %}
-          {% if package.aws_url %}<li><a href="{{ package.aws_url }}">AWS Version</a></li>{% endif %}
-          {% if package.gcp_url %}<li><a href="{{ package.gcp_url }}">GCP Version</a></li>{% endif %}
-          {% if package.azure_url %}<li><a href="{{ package.azure_url }}">Azure Version</a></li>{% endif %}
-          {% if package.public_url %}<li><a href="{{ package.public_url }}">Full Repo</a></li>{% endif %}
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-{% endfor %}
+{% include_relative _search.html %}
+{% include_relative _library-table.html %}
+{% include_relative _no-results.html %}
+{% include_relative _modals.html %}

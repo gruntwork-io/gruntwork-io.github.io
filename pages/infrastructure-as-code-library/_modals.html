@@ -1,0 +1,41 @@
+{% for package in site.data.library %}
+  <div class="modal fade" id="modal-{{ package.name | replace: " ", "_" | replace: ")", "_" |  replace: "(", "_" }}" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header text-center">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="fa fa-fw fa-close"></i></button>
+        </div>
+        <div class="modal-body">
+          <h4 class="h2 modal-title margin-top-none">{{ package.name }}</h4>
+          <h6>Description</h6>
+          <p>
+            {{ package.description }}
+          </p>
+          <h6>Clouds</h6>
+          <ul>
+            {% for cloud in package.clouds %}
+              <li>{{ cloud }}</li>
+            {% endfor %}
+          </ul>
+          <h6>Technologies</h6>
+          <ul>
+            {% for icon in package.icons %}
+              <li>
+                <img src="/assets/img/logos-technologies/{{ icon.image }}" height="24px" alt="{{ icon.title }}" /> {{ icon.title }}
+              </li>
+            {% endfor %}
+          </ul>
+          <h6>Links</h6>
+          <ul>
+          {% if package.docs_url %}<li><a href="{{ package.docs_url }}">Public Docs</a></li>{% endif %}
+          {% if package.full_url %}<li><a href="{{ package.docs_url }}">Full Repo</a> (<strong>ONLY accessible to subscribers!</strong> Everyone else will get a 404.)</li>{% endif %}
+          {% if package.aws_url %}<li><a href="{{ package.aws_url }}">AWS Version</a></li>{% endif %}
+          {% if package.gcp_url %}<li><a href="{{ package.gcp_url }}">GCP Version</a></li>{% endif %}
+          {% if package.azure_url %}<li><a href="{{ package.azure_url }}">Azure Version</a></li>{% endif %}
+          {% if package.public_url %}<li><a href="{{ package.public_url }}">Full Repo</a></li>{% endif %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endfor %}

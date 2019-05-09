@@ -1,0 +1,20 @@
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Clouds</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for package in site.data.library %}
+      <tr id="{{ package.name | replace: " ", "_" | replace: ")", "_" |  replace: "(", "_" }}" class="table-clickable-row" data-toggle="modal" data-target="#modal-{{ package.name | replace: " ", "_" |  replace: "(", "_" |  replace: ")", "_" }}">
+        <th style="width: 30%">{{ package.name }}</th>
+        <td style="width: 55%">{{ package.description | truncate: 60 }}</td>
+        <td style="width: 15%">
+          <small>{% for cloud in package.clouds %}{% if forloop.index0 > 0 %}, {% endif %}{{ cloud }}{% endfor %}</small>
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
