@@ -1,0 +1,49 @@
+{% for package in site.data.library %}
+  <div class="modal fade" id="modal-{{ package.name | replace: " ", "_" | replace: ")", "_" |  replace: "(", "_" }}" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header text-center" style="margin-bottom: 0">
+          <h4 class="h2 modal-title margin-top-none" style="float: left">{{ package.name }}</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="fa fa-fw fa-close"></i></button>
+        </div>
+        <div class="modal-body" style="padding-top: 0">
+          <h5 style="margin-top: 0">Description</h5>
+          <p>
+            {{ package.description }}
+          </p>
+          <h5>Clouds</h5>
+          <ul>
+            {% for cloud in package.clouds %}
+              <li>{{ cloud }}</li>
+            {% endfor %}
+          </ul>
+          <h5>Technologies</h5>
+          <ul>
+            {% for icon in package.icons %}
+              <li>
+                <img src="/assets/img/logos-technologies/{{ icon.image }}" height="24px" alt="{{ icon.title }}" /> {{ icon.title }}
+              </li>
+            {% endfor %}
+          </ul>
+          <h5>Type</h5>
+          <p>
+            {% if package.type == "Open Source" %}
+              This repo is open source!
+            {% else %}
+              This repo is only accessible to <a href="/pricing">Gruntwork Subscribers</a>.
+            {% endif %}
+          </p>
+          <h5>Links</h5>
+          <ul>
+          {% if package.docs_url %}<li><a href="{{ package.docs_url }}" target="_blank" rel="noopener">Public Docs</a></li>{% endif %}
+          {% if package.subscriber_url %}<li><a href="{{ package.subscriber_url }}" target="_blank" rel="noopener">Full Repo</a> (<strong>ONLY accessible to Gruntwork subscribers!</strong> Everyone else will get a 404.)</li>{% endif %}
+          {% if package.aws_url %}<li><a href="{{ package.aws_url }}" target="_blank" rel="noopener">AWS Version</a></li>{% endif %}
+          {% if package.gcp_url %}<li><a href="{{ package.gcp_url }}" target="_blank" rel="noopener">GCP Version</a></li>{% endif %}
+          {% if package.azure_url %}<li><a href="{{ package.azure_url }}" target="_blank" rel="noopener">Azure Version</a></li>{% endif %}
+          {% if package.public_url %}<li><a href="{{ package.public_url }}" target="_blank" rel="noopener">Full Repo</a></li>{% endif %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endfor %}
