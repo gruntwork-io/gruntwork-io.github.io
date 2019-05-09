@@ -4,34 +4,25 @@
     <div class="row">
       <div class="col-md-6">
         <h4>What will my Gruntwork Subscription cost?</h4>
-        {% include_relative _calculator.html %}
         <p style="margin-top: 20px">
-          Some perspective: the Gruntwork Subscription gets you access to a library of over 300,000 lines of
-          <a href="/infrastructure-as-code-library/" target="_blank">infrastructure code</a> that has been proven
-          in production at hundreds of companies over the last 3+ years,
-          <a href="https://blog.gruntwork.io/tagged/gruntwork-newsletter" target="_blank">ongoing maintenance and
-          updates</a> for that code, a library of <a href="/training/" target="_blank">DevOps training videos</a>, and
-          support from a team of DevOps experts, all starting at just ${{site.data.pricing.tier1.price[0]}} per month.
-        </p>
-        <p>
-          The math is pretty simple: if you spend even one day a month reimplementing any of this stuff, you're
-          already wasting more money than that, and all you're doing is reinventing the wheel.
+          Head to the <a href="/checkout/">get started</a> page to calculate your monthly price for both Gruntwork and
+          Houston.
         </p>
         {% comment %} Pull FAQs from Licensing category and offset by 1 {% endcomment %}
         {% assign category = site.data.faq[1] %}
         {% for item in category.items offset:1 %}
-          <h4 id="{{ item.question | slugify }}">{{ item.question }}</h4>
-          {{ item.answer }}
+        <h4 id="{{ item.question | slugify }}">{{ item.question }}</h4>
+        {{ item.answer }}
         {% endfor %}
-          <h4>Still have questions?</h4>
-          <p>Check out our <a href="/faq/">Full FAQ's</a>.</p>
+        <h4>Still have questions?</h4>
+        <p>Check out our <a href="/faq/">Full FAQ's</a>.</p>
       </div>
       <div class="col-md-6">
         {% comment %} Pull all FAQs from Pricing category {% endcomment %}
         {% assign category = site.data.faq[2] %}
         {% for item in category.items %}
-          <h4 id="{{ item.question | slugify }}">{{ item.question }}</h4>
-          {{ item.answer }}
+        <h4 id="{{ item.question | slugify }}">{{ item.question }}</h4>
+        {{ item.answer }}
         {% endfor %}
 
       </div>
