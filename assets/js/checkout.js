@@ -10,7 +10,7 @@ $(function () {
   // The checkout state
   var checkoutOptions = {
     subscription_type: 'aws',
-    dedicated_support: false,
+    pro_support: false,
     setup_deployment: false,
     users: 20
   };
@@ -27,7 +27,7 @@ $(function () {
   switch ($.query.get('addon')) {
     case 'subscription-type': _updateCheckout({ subscription_type: true }); break;
     case 'setup-deployment': _updateCheckout({ setup_deployment: true }); break;
-    case 'dedicated-support': _updateCheckout({ dedicated_support: true }); break;
+    case 'pro-support': _updateCheckout({ pro_support: true }); break;
     default: // do nothing
   }
   if (typeof Object.assign != 'function') {
@@ -68,11 +68,11 @@ $(function () {
   function _updateCheckout(newOptions) {
     checkoutOptions = Object.assign({}, checkoutOptions, newOptions);
 
-    var enable_dedicated_support = checkoutOptions.dedicated_support || checkoutOptions.subscription_type === 'enterprise';
+    var enable_pro_support = checkoutOptions.pro_support || checkoutOptions.subscription_type === 'enterprise';
 
     $('.grunty-sprite').attr('data-sprite', 0);
     $('#subscription_type').val(checkoutOptions.subscription_type);
-    $('[data-switch]'+'[name="dedicated_support"]').prop('checked', enable_dedicated_support); // updates addon switch
+    $('[data-switch]'+'[name="pro_support"]').prop('checked', enable_pro_support); // updates addon switch
     $('[data-switch]'+'[name="setup_deployment"]').prop('checked', checkoutOptions.setup_deployment); // updates addon switch
 
     // update the subscription type radios
@@ -109,7 +109,7 @@ $(function () {
       $('#checkout-contact-btn').hide();
     }
 
-    if (enable_dedicated_support) {
+    if (enable_pro_support) {
       $('.grunty-sprite').attr('data-sprite', 2);
       $('#subscription-addon-1').removeClass('check-list-disabled');
     } else {
@@ -129,7 +129,7 @@ $(function () {
       $('#subscription-addon-2').addClass('check-list-disabled');
     }
 
-    if (checkoutOptions.dedicated_support && checkoutOptions.setup_deployment) {
+    if (checkoutOptions.pro_support && checkoutOptions.setup_deployment) {
       $('.grunty-sprite').attr('data-sprite', 3);
     }
 
@@ -141,7 +141,7 @@ $(function () {
     $checkout.removeAttr('data-cb-addons_id_2');
     $checkout.removeAttr('data-cb-addons_quantity_2');
 
-    if (checkoutOptions.dedicated_support) {
+    if (checkoutOptions.pro_support) {
       $checkout.attr({
         'data-cb-addons_id_0': 'chargebee-support'
       });
@@ -171,7 +171,7 @@ $(function () {
       default: // do nothing
     }
 
-    if (checkoutOptions.dedicated_support) {
+    if (checkoutOptions.pro_support) {
       switch (checkoutOptions.subscription_type) {
         case 'aws': total += subtotal = pricing.subscriptions.aws.pro_support_price.value; break;
         case 'gcp': total += subtotal = pricing.subscriptions.gcp.pro_support_price.value; break;
@@ -188,7 +188,7 @@ $(function () {
     $('#subscription-price').text(total.toLocaleString());
     $('#subscription-subtotal').text(subtotal.toLocaleString());
 
-    _deferCheckout(checkoutOptions.subscription_type, checkoutOptions.dedicated_support, checkoutOptions.setup_deployment);
+    _deferCheckout(checkoutOptions.subscription_type, checkoutOptions.pro_support, checkoutOptions.setup_deployment);
   }
 
   // Prevents spamming Chargebee registerAgain on every change
@@ -213,7 +213,7 @@ $(function () {
       cbInstance.setCheckoutCallbacks(function(cart, product) {
         var subscriptionDetails = ("Subscription type: " + type);
         if (support){
-          subscriptionDetails += " • Dedicated Support";
+          subscriptionDetails += " • Professional Support";
         }
         if (setup){
           subscriptionDetails += " • Reference Architecture";
