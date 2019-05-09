@@ -52,9 +52,10 @@ $(function () {
     };
   }
   // Listen to the radios
-  $('[name="subscription_type"]').on('change', function () {
+  $('.subscription-type-option').on('click', function (event) {
+    event.preventDefault();
     var tmp = {};
-    tmp[this.name] = $(this).val();
+    tmp["subscription_type"] = $(this).data("subscription-type");
     _updateCheckout(tmp);
   });
   $('[data-switch]').on('change', function () {
@@ -67,10 +68,12 @@ $(function () {
   function _updateCheckout(newOptions) {
     checkoutOptions = Object.assign({}, checkoutOptions, newOptions);
 
+    var enable_dedicated_support = checkoutOptions.dedicated_support || checkoutOptions.subscription_type === 'enterprise';
+
     $('.grunty-sprite').attr('data-sprite', 0);
     $('#subscription_type').val(checkoutOptions.subscription_type);
-    $('[data-switch]'+'[name="dedicated_support"]').attr('checked', checkoutOptions.dedicated_support); // updates addon switch
-    $('[data-switch]'+'[name="setup_deployment"]').attr('checked', checkoutOptions.setup_deployment); // updates addon switch
+    $('[data-switch]'+'[name="dedicated_support"]').prop('checked', enable_dedicated_support); // updates addon switch
+    $('[data-switch]'+'[name="setup_deployment"]').prop('checked', checkoutOptions.setup_deployment); // updates addon switch
 
     // update the subscription type radios
     $('.subscription-type-option').removeClass('subscription-type-checked');
@@ -82,7 +85,7 @@ $(function () {
     }
 
     // updates subscription summary box
-    if (checkoutOptions.subscription_type == 'enterprise') {
+    if (checkoutOptions.subscription_type === 'enterprise') {
       $checkout.hide();
       $('#deposit-due').hide();
       $('#checkout-contact-btn').show();
@@ -106,7 +109,7 @@ $(function () {
       $('#checkout-contact-btn').hide();
     }
 
-    if (checkoutOptions.dedicated_support) {
+    if (enable_dedicated_support) {
       $('.grunty-sprite').attr('data-sprite', 2);
       $('#subscription-addon-1').removeClass('check-list-disabled');
     } else {
@@ -185,11 +188,11 @@ $(function () {
     $('#subscription-price').text(total.toLocaleString());
     $('#subscription-subtotal').text(subtotal.toLocaleString());
 
-    _deferCheckout(checkoutOptions.users, checkoutOptions.dedicated_support, checkoutOptions.setup_deployment);
+    _deferCheckout(checkoutOptions.subscription_type, checkoutOptions.dedicated_support, checkoutOptions.setup_deployment);
   }
 
   // Prevents spamming Chargebee registerAgain on every change
-  function _deferCheckout(users, support, setup) {
+  function _deferCheckout(type, support, setup) {
     var cbInstance;
     if (typeof timeout !== 'undefined') clearTimeout(timeout);
     $checkout.attr('disabled', true).text('Please wait...');
@@ -208,7 +211,7 @@ $(function () {
         }
       }
       cbInstance.setCheckoutCallbacks(function(cart, product) {
-        var subscriptionDetails = ("Gruntwork Subscribers: " + users);
+        var subscriptionDetails = ("Subscription type: " + type);
         if (support){
           subscriptionDetails += " • Dedicated Support";
         }

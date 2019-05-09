@@ -3,7 +3,7 @@
     <div class="row checkout-panel">
       <div class="col-md-8 panel panel-default panel-light checkout-panel-left">
         <div class="panel-body">
-          <div class="row row-divider checkout-addons">
+          <div class="row checkout-addons">
             {{!--
             <div class="col-sm-6">
               <h4 class="h5 text-center text-bold margin-top-none">Every Subscription Includes:</h4>
@@ -45,20 +45,19 @@
   } */
 
   .subscription-type {
-    margin-bottom: 20px;
+    margin-bottom: 30px;
   }
 
   .subscription-type-option {
+    display: block;
     font-size: 90%;
-    padding: 5px;
+    padding: 10px;
+    cursor: pointer;
+    border: 2px solid transparent;
   }
 
-  .subscription-type-option &:focus,
-  .subscription-type-option &:hover {
-    border: 1px solid rgba(255,255,255,0.1);
-    transition: all 200ms ease-in-out 0s;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 9px rgba(0,0,0,.10), 0 2px 5px rgba(0,0,0,.07);
+  .subscription-type-option:hover {
+    background-color: #384554;
   }
 
   .subscription-type-checked {
@@ -67,32 +66,29 @@
   }
 
 </style>
-            <div class="col-sm-12 subscription-type">
+            <div class="col-sm-12 subscription-type" style="padding: 0;">
               <div class="row">
-                <div class="col-md-4">
-                  <label id="subscription-type-aws" class="subscription-type-option text-center subscription-type-checked">
-                    <input type="radio" name="subscription_type" value="aws" checked>
-                    <img src="/assets/img/aws-logo@2x.png" alt="AWS Logo" width="108" height="100">
-                    {{ site.data.pricing.subscriptions.aws.name }}
-                  </label>
+                <div class="col-md-4" style="padding: 0; text-align: center;">
+                  <div id="subscription-type-aws" class="subscription-type-option text-center subscription-type-checked" data-subscription-type="aws">
+                    <img src="/assets/img/aws-logo@2x.png" alt="AWS Logo" style="height: 100px">
+                    <div>{{ site.data.pricing.subscriptions.aws.name }}</div>
+                  </div>
                 </div>
-                <div class="col-md-4">
-                  <label id="subscription-type-gcp" class="subscription-type-option text-center">
-                    <input type="radio" name="subscription_type" value="gcp">
-                    <img src="/assets/img/gcp-logo@2x.png" alt="GCP Logo" width="120" height="100">
-                    {{ site.data.pricing.subscriptions.gcp.name }}
-                  </label>
+                <div class="col-md-4" style="padding: 0; text-align: center;">
+                  <div id="subscription-type-gcp" class="subscription-type-option text-center" data-subscription-type="gcp">
+                    <img src="/assets/img/gcp-logo@2x.png" alt="GCP Logo" style="height: 100px">
+                    <div>{{ site.data.pricing.subscriptions.gcp.name }}</div>
+                  </div>
                 </div>
-                <div class="col-md-4">
-                  <label id="subscription-type-enterprise" class="subscription-type-option text-center">
-                    <input type="radio" name="subscription_type" value="enterprise">
-                    <img src="/assets/img/grunty-enterprise@2x.png" alt="Grunty Enterprise Mascot" width="171" height="100">
-                    {{ site.data.pricing.subscriptions.enterprise.name }}
-                  </label>
+                <div class="col-md-4" style="padding: 0; text-align: center;">
+                  <div id="subscription-type-enterprise" class="subscription-type-option text-center" data-subscription-type="enterprise">
+                    <img src="/assets/img/grunty-enterprise@2x.png" alt="Grunty Enterprise Mascot" style="height: 100px">
+                    <div>{{ site.data.pricing.subscriptions.enterprise.name }}</div>
+                  </div>
                 </div>
               </div>
             </div>
-            <div class="col-sm-7 col-sm-offset-2">
+            <div class="col-sm-7 col-sm-offset-3">
               <div class="visible-xs-block text-left" style="margin-bottom: 16px">
                 <h4 class="h5 text-bold margin-top-none margin-bottom-none">Legal:</h4>
                 View our <a target="_blank" href="/terms/">Terms of Service</a>
@@ -180,7 +176,9 @@
             <p class="text-muted small text-center margin-bottom-none visible-sm-block visible-md-block visible-lg-block">
               Annual Contract. Billed monthly.
             </p>
-            <p class="small text-white text-bold margin-top-none text-center" id="deposit-due" style="margin-bottom: 0">Deposit Due<span class="hide-on-tiny"> Today</span>: $500</p>
+            <div style="height: 35px;">
+              <p class="small text-white text-bold margin-top-none text-center" id="deposit-due" style="margin-bottom: 0">Deposit Due<span class="hide-on-tiny"> Today</span>: $500</p>
+            </div>
             <button
               type="button"
               class="btn btn-info btn-block btn-checkout"
@@ -188,7 +186,7 @@
               data-cb-plan-id="chargebee-subscription">
               Checkout
             </button>
-            <p><a id="checkout-contact-btn" class="btn btn-primary btn-block" style="margin-top: 15px;" href="/contact/" style="display: none;">Contact Us</a></p>
+            <p><a id="checkout-contact-btn" class="btn btn-primary btn-block" href="/contact/" style="display: none;">Contact Us</a></p>
             <p style="font-size:85%;" class="text-muted text-center margin-bottom-none visible-sm-block visible-md-block visible-lg-block">View our <span><a href="/terms/" title="Gruntwork Terms of Service" target="_blank">Terms of Service</a></span></p>
           </div>
           </div>
