@@ -188,11 +188,11 @@ $(function () {
     $('#subscription-price').text(total.toLocaleString());
     $('#subscription-subtotal').text(subtotal.toLocaleString());
 
-    _deferCheckout(checkoutOptions.users, checkoutOptions.dedicated_support, checkoutOptions.setup_deployment);
+    _deferCheckout(checkoutOptions.subscription_type, checkoutOptions.dedicated_support, checkoutOptions.setup_deployment);
   }
 
   // Prevents spamming Chargebee registerAgain on every change
-  function _deferCheckout(users, support, setup) {
+  function _deferCheckout(type, support, setup) {
     var cbInstance;
     if (typeof timeout !== 'undefined') clearTimeout(timeout);
     $checkout.attr('disabled', true).text('Please wait...');
@@ -211,7 +211,7 @@ $(function () {
         }
       }
       cbInstance.setCheckoutCallbacks(function(cart, product) {
-        var subscriptionDetails = ("Gruntwork Subscribers: " + users);
+        var subscriptionDetails = ("Subscription type: " + type);
         if (support){
           subscriptionDetails += " • Dedicated Support";
         }
