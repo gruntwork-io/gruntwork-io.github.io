@@ -68,7 +68,8 @@ $(function () {
   function _updateCheckout(newOptions) {
     checkoutOptions = Object.assign({}, checkoutOptions, newOptions);
 
-    var enable_pro_support = checkoutOptions.pro_support || checkoutOptions.subscription_type === 'enterprise';
+    var enable_pro_support = checkoutOptions.pro_support;
+    var enable_enterprise_support = checkoutOptions.subscription_type === 'enterprise';
 
     $('.grunty-sprite').attr('data-sprite', 0);
     $('#subscription_type').val(checkoutOptions.subscription_type);
@@ -93,12 +94,18 @@ $(function () {
       $('#subscription-20-users').hide();
       $('#subscription-unlimited-users').show();
 
+      $('#subscription-addon-1').hide();
+      $('#enterprise-support').show();
+
       $('[data-checkout-total="default"]').hide();
       $('[data-checkout-total="enterprise"]').show();
     } else {
       // aws or gcp
       $('#subscription-unlimited-users').hide();
       $('#subscription-20-users').show();
+
+      $('#subscription-addon-1').show();
+      $('#enterprise-support').hide();
 
       $('[data-checkout-total="default"]').show();
       $('[data-checkout-total="enterprise"]').hide();
@@ -114,6 +121,13 @@ $(function () {
       $('#subscription-addon-1').removeClass('check-list-disabled');
     } else {
       $('#subscription-addon-1').addClass('check-list-disabled');
+    }
+
+    if (enable_enterprise_support) {
+      $('.grunty-sprite').attr('data-sprite', 2);
+      $('#enterprise-support').removeClass('check-list-disabled');
+    } else {
+      $('#enterprise-support').addClass('check-list-disabled');
     }
 
     if (checkoutOptions.setup_deployment) {
