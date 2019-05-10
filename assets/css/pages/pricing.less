@@ -8,6 +8,10 @@
       font-size: 1.7rem;
       .margin-bottom-none;
 
+      // Add the position property so that #gcp-new has an element to be positioned relative to. This property has no
+      // effect on this element itself.
+      position: relative;
+
       #aws-plan {
         margin-top:48px;
       }
@@ -18,7 +22,7 @@
   #gcp-new {
     position: absolute;
     left: 50%;
-    top: -12px;
+    bottom: -29px;
     transform: translateX(-50%);
   }
 
