@@ -1,0 +1,20 @@
+<div class="row">
+  <div class="col-xs-12">
+    <ul class="gw-list-group list-group">
+      {% for change in site.data.changelog %}
+      <li class="list-group-item">
+        <div class="row">
+          <div class="col-xs-12 col-sm-4">
+            <p class="margin-bottom-none">{{ change.date }}</p>
+          </div>
+          <div class="col-xs-12 col-sm-8" style="line-height: 1.4;">
+            <a class="link-white text-lg" href="https://github.com/gruntwork-io/gruntwork-io.github.io/commit/{{ change.commit }}" target="_blank" rel="noreferrer">{{ change.title }}</a>
+            <p class="small">{{ change.description }}</p>
+            <p class="smaller text-muted margin-bottom-none">Changed in <a href="https://github.com/gruntwork-io/gruntwork-io.github.io/commit/{{ change.commit }}" target="_blank" rel="noreferrer">{{ change.commit }}</a>.</p>
+          </div>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>

@@ -361,8 +361,8 @@ $(function () { // This prevents global vars
     $('[data-pricing-calc="alert"]').hide();
     switch (defaultTab) {
       case '#tab-support':
-        if (numUsers <= pricing.dedicated_support.tier1.users_max) total = pricing.dedicated_support.tier1.price;
-        else if (numUsers <= pricing.dedicated_support.tier2.users_max) total = pricing.dedicated_support.tier1.price + (numUsers - pricing.dedicated_support.tier1.users_max) * pricing.dedicated_support.tier2.price;
+        if (numUsers <= pricing.pro_support.tier1.users_max) total = pricing.pro_support.tier1.price;
+        else if (numUsers <= pricing.pro_support.tier2.users_max) total = pricing.pro_support.tier1.price + (numUsers - pricing.pro_support.tier1.users_max) * pricing.pro_support.tier2.price;
         else $('[data-pricing-calc="alert"]').show();
         $('[data-pricing-calc="title"]').text('Your Subscription + Support Price');
         break;

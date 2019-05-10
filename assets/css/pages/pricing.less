@@ -1,0 +1,65 @@
+@import "../bootstrap/less/bootstrap.less";
+
+.page-pricing {
+
+  // The description of under "Gruntwork for AWS" or "Gruntwork for GCP"
+  .plans-heading {
+    p.description {
+      font-size: 1.7rem;
+      .margin-bottom-none;
+
+      #aws-plan {
+        margin-top:48px;
+      }
+    }
+  }
+
+  // Center the "New" badge just above the text and below the GCP logo
+  #gcp-new {
+    position: absolute;
+    left: 50%;
+    top: -12px;
+    transform: translateX(-50%);
+  }
+
+  // Center the "Special Pricing" badge just above the GCP price
+  #gcp-special-pricing {
+    font-size: 1.3rem;
+    margin-top: -13px;
+  }
+
+  // GCP and AWS Logos above pricing plans
+  .gw-sprite-gcp {
+    background-image: url(/assets/img/gcp-logo@2x.png);
+    background-size: 120px 100px;
+    background-position: 30px -5px;
+    background-repeat: no-repeat;
+    width: 180px;
+    height: 100px;
+  }
+
+  .gw-sprite-aws {
+    background-image: url(/assets/img/aws-logo@2x.png);
+    background-size: 108px 100px;
+    background-position: 36px 0;
+    background-repeat: no-repeat;
+    width: 180px;
+    height: 100px;
+  }
+
+  .enterprise-h1 {
+    margin-top: 12px;
+  }
+
+  // Pro Support
+  .pro-support {
+    ul.check-list {
+      text-align: left;
+    }
+  }
+
+  // Houston
+  .houston-features {
+    min-height: 316px;
+  }
+}
