@@ -10,6 +10,25 @@
   description: |
     Create a best-practices Virtual Private Cloud (VPC) on AWS. Includes multiple subnet tiers, network ACLs, security
     groups, NAT gateways, Internet Gateways, and VPC peering.
+  submodules:
+    - name: vpc-app
+      blurb: launch an app VPC
+      description: Launch a VPC meant to house applications and production code. This module creates the VPC, 3 "tiers" of subnets (public, private app, private persistence) across all Availability Zones, route tables, routing rules, Internet gateways, and NAT gateways.
+    - name: vpc-mgmt
+      blurb: launch a mgmt VPC
+      description: Launch a VPC meant to house internal tools (e.g. Jenkins, VPN server). This module creates the VPC, 2 "tiers" of subnets (public, private), route tables, routing rules, Internet gateways, and NAT gateways.
+    - name: vpc-app-network-acls
+      blurb: add NACLs to the app VPC
+      description: Add a default set of Network ACLs to a VPC created using the vpc-app module that strictly control what inbound and outbound network traffic is allowed in each subnet of that VPC.
+    - name: vpc-mgmt-network-acls
+      blurb: add NACLs to the mgmt VPC
+      description: Add a default set of Network ACLs to a VPC created using the vpc-mgmt module that strictly control what inbound and outbound network traffic is allowed in each subnet of that VPC.
+    - name: vpc-peering
+      blurb: peer VPCs in the same account
+      description: Create peering connections between your VPCs to allow them to communicate with each other.
+    - name: vpc-peering-external
+      blurb: peer VPCs in different accounts
+      description: Create peering connections between your VPCs and VPCs managed in other (external) AWS accounts.
 
 - name: "Monitoring and Alerting"
   clouds:
@@ -26,6 +45,16 @@
   type: Subscriber-Only
   description: |
     Configure monitoring, log aggregation, and alerting using CloudWatch, SNS, and S3. Includes Slack integration.
+  submodules:
+    - name: alarms
+      blurb: create CloudWatch alarms for your AWS services
+      description: A collection of more than 20 modules that set up CloudWatch Alarms for a variety of AWS services, such as CPU, memory, and disk space usage for EC2 Instances, Route 53 health checks for public endpoints, 4xx/5xx/connection errors for load balancers, and a way to send alarm notifications to a Slack channel.
+    - name: logs
+      blurb: aggregate all your logs in CloudWatch logs
+      description: A collection of modules to set up log aggregation, including one to send logs from all of your EC2 instances to CloudWatch Logs, one to rotate and rate-limit logging so you don't run out of disk space, and one to store all load balancer logs in S3.
+    - name: metrics
+      blurb: collect metrics from your AWS services
+      description: Modules that add custom metrics to CloudWatch, including critical metrics not visible to the EC2 hypervisor, such as memory usage and disk space usage.
 
 - name: "EC2 Container Service (ECS)"
   clouds:
@@ -41,6 +70,22 @@
   description: |
     Deploy a best-practices ECS Cluster and run Docker containers on it as ECS Services. Includes zero-downtime,
     rolling deployments, and auto scaling.
+  submodules:
+    - name: ecs-cluster
+      blurb: deploy an ECS cluster
+      description: Deploy an Auto Scaling Group (ASG) that ECS can use for running Docker containers. The size of the ASG can be scaled up or down in response to load.
+    - name: ecs-service
+      blurb: deploy a service in your ECS cluster
+      description: Deploy a Docker container as a long-running ECS Service. Includes support for automated, zero-downtime deployment, auto-restart of crashed containers, and automatic integration with the Elastic Load Balancer (ELB).
+    - name: ecs-fargate
+      blurb: deploy a service in ECS Fargate
+      description: Deploy a Docker container as a long-running Fargate Service. A Fargate service automatically manages and scales your cluster as needed without you needing to manage the underlying EC2 instances or clusters, it also includes integration with an Application Load Balancer (ALB) or a Network Load Balancer (NLB).
+    - name: ecs-service-with-alb
+      blurb: deploy a service in your ECS cluster with an ALB
+      description: Deploy a Docker container as a long-running ECS Service. Includes support for automated, zero-downtime deployment, auto-restart of crashed containers, and automatic integration with the Application Load Balancer (ALB).
+    - name: ecs-deploy
+      blurb: deploy a short-running task in your ECS cluster
+      description: Deploy a Docker container as a short-running ECS Task, wait for it to exit, and exit with the same exit code as the ECS Task.
 
 - name: "EC2 Kubernetes Service (EKS)"
   clouds:
@@ -57,6 +102,28 @@
     Deploy a best-practices EKS cluster and run Docker containers on it as Kubernetes services. Supports zero-downtime,
     rolling deployment, IAM to RBAC mapping, auto scaling, IAM roles for Pods, deploying Helm securely with automated
     TLS certificate management, and heterogeneous worker groups.
+  submodules:
+    - name: eks-cluster-control-plane
+      blurb: deploy the EKS control plane
+      description: Deploy an EKS control plane managed by AWS with support to configure your local kubectl to authenticate with EKS.
+    - name: eks-cluster-workers
+      blurb: deploy a cluster of EKS workers
+      description: Deploy a cluster of EC2 instances registered as Kubernetes workers with auto-recovery of failed nodes.
+    - name: eks-k8s-role-mapping
+      blurb: manage mappings between IAM and RBAC
+      description: Manage mappings between IAM roles and RBAC groups as code for provisioning accounts that can access the Kubernetes API.
+    - name: eks-vpc-tags
+      blurb: tag your VPC for EKS
+      description: Provides tags for your VPC to ensure Kubernetes uses it for allocating IP addresses to Pods and Services.
+    - name: eks-cloudwatch-container-logs
+      blurb: aggregate EKS logs to CloudWatch
+      description: Deploys Helm chart that installs fluentd into your cluster to aggregate Kubernetes logs for shipping to CloudWatch.
+    - name: eks-alb-ingress-controller
+      blurb: use ALBs as ingress controllers
+      description: Deploys Helm chart that installs the AWS ALB Ingress Controller into your cluster to map Ingress resources to ALBs.
+    - name: eks-k8s-external-dns
+      blurb: use Route53 for ingress hostnames
+      description: Deploys Helm chart that installs the external-dns application into your cluster to map Ingress hostnames to Route 53 Domain records.
 
 - name: "Kubernetes Helm Server"
   clouds:
@@ -71,6 +138,16 @@
   description: |
     Deploy a best-practices Tiller (Helm Server) to your Kubernetes cluster. Supports namespaces, service accounts,
     least privilege RBAC roles, and automated TLS management.
+  submodules:
+    - name: k8s-namespace
+      blurb: create a Kubernetes namespace
+      description: Create a namespace in Kubernetes with a set of predefined RBAC roles.
+    - name: k8s-namespace-roles
+      blurb: create RBAC roles for a namespace
+      description: Create a set of predefined RBAC roles for use with an existing namespace.
+    - name: k8s-service-account
+      blurb: create a Kubernetes service account
+      description: Create a Kubernetes service account with options to bind the account to a set of RBAC roles.
 
 - name: "Auto Scaling Group"
   clouds:
@@ -86,6 +163,13 @@
   description: |
     Run stateless and stateful services on top of an Auto Scaling Group. Supports zero-downtime, rolling deployment,
     attaching EBS volumes and ENIs, load balancing, health checks, service discovery, and auto scaling.
+  submodules:
+    - name: asg-rolling-deploy
+      blurb: ASG that can do a rolling deployment
+      description: Create an ASG that can do a zero-downtime rolling deployment.
+    - name: server-group
+      blurb: ASG with persistent EBS volumes and ENIs
+      description: Run a fixed-size cluster of servers, backed by ASGs, that can automatically attach EBS Volumes and ENIs, while still supporting zero-downtime deployment.
 
 - name: "AWS Load Balancer"
   clouds:
@@ -98,6 +182,16 @@
   description: |
     Run the highly-available and scalable load balancers in AWS: Application Load Balancer (ALB), Network Load Balancer
     (NLB), and the Classic Load Balancer (CLB).
+  submodules:
+    - name: alb
+      blurb: deploy an Application Load Balancer
+      description: Deploy an Application Load Balancer (ALB) in AWS. It supports HTTP, HTTPS, HTTP/2, WebSockets, path-based routing, host-based routing, and health checks.
+    - name: nlb
+      blurb: deploy a Network Load Balancer
+      description: Deploy a Network Load Balancer (NLB) in AWS. It supports TCP, WebSockets, static IPs, high throughputs, and health checks.
+    - name: acm-tls-certificate
+      blurb: create and validate a TLS certificate
+      description: Create a free, auto-renewing TLS certificate using AWS Certificate Manager (ACM) and automatically validate it.
 
 - name: "Lambda"
   clouds:
@@ -111,6 +205,19 @@
     Deploy and manage Lambda functions with Terraform and build serverless apps. Automatically upload source code,
     configure environment variables, create an IAM Role, associate with a VPC. enable versioning/aliasing. Also
     supports scheduled Lambdas and dead letter targets.
+  submodules:
+    - name: lambda
+      blurb: deploy and manage a Lambda function
+      description: Deploy and manage AWS Lambda functions. Includes support for automatically uploading your code to AWS, configuring an IAM role for your Lambda function, and giving your Lambda function access to your VPCs.
+    - name: scheduled-lambda-job
+      blurb: run a Lambda function on a scheduled basis
+      description: Configure your Lambda function to run on a scheduled basis, like a cron job.
+    - name: keep-warm
+      blurb: keep a Lambda function warm
+      description: This is a Lambda function you can use to invoke your other Lambda functions on a scheduled basis to keep those functions "warm," avoiding the cold start issue.
+    - name: lambda-edge
+      blurb: deploy and manage a Lambda@Edge function
+      description: This module makes it easy to deploy and manage an AWS Lambda@Edge function. Lambda@Edge gives you a way to run code on-demand in AWS Edge locations without having to manage servers.
 
 - name: "API Gateway"
   clouds:
@@ -125,6 +232,13 @@
   description: |
     Build serverless applications by defining APIs in Swagger, running your app locally using SAM, and deploying the
     app to production using Terraform and API Gateway.
+  submodules:
+    - name: gruntsam
+      blurb: run and test API Gateway and Lambda locally
+      description: CLI tool that allows you to define your APIs using Swagger, run and test your code locally using SAM, and deploy your code to production using API Gateway and Lambda.
+    - name: api-gateway-account-settings
+      blurb: configure API Gateway settings
+      description: set the global (regional) settings required to allow API Gateway to write to CloudWatch logs.
 
 - name: "Security"
   clouds:
@@ -144,6 +258,46 @@
   description: |
     A collection of security best practices for managing secrets, credentials, and servers. Includes streamlined support
     for CloudTrail, KMS, SSH key management via IAM, IAM Groups, fail2ban, NTP, and OS hardening.
+  submodules:
+    - name: auto-update
+      blurb: automatically patch servers
+      description: Configure your servers to automatically install critical security patches.
+    - name: aws-auth
+      blurb: authenticate to AWS from the CLI
+      description: A script that makes it much easier to use the AWS CLI with MFA and/or multiple AWS accounts.
+    - name: cloudtrail
+      blurb: configure audit logging in AWS
+      description: Configure CloudTrail in an AWS account to audit all API calls.
+    - name: kms-master-key
+      blurb: create a KMS master key
+      description: Create a master key in Amazon's Key Management Service and configure permissions for that key.
+    - name: ssh-grunt
+      blurb: manage SSH access via IAM or Houston
+      description: Manage SSH access to your servers using an identity provider, such as AWS IAM groups or Gruntwork Houston. Every developer in a managed group you specify will be able to SSH to your servers using their own username and SSH key.
+    - name: ssh-grunt-selinux-policy
+      blurb: SELinux policy for ssh-grunt
+      description: Install a SELinux Local Policy Module that is necessary to make ssh-grunt work on systems with SELinux, such as CentOS.
+    - name: iam-groups
+      blurb: create and manage IAM groups
+      description: Create a best-practices set of IAM groups for managing access to your AWS account.
+    - name: iam-user-password-policy
+      blurb: create an AWS account password policy
+      description: Set the AWS Account Password Policy that will govern password requirements for IAM Users.
+    - name: cross-account-iam-roles
+      blurb: create IAM roles for cross-account access
+      description: Create IAM roles that allow IAM users to easily switch between AWS accounts.
+    - name: fail2ban
+      blurb: install fail2ban
+      description: Install fail2ban on your servers to automatically ban malicious users.
+    - name: os-hardening
+      blurb: CIS hardening for Linux
+      description: Build a hardened Linux-AMI that implements certian CIS benchmarks.
+    - name: ntp
+      blurb: install and configure NTP
+      description: Install and configures NTP on a Linux server.
+    - name: ip-lockdown
+      blurb: block access to IPs
+      description: Install ip-lockdown on your servers to automatically lock down access to specific IPs, such as locking down the EC2 metadata endpoint so only the root user can access it.
 
 - name: "Continuous Delivery"
   clouds:
@@ -162,6 +316,31 @@
     A collection of scripts and Terraform code that implement common CI and build pipeline tasks including running
     Jenkins, configuring CircleCi, building a Docker image, building a Packer image, updating Terraform code, pushing
     to git, sharing or making AMIs public, and configuring the build environment.
+  submodules:
+    - name: aws-helpers
+      blurb: automate common AWS tasks
+      description: Automate common AWS tasks, such as publishing AMIs to multiple regions.
+    - name: build-helpers
+      blurb: automate Docker and Packer builds
+      description: Automate the process of building versioned, immutable, deployable artifacts, including Docker images and AMIs built with Packer.
+    - name: circleci-helpers
+      blurb: configure a CircleCi environment
+      description: Configure the CircleCI environment, including installing Go and configuring GOPATH.
+    - name: iam-policies
+      blurb: IAM policies for CI servers
+      description: Configure common IAM policies for CI servers, including policies for automatically pushing Docker containers to ECR, deploying Docker images to ECS, and using S3 for Terraform remote state.
+    - name: terraform-helpers
+      blurb: automate using Terraform in CI
+      description: Automate common CI tasks that involve Terraform, such as automatically updating variables in a .tfvars file.
+    - name: ec2-backup
+      blurb: backup an EC2 instance on a schedule
+      description: Run a Lambda function to make scheduled backups of EC2 Instances.
+    - name: install-jenkins
+      blurb: install Jenkins
+      description: Install Jenkins on a Linux server.
+    - name: jenkins-server
+      blurb: deploy Jenkins
+      description: Deploy a Jenkins server with an ASG, EBS Volume, ALB, and Route 53 settings.
 
 - name: "Relational Database"
   clouds:
@@ -177,6 +356,25 @@
   description: |
     Run MySQL, Postgres, MariaDB, or Amazon Aurora on Amazon’s Relational Database Service (RDS). Creates the database,
     sets up replicas, configures multi-zone automatic failover and automatic backup.
+  submodules:
+    - name: rds
+      blurb: deploy RDS for MySQL, PostgreSQL, Oracle, etc
+      description: Deploy a relational database on top of RDS. Includes support for MySQL, PostgreSQL, Oracle, and SQL Server, as well as automatic failover, read replicas, backups, patching, and encryption.
+    - name: aurora
+      blurb: deploy RDS for Aurora
+      description: Deploy Amazon Aurora on top of RDS. This is a MySQL-compatible database that supports automatic failover, read replicas, backups, patching, and encryption.
+    - name: lambda-create-snapshot
+      blurb: snapshot an RDS database on a schedule
+      description: Create an AWS Lambda function that runs on a scheduled basis and takes snapshots of an RDS database for backup purposes. Includes an AWS alarm that goes off if backup fails.
+    - name: lambda-share-snapshot
+      blurb: share RDS snapshots with another account
+      description: An AWS Lambda function that can automatically share an RDS snapshot with another AWS account. Useful for storing your RDS backups in a separate backup account.
+    - name: lambda-copy-shared-snapshot
+      blurb: copy RDS snapshots
+      description: An AWS Lambda function that can make a local copy of an RDS snapshot shared from another AWS account. Useful for storing yoru RDS backups in a separate backup account.
+    - name: lambda-cleanup-snapshots
+      blurb: delete RDS snapshots
+      description: An AWS Lambda function that runs on a scheduled basis to clean up old RDS database snapshots. Useful to ensure you aren't spending lots of money storing old snapshots you no longer need.
 
 - name: "Distributed Cache"
   clouds:
@@ -190,6 +388,13 @@
   description: |
     Run Redis or Memcached clusters using Amazon’s ElastiCache Service. Creates the cluster, sets up replicas, configures
     multi-zone automatic failover and automatic backup.
+  submodules:
+    - name: redis
+      blurb: deploy Redis on ElastiCache
+      description: Deploy a Redis cluster on top of ElastiCache. Includes support for automatic failover, backup, patches, and cluster scaling.
+    - name: memcached
+      blurb: deploy mecached on ElastiCache
+      description: Deploy a Memcached cluster on top of ElastiCache.
 
 - name: "Stateful Server"
   clouds:
@@ -206,6 +411,19 @@
     Set up a best-practices deployment of a single, stateful server on top of AWS, such as Jenkins or WordPress. Supports
     EBS volume re-attachment, and a scheduled Lambda job to backup the Instance on a cron schedule. Includes alarm if
     backup jobs fail.
+  submodules:
+    - name: single-server
+      blurb: deploy an EC2 instance
+      description: Run a server in AWS and configure its IAM role, security group, optional Elastic IP Address (EIP), and optional DNS A record in Route 53.
+    - name: attach-eni
+      blurb: attach an ENI to a server
+      description: Attach an Elastic Network Interface (ENI) to a server during boot. This is useful when you need to maintain a pool of IP addresses that remain static even as the underlying servers are replaced.
+    - name: persistent-ebs-volume
+      blurb: attach and mount an EBS volume to a server
+      description: Attach and mount an EBS Volume in a server during boot. This is useful when you want to maintain data on a hard disk even as the underlying server is replaced.
+    - name: route53-helpers
+      blurb: attach a DNS record in Route 53 to a server
+      description: Attach a DNS A record in Route 53 to a server during boot. This is useful when you want a pool of domain names that remain static even as the underlying servers are replaced.
 
 - name: "AWS Static Assets"
   clouds:
@@ -218,6 +436,13 @@
   description: |
     Deploy your static content and static websites on S3, optionally with a CloudFront distribution in front of it as a
     CDN. Includes bucket versioning, access logging, cache settings, Route 53 DNS entries, and TLS certs.
+  submodules:
+    - name: s3-static-website
+      blurb: deploy a static website on S3
+      description: Create an S3 bucket to host a static website. Includes support for custom routing rules and custom domain names.
+    - name: s3-cloudfront
+      blurb: deploy CloudFront as a CDN
+      description: Deploy a CloudFront distribution as a CDN in front of an S3 bucket. Includes support for custom caching rules, custom domain names, and SSL.
 
 - name: "MongoDB Cluster"
   clouds:
@@ -232,6 +457,22 @@
   description: |
     Deploy a MongoDB cluster, including replica sets, sharding, an automated bootstrapping process, backup, recovery,
     and OS optimizations.
+  submodules:
+    - name: install-mongodb
+      blurb: install MongoDB
+      description: Install MongoDB and all of its dependencies on a Linux server.
+    - name: run-mongodb
+      blurb: configure and run MongoDB
+      description: Boot up a mongod, mongos, or mongo config server. Meant to be used in the User Data of the servers in your MongoDB cluster.
+    - name: mongodb-cluster
+      blurb: run a MongoDB cluster
+      description: Run a MongoDB cluster using an Auto Scaling Group (ASG) and configure its IAM role, security group, EBS Volume, ENI, and private domain name.
+    - name: backup-mongodb
+      blurb: back up MongoDB
+      description: Back up the data in your MongoDB cluster to S3.
+    - name: init-mongodb
+      blurb: configure a MongoDB replica set
+      description: Configure a MongoDB replica set.
 
 - name: "Kafka"
   clouds:
@@ -247,6 +488,28 @@
     Deploy a cluster of Apache brokers that can automatically bootstrap themselves. Includes support for automatically
     discovering a ZooKeeper cluster, EBS Volumes for better log performance, automated zero-downtime rolling deployment,
     end-to-end encryption, OS optimizations, and security groups and IAM policy configuration.
+  submodules:
+    - name: install-kafka
+      blurb: install Kafka
+      description: Install Kafka and its dependencies on a Linux server.
+    - name: kafka-cluster
+      blurb: deploy a cluster of Kafka brokers
+      description: Deploy a Kafka cluster using the server-group module from the AMI Cluster Infrastructure Package. Includes support for EBS Volumes for the Kafka log.
+    - name: confluent-tools-cluster
+      blurb: deploy a cluster for Confluent tools
+      description: Run a cluster of Confluent tools (REST Proxy, Schema Registry, Kafka Connect).
+    - name: install-confluent-tools
+      blurb: install Confluent tools
+      description: Install Confluent tools (REST Proxy and Schema Registry) on Linux.
+    - name: run-kafka-connect
+      blurb: configure and run Kafka Connect
+      description: Configure and run Kafka Connect.
+    - name: run-kafka-rest
+      blurb: configure and run Kafka REST proxy
+      description: Configure and run Kafka REST Proxy.
+    - name: run-schema-registry
+      blurb: configure and run Schema Registry
+      description: Configure and run Schema Registry.
 
 - name: "ZooKeeper"
   clouds:
@@ -263,6 +526,25 @@
     process supervisor and management UI for ZooKeeper, static IP addresses (ENIs), EBS Volumes for better transaction
     log performance, automated zero-downtime rolling deployment, automatic recovery of failed servers, and security
     groups and IAM policy configuration.
+  submodules:
+    - name: install-zookeeper
+      blurb: install ZooKeeper
+      description: Install ZooKeeper and its dependencies on a Linux server.
+    - name: install-exhibitor
+      blurb: install Exhibitor
+      description: Install Exhibitor and its dependencies on a Linux server.
+    - name: install-openjdk
+      blurb: install OpenJDK
+      description: Install OpenJDK on a Linux server
+    - name: run-exhibitor
+      blurb: configure and run Exhibitor and ZooKeeper
+      description: Configure and run Exhibitor and ZooKeeper on a Linux server
+    - name: run-health-checker
+      blurb: run a ZooKeeper health check
+      description: Run a custom health check for ZooKeeper. Used in conjunction with a load balancer to do zero-downtime rolling updates of the ZooKeeper cluster.
+    - name: zookeeper-cluster
+      blurb: deploy a ZooKeeper cluster
+      description: Deploy a ZooKeeper cluster using the server-group module from the AMI Cluster Infrastructure Package. Includes support for EBS Volumes for the transaction log as well as a set of ENIs to provide static IP addresses to ZooKeeper clients.
 
 - name: "ELK"
   clouds:
@@ -279,6 +561,25 @@
     each with automated zero-downtime rolling deployment, automatic recovery of failed servers, and security
     groups and IAM policy configuration. Also contains scripts for setting up Filebeat and CollectD on an application
     server to ship off logs and machine metrics to Elasticsearch.
+  submodules:
+    - name: elasticsearch-cluster
+      blurb: deploy an Elasticsearch cluster
+      description: Deploy a cluster of Elasticsearch nodes with zero-downtime deployment and auto-recovery of failed nodes.
+    - name: kibana-cluster
+      blurb: deploy a Kibana cluster
+      description: Deploy a cluster of Kibana nodes with zero-downtime deployment and auto-recovery of failed nodes.
+    - name: logstash-cluster
+      blurb: deploy a Logstash cluster
+      description: Deploy a cluster of Logstash nodes with zero-downtime deployment and auto-recovery of failed nodes.
+    - name: elastalert
+      blurb: configure and run ElastAlert on a server
+      description: Runs ElastAlert in an instance, which makes API calls to the Elasticsearch cluster and sends alerts based on pre-defined data pattern rules.
+    - name: run-filebeat
+      blurb: configure and run Filebeat on a server
+      description: Runs Filebeat on an application server to ship application logs off to Logstash cluster.
+    - name: run-collectd
+      blurb: configure and run CollectD on a server
+      description: Runs CollectD on an application server and ships off machine metrics to th Logstash cluster.
 
 - name: "OpenVPN Server"
   clouds:
@@ -296,6 +597,19 @@
     Deploy an OpenVPN server and manage user accounts using IAM groups. Includes automatic install and configuration of
     a high-availability OpenVPN server, public key infrastructure (PKI), data backup, IAM policies, security groups, and
     cross-platform apps to automatically request and revoke credentials.
+  submodules:
+    - name: install-openvpn
+      blurb: install OpenVPN on a Linux server
+      description: Install OpenVPN and its dependencies on a Linux server.
+    - name: init-openvpn
+      blurb: initialize OpenVPN, PKI, and CA
+      description: Initialize an OpenVPN server, including its Public Key Infrastructure (PKI), Certificate Authority (CA) and configuration.
+    - name: openvpn-admin
+      blurb: CLI tool to manage OpenVPN certs
+      description: A command-line utility that allows users to request new certificates, administrators to revoke certificates and the OpenVPN server to process those requests. All access and permissions are controlled via IAM.
+    - name: openvpn-server
+      blurb: deploy an OpenVPN server
+      description: Deploy an OpenVPN server and configure its IAM role, security group, Elastic IP Address (EIP), S3 bucket for storage, and SQS queues.
 
 - name: "Messaging"
   clouds:
@@ -309,6 +623,16 @@
     Create SQS queues with support for FIFO, message retention, message delays, content-based deduplication,
     dead-letter queues, and IP-based access controls. Create SNS topics with configurable IAM and delivery policies.
     Create Kinesis streams with configurable or auto-calculated shard and retention settings.
+  submodules:
+    - name: sqs
+      blurb: create an SQS queue
+      description: Create an SQS queue. Includes support for FIFO, dead letter queues, and IP-limiting.
+    - name: sns
+      blurb: create an SNS topic
+      description: Create an SNS topic as well as the publisher and subscriber policies for that topic.
+    - name: kinesis
+      blurb: create a Kinesis stream
+      description: Create a Kinesis stream and configure its sharding settings.
 
 - name: "Google Kubernetes Engine (GKE)"
   clouds:
@@ -321,6 +645,13 @@
   description: |
     Terraform modules for running a Kubernetes cluster on Google Cloud Platform (GCP) using Google Kubernetes Engine
     (GKE).
+  submodules:
+    - name: gke-cluster
+      blurb: deploy a GKE cluster
+      description: Deploy a GKE cluster to run a managed Kubernetes Control Plane. Supports autoscaling, StackDriver monitoring, private and public access.
+    - name: gke-service-account
+      blurb: configure a GCP service account
+      description: Configure a GCP Service Account that can be used with a GKE cluster. This can be used to allow applications Pods running on your GKE workers to access other GCP services.
 
 - name: "GCP VPC"
   clouds:
@@ -333,6 +664,16 @@
   description: |
     Create a best-practices Virtual Private Cloud (VPC) on GCP. Includes multiple subnet tiers, firewall rules,
     NAT gateways, and VPC peering.
+  submodules:
+    - name: vpc-network
+      blurb: deploy a VPC
+      description: Launch a secure VPC network on GCP. Supports "access tiers", a pair of subnetwork and network tags. By defining an appropriate subnetwork and tag for an instance, you'll ensure that traffic to and from the instance is properly restricted.
+    - name: network-peering
+      blurb: peer VPCs
+      description: Configure peering connections between your networks, allowing you to limit access between environments and reduce the risk of production workloads being compromised.
+    - name: network-firewall
+      blurb: configure firewall rules for a VPC
+      description: Configures the firewall rules expected by the vpc-network module.
 
 - name: "Google Cloud SQL"
   clouds:
@@ -344,6 +685,10 @@
   type: Open Source
   description: |
     Run relational databases such as MySQL and PostgreSQL on Google Cloud Platform (GCP) using Cloud SQL.
+  submodules:
+    - name: cloud-sql
+      blurb: deploy MySQL or PostgreSQL
+      description: Deploy a Cloud SQL MySQL or PostgreSQL database. Supports automated backups, private and public access, autoresizing of disks, TLS, HA, and read replicas.
 
 - name: "GCP Static Assets"
   clouds:
@@ -355,6 +700,13 @@
   type: Open Source
   description: |
     Manage static assets (CSS, JS, images) on GCP using Google Cloud Storage and HTTP Load Balancers.
+  submodules:
+    - name: cloud-storage-static-website
+      blurb: deploy a website in a GCS bucket
+      description: Deploy a GCS bucket to host static content as a website. Supports assigning a custom domain to host the content under.
+    - name: http-load-balancer-website
+      blurb: deploy a load balancer for a GCS bucket
+      description: Deploy a GCS bucket to host static content and serve using Google Cloud Load Balancing. Supports configuring SSL/TLS with a custom domain name.
 
 - name: "Google Cloud Load Balancer"
   clouds:
@@ -367,6 +719,10 @@
   description: |
     Perform load balancing on GCP using Google Cloud Load Balancer, with support for HTTP, HTTPs, and global forwarding
     rules.
+  submodules:
+    - name: http-load-balancer
+      blurb: deploy an HTTP(s) Cloud Load Balancer
+      description: Deploy an HTTP(S) Cloud Load Balancer using global forwarding rules. Supports balancing HTTP and HTTPS traffic across multiple backend instances, across multiple regions.
 
 - name: "kubergrunt"
   clouds:
@@ -396,6 +752,10 @@
     Package services into a best-practices deployment for Kubernetes. Supports zero-downtime, rolling deployment, RBAC
     roles and groups, auto scaling, secrets management, and centralized logging. Includes support for web services,
     daemon sets, and tasks / jobs.
+  submodules:
+    - name: k8s-service
+      blurb: deploy a Kubernetes service using Helm
+      description: Package your application service as a docker container and deploy to Kubernetes as a Deployment. Supports replication, rolling deployment, logging, configuration values, and secrets management.
 
 - name: "Consul"
   clouds:
@@ -414,6 +774,19 @@
   description: |
     Deploy a best-practices HashiCorp Consul cluster. Includes support for automatic bootstrapping, configuring dnsmasq
     to use Consul as a DNS server, access to the Consul UI, and automatic recovery of failed servers.
+  submodules:
+    - name: install-consul
+      blurb: install Consul on a Linux server
+      description: Install Consul and its dependencies on a Linux server.
+    - name: install-dnsmasq
+      blurb: install dnsmasq on a Linux server
+      description: Install dnsmasq on a Linux server and configure it to work with Consul as a DNS server. This allows you to use domain names such as my-app.service.consul.
+    - name: run-consul
+      blurb: configure and run Consul
+      description: Run Consul and automatically bootstrap the cluster.
+    - name: consul-cluster
+      blurb: deploy a Consul cluster
+      description: Deploy a Consul cluster on GCP using a Managed Instance Group.
 
 - name: "Nomad"
   clouds:
@@ -432,6 +805,16 @@
   description: |
     Deploy a best-practices HashiCorp Nomad cluster. Includes support for automatic bootstrapping, automatic discovery
     of Consul servers (for cluster coordination), automatic recovery of failed servers.
+  submodules:
+    - name: install-nomad
+      blurb: install Nomad on a Linux server
+      description: Install Nomad and its dependencies on a Linux server.
+    - name: run-nomad
+      blurb: configure and run Nomad
+      description: Run Nomad and automatically connect to a Consul cluster.
+    - name: nomad-cluster
+      blurb: deploy a Nomad cluster
+      description: Deploy a Nomad cluster on GCP using a Managed Instance Group.
 
 - name: "Vault"
   clouds:
@@ -452,6 +835,19 @@
     bootstrapping, automatic discovery of Consul clusters (for HA cluster coordination), using S3 as a storage backend,
     creating self-signed TLS certificates, updating the OS certificate store, configuring an ELB in front of Vault to
     allow public access, and automatic recovery of failed servers.
+  submodules:
+    - name: install-vault
+      blurb: install Vault on a Linux server
+      description: Install Vault and its dependencies on a Linux server.
+    - name: run-vault
+      blurb: configure and run Vault
+      description: Run Vault and automatically connect to a Consul cluster.
+    - name: private-tls-cert
+      blurb: generate a self-signed TLS cert
+      description: Generate self-signed TLS certificates for use with Vault.
+    - name: vault-cluster
+      blurb: deploy a Vault cluster
+      description: Deploy a Vault cluster on GCP using a Managed Instance Group.
 
 - name: "Couchbase"
   clouds:
@@ -466,6 +862,22 @@
   description: |
     Deploy a best-practices Couchbase cluster. Includes support for automatic bootstrapping, running Sync Gateway,
     Web Console UI, cross-region replication, and automatic recovery of failed servers.
+  submodules:
+    - name: install-couchbase-server
+      blurb: install Couchbase on a Linux server
+      description: Install Couchbase and its dependencies on a Linux server.
+    - name: install-sync-gateway
+      blurb: install Sync Gateway on a Linux server
+      description: Install Sync Gateway and its dependencies on a Linux server.
+    - name: run-couchbase-server
+      blurb: configure and run Couchbase
+      description: Configure and run Couchbase.
+    - name: run-sync-gateway
+      blurb: configure and run Sync Gateway
+      description: Configure and start Sync Gateway.
+    - name: couchbase-cluster
+      blurb: deploy a Couchbase cluster
+      description: Deploy a Couchbase cluster on AWS using an Auto Scaling Group.
 
 - name: "Influx"
   clouds:
@@ -478,8 +890,42 @@
   aws_url: "https://github.com/gruntwork-io/terraform-aws-influx"
   type: Open Source
   description: |
-    Deploy a best-practices InfluxDB Enterprise cluster. Includes support for automatic bootstrapping, automatic node discovery,
-    and automatic recovery of failed servers.
+    Deploy a best-practices TICK stack (Telegraf, InfluxDB, Chronograf, Kapacitor). Includes support for automatic
+    bootstrapping, automatic node discovery, and automatic recovery of failed servers.
+  submodules:
+    - name: chronograf-server
+      blurb: deploy a Chronograf server
+      description: deploy a Chronograf server
+    - name: influxdb-cluster
+      blurb: deploy an InfluxDB cluster
+      description: deploy an InfluxDB cluster
+    - name: install-chronograf
+      blurb: install Chronograf on a Linux server
+      description: install Chronograf on a Linux server
+    - name: install-influxdb
+      blurb: install InfluxDB on a Linux server
+      description: install InfluxDB on a Linux server
+    - name: install-kapacitor
+      blurb: install Kapacitor on a Linux server
+      description: install Kapacitor on a Linux server
+    - name: install-telegraf
+      blurb: install Telegraf on a Linux server
+      description: install Telegraf on a Linux server
+    - name: kapacitor-server
+      blurb: deploy a Kapacitor server
+      description: deploy a Kapacitor server
+    - name: run-chronograf
+      blurb: configure and run Chronograf
+      description: configure and run Chronograf
+    - name: run-influxdb
+      blurb: configure and run InfluxDB
+      description: configure and run InfluxDB
+    - name: run-kapacitor
+      blurb: configure and run Kapacitor
+      description: configure and run Kapacitor
+    - name: run-telegraf
+      blurb: configure and run Telegraf
+      description: configure and run Telegraf
 
 - name: "Terratest"
   clouds:
