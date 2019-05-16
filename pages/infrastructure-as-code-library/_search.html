@@ -10,7 +10,8 @@
           {% for package in site.data.library %}
             {
               id: "{{ package.name | replace: " ", "_" | replace: ")", "_" |  replace: "(", "_" }}",
-              text: "{{ package | remove: '"' | downcase }}"
+              text: "{{ package | remove: '"' | downcase }}",
+              num_submodules: {{ package.submodules | size }}
             },
           {% endfor %}
         ];
