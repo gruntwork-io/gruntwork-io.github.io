@@ -66,15 +66,6 @@ function debounce(func, wait, immediate) {
   };
 }
 
-/* During initial load, fill search box on library page with the hash in the URL */
-$(function() {
-  if (window.location.hash) {
-    var text = decodeURIComponent(window.location.hash.replace(/^#/, ""));
-    $('#js-search-library').val(text);
-    $('#js-search-library').trigger("keyup");
-  }
-});
-
 /**
  * A hacky function to search the IaC Lib and show/hide the proper elements in the table based on the results. Note
  * that we wrap the function in a "debounce" so that if the user is typing quickly, we aren't trying to run searches
@@ -84,8 +75,6 @@ $(function() {
 var searchLibrary = debounce(function(event) {
   var target = $(event.currentTarget);
   var text = target.val();
-
-  window.location.hash = text;
 
   $('#no-matches').hide();
 
