@@ -66,6 +66,25 @@ function debounce(func, wait, immediate) {
   };
 }
 
+function showModuleCount(numRepos, numSubmodules) {
+  if (numRepos > 0 && numSubmodules > 0) {
+    $('#search-results-count').html("<strong>" + numRepos + "</strong> repos (~<strong>" + numSubmodules + "</strong> modules)");
+  } else {
+    $('#search-results-count').text("0 repos");
+  }
+}
+
+function showInitialModuleCount() {
+  var numSubmodules = 0;
+  for (var i = 0; i < libraryEntries.length; i++) {
+    numSubmodules += libraryEntries[i].num_submodules;
+  }
+  showModuleCount(libraryEntries.length, numSubmodules);
+}
+
+// Show initial module count on load
+$(showInitialModuleCount);
+
 /**
  * A hacky function to search the IaC Lib and show/hide the proper elements in the table based on the results. Note
  * that we wrap the function in a "debounce" so that if the user is typing quickly, we aren't trying to run searches
@@ -88,6 +107,8 @@ var searchLibrary = debounce(function(event) {
     $('.table-clickable-row').hide();
 
     var matches = 0;
+    var submoduleMatches = 0;
+
     for (var i = 0; i < libraryEntries.length; i++) {
       var entry = libraryEntries[i];
       var matchesAll = true;
@@ -102,13 +123,17 @@ var searchLibrary = debounce(function(event) {
       if (matchesAll) {
         $("#" + entry.id).show();
         matches++;
+        submoduleMatches += entry.num_submodules;
       }
     }
 
     if (matches === 0) {
       $('#no-matches').show();
     }
+
+    showModuleCount(matches, submoduleMatches);
   } else {
+    showInitialModuleCount();
     $('.table-clickable-row').show();
   }
 }, 250);

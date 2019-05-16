@@ -1,4 +1,4 @@
-<form style="margin: 30px 0 10px">
+<div style="margin: 30px 0 10px">
   <div class="form-group row">
     <label for="js-search-library" class="col-sm-1 col-form-label" style="padding-top: 8px">
       Search:
@@ -10,11 +10,12 @@
           {% for package in site.data.library %}
             {
               id: "{{ package.name | replace: " ", "_" | replace: ")", "_" |  replace: "(", "_" }}",
-              text: "{{ package | remove: '"' | downcase }}"
+              text: "{{ package | remove: '"' | downcase }}",
+              num_submodules: {{ package.submodules | size }}
             },
           {% endfor %}
         ];
       </script>
     </div>
   </div>
-</form>
+</div>

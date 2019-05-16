@@ -1,28 +1,40 @@
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Description</th>
-      <th>Tags</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for package in site.data.library %}
-      {% capture id %}{{ package.name | replace: " ", "_" | replace: ")", "_" |  replace: "(", "_" }}" class="table-clickable-row" data-toggle="modal" data-target="#modal-{{ package.name | replace: " ", "_" |  replace: "(", "_" |  replace: ")", "_" }}{% endcapture %}
-      <tr id="{{ id }}">
-        <th style="width: 30%; vertical-align: middle">
-          {{ package.name }}
-        </th>
-        <td style="width: 50%">
-          {{ package.description | truncate: 100 }}
-        </td>
-        <td style="width: 20%">
-          {% for cloud in package.clouds %}
-            {% include_relative _cloud-label.html cloud=cloud %}
-          {% endfor %}
-          {% include_relative _package-label.html type=package.type %}
-        </td>
-      </tr>
-    {% endfor %}
-  </tbody>
-</table>
+<div style="text-align: right">
+  <small id="search-results-count"></small>
+</div>
+<div class="table-responsive">
+  <div>
+    <table class="table table-striped" style="min-width: 500px">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Tags</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for package in site.data.library %}
+          {% capture id %}{{ package.name | replace: " ", "_" | replace: ")", "_" |  replace: "(", "_" }}" class="table-clickable-row" data-toggle="modal" data-target="#modal-{{ package.name | replace: " ", "_" |  replace: "(", "_" |  replace: ")", "_" }}{% endcapture %}
+          <tr id="{{ id }}">
+            <th style="width: 30%; vertical-align: middle">
+              {{ package.name }}
+            </th>
+            <td style="width: 50%">
+              {{ package.description | truncate: 100 }}
+            </td>
+            <td style="width: 20%">
+              <div>
+                {% for cloud in package.clouds %}
+                  {% include_relative _cloud-label.html cloud=cloud %}
+                {% endfor %}
+              </div>
+              <div>
+                {% include_relative _package-label.html type=package.type %}
+              </div>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+

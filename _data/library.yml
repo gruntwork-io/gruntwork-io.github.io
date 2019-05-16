@@ -1022,6 +1022,45 @@
   description: |
     A simple, lightweight package manager for installing Gruntwork modules.
 
+- name: "fetch"
+  clouds:
+    - AWS
+    - GCP
+    - Azure
+  icons:
+    - title: Go
+      image: icon-go.png
+  public_url: "https://github.com/gruntwork-io/fetch"
+  type: Open Source
+  description: |
+    A tool that makes it easy to download files, folders, and release assets from a specific git commit, branch, or tag
+    of public and private GitHub repos.
+
+- name: "pre-commit"
+  clouds:
+    - AWS
+    - GCP
+    - Azure
+  icons:
+    - title: Bash
+      image: icon-bash.png
+  public_url: "https://github.com/gruntwork-io/pre-commit"
+  type: Open Source
+  description: |
+    A collection of pre-commit hooks for Terraform, bash, Go, and more.
+
+- name: "gruntwork"
+  clouds:
+    - AWS
+  icons:
+    - title: Go
+      image: icon-go.png
+  public_url: "https://github.com/gruntwork-io/gruntwork"
+  type: Subscriber-Only
+  description: |
+    A CLI tool to perform Gruntwork tasks, such as bootstrapping your GitHub and AWS accounts for the Reference
+    Architecture.
+
 - name: "package-terraform-utilities"
   clouds:
     - AWS
@@ -1037,6 +1076,21 @@
   description: |
     A collection of miscellaneous utilities and helper modules for use with Terraform. Includes modules for determining
     the current operating system and running Python/PEX executables from Terraform.
-
+  submodules:
+    - name: join-path
+      blurb: join paths with the proper separator
+      description: Join a list of given path parts (that is, file and folder names) into a single path with the appropriate path separator (backslash or forward slash) for the current operating system.
+    - name: operating-system
+      blurb: determine the operating system
+      description: Figure out what operating system is being used to run Terraform from inside your Terraform code.
+    - name: require-executable
+      blurb: ensure an executable is installed
+      description: Verify an executable exists on the host system, and emit a friendly error message if it does not.
+    - name: run-pex-as-data-source
+      blurb: run a Python (pex) script as a data source
+      description: Run a python script with dependencies packaged together as an external data source in a portable way.
+    - name: run-pex-as-resource
+      blurb: run a Python (pex) script as a data source
+      description: Run a python script with dependencies packaged together as a local-exec provisioner on a null resource in a portable way.
 
 
