@@ -17,10 +17,14 @@
           {{ package.description | truncate: 100 }}
         </td>
         <td style="width: 20%">
-          {% for cloud in package.clouds %}
-            {% include_relative _cloud-label.html cloud=cloud %}
-          {% endfor %}
-          {% include_relative _package-label.html type=package.type %}
+          <div>
+            {% for cloud in package.clouds %}
+              {% include_relative _cloud-label.html cloud=cloud %}
+            {% endfor %}
+          </div>
+          <div>
+            {% include_relative _package-label.html type=package.type %}
+          </div>
         </td>
       </tr>
     {% endfor %}

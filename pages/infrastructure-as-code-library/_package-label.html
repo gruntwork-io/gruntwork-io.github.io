@@ -1,6 +1,6 @@
 {% if include.type == 'Subscriber-Only' %}
-  {% assign type_color = 'warning' %}
-{% else %}
   {% assign type_color = 'default' %}
+{% else %}
+  {% assign type_color = 'success' %}
 {% endif %}
 <span class="label label-{{ type_color }}" style="text-transform: lowercase">{{ include.type }}</span>
