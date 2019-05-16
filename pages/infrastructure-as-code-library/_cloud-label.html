@@ -1,0 +1,9 @@
+{% case include.cloud %}
+  {% when 'Azure' %}
+    {% assign cloud_color = 'primary' %}
+  {% when 'GCP' %}
+    {% assign cloud_color = 'success' %}
+  {% else %}
+    {% assign cloud_color = 'info' %}
+{% endcase %}
+<span class="label label-{{ cloud_color }}" style="text-transform: lowercase; margin-right: 3px">{{ include.cloud }}</span>

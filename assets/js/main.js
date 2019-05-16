@@ -46,14 +46,42 @@ $("#modalPublicRepo").on("show.bs.modal",function(r){var e=$(r.relatedTarget).da
 
 $("#modalPrivateRepo").on("show.bs.modal",function(r){var a=$(r.relatedTarget).data("private-repo");$(r.currentTarget).find(".private-repo-link").attr("href",a)});
 
-/* Search box on library page */
-$('#js-search-library').on("keyup", function(event) {
+// Returns a function, that, as long as it continues to be invoked, will not
+// be triggered. The function will be called after it stops being called for
+// N milliseconds. If `immediate` is passed, trigger the function on the
+// leading edge, instead of the trailing.
+// From: https://davidwalsh.name/javascript-debounce-function
+function debounce(func, wait, immediate) {
+  var timeout;
+  return function() {
+    var context = this, args = arguments;
+    var later = function() {
+      timeout = null;
+      if (!immediate) func.apply(context, args);
+    };
+    var callNow = immediate && !timeout;
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+    if (callNow) func.apply(context, args);
+  };
+}
+
+/**
+ * A hacky function to search the IaC Lib and show/hide the proper elements in the table based on the results. Note
+ * that we wrap the function in a "debounce" so that if the user is typing quickly, we aren't trying to run searches
+ * (and fire Google Analytics events!) on every key stroke, but only when they pause from typing.
+ * @type {Function}
+ */
+var searchLibrary = debounce(function(event) {
   var target = $(event.currentTarget);
   var text = target.val();
 
   $('#no-matches').hide();
 
   if (text && text.length > 0) {
+    // Track what users are searching for via Google Analytics events
+    ga('send', 'event', "iac-lib", "search", "query", text);
+
     var lowerText = text.toLowerCase();
     var words = lowerText.split(" ");
 
@@ -83,7 +111,10 @@ $('#js-search-library').on("keyup", function(event) {
   } else {
     $('.table-clickable-row').show();
   }
-});
+}, 250);
+
+/* Search box on library page */
+$('#js-search-library').on("keyup", searchLibrary);
 
 /* Dashed lines on homepage */
 var c=document.getElementById("dottedLine");if(c){var ctx=c.getContext("2d");ctx.beginPath(),ctx.setLineDash([10,10]),ctx.moveTo(0,0),ctx.lineTo(0,200),ctx.strokeStyle="#fff",ctx.lineWidth=1.5,ctx.stroke()}
