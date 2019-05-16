@@ -46,10 +46,21 @@ $("#modalPublicRepo").on("show.bs.modal",function(r){var e=$(r.relatedTarget).da
 
 $("#modalPrivateRepo").on("show.bs.modal",function(r){var a=$(r.relatedTarget).data("private-repo");$(r.currentTarget).find(".private-repo-link").attr("href",a)});
 
+/* During initial load, fill search box on library page with the hash in the URL */
+$(function() {
+  if (window.location.hash) {
+    var text = decodeURIComponent(window.location.hash.replace(/^#/, ""));
+    $('#js-search-library').val(text);
+    $('#js-search-library').trigger("keyup");
+  }
+});
+
 /* Search box on library page */
 $('#js-search-library').on("keyup", function(event) {
   var target = $(event.currentTarget);
   var text = target.val();
+
+  window.location.hash = text;
 
   $('#no-matches').hide();
 
