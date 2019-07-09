@@ -973,6 +973,14 @@ a.caret-right{
   }
 }
 
+// Section Hero styles for pages that appear under Products listing
+.section-hero-product {
+  @media (min-width: @screen-sm-min) {
+    padding-top: @padding-section-vertical-desktop - 30px;
+    padding-bottom: @padding-section-vertical-desktop - 40px;
+  }
+}
+
 // Sections that have a blue background
 .section-blue {
   background-color: #0FC0EF;
@@ -2723,4 +2731,9 @@ input[type=number]::-webkit-outer-spin-button {
   > li:nth-of-type(odd) {
     background-color: #242e3b;
   }
+}
+
+.get-a-demo {
+  color: #06A6FD;
+  background-color: #ffffff;
 }
