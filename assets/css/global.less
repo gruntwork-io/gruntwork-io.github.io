@@ -454,6 +454,11 @@ a.caret-right{
 // Navbar
 // ==================================================
 
+.header > nav > div.container {
+  @media (min-width: 1000px) {
+    width: 1250px;
+  }
+}
 .navbar-default {
   border: none;
 }
@@ -478,10 +483,13 @@ a.caret-right{
   padding: @padding-base-vertical @padding-base-horizontal;
   margin-top: ((@navbar-height - 42) / 2);
   margin-bottom: ((@navbar-height - 42) / 2);
-  margin-left: 20px;
   &:hover,
   &:focus {
     color: #fff;
+  }
+  @media (min-width: 1400px) {
+    margin-left: 180px;
+    margin-right: 20px;
   }
 }
 
