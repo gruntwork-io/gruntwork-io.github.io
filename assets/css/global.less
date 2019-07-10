@@ -454,14 +454,22 @@ a.caret-right{
 // Navbar
 // ==================================================
 
-.header > nav > div.container {
-  @media (min-width: 1000px) {
-    width: 1250px;
-  }
-}
 .navbar-default {
   border: none;
 }
+
+.navbar > .container > .navbar-header > .navbar-brand {
+  @media (min-width: @screen-md-min) {
+    margin-left: -1em;
+  }
+  @media (min-width: @screen-lg-min) {
+    margin-left: -1.5em;
+  }
+  @media (min-width: 1400px) {
+    margin-left: -4.5em;
+  }
+}
+
 .navbar-brand {
   font-size: 32px;
   line-height: 32px;
@@ -487,9 +495,24 @@ a.caret-right{
   &:focus {
     color: #fff;
   }
-  @media (min-width: 1400px) {
-    margin-left: 180px;
+  @media (min-width: @screen-md-min) {
+    margin-left: 2em;
     margin-right: 20px;
+  }
+  @media (min-width: 1200px) {
+    margin-left: 6em;
+  }
+  @media (min-width: 1400px) {
+    margin-left: 10em;
+  }
+}
+
+.navbar-nav > li > a.contact-sales {
+  @media (min-width: 1200px) {
+    margin-right: -5em;
+  }
+  @media (min-width: 1400px) {
+    margin-right: -9em;
   }
 }
 
