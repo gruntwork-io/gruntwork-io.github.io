@@ -1037,6 +1037,35 @@ a.caret-right{
   }
 }
 
+.how-it-works h1 {
+  margin-bottom: 15px;
+  font-size: 32px;
+}
+
+.how-it-works .section-hero {
+  color: #fff;
+  &:extend(.gradient-primary.gradient-vertical);
+  background: linear-gradient(@brand-primary, #06A2FF);
+  padding-bottom: 20px;
+  border-bottom: 2px solid white;
+  margin-top: -(@navbar-height + 4);
+  padding-top: (@navbar-height + 4);
+
+  @media (min-width: @screen-sm-min) {
+    .grunty-grid {
+      position: absolute;
+      width: 100%;
+      height: auto;
+      left: 40px;
+    }
+  }
+  @media (min-width: @screen-md-min) {
+    .grunty-grid {
+      left: 55px;
+    }
+  }
+}
+
 // Hero styles for sub pages
 .sub-page .section-hero {
   &:extend(.gradient-steel.gradient-vertical);
