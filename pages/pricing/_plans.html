@@ -14,7 +14,7 @@
               <p class="help-block" style="margin-top:-9px;">per month</p>
             </div>
             <div data-mh="plans-pricing-bottom" style="height:100px">
-              <p><a class="btn btn-info" href="{{ site.data.pricing.subscriptions.aws.checkout_url }}">Get Started</a></p>
+              <p><a class="btn btn-info" href="{{ site.data.pricing.subscriptions.aws.checkout_url }}">Select</a></p>
               <p class="text-muted small"><em>Annual contract<br>Billed monthly or annually.</em></p>
             </div>
           </div>
@@ -59,7 +59,7 @@
               <p class="help-block" style="margin-top:-9px;">per month</p>
             </div>
             <div data-mh="plans-pricing-bottom" style="height:100px">
-              <p><a class="btn btn-info" href="{{ site.data.pricing.subscriptions.gcp.checkout_url }}">Get Started</a></p>
+              <p><a class="btn btn-info" href="{{ site.data.pricing.subscriptions.gcp.checkout_url }}">Select</a></p>
               <p class="text-muted small"><em>Annual contract.<br>Billed monthly or annually.</em></p>
               <p id="gcp-special-pricing">Special Introductory Price!</p>
             </div>
@@ -150,7 +150,7 @@
 </div>
 
 <!-- Pro Support -->
-<div class="panel panel-default panel-light pro-support">
+<!-- <div class="panel panel-default panel-light pro-support">
   <div class="panel-body">
     <div class="text-center panel-heading">
       <h2 class="margin-top-none" style="margin-bottom: 8px;">Professional Support</h2>
@@ -261,13 +261,22 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->
 
 <!-- Reference Architecture Pricing -->
-{% include_relative _reference-architecture.html %}
+<!-- {% include_relative _reference-architecture.html %} -->
 
 <!-- Houston Pricing -->
-{% include_relative _houston.html %}
+<!-- {% include_relative _houston.html %} -->
+
+<div class="panel panel-default panel-light pricing-help-notification">
+  <div class="panel-body">
+    <div class="text-center panel-heading">
+      <h2 id="need-help-text">Need help deciding?</h2>
+      <a class="btn btn-primary-hollow btn-sm need-help-button" href="/contact/">Contact Sales</a>
+    </div>
+  </div>
+</div>
 
 <div class="row row-page-header padding-top-none">
   <div class="col-xs-12 col-md-8 col-md-offset-2">
