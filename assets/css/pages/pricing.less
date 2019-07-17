@@ -2,6 +2,36 @@
 
 .page-pricing {
 
+  .pricing-steps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    list-style: none;
+    counter-reset: item;
+
+    li::before {
+      content: counter(item) " ";
+      border: 1.5px solid;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: .5em;
+    }
+    li {
+      margin: .8em;
+      counter-increment: item;
+      font-weight: 700;
+    }
+    #select-plan::before {
+      border: none;
+      color: #06a2ff;
+      background-color: white;
+    }
+  }
+
   .page-pricing-header {
     text-align: center;
     background: linear-gradient(to bottom, #1a232d, #2e3b4a)
