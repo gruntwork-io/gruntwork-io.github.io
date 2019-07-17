@@ -75,28 +75,6 @@
   }
 
 </style>
-            <div class="col-sm-12 subscription-type" style="padding: 0;">
-              <div class="row">
-                <div class="col-md-4" style="padding: 0; text-align: center;">
-                  <div id="subscription-type-aws" class="subscription-type-option text-center subscription-type-checked" data-subscription-type="aws">
-                    <img src="/assets/img/aws-logo@2x.png" alt="AWS Logo" style="height: 100px">
-                    <div>{{ site.data.pricing.subscriptions.aws.name }}</div>
-                  </div>
-                </div>
-                <div class="col-md-4" style="padding: 0; text-align: center;">
-                  <div id="subscription-type-gcp" class="subscription-type-option text-center" data-subscription-type="gcp">
-                    <img src="/assets/img/gcp-logo@2x.png" alt="GCP Logo" style="height: 100px">
-                    <div>{{ site.data.pricing.subscriptions.gcp.name }}</div>
-                  </div>
-                </div>
-                <div class="col-md-4" style="padding: 0; text-align: center;">
-                  <div id="subscription-type-enterprise" class="subscription-type-option text-center" data-subscription-type="enterprise">
-                    <img src="/assets/img/grunty-enterprise@2x.png" alt="Grunty Enterprise Mascot" style="height: 100px">
-                    <div>{{ site.data.pricing.subscriptions.enterprise.name }}</div>
-                  </div>
-                </div>
-              </div>
-            </div>
             <div class="col-sm-7 col-sm-offset-3">
               <div class="visible-xs-block text-left" style="margin-bottom: 16px">
                 <h4 class="h5 text-bold margin-top-none margin-bottom-none">Legal:</h4>
@@ -123,15 +101,6 @@
               </div>
             </div>
           </div>
-          <div class="side-by-side text-center panel panel-default panel-light hidden-xs" style="padding-bottom: 0">
-            <div class="panel-body text-center" style="padding: 10px 0">
-              <h3 class="no-anchor text-center">30-Day Money Back Guarantee<a href="/faq/#what-if-i-want-to-cancel-my-gruntwork-subscription" target="_blank"><i class="fa fa-info-circle" data-toggle="tooltip" data-html="true" data-original-title="If you're not happy for any reason, we'll refund 100% of your money within the first 30 days.<br><u>Click the icon for more information</u> <i class='fa fa-caret-down'></i>" style="font-size: 22px;margin-left: 16px;"></i></a></h3>
-            </div>
-          </div>
-          <div class="side-by-side text-center panel panel-default panel-dark">
-            <h5 class="d-inline-block no-anchor">Need help deciding?</h5>
-            <a class="btn btn-primary-hollow btn-sm d-inline-block" href="/contact/">Ask a Grunt</a>
-          </div>
           <ul class="text-muted smaller">
             <li>An initial deposit of $500 will be charged at the time of checkout. The remaining balance for your monthly payment and any Reference Architecture fees (if you selected it) will be charged when your order is processed.</li>
             <li>We typically process your order within 1 - 2 business days.</li>
@@ -139,8 +108,8 @@
           </ul>
         </div>
       </div>
-      <div class="col-md-4 panel panel-default checkout-panel-right">
-        <div class="row">
+      <div class="col-md-4" style="margin-top: 30px">
+        <div class="row panel panel-default checkout-panel-right">
           <div class="col-xs-6 col-sm-12">
             <h6 class="margin-top-none text-center visible-sm-block visible-md-block visible-lg-block no-anchor">
               <strong>Your Subscription</strong>
@@ -199,12 +168,24 @@
             <p><a id="checkout-contact-btn" class="btn btn-primary btn-block" href="/contact/" style="display: none;">Contact Us</a></p>
             <p style="font-size:85%;" class="text-muted text-center margin-bottom-none visible-sm-block visible-md-block visible-lg-block">View our <span><a href="/terms/" title="Gruntwork Terms of Service" target="_blank">Terms of Service</a></span></p>
           </div>
+        </div>
+        <div class="row panel panel-default">
+          <div class="col-sm-12">
+              <h3 class="no-anchor text-center" style="font-size: 20px">30-Day Money Back Guarantee<a href="/faq/#what-if-i-want-to-cancel-my-gruntwork-subscription" target="_blank"><i class="fa fa-info-circle" data-toggle="tooltip" data-html="true" data-original-title="If you're not happy for any reason, we'll refund 100% of your money within the first 30 days.<br><u>Click the icon for more information</u> <i class='fa fa-caret-down'></i>" style="font-size: 16px;margin-left: 10px;"></i></a></h3>
           </div>
         </div>
+      </div>
       <figure class="grunty-sprite" data-sprite="0">
         <figcaption class="sr-only">Grunt sprite</figcaption>
       </figure>
     </div>
+  </div>
+</div>
+
+<div class="panel panel-default panel-light checkout-help-notification">
+  <div class="text-center panel-heading">
+    <h2 class="need-help-text">Need help deciding?</h2>
+    <a class="btn btn-primary-hollow btn-sm need-help-button" href="/contact/">Contact Sales</a>
   </div>
 </div>
 
