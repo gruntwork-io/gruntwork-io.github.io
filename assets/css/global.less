@@ -2367,7 +2367,7 @@ body.checkout .section-heading .gw-icon {
       width: 30px;
       height: 30px;
       border-radius: 50%;
-      background:  #0DB9F3;
+      background: #0DB9F3;
       .gradient-mixin( top; to bottom; @gradient-primary-start; @gradient-primary-end; );
     }
     &:focus::-ms-fill-lower {
@@ -2381,11 +2381,11 @@ body.checkout .section-heading .gw-icon {
 
 .grunty-sprite {
   position: absolute;
-  top: -160px;
-  right: 54px;
+  top: -141px;
+  left: 167px;
   width: 216px;
   height: 180px;
-  background: url('/assets/img/aws-logo@2x.png') no-repeat;
+  background: url('/assets/img/grunty-sprites@2x.png') no-repeat;
   background-size: auto 100%;
   z-index: 1;
 
@@ -2395,16 +2395,8 @@ body.checkout .section-heading .gw-icon {
   &[data-sprite="2"] { background-position-x: -432px; }
   &[data-sprite="3"] { background-position-x: -648px; }
 
-  @media (min-width: @screen-xs-min) and (max-width: @screen-md-max) {
-    top: -140px;
-    right: 0;
-  }
   @media (max-width: @screen-xs-max) {
-    top: auto;
-    bottom: 0;
-    left: 50%;
-    right: auto;
-    transform: translateX(-50%);
+    background: none;
   }
 }
 
