@@ -2176,7 +2176,6 @@ input[type="radio"] .styled:checked + label::after {
   margin-top: 40px;
 
   @media (min-width: @screen-md-min) {
-    margin-bottom: 40px;
     display: flex;
   }
   .panel-body{
@@ -2208,18 +2207,17 @@ input[type="radio"] .styled:checked + label::after {
   }
 }
 .checkout-panel-left {
-  margin-bottom: 0;
-  padding: 25px;
+  padding: 0px;
   margin-right: 10px;
 
   @media (max-width: @screen-xs-max) {
     padding: 16px 8px;
-    padding-bottom: 140px;
   }
 }
 .checkout-panel-right {
   position: relative;
-  padding: 25px;
+  padding: 43px 25px 25px 25px;
+  margin-bottom: 10px;
 
   @media (min-width: @screen-md-min) {
     margin-top: -30px;
@@ -2249,15 +2247,7 @@ input[type="radio"] .styled:checked + label::after {
     }
   }
 }
-.checkout-addons {
-  padding-top: 10px;
-  padding-bottom: 10px;
-  > div {
-    @media (max-width: @screen-sm-max) {
-      margin-bottom: 30px;
-    }
-  }
-}
+
 .btn-checkout{
   @media (max-width: @screen-xs-max) {
     max-width: 180px;
