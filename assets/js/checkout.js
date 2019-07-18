@@ -51,16 +51,24 @@ $(function () {
       return target;
     };
   }
-  // Listen to the radios
-  $('.subscription-type-option').on('click', function (event) {
-    event.preventDefault();
+
+  // Listen to Addon button clicks
+  $('.addon-button').on('click', function () {
     var tmp = {};
-    tmp["subscription_type"] = $(this).data("subscription-type");
-    _updateCheckout(tmp);
-  });
-  $('[data-switch]').on('change', function () {
-    var tmp = {};
-    tmp[this.name] = this.checked;
+    tmp["subscription_type"] = $.query.get('subscription-type');
+    switch ($(this).text()) {
+      case "Add":
+        tmp[this.name] = true;
+        $(this).text("Remove");
+        $(this).addClass('addon-remove-button');
+        break;
+      case "Remove":
+        tmp[this.name] = false;
+        $(this).text("Add");
+        $(this).removeClass('addon-remove-button');
+        break;
+      default: // Do nothing
+    }
     _updateCheckout(tmp);
   });
 
@@ -70,7 +78,6 @@ $(function () {
 
     var enable_pro_support = checkoutOptions.pro_support;
     var enable_enterprise_support = checkoutOptions.subscription_type === 'enterprise';
-    console.log("=========>", checkoutOptions, enable_pro_support, enable_enterprise_support)
 
     $('.grunty-sprite').attr('data-sprite', 0);
     $('#subscription_type').val(checkoutOptions.subscription_type);
@@ -149,30 +156,6 @@ $(function () {
     }
 
     _calculatePrice();
-  }
-
-  function _updateAttrs() {
-    // dont allow variable users
-    $checkout.removeAttr('data-cb-addons_id_2');
-    $checkout.removeAttr('data-cb-addons_quantity_2');
-
-    if (checkoutOptions.pro_support) {
-      $checkout.attr({
-        'data-cb-addons_id_0': 'chargebee-support'
-      });
-    } else {
-      $checkout.removeAttr('data-cb-addons_id_0');
-      $checkout.removeAttr('data-cb-addons_id_1');
-      $checkout.removeAttr('data-cb-addons_quantity_1');
-    }
-
-    if (checkoutOptions.setup_deployment) {
-      $checkout.attr({
-        'data-cb-addons_id_3': 'chargebee-refarch'
-      });
-    } else {
-      $checkout.removeAttr('data-cb-addons_id_3');
-    }
   }
 
   function _calculatePrice() {

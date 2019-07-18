@@ -2,7 +2,7 @@
   <div class="col-md-12 hidden-xs">
     <ol class="pricing-steps">
       <li class="completed-step"><a href="/pricing/" style="color: inherit">Select Plan</a></li>
-        <i class="fa fa-angle-right fa-2x completed-step-icon"></i>
+      <i class="fa fa-angle-right fa-2x completed-step-icon"></i>
       <li class="current-step">Customize</li>
       <i class="fa fa-angle-right fa-2x current-step-icon"></i>
       <li>Checkout</li>
@@ -13,49 +13,6 @@
       <div class="col-md-7 panel panel-default panel-light checkout-panel-left">
         <div class="panel-body">
           <div class="row">
-            <style type="text/css">
-              /* HIDE RADIO */
-              input[name=subscription_type] {
-                position: absolute;
-                opacity: 0;
-                width: 0;
-                height: 0;
-              }
-
-              /* IMAGE STYLES */
-              input[name=subscription_type] + img {
-                cursor: pointer;
-              }
-
-              /* CHECKED STYLES
-              input[name=subscription_type]:checked + img {
-                outline: 2px solid #f00;
-                border-width: 2px;
-                background-color: #ff0000;
-              } */
-
-              .subscription-type {
-                margin-bottom: 30px;
-              }
-
-              .subscription-type-option {
-                display: block;
-                font-size: 90%;
-                padding: 10px;
-                cursor: pointer;
-                border: 2px solid transparent;
-              }
-
-              .subscription-type-option:hover {
-                background-color: #384554;
-              }
-
-              .subscription-type-checked {
-                border: 2px solid rgba(255,255,255,0.1);
-                background-color: #242e3b;
-              }
-
-            </style>
             <div class="col-sm-12">
               <div class="visible-xs-block text-left" style="margin-bottom: 16px">
                 <h4 class="h5 text-bold margin-top-none margin-bottom-none">Legal:</h4>
@@ -65,21 +22,6 @@
                 <h4 class="h5 text-bold margin-top-none margin-bottom-none">30-Day Money Back Guarantee:</h4>
                 If you're not happy for any reason, we'll refund 100% of your money within the first 30 days. <a class="caret-right" href="/pricing/#what-if-i-want-to-cancel-my-gruntwork-subscription">more info</a>
               </div>
-              <!-- <h4 class="h5 text-bold margin-top-none">Add-ons:</h4>
-              <div class="switch-group">
-                <label class="switch">
-                  <input type="checkbox" data-switch name="pro_support">
-                  <span class="slider round"></span>
-                </label>
-                <span class="switch-label help-text light" title="Get support via email and private chat. 2 Business Day SLA." data-toggle="tooltip">Professional Support</span>
-              </div>
-              <div class="switch-group">
-                <label class="switch">
-                  <input type="checkbox" data-switch name="setup_deployment">
-                  <span class="slider round"></span>
-                </label>
-                <span class="switch-label help-text light" title="An opinionated, best-practices, end-to-end tech stack that we customize to your needs, deploy into your AWS accounts, and give you 100% of the code—all in about one day." data-toggle="tooltip">Reference Architecture</span>
-              </div> -->
               <div class="col-sm-12 panel panel-default sub-panel professional-support">
                 <div class="panel-body text-center">
                   <h1 class="addon-amount">$1,950</h1>
@@ -87,7 +29,7 @@
                   <h3 class="addon-type">Professional Support</h3>
                   <hr class="hr-sm hr-reset visible-sm-block visible-md-block visible-lg-block">
                   <p>Get support via email chat and phone/video from Gruntwork.</p>
-                  <p><a class="btn btn-primary addon-button">Add</a></p>
+                  <p><a class="btn btn-primary addon-button" name="pro_support">Add</a></p>
                 </div>
               </div>
               <div class="col-sm-12 panel panel-default sub-panel">
@@ -97,7 +39,7 @@
                   <h3 class="addon-type">Reference Architecture</h3>
                   <hr class="hr-sm hr-reset visible-sm-block visible-md-block visible-lg-block">
                   <p>An opinionated, best-practices, end-to-end tech stack that we customize to your needs, deploy into your AWS or GCP accounts, and give you 100% of the code.</p>
-                  <p><a class="btn btn-primary addon-button">Add</a></p>
+                  <p><a class="btn btn-primary addon-button" name="setup_deployment">Add</a></p>
                 </div>
               </div>
             </div>
