@@ -2400,6 +2400,25 @@ body.checkout .section-heading .gw-icon {
   }
 }
 
+#subscription-type-img {
+  position: absolute;
+  top: -91px;
+  right: 67px;
+  width: 216px;
+  height: 132px;
+  background-size: auto 100%;
+  z-index: 1;
+
+  // subscription type variations
+  &[data-subscription-type="aws"] { background: url('/assets/img/aws-logo@2x.png') no-repeat; background-size: auto 100%;}
+  &[data-subscription-type="gcp"] { background: url('/assets/img/gcp-logo@2x.png') no-repeat; background-size: auto 100%;}
+
+
+  @media (max-width: @screen-xs-max) {
+    background: none;
+  }
+}
+
 .checkout-price {
   @media (max-width: @screen-xs-max) {
     text-align: left;

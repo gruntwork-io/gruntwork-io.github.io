@@ -17,8 +17,14 @@ $(function () {
 
   // Auto toggles the subscription type based on the URI
   switch ($.query.get('subscription-type')) {
-    case 'aws': _updateCheckout({ subscription_type: 'aws' }); break;
-    case 'gcp': _updateCheckout({ subscription_type: 'gcp' }); break;
+    case 'aws':
+      $('#subscription-type-img').attr('data-subscription-type', 'aws');
+      _updateCheckout({ subscription_type: 'aws' });
+      break;
+    case 'gcp':
+      $('#subscription-type-img').attr('data-subscription-type', 'gcp');
+      _updateCheckout({ subscription_type: 'gcp' });
+      break;
     case 'enterprise': _updateCheckout({ subscription_type: 'enterprise' }); break;
     default: // do nothing
   }
