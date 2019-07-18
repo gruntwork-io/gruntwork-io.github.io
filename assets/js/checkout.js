@@ -70,6 +70,7 @@ $(function () {
 
     var enable_pro_support = checkoutOptions.pro_support;
     var enable_enterprise_support = checkoutOptions.subscription_type === 'enterprise';
+    console.log("=========>", checkoutOptions, enable_pro_support, enable_enterprise_support)
 
     $('.grunty-sprite').attr('data-sprite', 0);
     $('#subscription_type').val(checkoutOptions.subscription_type);

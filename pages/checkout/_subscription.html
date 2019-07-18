@@ -10,81 +10,62 @@
   </div>
   <div class="col-xs-12">
     <div class="row checkout-panel">
-      <div class="col-md-8 panel panel-default panel-light checkout-panel-left">
+      <div class="col-md-7 panel panel-default panel-light checkout-panel-left">
         <div class="panel-body">
           <div class="row checkout-addons">
-            {{!--
-            <div class="col-sm-6">
-              <h4 class="h5 text-center text-bold margin-top-none">Every Subscription Includes:</h4>
-              <ul class="check-list margin-bottom-none">
-                <li class="text-nowrap">
-                  Infrastructure as Code Library
-                  <span class="text-primary" title="300,000+ lines of reusable, battle-tested infrastructure code."><i class="fa fa-question-circle-o" aria-hidden="true"></i></span>
-                </li>
-                <li class="text-nowrap">
-                  DevOps Training Library
-                  <span class="text-primary" title="A collection of training video courses that teach you DevOps."><i class="fa fa-question-circle-o" aria-hidden="true"></i></span>
-                </li>
-                <li class="text-nowrap">
-                  Community Support
-                  <span class="text-primary" title="Chat with Gruntwork engineers and fellow customers in our community chat room."><i class="fa fa-question-circle-o" aria-hidden="true"></i></span>
-                </li>
-              </ul>
-            </div>
-            --}}
-<style type="text/css">
-  /* HIDE RADIO */
-  input[name=subscription_type] {
-    position: absolute;
-    opacity: 0;
-    width: 0;
-    height: 0;
-  }
+            <style type="text/css">
+              /* HIDE RADIO */
+              input[name=subscription_type] {
+                position: absolute;
+                opacity: 0;
+                width: 0;
+                height: 0;
+              }
 
-  /* IMAGE STYLES */
-  input[name=subscription_type] + img {
-    cursor: pointer;
-  }
+              /* IMAGE STYLES */
+              input[name=subscription_type] + img {
+                cursor: pointer;
+              }
 
-  /* CHECKED STYLES
-  input[name=subscription_type]:checked + img {
-    outline: 2px solid #f00;
-    border-width: 2px;
-    background-color: #ff0000;
-  } */
+              /* CHECKED STYLES
+              input[name=subscription_type]:checked + img {
+                outline: 2px solid #f00;
+                border-width: 2px;
+                background-color: #ff0000;
+              } */
 
-  .subscription-type {
-    margin-bottom: 30px;
-  }
+              .subscription-type {
+                margin-bottom: 30px;
+              }
 
-  .subscription-type-option {
-    display: block;
-    font-size: 90%;
-    padding: 10px;
-    cursor: pointer;
-    border: 2px solid transparent;
-  }
+              .subscription-type-option {
+                display: block;
+                font-size: 90%;
+                padding: 10px;
+                cursor: pointer;
+                border: 2px solid transparent;
+              }
 
-  .subscription-type-option:hover {
-    background-color: #384554;
-  }
+              .subscription-type-option:hover {
+                background-color: #384554;
+              }
 
-  .subscription-type-checked {
-    border: 2px solid rgba(255,255,255,0.1);
-    background-color: #242e3b;
-  }
+              .subscription-type-checked {
+                border: 2px solid rgba(255,255,255,0.1);
+                background-color: #242e3b;
+              }
 
-</style>
-            <div class="col-sm-7 col-sm-offset-3">
+            </style>
+            <div class="col-sm-12">
               <div class="visible-xs-block text-left" style="margin-bottom: 16px">
                 <h4 class="h5 text-bold margin-top-none margin-bottom-none">Legal:</h4>
                 View our <a target="_blank" href="/terms/">Terms of Service</a>
               </div>
-              <div class="visible-xs-block text-left" style="margin-bottom: 16px">
+              <div class="visible-xs-block text-left" style="margin-bottom: 35px">
                 <h4 class="h5 text-bold margin-top-none margin-bottom-none">30-Day Money Back Guarantee:</h4>
                 If you're not happy for any reason, we'll refund 100% of your money within the first 30 days. <a class="caret-right" href="/pricing/#what-if-i-want-to-cancel-my-gruntwork-subscription">more info</a>
               </div>
-              <h4 class="h5 text-bold margin-top-none">Add-ons:</h4>
+              <!-- <h4 class="h5 text-bold margin-top-none">Add-ons:</h4>
               <div class="switch-group">
                 <label class="switch">
                   <input type="checkbox" data-switch name="pro_support">
@@ -98,17 +79,30 @@
                   <span class="slider round"></span>
                 </label>
                 <span class="switch-label help-text light" title="An opinionated, best-practices, end-to-end tech stack that we customize to your needs, deploy into your AWS accounts, and give you 100% of the code—all in about one day." data-toggle="tooltip">Reference Architecture</span>
+              </div> -->
+              <div class="col-sm-12 panel panel-default sub-panel" style="margin-top: -35px">
+                <div class="panel-body text-center">
+                  <h1 class="addon-amount">$1,950</h1>
+                  <p class="addon-duration">billed monthly</p>
+                  <h3 class="addon-type">Professional Support</h3>
+                  <hr class="hr-sm hr-reset visible-sm-block visible-md-block visible-lg-block">
+                  <p>Get support via email chat and phone/video from Gruntwork.</p>
+                </div>
+              </div>
+              <div class="col-sm-12 panel panel-default sub-panel">
+                <div class="panel-body text-center">
+                  <h1 class="addon-amount">$4,950</h1>
+                  <p class="addon-duration">one-time, flat fee</p>
+                  <h3 class="addon-type">Reference Architecture</h3>
+                  <hr class="hr-sm hr-reset visible-sm-block visible-md-block visible-lg-block">
+                  <p>An opinionated, best-practices, end-to-end tech stack that we customize to your needs, deploy into your AWS or GCP accounts, and give you 100% of the code.</p>
+                </div>
               </div>
             </div>
           </div>
-          <ul class="text-muted smaller">
-            <li>An initial deposit of $500 will be charged at the time of checkout. The remaining balance for your monthly payment and any Reference Architecture fees (if you selected it) will be charged when your order is processed.</li>
-            <li>We typically process your order within 1 - 2 business days.</li>
-            <li>These <a style="text-decoration: underline;" class="text-muted" href="/terms/">Terms of Service</a> license our products FOR YOUR COMPANY'S INTERNAL USE ONLY. If you wish to become a Gruntwork Partner, please <a style="text-decoration: underline;" class="text-muted" href="/contact/">contact us</a>.</li>
-          </ul>
         </div>
       </div>
-      <div class="col-md-4" style="margin-top: 30px">
+      <div class="col-md-5" style="margin-top: 30px">
         <div class="row panel panel-default checkout-panel-right">
           <div class="col-xs-6 col-sm-12">
             <h6 class="margin-top-none text-center visible-sm-block visible-md-block visible-lg-block no-anchor">
@@ -169,9 +163,9 @@
             <p style="font-size:85%;" class="text-muted text-center margin-bottom-none visible-sm-block visible-md-block visible-lg-block">View our <span><a href="/terms/" title="Gruntwork Terms of Service" target="_blank">Terms of Service</a></span></p>
           </div>
         </div>
-        <div class="row panel panel-default">
-          <div class="col-sm-12">
-              <h3 class="no-anchor text-center" style="font-size: 20px">30-Day Money Back Guarantee<a href="/faq/#what-if-i-want-to-cancel-my-gruntwork-subscription" target="_blank"><i class="fa fa-info-circle" data-toggle="tooltip" data-html="true" data-original-title="If you're not happy for any reason, we'll refund 100% of your money within the first 30 days.<br><u>Click the icon for more information</u> <i class='fa fa-caret-down'></i>" style="font-size: 16px;margin-left: 10px;"></i></a></h3>
+        <div class="row panel panel-default panel-light">
+          <div class="col-sm-12 panel-body">
+            <h3 class="no-anchor text-center" style="font-size: 24px">30-Day Money Back Guarantee<a href="/faq/#what-if-i-want-to-cancel-my-gruntwork-subscription" target="_blank"><i class="fa fa-info-circle" data-toggle="tooltip" data-html="true" data-original-title="If you're not happy for any reason, we'll refund 100% of your money within the first 30 days.<br><u>Click the icon for more information</u> <i class='fa fa-caret-down'></i>" style="font-size: 22px;margin-left: 16px;"></i></a></h3>
           </div>
         </div>
       </div>
@@ -183,7 +177,7 @@
 </div>
 
 <div class="panel panel-default panel-light checkout-help-notification">
-  <div class="text-center panel-heading">
+  <div class="panel-body text-center">
     <h2 class="need-help-text">Need help deciding?</h2>
     <a class="btn btn-primary-hollow btn-sm need-help-button" href="/contact/">Contact Sales</a>
   </div>

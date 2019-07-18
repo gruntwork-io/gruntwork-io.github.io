@@ -11,3 +11,41 @@
   width: 103%;
   margin-left: -.8em;
 }
+
+.checkout-panel {
+  .checkout-panel-left {
+    .sub-panel {
+      background-color: #1D252F;
+      line-height: 1;
+      width: 110%;
+      margin-left: -23px;
+
+      @media (max-width: @screen-md-max) {
+        width: 105%;
+        margin-left: -15px;
+      }
+
+      @media (max-width: @screen-sm-max) {
+        width: 100%;
+        margin-left: 0px;
+      }
+
+      .addon-amount {
+        font-size: 66px;
+        font-weight: bold;
+      }
+      .addon-duration {
+        margin-top: -25px;
+        color: white;
+        font-size: 14px;
+      }
+      .addon-type {
+        font-size: 36px;
+      }
+
+      hr {
+        border: 2px solid #194c5f;
+      }
+    }
+  }
+}
