@@ -67,14 +67,14 @@ $(function () {
     var tmp = {};
     tmp["subscription_type"] = $.query.get('subscription-type');
     switch ($(this).text()) {
-      case "Add":
+      case "Add to Subscription ":
         tmp[this.name] = true;
         $(this).text("Remove");
         $(this).addClass('addon-remove-button');
         break;
       case "Remove":
         tmp[this.name] = false;
-        $(this).text("Add");
+        $(this).text("Add to Subscription ").append("<i class='fa fa-angle-double-right fa-lg' aria-hidden='true'></i>");
         $(this).removeClass('addon-remove-button');
         break;
       default: // Do nothing
