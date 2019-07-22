@@ -19,10 +19,14 @@ $(function () {
   switch ($.query.get('subscription-type')) {
     case 'aws':
       $('#subscription-type-img').attr('data-subscription-type', 'aws');
+      $('#refarch-button-default').show();
       _updateCheckout({ subscription_type: 'aws' });
       break;
     case 'gcp':
       $('#subscription-type-img').attr('data-subscription-type', 'gcp');
+      // Show Coming Soon text and Contact Us button for GCP reference architecture
+      $('#addon-amount-refarch').text('Coming Soon.');
+      $('#refarch-button-gcp').show();
       _updateCheckout({ subscription_type: 'gcp' });
       break;
     case 'enterprise': _updateCheckout({ subscription_type: 'enterprise' }); break;
