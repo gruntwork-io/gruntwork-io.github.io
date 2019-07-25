@@ -1,4 +1,13 @@
 <div class="row row-page-header">
+  <div class="col-md-12 hidden-xs">
+    <ol class="pricing-steps">
+      <li class="current-step">Select Plan</li>
+        <i class="fa fa-angle-right fa-2x current-step-icon"></i>
+      <li>Customize</li>
+      <i class="fa fa-angle-right fa-2x"></i>
+      <li>Checkout</li>
+    </ol>
+  </div>
   <div class="col-xs-12">
     <div class="gw-pricing-columns row row-collapse row-equalize-col-height row-panels row-panels-sm">
       <div class="col-xs-12 col-sm-4 panel panel-default panel-light" style="position: relative; margin-top: 100px;">
@@ -14,7 +23,7 @@
               <p class="help-block" style="margin-top:-9px;">per month</p>
             </div>
             <div data-mh="plans-pricing-bottom" style="height:100px">
-              <p><a class="btn btn-info" href="{{ site.data.pricing.subscriptions.aws.checkout_url }}">Get Started</a></p>
+              <p><a class="btn btn-info" href="{{ site.data.pricing.subscriptions.aws.checkout_url }}">Select</a></p>
               <p class="text-muted small"><em>Annual contract<br>Billed monthly or annually.</em></p>
             </div>
           </div>
@@ -59,7 +68,7 @@
               <p class="help-block" style="margin-top:-9px;">per month</p>
             </div>
             <div data-mh="plans-pricing-bottom" style="height:100px">
-              <p><a class="btn btn-info" href="{{ site.data.pricing.subscriptions.gcp.checkout_url }}">Get Started</a></p>
+              <p><a class="btn btn-info" href="{{ site.data.pricing.subscriptions.gcp.checkout_url }}">Select</a></p>
               <p class="text-muted small"><em>Annual contract.<br>Billed monthly or annually.</em></p>
               <p id="gcp-special-pricing">Special Introductory Price!</p>
             </div>
@@ -140,134 +149,16 @@
           </figure>
         </div>
       </div>
-      <!--<div class="col-xs-12 panel panel-default panel-light last" style="width: calc(100% - 1px);">
-          <div class="panel-body text-center">
-            <p><a href="#">Show All Features</a></p>
-          </div>
-        </div>-->
     </div>
   </div>
 </div>
 
-<!-- Pro Support -->
-<div class="panel panel-default panel-light pro-support">
-  <div class="panel-body">
-    <div class="text-center panel-heading">
-      <h2 class="margin-top-none" style="margin-bottom: 8px;">Professional Support</h2>
-      <p>Get support via email chat, and phone/video from Gruntwork.</p>
-    </div>
-    <div class="container">
-      <div class="gw-pricing-houston row row-panels row-panels-sm row-equalize-col-height">
-        <div class="col-sm-4 panel panel-default panel-dark">
-          <div class="panel-body">
-            <div class="text-center">
-              <h3 class="h2" style="margin: 18px 0 8px;">AWS</h3>
-            </div>
-            <hr>
-            <div class="flex flex-middle text-center" data-mh="houston-footer">
-              <div>
-                <ul class="check-list text-white">
-                  <li><span class="help-text light"
-                            title="Get help with questions, bugs, troubleshooting, best practices or high-level strategic DevOps questions for AWS."
-                            data-toggle="tooltip">Support for AWS</span></li>
-                  <li><span class="help-text light"
-                            title="Email us any time and use our customer portal to track all your requests."
-                            data-toggle="tooltip">Via email</span></li>
-                  <li><span class="help-text light"
-                            title="We'll setup a shared Slack channel so that you can chat with us directly from your preferred Slack workspace."
-                            data-toggle="tooltip">Via private Slack</span></li>
-                  <li><span class="help-text light"
-                            title="Gruntwork engineers will usually respond promptly, but no later than 2 business days after we receive your email or chat request."
-                            data-toggle="tooltip">2 business day SLA</span></li>
-                </ul>
-                <p class="h2 big-price"><span>+$</span>{{ site.data.pricing.subscriptions.aws.pro_support_price.label }}</p>
-                <p class="help-block">billed monthly</p>
-                <p><a class="btn btn-info" href="{{ site.data.pricing.subscriptions.aws.checkout_url }}&addon=pro-support">Get Started</a></p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-4 panel panel-default panel-dark">
-          <div class="panel-body">
-            <div class="text-center">
-              <h3 class="h2" style="margin: 18px 0 8px;">GCP</h3>
-            </div>
-            <hr>
-            <div class="flex flex-middle text-center" data-mh="houston-footer">
-              <div>
-                <ul class="check-list text-white">
-                  <li><span class="help-text light"
-                            title="Get help with questions, bugs, troubleshooting, best practices or high-level strategic DevOps questions for GCP."
-                            data-toggle="tooltip">Support for GCP</span></li>
-                  <li><span class="help-text light"
-                            title="Email us any time and use our customer portal to track all your requests."
-                            data-toggle="tooltip">Via email</span></li>
-                  <li><span class="help-text light"
-                            title="We'll setup a shared Slack channel so that you can chat with us directly from your preferred Slack workspace."
-                            data-toggle="tooltip">Via private Slack</span></li>
-                  <li><span class="help-text light"
-                            title="Gruntwork engineers will usually respond promptly, but no later than 2 business days after we receive your email or chat request."
-                            data-toggle="tooltip">2 business day SLA</span></li>
-                </ul>
-                <p class="h2 big-price"><span>+$</span>{{ site.data.pricing.subscriptions.gcp.pro_support_price.label }}</p>
-                <p class="help-block">billed monthly</p>
-                <p><a class="btn btn-info" href="{{ site.data.pricing.subscriptions.gcp.checkout_url }}&addon=pro-support">Get Started</a></p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-4 panel panel-default panel-dark">
-          <div class="panel-body">
-            <div class="text-center">
-              <h3 class="h2" style="margin: 18px 0 8px;">Enterprise</h3>
-            </div>
-            <hr>
-            <div class="flex flex-middle text-center" data-mh="houston-footer">
-              <div>
-                <ul class="check-list text-white">
-                  <li><span class="help-text light"
-                            title="Get help with questions, bugs, troubleshooting, best practices or high-level strategic DevOps questions for both AWS and GCP."
-                            data-toggle="tooltip">Support for AWS &amp; GCP</span></li>
-                  <li><span class="help-text light"
-                            title="Email us any time and use our customer portal to track all your requests."
-                            data-toggle="tooltip">Via email</span></li>
-                  <li><span class="help-text light"
-                            title="We'll setup a shared Slack channel so that you can chat with us directly from your preferred Slack workspace."
-                            data-toggle="tooltip">Via private Slack</span></li>
-                  <li><span class="help-text light"
-                            title="If we can't resolve an issue via email or chat, we'll schedule a call to work through it with you in real-time."
-                            data-toggle="tooltip">Via Phone/Video Chat</span></li>
-                  <li><span class="help-text light"
-                            title="Have us review your infrastructure code by @mentioning us in a Pull Request."
-                            data-toggle="tooltip">Code Reviews</span></li>
-                  <li><span class="help-text light"
-                            title="Want a second opinion on your network topology or cloud architecture? Send us a design doc, diagram or schedule a call to review it together."
-                            data-toggle="tooltip">Architecture Reviews</span></li>
-                  <li><span class="help-text light"
-                            title="We will begin work on any bugs you identify in the Infrastructure as Code Library as quickly as we can, but no later than 2 days after you request it."
-                            data-toggle="tooltip">Prioritized Bug Fixes</span></li>
-                  <li><span class="help-text light"
-                            title="Gruntwork engineers will usually respond promptly, but no later than 4 business hours after we receive your email or chat request."
-                            data-toggle="tooltip">Same-day SLA</span></li>
-                </ul>
-                <p><a class="btn btn-primary" href="/contact/">Contact Us</a></p>
-                <p>Included with Enterprise Subscription</p>
-                <p class="help-block"></p>
-                <p class="text-muted small"></p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+<div class="panel panel-default panel-light pricing-help-notification">
+  <div class="panel-body text-center">
+    <h2 class="need-help-text">Need help deciding?</h2>
+    <a class="btn btn-primary-hollow btn-sm need-help-button" href="/contact/">Contact Sales</a>
   </div>
 </div>
-
-<!-- Reference Architecture Pricing -->
-{% include_relative _reference-architecture.html %}
-
-<!-- Houston Pricing -->
-{% include_relative _houston.html %}
 
 <div class="row row-page-header padding-top-none">
   <div class="col-xs-12 col-md-8 col-md-offset-2">
