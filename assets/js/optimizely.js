@@ -57,23 +57,6 @@
       })
     })();
 
-
-    /**
-     * Experiment: Navbar Contact-Sales CTA
-     * Description: Check if there is an increase in customer reach out based on CTA
-     * on the navbar.
-     */
-    // (function () {
-    //   $('#navar-contact-button').click(function() {
-    //     // record each unique user that clicks the button
-    //     optimizely.track('clicked_nvbar_contact_cta', userId);
-    //   })
-    //   const variation = optimizely.activate('navbar_contact_sales_experiment', userId);
-    //   if (variation === 'show') {
-    //     $('#navbar-contact-button').show();
-    //   }
-    // })();
-
     /**
      * Experiment: Pricing Page Beta
      * Description: Compare engagement of new pricing page versus existing one.
@@ -108,6 +91,27 @@
       $('.checkout-addons').click(function() {
         // record each unique user that clicks the checkout CTAs
         optimizely.track('clicked_checkout_addon', userId);
+      })
+    })();
+
+    /**
+     * Experiment: Unified Checkout Flow
+     * Description: Compare conversion of unified flow versus existing flow.
+     */
+    (function () {
+      const variation = optimizely.activate('unified_checkout_flow_experiment', userId);
+      if (variation === 'unified') {
+        // Navbar buy now button should link to the pricing-beta page
+        $('#navbar-buy-now').attr('href', '/pricing-beta/');
+        // Pricing CTA buttons should link to the checkout-beta page
+        $('.pricing-cta-aws').attr('href', '/checkout-beta/?subscription-type=aws');
+        $('.pricing-cta-gcp').attr('href', '/checkout-beta/?subscription-type=gcp');
+      }
+
+      // Track the metrics
+      $('.btn-checkout').click(function() {
+        // record each unique user that clicks the checkout CTAs
+        optimizely.track('clicked_checkout_cta', userId);
       })
     })();
   });
