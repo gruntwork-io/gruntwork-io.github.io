@@ -62,6 +62,19 @@ $(function () {
     };
   }
 
+  // Listen to the radios
+  $('.subscription-type-option').on('click', function (event) {
+    event.preventDefault();
+    var tmp = {};
+    tmp["subscription_type"] = $(this).data("subscription-type");
+    _updateCheckout(tmp);
+  });
+  $('[data-switch]').on('change', function () {
+    var tmp = {};
+    tmp[this.name] = this.checked;
+    _updateCheckout(tmp);
+  });
+
   // Listen to Addon button clicks
   $('.addon-button').on('click', function () {
     var tmp = {};
