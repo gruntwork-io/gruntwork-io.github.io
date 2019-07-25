@@ -81,6 +81,7 @@
     (function () {
       const variation = optimizely.activate('pricing_beta_experiment', userId);
       if (variation === 'beta') {
+        // Navbar buy now button should link to the pricing-beta page
         $('#navbar-buy-now').attr('href', '/pricing-beta/');
       }
 
@@ -96,18 +97,19 @@
      * Description: Compare engagement of new checkout page versus existing one.
      */
     (function () {
-      const variation = optimizely.activate('pricing_beta_experiment', userId);
+      const variation = optimizely.activate('checkout_beta_experiment', userId);
       if (variation === 'beta') {
-        $('#navbar-buy-now').attr('href', '/pricing-beta/');
+        // Pricing CTA buttons should link to the checkout-beta page
+        $('.pricing-cta-aws').attr('href', '/checkout-beta/?subscription-type=aws');
+        $('.pricing-cta-gcp').attr('href', '/checkout-beta/?subscription-type=gcp');
       }
 
       // Track the metrics
-      $('.pricing-ctas').click(function() {
-        // record each unique user that clicks the button
-        optimizely.track('clicked_pricing_cta', userId);
+      $('.checkout-addons').click(function() {
+        // record each unique user that clicks the checkout CTAs
+        optimizely.track('clicked_checkout_addon', userId);
       })
     })();
-
   });
 })(window.jQuery);
 
