@@ -21,34 +21,91 @@
 
     /**
      * Experiment: Services CTA
-     * Description: Measure how many people will reach out to us based on prominent
+     * Description: Check if there is an increase in customer reach out based on prominent
      * CTAs on pages listed under Services.
      */
     (function () {
+      const variation = optimizely.activate('services_cta_experiment', userId);
+      if (variation === 'show') {
+        // The CTAs default display is set to hidden so set it to show
+        $('.services-ctas').show();
+      }
+
+      // Track the metrics
       $('.services-ctas').click(function() {
         // record each unique user that clicks the button
         optimizely.track('clicked_services_cta', userId)
       })
-      const variation = optimizely.activate('services_cta_experiment', userId);
-      if (variation === 'show') {
-        $('.services-ctas').show();
-      }
     })();
 
     /**
      * Experiment: Products CTA
-     * Description: Measure how many people will reach out to us based on prominent
+     * Description: Check if there is an increase in customer reach out based on prominent
      * CTAs on pages listed under Products.
      */
     (function () {
+      const variation = optimizely.activate('products_cta_experiment', userId);
+      if (variation === 'show') {
+        // The CTAs default display is set to hidden so set it to show
+        $('.products-ctas').show();
+      }
+
+      // Track the metrics
       $('.products-ctas').click(function() {
         // record each unique user that clicks the button
         optimizely.track('clicked_products_cta', userId);
       })
-      const variation = optimizely.activate('products_cta_experiment', userId);
-      if (variation === 'show') {
-        $('.products-ctas').show();
+    })();
+
+
+    /**
+     * Experiment: Navbar Contact-Sales CTA
+     * Description: Check if there is an increase in customer reach out based on CTA
+     * on the navbar.
+     */
+    // (function () {
+    //   $('#navar-contact-button').click(function() {
+    //     // record each unique user that clicks the button
+    //     optimizely.track('clicked_nvbar_contact_cta', userId);
+    //   })
+    //   const variation = optimizely.activate('navbar_contact_sales_experiment', userId);
+    //   if (variation === 'show') {
+    //     $('#navbar-contact-button').show();
+    //   }
+    // })();
+
+    /**
+     * Experiment: Pricing Page Beta
+     * Description: Compare engagement of new pricing page versus existing one.
+     */
+    (function () {
+      const variation = optimizely.activate('pricing_beta_experiment', userId);
+      if (variation === 'beta') {
+        $('#navbar-buy-now').attr('href', '/pricing-beta/');
       }
+
+      // Track the metrics
+      $('.pricing-ctas').click(function() {
+        // record each unique user that clicks the button
+        optimizely.track('clicked_pricing_cta', userId);
+      })
+    })();
+
+    /**
+     * Experiment: Checkout Page Beta
+     * Description: Compare engagement of new checkout page versus existing one.
+     */
+    (function () {
+      const variation = optimizely.activate('pricing_beta_experiment', userId);
+      if (variation === 'beta') {
+        $('#navbar-buy-now').attr('href', '/pricing-beta/');
+      }
+
+      // Track the metrics
+      $('.pricing-ctas').click(function() {
+        // record each unique user that clicks the button
+        optimizely.track('clicked_pricing_cta', userId);
+      })
     })();
 
   });
