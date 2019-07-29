@@ -52,9 +52,12 @@
 
 
       // Metrics to track
+      $('.contact-cta, .product-ctas, .service-ctas').click(function () {
+        optimizelyClientInstance.track('user_clicked_checkout_button', userId);
+      });
       $('.nav-item-central').click(function () {
         optimizelyClientInstance.track('user_clicked_on_other_navbar_buttons', userId);
-      })
+      });
       $('.home-page-cta').click(function () {
         optimizelyClientInstance.track('user_clicked_home_page_main_cta', userId);
       });

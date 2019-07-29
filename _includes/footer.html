@@ -16,7 +16,9 @@
           <hr class="hr-sm" />
           <ul class="list-unstyled">
             {% for link in category.links %}
-              <li><a href="{{ link.url }}" ga-on="click" ga-event-category="footer-{{ page.path | slugify }}" ga-event-action="link-{{ link.title | slugify }}">{{ link.title }}</a></li>
+              <li {% if link.title == "Contact us" %} class="contact-cta"{% endif %}>
+                <a href="{{ link.url }}" ga-on="click" ga-event-category="footer-{{ page.path | slugify }}" ga-event-action="link-{{ link.title | slugify }}">{{ link.title }}</a>
+              </li>
             {% endfor %}
             {% if category.title == "Connect" %}
               <li>
