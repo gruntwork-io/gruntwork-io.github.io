@@ -458,7 +458,7 @@ a.caret-right{
   border: none;
 }
 
-.navbar > .container > .navbar-header > .navbar-brand {
+.navbar > .container > .navbar-header .navbar-brand-beta {
   @media (min-width: @screen-md-min) {
     margin-left: -1em;
   }
@@ -491,10 +491,15 @@ a.caret-right{
   padding: @padding-base-vertical @padding-base-horizontal;
   margin-top: ((@navbar-height - 42) / 2);
   margin-bottom: ((@navbar-height - 42) / 2);
+  margin-left: 20px;
   &:hover,
   &:focus {
     color: #fff;
   }
+}
+
+.navbar-beta .navbar-nav > li > a.btn {
+  margin-left: inherit;
   @media (min-width: @screen-md-min) {
     margin-left: 2em;
     margin-right: 20px;
