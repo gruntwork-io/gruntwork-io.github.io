@@ -37,7 +37,7 @@
     (function () {
       var variation = optimizelyClientInstance.activate('navbar_and_checkout_flow', userId);
       if (variation === 'original_nav_plus_original_checkout_flow') {
-        // Pick the desired hidden elements to show for this variation
+        // execute code for original_nav_plus_original_checkout_flow
         $('#navbar-original').show();
         $('#learn-more').show();
       } else if (variation === 'original_nav_plus_beta_checkout_flow') {
@@ -47,6 +47,7 @@
         $('#get-a-demo').show();
         $('.products-ctas').show();
         $('.services-ctas').show();
+        $('.nav-dropdown-page').addClass('section-hero-with-button');
       } else if (variation === 'beta_nav_plus_original_checkout_flow') {
         // execute code for beta_nav_plus_original_checkout_flow
       } else {
@@ -83,7 +84,7 @@
       });
       $('.checkout-page-contact-cta').click(function () {
         optimizelyClientInstance.track('user_clicks_contact_cta_on_checkout_page', userId);
-      })
+      });
     })();
   });
 })(window.jQuery);
