@@ -50,6 +50,13 @@
         $('.nav-dropdown-page').addClass('section-hero-with-button');
       } else if (variation === 'beta_nav_plus_original_checkout_flow') {
         // execute code for beta_nav_plus_original_checkout_flow
+        $('#navbar-beta').show();
+        $('#get-a-demo').show();
+        $('.products-ctas').show();
+        $('.services-ctas').show();
+        $('.nav-dropdown-page').addClass('section-hero-with-button');
+        // this variation is same as above variation except users get the old flow
+        $('#navbar-buy-now').attr('href', '/pricing/');
       } else {
         // display original navbar and checkout flow
         $('#navbar-original').show();
