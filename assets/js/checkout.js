@@ -15,6 +15,11 @@ $(function () {
     users: 20
   };
 
+  var refarchOriginnalText = $('#refarch-slider-text').text();
+  var refarchOriginalTooltip = $('#refarch-slider-text').attr('data-original-title');
+  var gcpRefarchText = `${refarchOriginnalText}?`;
+  var gcpRefarchTooltip = `COMING SOON. ${refarchOriginalTooltip}`;
+
   // Auto toggles the subscription type based on the URI
   switch ($.query.get('subscription-type')) {
     case 'aws':
@@ -24,9 +29,18 @@ $(function () {
       break;
     case 'gcp':
       $('#subscription-type-img').attr('data-subscription-type', 'gcp');
-      // Show Coming Soon text and Contact Us button for GCP reference architecture
+
+      // Disable Refarch addon button
+      $('#refarch-slider-input').attr('disabled', true);
+      $('#refarch-slider').addClass('disabled-refarch-slider');
+      $('#refarch-slider-text').text(gcpRefarchText);
+      $('#refarch-slider-text').attr('data-original-title', gcpRefarchTooltip);
+
+      // Show Coming Soon text and Contact Us button in New Checkout for GCP reference architecture
       $('#addon-amount-refarch').text('Coming Soon.');
       $('#refarch-button-gcp').show();
+
+
       _updateCheckout({ subscription_type: 'gcp' });
       break;
     case 'enterprise': _updateCheckout({ subscription_type: 'enterprise' }); break;
@@ -62,13 +76,33 @@ $(function () {
     };
   }
 
-  // Listen to the radios
+  // Listen to cloud provider selection
   $('.subscription-type-option').on('click', function (event) {
     event.preventDefault();
     var tmp = {};
-    tmp["subscription_type"] = $(this).data("subscription-type");
+    var subscriptionType = $(this).data("subscription-type");
+    tmp["subscription_type"] = subscriptionType;
+
+    // Disable GCP Refarch Slider
+    switch (subscriptionType) {
+      case 'gcp':
+        tmp['setup_deployment'] = false;
+        input = $('#refarch-slider-input');
+        input.prop('checked', false);
+        input.attr('disabled', true);
+        $('#refarch-slider').addClass('disabled-refarch-slider');
+        $('#refarch-slider-text').text(gcpRefarchText);
+        $('#refarch-slider-text').attr('data-original-title', gcpRefarchTooltip);
+        break;
+      default:
+        $('#refarch-slider-input').attr('disabled', false);
+        $('#refarch-slider').removeClass('disabled-refarch-slider');
+        $('#refarch-slider-text').text(refarchOriginnalText);
+        $('#refarch-slider-text').attr('data-original-title', refarchOriginalTooltip);
+    }
     _updateCheckout(tmp);
   });
+  // Listen to the radios
   $('[data-switch]').on('change', function () {
     var tmp = {};
     tmp[this.name] = this.checked;
