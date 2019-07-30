@@ -43,11 +43,16 @@
       } else if (variation === 'original_nav_plus_beta_checkout_flow') {
         // execute code for original_nav_plus_beta_checkout_flow
       } else if (variation === 'beta_nav_plus_beta_checkout_flow') {
-        // execute code for beta_nav_plus_beta_checkout_flow
+        $('#navbar-beta').show();
+        $('#get-a-demo').show();
+        $('.products-ctas').show();
+        $('.services-ctas').show();
       } else if (variation === 'beta_nav_plus_original_checkout_flow') {
         // execute code for beta_nav_plus_original_checkout_flow
       } else {
-        // execute default code
+        // display original navbar and checkout flow
+        $('#navbar-original').show();
+        $('#learn-more').show();
       }
 
 
