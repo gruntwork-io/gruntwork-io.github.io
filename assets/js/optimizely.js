@@ -30,7 +30,7 @@
      * - End up on the contact page - done
      * - Contact us after reaching the contact page - done
      * - Click on the other buttons in the Nav - done
-     * - Pick the add ons per cloud provider
+     * - Pick the add ons per cloud provider - done
      * - Click the learn more vs Get Demo - done
      * - Click ask a grunt vs contact sales
      */
@@ -69,6 +69,12 @@
       });
       $('.home-page-cta').click(function () {
         optimizelyClientInstance.track('user_clicked_home_page_main_cta', userId);
+      });
+      $('.support-addon').click(function () {
+        optimizelyClientInstance.track('user_added_support', userId);
+      });
+      $('.setup-addon').click(function () {
+        optimizelyClientInstance.track('user_added_refarch', userId);
       });
     })();
   });
