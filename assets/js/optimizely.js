@@ -25,13 +25,13 @@
      * to track the following in each variation:
      * How many users;
      *
-     * - End up on the checkout page - done
-     * - Click the checkout button - done
-     * - End up on the contact page - done
-     * - Contact us after reaching the contact page - done
-     * - Click on the other buttons in the Nav - done
-     * - Pick the add ons per cloud provider - done
-     * - Click the learn more vs Get Demo - done
+     * - End up on the checkout page
+     * - Click the checkout button
+     * - End up on the contact page
+     * - Contact us after reaching the contact page
+     * - Click on the other buttons in the Nav
+     * - Pick the add ons per cloud provider
+     * - Click the learn more vs Get Demo
      * - Click ask a grunt vs contact sales
      */
     (function () {
@@ -76,6 +76,9 @@
       $('.setup-addon').click(function () {
         optimizelyClientInstance.track('user_added_refarch', userId);
       });
+      $('.checkout-page-contact-cta').click(function () {
+        optimizelyClientInstance.track('user_clicks_contact_cta_on_checkout_page', userId);
+      })
     })();
   });
 })(window.jQuery);
