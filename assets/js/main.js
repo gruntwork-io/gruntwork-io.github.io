@@ -477,8 +477,6 @@ function generateUUID() {
         // execute code for original_nav_plus_original_checkout_flow
         $('#navbar-original').show();
         $('#learn-more').show();
-      } else if (variation === 'original_nav_plus_beta_checkout_flow') {
-        // execute code for original_nav_plus_beta_checkout_flow
       } else if (variation === 'beta_nav_plus_beta_checkout_flow') {
         $('#navbar-beta').show();
         $('#get-a-demo').show();
