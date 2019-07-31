@@ -434,6 +434,7 @@ function generateUUID() {
   });
 }
 
+// Optimizely Experiment Setup
 (function($) {
   // Instantiate an Optimizely client
   const options = {
@@ -481,15 +482,15 @@ function generateUUID() {
       } else if (variation === 'beta_nav_plus_beta_checkout_flow') {
         $('#navbar-beta').show();
         $('#get-a-demo').show();
-        $('.products-ctas').show();
-        $('.services-ctas').show();
+        $('.js-products-ctas').show();
+        $('.js-services-ctas').show();
         $('.nav-dropdown-page').addClass('section-hero-with-button');
       } else if (variation === 'beta_nav_plus_original_checkout_flow') {
         // execute code for beta_nav_plus_original_checkout_flow
         $('#navbar-beta').show();
         $('#get-a-demo').show();
-        $('.products-ctas').show();
-        $('.services-ctas').show();
+        $('.js-products-ctas').show();
+        $('.js-services-ctas').show();
         $('.nav-dropdown-page').addClass('section-hero-with-button');
         // this variation is same as above variation except users get the old flow
         $('#navbar-buy-now').attr('href', '/pricing/');
@@ -501,31 +502,31 @@ function generateUUID() {
 
 
       // Metrics to track
-      $('.checkout-link').click(function () {
+      $('.js-checkout-link').click(function () {
         optimizelyClientInstance.track('user_on_checkout_page', userId);
       });
       $('.btn-checkout').click(function () {
         optimizelyClientInstance.track('user_clicked_checkout_button', userId);
       });
-      $('.contact-cta, .product-ctas, .service-ctas').click(function () {
+      $('.js-contact-ctas, .js-products-ctas, .js-services-ctas').click(function () {
         optimizelyClientInstance.track('user_on_contact_page', userId);
       });
       $('#submit-button').click(function () {
         optimizelyClientInstance.track('user_contacted_sales', userId);
       })
-      $('.nav-item-central').click(function () {
+      $('.js-nav-item-central').click(function () {
         optimizelyClientInstance.track('user_clicked_on_other_navbar_buttons', userId);
       });
-      $('.home-page-cta').click(function () {
+      $('.js-home-page-cta').click(function () {
         optimizelyClientInstance.track('user_clicked_home_page_main_cta', userId);
       });
-      $('.support-addon').click(function () {
+      $('.js-support-addon').click(function () {
         optimizelyClientInstance.track('user_added_support', userId);
       });
-      $('.setup-addon').click(function () {
+      $('.js-setup-addon').click(function () {
         optimizelyClientInstance.track('user_added_refarch', userId);
       });
-      $('.checkout-page-contact-cta').click(function () {
+      $('.js-checkout-page-contact-ctas').click(function () {
         optimizelyClientInstance.track('user_clicks_contact_cta_on_checkout_page', userId);
       });
     })();
