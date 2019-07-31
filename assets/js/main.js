@@ -481,31 +481,17 @@ function generateUUID() {
      */
     (function () {
       const variation = optimizelyClientInstance.activate('navbar_and_checkout_flow', userId);
+
       switch (variation) {
         case 'beta_nav_plus_beta_checkout_flow':
-          $('#navbar-beta').show();
-          $('#get-a-demo').show();
-          $('.js-products-ctas').show();
-          $('.js-services-ctas').show();
-          $('.nav-dropdown-page').addClass('section-hero-with-button');
+          setBetaNavPlusBetaCheckoutElements();
           break;
-
         case 'beta_nav_plus_original_checkout_flow':
-          // execute code for beta_nav_plus_original_checkout_flow
-          $('#navbar-beta').show();
-          $('#get-a-demo').show();
-          $('.js-products-ctas').show();
-          $('.js-services-ctas').show();
-          $('.nav-dropdown-page').addClass('section-hero-with-button');
-          // this variation is same as above variation except users get the old checkout flow
-          $('#navbar-buy-now').attr('href', '/pricing/');
+          setBetaNavPlusOriginalCheckoutElements();
           break;
-
         case 'original_nav_plus_original_checkout_flow':
         default:
-          // execute code for original_nav_plus_original_checkout_flow
-          $('#navbar-original').show();
-          $('#learn-more').show();
+         setOriginalNavPlusOriginalCheckoutElements();
       }
 
       // Metrics to track
@@ -537,5 +523,25 @@ function generateUUID() {
         optimizelyClientInstance.track('user_clicks_contact_cta_on_checkout_page', userId);
       });
     })();
+
+    function setBetaNavPlusBetaCheckoutElements() {
+      $('#navbar-beta').show(); // Show Beta nav bar
+      $('#get-a-demo').show(); // Show the new Get a demo CTA on the main page
+      // Show the new CTAs on the Products and services page listings
+      $('.js-products-ctas').show();
+      $('.js-services-ctas').show();
+      $('.nav-dropdown-page').addClass('section-hero-with-button');
+    }
+
+    function setBetaNavPlusOriginalCheckoutElements() {
+      setBetaNavPlusBetaCheckoutElements();
+      // this variation is same as above variation except users get the old checkout flow
+      $('#navbar-buy-now').attr('href', '/pricing/');
+    }
+
+    function setOriginalNavPlusOriginalCheckoutElements() {
+      $('#navbar-original').show(); // Show Original nav bar
+      $('#learn-more').show(); // Show the current Learn more CTA on the main page
+    }
   });
 })(window.jQuery);
