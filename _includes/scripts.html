@@ -1,7 +1,5 @@
 <script>window.pricing = {{ site.data.pricing | jsonify }}</script>
 <script src="{{ site.assets_base_url }}js/main.js"></script>
-<script src="/assets/js/utils.js"></script>
-<script src="/assets/js/optimizely.js"></script>
 {% if page.custom_js %}
   {% for js_file in page.custom_js %}
   <script src='/assets/js/{{ js_file }}.js' type="text/javascript"></script>
