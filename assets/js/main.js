@@ -403,3 +403,145 @@ $(window).load(function() {
   };
   activateAccordion(getHash);
 });
+
+// Use regular expression to find the cookie we made. Inspired from https://stackoverflow.com/a/25490531
+const getCookiebyName = function (name){
+  const pair = document.cookie.match(new RegExp(name + '=([^;]+)'));
+  return !!(pair && pair.length >= 2) ? pair[1] : null;
+};
+
+// Sets a cookie that expires after a year.
+const setCookie = function (name, value, days) {
+  let expires = '';
+  if (days) {
+    const date = new Date();
+    date.setTime(date.getTime() + (days*24*60*60*1000));
+    expires = '; expires=' + date.toUTCString();
+  }
+  document.cookie = name + '=' + (value || '') + expires + '; path=/';
+};
+
+// Generate UUID. Inspired by https://stackoverflow.com/a/8809472
+function generateUUID() {
+  let d = new Date().getTime();
+  if (typeof performance !== 'undefined' && typeof performance.now === 'function'){
+    d += performance.now();
+  }
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    const r = (d + Math.random() * 16) % 16 | 0;
+    d = Math.floor(d / 16);
+    return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+  });
+}
+
+// Optimizely Experiment Setup
+(function($) {
+  // Instantiate an Optimizely client
+  const options = {
+    sdkKey: '77Agw2WjbRD3e76AADwL3T',
+    datafileOptions: {
+      autoUpdate: true,
+      updateInterval: 60000, // 1 minute in milliseconds
+    }
+  };
+  const optimizelyClientInstance = window.optimizelySdk.createInstance(options);
+
+  optimizelyClientInstance.onReady().then(() => {
+    // optimizelyClientInstance is ready to use, with datafile downloaded from the Optimizely CDN
+
+    // We need unique user ids to correctly track experiments and since we do not
+    // create usernames for our users we'll generate a UUID instead for this
+    function getOrCreateUserId() {
+      const optimizelyEndUserIdCookieKey = 'optimizelyEndUserId';
+      const userIdFromCookie = getCookiebyName(optimizelyEndUserIdCookieKey);
+
+      if (userIdFromCookie) {
+        return userIdFromCookie;
+      }
+
+      const newUserId = generateUUID();
+      setCookie(optimizelyEndUserIdCookieKey, newUserId, 365);
+      return newUserId;
+    }
+    const userId = getOrCreateUserId();
+
+    /**
+     * Experiment: Navbar vs Checkout Flow
+     * Description: This experiment seeks to test the variations of navbar and checkout flows
+     * and track how many users do the following in each variation;
+     *
+     * - End up on the checkout page
+     * - Click the checkout button
+     * - End up on the contact page
+     * - Contact us after reaching the contact page
+     * - Click on the other buttons in the Nav
+     * - Pick the add ons (Ref Arch, Pro Support) per cloud provider on the check out page
+     * - Click the learn more vs Get Demo
+     * - Click ask a grunt vs contact sales
+     */
+    (function () {
+      const variation = optimizelyClientInstance.activate('navbar_and_checkout_flow', userId);
+
+      switch (variation) {
+        case 'beta_nav_plus_beta_checkout_flow':
+          setBetaNavPlusBetaCheckoutElements();
+          break;
+        case 'beta_nav_plus_original_checkout_flow':
+          setBetaNavPlusOriginalCheckoutElements();
+          break;
+        case 'original_nav_plus_original_checkout_flow':
+        default:
+         setOriginalNavPlusOriginalCheckoutElements();
+      }
+
+      // Metrics to track
+      $('.js-checkout-link').click(function () {
+        optimizelyClientInstance.track('user_on_checkout_page', userId);
+      });
+      $('.btn-checkout').click(function () {
+        optimizelyClientInstance.track('user_clicked_checkout_button', userId);
+      });
+      $('.js-contact-ctas, .js-products-ctas, .js-services-ctas').click(function () {
+        optimizelyClientInstance.track('user_on_contact_page', userId);
+      });
+      $('#submit-button').click(function () {
+        optimizelyClientInstance.track('user_contacted_sales', userId);
+      })
+      $('.js-nav-item-central').click(function () {
+        optimizelyClientInstance.track('user_clicked_on_other_navbar_buttons', userId);
+      });
+      $('.js-home-page-cta').click(function () {
+        optimizelyClientInstance.track('user_clicked_home_page_main_cta', userId);
+      });
+      $('.js-support-addon').click(function () {
+        optimizelyClientInstance.track('user_added_support', userId);
+      });
+      $('.js-setup-addon').click(function () {
+        optimizelyClientInstance.track('user_added_refarch', userId);
+      });
+      $('.js-checkout-page-contact-ctas').click(function () {
+        optimizelyClientInstance.track('user_clicks_contact_cta_on_checkout_page', userId);
+      });
+    })();
+
+    function setBetaNavPlusBetaCheckoutElements() {
+      $('#navbar-beta').show(); // Show Beta nav bar
+      $('#get-a-demo').show(); // Show the new Get a demo CTA on the main page
+      // Show the new CTAs on the Products and services page listings
+      $('.js-products-ctas').show();
+      $('.js-services-ctas').show();
+      $('.nav-dropdown-page').addClass('section-hero-with-button');
+    }
+
+    function setBetaNavPlusOriginalCheckoutElements() {
+      setBetaNavPlusBetaCheckoutElements();
+      // this variation is same as above variation except users get the old checkout flow
+      $('#navbar-buy-now').attr('href', '/pricing/');
+    }
+
+    function setOriginalNavPlusOriginalCheckoutElements() {
+      $('#navbar-original').show(); // Show Original nav bar
+      $('#learn-more').show(); // Show the current Learn more CTA on the main page
+    }
+  });
+})(window.jQuery);

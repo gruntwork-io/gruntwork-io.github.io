@@ -1,0 +1,13 @@
+<div class="row row-page-header">
+  {% include_relative _checkout-flow-status-bar.html %}
+  <div class="col-xs-12">
+    <div class="gw-pricing-columns row row-collapse row-equalize-col-height row-panels row-panels-sm">
+      {% include_relative _aws-pricing.html %}
+      {% include_relative _gcp-pricing.html %}
+      {% include_relative _enterprise-pricing.html %}
+    </div>
+  </div>
+</div>
+
+{% include_relative _need-help.html %}
+{% include_relative _terms.html %}

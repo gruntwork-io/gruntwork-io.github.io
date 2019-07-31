@@ -457,6 +457,19 @@ a.caret-right{
 .navbar-default {
   border: none;
 }
+
+.navbar > .container > .navbar-header .navbar-brand-beta {
+  @media (min-width: @screen-md-min) {
+    margin-left: -1em;
+  }
+  @media (min-width: @screen-lg-min) {
+    margin-left: -1.5em;
+  }
+  @media (min-width: 1400px) {
+    margin-left: -4.5em;
+  }
+}
+
 .navbar-brand {
   font-size: 32px;
   line-height: 32px;
@@ -482,6 +495,41 @@ a.caret-right{
   &:hover,
   &:focus {
     color: #fff;
+  }
+}
+
+.navbar-beta .navbar-nav > li > a.btn {
+  margin-left: inherit;
+  @media (min-width: @screen-md-min) {
+    margin-left: 2em;
+    margin-right: 20px;
+  }
+  @media (min-width: 1200px) {
+    margin-left: 6em;
+  }
+  @media (min-width: 1400px) {
+    margin-left: 10em;
+  }
+}
+
+.navbar-nav > li > a.contact-sales {
+  @media (min-width: 1200px) {
+    margin-right: -5em;
+  }
+  @media (min-width: 1400px) {
+    margin-right: -9em;
+  }
+}
+
+#services-nav-item-beta {
+  @media (min-width: 992px) {
+    margin-right: 50px;
+  }
+  @media (min-width: 1200px) {
+    margin-right: 140px;
+  }
+  @media (min-width: 1400px) {
+    margin-right: 186px;
   }
 }
 
@@ -965,6 +1013,14 @@ a.caret-right{
   }
 }
 
+// Section Hero styles for pages that appear under Products and Services listing
+.section-hero-with-button {
+  @media (min-width: @screen-sm-min) {
+    padding-top: @padding-section-vertical-desktop - 30px;
+    padding-bottom: @padding-section-vertical-desktop - 40px;
+  }
+}
+
 // Sections that have a blue background
 .section-blue {
   background-color: #0FC0EF;
@@ -994,6 +1050,35 @@ a.caret-right{
       width: auto;
       top: -60px;
       left: 15px;
+    }
+  }
+}
+
+.how-it-works-beta h1 {
+  margin-bottom: 15px;
+  font-size: 32px;
+}
+
+.how-it-works-beta .section-hero {
+  color: #fff;
+  &:extend(.gradient-primary.gradient-vertical);
+  background: linear-gradient(@brand-primary, #06A2FF);
+  padding-bottom: 20px;
+  border-bottom: 2px solid white;
+  margin-top: -(@navbar-height + 4);
+  padding-top: (@navbar-height + 4);
+
+  @media (min-width: @screen-sm-min) {
+    .grunty-grid {
+      position: absolute;
+      width: 100%;
+      height: auto;
+      left: 40px;
+    }
+  }
+  @media (min-width: @screen-md-min) {
+    .grunty-grid {
+      left: 55px;
     }
   }
 }
@@ -2108,7 +2193,6 @@ input[type="radio"] .styled:checked + label::after {
   margin-top: 40px;
 
   @media (min-width: @screen-md-min) {
-    margin-bottom: 40px;
     display: flex;
   }
   .panel-body{
@@ -2140,25 +2224,20 @@ input[type="radio"] .styled:checked + label::after {
   }
 }
 .checkout-panel-left {
-  margin-bottom: 0;
-  padding: 25px;
-
-  @media (min-width: @screen-md-min) {
-    border-right: 0 none;
-  }
+  padding: 0px;
+  margin-right: 10px;
 
   @media (max-width: @screen-xs-max) {
     padding: 16px 8px;
-    padding-bottom: 140px;
   }
 }
 .checkout-panel-right {
   position: relative;
-  padding: 25px;
+  padding: 43px 25px 25px 25px;
+  margin-bottom: 10px;
 
   @media (min-width: @screen-md-min) {
-    margin-top: -20px;
-    margin-bottom: -20px;
+    margin-top: -30px;
   }
 
   @media (min-width: @screen-sm-min) and (max-width: @screen-md-max) {
@@ -2185,15 +2264,7 @@ input[type="radio"] .styled:checked + label::after {
     }
   }
 }
-.checkout-addons {
-  padding-top: 10px;
-  padding-bottom: 10px;
-  > div {
-    @media (max-width: @screen-sm-max) {
-      margin-bottom: 30px;
-    }
-  }
-}
+
 .btn-checkout{
   @media (max-width: @screen-xs-max) {
     max-width: 180px;
@@ -2313,7 +2384,7 @@ body.checkout .section-heading .gw-icon {
       width: 30px;
       height: 30px;
       border-radius: 50%;
-      background:  #0DB9F3;
+      background: #0DB9F3;
       .gradient-mixin( top; to bottom; @gradient-primary-start; @gradient-primary-end; );
     }
     &:focus::-ms-fill-lower {
@@ -2351,6 +2422,46 @@ body.checkout .section-heading .gw-icon {
     left: 50%;
     right: auto;
     transform: translateX(-50%);
+  }
+}
+
+.grunty-sprite-beta {
+  position: absolute;
+  top: -141px;
+  left: 167px;
+  width: 216px;
+  height: 180px;
+  background: url('/assets/img/grunty-sprites@2x.png') no-repeat;
+  background-size: auto 100%;
+  z-index: 1;
+
+  // Grunty sprite variations
+  &[data-sprite="0"] { background-position-x: 0px; }
+  &[data-sprite="1"] { background-position-x: -216px; }
+  &[data-sprite="2"] { background-position-x: -432px; }
+  &[data-sprite="3"] { background-position-x: -648px; }
+
+  @media (max-width: @screen-xs-max) {
+    background: none;
+  }
+}
+
+#subscription-type-img {
+  position: absolute;
+  top: -91px;
+  right: 67px;
+  width: 216px;
+  height: 132px;
+  background-size: auto 100%;
+  z-index: 1;
+
+  // subscription type variations
+  &[data-subscription-type="aws"] { background: url('/assets/img/aws-logo@2x.png') no-repeat; background-size: auto 100%;}
+  &[data-subscription-type="gcp"] { background: url('/assets/img/gcp-logo@2x.png') no-repeat; background-size: auto 100%;}
+
+
+  @media (max-width: @screen-xs-max) {
+    background: none;
   }
 }
 
@@ -2714,5 +2825,24 @@ input[type=number]::-webkit-outer-spin-button {
   }
   > li:nth-of-type(odd) {
     background-color: #242e3b;
+  }
+}
+
+// Styles for Geta Demo Button
+.get-a-demo {
+  color: #06A6FD;
+  background-color: #ffffff;
+}
+.get-a-demo:hover {
+  color: #06a6fd;
+  background-color: #CEF1FC;
+}
+
+// Style for disabled GCP refarch slider
+.slider.round.disabled-refarch-slider {
+  cursor: not-allowed;
+
+  &::before {
+    background: white;
   }
 }

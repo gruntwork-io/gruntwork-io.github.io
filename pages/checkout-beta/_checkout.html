@@ -1,0 +1,67 @@
+<div class="col-md-5" style="margin-top: 30px">
+  <div class="row panel panel-default checkout-panel-right">
+    <div class="col-xs-6 col-sm-12">
+      <h6 class="margin-top-none text-center visible-sm-block visible-md-block visible-lg-block no-anchor">
+        <strong>Your Subscription</strong>
+      </h6>
+      <div class="checkout-price-view">
+        <div class="checkout-price text-center" data-checkout-total="default">
+          <span class="large-price visible-xs-inline large-price--mobile" style="white-space: nowrap;"><span>$</span><strong id="subscription-subtotal"></strong></span><span class="small text-muted visible-xs-inline" style="white-space: nowrap;"> / month</span>
+          <span id="checkout-price-addon--mobile"><span class="medium-price medium-price--mobile medium-price-sub"><span>+$</span>4,950</span><span class="text-muted visible-xs-inline small">  one-time</span></span>
+          <div class="visible-sm-block visible-md-block visible-lg-block">
+            <span class="large-price"><span>$</span><strong id="subscription-price"></strong></span>&nbsp; / month
+            <p class="text-center" id="checkout-price-addon" style="display: none;"><span class="large-price large-price-sub"><span>+$</span>4,950</span>&nbsp; flat fee</p>
+          </div>
+        </div>
+        <div class="checkout-price-enterprise" data-checkout-total="enterprise" style="display: none;">
+          <h5 class="h1 large-price large-price--mobile large-price-sub text-center margin-top-none"><span>Enterprise</span></h5>
+        </div>
+      </div>
+      <hr class="hr-sm hr-reset visible-sm-block visible-md-block visible-lg-block">
+      <div class="visible-sm-block visible-sm-block visible-md-block visible-lg-block">
+        <h5 class="margin-top-none text-center no-anchor">
+          <strong>What's Included:</strong>
+        </h5>
+        <div class="row">
+          <div class="col-xs-12 col-sm-6 col-sm-offset-3 col-md-12 col-md-offset-0">
+            <ul class="check-list medium text-white margin-bottom-none">
+              <li><span class="help-text light" title="300,000+ lines of reusable, battle-tested infrastructure code." data-toggle="tooltip">Infrastructure as Code Library</span></li>
+              <li><span class="help-text light" title="A collection of training video courses that teach you DevOps." data-toggle="tooltip">DevOps Training Library</span></li>
+              <li><span class="help-text light" title="Mission Control for your infrastructure. Currently in private beta." data-toggle="tooltip">Gruntwork Houston</span></li>
+              <li><span class="help-text light" title="Chat with fellow customers and occasionally Gruntwork engineers via Slack." data-toggle="tooltip">Community Support</span></li>
+              <li id="subscription-20-users"><span class="help-text light" title="Your subscription supports up to 20 users." data-toggle="tooltip">Up to 20 Users</span></li>
+              <li id="subscription-unlimited-users" style="display:none"><span class="help-text light" title="Your subscription supports unlimited users." data-toggle="tooltip">Unlimited Users</span></li>
+              <li class="check-list-disabled" id="subscription-addon-1"><span class="help-text light" title="Our paid support program where you can contact us via email or private Slack. 2 Business Day SLA." data-toggle="tooltip">Professional Support</span></li>
+              <li class="check-list-disabled" id="enterprise-support"><span class="help-text light" title="Our Enterprise Support includes support via email, private Slack, and phone video, all with a same-business-day response time commitment." data-toggle="tooltip">Enterprise Support</span></li>
+              <li class="check-list-disabled" id="subscription-addon-2"><span class="help-text light" title="An opinionated, best-practices, end-to-end tech stack that we customize to your needs, deploy into your AWS accounts, and give you 100% of the code—all in about one day." data-toggle="tooltip">Reference Architecture</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6 col-sm-12">
+      <hr class="hr-sm hr-reset visible-sm-block visible-md-block visible-lg-block">
+      <p class="text-muted small text-center margin-bottom-none visible-sm-block visible-md-block visible-lg-block">30-Day Money Back Guarantee</p>
+      <p class="text-muted small text-center margin-bottom-none visible-sm-block visible-md-block visible-lg-block">
+        Annual Contract. Billed monthly.
+      </p>
+      <div style="height: 35px;">
+        <p class="small text-white text-bold margin-top-none text-center" id="deposit-due" style="margin-bottom: 0">Deposit Due<span class="hide-on-tiny"> Today</span>: $500</p>
+      </div>
+      <button
+        type="button"
+        class="btn btn-info btn-block btn-checkout"
+        data-cb-type="checkout"
+        data-cb-plan-id="chargebee-subscription">
+        Checkout
+      </button>
+      <p><a id="checkout-contact-btn" class="btn btn-primary btn-block js-checkout-page-contact-ctas" href="/contact/" style="display: none;">Contact Us</a></p>
+      <p style="font-size:85%;" class="text-muted text-center margin-bottom-none visible-sm-block visible-md-block visible-lg-block">View our <span><a href="/terms/" title="Gruntwork Terms of Service" target="_blank">Terms of Service</a></span></p>
+    </div>
+  </div>
+  <div class="row panel panel-default panel-light">
+    <div class="col-sm-12 panel-body" id="checkout-money-back">
+      <h3 class="no-anchor text-center" style="font-size: 24px">30-Day Money Back Guarantee<a href="/faq/#what-if-i-want-to-cancel-my-gruntwork-subscription" target="_blank"><i class="fa fa-info-circle" data-toggle="tooltip" data-html="true" data-original-title="If you're not happy for any reason, we'll refund 100% of your money within the first 30 days.<br><u>Click the icon for more information</u> <i class='fa fa-caret-down'></i>" style="font-size: 22px;margin-left: 16px;"></i></a></h3>
+    </div>
+  </div>
+</div>
