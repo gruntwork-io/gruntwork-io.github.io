@@ -441,7 +441,7 @@ function generateUUID() {
     sdkKey: '8E1RuW2VLAS2csau84LZRq',
     datafileOptions: {
       autoUpdate: true,
-      updateInterval: 6000, // 1 minute in milliseconds
+      updateInterval: 60000, // 1 minute in milliseconds
     }
   };
   const optimizelyClientInstance = window.optimizelySdk.createInstance(options);
@@ -449,55 +449,64 @@ function generateUUID() {
   optimizelyClientInstance.onReady().then(() => {
     // optimizelyClientInstance is ready to use, with datafile downloaded from the Optimizely CDN
 
-    const optimizelyEndUserIdCookieKey = 'optimizelyEndUserId';
-    if (!getCookiebyName(optimizelyEndUserIdCookieKey)) {
-      // Create optimizely UserID
-      setCookie(optimizelyEndUserIdCookieKey, generateUUID(), 365);
+    // We need unique user ids to correctly track experiments and since we do not
+    // create usernames for our users we'll generate a UUID instead for this
+    function getOrCreateUserId() {
+      const optimizelyEndUserIdCookieKey = 'optimizelyEndUserId';
+      const userIdFromCookie = getCookiebyName(optimizelyEndUserIdCookieKey);
+
+      if (userIdFromCookie) {
+        return userIdFromCookie;
+      }
+
+      const newUserId = generateUUID();
+      setCookie(optimizelyEndUserIdCookieKey, newUserId, 365);
+      return newUserId;
     }
-    const userId = getCookiebyName(optimizelyEndUserIdCookieKey);
+    const userId = getOrCreateUserId();
 
     /**
      * Experiment: Navbar vs Checkout Flow
-     * Description: This experiment seeks to test out the variations of navbar and checkout flows
-     * to track the following in each variation:
-     * How many users;
+     * Description: This experiment seeks to test the variations of navbar and checkout flows
+     * and track how many users do the following in each variation;
      *
      * - End up on the checkout page
      * - Click the checkout button
      * - End up on the contact page
      * - Contact us after reaching the contact page
      * - Click on the other buttons in the Nav
-     * - Pick the add ons per cloud provider
+     * - Pick the add ons (Ref Arch, Pro Support) per cloud provider on the check out page
      * - Click the learn more vs Get Demo
      * - Click ask a grunt vs contact sales
      */
     (function () {
-      var variation = optimizelyClientInstance.activate('navbar_and_checkout_flow', userId);
-      if (variation === 'original_nav_plus_original_checkout_flow') {
-        // execute code for original_nav_plus_original_checkout_flow
-        $('#navbar-original').show();
-        $('#learn-more').show();
-      } else if (variation === 'beta_nav_plus_beta_checkout_flow') {
-        $('#navbar-beta').show();
-        $('#get-a-demo').show();
-        $('.js-products-ctas').show();
-        $('.js-services-ctas').show();
-        $('.nav-dropdown-page').addClass('section-hero-with-button');
-      } else if (variation === 'beta_nav_plus_original_checkout_flow') {
-        // execute code for beta_nav_plus_original_checkout_flow
-        $('#navbar-beta').show();
-        $('#get-a-demo').show();
-        $('.js-products-ctas').show();
-        $('.js-services-ctas').show();
-        $('.nav-dropdown-page').addClass('section-hero-with-button');
-        // this variation is same as above variation except users get the old flow
-        $('#navbar-buy-now').attr('href', '/pricing/');
-      } else {
-        // display original navbar and checkout flow
-        $('#navbar-original').show();
-        $('#learn-more').show();
-      }
+      const variation = optimizelyClientInstance.activate('navbar_and_checkout_flow', userId);
+      switch (variation) {
+        case 'beta_nav_plus_beta_checkout_flow':
+          $('#navbar-beta').show();
+          $('#get-a-demo').show();
+          $('.js-products-ctas').show();
+          $('.js-services-ctas').show();
+          $('.nav-dropdown-page').addClass('section-hero-with-button');
+          break;
 
+        case 'beta_nav_plus_original_checkout_flow':
+          // execute code for beta_nav_plus_original_checkout_flow
+          $('#navbar-beta').show();
+          $('#get-a-demo').show();
+          $('.js-products-ctas').show();
+          $('.js-services-ctas').show();
+          $('.nav-dropdown-page').addClass('section-hero-with-button');
+          // this variation is same as above variation except users get the old checkout flow
+          $('#navbar-buy-now').attr('href', '/pricing/');
+          break;
+
+        case 'original_nav_plus_original_checkout_flow':
+        default:
+          // execute code for original_nav_plus_original_checkout_flow
+          $('#navbar-original').show();
+          $('#learn-more').show();
+      }
 
       // Metrics to track
       $('.js-checkout-link').click(function () {
