@@ -438,7 +438,7 @@ function generateUUID() {
 (function($) {
   // Instantiate an Optimizely client
   const options = {
-    sdkKey: '8E1RuW2VLAS2csau84LZRq',
+    sdkKey: '77Agw2WjbRD3e76AADwL3T',
     datafileOptions: {
       autoUpdate: true,
       updateInterval: 60000, // 1 minute in milliseconds
