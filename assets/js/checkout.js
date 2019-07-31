@@ -15,32 +15,40 @@ $(function () {
     users: 20
   };
 
-  var refarchOriginnalText = $('#refarch-slider-text').text();
+  var refarchOriginalText = $('#refarch-slider-text').text();
   var refarchOriginalTooltip = $('#refarch-slider-text').attr('data-original-title');
-  var gcpRefarchText = `${refarchOriginnalText}?`;
+  var gcpRefarchText = `${refarchOriginalText}?`;
   var gcpRefarchTooltip = `COMING SOON. ${refarchOriginalTooltip}`;
+
+  // Set the UI defaults for AWS selection
+  function _setAwsUIDefaults() {
+    $('#subscription-type-img').attr('data-subscription-type', 'aws');
+    $('#refarch-button-default').show();
+  }
+
+  // Set the UI defaults for GCP selection
+  function _setGcpUIDefaults() {
+    $('#subscription-type-img').attr('data-subscription-type', 'gcp');
+
+    // Disable Refarch addon button in current Checkout variation
+    $('#refarch-slider-input').attr('disabled', true);
+    $('#refarch-slider').addClass('disabled-refarch-slider');
+    $('#refarch-slider-text').text(gcpRefarchText);
+    $('#refarch-slider-text').attr('data-original-title', gcpRefarchTooltip);
+
+    // Show Coming Soon text in New Checkout variation for refarch
+    $('#addon-amount-refarch').text('Coming Soon.');
+    $('#refarch-button-gcp').show();
+  }
 
   // Auto toggles the subscription type based on the URI
   switch ($.query.get('subscription-type')) {
     case 'aws':
-      $('#subscription-type-img').attr('data-subscription-type', 'aws');
-      $('#refarch-button-default').show();
+      _setAwsUIDefaults();
       _updateCheckout({ subscription_type: 'aws' });
       break;
     case 'gcp':
-      $('#subscription-type-img').attr('data-subscription-type', 'gcp');
-
-      // Disable Refarch addon button
-      $('#refarch-slider-input').attr('disabled', true);
-      $('#refarch-slider').addClass('disabled-refarch-slider');
-      $('#refarch-slider-text').text(gcpRefarchText);
-      $('#refarch-slider-text').attr('data-original-title', gcpRefarchTooltip);
-
-      // Show Coming Soon text and Contact Us button in New Checkout for GCP reference architecture
-      $('#addon-amount-refarch').text('Coming Soon.');
-      $('#refarch-button-gcp').show();
-
-
+      _setGcpUIDefaults();
       _updateCheckout({ subscription_type: 'gcp' });
       break;
     case 'enterprise': _updateCheckout({ subscription_type: 'enterprise' }); break;
@@ -83,22 +91,31 @@ $(function () {
     var subscriptionType = $(this).data("subscription-type");
     tmp["subscription_type"] = subscriptionType;
 
-    // Disable GCP Refarch Slider
+    // Disables GCP Refarch Slider for now; Users get shown "Coming soon."
+    function _disableGCPRefarchSlider () {
+      tmp['setup_deployment'] = false;
+      input = $('#refarch-slider-input');
+      input.prop('checked', false);
+      input.attr('disabled', true);
+      $('#refarch-slider').addClass('disabled-refarch-slider');
+      $('#refarch-slider-text').text(gcpRefarchText);
+      $('#refarch-slider-text').attr('data-original-title', gcpRefarchTooltip);
+    }
+
+    // Makes the Refarch slider available for usage
+    function _resetRefarchSlider() {
+      $('#refarch-slider-input').attr('disabled', false);
+      $('#refarch-slider').removeClass('disabled-refarch-slider');
+      $('#refarch-slider-text').text(refarchOriginalText);
+      $('#refarch-slider-text').attr('data-original-title', refarchOriginalTooltip);
+    }
+
     switch (subscriptionType) {
       case 'gcp':
-        tmp['setup_deployment'] = false;
-        input = $('#refarch-slider-input');
-        input.prop('checked', false);
-        input.attr('disabled', true);
-        $('#refarch-slider').addClass('disabled-refarch-slider');
-        $('#refarch-slider-text').text(gcpRefarchText);
-        $('#refarch-slider-text').attr('data-original-title', gcpRefarchTooltip);
+        _disableGCPRefarchSlider();
         break;
       default:
-        $('#refarch-slider-input').attr('disabled', false);
-        $('#refarch-slider').removeClass('disabled-refarch-slider');
-        $('#refarch-slider-text').text(refarchOriginnalText);
-        $('#refarch-slider-text').attr('data-original-title', refarchOriginalTooltip);
+        _resetRefarchSlider();
     }
     _updateCheckout(tmp);
   });
@@ -113,16 +130,30 @@ $(function () {
   $('.addon-button').on('click', function () {
     var tmp = {};
     tmp["subscription_type"] = $.query.get('subscription-type');
-    switch ($(this).text()) {
-      case "Add to Subscription ":
-        tmp[this.name] = true;
-        $(this).text("Remove");
-        $(this).addClass('addon-remove-button');
+    var actionType = $(this).data("addon-action-type");
+
+    // Process the add action and switch the addon button so user can clear thier selection
+    function _handleAddAction(button) {
+      tmp[button.name] = true;
+      $(button).text("Remove");
+      $(button).addClass('addon-remove-button');
+      $(button).data('addon-action-type', "Remove");
+    }
+
+    // Process the remove action and switch the addon button so user can make a selection
+    function _handleRemoveAction(button) {
+      tmp[button.name] = false;
+      $(button).text("Add to Subscription ").append("<i class='fa fa-angle-double-right fa-lg' aria-hidden='true'></i>");
+      $(button).removeClass('addon-remove-button');
+      $(button).data('addon-action-type', "Add");
+    }
+
+    switch (actionType) {
+      case "Add":
+        _handleAddAction(this);
         break;
       case "Remove":
-        tmp[this.name] = false;
-        $(this).text("Add to Subscription ").append("<i class='fa fa-angle-double-right fa-lg' aria-hidden='true'></i>");
-        $(this).removeClass('addon-remove-button');
+        _handleRemoveAction(this);
         break;
       default: // Do nothing
     }
