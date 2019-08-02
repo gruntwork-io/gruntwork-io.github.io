@@ -550,11 +550,11 @@ function setOriginalNavPlusOriginalCheckoutElements() {
       });
     } catch (error) {
       console.log("Defaulting to standard content.")
-      setOriginalNavPlusOriginalCheckoutElements();
+      setBetaNavPlusBetaCheckoutElements();
     }
   } else {
     console.log("Not running optimizely experiments, defaulting to standard content.")
-    setOriginalNavPlusOriginalCheckoutElements();
+    setBetaNavPlusBetaCheckoutElements();
   }
 
 })(window.jQuery);
