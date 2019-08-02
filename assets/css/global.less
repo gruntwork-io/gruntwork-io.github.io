@@ -534,7 +534,7 @@ a.caret-right{
 }
 
 // Home page navbar styles
-.index-page .navbar-default {
+.index-page .navbar-default, .how-it-works-beta .navbar-default {
   border: none;
   @media (max-width: @screen-md-max) {
     background-color: @gradient-primary-start;
@@ -1065,10 +1065,14 @@ a.caret-right{
   background: linear-gradient(@brand-primary, #06A2FF);
   padding-bottom: 20px;
   border-bottom: 2px solid white;
-  margin-top: -(@navbar-height + 4);
   padding-top: (@navbar-height + 4);
 
-  @media (min-width: @screen-sm-min) {
+  @media (max-width: @screen-sm-max) {
+    margin-top: -5px;
+  }
+
+  @media (min-width: @screen-sm-max) {
+    margin-top: -(@navbar-height + 4);
     .grunty-grid {
       position: absolute;
       width: 100%;
