@@ -1,9 +1,9 @@
 <div class="row">
   <div class="col-xs-12">
     <div class="row checkout-panel">
-      <div class="col-md-8 panel panel-default panel-light checkout-panel-left">
+      <div class="col-md-8 panel panel-default panel-light checkout-panel-left" style="padding: 25px; border-right: none; margin-right: 0px;">
         <div class="panel-body">
-          <div class="row checkout-addons">
+          <div class="row">
             {{!--
             <div class="col-sm-6">
               <h4 class="h5 text-center text-bold margin-top-none">Every Subscription Includes:</h4>
@@ -101,16 +101,16 @@
               <div class="switch-group">
                 <label class="switch">
                   <input type="checkbox" data-switch name="pro_support">
-                  <span class="slider round"></span>
+                  <span class="slider round js-support-addon"></span>
                 </label>
                 <span class="switch-label help-text light" title="Get support via email and private chat. 2 Business Day SLA." data-toggle="tooltip">Professional Support</span>
               </div>
               <div class="switch-group">
                 <label class="switch">
-                  <input type="checkbox" data-switch name="setup_deployment">
-                  <span class="slider round"></span>
+                  <input id="refarch-slider-input" type="checkbox" data-switch name="setup_deployment">
+                  <span id="refarch-slider" class="slider round js-setup-addon"></span>
                 </label>
-                <span class="switch-label help-text light" title="An opinionated, best-practices, end-to-end tech stack that we customize to your needs, deploy into your AWS accounts, and give you 100% of the code—all in about one day." data-toggle="tooltip">Reference Architecture</span>
+                <span id="refarch-slider-text" class="switch-label help-text light" title="An opinionated, best-practices, end-to-end tech stack that we customize to your needs, deploy into your AWS accounts, and give you 100% of the code—all in about one day." data-toggle="tooltip">Reference Architecture</span>
               </div>
             </div>
           </div>
@@ -121,16 +121,16 @@
           </div>
           <div class="side-by-side text-center panel panel-default panel-dark">
             <h5 class="d-inline-block no-anchor">Need help deciding?</h5>
-            <a class="btn btn-primary-hollow btn-sm d-inline-block" href="/contact/">Ask a Grunt</a>
+            <a class="btn btn-primary-hollow btn-sm d-inline-block js-contact-ctas js-checkout-page-contact-ctas" href="/contact/">Ask a Grunt</a>
           </div>
           <ul class="text-muted smaller">
             <li>An initial deposit of $500 will be charged at the time of checkout. The remaining balance for your monthly payment and any Reference Architecture fees (if you selected it) will be charged when your order is processed.</li>
             <li>We typically process your order within 1 - 2 business days.</li>
-            <li>These <a style="text-decoration: underline;" class="text-muted" href="/terms/">Terms of Service</a> license our products FOR YOUR COMPANY'S INTERNAL USE ONLY. If you wish to become a Gruntwork Partner, please <a style="text-decoration: underline;" class="text-muted" href="/contact/">contact us</a>.</li>
+            <li>These <a style="text-decoration: underline;" class="text-muted" href="/terms/">Terms of Service</a> license our products FOR YOUR COMPANY'S INTERNAL USE ONLY. If you wish to become a Gruntwork Partner, please <a style="text-decoration: underline;" class="text-muted js-checkout-page-contact-ctas" href="/contact/">contact us</a>.</li>
           </ul>
         </div>
       </div>
-      <div class="col-md-4 panel panel-default checkout-panel-right">
+      <div class="col-md-4 panel panel-default checkout-panel-right" style="padding: 25px; margin-top: -20px;">
         <div class="row">
           <div class="col-xs-6 col-sm-12">
             <h6 class="margin-top-none text-center visible-sm-block visible-md-block visible-lg-block no-anchor">
@@ -177,7 +177,7 @@
             <p class="text-muted small text-center margin-bottom-none visible-sm-block visible-md-block visible-lg-block">
               Annual Contract. Billed monthly.
             </p>
-            <div style="height: 35px;">
+            <div id="checkout-btn-container">
               <p class="small text-white text-bold margin-top-none text-center" id="deposit-due" style="margin-bottom: 0">Deposit Due<span class="hide-on-tiny"> Today</span>: $500</p>
             </div>
             <button
@@ -187,7 +187,7 @@
               data-cb-plan-id="chargebee-subscription">
               Checkout
             </button>
-            <p><a id="checkout-contact-btn" class="btn btn-primary btn-block" href="/contact/" style="display: none;">Contact Us</a></p>
+            <p><a id="checkout-contact-btn" class="btn btn-primary btn-block js-checkout-page-contact-ctas" href="/contact/" style="display: none;">Contact Us</a></p>
             <p style="font-size:85%;" class="text-muted text-center margin-bottom-none visible-sm-block visible-md-block visible-lg-block">View our <span><a href="/terms/" title="Gruntwork Terms of Service" target="_blank">Terms of Service</a></span></p>
           </div>
           </div>
@@ -200,8 +200,4 @@
 </div>
 
 <script src="https://js.chargebee.com/v2/chargebee.js" data-cb-site="gruntwork"></script>
-<script type="text/javascript">
-  window.onload = function() {
-    var cbInstance = Chargebee.getInstance();
-  };
-</script>
+

@@ -1,0 +1,18 @@
+<div class="row">
+  {% include_relative _checkout-flow-status-bar.html %}
+  <div class="col-xs-12 checkout-panel-container">
+    <div class="row checkout-panel">
+      {% include_relative _add-ons.html %}
+      {% include_relative _checkout.html %}
+      <figure class="grunty-sprite-beta" data-sprite="0">
+        <figcaption class="sr-only">Grunt sprite</figcaption>
+      </figure>
+      <figure id="subscription-type-img" data-subscription-type="">
+        <figcaption class="sr-only">Subscription type image</figcaption>
+      </figure>
+    </div>
+  </div>
+</div>
+{% include_relative _need-help.html %}
+
+<script src="https://js.chargebee.com/v2/chargebee.js" data-cb-site="gruntwork"></script>

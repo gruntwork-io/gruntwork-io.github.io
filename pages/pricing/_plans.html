@@ -14,7 +14,7 @@
               <p class="help-block" style="margin-top:-9px;">per month</p>
             </div>
             <div data-mh="plans-pricing-bottom" style="height:100px">
-              <p><a class="btn btn-info" href="{{ site.data.pricing.subscriptions.aws.checkout_url }}">Get Started</a></p>
+              <p><a class="btn btn-info pricing-cta-aws js-checkout-link" href="{{ site.data.pricing.subscriptions.aws.checkout_url }}">Get Started</a></p>
               <p class="text-muted small"><em>Annual contract<br>Billed monthly or annually.</em></p>
             </div>
           </div>
@@ -59,7 +59,7 @@
               <p class="help-block" style="margin-top:-9px;">per month</p>
             </div>
             <div data-mh="plans-pricing-bottom" style="height:100px">
-              <p><a class="btn btn-info" href="{{ site.data.pricing.subscriptions.gcp.checkout_url }}">Get Started</a></p>
+              <p><a class="btn btn-info pricing-cta-gcp js-checkout-link" href="{{ site.data.pricing.subscriptions.gcp.checkout_url }}">Get Started</a></p>
               <p class="text-muted small"><em>Annual contract.<br>Billed monthly or annually.</em></p>
               <p id="gcp-special-pricing">Special Introductory Price!</p>
             </div>
@@ -102,7 +102,7 @@
               <p class="help-block"></p>
             </div>
             <div data-mh="plans-pricing-bottom" style="height:100px">
-              <p><a class="btn btn-primary" href="/contact/">Contact Us</a></p>
+              <p><a class="btn btn-primary js-contact-ctas" href="/contact/">Contact Us</a></p>
               <p class="text-muted small"><em>Annual contract.<br>Billed monthly or annually.</em></p>
             </div>
           </div>
@@ -182,7 +182,7 @@
                 </ul>
                 <p class="h2 big-price"><span>+$</span>{{ site.data.pricing.subscriptions.aws.pro_support_price.label }}</p>
                 <p class="help-block">billed monthly</p>
-                <p><a class="btn btn-info" href="{{ site.data.pricing.subscriptions.aws.checkout_url }}&addon=pro-support">Get Started</a></p>
+                <p><a class="btn btn-info js-checkout-link js-support-addon" href="{{ site.data.pricing.subscriptions.aws.checkout_url }}&addon=pro-support">Get Started</a></p>
               </div>
             </div>
           </div>
@@ -211,7 +211,7 @@
                 </ul>
                 <p class="h2 big-price"><span>+$</span>{{ site.data.pricing.subscriptions.gcp.pro_support_price.label }}</p>
                 <p class="help-block">billed monthly</p>
-                <p><a class="btn btn-info" href="{{ site.data.pricing.subscriptions.gcp.checkout_url }}&addon=pro-support">Get Started</a></p>
+                <p><a class="btn btn-info js-checkout-link js-support-addon" href="{{ site.data.pricing.subscriptions.gcp.checkout_url }}&addon=pro-support">Get Started</a></p>
               </div>
             </div>
           </div>
@@ -250,7 +250,7 @@
                             title="Gruntwork engineers will usually respond promptly, but no later than 4 business hours after we receive your email or chat request."
                             data-toggle="tooltip">Same-day SLA</span></li>
                 </ul>
-                <p><a class="btn btn-primary" href="/contact/">Contact Us</a></p>
+                <p><a class="btn btn-primary js-contact-ctas" href="/contact/">Contact Us</a></p>
                 <p>Included with Enterprise Subscription</p>
                 <p class="help-block"></p>
                 <p class="text-muted small"></p>
@@ -266,13 +266,10 @@
 <!-- Reference Architecture Pricing -->
 {% include_relative _reference-architecture.html %}
 
-<!-- Houston Pricing -->
-{% include_relative _houston.html %}
-
 <div class="row row-page-header padding-top-none">
   <div class="col-xs-12 col-md-8 col-md-offset-2">
     <p class="text-center text-muted small">Discounted pricing is available for non-profits, educational institutions,
-      and startups with fewer than 10 employees. <a href="/contact/">Contact us</a> to get the discounted pricing.</p>
+      and startups with fewer than 10 employees. <a class="js-contact-ctas" href="/contact/">Contact us</a> to get the discounted pricing.</p>
   </div>
 </div>
 <div class="row row-sm-gutters row-page-header">

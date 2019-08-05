@@ -10,23 +10,6 @@
 (function ($) { "use strict";
   var cookieInnerHtml = '<div><p>By using this website you agree to our <a href="/cookie-policy/">cookie policy</a></p><button id="cookieModalClose" class="btn btn-primary">OK</button></div>';
 
-  // Use regular expression to find the cookie we made. Inspired from https://stackoverflow.com/a/25490531
-  var getCookiebyName = function (name){
-    var pair = document.cookie.match(new RegExp(name + '=([^;]+)'));
-    return !!(pair && pair.length >= 2) ? pair[1] : null;
-  };
-
-  // Sets a cookie that expires after a year.
-  var setCookie = function (name, value, days) {
-    var expires = '';
-    if (days) {
-      var date = new Date();
-      date.setTime(date.getTime() + (days*24*60*60*1000));
-      expires = '; expires=' + date.toUTCString();
-    }
-    document.cookie = name + '=' + (value || '')  + expires + '; path=/';
-  };
-
   var initCookie = function () {
 
     // Don't create cookie notice if already acknowledged

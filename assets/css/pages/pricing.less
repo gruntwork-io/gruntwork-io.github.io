@@ -2,6 +2,11 @@
 
 .page-pricing {
 
+  .page-pricing-header {
+    text-align: center;
+    background: linear-gradient(to bottom, #1a232d, #2e3b4a);
+  }
+
   // The description of under "Gruntwork for AWS" or "Gruntwork for GCP"
   .plans-heading {
     p.description {
@@ -65,5 +70,66 @@
   // Houston
   .houston-features {
     min-height: 316px;
+  }
+
+  .pricing-help-notification {
+    width: 103%;
+    margin-left: -.8em;
+  }
+
+  .refarch-contact-ctas {
+    margin-top: 20px;
+  }
+}
+
+.need-help-text {
+  display: inline;
+  margin-right: .7em;
+}
+
+.need-help-button {
+  margin-bottom: .6em;
+}
+
+.pricing-steps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  list-style: none;
+  counter-reset: item;
+
+  li::before {
+    content: counter(item) " ";
+    border: 1.5px solid;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: .5em;
+  }
+  li {
+    margin: .8em;
+    counter-increment: item;
+    font-weight: 700;
+  }
+  // Style for "Select Plan" step on pricing page
+  .current-step::before {
+    border: none;
+    color: #06a2ff;
+    background-color: white;
+  }
+  .current-step-icon, .completed-step-icon {
+    color: #06a2ff;
+  }
+  // Style for "Select Plan" step on checkout page
+  .completed-step::before {
+    border: none;
+    content: '\f00c';
+    font-family: FontAwesome;
+    font-size: .8em;
+    color: white;
+    background-color: #06a2ff;
   }
 }
