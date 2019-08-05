@@ -1,0 +1,54 @@
+<div class="searchbar">
+    <input autofocus class="search_input" type="text" placeholder="Search guides...">
+    <i class="fa fa-search search_icon"></i>
+</div>
+<div class="guide-filter">
+    <div class="col-lg-8">
+        <label>Filter Topic: </label>
+        <span class="badge badge-pill badge-default">AWS</span>
+        <span class="badge badge-pill badge-default">GCP</span>
+        <span class="badge badge-pill badge-default">GKE</span>
+    </div>
+    <div class="col-lg-4 text-right">
+         <label>Sort by</label>
+        <label class="dropdown">
+            <a href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                Popular <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a href="#">GCP</a></li>
+                <li><a href="#">GKE</a></li>
+                <li><a href="#">AWS</a></li>
+            </ul>
+        </label>
+    </div>
+</div>
+<div class="row card-columns"> 
+
+{% for guide in site.posts %}
+<div class="col-md-6 mt-5">
+
+    <div class="card-columns guide-card card-shadow">
+        <div class="card">
+            <div class="card-img-top img-fluid text-center">
+                <img src="{{ guide.logoUrl }}" alt="card image">
+            </div>
+            <div class="card-body">
+                <h3 class="card-title"><b>{{ guide.title }}</b></h3>
+                <p class="card-text">{{ guide.excerpt }}</p>
+            </div>
+            <div class="card-footer">
+                <a href="{{ guide.url }}" class="card-link"><strong>Read more ></strong></a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+</div>
+
+
+
+
+
+
+

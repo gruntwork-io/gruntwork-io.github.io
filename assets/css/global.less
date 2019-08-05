@@ -826,6 +826,80 @@ a.caret-right{
   }
 }
 
+// Deployement guides
+.guide-card {
+  margin: 1.5rem;
+  max-height: 420px;
+  overflow : hidden;
+  text-overflow: ellipsis;
+  display: flex;
+}
+
+.card {
+  background: white;
+  padding: 6%;
+  color: black;
+  border-radius: 5px;
+  & h3, h2 {
+    color: black;
+  }
+  & a {
+    color: #06A6FD;
+    font-weight: 200;
+  }
+}
+
+.card-shadow{
+  -webkit-box-shadow: 1px 1px 7px 4px #ccc;  /* Safari, Android, iOS */
+  -moz-box-shadow:    1px 1px 7px 4px #ccc;  /* Firefox */
+  box-shadow:         1px 1px 7px 4px #ccc;
+}
+
+.searchbar{
+  background-color: white;
+  border-radius: 30px;
+  padding: 10px;
+  & .search_input{
+    color: white;
+    border: 0;
+    outline: 0;
+    background: none;
+    width: 80%;
+    caret-color:transparent;
+    line-height: 40px;
+  }
+  & .search_icon{
+    height: 40px;
+    width: 40px;
+    float: left;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    color: #a79e9e;
+  }
+}
+
+.guide-filter {
+  margin: 3% 0;
+  & label {
+    color: #7b7d7e;
+  }
+  & a {
+    color: #28adf9;
+  }
+}
+
+.badge {
+  border: 2px solid #06a6fd;
+  background-color: #fff;
+  padding: 10px 40px;
+  color: #000;
+  border-radius: 25px;
+  margin: 0 1%;
+  color: #06a6fd;
+}
+
 .row-library {
   // Safari fix for column width/padding issue
   .row-equalize-col-height>.col-sm-6 {
@@ -965,10 +1039,29 @@ a.caret-right{
   }
 }
 
+.section-ghostwhite {
+  background-color: #f7fbfd;
+  overflow: hidden;
+  & .aside-wrapper {
+    margin-bottom: -99999px;
+    padding-bottom: 99999px;
+    background: white;
+  }
+  & section {
+    margin: 3%;
+  }
+}
+
 // Sections that have a blue background
-.section-blue {
-  background-color: #0FC0EF;
+.section-hero-blue {
   color: #fff;
+  background: url('../img/bg-header-squares.png') center bottom no-repeat, linear-gradient(#07a7fc, #57a1ea); 
+  padding: 7% 0;
+}
+
+.section-footer-blue {
+  color: #fff;
+  background: url('../img/bg-header-squares.png') center bottom no-repeat, linear-gradient(#07a7fc, #57a1ea); 
 }
 
 // Hero styles on the front page
@@ -2715,4 +2808,17 @@ input[type=number]::-webkit-outer-spin-button {
   > li:nth-of-type(odd) {
     background-color: #242e3b;
   }
+}
+
+//navbar center
+@media (min-width: 768px) {
+  .navbar-nav.navbar-center {
+    position: absolute;
+    left: 50%;
+    transform: translatex(-50%);
+  }
+}
+
+.btn-outline-white {
+  border: 2px solid white;
 }
