@@ -1,38 +1,4 @@
 <header class="header">
-    {% if page.url contains "guides" %}
-    <div id="navbar-original">
-      <nav class="navbar navbar-default">
-        <div class="container">
-            <div class="navbar-header">
-              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-              </button>
-              <a class="navbar-brand" href="/"><strong>Gruntwork</strong>.io</a>
-            </div>
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-              <ul class="nav navbar-nav navbar-center">
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Learn <i class="fa fa-caret-down" aria-hidden="true"></i></a>
-                </li>
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Deploy <i class="fa fa-caret-down" aria-hidden="true"></i></a>
-                </li>
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Maintain <i class="fa fa-caret-down" aria-hidden="true"></i></a>
-                </li>
-              </ul>
-              <ul class="nav navbar-nav navbar-right">
-                <li><a href="#" ga-on="click" ga-event-category="nav-{{ page.path | slugify }}" ga-event-action="sign-in"><strong>Sign In</strong></a></li>
-                <li><a href="#" class="btn btn-outline-white" role="button" ga-event-category="nav-{{ page.path | slugify }}" ga-event-action="sign-up">Sign Up</a></li>
-              </ul>
-          </div>
-        </div>
-      </nav>
-    </div>
-    {% else %}
     <div id="navbar-original" hidden>
       <nav class="navbar navbar-default">
         <div class="container">
@@ -110,5 +76,4 @@
         </div>
       </nav>
     </div>
-    {% endif %}
   </header>
