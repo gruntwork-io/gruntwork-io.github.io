@@ -29,6 +29,9 @@
     - name: vpc-peering-external
       blurb: peer VPCs in different accounts
       description: Create peering connections between your VPCs and VPCs managed in other (external) AWS accounts.
+    - name: vpc-flow-logs
+      blurb: create VPC flow logs
+      description: Create VPC flow logs to observe IP traffic in your VPCs.
 
 - name: "Monitoring and Alerting"
   clouds:
@@ -1092,5 +1095,3 @@
     - name: run-pex-as-resource
       blurb: run a Python (pex) script as a data source
       description: Run a python script with dependencies packaged together as a local-exec provisioner on a null resource in a portable way.
-
-
