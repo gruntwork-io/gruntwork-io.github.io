@@ -7,6 +7,8 @@ group :jekyll_plugins do
   gem 'jekyll-paginate', '1.1.0'
   gem 'therubyracer', '0.12.3'
   gem 'less', '2.6.0'
+  gem 'jekyll-asciidoc'
+  gem 'jekyll-toc'
 end
 
 # https://github.com/jekyll/jekyll-redirect-from/issues/150
