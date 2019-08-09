@@ -18,8 +18,6 @@ Before we can deploy a dockerized app, we need to first create one. For the purp
 Start by creating a file called server.js and paste in the following source code:
 Before we can deploy a dockerized app, we need to first create one. For the purposes of this guide we will create a basic 
 
-I want to say display this part in another card not within only one card
-
 ## Test 2
 Node.js app that responds to requests on port 8080.
 Start by creating a file called server.js and paste in the following source code:Before we can deploy a dockerized app, we need to first create one. For the purposes of this guide we will create a basic Node.js app that responds to requests on port 8080.
