@@ -5,42 +5,49 @@ custom_js:
 ---
 
 <div class="main">
-    <div class="section section-hero">
-        <div class="container">
-            <div class="row">
-                <div class="col-xs-12 text-center">
-                <h1>{{ page.title }}</h1>
-                <h6 class="lead">
-                        10 mins read<strong>.</strong> Last updated {{ page.date | date_to_string }}
-                </h6>
-                </div>
-            </div>
+  <div class="section section-hero">
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12 text-center">
+          <h1>{{ page.title }}</h1>
+          <h6 class="lead">
+            10 mins read<strong>.</strong> Last updated {{ page.date | date_to_string }}
+          </h6>
         </div>
-    </div>   
-    <div class="container-fluid section-ghostwhite">
-        <div class="row">
-            <aside id="toc" class="col-md-3 aside-wrapper">
-                <p>Table of contents</p>   
-                {% toc %}            
-            </aside>
-            <section class="col-md-8 content">
-                <div class="text-center">
-                    <img src="{{ page.logoUrl }}"  alt="card image">
-                </div>
-                <div class="row justify-content-center">
-
-                    <div class="col-md-8 offset-md-2">
-                        <h3 style="color: black;">{{ page.prerequisiteTitle }}:</h2>
-                        <ol>{% for requirement in page.prerequisite %}
-                            <li>{{ requirement.listItem }}
-                            </li>{% endfor %}
-                        </ol>
-                    </div>
-                </div>
-                <div>
-                    {{ content }}
-                </div>
-            </section>
-        </div>
+      </div>
     </div>
+  </div>
+  <div class="container-fluid section-ghostwhite">
+    <div class="row">
+      <aside
+        id="toc"
+        class="col-md-3 aside-wrapper"
+      >
+        {% toc %}
+      </aside>
+      <section class="col-md-8 content">
+        <label style="color:#07a6fd!;"><a href="/guides/">< All guides</a></label>
+        <div class="row justify-content-center">
+          <div class="col-md-8 col-md-offset-2">
+            <div class="text-center">
+              <img
+                src="{{ page.logoUrl }}"
+                alt="card image"
+              >
+            </div>
+            {% if page.prerequisiteTitle %}
+            <h3><strong>{{ page.prerequisiteTitle }}:</strong></h2>
+              <ol>{% for requirement in page.prerequisite %}
+                <li>{{ requirement.listItem }}
+                </li>{% endfor %}
+              </ol>
+            {% endif %}
+          </div>
+        </div>
+        <div id="post">
+          {{ content }}
+        </div>
+      </section>
+    </div>
+  </div>
 </div>

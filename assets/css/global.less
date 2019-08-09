@@ -881,6 +881,9 @@ a.caret-right{
   overflow : hidden;
   text-overflow: ellipsis;
   display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  padding: 1rem;
 }
 
 .card {
@@ -889,6 +892,10 @@ a.caret-right{
   padding: 6%;
   color: black;
   border-radius: 5px;
+  flex: 0 0 100%;
+  & .card-title {
+    max-height: 45px;
+  }
   & h3, h2 {
     color: black;
   }
@@ -1095,9 +1102,34 @@ a.caret-right{
     margin-bottom: -99999px;
     padding-bottom: 99999px;
     background: white;
+    padding-top: 30%;
   }
   & section {
     margin: 3%;
+  }
+}
+
+#post {
+  & h2 {
+    color: #000;
+    font-weight: bold;
+  }
+}
+
+.section-nav {
+  padding: 0;
+  & li {
+    list-style-type: none;
+  }
+  & a{
+    opacity: 0.6;
+    color: #000000;
+    font-family: "Open Sans";
+    font-weight: bold;
+  }
+  & a:active, a:hover{
+      color: #08a9fb;
+      text-decoration: none;
   }
 }
 
@@ -1200,6 +1232,12 @@ a.caret-right{
         background-size: 224px 305px;
       }
     }
+  }
+}
+
+.content {
+  p, h3, li{
+    color: black;
   }
 }
 
