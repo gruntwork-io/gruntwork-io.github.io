@@ -875,6 +875,23 @@ a.caret-right{
 }
 
 // Deployement guides
+
+.col-sm-2-5 {
+  position: relative;
+  min-height: 1px;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+@media (min-width: 768px) {
+  .col-sm-2-5 {
+      float: left;
+  }
+  .col-sm-2-5 {
+    width: 20.83333%;
+  }
+}
+
 .guide-card {
   margin: 1.5rem;
   max-height: 420px;
@@ -902,6 +919,9 @@ a.caret-right{
   & a {
     color: #06A6FD;
     font-weight: 200;
+  }
+  & code {
+    color: #c7254e !important;
   }
 }
 
@@ -1103,6 +1123,8 @@ a.caret-right{
     padding-bottom: 99999px;
     background: white;
     padding-top: 30%;
+    line-height: 2.5em;
+    font-weight: bold;
   }
   & section {
     margin: 3%;
@@ -1125,7 +1147,6 @@ a.caret-right{
     opacity: 0.6;
     color: #000000;
     font-family: "Open Sans";
-    font-weight: bold;
   }
   & a:active, a:hover{
       color: #08a9fb;
@@ -1238,6 +1259,10 @@ a.caret-right{
 .content {
   p, h3, li{
     color: black;
+  }
+  & a {
+    color: #06A6FD;
+    font-weight: bold;
   }
 }
 

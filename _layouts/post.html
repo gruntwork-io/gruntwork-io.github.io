@@ -1,6 +1,7 @@
 ---
 layout: default
 custom_js:
+- prism
 - guides
 ---
 
@@ -21,14 +22,14 @@ custom_js:
     <div class="row">
       <aside
         id="toc"
-        class="col-md-3 aside-wrapper"
+        class="col-sm-2-5 aside-wrapper"
       >
         {% toc %}
       </aside>
       <section class="col-md-8 content">
         <label style="color:#07a6fd!;"><a href="/guides/">< All guides</a></label>
         <div class="row justify-content-center">
-          <div class="col-md-8 col-md-offset-2">
+          <div id="prerequisite" class="col-md-8 col-md-offset-2">
             <div class="text-center">
               <img
                 src="{{ page.logoUrl }}"
