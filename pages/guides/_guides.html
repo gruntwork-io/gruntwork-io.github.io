@@ -34,7 +34,7 @@
             </div>
             <div class="card-body">
                 <h3 class="card-title"><b>{{ guide.title }}</b></h3>
-                <p class="card-text">{{ guide.excerpt }}</p>
+                <p class="card-text">{{ guide.excerpt | truncate:150 "....." }}</p>
             </div>
             <div class="card-footer">
                 <a href="{{ guide.url }}" class="card-link"><strong>Read more ></strong></a>

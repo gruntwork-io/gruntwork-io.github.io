@@ -894,18 +894,21 @@ a.caret-right{
 
 .guide-card {
   margin: 1.5rem;
-  max-height: 420px;
-  overflow : hidden;
-  text-overflow: ellipsis;
-  display: flex;
-  flex: 1 1 auto;
-  flex-direction: column;
+  background: white;
   padding: 1rem;
+  border: solid 1px #d2cdcd;
+  border-radius: 5px;
+}
+
+.card-shadow:hover {
+  -webkit-box-shadow: 1px 1px 7px 4px #ccc;  /* Safari, Android, iOS */
+  -moz-box-shadow:    1px 1px 7px 4px #ccc;  /* Firefox */
+  box-shadow:         1px 1px 7px 4px #ccc;
 }
 
 .card {
   margin: 1.5rem;
-  background: white;
+  // background: white;
   padding: 6%;
   color: black;
   border-radius: 5px;
@@ -923,12 +926,6 @@ a.caret-right{
   & code {
     color: #c7254e !important;
   }
-}
-
-.card-shadow{
-  -webkit-box-shadow: 1px 1px 7px 4px #ccc;  /* Safari, Android, iOS */
-  -moz-box-shadow:    1px 1px 7px 4px #ccc;  /* Firefox */
-  box-shadow:         1px 1px 7px 4px #ccc;
 }
 
 .searchbar{
@@ -1117,14 +1114,16 @@ a.caret-right{
 
 .section-ghostwhite {
   background-color: #f7fbfd;
-  overflow: hidden;
+  position: relative;
   & .aside-wrapper {
-    margin-bottom: -99999px;
-    padding-bottom: 99999px;
     background: white;
     padding-top: 30%;
     line-height: 2.5em;
     font-weight: bold;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
   }
   & section {
     margin: 3%;
@@ -1255,8 +1254,8 @@ a.caret-right{
     }
   }
 }
-
 .content {
+  margin-left: 16em !important;
   p, h3, li{
     color: black;
   }
