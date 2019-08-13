@@ -1,0 +1,100 @@
+= How to configure a production-grade AWS account structure
+:type: guide
+:description: Learn about why you need multiple AWS accounts, AWS Organizations, IAM Users, IAM Roles, IAM Policies, CloudTrail, and more.
+:image: ../assets/img/guides/aws-account/aws-logo.png
+:tags: aws, terraform
+:toc:
+:toc-placement!:
+
+// GitHub specific settings. See https://gist.github.com/dcode/0cfbf2699a1fe9b46ff04c41721dda74 for details.
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+
+toc::[]
+
+== Intro
+
+This guide will walk you through the process of configuring a production-grade AWS account structure.
+
+=== What is an AWS account structure?
+
+https://aws.amazon.com[Amazon Web Services (AWS)] is the world's most popular an on-demand cloud computing platform,
+with a larger market share than the next three major cloud providers combined (Azure, GCP, IBM), more than 1 million
+customers, and over 60 data centers in 20 regions around the world. To use AWS, you sign up for an AWS account. To use
+AWS in production, you have to create an _AWS account structure_ that consists of multiple inter-connected AWS accounts.
+
+Configuring an AWS account structure serves three primary purposes:
+
+Isolation::
+You use separate AWS accounts to isolate different environments from each other. For example, putting your staging and
+production environments in separate AWS accounts ensures that if an attacker manages to break into staging, they still
+have no access whatsoever to production. Likewise, this isolation ensures a developer making changes in staging is
+less likely to accidentally break something in production.
+
+Authentication and authorization::
+If you configure your AWS account structure correctly, you'll be able to manage all user accounts in one place, making
+it easier to enforce password policies, multi-factor authentication, key rotation, and other security requirements.
+Using multiple AWS accounts also makes it easier to have fine-grained control over what permissions each developer gets
+in each environment.
+
+Auditing::
+A properly configured AWS account structure will allow you to maintain an audit trail off all the changes happening in
+all your environments, check if you're adhering to compliance requirements, and detect anomalies.
+
+=== What you'll learn in this guide
+
+This guide consists of four main sections:
+
+<<core_concepts>>::
+An overview of the core concepts you need to understand to set up an AWS account structure, including AWS
+Organizations, IAM Users, IAM Roles, IAM Groups, CloudTrail, and more.
+
+<<production_grade_design>>::
+An overview of how to configure a secure, scalable, highly available AWS account structure that you can rely on in
+production. To get a sense of what production-grade means, check out the production-grade infrastructure checklist.
+
+// TODO: link to checklist
+
+<<deployment_walkthrough>>::
+A step-by-step guide to configuring a production-grade AWS account structure using code from the Gruntwork Service
+Catalog.
+
+<<next_steps>>::
+What to do once you've got your AWS account structure configured.
+
+Feel free to read the guide start to finish or skip around to whatever part interests you!
+
+[[core_concepts]]
+== Core concepts
+
+TODO
+
+- Password policy
+- IAM User
+- IAM Role
+- IAM Group
+- Account switching
+- CloudTrail
+- AWS Config (future)
+- AWS Security Hub (future)
+- AWS Shield (future)
+
+[[production_grade_design]]
+== Production-grade design
+
+TODO
+
+[[deployment_walkthrough]]
+== Deployment walkthrough
+
+TODO
+
+[[next_steps]]
+== Next steps
+
+TODO
