@@ -19,7 +19,8 @@ toc::[]
 
 == Intro
 
-This guide will walk you through the process of configuring a production-grade AWS account structure.
+This guide will walk you through the process of configuring a production-grade AWS account structure, including how to
+manage multiple environments, users, permissions, audit logging, and more.
 
 === What is an AWS account structure?
 
@@ -31,60 +32,55 @@ AWS in production, you have to create an _AWS account structure_ that consists o
 Configuring an AWS account structure serves three primary purposes:
 
 Isolation::
-You use separate AWS accounts to isolate different environments from each other. For example, putting your staging and
-production environments in separate AWS accounts ensures that if an attacker manages to break into staging, they still
-have no access whatsoever to production. Likewise, this isolation ensures a developer making changes in staging is
-less likely to accidentally break something in production.
+  You use separate AWS accounts to isolate different environments from each other. For example, putting your staging and
+  production environments in separate AWS accounts ensures that if an attacker manages to break into staging, they still
+  have no access whatsoever to production. Likewise, this isolation ensures a developer making changes in staging is
+  less likely to accidentally break something in production.
 
 Authentication and authorization::
-If you configure your AWS account structure correctly, you'll be able to manage all user accounts in one place, making
-it easier to enforce password policies, multi-factor authentication, key rotation, and other security requirements.
-Using multiple AWS accounts also makes it easier to have fine-grained control over what permissions each developer gets
-in each environment.
+  If you configure your AWS account structure correctly, you'll be able to manage all user accounts in one place, making
+  it easier to enforce password policies, multi-factor authentication, key rotation, and other security requirements.
+  Using multiple AWS accounts also makes it easier to have fine-grained control over what permissions each developer
+  gets in each environment.
 
 Auditing and reporting::
-A properly configured AWS account structure will allow you to maintain an audit trail off all the changes happening in
-all your environments, check if you're adhering to compliance requirements, and detect anomalies. Moreover, you'll be
-able to have consolidated billing, with a single bill for all of your AWS accounts, showing cost breakdowns by account,
-service, tag, etc.
+  A properly configured AWS account structure will allow you to maintain an audit trail off all the changes happening in
+  all your environments, check if you're adhering to compliance requirements, and detect anomalies. Moreover, you'll be
+  able to have consolidated billing, with a single bill for all of your AWS accounts, showing cost breakdowns by
+  account, service, tag, etc.
 
 === What you'll learn in this guide
 
 This guide consists of four main sections:
 
 <<core_concepts>>::
-An overview of the core concepts you need to understand to set up an AWS account structure, including AWS
-Organizations, IAM Users, IAM Roles, IAM Groups, CloudTrail, and more.
+  An overview of the core concepts you need to understand to set up an AWS account structure, including AWS
+  Organizations, IAM Users, IAM Roles, IAM Groups, CloudTrail, and more.
 
 <<production_grade_design>>::
-An overview of how to configure a secure, scalable, highly available AWS account structure that you can rely on in
-production. To get a sense of what production-grade means, check out the production-grade infrastructure checklist.
+  An overview of how to configure a secure, scalable, highly available AWS account structure that you can rely on in
+  production. To get a sense of what production-grade means, check out the production-grade infrastructure checklist.
 
 // TODO: link to checklist
 
 <<deployment_walkthrough>>::
-A step-by-step guide to configuring a production-grade AWS account structure using code from the Gruntwork Service
-Catalog.
+  A step-by-step guide to configuring a production-grade AWS account structure using code from the Gruntwork Service
+  Catalog.
 
 <<next_steps>>::
-What to do once you've got your AWS account structure configured.
+  What to do once you've got your AWS account structure configured.
 
 Feel free to read the guide start to finish or skip around to whatever part interests you!
 
 [[core_concepts]]
 == Core concepts
 
-=== Creating an AWS account
+=== AWS account
 
-Creating a single AWS account is easy:
-
-. Go to https://aws.amazon.com
-. Click the "Sign Up" button
-. Fill in your contact and billing details
-. This will create a new AWS account for you with a unique
-  _https://docs.aws.amazon.com/IAM/latest/UserGuide/console_account-alias.html[AWS account ID]_ (a 12 digit code).
-
-You'll now be logged into your new AWS account as the root user.
+To use AWS, you must create an AWS account. You do this by signing up at https://aws.amazon.com. Once you've created
+an account, it will get a unique
+_https://docs.aws.amazon.com/IAM/latest/UserGuide/console_account-alias.html[AWS account ID]_ (a 12 digit code) and
+you'll be logged into your new AWS account as the root user.
 
 === Root user
 
@@ -123,9 +119,8 @@ Root permissions::
 
 In AWS, you use _https://aws.amazon.com/iam/[Identity and Access Management (IAM)]_ to manage access to your AWS
 account. One of the things you can do in IAM is create an
-_https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users.html[IAM user]_, which is a user account with a name and
-credentials. You can login to AWS as this IAM user and, depending on the permissions granted to this user (we'll
-discuss permissions in the next section), access various resources in your AWS account.
+_https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users.html[IAM user]_, which is a user account a human being can
+use to access an AWS account.
 
 User name::
   Every IAM user in your AWS account must have a unique _user name_.
@@ -171,23 +166,147 @@ Password policy::
   in your AWS account to enforce requirements on console passwords, such as minimum length, use of special characters,
   and password expiration.
 
+Permissions::
+  By default, a new IAM user does not have permissions to do anything in the AWS account
+  (https://en.wikipedia.org/wiki/Principle_of_least_privilege[principle of least privilege]). In order to grant this
+  user permissions, you will need to use IAM policies, which are the topic of the next section.
+
 === IAM policies
 
-TODO
+You can use _https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies.html[IAM policies]_ to define permissions
+in your AWS account.
+
+IAM policy basics::
+  Each IAM policy is a JSON document that consists of one or more _statements_, where each statement can allow or deny
+  specific _principals_ (e.g., IAM users) to perform specific _actions_ (e.g., `ec2:StartInstances`, `s3:GetObject`) on
+  specific _resources_ (e.g., EC2 instances, S3 buckets). Here's an example IAM policy that allows an IAM user named
+  `Bob` to perform `s3:GetObject` (i.e., download from S3) any files in an S3 bucket called `examplebucket`:
++
+[source,json]
+----
+{
+  "Version":"2012-10-17",
+  "Statement":[
+    {
+      "Effect":"Allow",
+      "Principal": {"AWS": ["arn:aws:iam::111122223333:user/Bob"]},
+      "Action":["s3:GetObject"],
+      "Resource":"arn:aws:s3:::examplebucket/*"
+    }
+  ]
+}
+----
+
+Managed policies::
+  Each AWS account comes with a number of
+  _https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_managed-vs-inline.html[managed policies]_, which
+  are pre-defined IAM policies created and maintained by AWS. These included policies such as `AdministratorAccess`
+  (full access to everything in an AWS account), `ReadOnlyAccess` (read-only access to everything in an AWS account),
+  `AmazonEC2ReadOnlyAccess` (read-only access to solely EC2 resources in an AWS account), and many others.
+
+Customer-managed policies::
+  While managed policies give you coarse-grained, generic permissions, to get more fine-grained, custom permissions,
+  you can create custom IAM policies (known as _customer-managed policies_).
+
+Standalone policies::
+  A _standalone policy_ is an IAM policy that exists by itself and can be attached to other IAM entities. For example,
+  you could create a single policy that gives access to a specific S3 bucket and _attach_ that policy to several IAM
+  users so they all get the same permissions.
+
+Inline policies::
+  An _inline policy_ is a policy that's embedded within an IAM entity, and only affects that single entity. For
+  example, you could create a policy embedded within an IAM user that gives solely that one user access to a specific
+  S3 bucket.
 
 === IAM groups
 
-TODO
+An _https://docs.aws.amazon.com/IAM/latest/UserGuide/id_groups.html[IAM group]_ is a collection of IAM users. You can
+attach IAM policies to an IAM group and all the users in that group will inherit the permissions from that policy.
+Instead of managing permissions by attaching multiple IAM policies directly to each IAM user—which can become very hard
+to maintain as the number of policies and users grows and your organization changes—you can create a relatively fixed
+number of groups that represent your company's structure and permissions (e.g., `developers`, `admins`, and `billing`)
+and assign each IAM user to the appropriate IAM groups.
 
 === IAM roles
 
-TODO
+An _https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html[IAM role]_ is a standalone IAM entity that (a) allows
+you to attach IAM policies to it, (b) specify which other IAM entities to trust, and then (c) those other IAM entities
+can _assume_ the IAM role to be temporarily get access to the permissions in those IAM policies. The two most common
+use cases for IAM roles are:
 
-=== Creating multiple AWS accounts with AWS Organizations
+Service roles::
+  Whereas an IAM user allows a human being to access AWS resources, one of the most common use cases for an IAM role is
+  to allow a service—e.g., one of your applications, a CI server, or an AWS service—to access specific resources in
+  your AWS account. For example, you could create an IAM role that gives access to a specific S3 bucket and allow that
+  role to be assumed by one of your EC2 instances. The code running on that EC2 instance will then be able to access
+  that S3 bucket without you having to manually copy AWS credentials (i.e., access keys) onto that instance.
 
-TODO
+Cross account access::
+  Another common use case for IAM roles is to grant an IAM entity in one AWS account access to specific resources in
+  another AWS account. For example, if you have an IAM user in account `A`, then by default, that IAM user cannot
+  access anything in account `B`. However, you could create an IAM role in account `B` that gives access to a specific
+  S3 bucket in account `B` and allow that role to be assumed by an IAM user in account `A`. That IAM user will then be
+  able to access the contents of the S3 bucket by assuming the IAM role in account `B`.
+
+Here are some more details on how IAM roles work:
+
+IAM policies::
+  Just as you can attach IAM policies to an IAM user and IAM group, you can attach IAM policies to an IAM role.
+
+Trust policy::
+  You must define a _trust policy_ for each IAM role, which is a JSON document (very similar to an IAM policy) that
+  specifies who can assume this IAM role. For example, here is a trust policy that allows this IAM role to be assumed
+  by an IAM user named `Bob` in AWS account `111122223333`:
++
+[source,json]
+----
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {"AWS": "arn:aws:iam::111122223333:user/Bob"},
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+----
+
+Assuming an IAM role::
+  IAM roles do not have a user name, password, or permanent access keys. To use an IAM role, you must _assume_ it by
+  making an `AssumeRole` API call (see the
+  https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html[AssumeRole API] and
+  https://docs.aws.amazon.com/cli/latest/reference/sts/assume-role.html[assume-role CLI command]), which will return
+  _temporary access keys_ you can use in follow-up API calls to authenticate as the IAM role (the temporary access keys
+  will be valid for 1-12 hours, depending on IAM role settings, after which you must call `AssumeRole` again to fetch
+  new keys). Note that to make the `AssumeRole` API call, you must first authenticate to AWS using some other
+  mechanism. For example, for an IAM user to assume an IAM role, you:
++
+. Authenticate using the IAM user's permanent AWS access keys
+. Make the `AssumeRole` API call
+. AWS sends back temporary access keys
+. You authenticate using those temporary access keys
+. Now all of your subsequent API calls will be on behalf of the assumed IAM role, with access to whatever permissions
+  are attached to that role
+
+IAM roles and AWS services::
+  Most AWS services have native support built-in for assuming IAM roles. For example, you can associate an IAM role
+  directly with an EC2 instance, and that instance will automatically assume the IAM role every few hours, making the
+  temporary credentials available in
+  _https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html#instancedata-data-retrieval[EC2 instance metadata]_.
+  Just about every AWS CLI and SDK tool knows how to read temporary credentials from EC2 instance metadata, so in
+  practice, as soon as you attach an IAM role to an EC2 instance, any code running on that EC2 instance can
+  automatically make API calls on behalf of that IAM role, with whatever permissions are attached to that role. This
+  allows you to give code on your EC2 instances IAM permissions without having to manually figure out how to copy
+  credentials (access keys) onto that instance! The same strategy works with many other AWS services: e.g., you use
+  IAM roles as a secure way to give your Lambda functions, ECS services, Step Functions, and many other AWS services
+  permissions to access specific resources in your AWS account.
 
 === Federated authentication
+
+TODO
+
+=== AWS Organizations
 
 TODO
 
@@ -219,16 +338,17 @@ TODO
     - Each IAM user needs self-mgmt permissions at the minimum
 - IAM roles in other accounts
     - Use to give users access to those accounts
-    - Use to give permissions to services (e.g., EC2, EKS) in those accounts
+    - Use to give permissions to services (e.g., EC2, EKS) in those accounts; don't copy creds anywhere in plain text
     - Require MFA for all but machine user IAM roles
 - Create IAM groups that give access to certain roles
-- Assign IAM users to those IAM groups
+- Assign IAM users to those IAM groups; don't attach policies to individual users, too hard to manage
 - Delete default VPCs / SGs
 - Enable CloudTrail in each account
 - Enable AWS Config in each account
 - Enable AWS Security Hub in each account
 - Enable AWS Shield in each account
 - Manage domain names? KMS keys?
+- Lock down IAM roles
 
 === Lock down the root user
 
@@ -253,6 +373,7 @@ TODO
 - Authenticating on the CLI
 - Use unique email address for each user; see Google trick with the `+` thing.
 - Reset root user password with AWS Org
+- ip-lockdown for IAM roles
 
 [[next_steps]]
 == Next steps
