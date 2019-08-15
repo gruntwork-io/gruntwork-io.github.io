@@ -75,6 +75,14 @@ Feel free to read the guide start to finish or skip around to whatever part inte
 [[core_concepts]]
 == Core concepts
 
+// TODO: topics to consider adding in the future
+// AWS Security Hub
+// Amazon Inspector
+// Access logging in S3, ELBs, etc
+// AWS Shield
+// AWS WAF
+// Amazon Macie
+
 === AWS account
 
 To use AWS, you must create an AWS account. You do this by signing up at https://aws.amazon.com. Once you've created
@@ -304,33 +312,99 @@ IAM roles and AWS services::
 
 === Federated authentication
 
-TODO
+_https://aws.amazon.com/identity/federation/[Federation]_ allows you to authenticate to your AWS account using an
+existing _identity provider (IdP)_, such as Google, Active Directory, or Okta, rather than IAM users. Since just about
+every single company already has all their user accounts defined in an IdP, this allows you to avoid having to:
+
+* Duplicate all those user accounts in the form of IAM users
+* Maintain and update user accounts in multiple places (e.g., when someone changes teams or leaves the company)
+* Manage multiple sets of credentials
+
+There are several ways to configure your AWS account to support _single sign-on (SSO)_, allowing you to authenticate
+using the users and credentials from your IdP:
+
+AWS Single Sign-On::
+  https://aws.amazon.com/single-sign-on/[AWS Single Sign-On] is a managed service that allows you to configure SSO for
+  IdPs that support SAML, such as Active Directory and Google. It provides a simple SSO experience for the AWS web
+  console, although
+  https://aws.amazon.com/blogs/security/aws-single-sign-on-now-enables-command-line-interface-access-for-aws-accounts-using-corporate-credentials/[signing in on the command line]
+  requires multiple steps, including manually copy/pasting credentials.
+
+Gruntwork Houston::
+  Gruntwork Houston allows you to configure SSO for IdPs that support SAML or OAuth, including Active Directory,
+  Google, Okta, GitHub, and others. It provides a simple SSO experience for the AWS web console, command-line access,
+  VPN access, and SSH access. Houston is currently in private beta, so if you're interested, please
+  mailto:info@gruntwork.io[email us to find out how to get access].
 
 === AWS Organizations
 
-TODO
+_https://aws.amazon.com/organizations/[AWS Organizations]_ gives you a central way to manage multiple AWS accounts. As
+you'll see in <<production_grade_design>>, you'll need to use multiple separate AWS accounts to manage separate
+environments, and AWS organizations is the best way to create and manage all of those accounts.
+
+Root account::
+  The first AWS account you create is the _root account_ (sometimes also called the _master account_). This will be the
+  parent account for your organization. This account has powerful permissions over all child accounts, so you should
+  strictly limit access to this account to a small number of trusted admins.
+
+Child account::
+  You can use AWS Organizations to create one or more _child accounts_ beneath the root account.
+
+Organization unit::
+  You can group child accounts into one or more _organization units_. This gives you a logical way to group accounts:
+  for example, if your company has multiple business units, then each business unit could be represented by one
+  organization unit, and each organization unit can contain multiple child accounts that can be accessed solely by
+  members of that business unit.
+
+Consolidated billing::
+  All of the billing from the child accounts rolls up to the root account. This allows you to manage all payment
+  details in a single account and to get a breakdown of cost by organization unit, child account, service type, etc.
+
+IAM roles::
+  When creating a child account, you can configure AWS Organizations to create an IAM role within that account that
+  allow users from the root account to access the child account. This allows you to manage the child accounts from the
+  parent account without having to create an IAM user in every single child account.
+
+Service control policies::
+  You can use
+  _https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scp.html[Service control policies (SCPs)]_
+  to define the maximum available permissions for a child account, overriding any permissions defined in the child
+  account itself. For example, you could use SCPs to completely block a child account from using specific AWS services
+  (e.g., Redshift or Amazon Elasticsearch), perhaps because those services do not meet your company's compliance
+  requirements (e.g., PCI, HIPAA, etc).
 
 === CloudTrail
 
-TODO
+_https://aws.amazon.com/cloudtrail/[AWS CloudTrail]_ is a service you can use to log (most) of the activity within your
+AWS account. CloudTrail automatically maintains an audit log of all API calls for
+https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-aws-service-specific-topics.html[supported services]
+in your AWS account, writing these logs to an S3 bucket, and optionally encrypting the data using
+https://aws.amazon.com/kms/[KMS]. It can be a good idea to enable CloudTrail in every AWS account, as the API call
+data is useful useful for troubleshooting, investigating security incidents, and maintaining audit logs for compliance.
 
 === AWS Config
 
-TODO
+Whereas CloudTrail maintains a log of API calls, _https://aws.amazon.com/cloudtrail/[AWS Config]_ is a service that
+maintains a log of the resource configurations that were the result of those API calls. This allows you to see, for
+example, how your EC2 instances or security groups were configured at some snapshot in time, as well as the
+relationships between those resources. AWS Config can also compare the resource configurations against a set of
+https://docs.aws.amazon.com/config/latest/developerguide/evaluate-config.html[rules you define] (e.g., you can define
+rules that check compliance requirements) and notify you if those rules are being violated.
 
-=== AWS Security Hub
+=== Amazon GuardDuty
 
-TODO
-
-=== AWS Shield
-
-TODO
+_https://aws.amazon.com/guardduty/[Amazon GuardDuty]_ is a service that can automatically detect threats and anomalies
+in your AWS account. GuardDuty continuously monitors activity from AWS data sources, such as AWS CloudTrail, Amazon
+VPC Flow Logs, and DNS logs, analyzes it using rule sets and machine learning, and triggers an alert if it detects
+malicious or unauthorized behavior.
 
 [[production_grade_design]]
 == Production-grade design
 
 TODO
 
+- Principle of least privilege
+- Compliance: HIPAA BAA, https://aws.amazon.com/artifact/?nc2=h_m1
 - Create master account
 - Use AWS Orgs to create multiple child accounts: security, dev, stage, prod, shared-services
 - Lock down the root user
@@ -374,6 +448,7 @@ TODO
 - Use unique email address for each user; see Google trick with the `+` thing.
 - Reset root user password with AWS Org
 - ip-lockdown for IAM roles
+- SCPs
 
 [[next_steps]]
 == Next steps
