@@ -875,12 +875,25 @@ a.caret-right{
 }
 
 // Deployement guides
-
-.col-sm-2-5 {
-  position: relative;
-  min-height: 1px;
-  padding-right: 15px;
-  padding-left: 15px;
+.sect1 {
+  padding: 1% 5%;
+  & code {
+    background-color: #e6f6fe;
+    color: #000;
+  }
+  & p {
+    font-size: 16px;
+  }
+  & .dlist {
+    padding: 0 4%;
+  }
+  & a:link{
+    color: #07a7fc;
+    text-decoration: none;
+  }
+  & h2 {
+    border-bottom: solid 1px #07a7fc;
+  }
 }
 
 @media (min-width: 768px) {
@@ -895,7 +908,6 @@ a.caret-right{
 .guide-card {
   margin: 1.5rem;
   background: white;
-  padding: 1rem;
   border: solid 1px #d2cdcd;
   border-radius: 5px;
 }
@@ -906,28 +918,66 @@ a.caret-right{
   box-shadow:         1px 1px 7px 4px #ccc;
 }
 
-.card {
-  margin: 1.5rem;
-  // background: white;
-  padding: 6%;
-  color: black;
-  border-radius: 5px;
-  flex: 0 0 100%;
-  & .card-title {
-    max-height: 45px;
+.guide-listing {
+  padding-top: 20px;
+  & .categories {
+    margin-top: 10%;
+    font-size: 16px;
+    & a:active, a:hover{
+      text-decoration: none;
+      color:#07a7fc;
+    }
   }
-  & h3, h2 {
-    color: black;
+  & .category-head {
+    color: #4e4c4c;
+    font-weight: bold;
   }
-  & a {
-    color: #06A6FD;
-    font-weight: 200;
+  & .card {
+    color: #4e4c4c;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    & h4, h3, h2, a {
+      color: #4e4c4c;
+    }
+    & code {
+      color: #c7254e !important;
+    }
   }
-  & code {
-    color: #c7254e !important;
+  & .newsletter {
+    margin: 10%;
+    font-size: 20px;
+    color: #4e4c4c;
+    & input {
+      overflow: hidden;
+      border-radius: 23px;
+      width: 55%;
+    }
+    & button {
+      margin-left: -35px;
+      text-decoration: none;
+      background: #07a7fc;
+      font-size: 15px;
+      padding: 13px;
+    }
   }
 }
 
+.cloud-filter {
+  & .btn-group {
+    height: 60px;
+  }
+  & img {
+      height: 100%;
+      background: #ececef;
+      width: 33%;
+      border-radius: 2px;
+  }
+}
+
+.searchrow {
+  margin-top: 3%;
+}
 .searchbar{
   background-color: white;
   border-radius: 30px;
@@ -954,21 +1004,27 @@ a.caret-right{
 }
 
 .guide-filter {
-  margin: 3% 0;
   & label {
     color: #7b7d7e;
   }
-  & a {
+  & button {
+    border-radius: 10px;
+    color: #13cfe7;
+    background: #e6f0f9;
+    box-shadow: none;
+    padding: 0% 7%;
+  }
+  & button > label > a {
     color: #28adf9;
+    font-size: 20px;
   }
 }
 
 .badge {
-  border: 2px solid #06a6fd;
-  background-color: #fff;
-  padding: 10px 40px;
+  background-color: #e6f6fe;
+  padding: 6px 10px;
   color: #000;
-  border-radius: 25px;
+  border-radius: 5px;
   margin: 0 1%;
   color: #06a6fd;
 }
@@ -1113,8 +1169,20 @@ a.caret-right{
 }
 
 .section-ghostwhite {
-  background-color: #f7fbfd;
+  background-color: #ececec;
+}
+
+.section-white {
+  background-color: #fff;
   position: relative;
+  color: #000;
+  & .post-title {
+    font-size: 27px;
+    font-weight: bold;
+  }
+  & h4, h3, h2,label, a {
+    color: #4e4c4c;
+  }
   & .aside-wrapper {
     background: white;
     padding-top: 30%;
@@ -1159,6 +1227,25 @@ a.caret-right{
     padding-top: @padding-section-vertical-desktop - 30px;
     padding-bottom: @padding-section-vertical-desktop - 40px;
   }
+}
+
+// Sections that have a blue background
+.section-hero-blue {
+  color: #fff;
+  background: url('../img/bg-header-squares.png') center bottom no-repeat, linear-gradient(#7cd7ff, #07a7fc, #57a1ea); 
+  & label {
+    font-size: 30px;
+  }
+  & button {
+    padding: 7px 30px;
+    margin-bottom: 3%;
+    color: #08a9fb;
+    font-size: 14px;
+  }
+  & button:active, button:hover{
+    color: #08a9fb;
+    text-decoration: none;
+}
 }
 
 // Hero styles on the front page
