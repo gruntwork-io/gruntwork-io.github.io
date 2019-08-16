@@ -407,47 +407,245 @@ that looks something like this:
 .A production-grade AWS account structure
 image::../assets/img/guides/aws-account/aws-account-structure.png[]
 
+// TODO: other topics we may wish to cover:
+// Compliance: e.g., signing BAA for HIPAA https://aws.amazon.com/artifact/?nc2=h_m1
+// A separate "backup" account for disaster recovery
+
+=== Root account
+
+The first step is to create your root account. This account will be the parent of all of your other AWS accounts and
+the central place where you manage billing:
+
+. Go to https://aws.amazon.com.
+. Click Create an AWS Account.
+. Go through the sign up flow, entering contact and billing details as requested.
+. You will be asked to enter an email address and password to use as the credentials for the root user of this root
+  account. Let's now turn our attention to how to handle this password and other security considerations for the root
+  user.
+
+[[lock_down_root_user]]
+=== Lock down a root user
+
+The root user has unrestricted access to just about everything in your AWS account (and any child accounts),
+so if an attacker compromises your root user, the results can be catastrophic for your company. Therefore, it's
+critical that you lock this root user down as much as possible:
+
+Use a secrets manager::
+  Do NOT store the credentials or any kind of secret in plain text. Instead, always use a secrets manager such as
+  https://1password.com[1Password], https://www.lastpass.com[LastPass], or https://www.passwordstore.org[pass] to store
+  the credentials in an encrypted format.
+
+Use a strong, generated password::
+  Do NOT re-use passwords from other websites, or any password that you can remember at all. Instead, generate a random,
+  cryptographically secure, long password (20+ characters). All the password managers mentioned above can generate and
+  store passwords for you in one step, so use them!
+
+Enable MFA::
+  Always make sure to
+  https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html#id_root-user_manage_mfa[enable MFA for your root user].
+  Feel free to use a virtual or hardware MFA device—whichever is easier or required by your company—as either one
+  dramatically improves the security of your root user.
+
+Disable access keys::
+  Right after enabling MFA, make sure to
+  https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html#id_root-user_manage_delete-key[delete the root user's access keys],
+  so that the only way to login as the root user is via the web console, where MFA is required.
+
+Create an Admin IAM user::
+  Now that the root user is locked down, the next step is to
+  https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html[create an IAM user] and to attach admin
+  permissions to this user. Later on, you'll be able to create all IAM users using code and assign permissions using
+  IAM groups, but for this very first user, your best bet is to do it manually by using the web console to directly
+  attach the `AdministratorAccess` managed policy to this user.
+
+Don't use the root user again::
+  From here on out, you should only use the IAM user account, and more or less never touch the root user account again.
+  The only time you'll need it is for account recovery situations (e.g., you accidentally deleted the IAM user or lost
+  your credentials) or for the
+  https://docs.aws.amazon.com/general/latest/gr/aws_tasks-that-require-root.html[small number of tasks that require root user credentials].
+
+The first step in using your new IAM user is to lock that user down!
+
+[[lock_down_iam_user]]
+=== Lock down an IAM user
+
+Although IAM users don't have the same powers as a root user, having an IAM user account compromised can still be a
+huge problem for your company (especially if that IAM user had admin permissions), so it's still critical to lock down
+IAM user accounts as much as possible:
+
+Use a secrets manager::
+  Do NOT store the credentials or any kind of secret in plain text. Instead, always use a secrets manager such as
+  https://1password.com[1Password], https://www.lastpass.com[LastPass], or https://www.passwordstore.org[pass] to store
+  the credentials in an encrypted format.
+
+Use a strong, generated password::
+  Do NOT re-use passwords from other websites, or any password that you can remember at all. Instead, generate a random,
+  cryptographically secure, long password (20+ characters). All the password managers mentioned above can generate and
+  store passwords for you in one step, so use them!
+
+Enable MFA::
+  Always make sure to
+  https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_mfa_enable.html[enable MFA for your IAM user].
+  Feel free to use a virtual or hardware MFA device—whichever is easier or required by your company—as either one
+  dramatically improves the security of your IAM user. Note that using SMS (text messages) for MFA is
+  https://www.schneier.com/blog/archives/2016/08/nist_is_no_long.html[no longer recommended by NIST] due to known
+  https://www.theverge.com/2017/9/18/16328172/sms-two-factor-authentication-hack-password-bitcoin[vulnerabilities with the cellular system],
+  so using a virtual or hardware MFA device is preferable; that said, MFA with SMS is still better than no MFA at all!
+
+=== Child accounts
+
+Now that you have your root account setup, you can use AWS Organizations to create all the child accounts. The exact
+child accounts you will need will vary depending on your company's needs, but the overall structure should look
+something like this:
+
+.A production-grade AWS account structure
+image::../assets/img/guides/aws-account/aws-account-structure.png[]
+
+Let's break down the accounts in this diagram:
+
+Security account::
+  You will want a single _security account_ where all of your IAM users and IAM groups are defined. So, even though
+  our account structure has multiple accounts, each person on your team will have only a single IAM user and a single
+  set of credentials (the one exception is the root account, where one or a small number of admins will have a separate
+  IAM user and separate credentials used to manage the account structure itself). The security account is not used to
+  run any infrastructure, bot solely a central place to manage authentication and authorization.
+
+Application accounts (dev, stage, prod)::
+  You can have one or more _application accounts_ for running your software. At a bare minimum, most companies will
+  have a production account ("prod"), for running user-facing software, and a staging account ("stage") which is a
+  replica of production (albeit with smaller or fewer servers to save money) used for internal testing. Some teams will
+  have more pre-prod environments (e.g., dev, qa, uat) and some may find the need for more than one prod account (e.g.,
+  a separate failover account for disaster recovery).
+
+Shared-services account::
+  The _shared-services account_ is used to store infrastructure and data that is shared amongst all the application
+  accounts, such as CI servers and artifact repositories. For example, in your shared-services account, you might use
+  https://aws.amazon.com/ecr/[ECR] to store Docker images and Jenkins to deploy those Docker images to dev, stage, and
+  prod.
+
+Sandbox accounts::
+  You may want to have one or more _sandbox accounts_ that developers can use for manual testing. The application
+  accounts (e.g., dev and stage) are usually shared by the whole company, so these sandbox accounts are intentionally
+  kept separate so that developers can feel comfortable deploying and undeploying anything they want without
+  fear of affecting someone else (in fact, the gold standard is one sandbox account per developer to keep things 100%
+  isolated). Sandbox accounts tend to build up more and more unused infrastructure over time, so to prevent your bill
+  from getting out of hand, you may want to run a tool like https://github.com/gruntwork-io/cloud-nuke[cloud-nuke] on
+  a daily basis to clean up everything in the account older than, say, 5 days (you wouldn't want to run a tool like
+  `cloud-nuke` in an account like staging, so this is yet another reason to keep sandbox accounts separate).
+
+Testing accounts::
+  One other type of account that often comes in handy is a _testing account_ that is used specifically for automated
+  tests that spin up and tear down lots of AWS infrastructure. For example, at Gruntwork, we use
+  https://blog.gruntwork.io/open-sourcing-terratest-a-swiss-army-knife-for-testing-infrastructure-code-5d883336fcd5[Terratest]
+  to test all of our infrastructure code, and when testing something like our
+  https://github.com/hashicorp/terraform-aws-vault/[Vault modules], we end up spinning up and tearing down a dozen
+  Vault and Consul clusters after every single commit! You don't want all this infrastructure churn in your application
+  or sandbox accounts, so we recommend having a separate AWS account dedicated for automated tests. This is especially
+  important as automated tests sometimes fail to clean up that infrastructure (e.g., due to a bug in the test or the
+  test crashing before it can run the cleanup steps), so you'll want to run a tool like `cloud-nuke` multiple times per
+  day to clean up anything older than a few hours, which you definitely don't want in your application or sandbox
+  accounts.
+
+Note that for larger organizations with multiple separate business units, you may need to repeat the structure above
+multiple times. That is, in the root account, you
+https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_ous.html#create_ou[create an Organization Unit]
+for each business unit, and within each Organization Unit, you create the security, dev, stage, prod,
+shared-services, sandbox, and testing accounts.
+
+Here are a few useful tips on creating child accounts:
+
+Use AWS Organizations::
+  Use AWS Organizations to https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts_create.html[create each child account].
+  If there are certain AWS services that should never be used in the child accounts (e.g., because the service does not
+  meet your company's compliance requirements),
+  https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scp.html[create an SCP] that prevents
+  that service from being used.
+
+IAM roles in child accounts::
+  As you're creating each account, AWS Organizations will ask you for the name of an IAM role to create in the child
+  account. This IAM role will allow you to access the child account from the root account with full administrative
+  access, which is a useful fallback in case you accidentally lose access to the child account. We recommend using a
+  consistent name for this IAM role, such as `OrganizationAccountAccessRole`, so you always know what role to assume
+  when you need to access that account.
+
+Unique root user email addresses::
+  AWS requires that you associate an email address with each child account. This email address must be globally unique,
+  so it cannot be the email address you used for the root account or any of the other child accounts. You'll have to
+  either create multiple email accounts in your company's email system, or, if your company uses Gmail (perhaps as part
+  of G Suite) for email, you can take advantage of the fact that
+  https://gmail.googleblog.com/2008/03/2-hidden-ways-to-get-more-from-your.html[Gmail ignores everything after a plus sign in an email address],
+  so that while AWS will see `example@gmail.com`, `example+dev@gmail.com`, `example+stage@gmail.com`, and
+  `example+prod@gmail.com` as four unique email addresses, Gmail will see them all as the same email address,
+  `example@gmail.com`.
+
+Resetting the root user password::
+  When you create a child account using AWS Organizations, you are asked to provide the email address for the root user,
+  but confusingly, not a password. So how do you login as the root user then? It turns out that you need to
+  https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys_retrieve.html#reset-root-password[reset the root user password],
+  using the "Forgot your password?" prompt on the login page. AWS will email you a reset link and you'll be able to
+  configure a password for the root user of this child account. As soon as you've reset the password, make sure to
+  follow the steps in <<lock_down_root_user>>.
+
+=== Lock down the root account root user
+
 TODO
 
-- Principle of least privilege
-- Compliance: HIPAA BAA, https://aws.amazon.com/artifact/?nc2=h_m1
-- Create master account
-- Use AWS Orgs to create multiple child accounts: security, dev, stage, prod, shared-services
-- Lock down the root user
-- Create a set of IAM users in security. Alternatively, use federated auth with one set of users in an IdP.
-    - Each IAM user needs self-mgmt permissions at the minimum
-- IAM roles in other accounts
-    - Use to give users access to those accounts
-    - Use to give permissions to services (e.g., EC2, EKS) in those accounts; don't copy creds anywhere in plain text
-    - Require MFA for all but machine user IAM roles
-- Create IAM groups that give access to certain roles
-- Assign IAM users to those IAM groups; don't attach policies to individual users, too hard to manage
-- Delete default VPCs / SGs
-- Enable CloudTrail in each account
-- Enable AWS Config in each account
-- Enable AWS Security Hub in each account
-- Enable AWS Shield in each account
-- Manage domain names? KMS keys?
-- Lock down IAM roles
+- Do this for each account
+- Reset password
+- Long, auto generated password in secrets mgr of trusted admin
+- MFA
+- Remove access keys
+- Don't use again except in emergency / recover situations
 
-=== Lock down the root user
+=== IAM roles for users
 
-Therefore, we *strongly* recommend the following:
+- Roles in dev, stage, prod, shared
+- Trust security acccount
+- Require MFA <-----
+- Common ones: allow-full-access-from-other-accounts, allow-read-only-from-other-accounts, allow-developers-from-other-accounts
 
-- Strong password. Store in secrets manager of just one trusted admin at your company.
-- Enable MFA
-- Delete access keys
-- Don't use the root user for anything again
+=== IAM users and groups
 
-=== Delete default VPC and SGs in prod
+TODO
 
-- Cloud Nuke
+- Create users in security acct
+- At least user self-mgmt
+- Require MFA for all of security acct?
+- Alternatively, federated auth
+    - Relies on similar IAM roles in each account
+- Create groups with access to other accounts (don't assign policies directly to users)
+    - Must connect from both sides
+- security-full-access is solely for admins in security account; could be purely IAM permissions in that group
+- Give no other permissions within security account itself
+
+=== Password policy
+
+- Enable in each account
+- Follow NIST recommendations or compliance requirements
+
+=== IAM roles for services
+
+- IAM roles for services do not require MFA
+- Trust policy only allows them to be assumed by specific service (e.g., ec2)
+    - E.g., IAM role that allows Jenkins to deploy in this acct
+    - E.g., IAM role that allows pushing to ECR
+- If using external CI system, can't use IAM role, so create machine user, give access keys to that service
+    - Will assume IAM role that doesn't require MFA
+    - Be careful!
+- Use ip-lockdown when possible
+
+=== CloudTrail, AWS Config, Amazon GuardDuty
+
+- Enable in each account
+- Send data to security account and encrypt
+- Only give admins access to KMS key
 
 [[deployment_walkthrough]]
 == Deployment walkthrough
 
 TODO
 
+- Creating accounts using code
 - Switching between accounts
 - Authenticating on the web
 - Authenticating on the CLI
