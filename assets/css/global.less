@@ -906,7 +906,7 @@ a.caret-right{
 }
 
 .guide-card {
-  margin: 1.5rem;
+  margin-bottom: 1%;
   background: white;
   border: solid 1px #d2cdcd;
   border-radius: 5px;
@@ -934,10 +934,18 @@ a.caret-right{
   }
   & .card {
     color: #4e4c4c;
-    font-size: 16px;
+    font-size: 14px;
     border-radius: 5px;
     cursor: pointer;
-    & h4, h3, h2, a {
+    & img {
+      width: 50%;
+      margin: 22px;
+    }
+    & .card-title {
+      margin-top: 15px;
+      margin-bottom: 2px;
+    }
+    & h6, h5, h4, h3, h2, a {
       color: #4e4c4c;
     }
     & code {
@@ -977,6 +985,21 @@ a.caret-right{
 
 .searchrow {
   margin-top: 3%;
+  margin-bottom: 3%;
+  & .input-group {
+    width: 100%;
+    & .form-control {
+      background: #f5f9fa;
+      border: 0px;
+    }
+  }
+  & .btn-group {
+    border-radius: 2px;
+    & .btn {
+      border-bottom-left-radius: 3px;
+      border-top-left-radius: 3px;
+    }
+  }
 }
 .searchbar{
   background-color: white;
@@ -1017,6 +1040,7 @@ a.caret-right{
   & button > label > a {
     color: #28adf9;
     font-size: 20px;
+    padding: 15px;
   }
 }
 
@@ -1173,6 +1197,7 @@ a.caret-right{
 }
 
 .section-white {
+  font-family: sans-serif;
   background-color: #fff;
   position: relative;
   color: #000;
@@ -1342,7 +1367,6 @@ a.caret-right{
   }
 }
 .content {
-  margin-left: 16em !important;
   p, h3, li{
     color: black;
   }
