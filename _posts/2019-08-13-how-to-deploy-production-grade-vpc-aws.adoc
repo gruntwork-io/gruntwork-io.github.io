@@ -448,8 +448,7 @@ change something in prod rather than pre-prod).
 
 Therefore, your best bet is to put pre-production environments and production environments in completely separate AWS
 accounts. This makes it easy to, for example, grant relatively lax permissions in pre-prod environments, but very
-strict permissions in production. Check out the `How to configure a production-grade AWS account` guide _(coming soon!)_
-for instructions.
+strict permissions in production. Check out the <<production_grade_aws_account_structure>> guide for instructions.
 
 [[multiple_vpcs]]
 === Multiple VPCs
@@ -619,11 +618,10 @@ Terraform::
   not familiar with Terraform, check out https://blog.gruntwork.io/a-comprehensive-guide-to-terraform-b3d32832baca[A
   Comprehensive Guide to Terraform] and https://training.gruntwork.io/p/terraform[A Crash Course on Terraform].
 
-// TODO: Create a guide for configuring AWS accounts: e.g., AWS Orgs, CloudTrail, AWS Config, KMS, etc.
 AWS accounts::
-  This guide deploys infrastructure into one or more AWS accounts. Check out `How to configure a production-grade AWS
-  account` guide _(coming soon!)_ for instructions. You will also need to be able to authenticate to these accounts on
-  the CLI: check out
+  This guide deploys infrastructure into one or more AWS accounts. Check out the
+  <<production_grade_aws_account_structure>> guide for instructions. You will also need to be able to authenticate to
+  these accounts on the CLI: check out
   https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[A Comprehensive Guide to Authenticating to AWS on the Command Line]
   for instructions.
 

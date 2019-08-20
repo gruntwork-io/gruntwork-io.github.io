@@ -1,3 +1,4 @@
+[[production_grade_aws_account_structure]]
 = How to configure a production-grade AWS account structure
 :type: guide
 :description: Learn about why you need multiple AWS accounts, AWS Organizations, IAM Users, IAM Roles, IAM Policies, CloudTrail, and more.
@@ -76,7 +77,10 @@ Feel free to read the guide start to finish or skip around to whatever part inte
 == Core concepts
 
 // TODO: topics to consider adding in the future
-// AWS Security Hub
+// GuardDuty
+// AWS Config
+// Security Hub
+// Trusted Advisor
 // Amazon Inspector
 // Access logging in S3, ELBs, etc
 // AWS Shield
@@ -403,22 +407,6 @@ in your AWS account, writing these logs to an S3 bucket, and optionally encrypti
 https://aws.amazon.com/kms/[KMS]. It can be a good idea to enable CloudTrail in every AWS account, as the API call
 data is useful useful for troubleshooting, investigating security incidents, and maintaining audit logs for compliance.
 
-=== AWS Config
-
-Whereas CloudTrail maintains a log of API calls, _https://aws.amazon.com/cloudtrail/[AWS Config]_ is a service that
-maintains a log of the resource configurations that were the result of those API calls. This allows you to see, for
-example, how your EC2 instances or security groups were configured at some snapshot in time, as well as the
-relationships between those resources. AWS Config can also compare the resource configurations against a set of
-https://docs.aws.amazon.com/config/latest/developerguide/evaluate-config.html[rules you define] (e.g., you can define
-rules that check compliance requirements) and notify you if those rules are being violated.
-
-=== Amazon GuardDuty
-
-_https://aws.amazon.com/guardduty/[Amazon GuardDuty]_ is a service that can automatically detect threats and anomalies
-in your AWS account. GuardDuty continuously monitors activity from AWS data sources, such as AWS CloudTrail, Amazon
-VPC Flow Logs, and DNS logs, analyzes it using rule sets and machine learning, and triggers an alert if it detects
-malicious or unauthorized behavior.
-
 [[production_grade_design]]
 == Production-grade design
 
@@ -445,6 +433,7 @@ policies attached to each group, and assign all of your users to the appropriate
 you need depends on your company's requirements, but for most companies, the root account contains solely a single
 `full-access` IAM group that gives the handful of trusted users in that account admin permissions.
 
+[[child_accounts]]
 === Child accounts
 
 The admins in the root account can create the following child accounts in your AWS organization:
@@ -698,15 +687,12 @@ Machine users::
   live on an external system, so think very carefully if that system is worth trusting with access to your AWS account,
   and limit the machine user's permissions as much as possible.
 
-=== CloudTrail, AWS Config, Amazon GuardDuty
+=== CloudTrail
 
-You'll want to enable CloudTrail, AWS Config, and Amazon GuardDuty in every single AWS account so that you are notified
-of any anomalous activity (with GuardDuty) and that you have the audit logs (from CloudTrail and AWS Config) to
-understand what happened.
-
-For CloudTrail and AWS Config, we typically recommend creating an S3 bucket in the security account and sending all the
-audit logs from the other accounts to this one S3 bucket. Also, make sure to encrypt all logs with KMS, and only give a
-small number of trusted admins access to the KMS master key and the S3 bucket.
+You'll want to enable CloudTrail in every single AWS account so that you have an audit log of the major activity
+happening in the account. We typically recommend creating an S3 bucket in the security account and sending all the
+CloudTrail logs from the other accounts to this one S3 bucket. Also, make sure to encrypt all logs with KMS, and only
+give a small number of trusted admins access to the KMS master key and the S3 bucket.
 
 === Federated auth
 
@@ -720,7 +706,7 @@ No IAM users or groups::
 No security account (maybe)::
   You might be able to get rid of the security account entirely. The key considerations are (a) if you need to have any
   machine users (if so, perhaps define them in the shared-services account?) and (b) where to store your audit logs
-  for CloudTrail and AWS Config (e.g., perhaps them to the root account).
+  for CloudTrail (e.g., perhaps them to the root account).
 
 Different IAM role trust policies::
   With federated auth, you will be granting your IdP users access to specific IAM roles in specific accounts.
@@ -754,63 +740,589 @@ No MFA::
 [[deployment_walkthrough]]
 == Deployment walkthrough
 
-TODO
+Let's now walk through the step-by-step process of how to create a production-grade AWS account structure using the
+Gruntwork Service Catalog.
 
-- Creating accounts using code
-- Switching between accounts
-- Authenticating on the web
-- Authenticating on the CLI
-- Use unique email address for each user; see Google trick with the `+` thing.
-- Reset root user password with AWS Org
-- ip-lockdown for IAM roles
-- SCPs
+[[pre_requisites]]
+=== Pre-requisites
+
+This walkthrough has the following pre-requistes:
+
+Gruntwork Service Catalog::
+  This guide uses code from the https://gruntwork.io/infrastructure-as-code-library/[Gruntwork Service Catalog], as it
+  implements most of the production-grade design for you out of the box.
++
+IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access this code.
+
+Terraform::
+  This guide uses https://www.terraform.io/[Terraform] to define and manage all the infrastructure as code. If you're
+  not familiar with Terraform, check out https://blog.gruntwork.io/a-comprehensive-guide-to-terraform-b3d32832baca[A
+  Comprehensive Guide to Terraform] and https://training.gruntwork.io/p/terraform[A Crash Course on Terraform].
+
+// TODO: extract the Terraform/Terragrunt/infra-live/infra-modules content into a separate guide and cross-link it
+// instead of copy/pasting it into each guide
+Git repos::
+  This guide assumes you have configured two Git repos for your Terraform code: an `infrastructure-modules` repo which
+  contains reusable Terraform modules and an `infrastructure-live` repo that deploys the modules from
+  `infrastructure-modules` into your live environments (i.e., into dev, stage, prod, etc). This is the recommended repo
+  structure for using https://github.com/gruntwork-io/terragrunt[Terragrunt] (see
+  https://github.com/gruntwork-io/terragrunt#motivation[keep your code DRY] for the motivation behind this folder
+  structure), but take note that neither this repo structure nor Terragrunt are required for this guide! Everything in
+  this guide will work just fine in any other repo structure you choose (e.g., everything in one repo) and with vanilla
+  Terraform (or Terraform Enterprise).
 
 === Create the root account
 
 The first step is to create your root account. This account will be the parent of all of your other AWS accounts and
-the central place where you manage billing:
+the central place where you manage billing. You create this initial account manually, via a web browser:
 
 . Go to https://aws.amazon.com.
 . Click Create an AWS Account.
 . Go through the sign up flow, entering contact and billing details as requested.
 . You will be asked to enter an email address and password to use as the credentials for the root user of this root
-  account. Let's now turn our attention to how to handle this password and other security considerations for the root
-  user.
+  account.
 
-[[lock_down_root_user]]
-=== Lock down the root user
+=== Create IAM groups, IAM users, and an IAM password policy in the root account
 
 The root user has unrestricted access to just about everything in your AWS account (and any child accounts),
-so if an attacker compromises your root user, the results can be catastrophic for your company. Therefore, it's
-critical that you lock this root user down as much as possible:
+so if an attacker compromises your root user, the results can be catastrophic for your company. Therefore, you'll need
+to (a) create IAM users, IAM groups, and IAM roles that you will use instead, as we'll discuss now and (b) lock down
+the root user account as much as possible, as we'll discuss a little later.
+
+Let's first create the IAM groups and IAM users by using the `iam-groups`, `iam-users`, `iam-user-password-policy`, and
+`cross-account-iam-roles` modules from https://github.com/gruntwork-io/module-security[module-security].
+
+IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access `module-security`.
+
+First, create a _wrapper module_ called `iam` in your `infrastructure-modules` repo:
++
+----
+infrastructure-modules
+  └ security
+    └ iam
+      └ main.tf
+      └ outputs.tf
+      └ variables.tf
+----
+
+Inside of `main.tf`, configure your AWS provider and Terraform settings:
+
+.infrastructure-modules/networking/iam/main.tf
+[source,hcl]
+----
+provider "aws" {
+  # The AWS region in which all resources will be created
+  region = var.aws_region
+
+  # Require a 2.x version of the AWS provider
+  version = "~> 2.6"
+
+  # Only these AWS Account IDs may be operated on by this template
+  allowed_account_ids = var.aws_account_id
+}
+
+terraform {
+  # The configuration for this backend will be filled in by Terragrunt or via a backend.hcl file. See
+  # https://www.terraform.io/docs/backends/config.html#partial-configuration
+  backend "s3" {}
+
+  # Only allow this Terraform version. Note that if you upgrade to a newer version, Terraform won't allow you to use an
+  # older version, so when you upgrade, you should upgrade everyone on your team and your CI servers all at once.
+  required_version = "= 0.12.6"
+}
+----
+
+Next, use the `iam-groups` module from the Gruntwork Service Catalog, making sure to replace the `<VERSION>` placeholder
+with the latest version from the https://github.com/gruntwork-io/module-security/releases[releases page]:
+
+.infrastructure-modules/networking/iam-groups/main.tf
+[source,hcl]
+----
+module "iam_groups" {
+  source = "git::git@github.com:gruntwork-io/module-security.git//modules/iam-groups?ref=<VERSION>"
+
+  aws_account_id     = var.aws_account_id
+  should_require_mfa = var.should_require_mfa
+
+  iam_group_developers_permitted_services = var.iam_group_developers_permitted_services
+
+  iam_groups_for_cross_account_access = var.iam_groups_for_cross_account_access
+  cross_account_access_all_group_name = var.cross_account_access_all_group_name
+
+  should_create_iam_group_full_access            = var.should_create_iam_group_full_access
+  should_create_iam_group_billing                = var.should_create_iam_group_billing
+  should_create_iam_group_developers             = var.should_create_iam_group_developers
+  should_create_iam_group_read_only              = var.should_create_iam_group_read_only
+  should_create_iam_group_user_self_mgmt         = var.should_create_iam_group_user_self_mgmt
+  should_create_iam_group_use_existing_iam_roles = var.should_create_iam_group_use_existing_iam_roles
+  should_create_iam_group_auto_deploy            = var.should_create_iam_group_auto_deploy
+  should_create_iam_group_houston_cli_users      = var.should_create_iam_group_houston_cli_users
+
+  auto_deploy_permissions = var.auto_deploy_permissions
+}
+----
+
+Create all the corresponding input variables for `iam-gruops` in `variables.tf`:
+
+.infrastructure-modules/networking/iam-groups/variables.tf
+[source,hcl]
+----
+variable "aws_region" {
+  description = "The AWS region in which all resources will be created"
+  type        = string
+}
+
+variable "aws_account_id" {
+  description = "The ID of the AWS Account in which to create resources."
+  type        = string
+}
+
+variable "should_require_mfa" {
+  description = "Should we require that all IAM Users use Multi-Factor Authentication for both AWS API calls and the AWS Web Console? (true or false)"
+  type        = bool
+}
+
+variable "iam_group_developers_permitted_services" {
+  description = "A list of AWS services for which the developers IAM Group will receive full permissions. See https://goo.gl/ZyoHlz to find the IAM Service name. For example, to grant developers access only to EC2 and Amazon Machine Learning, use the value [\"ec2\",\"machinelearning\"]. Do NOT add iam to the list of services, or that will grant Developers de facto admin access. If you need to grant iam privileges, just grant the user Full Access."
+  type        = list(string)
+  default     = []
+}
+
+variable "iam_groups_for_cross_account_access" {
+  description = "This variable is used to create groups that allow allow IAM users to assume roles in your other AWS accounts. It should be a list of maps, where each map has the keys group_name and iam_role_arn. For each entry in the list, we will create an IAM group that allows users to assume the given IAM role in the other AWS account. This allows you to define all your IAM users in one account (e.g. the users account) and to grant them access to certain IAM roles in other accounts (e.g. the stage, prod, audit accounts)."
+  type = list(object({
+    group_name   = string
+    iam_role_arn = string
+  }))
+  default = []
+
+  # Example:
+  # default = [
+  #   {
+  #     group_name   = "stage-full-access"
+  #     iam_role_arn = "arn:aws:iam::123445678910:role/mgmt-full-access"
+  #   },
+  #   {
+  #     group_name   = "prod-read-only-access"
+  #     iam_role_arn = "arn:aws:iam::9876543210:role/prod-read-only-access"
+  #   }
+  # ]
+}
+
+variable "should_create_iam_group_full_access" {
+  description = "Should we create the IAM Group for full access? Allows full access to all AWS resources. (true or false)"
+  type        = bool
+  default     = true
+}
+
+variable "should_create_iam_group_billing" {
+  description = "Should we create the IAM Group for billing? Allows read-write access to billing features only. (true or false)"
+  type        = bool
+  default     = true
+}
+
+variable "should_create_iam_group_developers" {
+  description = "Should we create the IAM Group for developers? The permissions of that group are specified via var.iam_group_developers_permitted_services. (true or false)"
+  type        = bool
+  default     = true
+}
+
+variable "should_create_iam_group_read_only" {
+  description = "Should we create the IAM Group for read-only? Allows read-only access to all AWS resources. (true or false)"
+  type        = bool
+  default     = true
+}
+
+variable "should_create_iam_group_user_self_mgmt" {
+  description = "Should we create the IAM Group for user self-management? Allows users to manage their own IAM user accounts, but not other IAM users. (true or false)"
+  type        = bool
+  default     = true
+}
+
+variable "should_create_iam_group_use_existing_iam_roles" {
+  description = "Should we create the IAM Group for use-existing-iam-roles? Allow launching AWS resources with existing IAM Roles, but no ability to create new IAM Roles. (true or false)"
+  type        = bool
+  default     = false
+}
+
+variable "should_create_iam_group_auto_deploy" {
+  description = "Should we create the IAM Group for auto-deploy? Allows automated deployment by granting the permissions specified in var.auto_deploy_permissions. (true or false)"
+  type        = bool
+  default     = false
+}
+
+variable "should_create_iam_group_houston_cli_users" {
+  description = "Should we create the IAM Group for houston CLI users? Allows users to use the houston CLI for managing and deploying services."
+  type        = bool
+  default     = false
+}
+
+variable "cross_account_access_all_group_name" {
+  description = "The name of the IAM group that will grant access to all external AWS accounts in var.iam_groups_for_cross_account_access."
+  type        = string
+  default     = "_all-accounts"
+}
+
+variable "auto_deploy_permissions" {
+  description = "A list of IAM permissions (e.g. ec2:*) that will be added to an IAM Group for doing automated deployments. NOTE: If var.should_create_iam_group_auto_deploy is true, the list must have at least one element (e.g. '*')."
+  type        = list(string)
+  default     = []
+}
+----
+
+Next, add the `iam-users` module from `module-security` to `main.tf` (again, make sure to replace `<VERSION>`):
+
+.infrastructure-modules/networking/iam/main.tf
+[source,hcl]
+----
+module "iam_users" {
+  source = "git::git@github.com:gruntwork-io/module-security.git//modules/iam-users?ref=<VERSION>"
+
+  users           = var.users
+  password_length = var.minimum_password_length
+}
+----
+
+And the corresponding variables for the `iam-users` module in `variables.tf`:
+
+.infrastructure-modules/networking/iam-users/variables.tf
+[source,hcl]
+----
+variable "users" {
+  description = "A map of users to create. The keys are the user names and the values are an object with the optional keys 'groups' (a list of IAM groups to add the user to), 'tags' (a map of tags to apply to the user), 'pgp_key' (either a base-64 encoded PGP public key, or a keybase username in the form keybase:username, used to encrypt the user's credentials; required if create_login_profile or create_access_keys is true), 'create_login_profile' (if set to true, create a password to login to the AWS Web Console), 'create_access_keys' (if set to true, create access keys for the user), 'path' (the path), and 'permissions_boundary' (the ARN of the policy that is used to set the permissions boundary for the user)."
+
+  # Ideally, this would be a map of (string, object), but object does not support optional properties, and we want
+  # users to be able to specify, say, tags for some users, but not for others. We can't use a map(any) either, as that
+  # would require the values to all have the same type, and due to optional parameters, that wouldn't work either. So,
+  # we have to lamely fall back to any.
+  type = any
+
+  # Example:
+  # default = {
+  #   alice = {
+  #     groups = ["user-self-mgmt", "developers", "ssh-sudo-users"]
+  #   }
+  #
+  #   bob = {
+  #     path   = "/"
+  #     groups = ["user-self-mgmt", "ops", "admins"]
+  #     tags   = {
+  #       foo = "bar"
+  #     }
+  #   }
+  #
+  #   carol = {
+  #     groups               = ["user-self-mgmt", "developers", "ssh-users"]
+  #     pgp_key              = "keybase:carol_on_keybase"
+  #     create_login_profile = true
+  #     create_access_keys   = true
+  #   }
+  # }
+}
+
+variable "minimum_password_length" {
+  description = "The minimum length to enforce for IAM user passwords"
+  type        = number
+  default     = 20
+}
+----
+
+Next, add the `iam-user-password-policy` module from `module-security` to `main.tf` (again, make sure to replace
+`<VERSION>`):
+
+.infrastructure-modules/networking/iam/main.tf
+[source,hcl]
+----
+module "iam_password_policy" {
+  source = "git::git@github.com:gruntwork-io/module-security.git//modules/iam-user-password-policy?ref=<VERSION>"
+
+  # Adjust these settings as appropriate for your company
+  minimum_password_length        = var.minimum_password_length
+  require_numbers                = false
+  require_symbols                = false
+  require_lowercase_characters   = false
+  require_uppercase_characters   = false
+  allow_users_to_change_password = true
+  hard_expiry                    = true
+  max_password_age               = 0
+  password_reuse_prevention      = 5
+}
+----
+
+You'll also want to add the `cross-account-iam-roles` module to `main.tf` (again, make sure to replace `<VERSION>`):
+
+.infrastructure-modules/networking/iam/main.tf
+[source,hcl]
+----
+module "iam_password_policy" {
+  source = "git::git@github.com:gruntwork-io/module-security.git//modules/cross-account-iam-roles?ref=<VERSION>"
+
+  aws_account_id = var.aws_account_id
+
+  should_require_mfa     = var.should_require_mfa
+  dev_permitted_services = var.dev_permitted_services
+
+  allow_read_only_access_from_other_account_arns = var.allow_read_only_access_from_other_account_arns
+  allow_billing_access_from_other_account_arns   = var.allow_billing_access_from_other_account_arns
+  allow_ssh_grunt_access_from_other_account_arns = var.allow_ssh_grunt_access_from_other_account_arns
+  allow_dev_access_from_other_account_arns       = var.allow_dev_access_from_other_account_arns
+  allow_full_access_from_other_account_arns      = var.allow_full_access_from_other_account_arns
+
+  auto_deploy_permissions                   = var.auto_deploy_permissions
+  allow_auto_deploy_from_other_account_arns = var.allow_auto_deploy_from_other_account_arns
+}
+----
+
+And the corresponding input variables in `variables.tf`:
+
+.infrastructure-modules/networking/iam/variables.tf
+[source,hcl]
+----
+variable "dev_permitted_services" {
+  description = "A list of AWS services for which the developers from the accounts in var.allow_dev_access_from_other_account_arns will receive full permissions. See https://goo.gl/ZyoHlz to find the IAM Service name. For example, to grant developers access only to EC2 and Amazon Machine Learning, use the value [\"ec2\",\"machinelearning\"]. Do NOT add iam to the list of services, or that will grant Developers de facto admin access."
+  type        = list(string)
+  default     = []
+}
+
+variable "allow_read_only_access_from_other_account_arns" {
+  description = "A list of IAM ARNs from other AWS accounts that will be allowed read-only access to this account."
+  type        = list(string)
+  default     = []
+  # Example:
+  # default = [
+  #   "arn:aws:iam::123445678910:root"
+  # ]
+}
+
+variable "allow_billing_access_from_other_account_arns" {
+  description = "A list of IAM ARNs from other AWS accounts that will be allowed full (read and write) access to the billing info for this account."
+  type        = list(string)
+  default     = []
+  # Example:
+  # default = [
+  #   "arn:aws:iam::123445678910:root"
+  # ]
+}
+
+variable "allow_ssh_grunt_access_from_other_account_arns" {
+  description = "A list of IAM ARNs from other AWS accounts that will be allowed read access to IAM groups and publish SSH keys. This is used for ssh-grunt."
+  type        = list(string)
+  default     = []
+  # Example:
+  # default = [
+  #   "arn:aws:iam::123445678910:root"
+  # ]
+}
+
+variable "allow_dev_access_from_other_account_arns" {
+  description = "A list of IAM ARNs from other AWS accounts that will be allowed full (read and write) access to the services in this account specified in var.dev_permitted_services."
+  type        = list(string)
+  default     = []
+  # Example:
+  # default = [
+  #   "arn:aws:iam::123445678910:root"
+  # ]
+}
+
+variable "allow_full_access_from_other_account_arns" {
+  description = "A list of IAM ARNs from other AWS accounts that will be allowed full (read and write) access to this account."
+  type        = list(string)
+  default     = []
+  # Example:
+  # default = [
+  #   "arn:aws:iam::123445678910:root"
+  # ]
+}
+
+variable "allow_auto_deploy_from_other_account_arns" {
+  description = "A list of IAM ARNs from other AWS accounts that will be allowed to assume the auto deploy IAM role that has the permissions in var.auto_deploy_permissions."
+  type        = list(string)
+  default     = []
+  # Example:
+  # default = [
+  #   "arn:aws:iam::123445678910:role/jenkins"
+  # ]
+}
+
+variable "auto_deploy_permissions" {
+  description = "A list of IAM permissions (e.g. ec2:*) which will be granted for automated deployment."
+  type        = list(string)
+  default     = []
+}
+----
+
+Finally, add some useful outputs in `outputs.tf`:
+
+.infrastructure-modules/networking/iam/outputs.tf
+[source,hcl]
+----
+output "user_arns" {
+  value = module.iam_users.user_arns
+}
+
+output "user_access_keys" {
+  value = module.iam_users.user_access_keys
+}
+
+output "user_passwords" {
+  value = module.iam_users.user_passwords
+}
+----
+
+// TODO: I'm skipping the testing steps for this module here, but we should cross-link here to our Terraform/Terragrunt
+// guide when it's ready
+
+Commit and release your changes:
+
+----
+$ git add security/iam
+$ git commit -m "Add iam wrapper module"
+$ git tag -a "v0.3.0" -m "Created iam module"
+$ git push --follow-tags
+----
+
+If you using Terraform directly, you will be running commands directly in `infrastructure-modules`. If you are using
+Terragrunt, you will need to create a `terragrunt.hcl` file in `infrastructure-live`. It should go under the file path
+`root/\_global/iam`:
+
+----
+infrastructure-live
+  └ root
+    └ _global
+      └ iam
+        └ terragrunt.hcl
+----
+
+Point the `source` URL in your `terragrunt.hcl` file to your `iam` wrapper module in the `infrastructure-modules`
+repo, setting the `ref` param to the version you released earlier:
+
+.infrastructure-live/root/_global/iam/terragrunt.hcl
+[source,hcl]
+----
+terraform {
+  source = "git@github.com/<YOUR_ORG>/infrastructure-modules.git//security/iam?ref=v0.3.0"
+}
+----
+
+Set the variables for the `iam` module in this environment. You can set these values in a `.tfvars` file or, if
+using Terragrunt, in the `inputs = { ... }` block of `terragrunt.hcl`:
+
+.infrastructure-live/root/_global/iam/terragrunt.hcl
+[source,hcl]
+----
+# Fill in your region you want to use (only used for API calls) and the ID of your root AWS account
+aws_region     = "us-east-2"
+aws_account_id = "111122223333"
+
+# Make sure to require MFA for all policies used in these IAM groups!
+should_require_mfa = true
+
+# The only IAM groups you need in the root account are full access (for admins) and billing (for the finance team)
+should_create_iam_group_full_access = true
+should_create_iam_group_billing     = true
+
+# Disable all other groups in the root account
+should_create_iam_group_developers             = false
+should_create_iam_group_read_only              = false
+should_create_iam_group_use_existing_iam_roles = false
+should_create_iam_group_auto_deploy            = false
+should_create_iam_group_houston_cli_users      = false
+should_create_iam_group_user_self_mgmt         = false
+
+# Define the IAM users you want in the root account
+users = {
+  alice = {
+    groups               = ["full-access"]
+    pgp_key              = "keybase:alice"
+    create_login_profile = true
+  }
+
+  bob = {
+    groups               = ["full-access"]
+    pgp_key              = "keybase:bob"
+    create_login_profile = true
+  }
+
+  carol = {
+    groups               = ["billing"]
+    pgp_key              = "keybase:carol"
+    create_login_profile = true
+  }
+}
+----
+
+The example above creates a `full-access` IAM group (for admins) and a `billing` IAM group (for the finance team), as
+well as the IAM users `alice`, `bob`, and `carol`, adding `alice` and `bob` to the `full-access` IAM group and `carol`
+to the `billing` IAM group. The code will also generate a password for each user and encrypt it with that user's PGP
+key from Keybase (we'll come back to how to handle the passwords shortly). You should follow this pattern to create an
+IAM user for yourself, as well as the small number of other trusted admins at your company who should have access to
+the root account.
+
+Configure the backend https://www.terraform.io/docs/backends/[backend] you want to use to store your Terraform state.
+The https://www.terraform.io/docs/backends/types/s3.html[S3 backend] is usually the best choice for AWS accounts. If
+you're using Terragrunt, the backend settings should be defined in a root `terragrunt.hcl` file that you `include` in
+each child `terragrunt.hcl`:
+
+.infrastructure-live/root/_global/iam/terragrunt.hcl
+[source,hcl]
+----
+include {
+  path = find_in_parent_folders()
+}
+----
+
+https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html#id_root-user_manage_add-key[Create a set of access keys for your root user]
+and https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[use those access keys to authenticate on the CLI].
+Finally, deploy the `iam` module by running `terraform apply -var-file=<your-file>.tfvars` or, if using Terragrunt, by
+running `terragrunt apply`:
+
+----
+$ cd infrastructure-live/root/_global/iam
+$ terragrunt apply
+----
+
+After `apply` completes, the module will output the encrypted passwords for `alice`, `bob`, and `carol`:
+
+----
+user_passwords = {
+  "alice" = "wcBMA7E6Kn/t1YPfAQgAVSXlUzumcs4UyO8E5q099YnnU="
+  "bob" = "wcBMA7E6Kn/t1YPfAQgACgbdb1mYtQx7EL4hnVWtYAi="
+  "carol" = "wcBMA7E6Kn/t1YPfAQgACgbdb1mYtQx7EL4hnVWtYAi="
+}
+----
+
+Send the encrypted password to each user, along with their user name, and the IAM user sign-in URL for the account. Each
+user can then decrypt the password on their own computer (which should have their PGP key) as follows:
+
+----
+echo "<PASSWORD>" | base64 --decode | keybase pgp decrypt
+----
+
+[[lock_down_root_user]]
+=== Lock down the root account root user
+
+Now that you have IAM users in the root account, it's time to lock down the root user as much as possible:
 
 Use a secrets manager::
-  Do NOT store the credentials or any kind of secret in plain text. Instead, always use a secrets manager such as
-  https://1password.com[1Password], https://www.lastpass.com[LastPass], or https://www.passwordstore.org[pass] to store
-  the credentials in an encrypted format.
+  Do NOT store the root user's password, or secrets of any kind, in plain text. Instead, always use a secrets manager
+  such as https://1password.com[1Password], https://www.lastpass.com[LastPass], or https://www.passwordstore.org[pass]
+  to store the credentials in an encrypted format.
 
 Use a strong, generated password::
   Do NOT re-use passwords from other websites, or any password that you can remember at all. Instead, generate a random,
-  cryptographically secure, long password (20+ characters). All the password managers mentioned above can generate and
-  store passwords for you in one step, so use them!
+  cryptographically secure, long password (20+ characters) for the root user. All the password managers mentioned above
+  can generate and store passwords for you in one step, so use them!
 
 Enable MFA::
-  Always make sure to
+  Make sure to
   https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html#id_root-user_manage_mfa[enable MFA for your root user].
   Feel free to use a virtual or hardware MFA device—whichever is easier or required by your company—as either one
   dramatically improves the security of your root user.
 
 Disable access keys::
-  Right after enabling MFA, make sure to
+  Make sure to
   https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html#id_root-user_manage_delete-key[delete the root user's access keys],
   so that the only way to login as the root user is via the web console, where MFA is required.
-
-Create an Admin IAM user::
-  Now that the root user is locked down, the next step is to
-  https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html[create an IAM user] and to attach admin
-  permissions to this user. Later on, you'll be able to create all IAM users using code and assign permissions using
-  IAM groups, but for this very first user, your best bet is to do it manually by using the web console to directly
-  attach the `AdministratorAccess` managed policy to this user.
 
 Don't use the root user again::
   From here on out, you should only use the IAM user account, and more or less never touch the root user account again.
@@ -818,10 +1330,8 @@ Don't use the root user again::
   your credentials) or for the
   https://docs.aws.amazon.com/general/latest/gr/aws_tasks-that-require-root.html[small number of tasks that require root user credentials].
 
-The first step in using your new IAM user is to lock that user down!
-
-[[lock_down_iam_user]]
-=== Lock down an IAM user
+[[lock_down_iam_users]]
+=== Lock down the root account IAM users
 
 Although IAM users don't have the same powers as a root user, having an IAM user account compromised can still be a
 huge problem for your company (especially if that IAM user had admin permissions), so it's still critical to lock down
@@ -846,112 +1356,961 @@ Enable MFA::
   https://www.theverge.com/2017/9/18/16328172/sms-two-factor-authentication-hack-password-bitcoin[vulnerabilities with the cellular system],
   so using a virtual or hardware MFA device is preferable; that said, MFA with SMS is still better than no MFA at all!
 
-=== Child accounts
+=== Enable CloudTrail on the root account
 
-Now that you have your root account setup, you can use AWS Organizations to create all the child accounts. The exact
-child accounts you will need will vary depending on your company's needs, but the overall structure should look
-something like this:
+Next, let's enable CloudTrail in the root account so we have an audit log of everything we do. You can do this using
+the `cloudtrail` module from https://github.com/gruntwork-io/module-security[module-security].
 
-.A production-grade AWS account structure
-image::../assets/img/guides/aws-account/aws-account-structure.png[]
+IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access `module-security`.
 
-Let's break down the accounts in this diagram:
+First, create a _wrapper module_ called `cloud` in your `infrastructure-modules` repo:
++
+----
+infrastructure-modules
+  └ security
+    └ cloudtrail
+      └ main.tf
+      └ outputs.tf
+      └ variables.tf
+----
 
-Security account::
-  You will want a single _security account_ where all of your IAM users and IAM groups are defined. So, even though
-  the account structure has multiple accounts, each person on your team will have only a single IAM user and a single
-  set of credentials (the one exception is the root account, where one or a small number of admins will have a separate
-  IAM user and separate credentials used to manage the account structure itself). You'll see later in this guide how
-  to use IAM roles to allow a single IAM user in one AWS account to access other AWS accounts.
+Inside of `main.tf`, configure your AWS provider and Terraform settings:
 
-Application accounts (dev, stage, prod)::
-  You can have one or more _application accounts_ for running your software. At a bare minimum, most companies will
-  have a production account ("prod"), for running user-facing software, and a staging account ("stage") which is a
-  replica of production (albeit with smaller or fewer servers to save money) used for internal testing. Some teams will
-  have more pre-prod environments (e.g., dev, qa, uat) and some may find the need for more than one prod account (e.g.,
-  a separate failover account for disaster recovery).
+.infrastructure-modules/networking/cloudtrail/main.tf
+[source,hcl]
+----
+provider "aws" {
+  # The AWS region in which all resources will be created
+  region = var.aws_region
 
-Shared-services account::
-  The _shared-services account_ is used to store infrastructure and data that is shared amongst all the application
-  accounts, such as CI servers and artifact repositories. For example, in your shared-services account, you might use
-  https://aws.amazon.com/ecr/[ECR] to store Docker images and Jenkins to deploy those Docker images to dev, stage, and
-  prod.
+  # Require a 2.x version of the AWS provider
+  version = "~> 2.6"
 
-Sandbox accounts::
-  You may want to have one or more _sandbox accounts_ that developers can use for manual testing. The application
-  accounts (e.g., dev and stage) are usually shared by the whole company, so these sandbox accounts are intentionally
-  kept separate so that developers can feel comfortable deploying and undeploying anything they want without
-  fear of affecting someone else (in fact, the gold standard is one sandbox account per developer to keep things 100%
-  isolated). Sandbox accounts tend to build up more and more unused infrastructure over time, so to prevent your bill
-  from getting out of hand, you may want to run a tool like https://github.com/gruntwork-io/cloud-nuke[cloud-nuke] on
-  a daily basis to clean up everything in the account older than, say, 5 days (you wouldn't want to run a tool like
-  `cloud-nuke` in an account like staging, so this is yet another reason to keep sandbox accounts separate).
+  # Only these AWS Account IDs may be operated on by this template
+  allowed_account_ids = var.aws_account_id
+}
 
-Testing accounts::
-  One other type of account that often comes in handy is a _testing account_ that is used specifically for automated
-  tests that spin up and tear down lots of AWS infrastructure. For example, at Gruntwork, we use
-  https://blog.gruntwork.io/open-sourcing-terratest-a-swiss-army-knife-for-testing-infrastructure-code-5d883336fcd5[Terratest]
-  to test all of our infrastructure code, and when testing something like our
-  https://github.com/hashicorp/terraform-aws-vault/[Vault modules], we end up spinning up and tearing down a dozen
-  Vault and Consul clusters after every single commit! You don't want all this infrastructure churn in your application
-  or sandbox accounts, so we recommend having a separate AWS account dedicated for automated tests. This is especially
-  important as automated tests sometimes fail to clean up that infrastructure (e.g., due to a bug in the test or the
-  test crashing before it can run the cleanup steps), so you'll want to run a tool like `cloud-nuke` multiple times per
-  day to clean up anything older than a few hours, which you definitely don't want in your application or sandbox
-  accounts.
+terraform {
+  # The configuration for this backend will be filled in by Terragrunt or via a backend.hcl file. See
+  # https://www.terraform.io/docs/backends/config.html#partial-configuration
+  backend "s3" {}
 
-Note that for larger organizations with multiple separate business units, you may need to repeat the structure above
-multiple times. That is, in the root account, you
-https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_ous.html#create_ou[create an Organization Unit]
-for each business unit, and within each Organization Unit, you create the security, dev, stage, prod,
-shared-services, sandbox, and testing accounts.
+  # Only allow this Terraform version. Note that if you upgrade to a newer version, Terraform won't allow you to use an
+  # older version, so when you upgrade, you should upgrade everyone on your team and your CI servers all at once.
+  required_version = "= 0.12.6"
+}
+----
 
-Here are a few useful tips on creating child accounts:
+Next, use the `cloud-trail` module from the Gruntwork Service Catalog, making sure to replace the `<VERSION>` placeholder
+with the latest version from the https://github.com/gruntwork-io/module-security/releases[releases page]:
 
-Use AWS Organizations::
-  Use AWS Organizations to https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts_create.html[create each child account].
-  If there are certain AWS services that should never be used in the child accounts (e.g., because the service does not
-  meet your company's compliance requirements),
-  https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scp.html[create an SCP] that prevents
-  that service from being used.
+.infrastructure-modules/networking/cloudtrail/main.tf
+[source,hcl]
+----
+module "cloudtrail" {
+  source = "git::git@github.com:gruntwork-io/module-security.git//modules/cloudtrail?ref=<VERSION>"
 
-IAM roles in child accounts::
-  As you're creating each account, AWS Organizations will ask you for the name of an IAM role to create in the child
-  account. This IAM role will allow you to access the child account from the root account with full administrative
-  access, which is a useful fallback in case you accidentally lose access to the child account. We recommend using a
-  consistent name for this IAM role, such as `OrganizationAccountAccessRole`, so you always know what role to assume
-  when you need to access that account.
+  aws_region     = var.aws_region
+  aws_account_id = var.aws_account_id
 
-Unique root user email addresses::
-  AWS requires that you associate an email address with each child account. This email address must be globally unique,
-  so it cannot be the email address you used for the root account or any of the other child accounts. You'll have to
-  either create multiple email accounts in your company's email system, or, if your company uses Gmail (perhaps as part
-  of G Suite) for email, you can take advantage of the fact that
-  https://gmail.googleblog.com/2008/03/2-hidden-ways-to-get-more-from-your.html[Gmail ignores everything after a plus sign in an email address],
-  so that while AWS will see `example@gmail.com`, `example+dev@gmail.com`, `example+stage@gmail.com`, and
-  `example+prod@gmail.com` as four unique email addresses, Gmail will see them all as the same email address,
-  `example@gmail.com`.
+  cloudtrail_trail_name = var.cloudtrail_trail_name
+  s3_bucket_name        = var.s3_bucket_name
 
-Resetting the root user password::
-  When you create a child account using AWS Organizations, you are asked to provide the email address for the root user,
-  but confusingly, not a password. So how do you login as the root user then? It turns out that you need to
-  https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys_retrieve.html#reset-root-password[reset the root user password],
-  using the "Forgot your password?" prompt on the login page. AWS will email you a reset link and you'll be able to
-  configure a password for the root user of this child account. As soon as you've reset the password, make sure to
-  follow the steps in <<lock_down_root_user>>. You should end up with a locked-down root user and a locked-down
-  admin IAM user in each account: the root user you'll hardly ever use again; the IAM user in the security account
-  you'll use as your
+  num_days_after_which_archive_log_data = var.num_days_after_which_archive_log_data
+  num_days_after_which_delete_log_data  = var.num_days_after_which_delete_log_data
+
+  # Note that users with IAM permissions to CloudTrail can still view the last 7 days of data in the AWS Web Console!
+  kms_key_user_iam_arns            = var.kms_key_user_iam_arns
+  kms_key_administrator_iam_arns   = var.kms_key_administrator_iam_arns
+  allow_cloudtrail_access_with_iam = var.allow_cloudtrail_access_with_iam
+
+  # If you're writing CloudTrail logs to an existing S3 bucket in another AWS account, set this to true
+  s3_bucket_already_exists = var.s3_bucket_already_exists
+
+  # If external AWS accounts need to write CloudTrail logs to the S3 bucket in this AWS account, provide those
+  # external AWS account IDs here
+  external_aws_account_ids_with_write_access = var.external_aws_account_ids_with_write_access
+
+  force_destroy = var.force_destroy
+}
+----
+
+Create all the corresponding input variables for `cloudtrail` in `variables.tf`:
+
+.infrastructure-modules/networking/cloudtrail/variables.tf
+[source,hcl]
+----
+# ---------------------------------------------------------------------------------------------------------------------
+# MODULE PARAMETERS
+# These variables are expected to be passed in by the operator
+# ---------------------------------------------------------------------------------------------------------------------
+
+variable "aws_region" {
+  description = "The AWS region in which all resources will be created"
+  type        = string
+}
+
+variable "aws_account_id" {
+  description = "The ID of the AWS Account in which to create resources."
+  type        = string
+}
+
+variable "cloudtrail_trail_name" {
+  description = "The name to assign to the CloudTrail 'trail' that will be used to track all API calls in your AWS account."
+  type        = string
+}
+
+variable "s3_bucket_name" {
+  description = "The name of the S3 Bucket where CloudTrail logs will be stored."
+  type        = string
+}
+
+variable "num_days_after_which_archive_log_data" {
+  description = "After this number of days, log files should be transitioned from S3 to Glacier. Enter 0 to never archive log data."
+  type        = number
+}
+
+variable "num_days_after_which_delete_log_data" {
+  description = "After this number of days, log files should be deleted from S3. Enter 0 to never delete log data."
+  type        = number
+}
+
+variable "kms_key_administrator_iam_arns" {
+  description = "All CloudTrail Logs will be encrypted with a KMS Key (a Customer Master Key) that governs access to write API calls older than 7 days and all read API calls. The IAM Users specified in this list will have rights to change who can access this extended log data."
+  type        = list(string)
+  # example = ["arn:aws:iam::<aws-account-id>:user/<iam-user-name>"]
+}
+
+variable "kms_key_user_iam_arns" {
+  description = "All CloudTrail Logs will be encrypted with a KMS Key (a Customer Master Key) that governs access to write API calls older than 7 days and all read API calls. The IAM Users specified in this list will have read-only access to this extended log data."
+  type        = list(string)
+  # example = ["arn:aws:iam::<aws-account-id>:user/<iam-user-name>"]
+}
+
+variable "allow_cloudtrail_access_with_iam" {
+  description = "If true, an IAM Policy that grants access to CloudTrail will be honored. If false, only the ARNs listed in var.kms_key_user_iam_arns will have access to CloudTrail and any IAM Policy grants will be ignored. (true or false)"
+  type        = bool
+}
+
+variable "s3_bucket_already_exists" {
+  description = "If set to true, that means the S3 bucket you're using already exists, and does not need to be created. This is especially useful when using CloudTrail with multiple AWS accounts, with a common S3 bucket shared by all of them."
+  type        = bool
+  default     = false
+}
+
+variable "external_aws_account_ids_with_write_access" {
+  description = "A list of external AWS accounts that should be given write access for CloudTrail logs to this S3 bucket. This is useful when aggregating CloudTrail logs for multiple AWS accounts in one common S3 bucket."
+  type        = list(string)
+  default     = []
+}
+
+variable "force_destroy" {
+  description = "If set to true, when you run 'terraform destroy', delete all objects from the bucket so that the bucket can be destroyed without error. Warning: these objects are not recoverable so only use this if you're absolutely sure you want to permanently delete everything!"
+  type        = bool
+  default     = false
+}
+----
+
+// TODO: I'm skipping the testing steps for this module here, but we should cross-link here to our Terraform/Terragrunt
+// guide when it's ready
+
+Commit and release your changes:
+
+----
+$ git add security/cloudtrail
+$ git commit -m "Add cloudtrail wrapper module"
+$ git tag -a "v0.3.1" -m "Created cloudtrail module"
+$ git push --follow-tags
+----
+
+If you using Terraform directly, you will be running commands directly in `infrastructure-modules`. If you are using
+Terragrunt, you will need to create a `terragrunt.hcl` file in `infrastructure-live`. It should go under the file path
+`root/\_global/cloudtrail`:
+
+----
+infrastructure-live
+  └ root
+    └ _global
+      └ cloudtrail
+        └ terragrunt.hcl
+----
+
+Point the `source` URL in your `terragrunt.hcl` file to your `cloudtrail` wrapper module in the `infrastructure-modules`
+repo, setting the `ref` param to the version you released earlier:
+
+.infrastructure-live/root/_global/cloudtrail/terragrunt.hcl
+[source,hcl]
+----
+terraform {
+  source = "git@github.com/<YOUR_ORG>/infrastructure-modules.git//security/cloudtrail?ref=v0.3.1"
+}
+----
+
+Set the variables for the `cloudtrail` module in this environment. You can set these values in a `.tfvars` file or, if
+using Terragrunt, in the `inputs = { ... }` block of `terragrunt.hcl`:
+
+.infrastructure-live/root/_global/cloudtrail/terragrunt.hcl
+[source,hcl]
+----
+# Fill in your region you want to use (only used for API calls) and the ID of your root AWS account
+aws_region     = "us-east-2"
+aws_account_id = "111122223333"
+
+# Name the CloudTrail and S3 bucket
+cloudtrail_trail_name = "<COMPANY_NAME>-root"
+s3_bucket_name        = "<COMPANY_NAME>-root-cloudtrail"
+
+num_days_after_which_archive_log_data = 30
+num_days_after_which_delete_log_data  = 365
+
+# Who has access to the KMS master key
+kms_key_administrator_iam_arns = [
+  "arn:aws:iam::<ROOT_ACCOUNT_ID>:user/<ADMIN_USERNAME>",
+]
+kms_key_user_iam_arns = [
+  "arn:aws:iam::<ROOT_ACCOUNT_ID>:user/<ADMIN_USERNAME>",
+]
+allow_cloudtrail_access_with_iam = true
+
+s3_bucket_already_exists                   = false
+external_aws_account_ids_with_write_access = []
+
+# Only set this to true if, when running 'terragrunt destroy,' you want to delete the contents of the S3 bucket that
+# stores the CloudTrail logs. Note that you must set this to true and run 'terragrunt apply' FIRST, before running 'destroy'!
+force_destroy = false
+----
+
+Configure the backend https://www.terraform.io/docs/backends/[backend] you want to use to store your Terraform state.
+The https://www.terraform.io/docs/backends/types/s3.html[S3 backend] is usually the best choice for AWS accounts. If
+you're using Terragrunt, the backend settings should be defined in a root `terragrunt.hcl` file that you `include` in
+each child `terragrunt.hcl`:
+
+.infrastructure-live/root/_global/iam/terragrunt.hcl
+[source,hcl]
+----
+include {
+  path = find_in_parent_folders()
+}
+----
+
+Since you already deleted the root user's access keys, this time, you should authenticate as your IAM user, making
+sure to set the MFA token on the CLI! See
+https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[A Comprehensive Guide to Authenticating to AWS on the Command Line]
+for instructions on how to do that.
+
+Finally, deploy the `cloudtrail` module by running `terraform apply -var-file=<your-file>.tfvars` or, if using
+Terragrunt, by running `terragrunt apply`:
+
+----
+$ cd infrastructure-live/root/_global/cloudtrail
+$ terragrunt apply
+----
+
+=== Create child accounts
+
+Now that your root account is fully configured, you can create child accounts. In this guide, we will be creating the
+accounts detailed in <<child_accounts>>, but feel free to adjust this as necessary based on the accounts your company
+needs.
+
+Create a new module called `organization` in your `infrastructure-modules` repo:
++
+----
+infrastructure-modules
+  └ security
+    └ organization
+      └ main.tf
+      └ outputs.tf
+      └ variables.tf
+----
+
+Inside of `main.tf`, configure your AWS provider and Terraform settings:
+
+.infrastructure-modules/networking/organization/main.tf
+[source,hcl]
+----
+provider "aws" {
+  # The AWS region in which all resources will be created
+  region = var.aws_region
+
+  # Require a 2.x version of the AWS provider
+  version = "~> 2.6"
+
+  # Only these AWS Account IDs may be operated on by this template
+  allowed_account_ids = var.aws_account_id
+}
+
+terraform {
+  # The configuration for this backend will be filled in by Terragrunt or via a backend.hcl file. See
+  # https://www.terraform.io/docs/backends/config.html#partial-configuration
+  backend "s3" {}
+
+  # Only allow this Terraform version. Note that if you upgrade to a newer version, Terraform won't allow you to use an
+  # older version, so when you upgrade, you should upgrade everyone on your team and your CI servers all at once.
+  required_version = "= 0.12.6"
+}
+----
+
+Next, use the `aws_organizations_organization` resource to enable AWS Organizations in your AWS account:
+
+.infrastructure-modules/networking/organization/main.tf
+[source,hcl]
+----
+resource "aws_organizations_organization" "org" {
+  feature_set                   = "ALL"
+  aws_service_access_principals = ["cloudtrail.amazonaws.com"]
+}
+----
+
+Now you can use the `aws_organizations_account` resource to create child accounts within the organization (note: if
+you need to group child accounts into Organizational Units, see the
+https://www.terraform.io/docs/providers/aws/r/organizations_organizational_unit.html:[aws_organizations_organizational_unit resource]):
+
+.infrastructure-modules/networking/organization/main.tf
+[source,hcl]
+----
+resource "aws_organizations_account" "child_accounts" {
+  for_each = var.child_accounts
+  name     = each.key
+  email    = each.value["email"]
+  role     = var.organizations_account_access_role_name
+}
+----
+
+Create all the corresponding input variables in `variables.tf`:
+
+.infrastructure-modules/networking/organization/variables.tf
+[source,hcl]
+----
+# ---------------------------------------------------------------------------------------------------------------------
+# MODULE PARAMETERS
+# These variables are expected to be passed in by the operator
+# ---------------------------------------------------------------------------------------------------------------------
+
+variable "aws_region" {
+  description = "The AWS region in which all resources will be created"
+  type        = string
+}
+
+variable "aws_account_id" {
+  description = "The ID of the AWS Account in which to create resources."
+  type        = string
+}
+
+variable "child_accounts" {
+  description = "The child accounts to create. This is a map where the key is the name of the account and the value is the email address to use for the root user (this email must be globally unique amongst all AWS accounts!."
+  type        = map(string)
+}
+
+variable "organizations_account_access_role_name" {
+  description = "The name to use for the IAM role that will be created in child accounts. Users in the root account will be able to assume this role to get admin access to those child accounts."
+  type        = string
+  default     = "OrganizationAccountAccessRole"
+}
+----
+
+And the corresponding output variables in `outputs.tf`:
+
+.infrastructure-modules/networking/organization/outputs.tf
+[source,hcl]
+----
+output "child_accounts" {
+  value = {
+    for key, value in aws_organizations_account.child_accounts:
+    key => { id: value.id, arn: value.arn }
+  }
+}
+
+output "organizations_account_access_role_name" {
+  value = var.organizations_account_access_role_name
+}
+----
+
+// TODO: I'm skipping the testing steps for this module here, but we should cross-link here to our Terraform/Terragrunt
+// guide when it's ready
+
+Commit and release your changes:
+
+----
+$ git add security/organization
+$ git commit -m "Add organization wrapper module"
+$ git tag -a "v0.3.2" -m "Created organization module"
+$ git push --follow-tags
+----
+
+If you using Terraform directly, you will be running commands directly in `infrastructure-modules`. If you are using
+Terragrunt, you will need to create a `terragrunt.hcl` file in `infrastructure-live`. It should go under the file path
+`root/\_global/organization`:
+
+----
+infrastructure-live
+  └ root
+    └ _global
+      └ organization
+        └ terragrunt.hcl
+----
+
+Point the `source` URL in your `terragrunt.hcl` file to your `organization` wrapper module in the `infrastructure-modules`
+repo, setting the `ref` param to the version you released earlier:
+
+.infrastructure-live/root/_global/organization/terragrunt.hcl
+[source,hcl]
+----
+terraform {
+  source = "git@github.com/<YOUR_ORG>/infrastructure-modules.git//security/organization?ref=v0.3.2"
+}
+----
+
+Set the variables for the `organization` module in this environment. You can set these values in a `.tfvars` file or, if
+using Terragrunt, in the `inputs = { ... }` block of `terragrunt.hcl`:
+
+.infrastructure-live/root/_global/organization/terragrunt.hcl
+[source,hcl]
+----
+# Fill in your region you want to use (only used for API calls) and the ID of your root AWS account
+aws_region     = "us-east-2"
+aws_account_id = "111122223333"
+
+# Specify the child accounts you want
+child_accounts = {
+  security        = "account-root+security@your-company.com"
+  shared-services = "account-root+shared@your-company.com"
+  dev             = "account-root+dev@your-company.com"
+  stage           = "account-root+stage@your-company.com"
+  prod            = "account-root+prod@your-company.com"
+}
+----
+
+The code above configures 5 child AWS accounts. Note that AWS requires that you associate an email address with each
+child account, and that this email address must be _globally_ unique, so it cannot be the email address you used for
+the root account or any of the other child accounts. You'll have to either create multiple email accounts in your
+company's email system, or, if your company uses Gmail (perhaps as part of G Suite), you can take advantage of the fact
+that https://gmail.googleblog.com/2008/03/2-hidden-ways-to-get-more-from-your.html[Gmail ignores everything after a plus sign in an email address],
+so that while AWS will see `account-root+security@your-company.com`, `account-root+shared@your-company.com`, and
+`account-root+dev@your-company.com` as three unique email addresses, Gmail will see them all as the same email address,
+`account-root@your-company.com`.
+
+Configure the backend https://www.terraform.io/docs/backends/[backend] you want to use to store your Terraform state.
+The https://www.terraform.io/docs/backends/types/s3.html[S3 backend] is usually the best choice for AWS accounts. If
+you're using Terragrunt, the backend settings should be defined in a root `terragrunt.hcl` file that you `include` in
+each child `terragrunt.hcl`:
+
+.infrastructure-live/root/_global/organization/terragrunt.hcl
+[source,hcl]
+----
+include {
+  path = find_in_parent_folders()
+}
+----
+
+Authenticate on the CLI as your IAM user and deploy the `organization` module by running
+`terraform apply -var-file=<your-file>.tfvars` or, if using Terragrunt, by running `terragrunt apply`:
+
+----
+$ cd infrastructure-live/root/_global/organization
+$ terragrunt apply
+----
+
+When `apply` finishes, it'll output the account IDs and ARNs of the new child accounts, plus the name of the IAM role
+you can use to access those accounts from the root account.
+
+=== Reset the root user password in each child account
+
+When creating the child accounts, you may have noticed that you provided an email address for each root user, but
+confusingly, not a password. So how do you login as the root user then? It's not obvious, but the answer is that you
+https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys_retrieve.html#reset-root-password[reset the root user password],
+using the "Forgot your password?" prompt on the login page. AWS will email you a reset link, which you can click to go
+to a page that will allow you to configure a password for the root user.
+
+Use this process to reset the password for the root user of each child account you created. With access to the root
+user in each account, you can configure IAM users, IAM groups, and IAM roles in those accounts, as described in the
+next couple sections.
+
+=== Create IAM users and groups in the security account
+
+The first step is to create IAM users and groups in the security account. You can re-use the `iam` module you created
+earlier in `infrastructure-modules` to do this!
+
+If you using Terraform directly, you will be running commands directly in `infrastructure-modules`. If you are using
+Terragrunt, you will need to create a `terragrunt.hcl` file in `infrastructure-live`. It should go under the file path
+`security/\_global/iam`:
+
+----
+infrastructure-live
+  └ root
+  └ security
+    └ _global
+      └ iam
+        └ terragrunt.hcl
+----
+
+Point the `source` URL in your `terragrunt.hcl` file to your `iam` wrapper module in the `infrastructure-modules`
+repo, setting the `ref` param to the version you released earlier:
+
+.infrastructure-live/security/_global/iam/terragrunt.hcl
+[source,hcl]
+----
+terraform {
+  source = "git@github.com/<YOUR_ORG>/infrastructure-modules.git//security/iam?ref=v0.3.0"
+}
+----
+
+Set the variables for the `iam` module in this environment. You can set these values in a `.tfvars` file or, if
+using Terragrunt, in the `inputs = { ... }` block of `terragrunt.hcl`:
+
+.infrastructure-live/security/_global/iam/terragrunt.hcl
+[source,hcl]
+----
+# Fill in your region you want to use (only used for API calls) and the ID of your security AWS account
+aws_region     = "us-east-2"
+aws_account_id = "444444444444"
+
+# Make sure to require MFA for all policies used in these IAM groups!
+should_require_mfa = true
+
+# Allow the other child accounts to check IAM group membership for authenticating SSH requests with ssh-grunt
+allow_ssh_grunt_access_from_other_account_arns = [
+  "arn:aws:iam::666666666666:root", # dev
+  "arn:aws:iam::777777777777:root", # stage
+  "arn:aws:iam::888888888888:root", # prod
+  "arn:aws:iam::999999999999:root", # shared-services
+]
+
+# The only IAM groups you need in the security account are full access (for admins) and a group that allows access to
+# other AWS accounts
+should_create_iam_group_full_access = true
+iam_groups_for_cross_account_access = [
+  {
+   group_name   = "_account.dev-full-access"
+   iam_role_arn = "arn:aws:iam::666666666666:role/allow-full-access-from-other-accounts"
+  },
+  {
+   group_name   = "_account.dev-read-only-access"
+   iam_role_arn = "arn:aws:iam::666666666666:role/allow-read-only-access-from-other-accounts"
+  },
+  {
+   group_name   = "_account.dev-dev-access"
+   iam_role_arn = "arn:aws:iam::666666666666:role/allow-dev-access-from-other-accounts"
+  },
+  {
+   group_name   = "_account.stage-full-access"
+   iam_role_arn = "arn:aws:iam::777777777777:role/allow-full-access-from-other-accounts"
+  },
+  {
+   group_name   = "_account.stage-read-only-access"
+   iam_role_arn = "arn:aws:iam::777777777777:role/allow-read-only-access-from-other-accounts"
+  },
+  {
+   group_name   = "_account.stage-developers-access"
+   iam_role_arn = "arn:aws:iam::777777777777:role/allow-developers-access-from-other-accounts"
+  },
+  # ... Etc ...
+]
+
+# Disable all other IAM groups in the security account
+should_create_iam_group_billing                = false
+should_create_iam_group_developers             = false
+should_create_iam_group_read_only              = false
+should_create_iam_group_use_existing_iam_roles = false
+should_create_iam_group_auto_deploy            = false
+should_create_iam_group_houston_cli_users      = false
+should_create_iam_group_user_self_mgmt         = false
+
+# Define the IAM users you want in the security account
+users = {
+  alice = {
+    groups               = ["full-access"]
+    pgp_key              = "keybase:alice"
+    create_login_profile = true
+  }
+
+  bob = {
+    groups               = ["full-access"]
+    pgp_key              = "keybase:bob"
+    create_login_profile = true
+  }
+
+  chris = {
+    groups               = ["_account.dev-full-access", "_account.stage-read-only-access", "_account.prod-read-only-access"]
+    pgp_key              = "keybase:chris"
+    create_login_profile = true
+  }
+
+  dan = {
+    groups               = ["_account.dev-full-access", "_account.stage-read-only-access", "_account.prod-read-only-access"]
+    pgp_key              = "keybase:dan"
+    create_login_profile = true
+  }
+
+  emily = {
+    groups               = ["_account.dev-full-access", "_account.stage-full-access", "_account.prod-full-access"]
+    pgp_key              = "keybase:emily"
+    create_login_profile = true
+  }
+
+  # ... etc ...
+}
+----
+
+In the security account, you'll most likely want a `full-access` group (solely for a few trusted admins), plus a number
+of groups that give specific permissions in all your other child accounts (e.g., full-access in dev, read-only in prod,
+etc). Create an IAM user for yourself in the `full-access` group, plus IAM users for the rest of your team in the
+appropriate groups.
+
+Configure the backend https://www.terraform.io/docs/backends/[backend] you want to use to store your Terraform state.
+The https://www.terraform.io/docs/backends/types/s3.html[S3 backend] is usually the best choice for AWS accounts. If
+you're using Terragrunt, the backend settings should be defined in a root `terragrunt.hcl` file that you `include` in
+each child `terragrunt.hcl`:
+
+.infrastructure-live/security/_global/iam/terragrunt.hcl
+[source,hcl]
+----
+include {
+  path = find_in_parent_folders()
+}
+----
+
+https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html#id_root-user_manage_add-key[Create a set of access keys for the root user in the security account]
+and https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[use those access keys to authenticate on the CLI].
+Finally, deploy the `iam` module by running `terraform apply -var-file=<your-file>.tfvars` or, if using Terragrunt, by
+running `terragrunt apply`:
+
+----
+$ cd infrastructure-live/security/_global/iam
+$ terragrunt apply
+----
+
+=== Create IAM roles in the other child accounts
+
+In all of the other child accounts (dev, stage, prod, etc), instead of IAM users, you'll solely want to create IAM
+roles. Once again, you can re-use the `iam` module you created earlier in `infrastructure-modules` to do this!
+
+If you using Terraform directly, you will be running commands directly in `infrastructure-modules`. If you are using
+Terragrunt, you will need to create a `terragrunt.hcl` file in `infrastructure-live`. It should go under the file path
+`<ACCOUNT>/\_global/iam`, where `<ACCOUNT>` is one of these other child accounts, such as dev, stage, prod, and
+shared-services. In the rest of this example, we'll look solely at the stage account, but make sure you follow the
+analogous steps for ALL of your child accounts!
+
+----
+infrastructure-live
+  └ root
+  └ security
+  └ stage
+    └ _global
+      └ iam
+        └ terragrunt.hcl
+----
+
+Point the `source` URL in your `terragrunt.hcl` file to your `iam` wrapper module in the `infrastructure-modules`
+repo, setting the `ref` param to the version you released earlier:
+
+.infrastructure-live/stage/_global/iam/terragrunt.hcl
+[source,hcl]
+----
+terraform {
+  source = "git@github.com/<YOUR_ORG>/infrastructure-modules.git//security/iam?ref=v0.3.0"
+}
+----
+
+Set the variables for the `iam` module in this environment. You can set these values in a `.tfvars` file or, if
+using Terragrunt, in the `inputs = { ... }` block of `terragrunt.hcl`:
+
+.infrastructure-live/stage/_global/iam/terragrunt.hcl
+[source,hcl]
+----
+# Fill in your region you want to use (only used for API calls) and the ID of your stage AWS account
+aws_region     = "us-east-2"
+aws_account_id = "777777777777"
+
+# Make sure to require MFA for all policies used in these IAM roles!
+should_require_mfa = true
+
+# Disable all IAM groups in stage, since there are no IAM users in this account
+should_create_iam_group_full_access            = false
+should_create_iam_group_billing                = false
+should_create_iam_group_developers             = false
+should_create_iam_group_read_only              = false
+should_create_iam_group_use_existing_iam_roles = false
+should_create_iam_group_auto_deploy            = false
+should_create_iam_group_houston_cli_users      = false
+should_create_iam_group_user_self_mgmt         = false
+
+# Define no IAM users in stage
+users = {}
+
+# Allow users from the security account to assume IAM roles in this account
+allow_read_only_access_from_other_account_arns = [
+  "arn:aws:iam::444444444444:root", # security account
+]
+allow_billing_access_from_other_account_arns = [
+  "arn:aws:iam::444444444444:root", # security account
+]
+allow_dev_access_from_other_account_arns = [
+  "arn:aws:iam::444444444444:root", # security account
+]
+allow_full_access_from_other_account_arns = [
+  "arn:aws:iam::444444444444:root", # security account
+]
+allow_auto_deploy_from_other_account_arns = [
+  "arn:aws:iam::444444444444:root", # shared-services
+]
+
+# Define the permissions for the auto deploy IAM role
+auto_deploy_permissions = ["cloudwatch:*", "logs:*", "dynamodb:*", "ecr:*", "ecs:*"]
+
+# Define the permissions for the dev IAM role
+dev_permitted_services = ["ec2", "s3", "rds", "dynamodb", "elasticache"]
+
+----
+
+In dev, stage, prod, and other similar child accounts, you create no IAM users or groups, but only IAM roles, and you
+configure those IAM roles so they can be assumed from the security account.
+
+Configure the backend https://www.terraform.io/docs/backends/[backend] you want to use to store your Terraform state.
+The https://www.terraform.io/docs/backends/types/s3.html[S3 backend] is usually the best choice for AWS accounts. If
+you're using Terragrunt, the backend settings should be defined in a root `terragrunt.hcl` file that you `include` in
+each child `terragrunt.hcl`:
+
+.infrastructure-live/security/_global/iam/terragrunt.hcl
+[source,hcl]
+----
+include {
+  path = find_in_parent_folders()
+}
+----
+
+https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html#id_root-user_manage_add-key[Create a set of access keys for the root user in the stage account]
+and https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[use those access keys to authenticate on the CLI].
+Finally, deploy the `iam` module by running `terraform apply -var-file=<your-file>.tfvars` or, if using Terragrunt, by
+running `terragrunt apply`:
+
+----
+$ cd infrastructure-live/security/_global/iam
+$ terragrunt apply
+----
+
+=== Try authenticating as an IAM user to the child accounts
+
+Now that you have an IAM user in the security account and IAM roles in the other accounts, it's time to practice
+authenticating!
+
+. Use your IAM user's user name and password (decrypted using keybase) to log into the web console of the security
+  account.
+. Follow the steps in <<lock_down_iam_users>>.
+. After creating an MFA token, log out, and then log back into the web console of the security account with an MFA
+  token. If you don't do this, the next steps won't work!
+. Try to https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-console.html[switch to a role] in
+  one of the other child accounts using the AWS Web Console. For example, try to switch to the
+  `allow-full-access-from-other-accounts` role in the dev account.
+. Try to switch to a role in one of the other child accounts using the AWS CLI. There are several ways to do this, so
+  check out https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[A Comprehensive Guide to Authenticating to AWS on the Command Line]
+  for your preferred option.
+
+=== Lock down the root user in the child accounts
+
+Now that you can access all the child accounts using your IAM user and IAM roles, you should follow the steps in
+<<lock_down_root_user>> for the root user of each of those child accounts, and (almost) never use those root users
+again.
+
+=== Enable CloudTrail in the security account
+
+The next step is to configure CloudTrail in all your child accounts. You can do this using the `cloudtrail` module you
+created in `infrastructure-modules` earlier!
+
+If you using Terraform directly, you will be running commands directly in `infrastructure-modules`. If you are using
+Terragrunt, you will need to create a `terragrunt.hcl` file in `infrastructure-live`. It should go under the file path
+`security/\_global/cloudtrail`:
+
+----
+infrastructure-live
+  └ root
+  └ security
+    └ _global
+      └ cloudtrail
+        └ terragrunt.hcl
+  └ stage
+  └ dev
+  └ prod
+  └ shared-services
+----
+
+Point the `source` URL in your `terragrunt.hcl` file to your `cloudtrail` wrapper module in the `infrastructure-modules`
+repo, setting the `ref` param to the version you released earlier:
+
+.infrastructure-live/security/_global/cloudtrail/terragrunt.hcl
+[source,hcl]
+----
+terraform {
+  source = "git@github.com/<YOUR_ORG>/infrastructure-modules.git//security/cloudtrail?ref=v0.3.1"
+}
+----
+
+Set the variables for the `cloudtrail` module in this environment. You can set these values in a `.tfvars` file or, if
+using Terragrunt, in the `inputs = { ... }` block of `terragrunt.hcl`:
+
+.infrastructure-live/security/_global/cloudtrail/terragrunt.hcl
+[source,hcl]
+----
+# Fill in your region you want to use (only used for API calls) and the ID of your security AWS account
+aws_region     = "us-east-2"
+aws_account_id = "444444444444"
+
+# Name the CloudTrail and S3 bucket
+cloudtrail_trail_name = "<COMPANY_NAME>-security"
+s3_bucket_name        = "<COMPANY_NAME>-security-cloudtrail"
+
+num_days_after_which_archive_log_data = 30
+num_days_after_which_delete_log_data  = 365
+
+# Who has access to the KMS master key
+kms_key_administrator_iam_arns = [
+  "arn:aws:iam::<SECURITY_ACCOUNT_ID>:user/<ADMIN_USERNAME>",
+]
+kms_key_user_iam_arns = [
+  "arn:aws:iam::<SECURITY_ACCOUNT_ID>:user/<ADMIN_USERNAME>",
+]
+allow_cloudtrail_access_with_iam = true
+
+s3_bucket_already_exists                   = false
+
+# Give the other child accounts (dev, stage, etc) the ability to write their logs to this bucket too
+external_aws_account_ids_with_write_access = [
+  "666666666666", # dev
+  "777777777777", # stage
+  "888888888888", # prod
+  "999999999999", # shared-services
+]
+
+# Only set this to true if, when running 'terragrunt destroy,' you want to delete the contents of the S3 bucket that
+# stores the CloudTrail logs. Note that you must set this to true and run 'terragrunt apply' FIRST, before running 'destroy'!
+force_destroy = false
+----
+
+Configure the backend https://www.terraform.io/docs/backends/[backend] you want to use to store your Terraform state.
+The https://www.terraform.io/docs/backends/types/s3.html[S3 backend] is usually the best choice for AWS accounts. If
+you're using Terragrunt, the backend settings should be defined in a root `terragrunt.hcl` file that you `include` in
+each child `terragrunt.hcl`:
+
+.infrastructure-live/security/_global/iam/terragrunt.hcl
+[source,hcl]
+----
+include {
+  path = find_in_parent_folders()
+}
+----
+
+Since you already deleted the root user's access keys, this time, you should authenticate as your IAM user, making
+sure to set the MFA token on the CLI! See
+https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[A Comprehensive Guide to Authenticating to AWS on the Command Line]
+for instructions on how to do that.
+
+Finally, deploy the `cloudtrail` module by running `terraform apply -var-file=<your-file>.tfvars` or, if using
+Terragrunt, by running `terragrunt apply`:
+
+----
+$ cd infrastructure-live/security/_global/cloudtrail
+$ terragrunt apply
+----
+
+=== Enable CloudTrail in the other child accounts
+
+Enabling CloudTrail in all the other child accounts is nearly identical, with the only difference being that you tell
+those accounts to write their audit log to the existing S3 bucket in the security account.
+
+If you using Terraform directly, you will be running commands directly in `infrastructure-modules`. If you are using
+Terragrunt, you will need to create a `terragrunt.hcl` file in `infrastructure-live`. It should go under the file path
+`<ACCOUNT>/\_global/cloudtrail`, where `<ACCOUNT>` is one of these other child accounts, such as dev, stage, prod, and
+shared-services. In the rest of this example, we'll look solely at the stage account, but make sure you follow the
+analogous steps for ALL of your child accounts!
 
 
+----
+infrastructure-live
+  └ root
+  └ security
+  └ stage
+    └ _global
+      └ cloudtrail
+        └ terragrunt.hcl
+  └ dev
+  └ prod
+  └ shared-services
+----
 
-=== Clean up sandbox accounts
+Point the `source` URL in your `terragrunt.hcl` file to your `cloudtrail` wrapper module in the `infrastructure-modules`
+repo, setting the `ref` param to the version you released earlier:
 
-Sandbox accounts tend to build up more and more unused infrastructure over time, so to prevent your bill
-from getting out of hand, you may want to run a tool like https://github.com/gruntwork-io/cloud-nuke[cloud-nuke] on
-a daily basis to clean up everything in the account older than, say, 5 days (you wouldn't want to run a tool like
-  `cloud-nuke` in an account like staging, so this is yet another reason to keep sandbox accounts separate).
+.infrastructure-live/stage/_global/cloudtrail/terragrunt.hcl
+[source,hcl]
+----
+terraform {
+  source = "git@github.com/<YOUR_ORG>/infrastructure-modules.git//security/cloudtrail?ref=v0.3.1"
+}
+----
+
+Set the variables for the `cloudtrail` module in this environment. You can set these values in a `.tfvars` file or, if
+using Terragrunt, in the `inputs = { ... }` block of `terragrunt.hcl`:
+
+.infrastructure-live/stage/_global/cloudtrail/terragrunt.hcl
+[source,hcl]
+----
+# Fill in your region you want to use (only used for API calls) and the ID of your stage AWS account
+aws_region     = "us-east-2"
+aws_account_id = "777777777777"
+
+# Name the CloudTrail and S3 bucket
+cloudtrail_trail_name = "<COMPANY_NAME>-stage"
+s3_bucket_name        = "<COMPANY_NAME>-security-cloudtrail"
+
+num_days_after_which_archive_log_data = 30
+num_days_after_which_delete_log_data  = 365
+
+# Who has access to the KMS master key
+kms_key_administrator_iam_arns = [
+  "arn:aws:iam::<SECURITY_ACCOUNT_ID>:user/<ADMIN_USERNAME>",
+]
+kms_key_user_iam_arns = [
+  "arn:aws:iam::<SECURITY_ACCOUNT_ID>:user/<ADMIN_USERNAME>",
+]
+allow_cloudtrail_access_with_iam = true
+
+# NOTE: the bucket already exists in the security account!
+s3_bucket_already_exists                   = true
+external_aws_account_ids_with_write_access = []
+
+# Only set this to true if, when running 'terragrunt destroy,' you want to delete the contents of the S3 bucket that
+# stores the CloudTrail logs. Note that you must set this to true and run 'terragrunt apply' FIRST, before running 'destroy'!
+force_destroy = false
+----
+
+Configure the backend https://www.terraform.io/docs/backends/[backend] you want to use to store your Terraform state.
+The https://www.terraform.io/docs/backends/types/s3.html[S3 backend] is usually the best choice for AWS accounts. If
+you're using Terragrunt, the backend settings should be defined in a root `terragrunt.hcl` file that you `include` in
+each child `terragrunt.hcl`:
+
+.infrastructure-live/stage/_global/iam/terragrunt.hcl
+[source,hcl]
+----
+include {
+  path = find_in_parent_folders()
+}
+----
+
+Since you already deleted the root user's access keys, this time, you should authenticate as your IAM user, making
+sure to set the MFA token on the CLI, _and_ assume a role in the stage account! See
+https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[A Comprehensive Guide to Authenticating to AWS on the Command Line]
+for instructions on how to do that.
+
+Finally, deploy the `cloudtrail` module by running `terraform apply -var-file=<your-file>.tfvars` or, if using
+Terragrunt, by running `terragrunt apply`:
+
+----
+$ cd infrastructure-live/stage/_global/cloudtrail
+$ terragrunt apply
+----
 
 [[next_steps]]
 == Next steps
 
-TODO
+Now that you have your basic AWS account structure set up, the next step is to start deploying infrastructure in those
+accounts! Usually, the best starting point is to configure your network topology, as described in
+<<production_grade_vpc_aws>>.
