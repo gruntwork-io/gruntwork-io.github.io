@@ -795,7 +795,7 @@ Let's first create the IAM groups and IAM users by using the `iam-groups`, `iam-
 IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access `module-security`.
 
 First, create a _wrapper module_ called `iam` in your `infrastructure-modules` repo:
-+
+
 ----
 infrastructure-modules
   └ security
@@ -1364,7 +1364,7 @@ the `cloudtrail` module from https://github.com/gruntwork-io/module-security[mod
 IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access `module-security`.
 
 First, create a _wrapper module_ called `cloud` in your `infrastructure-modules` repo:
-+
+
 ----
 infrastructure-modules
   └ security
@@ -1613,7 +1613,7 @@ accounts detailed in <<child_accounts>>, but feel free to adjust this as necessa
 needs.
 
 Create a new module called `organization` in your `infrastructure-modules` repo:
-+
+
 ----
 infrastructure-modules
   └ security
@@ -1707,6 +1707,8 @@ variable "organizations_account_access_role_name" {
   default     = "OrganizationAccountAccessRole"
 }
 ----
+
+// TODO: find a way to require MFA to assume the OrganizationAccountAccessRole
 
 And the corresponding output variables in `outputs.tf`:
 
