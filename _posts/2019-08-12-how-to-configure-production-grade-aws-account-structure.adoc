@@ -544,13 +544,11 @@ full-access::
 _account-<ACCOUNT>-<ROLE>::
   These IAM groups are how you grant IAM users in the security account access to other child accounts. For each AWS
   account `<ACCOUNT>`, and each IAM role `<ROLE>` in that account, you have a group that grants `sts:AssumeRole`
-  permissions for that role: e.g., users you add to the `\_account-dev-full-access` group will get `sts:AssumeRole`
-  permissions to the `allow-full-access-from-other-accounts` IAM role in the dev account (so they will have full access
-  to that account), users you add to the `\_account-prod-read-only` group will get `sts:AssumeRole` permissions to
-  the `allow-read-only-access-from-other-accounts` IAM role in the prod account (so they will have read-only access to
-  that account), and users you add to the `\_account-prod-openvpn-requests` group will get `sts:AssumeRole` permissions
-  to the `openvpn-allow-certificate-requests-for-external-accounts` IAM role in the prod account (so they will be able
-  to request OpenVPN certs for that account).
+  permissions for that role: e.g., users you add to the `_account-dev-full-access` group will get `sts:AssumeRole`
+  permissions to the `allow-full-access-from-other-accounts` IAM role in the `dev` account (so they will have full
+  access to that account) and users you add to the `_account-prod-read-only` group will get `sts:AssumeRole` permissions
+  to the `allow-read-only-access-from-other-accounts` IAM role in the `prod` account (so they will have read-only
+  access to that account).
 
 ssh-grunt-users and ssh-grunt-sudo-users::
   These IAM groups don't grant any IAM permissions, but instead are used by
@@ -567,9 +565,10 @@ https://github.com/gruntwork-io/module-security/[module-security].
 === MFA policy
 
 MFA should be required to access any of your AWS accounts via the web or any API call. Unfortunately, AWS doesn't have
-an easy way to enforce MFA globally, and if you try to enforce it in a naive manner, you'll run into issues: e.g., AWS
-services, your own applications, and machine users won't be able to access your account and new IAM users won't be able
-to access the account to configure an MFA token in the first place.
+an easy way to enforce MFA globally, and if you try to enforce it in a naive manner, you'll run into issues: e.g., you
+might accidentally block access for your own applications (e.g., those that use IAM roles on EC2 instance, where MFA
+isn't possible) or you might accidentally block new IAM users from accessing AWS and setting up an MFA token in the
+first place.
 
 Therefore, the best way to enforce MFA right now is as follows:
 
@@ -586,13 +585,14 @@ IAM users and groups::
   have any IAM policies directly attached, so the only thing to think through is the policies attached to the IAM
   groups. To enforce MFA, make sure that all of these policies
   https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_mfa_configure-api-require.html#MFAProtectedAPI-user-mfa[require an MFA token].
-  The only exception is the `iam-user-self-mgmt` IAM group, where you need one policy that will allow a user to enable
-  MFA in the first place; this is the only policy that will not require MFA.
+  Note that all of these policies also should attach "self-management" permissions that allow IAM users just enough
+  permissions to access their own user account without an MFA token so they can configure an MFA token in the first
+  place.
 
 === Password policy
 
 In any account that has IAM users (which should just be the root and security accounts), configure a password policy
-that ensures all IAM users have strong passwords. The exact policy you use depends on your companies requirements (e.g.,
+that ensures all IAM users have strong passwords. The exact policy you use depends on your company's requirements (e.g.,
 certain compliance requirements may force you to use a specific password policy), but you may want to consider
 https://pages.nist.gov/800-63-3/sp800-63b.html#memsecret[NIST 800-63 guidelines] as a reasonable starting point.
 
@@ -604,12 +604,12 @@ requirements, but here are some common ones:
 
 allow-auto-deploy-access-from-other-accounts::
   This is an IAM role that grants permissions for automatically deploying (e.g., as part of a CI / CD pipline)
-  some specific service. You may have many such roles, depending on what types of services you deploy automatically.
-  For example, this role may have a trust policy that allows it to be assumed by a Jenkins server in the
-  shared-services account, and gives that server permissions to deploy EC2 Instances and Auto Scaling Groups.
+  some specific service. For example, this role may have a trust policy that allows it to be assumed by a Jenkins
+  server in the shared-services account, and gives that server permissions to deploy EC2 Instances and Auto Scaling
+  Groups.
 
 allow-ssh-grunt-access-from-other-accounts::
-  This is an IAM role that grants permission to look up IAM group membership and the public SSH keys on IAM user
+  This is an IAM role that grants permission to look up IAM group membership and the public SSH keys of IAM user
   accounts. Typically, you'd have this role in your security account to allow the EC2 instances in other accounts to
   authenticate SSH attempts using
   https://github.com/gruntwork-io/module-security/tree/master/modules/ssh-grunt[ssh-grunt].
@@ -627,7 +627,7 @@ Service roles::
 
 A few important notes on IAM roles for services:
 
-MFA::
+No MFA::
   The trust policy in service IAM roles cannot require MFA, as automated services can't use MFA devices. That means you
   need to take extra care in terms of who can assume this IAM role, what permissions the role has, and locking down the
   services. For example, if you have Jenkins running on an EC2 instance, and you give that EC2 instance access to an
@@ -635,7 +635,7 @@ MFA::
   to just `ecs` permissions if deploying to ECS) and you should ensure that your Jenkins instance runs in private
   subnets so that it is NOT accessible from the public Internet (see <<production_grade_vpc_aws>>).
 
-Principal::
+Use the right Principal::
   The trust policy in service IAM roles will need to specify the appropriate `Principal` to allow an AWS service to
   assume it. For example, if you're running Jenkins on an EC2 instance, and you want that EC2 instance to be able to
   assume an IAM role to get specific permissions (e.g., to get permissions to deploy some code in one of your child
@@ -703,11 +703,6 @@ Directory, or Okta—you should use the same account structure, but with a few c
 No IAM users or groups::
   Since all of your users will be managed in the IdP, you do not need to create any IAM users or IAM groups (other than
   the handful of IAM users in the root account).
-
-No security account (maybe)::
-  You might be able to get rid of the security account entirely. The key considerations are (a) if you need to have any
-  machine users (if so, perhaps define them in the shared-services account?) and (b) where to store your audit logs
-  for CloudTrail (e.g., perhaps them to the root account).
 
 Different IAM role trust policies::
   With federated auth, you will be granting your IdP users access to specific IAM roles in specific accounts.
