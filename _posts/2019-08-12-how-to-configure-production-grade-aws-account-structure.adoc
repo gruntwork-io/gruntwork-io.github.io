@@ -437,8 +437,9 @@ manage child accounts and billing.
 
 Do NOT attach any IAM policies directly to the IAM users; instead, create a set of IAM groups, with specific IAM
 policies attached to each group, and assign all of your users to the appropriate groups. The exact set of IAM groups
-you need depends on your company's requirements, but for most companies, the root account contains solely a single
-`full-access` IAM group that gives the handful of trusted users in that account admin permissions.
+you need depends on your company's requirements, but for most companies, the root account contains solely a
+`full-access` IAM group that gives the handful of trusted users in that account admin permissions, plus a `billing`
+IAM group that gives the finance team access to the billing details.
 
 [[child_accounts]]
 === Child accounts
@@ -523,8 +524,8 @@ allow-dev-access-from-other-accounts::
 openvpn-allow-certificate-requests-for-external-accounts and openvpn-allow-certificate-revocations-for-external-accounts::
   These IAM roles allows users to request and revoke VPN certificates for an OpenVPN server running in the child
   account. This is part of the Gruntwork https://github.com/gruntwork-io/package-openvpn/[package-openvpn] code, which
-  deploys a production-grade OpenVPN server, and gives developers with access to these IAM roles and the
-  `openvpn-admin` tool a self-service VPN certificate experience.
+  deploys a production-grade OpenVPN server and allows developers with access to these IAM roles to request VPN
+  certificates (self-service).
 +
 IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access
 https://github.com/gruntwork-io/package-openvpn/[package-openvpn].
@@ -535,13 +536,6 @@ In the security account, you will need to create all the IAM users for your team
 directly to users; instead, create a set of IAM groups, with specific IAM policies attached to each group, and assign
 all of your users to the appropriate groups. The exact set of IAM groups you need depends on your company's
 requirements, but here are some common ones:
-
-iam-user-self-mgmt::
-  This IAM group grants permission to an IAM user to manage their own IAM user account, including resetting the
-  password, generating access keys, and enabling MFA. It also grants permission to list other IAM users (so you can
-  find your own user in the list), but not to view or modify any information about other users. Just about every IAM
-  user should be added to this group or they likely won't be able to make much use of their own user account. For most
-  IAM users, this will be the _only_ permission they have in the security account itself.
 
 full-access::
   This IAM group gives users full access to everything in the security account. It should only be used for a small
