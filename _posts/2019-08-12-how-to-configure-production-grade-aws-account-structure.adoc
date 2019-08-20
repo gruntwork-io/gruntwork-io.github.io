@@ -782,11 +782,11 @@ the central place where you manage billing. You create this initial account manu
 
 The root user has unrestricted access to just about everything in your AWS account (and any child accounts),
 so if an attacker compromises your root user, the results can be catastrophic for your company. Therefore, you'll need
-to (a) create IAM users, IAM groups, and IAM roles that you will use instead, as we'll discuss now and (b) lock down
+to (a) create IAM users, groups, and roles that you will use instead, as we'll discuss now and (b) lock down
 the root user account as much as possible, as we'll discuss a little later.
 
-Let's first create the IAM groups and IAM users by using the `iam-groups`, `iam-users`, `iam-user-password-policy`, and
-`cross-account-iam-roles` modules from https://github.com/gruntwork-io/module-security[module-security].
+Let's first create the IAM users, groups, and roles by using the `iam-groups`, `iam-users`, `iam-user-password-policy`,
+and `cross-account-iam-roles` modules from https://github.com/gruntwork-io/module-security[module-security].
 
 IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access `module-security`.
 
@@ -831,7 +831,7 @@ terraform {
 Next, use the `iam-groups` module from the Gruntwork Service Catalog, making sure to replace the `<VERSION>` placeholder
 with the latest version from the https://github.com/gruntwork-io/module-security/releases[releases page]:
 
-.infrastructure-modules/networking/iam-groups/main.tf
+.infrastructure-modules/networking/iam/main.tf
 [source,hcl]
 ----
 module "iam_groups" {
@@ -858,9 +858,9 @@ module "iam_groups" {
 }
 ----
 
-Create all the corresponding input variables for `iam-gruops` in `variables.tf`:
+Create all the corresponding input variables for `iam-groups` in `variables.tf`:
 
-.infrastructure-modules/networking/iam-groups/variables.tf
+.infrastructure-modules/networking/iam/variables.tf
 [source,hcl]
 ----
 variable "aws_region" {
@@ -979,9 +979,9 @@ module "iam_users" {
 }
 ----
 
-And the corresponding variables for the `iam-users` module in `variables.tf`:
+Add the corresponding variables for the `iam-users` module in `variables.tf`:
 
-.infrastructure-modules/networking/iam-users/variables.tf
+.infrastructure-modules/networking/iam/variables.tf
 [source,hcl]
 ----
 variable "users" {
@@ -1069,7 +1069,7 @@ module "iam_password_policy" {
 }
 ----
 
-And the corresponding input variables in `variables.tf`:
+Add the corresponding input variables in `variables.tf`:
 
 .infrastructure-modules/networking/iam/variables.tf
 [source,hcl]
@@ -1179,7 +1179,7 @@ $ git push --follow-tags
 
 If you using Terraform directly, you will be running commands directly in `infrastructure-modules`. If you are using
 Terragrunt, you will need to create a `terragrunt.hcl` file in `infrastructure-live`. It should go under the file path
-`root/\_global/iam`:
+`root/_global/iam`:
 
 ----
 infrastructure-live
@@ -1210,7 +1210,7 @@ using Terragrunt, in the `inputs = { ... }` block of `terragrunt.hcl`:
 aws_region     = "us-east-2"
 aws_account_id = "111122223333"
 
-# Make sure to require MFA for all policies used in these IAM groups!
+# Make sure to require MFA for all policies used in these IAM groups and roles!
 should_require_mfa = true
 
 # The only IAM groups you need in the root account are full access (for admins) and billing (for the finance team)
@@ -1254,7 +1254,7 @@ key from Keybase (we'll come back to how to handle the passwords shortly). You s
 IAM user for yourself, as well as the small number of other trusted admins at your company who should have access to
 the root account.
 
-Configure the backend https://www.terraform.io/docs/backends/[backend] you want to use to store your Terraform state.
+Configure the https://www.terraform.io/docs/backends/[backend] you want to use to store your Terraform state.
 The https://www.terraform.io/docs/backends/types/s3.html[S3 backend] is usually the best choice for AWS accounts. If
 you're using Terragrunt, the backend settings should be defined in a root `terragrunt.hcl` file that you `include` in
 each child `terragrunt.hcl`:
@@ -1354,16 +1354,17 @@ Enable MFA::
 
 === Enable CloudTrail on the root account
 
-Next, let's enable CloudTrail in the root account so we have an audit log of everything we do. You can do this using
-the `cloudtrail` module from https://github.com/gruntwork-io/module-security[module-security].
+Next, let's enable CloudTrail in the root account so you have an audit log of everything that happens in the account.
+You can do this using the `cloudtrail` module from https://github.com/gruntwork-io/module-security[module-security].
 
 IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access `module-security`.
 
-First, create a _wrapper module_ called `cloud` in your `infrastructure-modules` repo:
+First, create a wrapper module called `cloudtrail` in your `infrastructure-modules` repo:
 
 ----
 infrastructure-modules
   └ security
+    └ iam
     └ cloudtrail
       └ main.tf
       └ outputs.tf
@@ -1397,7 +1398,7 @@ terraform {
 }
 ----
 
-Next, use the `cloud-trail` module from the Gruntwork Service Catalog, making sure to replace the `<VERSION>` placeholder
+Next, use the `cloudtrail` module from the Gruntwork Service Catalog, making sure to replace the `<VERSION>` placeholder
 with the latest version from the https://github.com/gruntwork-io/module-security/releases[releases page]:
 
 .infrastructure-modules/networking/cloudtrail/main.tf
@@ -1521,12 +1522,13 @@ $ git push --follow-tags
 
 If you using Terraform directly, you will be running commands directly in `infrastructure-modules`. If you are using
 Terragrunt, you will need to create a `terragrunt.hcl` file in `infrastructure-live`. It should go under the file path
-`root/\_global/cloudtrail`:
+`root/_global/cloudtrail`:
 
 ----
 infrastructure-live
   └ root
     └ _global
+      └ iam
       └ cloudtrail
         └ terragrunt.hcl
 ----
@@ -1576,12 +1578,10 @@ external_aws_account_ids_with_write_access = []
 force_destroy = false
 ----
 
-Configure the backend https://www.terraform.io/docs/backends/[backend] you want to use to store your Terraform state.
-The https://www.terraform.io/docs/backends/types/s3.html[S3 backend] is usually the best choice for AWS accounts. If
-you're using Terragrunt, the backend settings should be defined in a root `terragrunt.hcl` file that you `include` in
-each child `terragrunt.hcl`:
+As before, configure the backend you want to use, which with Terragrunt you can do by including the settings from the
+root `terragrunt.hcl`:
 
-.infrastructure-live/root/_global/iam/terragrunt.hcl
+.infrastructure-live/root/_global/cloudtrail/terragrunt.hcl
 [source,hcl]
 ----
 include {
@@ -1589,8 +1589,8 @@ include {
 }
 ----
 
-Since you already deleted the root user's access keys, this time, you should authenticate as your IAM user, making
-sure to set the MFA token on the CLI! See
+Since you already deleted the root user's access keys, this time, you should authenticate as your IAM user in the root
+account, making sure to set the MFA token on the CLI! See
 https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[A Comprehensive Guide to Authenticating to AWS on the Command Line]
 for instructions on how to do that.
 
@@ -1605,14 +1605,16 @@ $ terragrunt apply
 === Create child accounts
 
 Now that your root account is fully configured, you can create child accounts. In this guide, we will be creating the
-accounts detailed in <<child_accounts>>, but feel free to adjust this as necessary based on the accounts your company
-needs.
+accounts detailed in the <<child_accounts>> section, but feel free to adjust this as necessary based on the accounts
+your company needs.
 
 Create a new module called `organization` in your `infrastructure-modules` repo:
 
 ----
 infrastructure-modules
   └ security
+    └ iam
+    └ cloudtrail
     └ organization
       └ main.tf
       └ outputs.tf
@@ -1706,7 +1708,7 @@ variable "organizations_account_access_role_name" {
 
 // TODO: find a way to require MFA to assume the OrganizationAccountAccessRole
 
-And the corresponding output variables in `outputs.tf`:
+Add the corresponding output variables in `outputs.tf`:
 
 .infrastructure-modules/networking/organization/outputs.tf
 [source,hcl]
@@ -1737,12 +1739,14 @@ $ git push --follow-tags
 
 If you using Terraform directly, you will be running commands directly in `infrastructure-modules`. If you are using
 Terragrunt, you will need to create a `terragrunt.hcl` file in `infrastructure-live`. It should go under the file path
-`root/\_global/organization`:
+`root/_global/organization`:
 
 ----
 infrastructure-live
   └ root
     └ _global
+      └ iam
+      └ cloudtrail
       └ organization
         └ terragrunt.hcl
 ----
@@ -1787,10 +1791,7 @@ so that while AWS will see `account-root+security@your-company.com`, `account-ro
 `account-root+dev@your-company.com` as three unique email addresses, Gmail will see them all as the same email address,
 `account-root@your-company.com`.
 
-Configure the backend https://www.terraform.io/docs/backends/[backend] you want to use to store your Terraform state.
-The https://www.terraform.io/docs/backends/types/s3.html[S3 backend] is usually the best choice for AWS accounts. If
-you're using Terragrunt, the backend settings should be defined in a root `terragrunt.hcl` file that you `include` in
-each child `terragrunt.hcl`:
+Configure your Terraform backend:
 
 .infrastructure-live/root/_global/organization/terragrunt.hcl
 [source,hcl]
@@ -1800,7 +1801,7 @@ include {
 }
 ----
 
-Authenticate on the CLI as your IAM user and deploy the `organization` module by running
+Authenticate on the CLI as your IAM user in the root account and deploy the `organization` module by running
 `terraform apply -var-file=<your-file>.tfvars` or, if using Terragrunt, by running `terragrunt apply`:
 
 ----
@@ -1830,7 +1831,7 @@ earlier in `infrastructure-modules` to do this!
 
 If you using Terraform directly, you will be running commands directly in `infrastructure-modules`. If you are using
 Terragrunt, you will need to create a `terragrunt.hcl` file in `infrastructure-live`. It should go under the file path
-`security/\_global/iam`:
+`security/_global/iam`:
 
 ----
 infrastructure-live
@@ -1954,10 +1955,7 @@ of groups that give specific permissions in all your other child accounts (e.g.,
 etc). Create an IAM user for yourself in the `full-access` group, plus IAM users for the rest of your team in the
 appropriate groups.
 
-Configure the backend https://www.terraform.io/docs/backends/[backend] you want to use to store your Terraform state.
-The https://www.terraform.io/docs/backends/types/s3.html[S3 backend] is usually the best choice for AWS accounts. If
-you're using Terragrunt, the backend settings should be defined in a root `terragrunt.hcl` file that you `include` in
-each child `terragrunt.hcl`:
+Configure your Terraform backend:
 
 .infrastructure-live/security/_global/iam/terragrunt.hcl
 [source,hcl]
@@ -1984,9 +1982,9 @@ roles. Once again, you can re-use the `iam` module you created earlier in `infra
 
 If you using Terraform directly, you will be running commands directly in `infrastructure-modules`. If you are using
 Terragrunt, you will need to create a `terragrunt.hcl` file in `infrastructure-live`. It should go under the file path
-`<ACCOUNT>/\_global/iam`, where `<ACCOUNT>` is one of these other child accounts, such as dev, stage, prod, and
+`<ACCOUNT>/_global/iam`, where `<ACCOUNT>` is one of these other child accounts, such as dev, stage, prod, and
 shared-services. In the rest of this example, we'll look solely at the stage account, but make sure you follow the
-analogous steps for ALL of your child accounts!
+analogous steps for EACH of your child accounts!
 
 ----
 infrastructure-live
@@ -1996,6 +1994,9 @@ infrastructure-live
     └ _global
       └ iam
         └ terragrunt.hcl
+  └ dev
+  └ prod
+  └ shared-services
 ----
 
 Point the `source` URL in your `terragrunt.hcl` file to your `iam` wrapper module in the `infrastructure-modules`
@@ -2063,10 +2064,7 @@ dev_permitted_services = ["ec2", "s3", "rds", "dynamodb", "elasticache"]
 In dev, stage, prod, and other similar child accounts, you create no IAM users or groups, but only IAM roles, and you
 configure those IAM roles so they can be assumed from the security account.
 
-Configure the backend https://www.terraform.io/docs/backends/[backend] you want to use to store your Terraform state.
-The https://www.terraform.io/docs/backends/types/s3.html[S3 backend] is usually the best choice for AWS accounts. If
-you're using Terragrunt, the backend settings should be defined in a root `terragrunt.hcl` file that you `include` in
-each child `terragrunt.hcl`:
+Configure your Terraform backend:
 
 .infrastructure-live/security/_global/iam/terragrunt.hcl
 [source,hcl]
@@ -2082,32 +2080,36 @@ Finally, deploy the `iam` module by running `terraform apply -var-file=<your-fil
 running `terragrunt apply`:
 
 ----
-$ cd infrastructure-live/security/_global/iam
+$ cd infrastructure-live/stage/_global/iam
 $ terragrunt apply
 ----
 
+Remember to repeat this process in the other child accounts too!
+
 === Try authenticating as an IAM user to the child accounts
 
-Now that you have an IAM user in the security account and IAM roles in the other accounts, it's time to practice
+Now that you have IAM users in the security account and IAM roles in the other accounts, it's time to practice
 authenticating!
 
 . Use your IAM user's user name and password (decrypted using keybase) to log into the web console of the security
-  account.
-. Follow the steps in <<lock_down_iam_users>>.
-. After creating an MFA token, log out, and then log back into the web console of the security account with an MFA
-  token. If you don't do this, the next steps won't work!
+  account (remember to use the IAM user sign-in URL for the security account).
+. Follow the steps in <<lock_down_iam_users>> to lock down your IAM user in the security account. This includes
+  configuring an MFA device for your IAM user.
+. After configuring an MFA device, log out, and then log back into the security account again, this time providing your
+  MFA token. If you don't do this, attempting to assume IAM roles in other accounts won't work, as those roles require
+  an MFA token to be present!
 . Try to https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-console.html[switch to a role] in
   one of the other child accounts using the AWS Web Console. For example, try to switch to the
   `allow-full-access-from-other-accounts` role in the dev account.
 . Try to switch to a role in one of the other child accounts using the AWS CLI. There are several ways to do this, so
   check out https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[A Comprehensive Guide to Authenticating to AWS on the Command Line]
-  for your preferred option.
+  and pick your preferred approach.
 
 === Lock down the root user in the child accounts
 
-Now that you can access all the child accounts using your IAM user and IAM roles, you should follow the steps in
-<<lock_down_root_user>> for the root user of each of those child accounts, and (almost) never use those root users
-again.
+Once you're able to access all the child accounts using your IAM user and IAM roles, you should follow the steps in
+<<lock_down_root_user>> for the root user of each of those child accounts—including enabling MFA and deleting the root
+user's access keys—and (almost) never use those root users again.
 
 === Enable CloudTrail in the security account
 
@@ -2116,13 +2118,14 @@ created in `infrastructure-modules` earlier!
 
 If you using Terraform directly, you will be running commands directly in `infrastructure-modules`. If you are using
 Terragrunt, you will need to create a `terragrunt.hcl` file in `infrastructure-live`. It should go under the file path
-`security/\_global/cloudtrail`:
+`security/_global/cloudtrail`:
 
 ----
 infrastructure-live
   └ root
   └ security
     └ _global
+      └ iam
       └ cloudtrail
         └ terragrunt.hcl
   └ stage
@@ -2183,10 +2186,7 @@ external_aws_account_ids_with_write_access = [
 force_destroy = false
 ----
 
-Configure the backend https://www.terraform.io/docs/backends/[backend] you want to use to store your Terraform state.
-The https://www.terraform.io/docs/backends/types/s3.html[S3 backend] is usually the best choice for AWS accounts. If
-you're using Terragrunt, the backend settings should be defined in a root `terragrunt.hcl` file that you `include` in
-each child `terragrunt.hcl`:
+Configure your Terraform backend:
 
 .infrastructure-live/security/_global/iam/terragrunt.hcl
 [source,hcl]
@@ -2196,13 +2196,9 @@ include {
 }
 ----
 
-Since you already deleted the root user's access keys, this time, you should authenticate as your IAM user, making
-sure to set the MFA token on the CLI! See
-https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[A Comprehensive Guide to Authenticating to AWS on the Command Line]
-for instructions on how to do that.
-
-Finally, deploy the `cloudtrail` module by running `terraform apply -var-file=<your-file>.tfvars` or, if using
-Terragrunt, by running `terragrunt apply`:
+Since you already deleted the access keys for the root user in the security account, you should authenticate as your
+IAM user, making sure to set the MFA token on the CLI, and deploy the `cloudtrail` module by running
+`terraform apply -var-file=<your-file>.tfvars` or, if using Terragrunt, by running `terragrunt apply`:
 
 ----
 $ cd infrastructure-live/security/_global/cloudtrail
@@ -2216,10 +2212,9 @@ those accounts to write their audit log to the existing S3 bucket in the securit
 
 If you using Terraform directly, you will be running commands directly in `infrastructure-modules`. If you are using
 Terragrunt, you will need to create a `terragrunt.hcl` file in `infrastructure-live`. It should go under the file path
-`<ACCOUNT>/\_global/cloudtrail`, where `<ACCOUNT>` is one of these other child accounts, such as dev, stage, prod, and
+`<ACCOUNT>/_global/cloudtrail`, where `<ACCOUNT>` is one of these other child accounts, such as dev, stage, prod, and
 shared-services. In the rest of this example, we'll look solely at the stage account, but make sure you follow the
 analogous steps for ALL of your child accounts!
-
 
 ----
 infrastructure-live
@@ -2227,6 +2222,7 @@ infrastructure-live
   └ security
   └ stage
     └ _global
+      └ iam
       └ cloudtrail
         └ terragrunt.hcl
   └ dev
@@ -2280,10 +2276,7 @@ external_aws_account_ids_with_write_access = []
 force_destroy = false
 ----
 
-Configure the backend https://www.terraform.io/docs/backends/[backend] you want to use to store your Terraform state.
-The https://www.terraform.io/docs/backends/types/s3.html[S3 backend] is usually the best choice for AWS accounts. If
-you're using Terragrunt, the backend settings should be defined in a root `terragrunt.hcl` file that you `include` in
-each child `terragrunt.hcl`:
+Configure your Terraform backend:
 
 .infrastructure-live/stage/_global/iam/terragrunt.hcl
 [source,hcl]
@@ -2293,10 +2286,10 @@ include {
 }
 ----
 
-Since you already deleted the root user's access keys, this time, you should authenticate as your IAM user, making
-sure to set the MFA token on the CLI, _and_ assume a role in the stage account! See
+Authenticate to each child account by (a) authenticating to the security account (b) assuming an IAM role in the child
+account and (c) using an MFA token. This can be fairly complicated to do, so check out
 https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[A Comprehensive Guide to Authenticating to AWS on the Command Line]
-for instructions on how to do that.
+for instructions.
 
 Finally, deploy the `cloudtrail` module by running `terraform apply -var-file=<your-file>.tfvars` or, if using
 Terragrunt, by running `terragrunt apply`:
@@ -2305,6 +2298,8 @@ Terragrunt, by running `terragrunt apply`:
 $ cd infrastructure-live/stage/_global/cloudtrail
 $ terragrunt apply
 ----
+
+Remember to repeat this process in the other child accounts too!
 
 [[next_steps]]
 == Next steps
