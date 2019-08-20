@@ -874,15 +874,38 @@ a.caret-right{
   }
 }
 
+.admonitionblock  {
+  border-top: 11px solid #06a6fd;
+  background-color: #f5f9fa;
+  padding: 4% 18%;
+  font-size: 12px;
+}
+
 // Deployement guides
-.sect1 {
-  padding: 1% 5%;
-  & code {
-    background-color: #e6f6fe;
-    color: #000;
-  }
+.post-section-white {
+  font-family: sans-serif;
+  background-color: #fff;
+  position: relative;
+  color: #000;
+  padding: 2% 5%;
   & p {
     font-size: 16px;
+    letter-spacing: 0.42px;
+    line-height: 22px;
+    & code {
+      background-color: #e6f6fe;
+      color: #000;
+    }
+  }
+  & .post-title {
+    font-size: 27px;
+    padding: 0 5%;
+    & p {
+      font-size: small;
+      color: #736c6c;
+      font-weight: 600;
+      margin-bottom: 0px;
+    }
   }
   & .dlist {
     padding: 0 4%;
@@ -894,14 +917,31 @@ a.caret-right{
   & h2 {
     border-bottom: solid 1px #07a7fc;
   }
+  & h4, h3, h2,label, a {
+    color: #4e4c4c;
+  }
+  & .aside-wrapper {
+    background: white;
+    padding-top: 30%;
+    line-height: 2.5em;
+    font-weight: bold;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+  }
+  & section {
+    margin: 3%;
+  }
 }
 
-@media (min-width: 768px) {
-  .col-sm-2-5 {
-      float: left;
+#all-guides {
+  & a {
+    color: #06a6fd;
+    font-weight: bold;
   }
-  .col-sm-2-5 {
-    width: 20.83333%;
+  & a:hover {
+    cursor: pointer;
   }
 }
 
@@ -938,7 +978,7 @@ a.caret-right{
     border-radius: 5px;
     cursor: pointer;
     & img {
-      width: 50%;
+      width: 55px;
       margin: 22px;
     }
     & .card-title {
@@ -953,20 +993,36 @@ a.caret-right{
     }
   }
   & .newsletter {
-    margin: 10%;
-    font-size: 20px;
+    margin: 6%;
+    font-size: 16px;
     color: #4e4c4c;
     & input {
+      background-color: #f5f9fa;
+      border: none;
+      border-top-left-radius: 20px;
+      border-bottom-left-radius: 20px;
+      font-size: 16px;
+      color: black;
       overflow: hidden;
-      border-radius: 23px;
-      width: 55%;
+      padding-right: 16px;
     }
-    & button {
-      margin-left: -35px;
+    & label {
+      font-size: 28px;
+      line-height: 40px;
+      letter-spacing: 0.79px;
+      font-weight: 500;
+    }
+    & img {
+      margin-bottom: 2%;
+    }
+    & .btn-group>.btn {
       text-decoration: none;
       background: #07a7fc;
       font-size: 15px;
-      padding: 13px;
+      border-radius: 25px;
+      margin-left: -13px;
+      padding: 10px 24px;
+      position: relative;
     }
   }
 }
@@ -974,6 +1030,9 @@ a.caret-right{
 .cloud-filter {
   & .btn-group {
     height: 60px;
+  }
+  & .btn-group-toggle > .btn:hover, .btn-group-toggle:active > .btn:hover {
+    background: white;
   }
   & img {
       height: 100%;
@@ -990,7 +1049,9 @@ a.caret-right{
     width: 100%;
     & .form-control {
       background: #f5f9fa;
+      border-radius: 5px;
       border: 0px;
+      color: #4e4c4c;
     }
   }
   & .btn-group {
@@ -1001,6 +1062,7 @@ a.caret-right{
     }
   }
 }
+
 .searchbar{
   background-color: white;
   border-radius: 30px;
@@ -1031,15 +1093,15 @@ a.caret-right{
     color: #7b7d7e;
   }
   & button {
-    border-radius: 10px;
+    border-radius: 8px;
     color: #13cfe7;
     background: #e6f0f9;
     box-shadow: none;
-    padding: 0% 7%;
+    padding: 5px;
   }
   & button > label > a {
     color: #28adf9;
-    font-size: 20px;
+    font-size: 15px;
     padding: 15px;
   }
 }
@@ -1049,7 +1111,6 @@ a.caret-right{
   padding: 6px 10px;
   color: #000;
   border-radius: 5px;
-  margin: 0 1%;
   color: #06a6fd;
 }
 
@@ -1196,33 +1257,6 @@ a.caret-right{
   background-color: #ececec;
 }
 
-.section-white {
-  font-family: sans-serif;
-  background-color: #fff;
-  position: relative;
-  color: #000;
-  & .post-title {
-    font-size: 27px;
-    font-weight: bold;
-  }
-  & h4, h3, h2,label, a {
-    color: #4e4c4c;
-  }
-  & .aside-wrapper {
-    background: white;
-    padding-top: 30%;
-    line-height: 2.5em;
-    font-weight: bold;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-  }
-  & section {
-    margin: 3%;
-  }
-}
-
 #post {
   & h2 {
     color: #000;
@@ -1231,10 +1265,38 @@ a.caret-right{
 }
 
 .section-nav {
-  padding: 0;
+  @media (max-width: @screen-sm-min) {
+      visibility: hidden;
+      clear: both;
+      display: none;
+  }
+  margin-top: 3%;
+  padding: 20% 3%;
+  top: 0;
+  bottom: 0;
+  position: fixed;
+  overflow-y: scroll;
+  overflow-wrap: break-word;
+  z-index: 80%;
+  display: block;
+  z-index: 2;
+  width: 25%;
+  & li ul {
+    display: none;
+  }
   & li {
     list-style-type: none;
   }
+  & li:hover ul {
+    display: block;
+  }
+  & li > a:before {
+    content: '▼'; 
+    font-size: 0.8rem;
+    vertical-align: middle;
+    margin: 2px;
+  }
+  & li > a:only-child:before {content: ''; }
   & a{
     opacity: 0.6;
     color: #000000;
@@ -1243,6 +1305,32 @@ a.caret-right{
   & a:active, a:hover{
       color: #08a9fb;
       text-decoration: none;
+  }
+}
+
+.contact-us-card {
+  @media (max-width: @screen-sm-min) {
+    visibility: hidden;
+    clear: both;
+    display: none;
+  }
+  margin-top: 20%;
+  top: 0;
+  position: fixed;
+  background-color: white;
+  color: black;
+  box-shadow: 3px 4px #c5c2c2;
+  border-radius: 5px;
+  padding: 24px 20px;
+  & p {
+    color: black;
+    font-size: 14px
+  }
+  & .btn {
+    margin-top: 6%;
+    width: 100%;
+    border-radius: 6px;
+    font-size: 14px;
   }
 }
 
@@ -1260,6 +1348,10 @@ a.caret-right{
   background: url('../img/bg-header-squares.png') center bottom no-repeat, linear-gradient(#7cd7ff, #07a7fc, #57a1ea); 
   & label {
     font-size: 30px;
+  }
+  & img {
+    margin: -1%;
+    position: relative;
   }
   & button {
     padding: 7px 30px;

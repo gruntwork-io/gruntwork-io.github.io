@@ -1,19 +1,26 @@
 ---
 layout: post
+type: guide
 title: Deploying a Dockerized app on GCP/GKE
+permalink: /guides/:categories/:title
 logoUrl: /assets/img/guides/kubernetics_image.png
 excerpt: Before we can deploy a dockerized app, we need to first create one. For the purposes of this guide we will create a basic Node.js app that responds to requests on port 8080.
-prerequisiteTitle: In order to follow this guide, you will need
-prerequisite:
- - listItem: A GCP account with billing enabled. There is a free tier that includes $300 of free credit over a 12 month period.
- - listItem: Terraform v0.10.3 or later installed locally.
- - listItem: Docker v18.09.2 or later installed locally.
- - listItem: A recent version of the gcloud command-line tool.
- - listItem: A basic understanding of Node.js is also recommended.
 tags: ["gcp", "gke", "docker"]
+date: 2019-05-08
+categories: Docker
 toc: true
 ---
 
+## Prerequisite
+This guide walks you through deploying a dockerized app to a GKE cluster running on Google Cloud Platform.
+
+In order to follow this guide you will need:
+
+1. A GCP account with billing enabled. There is a [free tier](https://cloud.google.com/free/) that includes \$300 of free credit over a 12 month period.
+2. [Terraform](https://learn.hashicorp.com/terraform/getting-started/install.html) v0.10.3 or later installed locally.
+3. [Docker](https://www.docker.com/) v18.09.2 or later installed locally.
+4. A recent version of the [gcloud](https://cloud.google.com/sdk/gcloud/) command-line tool.
+5. A basic understanding of Node.js is also recommended.
 
 ## Creating a Basic App
 

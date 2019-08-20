@@ -2,39 +2,58 @@
 layout: default
 custom_js:
 - prism
+- guides
 ---
 
-<div class="main">
+<div>
   <div class="container-fluid section-ghostwhite">
-    <div class="row">
-      <div class="col-md-7 col-md-offset-3 section-white text-center">
-          <div class="col-md-6 col-md-offset-3">
-              <img src="{{ page.logoUrl }}" alt="post logo">
-              <label class="post-title">{{ page.title }}</label>
-              <p>
-                  {% assign words = content | number_of_words %}
-                  {% if words < 360 %}
-                    1 min read.
-                  {% else %}
-                    {{ words | divided_by:180 }} mins read.
-                  {% endif %} 
-                  Updated {{ page.date | date_to_string }}
-              </p>
-              {% if page.tags %}
-                {% for tag in page.tags %}
-                  <span class="badge badge-pill badge-default">{{tag}}</span>
-                {% endfor %}
-              {% endif %}
-            </div>
+    <div class="col-md-3">
+      <div id="all-guides">
+        <label class="pull-right" >
+          <a href="/guides">&lt; All Guides</a>
+        </label>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-md-3">
-          {% toc %}
-      </div>
-      <div class="col-md-7 section-white">
-          {{ content }}
+        <div id="toc">
+            {% toc %}
         </div>
+    </div>
+    <div class="col-md-7 post-section-white">
+        <div class="col-md-9 col-md-offset-2 post-title text-center">
+            <img src="{{ page.logoUrl }}" alt="post logo">
+            <label>{{ page.title }}</label>
+            <p>
+                {% assign words = content | number_of_words %}
+                {% if words < 360 %}
+                  1 min read.
+                {% else %}
+                  {{ words | divided_by:180 }} mins read.
+                {% endif %} 
+                Updated {{ page.date | date_to_string }}
+            </p>
+            {% if page.tags %}
+              {% for tag in page.tags %}
+                <span class="badge badge-pill badge-default">
+                  {% capture tag-name %}{{tag | upcase }}{% endcapture %}
+                  {% if tag-name=="AWS" or tag-name=="GCP"  or tag-name=="GKE" %} {{ tag-name }} {% else %} {{tag-name | capitalize}}{% endif %}</span>
+              {% endfor %}
+            {% endif %}
+          </div>
+          <div class="content">
+              {{ content }}
+          </div>
+
+    </div>
+    <div class="col-md-2">
+        <div class="card contact-us-card text-center">
+          <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <div class="card-body">
+              <p class="card-title">Want to learn more? Feel free to contact us for support</p>
+              <a href="#" class="btn btn-primary">Support</a>
+              <a href="#">Dismiss</a>
+            </div>
+          </div>
+    </div>
+    </div>
     </div>
   </div>
 </div>

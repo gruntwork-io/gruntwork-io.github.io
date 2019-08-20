@@ -1,13 +1,14 @@
 ---
 layout: post
+type: guide
 title: How to deploy a production-grade VPC on AWS
+permalink: /guides/:categories/:title
 logoUrl: /assets/img/guides/kubernetics_image.png
 excerpt: Learn how to configure subnets, route tables, Internet Gateways, NAT Gateways, NACLs, VPC Peering, and more. you would set up a physical network 
-categories: [guides]
-tags: [aws, networking, terraform]
+categories: Networking
+tags: [AWS, networking, terraform]
 toc: true
 ---
-
 
 == Intro
 
@@ -23,39 +24,39 @@ a logical partition of your AWS account, complete with its own IP addresses, sub
 The VPC serves three primary purposes:
 
 Networking::
-  The VPC is the basic networking and communication layer for your AWS account. Just about every AWS resource (e.g.,
-  EC2 instances, RDS databases, ELBs, etc) runs in a VPC and the VPC determines how (or if) all those resources are
-  able to talk to each other.
+The VPC is the basic networking and communication layer for your AWS account. Just about every AWS resource (e.g.,
+EC2 instances, RDS databases, ELBs, etc) runs in a VPC and the VPC determines how (or if) all those resources are
+able to talk to each other.
 
 Security::
-  The VPC is also the basic security layer for your AWS account. As it controls all networking and communication,
-  it's your first line of defense against attackers, protecting your resources from attackers and unwanted access.
+The VPC is also the basic security layer for your AWS account. As it controls all networking and communication,
+it's your first line of defense against attackers, protecting your resources from attackers and unwanted access.
 
 Partitioning::
-  VPCs also give you a way to create separate, logical partitions within an AWS account. For example, you could have
-  one VPC for a staging environment and a separate VPC for a production environment. You can also connect VPCs to
-  other networks, such as connecting your VPC to your corporate intranet via a VPN connection, so that everyone in
-  your office and all the resources in your AWS account can access the same IPs and domain names.
+VPCs also give you a way to create separate, logical partitions within an AWS account. For example, you could have
+one VPC for a staging environment and a separate VPC for a production environment. You can also connect VPCs to
+other networks, such as connecting your VPC to your corporate intranet via a VPN connection, so that everyone in
+your office and all the resources in your AWS account can access the same IPs and domain names.
 
 === What you'll learn in this guide
 
 This guide consists of three main sections:
 
 <<core_concepts>>::
-  An overview of the core concepts you need to understand to use VPCs, including subnets, route tables, security
-  groups, NACLs, peering connections, and endpoints.
+An overview of the core concepts you need to understand to use VPCs, including subnets, route tables, security
+groups, NACLs, peering connections, and endpoints.
 
 <<production_grade_design>>::
-  An overview of how to configure a secure, scalable, highly available VPC that you can rely on in production. To get a
-  sense of what production-grade means, check out the production-grade infrastructure checklist.
+An overview of how to configure a secure, scalable, highly available VPC that you can rely on in production. To get a
+sense of what production-grade means, check out the production-grade infrastructure checklist.
 
 // TODO: link to checklist
 
 <<deployment_walkthrough>>::
-  A step-by-step guide to deploying a production-grade VPC in AWS using code from the Gruntwork Service Catalog.
+A step-by-step guide to deploying a production-grade VPC in AWS using code from the Gruntwork Service Catalog.
 
 <<next_steps>>::
-  What to do once you've got your VPC(s) deployed.
+What to do once you've got your VPC(s) deployed.
 
 Feel free to read the guide start to finish or skip around to whatever part interests you!
 
@@ -75,40 +76,40 @@ Feel free to read the guide start to finish or skip around to whatever part inte
 A quick overview of VPCs:
 
 Before VPCs::
-  When AWS first launched, it did not support VPCs, so every resource you launched in your AWS account (e.g., every EC2
-  instance) was effectively in a single, large, public IP address space that could be accessed by anyone, anywhere,
-  over the public Internet (unless you blocked it using security groups and OS-level firewalls):
+When AWS first launched, it did not support VPCs, so every resource you launched in your AWS account (e.g., every EC2
+instance) was effectively in a single, large, public IP address space that could be accessed by anyone, anywhere,
+over the public Internet (unless you blocked it using security groups and OS-level firewalls):
 +
 .Before VPCs, all your AWS resources were in one global IP address space anyone could access (unless you blocked them via security groups or firewalls)
-image::_docs/no-vpc-diagram.png[]
+image::../assets/img/guides/vpc/no-vpc-diagram.png[]
 +
 From a security standpoint, this represented a step backwards compared to traditional data centers where you could
 configure most of your servers so they were physically unreachable from the public Internet.
 
 VPCs are introduced::
-  Around 2009, AWS added support for VPCs to allow you to better isolate your resources. For example, you could create
-  one VPC for a staging environment that is completely isolated from (that is, has no way to talk to) a separate VPC for
-  your production environment:
+Around 2009, AWS added support for VPCs to allow you to better isolate your resources. For example, you could create
+one VPC for a staging environment that is completely isolated from (that is, has no way to talk to) a separate VPC for
+your production environment:
 +
 .With VPCs, you could separate your AWS resources into completely isolated networks
-image::_docs/vpc-no-subnets-diagram.png[]
+image::../assets/img/guides/vpc/vpc-no-subnets-diagram.png[]
 +
 You'll see later in this guide how you can use VPCs, route tables, subnets, security groups, and NACLs to get
 fine-grained control over what network traffic can or can't reach your AWS resources.
 
 Default VPCs::
-  Every AWS account created after 2013 requires that you use a VPC for just about all resources. If you don't specify a
-  VPC, your resource will be deployed into the
-  https://docs.aws.amazon.com/vpc/latest/userguide/default-vpc.html:[_Default VPC_] in your AWS account. The Default VPC
-  is great for learning and experimenting, but it is not a good choice for production use cases. That's because the
-  default settings in the Default VPC makes all your resources accessible on the public Internet, a bit like having no
-  VPC at all. You can modify those settings to lock things down more, but it's a lot of settings to change, and as
-  nothing in the Default VPC is managed as code (it's all automatically created for you behind the scenes by AWS),
-  you're typically better off creating a new, custom VPC.
+Every AWS account created after 2013 requires that you use a VPC for just about all resources. If you don't specify a
+VPC, your resource will be deployed into the
+https://docs.aws.amazon.com/vpc/latest/userguide/default-vpc.html:[_Default VPC_] in your AWS account. The Default VPC
+is great for learning and experimenting, but it is not a good choice for production use cases. That's because the
+default settings in the Default VPC makes all your resources accessible on the public Internet, a bit like having no
+VPC at all. You can modify those settings to lock things down more, but it's a lot of settings to change, and as
+nothing in the Default VPC is managed as code (it's all automatically created for you behind the scenes by AWS),
+you're typically better off creating a new, custom VPC.
 
 Custom VPCs::
-  For any production use cases, you should create a _custom VPC_. In the <<production_grade_design>> section, we'll go
-  over how to configure a VPC with the kind of security, scalability, and high availability you need in production.
+For any production use cases, you should create a _custom VPC_. In the <<production_grade_design>> section, we'll go
+over how to configure a VPC with the kind of security, scalability, and high availability you need in production.
 
 [[vpc_ip_addresses]]
 === VPC IP addresses
@@ -116,24 +117,24 @@ Custom VPCs::
 Here's how IP addresses work with AWS VPCs:
 
 Private IP addresses::
-  Every VPC defines an isolated network that has its own range of _private IP addresses_. For example, the Default VPC
-  in AWS is configured to use all the IP addresses between `172.31.0.0` and `172.31.255.255`; if you create a custom
-  VPC, you can pick a custom IP address range to use, such as `10.10.0.0` to `10.10.255.255`. These private IPs should
-  be from the IP address ranges defined in http://www.faqs.org/rfcs/rfc1918.html[RFC 1918] (more on this later).
-  Private IP addresses are only accessible from within the VPC, and not from the public Internet.
+Every VPC defines an isolated network that has its own range of _private IP addresses_. For example, the Default VPC
+in AWS is configured to use all the IP addresses between `172.31.0.0` and `172.31.255.255`; if you create a custom
+VPC, you can pick a custom IP address range to use, such as `10.10.0.0` to `10.10.255.255`. These private IPs should
+be from the IP address ranges defined in http://www.faqs.org/rfcs/rfc1918.html[RFC 1918] (more on this later).
+Private IP addresses are only accessible from within the VPC, and not from the public Internet.
 
 Public IP addresses::
-  VPCs can also optionally be configured to assign _public IP addresses_ to your resources (as is the case with the
-  Default VPC). Public IPs are not associated with your VPC or even your AWS account; instead, they come from a pool of
-  IP addresses shared by AWS across all of its customers
-  (see https://docs.aws.amazon.com/general/latest/gr/aws-ip-ranges.html[AWS IP Address Ranges]), so the IPs you get are
-  unpredictable, and may change (if you need consistent, predictable public IP addresses, you will need to use
-  https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html[elastic IP addresses]).
+VPCs can also optionally be configured to assign _public IP addresses_ to your resources (as is the case with the
+Default VPC). Public IPs are not associated with your VPC or even your AWS account; instead, they come from a pool of
+IP addresses shared by AWS across all of its customers
+(see https://docs.aws.amazon.com/general/latest/gr/aws-ip-ranges.html[AWS IP Address Ranges]), so the IPs you get are
+unpredictable, and may change (if you need consistent, predictable public IP addresses, you will need to use
+https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html[elastic IP addresses]).
 
 Assigning IP addresses::
-  AWS will automatically assign IP addresses to resources you launch in a VPC. For example, in the Default VPC,
-  one EC2 instance you launch might get the private IP address `172.31.0.2` and public IP address `203.0.113.25`,
-  while another instance might get the private IP address `172.31.5.3` and the public IP address `54.154.202.112`.
+AWS will automatically assign IP addresses to resources you launch in a VPC. For example, in the Default VPC,
+one EC2 instance you launch might get the private IP address `172.31.0.2` and public IP address `203.0.113.25`,
+while another instance might get the private IP address `172.31.5.3` and the public IP address `54.154.202.112`.
 
 [[cidr_notation]]
 === CIDR notation
@@ -148,31 +149,31 @@ you:
 
 . Convert the IP address to binary: e.g., `172.31.0.0` in binary is `10101100.00011111.00000000.00000000`.
 . The mask tells you how many bits of the binary IP address identify the network (and stay constant for everything in
-  that network) and how many bits identify unique hosts (and therefore, can vary). For a `/16` mask, the
-  left-most 16 bits stay constant, while the right-most 16 bits are allowed to vary.
+that network) and how many bits identify unique hosts (and therefore, can vary). For a `/16` mask, the
+left-most 16 bits stay constant, while the right-most 16 bits are allowed to vary.
 . Putting that together, `172.31.0.0/16` represents all IP addresses from `10101100.00011111.00000000.00000000`
-  (`172.31.0.0`) to `10101100.00011111.11111111.11111111` (`172.31.255.255`).
+(`172.31.0.0`) to `10101100.00011111.11111111.11111111` (`172.31.255.255`).
 
 A few handy notes:
 
 CIDR calculators::
-  You can use http://cidr.xyz/[online CIDR calculators] to quickly do the math for you.
+You can use http://cidr.xyz/[online CIDR calculators] to quickly do the math for you.
 
 CIDR blocks::
-  IP addresses expressed in CIDR notation are often called CIDR Blocks.
+IP addresses expressed in CIDR notation are often called CIDR Blocks.
 
 All IPs::
-  The CIDR Block `0.0.0.0/0` corresponds to all IP address.
+The CIDR Block `0.0.0.0/0` corresponds to all IP address.
 
 Single IPs::
-  To specify a single IP address (e.g., the IP of a specific server), use the `/32` mask: e.g., `4.4.4.4/32` is the
-  CIDR notation for just one IP, `4.4.4.4`.
+To specify a single IP address (e.g., the IP of a specific server), use the `/32` mask: e.g., `4.4.4.4/32` is the
+CIDR notation for just one IP, `4.4.4.4`.
 
 [[subnets]]
 === Subnets
 
 .VPCs partitioned into multiple subnets: public, private (services), private (persistence)
-image::_docs/vpc-subnets-diagram.png[]
+image::../assets/img/guides/vpc/vpc-subnets-diagram.png[]
 
 Each VPC is partitioned into one or more _https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Subnets.html:[subnets]_
 (sub-networks). Each subnet controls a portion of the VPC's CIDR range. For example, a VPC with the CIDR block
@@ -298,16 +299,16 @@ port range.
 However, there are two main differences with NACLs:
 
 Allow/Deny::
-  Each NACL rule can either `ALLOW` or `DENY` the traffic defined in that rule.
+Each NACL rule can either `ALLOW` or `DENY` the traffic defined in that rule.
 
 Stateful/Stateless::
-  Security groups are _stateful_, so if have a rule that allows an inbound connection on, say, port 80, the security
-  group will automatically also open up an outbound port for that specific connection so it can respond. With a NACL,
-  if you have a rule that allows an inbound connection on port 80, that connection will not be able to respond unless
-  you also manually add another rule that allows outbound connections for the response. You normally don't know exactly
-  which port will be used to respond: these are called
-  _https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html#nacl-ephemeral-ports[ephemeral ports]_), and
-  the rules depend on the operating system.
+Security groups are _stateful_, so if have a rule that allows an inbound connection on, say, port 80, the security
+group will automatically also open up an outbound port for that specific connection so it can respond. With a NACL,
+if you have a rule that allows an inbound connection on port 80, that connection will not be able to respond unless
+you also manually add another rule that allows outbound connections for the response. You normally don't know exactly
+which port will be used to respond: these are called
+_https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html#nacl-ephemeral-ports[ephemeral ports]_), and
+the rules depend on the operating system.
 +
 For example, the networking stack on Linux usually picks any available port
 from the range 32768-61000, where as Windows Server 2003 uses 1025-5000, NAT Gateways use 1024-65535, and so on.
@@ -320,7 +321,7 @@ uses port 80), and locking down source/destination IP addresses.
 === VPC Peering
 
 .Multiple VPCs connected via VPC peering
-image::_docs/vpc-diagram.png[]
+image::../assets/img/guides/vpc/vpc-diagram.png[]
 
 Normally, you use VPCs to create isolated networks, so the resources in one VPC have no way to access the resources in
 another VPC. _https://docs.aws.amazon.com/vpc/latest/peering/what-is-vpc-peering.html[VPC Peering]_ is a networking
@@ -363,18 +364,18 @@ domain names (e.g., `s3.us-east-1.amazonaws.com`) automatically route to these e
 There are two types of endpoints, each of which support different AWS services:
 
 Gateway endpoints::
-  These are the original endpoints AWS created. They are free, but only support S3 and DynamoDB.
+These are the original endpoints AWS created. They are free, but only support S3 and DynamoDB.
 
 Interface endpoints::
-  These are the new types of endpoints. They are backed by https://aws.amazon.com/privatelink/[PrivateLink], which is
-  a paid service, and include support for CloudTrail, Secrets Manager, EC2, SNS, and many other services
-  (https://docs.aws.amazon.com/vpc/latest/userguide/vpc-endpoints.html[full list]).
+These are the new types of endpoints. They are backed by https://aws.amazon.com/privatelink/[PrivateLink], which is
+a paid service, and include support for CloudTrail, Secrets Manager, EC2, SNS, and many other services
+(https://docs.aws.amazon.com/vpc/latest/userguide/vpc-endpoints.html[full list]).
 
 [[regions_azs]]
 === Regions and availability zones
 
 .AWS regions and availability zones
-image::_docs/aws-regions.png[]
+image::../assets/img/guides/vpc/aws-regions.png[]
 
 AWS has data centers all over the world, grouped into regions and availability zones. An _AWS region_ is a separate
 geographic area, such as `us-east-2` (Ohio), `eu-west-1` (Ireland), and `ap-southeast-2` (Sydney). Within each region,
@@ -401,13 +402,13 @@ With all the core concepts out of the way, let's now discuss how to configure a 
 something like this:
 
 .A production-grade VPC setup
-image::_docs/vpc-diagram.png[]
+image::../assets/img/guides/vpc/vpc-diagram.png[]
 
 [[defense_in_depth]]
 === Defense in depth
 
 .Aerial view of Beaumaris Castle, showing multiple layers of walls for defense. Crown copyright 2016.
-image::_docs/castle.jpeg[]
+image::../assets/img/guides/vpc/castle.jpeg[]
 
 People make mistakes all the time: forgetting to remove accounts, keeping ports open, including test credentials in
 production code, etc. Rather than living in an idealized model where we assume people won't make mistakes, you can
@@ -443,25 +444,25 @@ for instructions.
 The second layer of defense is to use separate, isolated VPCs:
 
 Application VPCs::
-  Each of the environments where you deploy applications (e.g.,dev, stage, prod) should live in a separate VPC. In
-  fact, as mentioned in the previous section, the gold standard is that each of these environments and their associated
-  VPCs live in completely separate AWS accounts. We'll call each of these VPCs your _application VPCs_.
+Each of the environments where you deploy applications (e.g.,dev, stage, prod) should live in a separate VPC. In
+fact, as mentioned in the previous section, the gold standard is that each of these environments and their associated
+VPCs live in completely separate AWS accounts. We'll call each of these VPCs your _application VPCs_.
 
 Management VPC::
-  You will also want a separate VPC for DevOps tooling such as a CI server (e.g., Jenkins) and a bastion host
-  (discussed later in this guide). We'll call this the _management VPC_. You can connect the management VPC to each of
-  your application VPCs using VPC peering. This (a) gives you more fine grained control over which of your DevOps
-  tooling can talk to the application VPCs and (b) allows you to use a single management VPC with multiple application
-  VPCs without allowing connections between the application VPCs themselves.
+You will also want a separate VPC for DevOps tooling such as a CI server (e.g., Jenkins) and a bastion host
+(discussed later in this guide). We'll call this the _management VPC_. You can connect the management VPC to each of
+your application VPCs using VPC peering. This (a) gives you more fine grained control over which of your DevOps
+tooling can talk to the application VPCs and (b) allows you to use a single management VPC with multiple application
+VPCs without allowing connections between the application VPCs themselves.
 
 VPC sizing::
-  AWS VPCs allow masks between `/16` (65,536 IPs) and `/28` (16 IPs). For most use cases, we recommend using `/16`, as
-  that gives you a large, contiguous block of IPs that you're unlikely to exhaust.
+AWS VPCs allow masks between `/16` (65,536 IPs) and `/28` (16 IPs). For most use cases, we recommend using `/16`, as
+that gives you a large, contiguous block of IPs that you're unlikely to exhaust.
 
 IP addresses::
-  The Internet Assigned Numbers Authority (IANA) has three blocks of the IP addresses reserved for use as
-  private IPs (http://www.faqs.org/rfcs/rfc1918.html[RFC 1918]). Your VPCs should all use CIDR blocks that fall into
-  one of these IP address ranges:
+The Internet Assigned Numbers Authority (IANA) has three blocks of the IP addresses reserved for use as
+private IPs (http://www.faqs.org/rfcs/rfc1918.html[RFC 1918]). Your VPCs should all use CIDR blocks that fall into
+one of these IP address ranges:
 +
 ----
 10.0.0.0    - 10.255.255.255
@@ -470,34 +471,34 @@ IP addresses::
 ----
 
 Unique CIDR blocks::
-  Every VPC you have should have a unique, non-overlapping CIDR block: e.g., dev could be `10.0.0.0/16`, production
-  could be `10.10.0.0/16`, management could be `10.20.0.0/16`, and so on. Overlapping CIDR blocks should be avoided as
-  they will prevent you from being able to peer VPCs together and from connecting your VPCs to other data centers or
-  your corporate intranet via site-to-site VPN connections.
+Every VPC you have should have a unique, non-overlapping CIDR block: e.g., dev could be `10.0.0.0/16`, production
+could be `10.10.0.0/16`, management could be `10.20.0.0/16`, and so on. Overlapping CIDR blocks should be avoided as
+they will prevent you from being able to peer VPCs together and from connecting your VPCs to other data centers or
+your corporate intranet via site-to-site VPN connections.
 
 [[multiple_subnets]]
 === Multiple subnet tiers
 
 .Each VPC is partitioned into multiple tiers of subnets
-image::_docs/subnets-diagram.png[]
+image::../assets/img/guides/vpc/subnets-diagram.png[]
 
 The third layer of defense is to use separate _subnet tiers_, where each tier contains multiple subnets configured in
 the same way. We recommend the following three theirs for most use cases:
 
 Public tier::
-  This tier contains public subnets, so any resources in this tier will be directly addressable from the public
-  Internet. The only things you should run in this tier are highly locked down services that must be exposed directly
-  to the public, including load balancers and the bastion host.
+This tier contains public subnets, so any resources in this tier will be directly addressable from the public
+Internet. The only things you should run in this tier are highly locked down services that must be exposed directly
+to the public, including load balancers and the bastion host.
 
 Private application tier::
-  This tier contains private subnets, so any resources in tier will not be directly addressable from the public
-  Internet. This tier should be used for all of your applications: e.g., EC2 instances, Docker containers, and so on.
+This tier contains private subnets, so any resources in tier will not be directly addressable from the public
+Internet. This tier should be used for all of your applications: e.g., EC2 instances, Docker containers, and so on.
 
 Private persistence tier::
-  This tier also contains private subnets, so any resources in tier will not be directly addressable from the public
-  Internet. This tier should be used for all of your data stores: e.g., relational databases, caches, NoSQL stores, and
-  so on. This allows you to add additional additional layers of defense for your data, as described in the next
-  section. If you have no data stores (e.g., in a management VPC), this tier can be omitted.
+This tier also contains private subnets, so any resources in tier will not be directly addressable from the public
+Internet. This tier should be used for all of your data stores: e.g., relational databases, caches, NoSQL stores, and
+so on. This allows you to add additional additional layers of defense for your data, as described in the next
+section. If you have no data stores (e.g., in a management VPC), this tier can be omitted.
 
 Each tier should contain one subnet per availability zone in your chosen AWS region so that resources in that tier can
 take advantage of all availability zones. So, if you picked the `us-east-2` region, which has three availability zones
@@ -511,24 +512,24 @@ discussed in the next section.
 === Security groups and NACLs
 
 .Security group settings for the different subnet tiers
-image::_docs/peering-diagram.png[]
+image::../assets/img/guides/vpc/peering-diagram.png[]
 
 Use security groups and NACLs to configure the following rules for each subnet tier:
 
 Public tier::
-  The public tier should allow all requests.
+The public tier should allow all requests.
 
 Private application tier::
-  The private application tier should only allow requests to/from the public tier, private application tier, private
-  persistence tier, and the management VPC. Notably, requests from the public Internet and other subnets are not
-  allowed.
+The private application tier should only allow requests to/from the public tier, private application tier, private
+persistence tier, and the management VPC. Notably, requests from the public Internet and other subnets are not
+allowed.
 
 Private persistence tier::
-  The private persistence tier should only allow requests to/from the private application tier, private persistence
-  tier, and optionally the management VPC (e.g., if you need to run schema migrations during a CI build). Notably,
-  requests from the public Internet and other subnets—including the public subnet tier—are not allowed. This provides
-  an extra layer of defense for your data, which is the most valuable, irreplaceable, and sought-after resource at most
-  companies.
+The private persistence tier should only allow requests to/from the private application tier, private persistence
+tier, and optionally the management VPC (e.g., if you need to run schema migrations during a CI build). Notably,
+requests from the public Internet and other subnets—including the public subnet tier—are not allowed. This provides
+an extra layer of defense for your data, which is the most valuable, irreplaceable, and sought-after resource at most
+companies.
 
 This is a defense-in-depth strategy in action: attackers outside your VPC have no direct access to any of your
 applications or data stores, only to the resources in your public subnets, such as load balancers, which should be
@@ -543,15 +544,15 @@ If the resources in your VPC need to be able to reach the outside world, you'll 
 NAT Gateway:
 
 Internet Gateway::
-  Deploy an Internet Gateway and configure a fallback route (i.e., `0.0.0.0/0`) in your public subnets to send traffic
-  to this Gateway. You only need one Internet Gateway per VPC, as AWS will handle auto scaling and auto healing for this
-  managed service completely automatically.
+Deploy an Internet Gateway and configure a fallback route (i.e., `0.0.0.0/0`) in your public subnets to send traffic
+to this Gateway. You only need one Internet Gateway per VPC, as AWS will handle auto scaling and auto healing for this
+managed service completely automatically.
 
 NAT Gateways::
-  If you have resources in your private application or private persistence subnets that need to make outbound calls to
-  the public Internet (e.g., to call a 3rd party API), you'll need to deploy one or more NAT Gateways in your public
-  subnets. In pre-prod environments, a single NAT Gateway is probably enough, but to get high availability in
-  production, you may want to deploy multiple NAT Gateways, each one in a different availability zone.
+If you have resources in your private application or private persistence subnets that need to make outbound calls to
+the public Internet (e.g., to call a 3rd party API), you'll need to deploy one or more NAT Gateways in your public
+subnets. In pre-prod environments, a single NAT Gateway is probably enough, but to get high availability in
+production, you may want to deploy multiple NAT Gateways, each one in a different availability zone.
 +
 Each NAT Gateway should get an Elastic IP Address so that it has a consistent IP address you (and your
 customers/partners) can use in firewalls. In each of your private subnets, you'll need to configure a fallback route
@@ -590,33 +591,33 @@ Let's now walk through how to deploy a production-grade VPC using the Gruntwork 
 This walkthrough has the following pre-requistes:
 
 Gruntwork Service Catalog::
-  This guide uses code from the https://gruntwork.io/infrastructure-as-code-library/[Gruntwork Service Catalog], as it
-  implements most of the production-grade design for you out of the box.
+This guide uses code from the https://gruntwork.io/infrastructure-as-code-library/[Gruntwork Service Catalog], as it
+implements most of the production-grade design for you out of the box.
 +
 IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access this code.
 
 Terraform::
-  This guide uses https://www.terraform.io/[Terraform] to define and manage all the infrastructure as code. If you're
-  not familiar with Terraform, check out https://blog.gruntwork.io/a-comprehensive-guide-to-terraform-b3d32832baca[A
-  Comprehensive Guide to Terraform] and https://training.gruntwork.io/p/terraform[A Crash Course on Terraform].
+This guide uses https://www.terraform.io/[Terraform] to define and manage all the infrastructure as code. If you're
+not familiar with Terraform, check out https://blog.gruntwork.io/a-comprehensive-guide-to-terraform-b3d32832baca[A
+Comprehensive Guide to Terraform] and https://training.gruntwork.io/p/terraform[A Crash Course on Terraform].
 
 // TODO: Create a guide for configuring AWS accounts: e.g., AWS Orgs, CloudTrail, AWS Config, KMS, etc.
 AWS accounts::
-  This guide deploys infrastructure into one or more AWS accounts. Check out `How to configure a production-grade AWS
+This guide deploys infrastructure into one or more AWS accounts. Check out `How to configure a production-grade AWS
   account` guide _(coming soon!)_ for instructions. You will also need to be able to authenticate to these accounts on
-  the CLI: check out
-  https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[A Comprehensive Guide to Authenticating to AWS on the Command Line]
-  for instructions.
+the CLI: check out
+https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[A Comprehensive Guide to Authenticating to AWS on the Command Line]
+for instructions.
 
 Git repos::
-  This guide assumes you have configured two Git repos for your Terraform code: an `infrastructure-modules` repo which
-  contains reusable Terraform modules and an `infrastructure-live` repo that deploys the modules from
+This guide assumes you have configured two Git repos for your Terraform code: an `infrastructure-modules` repo which
+contains reusable Terraform modules and an `infrastructure-live` repo that deploys the modules from
   `infrastructure-modules` into your live environments (i.e., into dev, stage, prod, etc). This is the recommended repo
-  structure for using https://github.com/gruntwork-io/terragrunt[Terragrunt] (see
-  https://github.com/gruntwork-io/terragrunt#motivation[keep your code DRY] for the motivation behind this folder
-  structure), but take note that neither this repo structure nor Terragrunt are required for this guide! Everything in
-  this guide will work just fine in any other repo structure you choose (e.g., everything in one repo) and with vanilla
-  Terraform (or Terraform Enterprise).
+structure for using https://github.com/gruntwork-io/terragrunt[Terragrunt] (see
+https://github.com/gruntwork-io/terragrunt#motivation[keep your code DRY] for the motivation behind this folder
+structure), but take note that neither this repo structure nor Terragrunt are required for this guide! Everything in
+this guide will work just fine in any other repo structure you choose (e.g., everything in one repo) and with vanilla
+Terraform (or Terraform Enterprise).
 
 [[deploy_mgmt_vpc]]
 === Deploy a management VPC
@@ -730,11 +731,11 @@ file for reference.
 To test your `vpc-mgmt` module manually:
 
 . Configure a _sandbox environment_ where you can deploy infrastructure without affecting any other environments
-  (especially production!). Typically, this should be a separate AWS account. The gold standard is one AWS account per
-  developer on your team. This allows your developers to test infrastructure changes without having to worry at all
-  about those changes interfering or causing issues for other team members.
+(especially production!). Typically, this should be a separate AWS account. The gold standard is one AWS account per
+developer on your team. This allows your developers to test infrastructure changes without having to worry at all
+about those changes interfering or causing issues for other team members.
 . Create an _example_ of how to use your own `vpc-mgmt` wrapper module. This example will configure this module with
-  values that make manual testing easy:
+values that make manual testing easy:
 +
 .infrastructure-modules/examples/networking/vpc-mgmt/main.tf
 [source,hcl]
@@ -756,15 +757,15 @@ module "vpc" {
 To create automated tests for your `vpc-mgmt` module:
 
 . Configure a _testing environment_ where you can deploy infrastructure without affecting any other environments
-  (especially production!). Typically, this should be a separate AWS account—separate even from the one you use for
-  manual testing, as automated testing accounts need to be cleaned up often.
+(especially production!). Typically, this should be a separate AWS account—separate even from the one you use for
+manual testing, as automated testing accounts need to be cleaned up often.
 . Create an automated test for the same example code you were using for manual testing. The test will automate the same
-  steps you used for manual testing: that is, set some variables, run `terraform apply`, validate the infrastructure
-  works, and then run `terraform destroy`. Check out https://github.com/gruntwork-io/terratest/[Terratest] for a
-  library of helpers that make this style of testing easier. Take a look at the
-  https://github.com/gruntwork-io/module-vpc/tree/master/test[automated tests for module-vpc] for examples of how to
-  create automated tests for VPC code. And for a complete guide to automated testing, grab a copy of
-  _https://www.terraformupandrunning.com/[Terraform: Up & Running, 2nd edition]_.
+steps you used for manual testing: that is, set some variables, run `terraform apply`, validate the infrastructure
+works, and then run `terraform destroy`. Check out https://github.com/gruntwork-io/terratest/[Terratest] for a
+library of helpers that make this style of testing easier. Take a look at the
+https://github.com/gruntwork-io/module-vpc/tree/master/test[automated tests for module-vpc] for examples of how to
+create automated tests for VPC code. And for a complete guide to automated testing, grab a copy of
+_https://www.terraformupandrunning.com/[Terraform: Up & Running, 2nd edition]_.
 . Configure your automated tests to run after every commit.
 
 To keep your AWS bill from exploding, consider setting up a tool such as
@@ -791,20 +792,20 @@ $ git push --follow-tags
 The next step is to deploy your wrapper `vpc-mgmt` module. You can either deploy it in one AWS account or multiple:
 
 One management VPC::
-  You could deploy a single management VPC and then peer it to all of your application VPCs. This is the simplest
-  approach, but using the same management VPC for pre-production and production environments carries some risk: first,
-  most companies are more lax with security for pre-production, but if an attacker can leverage that to get access to this
-  single management VPC, they will also have access to prod; second, having this single management VPC makes it more
-  likely that someone on your team will accidentally affect production while they think they are working on
-  pre-production (e.g., delete a database table in the wrong environment!).
+You could deploy a single management VPC and then peer it to all of your application VPCs. This is the simplest
+approach, but using the same management VPC for pre-production and production environments carries some risk: first,
+most companies are more lax with security for pre-production, but if an attacker can leverage that to get access to this
+single management VPC, they will also have access to prod; second, having this single management VPC makes it more
+likely that someone on your team will accidentally affect production while they think they are working on
+pre-production (e.g., delete a database table in the wrong environment!).
 
 Multiple management VPCs::
-  An alternative is to run multiple management VPCs: typically, you have one that is peered to all of your
-  pre-production environments and one that is peered to all your production environments; alternatively, you could have
-  one management VPC for each of your environments. This way, you can keep production and non-production environments
-  completely separate, reducing the risk from both external attackers and mistakes made by internal employees. The
-  drawback to this approach is that you have more infrastructure to manage: more VPCs, more peering connections, more
-  route table entries, more bastion hosts, and more credentials.
+An alternative is to run multiple management VPCs: typically, you have one that is peered to all of your
+pre-production environments and one that is peered to all your production environments; alternatively, you could have
+one management VPC for each of your environments. This way, you can keep production and non-production environments
+completely separate, reducing the risk from both external attackers and mistakes made by internal employees. The
+drawback to this approach is that you have more infrastructure to manage: more VPCs, more peering connections, more
+route table entries, more bastion hosts, and more credentials.
 
 [[configure_wrapper_module]]
 ==== Configure the wrapper module for each environment
@@ -817,8 +818,8 @@ In each account where you want to deploy a management VPC, you will need to:
 . *Prepare the module.* If you using Terraform directly, you will be running commands directly in
   `infrastructure-modules`. If you are using Terragrunt, you will need to create a `terragrunt.hcl` file in
   `infrastructure-live`. It should go under the file path `<ACCOUNT>/<REGION>/<ENVIRONMENT>/networking/vpc-mgmt`. For
-  example, if you are deploying this VPC in your "production" account, in the `us-east-2` region, and this is your
-  "prod" environment, the file path would look like this:
+example, if you are deploying this VPC in your "production" account, in the `us-east-2` region, and this is your
+"prod" environment, the file path would look like this:
 +
 ----
 infrastructure-live
@@ -842,8 +843,8 @@ terraform {
 ----
 +
 . *Set the variables for the VPC in that environment.* Namely, set a unique VPC name and CIDR block for each VPC, and
-  set the number of gateways based on your availability needs in that environment (typically, 1 NAT Gateway for
-  pre-production environments and 2-3 NAT Gateways for production environments). You can set these values in a
+set the number of gateways based on your availability needs in that environment (typically, 1 NAT Gateway for
+pre-production environments and 2-3 NAT Gateways for production environments). You can set these values in a
   `.tfvars` file or, if using Terragrunt, in the `inputs = { ... }` block of `terragrunt.hcl`. Example:
 +
 .infrastructure-live/production/us-east-2/prod/networking/vpc-mgmt/terragrunt.hcl
@@ -859,8 +860,8 @@ inputs = {
 ----
 +
 . *Configure the Terraform backend.* Configure the backend https://www.terraform.io/docs/backends/[backend] you want to
-  use to store your Terraform state. The https://www.terraform.io/docs/backends/types/s3.html[S3 backend] is usually
-  the best choice for AWS accounts. If you're using Terragrunt, the backend settings should be defined in a root
+use to store your Terraform state. The https://www.terraform.io/docs/backends/types/s3.html[S3 backend] is usually
+the best choice for AWS accounts. If you're using Terragrunt, the backend settings should be defined in a root
   `terragrunt.hcl` file that you `include` in each child `terragrunt.hcl`:
 +
 .infrastructure-live/production/us-east-2/prod/networking/vpc-mgmt/terragrunt.hcl
@@ -1088,8 +1089,8 @@ To create automated tests for your `vpc-app` module:
 
 . Configure a testing environment.
 . Create an automated test for the same example code you were using for manual testing. Use
-  https://github.com/gruntwork-io/terratest/[Terratest] to create automated tests for the example you were testing
-  manually.
+https://github.com/gruntwork-io/terratest/[Terratest] to create automated tests for the example you were testing
+manually.
 . Configure your automated tests to run after every commit.
 
 [[merge_release_wrapper_module_app]]
@@ -1114,8 +1115,8 @@ In each account where you want to deploy an application VPC, you will need to:
 . *Prepare the module.* If you using Terraform directly, you will be running commands directly in
   `infrastructure-modules`. If you are using Terragrunt, you will need to create a `terragrunt.hcl` file in
   `infrastructure-live`. It should go under the file path `<ACCOUNT>/<REGION>/<ENVIRONMENT>/networking/vpc-app`. For
-  example, if you are deploying this VPC in your "production" account, in the `us-east-2` region, and this is your
-  "prod" environment, the file path would look like this:
+example, if you are deploying this VPC in your "production" account, in the `us-east-2` region, and this is your
+"prod" environment, the file path would look like this:
 +
 ----
 infrastructure-live
@@ -1139,8 +1140,8 @@ terraform {
 ----
 +
 . *Set the variables for the VPC in that environment.* Namely, set a unique VPC name and CIDR block for each VPC, and
-  set the number of gateways based on your availability needs in that environment (typically, 1 NAT Gateway for
-  pre-production environments and 2-3 NAT Gateways for production environments). You can set these values in a
+set the number of gateways based on your availability needs in that environment (typically, 1 NAT Gateway for
+pre-production environments and 2-3 NAT Gateways for production environments). You can set these values in a
   `.tfvars` file or, if using Terragrunt, in the `inputs = { ... }` block of `terragrunt.hcl`. Example:
 +
 .infrastructure-live/production/us-east-2/prod/networking/vpc-app/terragrunt.hcl
@@ -1156,8 +1157,8 @@ inputs = {
 ----
 +
 . *Configure the Terraform backend.* Configure the backend https://www.terraform.io/docs/backends/[backend] you want to
-  use to store your Terraform state. The https://www.terraform.io/docs/backends/types/s3.html[S3 backend] is usually
-  the best choice for AWS accounts. If you're using Terragrunt, the backend settings should be defined in a root
+use to store your Terraform state. The https://www.terraform.io/docs/backends/types/s3.html[S3 backend] is usually
+the best choice for AWS accounts. If you're using Terragrunt, the backend settings should be defined in a root
   `terragrunt.hcl` file that you `include` in each child `terragrunt.hcl`:
 +
 .infrastructure-live/production/us-east-2/prod/networking/vpc-app/terragrunt.hcl
