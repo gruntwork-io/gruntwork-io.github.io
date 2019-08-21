@@ -14,12 +14,12 @@ custom_js:
         </label>
       </div>
         <div id="toc">
-            {% toc %}
+            {% toc %} {{page.document | tocify_asciidoc}}
         </div>
     </div>
     <div class="col-md-7 post-section-white">
         <div class="col-md-9 col-md-offset-2 post-title text-center">
-            <img src="{{ page.logoUrl }}" alt="post logo">
+            <img src="{{ page.image }}" alt="post logo">
             <label>{{ page.title }}</label>
             <p>
                 {% assign words = content | number_of_words %}
