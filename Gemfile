@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-gem 'jekyll', '3.5.2'
+gem 'jekyll', '3.8.6'
 gem 's3_website', '3.3.0'
 group :jekyll_plugins do
   gem 'jekyll-redirect-from', '0.12.1'
