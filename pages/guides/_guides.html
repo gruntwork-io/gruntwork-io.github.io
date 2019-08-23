@@ -1,43 +1,36 @@
 <div class="row">
-        <div class="col-md-10 searchrow col-md-offset-2 text-center">
-            <div class="col-md-10">
-                <div class="input-group">
-                    <div class="input-group-btn" >
-                        <div class="btn-group" role="group"> 
-                            <button type="button" class="btn btn-primary" >
-                                <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-                            </button>
-                        </div>
-                    </div><input type="text" class="form-control" placeholder="Search guides....">
-                </div>
-            </div>
-            <div class="col-md-2">   
-                <div class="guide-filter">
-                    <div class="col-md-4 text-right">
-                        <button class="btn" type="button"> 
-                            <label class="dropdown">
-                                <a href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                    Filter <span class="caret"></span>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#">Alphabetically</a></li>
-                                    <li><a href="#">Chronologically</a></li>
-                                </ul>
-                            </label>
-                        </button>
-                    </div>
-                </div>
-            </div>
+    <div class="col-md-10 searchrow col-md-offset-2 text-center">
+        <div class="col-md-10">
+                {% include_relative _search.html %}
         </div>
-        <div class="cloud-filter col-md-4 col-md-offset-5 text-center">
-                <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                <img class="btn" type="radio" name="options" src="/assets/img/logos-technologies/aws_logo.png" alt="aws logo">
-                <img class="btn" type="radio" name="options" src="/assets/img/logos-technologies/gcp_logo.png" alt="gcp logo">
-                <img class="btn" type="radio" name="options" src="/assets/img/logos-technologies/azure_logo.png" alt="azure logo">
+        <div class="col-md-2">   
+            <div class="guide-filter">
+                <div class="col-md-4 text-right">
+                    <button class="btn" type="button"> 
+                        <label class="dropdown">
+                            <a href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                Filter <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">Alphabetically</a></li>
+                                <li><a href="#">Chronologically</a></li>
+                            </ul>
+                        </label>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-<div class="guide-listing">
+    <div class="cloud-filter col-md-4 col-md-offset-5 text-center">
+            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+            <img class="btn" type="radio" name="options" src="/assets/img/logos-technologies/aws_logo.png" alt="aws logo">
+            <img class="btn" type="radio" name="options" src="/assets/img/logos-technologies/gcp_logo.png" alt="gcp logo">
+            <img class="btn" type="radio" name="options" src="/assets/img/logos-technologies/azure_logo.png" alt="azure logo">
+        </div>
+    </div>
+</div>
+<div id="filtered-records"></div>
+<div class="guide-listing" id="listings">
     <div class="col-md-2 categories">
         {% for category in site.categories %}
         {% capture category_name %}{{ category | first }}{% endcapture %}
@@ -49,33 +42,33 @@
         {% endfor %}
     </div>
     <div class="col-md-10">
-            {% for category in site.categories %}
-            {% capture category_name %}{{ category | first }}{% endcapture %}
-            <div id="#{{ category_name | slugize }}"></div>   
-                <h3 class="category-head">{{ category_name }}</h3>
-                <a name="{{ category_name | slugize }}"></a>
-                {% for post in site.categories[category_name] %}
-                <div class="guide-card card-shadow">
-                    <div class="card">
-                        <div class="row">
-                            <div class="col-md-2">
-                                <div class="card-img-top img-fluid text-center">
-                                    <img src="{{ post.image }}" alt="card image">
-                                </div>
-                            </div>
-                            <a href="{{ post.url }}">
-                                <div class="col-md-10">
-                                    <div class="card-body">
-                                        <h5 class="card-title"><b>{{ post.title }}</b></h5>
-                                        <p class="card-text">{{ post.excerpt | truncate:200 "....." }}</p>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>    
+        {% for category in site.categories %}
+        {% capture category_name %}{{ category | first }}{% endcapture %}
+        <div id="#{{ category_name | slugize }}"></div>   
+        <h3 class="category-head">{{ category_name }}</h3>
+        <a name="{{ category_name | slugize }}"></a>
+        {% for post in site.categories[category_name] %}
+        <div class="guide-card card-shadow">
+            <div class="card">
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="card-img-top img-fluid text-center">
+                            <img src="{{ post.image }}" alt="card image">
+                        </div>
                     </div>
-                </div>
-                {% endfor %}
-            {% endfor %}
+                    <a href="{{ post.url }}">
+                        <div class="col-md-10">
+                            <div class="card-body">
+                                <h5 class="card-title"><b>{{ post.title }}</b></h5>
+                                <p class="card-text">{{ post.excerpt | truncate:200 "....." }}</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>    
+            </div>
+        </div>
+        {% endfor %}
+        {% endfor %}
         <div class="row newsletter">
             <div class="col-md-9 col-md-offset-1 text-center">
                 <img src="/assets/img/guides/img-newsletter.png" alt="newsletter_image" /><br />
