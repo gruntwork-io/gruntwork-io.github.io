@@ -21,16 +21,16 @@ The fastest way to launch this site is to use [Docker](https://www.docker.com/).
 1. `git clone` this repo
 1. Install [Jekyll](http://jekyllrb.com/docs/installation/)
 1. Just the first time: `bundle install`
-1. Start Jekyll server: `bundle exec jekyll serve`
+1. Start Jekyll server: `bundle exec jekyll serve --livereload`
 1. Go to `http://localhost:4000`
 
 
 ## Updating /assets/msword/gruntwork-terms.docx
 
 Jekyll will automatically generate an MS Word version of our terms of service at `/assets/msword/gruntwork-terms.docx`
-using [Pandoc](https://pandoc.org/) when `docker-compose up` is first run. Unfortunately, when changes are made to 
+using [Pandoc](https://pandoc.org/) when `docker-compose up` is first run. Unfortunately, when changes are made to
 `/_data/terms-of-service.yml`, these changes do not automatically re-generate a new `gruntwork-terms.docx` file. The
-current solution is to re-run `docker-compose up`. 
+current solution is to re-run `docker-compose up`.
 
 Hopefully, in the future, Jekyll will support the ability to indicate which files should trigger which regeneration pages.
 
