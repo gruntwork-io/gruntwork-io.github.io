@@ -6,18 +6,5 @@
             </button>
         </div>
     </div><input id="search-box" type="text" class="form-control" placeholder="Search guides....">
-    <script>
-        window.guideEntries = [
-            {% for post in site.posts %} 
-            {
-                "title": "{{ post.title | xml_escape }}",
-                "image": "{{ post.image }}",
-                "excerpt": {{ post.excerpt | strip_html | strip_newlines | jsonify }},
-                "category": "{{ post.category | xml_escape }}",
-                "content": {{ post.content | strip_html | strip_newlines | jsonify }},
-            },
-            {% endfor %}
-        ];
-    </script>
 </div>
           

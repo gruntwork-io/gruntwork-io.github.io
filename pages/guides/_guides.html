@@ -6,17 +6,15 @@
         <div class="col-md-2">   
             <div class="guide-filter">
                 <div class="col-md-4 text-right">
-                    <button class="btn" type="button"> 
-                        <label class="dropdown">
-                            <a href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                Filter <span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a href="#">Alphabetically</a></li>
-                                <li><a href="#">Chronologically</a></li>
-                            </ul>
-                        </label>
-                    </button>
+                    <div class="dropdown">
+                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"><span class="dropdown-text"> Filter</span>
+                        <span class="caret"></span></button>
+                        <ul class="dropdown-menu dropdown-menu-form" id="filter-options">
+                                <li><label class="checkbox"><input value="aws" type="checkbox">AWS</label></li>
+                                <li><label class="checkbox"><input value="gcp" type="checkbox">GCP</label></li>
+                              </ul>
+                    </div>
+                        
                 </div>
             </div>
         </div>
