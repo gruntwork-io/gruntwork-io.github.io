@@ -875,10 +875,11 @@ a.caret-right{
 }
 
 .admonitionblock  {
-  border-top: 11px solid #06a6fd;
+  border-top: 9px solid #06a6fd;
   background-color: #f5f9fa;
-  padding: 4% 18%;
+  padding: 4% 8%;
   font-size: 12px;
+  text-align: center;
 }
 
 // Deployement guides
@@ -899,7 +900,7 @@ a.caret-right{
   }
   & .post-title {
     font-size: 27px;
-    padding: 0 5%;
+    padding: 5% 5% 0 5%;
     & p {
       font-size: small;
       color: #736c6c;
@@ -918,7 +919,7 @@ a.caret-right{
     border-bottom: solid 1px #07a7fc;
   }
   & h4, h3, h2,label, a {
-    color: #4e4c4c;
+    color: #1e252f;
   }
   & .aside-wrapper {
     background: white;
@@ -961,19 +962,33 @@ a.caret-right{
 .guide-listing {
   padding-top: 20px;
   & .categories {
-    margin-top: 10%;
+    margin-top: 9%;
     font-size: 16px;
     & a:active, a:hover{
       text-decoration: none;
       color:#07a7fc;
+      opacity: 1;
+    }
+    & ul {
+      list-style: none;
+      font-size: 14px;
+      opacity: 0.8;
+      & li:hover:before {
+        margin: 0 0 0 -15px;
+        vertical-align: middle;
+        display: inline-block;
+        font-size: 25px;
+        content: "•";
+        color: #06a6fd;
+      }
     }
   }
   & .category-head {
-    color: #4e4c4c;
+    color: #1e252f;
     font-weight: bold;
   }
   & .card {
-    color: #4e4c4c;
+    color: #1e252f;
     font-size: 14px;
     border-radius: 5px;
     cursor: pointer;
@@ -986,7 +1001,7 @@ a.caret-right{
       margin-bottom: 2px;
     }
     & h6, h5, h4, h3, h2, a {
-      color: #4e4c4c;
+      color: #1e252f;
     }
     & code {
       color: #c7254e !important;
@@ -995,7 +1010,7 @@ a.caret-right{
   & .newsletter {
     margin: 6%;
     font-size: 16px;
-    color: #4e4c4c;
+    color: #1e252f;
     & input {
       background-color: #f5f9fa;
       border: none;
@@ -1003,8 +1018,17 @@ a.caret-right{
       border-bottom-left-radius: 20px;
       font-size: 16px;
       color: black;
+      height: 39px;
+      z-index: 1;
       overflow: hidden;
       padding-right: 16px;
+    }
+    & input:hover, input:active, input:focus{
+      border: 1px solid #07a7fc;
+      z-index: 1;
+    }
+    & input:invalid{
+      border: 1px solid #ef5a73;
     }
     & label {
       font-size: 28px;
@@ -1019,11 +1043,35 @@ a.caret-right{
       text-decoration: none;
       background: #07a7fc;
       font-size: 15px;
+      margin-top: -2px;
       border-radius: 25px;
       margin-left: -13px;
       padding: 10px 24px;
       position: relative;
     }
+    & .btn-group>.btn:hover{
+      border: solid 1px #06a6fd;
+      background-image: linear-gradient(to top, #07a6fd, #1ae5dd);
+    }
+  }
+}
+
+#newsletter-success{
+  & label {
+    font-size: 28px;
+  }
+  & .modal-content {
+    background: #fff;
+    width: 468px;
+    height: 260px;
+    border-radius: 8px;
+    margin-left: 20%;
+  }
+  & button {
+    width: 131px;
+    height: 47px;
+    border-radius: 23.5px;
+    background-image: linear-gradient(to bottom, #5bcde7, #569cea);
   }
 }
 
@@ -1047,18 +1095,20 @@ a.caret-right{
   margin-bottom: 3%;
   & .input-group {
     width: 100%;
-    & .form-control {
-      background: #f5f9fa;
-      border-radius: 5px;
-      border: 0px;
-      color: #4e4c4c;
-    }
+    height: 46px;
+  }
+  & .form-control {
+    background: #f5f9fa;
+    border-radius: 5px;
+    border: 0px;
+    color: #1e252f;
   }
   & .btn-group {
     border-radius: 2px;
     & .btn {
       border-bottom-left-radius: 3px;
       border-top-left-radius: 3px;
+      background: #00b9f8;
     }
   }
 }
@@ -1098,11 +1148,35 @@ a.caret-right{
     background: #e6f0f9;
     box-shadow: none;
     padding: 5px;
+    height: 46px;
+    width: 90px;
   }
   & button > label > a {
     color: #28adf9;
     font-size: 15px;
     padding: 15px;
+  }
+  & .dropdown-menu {
+    margin-top: 11px;
+    left: 0;
+    right: 0;
+    background: #f5f9fa;
+    padding: 10px;
+    border: none;
+    box-shadow: none;
+  }
+  & .dropdown-text {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.51px;
+    text-align: center;
+    color: #06a6fd;
+  }
+  & .caret {
+    color: #06a6fd;
+  }
+  & .checkbox input[type="checkbox"]{
+    opacity: 1;
   }
 }
 
@@ -1289,6 +1363,15 @@ a.caret-right{
   }
   & li:hover ul {
     display: block;
+    font-size: 16px;
+    & li:before {
+      content: '-'; 
+      font-weight: bold;
+      font-size: 20px;
+      display: inline-block;
+      vertical-align: inherit;
+      margin: 0px 7px 0 -15px;
+    }
   }
   & li > a:before {
     content: '▼'; 
@@ -1362,7 +1445,10 @@ a.caret-right{
   & button:active, button:hover{
     color: #08a9fb;
     text-decoration: none;
+  }
 }
+.guides-navbar {
+  background: #78d6ff !important;
 }
 
 // Hero styles on the front page
@@ -1465,6 +1551,9 @@ a.caret-right{
   & a {
     color: #06A6FD;
     font-weight: bold;
+  }
+  & pre {
+    max-height: 100vh;
   }
 }
 

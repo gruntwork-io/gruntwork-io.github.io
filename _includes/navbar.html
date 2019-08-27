@@ -1,6 +1,6 @@
 <header class="header">
   <div id="navbar-original" hidden>
-    <nav class="navbar navbar-default">
+    <nav {% if page.url contains 'guides' %} class="navbar navbar-default guides-navbar" {% else %} class="navbar navbar-default" {% endif %}>
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
@@ -39,7 +39,7 @@
     </nav>
   </div>
   <div id="navbar-beta" hidden>
-    <nav class="navbar navbar-default">
+      <nav {% if page.url contains 'guides' %} class="navbar navbar-default guides-navbar" {% else %} class="navbar navbar-default" {% endif %}>
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2" aria-expanded="false">

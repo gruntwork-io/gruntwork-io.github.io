@@ -17,12 +17,13 @@ custom_js:
       </div>
     </div>
     <div class="col-md-7 post-section-white">
-      <div class="col-md-9 col-md-offset-2 post-title text-center">
+      <div class="post-title text-center">
         <img src="{{ page.image }}" alt="post logo">
         <label>{{ page.title }}</label>
         <p>
           {% assign words = content | number_of_words %}
-          {% if words < 360 %}
+          <!-- https://help.medium.com/hc/en-us/articles/214991667-Read-time -->
+          {% if words < 265 %}
             1 min read.
           {% else %}
             {{ words | divided_by:180 }} mins read.
