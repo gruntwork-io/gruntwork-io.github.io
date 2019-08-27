@@ -27,7 +27,6 @@
         </div>
     </div>
 </div>
-<!-- <div id="filtered-records"></div> -->
 <div class="guide-listing" id="listings">
     <div class="col-md-2 categories">
         {% for category in site.categories %}
@@ -68,22 +67,36 @@
         {% endfor %}
         {% endfor %}
         <div class="row newsletter">
-            <div class="col-md-9 col-md-offset-1 text-center">
+            <div class="col-md-10 col-md-offset-1 text-center">
                 <img src="/assets/img/guides/img-newsletter.png" alt="newsletter_image" /><br />
                 <label>Newsletter</label>
                 <p>Subscribe to the Gruntwork Newsletter to get notified when updates and new guides are released. No spam. Ever.</p>
-                <form action="#" class="col-xs-9 col-xs-offset-1">
+                <form id="newsletter-form" class="col-xs-9 col-xs-offset-1" method="post" action="//gruntwork.us13.list-manage.com/subscribe/post?u=8ccaad0747ac13944cf318e0f&amp;id=786bd365d1">
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Your Email Address">
+                        <input type="text" id="email" class="form-control" placeholder="Your Email Address">
                         <div class="input-group-btn" >
                             <div class="btn-group" role="group"> 
-                                <button type="button" class="btn btn-primary" >
+                                <button type="button" id="newsletter-subscribe" class="btn btn-primary">
                                     Subscribe
                                 </button>
                             </div>
                         </div>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Newsletter success Modal -->
+<div class="modal fade" id="newsletter-success" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content text-center">
+            <div class="modal-body">
+                <img src="/assets/img/guides/img-newsletter.png" alt="newsletter_image" /><br />
+                <label class="modal-title" id="exampleModalLabel">Success! You’re signed up. </label>
+                <p>You signed up for our newsletter with the email address: {{#email}}</p>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Got it</button>
             </div>
         </div>
     </div>
