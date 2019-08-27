@@ -62,7 +62,7 @@ Get commercial support::
 
 === What you'll learn in this guide
 
-This guide consists of four main sections:
+This guide consists of three main sections:
 
 <<core_concepts>>::
   An overview of the core concepts you need to understand to use the Gruntwork Service Catalog, including a look into
@@ -70,14 +70,8 @@ This guide consists of four main sections:
   infrastructure, and how to make use of infrastructure as code, Terraform, Terragrunt, Packer, Docker, immutable
   infrastructure, versioning, automated testing, and more.
 
-// TODO: link to checklist below
-<<production_grade_design>>::
-  An overview of how to use the Gruntwork Service Catalog to build a production-grade tech stack. To get a sense of
-  what production-grade means, check out <<production_grade_infra_checklist>>.
-
-<<deployment_walkthrough>>::
-  A step-by-step guide to deploying several services from the Gruntwork Service Catalog to give you some hands-on
-  practice.
+<<how_to_use_the_catalog>>::
+  An overview of how to use the Gruntwork Service Catalog.
 
 <<next_steps>>::
   What to do next once you've finished reading this guide.
@@ -167,7 +161,7 @@ All of the code in the Gruntwork Service Catalog is _versioned_. Every time we m
 versioned release, and announce it in the monthly
 https://blog.gruntwork.io/tagged/gruntwork-newsletter[Gruntwork Newsletter].
 
-When you use the code from the Gruntwork Service Catalog (a topic we'll cover in <<deployment_walkthrough>>), you will
+When you use the code from the Gruntwork Service Catalog (a topic we'll cover in <<how_to_use_the_catalog>>), you will
 always pin yourself to a specific version of the code. That way, you are not accidentally affected by any subsequent
 changes in the Gruntwork Service Catalog until you explicitly choose to pull those changes in. And when you do want to
 pull the changes in, it's just a matter of bumping the version number!
@@ -190,22 +184,51 @@ version numbers. With `0.MINOR.PATCH`, the rules are a bit different, where you 
 
 // TODO: Ref Arch diagram
 
-The Gruntwork Reference Architecture is a production-grade, end-to-end tech stack built on top of the modules from the
-Gruntwork Service Catalog. It includes just about everything the typical company needs: multiple environments, each
-configured with server orchestration (e.g., Kubernetes), load balancers, databases, caches, network topology,
-monitoring, alerting, log aggregation, CI/CD, user management, secrets management, SSH management, VPN management, and
-so on. We wire all these pieces together according to your needs, deploy it into your AWS or GCP accounts, and give you
-100% of the code—all in about one day.
+The https://gruntwork.io/reference-architecture/[Gruntwork Reference Architecture] is a production-grade, end-to-end
+tech stack built on top of the modules from the Gruntwork Service Catalog.
 
-Whereas the Gruntwork Service Catalog is relatively unopinionated, allowing you to combine and compose modules, tools,
-and approaches however you want ("a la carte"), the Gruntwork Reference Architecture is more opinionated, giving you a
-small set of pre-defined, standardized sets of modules, tools, and approaches to choose from ("prixe fixe"). For a
-detailed look at the Gruntwork Reference Architecture, check out
-https://blog.gruntwork.io/how-to-build-an-end-to-end-production-grade-architecture-on-aws-part-1-eae8eeb41fec[How to Build an End to End Production-Grade Architecture on AWS].
+What it includes::
+  The Reference Architecture includes just about everything the typical company needs: multiple environments, each
+  configured with server orchestration (e.g., Kubernetes), load balancers, databases, caches, network topology,
+  monitoring, alerting, log aggregation, CI/CD, user management, secrets management, SSH management, VPN management, and
+  much more (for a detailed walkthrough, see
+  https://blog.gruntwork.io/how-to-build-an-end-to-end-production-grade-architecture-on-aws-part-1-eae8eeb41fec[How to Build an End to End Production-Grade Architecture on AWS]).
+  We wire all these pieces together according to your needs, deploy it into your AWS or GCP accounts, and give you
+  100% of the code—all in about one day.
 
-If the opinionated design of the Reference Architecture looks like a good fit for your company, you may wish to
-purchase it as a way to save months on having to wire everything together and deploy it yourself. If the opinionated
-design is not a good fit, then you will want to use the Gruntwork Service Catalog directly instead.
+Opinionated code::
+  Whereas the Gruntwork Service Catalog is relatively unopinionated, allowing you to combine and compose modules, tools,
+  and approaches however you want ("a la carte"), the Gruntwork Reference Architecture is more opinionated, giving you a
+  small set of pre-defined, standardized sets of modules, tools, and approaches to choose from ("prixe fixe"). If the
+  opinionated design of the Reference Architecture looks like a good fit for your company, you may wish to purchase it
+  as a way to save months on having to wire everything together and deploy it yourself. If the opinionated design is
+  not a good fit, then you will want to use the Gruntwork Service Catalog directly instead.
+
+[[example_ref_arch]]
+See an example Reference Architecture::
+  You can find the code for an example Reference Architecture for a fictional Acme corporation in the following repos:
++
+IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access these example repos.
++
+* https://github.com/gruntwork-io/infrastructure-live-multi-account-acme/tree/master/_docs[Walkthrough documentation]
+  (start here!): The Reference Architecture comes with end-to-end documentation that walks you through all of the code
+  so you know how to run things in dev, how to deploy changes to prod, how to find metrics and logs, how to connect
+  over VPN and SSH, and so on. This is a great starting point for exploring the Reference Architecture.
++
+* https://github.com/gruntwork-io/infrastructure-modules-multi-account-acme[infrastratructure-modules]: In this repo,
+  you'll find the reusable modules that define the infrastructure for the entire company (in this case, for Acme).
+  These are like the blueprints for a house.
+* https://github.com/gruntwork-io/infrastructure-modules-multi-account-acme[infrastratructure-live]: This repo uses
+  the modules from `infrastructure-modules` to deploy all of the live environments for the company (dev, stage, prod,
+  etc). These are like the real houses built from the blueprints.
+* https://github.com/gruntwork-io/sample-app-frontend-multi-account-acme[sample-app-frontend]: This repo contains a
+  sample app that demonstrates best practices for a Docker-based frontend app or microservice, including examples of
+  how to talk to backend apps (i.e., service discovery), manage secrets, use TLS certs, and render HTML and JSON. This
+  app is written in Node.js but the underlying patterns apply to any language or technology.
+* https://github.com/gruntwork-io/sample-app-backend-multi-account-acme[sample-app-backend]: This repo contains a
+  sample app that demonstrates best practices for a Docker-based backend app or microservice, including examples of
+  how to talk to a database, do schema migrations, manage secrets, and use TLS certs. This app is written in Node.js
+  but the underlying patterns apply to any language or technology.
 
 [[production_grade_infra_checklist]]
 === The production-grade infrastructure checklist
@@ -441,7 +464,7 @@ specific IAM groups will be able to SSH to specific servers using their own user
 
 To get these scripts and binaries onto your virtual servers (e.g., onto EC2 instances in AWS or compute instances in
 GCP), we recommend using Packer to build VM images that have these scripts and binaries installed. You'll see an
-example of how to do this in the <<deployment_walkthrough>>. Note that Gruntwork Service Catalog does NOT require that
+example of how to do this in <<how_to_use_the_catalog>>. Note that Gruntwork Service Catalog does NOT require that
 you use Packer (e.g., you could also use Ansible or Chef to install the scripts and binaries), but the Gruntwork
 Reference Architecture does use Packer as one of its opinionated tools.
 
@@ -501,34 +524,539 @@ Easier scaling and rollback::
   previous image, without having to wait for and worry about running a bunch of older install commands (which may no
   longer work, e.g., if certain packages have been removed from APT or YUM).
 
+=== Operating system compatibility
 
-[[production_grade_design]]
-== Production-grade design
+TODO
+
+[[how_to_use_the_catalog]]
+== How to use the Gruntwork Service Catalog
 
 With all the core concepts out of the way, let's now discuss how to use the Gruntwork Service Catalog to build
 production-grade infrastructure.
 
-- infra-modules
-- infra-live
-- Packer
-- Docker
+=== Learning resources
+
+The first step is to learn! You'll need to learn about your chosen cloud (e.g., AWS or GCP), infrastructure (e.g., VPCs,
+Kubernetes, Kafka, ELK), tools (e.g., Terraform, Docker, Packer), and DevOps practices (e.g., CI, CD). Here are some
+useful resources:
+
+. https://gruntwork.io/training/[Gruntwork DevOps Training Library]: a collection of video training courses that teach
+  a variety of DevOps topics, such as infrastructure as code, Terraform, Docker, Packer, AWS, GCP, security, and more.
+. https://gruntwork.io/guides/[Gruntwork Production Deployment Guides]: a collection of guides that do step-by-step
+  walkthroughs of how to go to production. You're reading one now!
+. https://gruntwork.io/devops-resources/[Gruntwork DevOps Resources]: a collection of blog posts, talks, books, and
+  checklists for learning about DevOps, AWS, Terraform, Docker, Packer, and more.
+
+[[get_access]]
+=== Get access to the Gruntwork Service Catalog
+
+The next step is to get access to the Gruntwork Service Catalog.
+
+. To get access, you must become a https://gruntwork.io[Gruntwork subscriber].
+. As part of the sign up process, we'll ask for your GitHub user ID. The Gruntwork Service Catalog lives in 40+ GitHub
+  repos, most of them private, so you'll need to send us a GitHub user ID so we can grant you access (if you don't
+  already have a GitHub user, you can create one for free on http://github.com/[github.com]).
+. If you haven't already, create an SSH key, add it to `ssh-agent`, and associate it with your GitHub user
+  (https://help.github.com/en/enterprise/2.16/user/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent[instructions]).
+  You'll need a working SSH key to access Terraform modules in the Gruntwork Service Catalog (you'll see examples of
+  this later in the guide).
+. If you haven't already, create a GitHub personal access token
+  (https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line[instructions]). You'll
+  need a working GitHub personal access token to access scripts and binaries in the Gruntwork Service Catalog (you'll
+  see examples of this later in the guide).
+
+=== Find the modules you want to use
+
+The next step is to find the modules you want to use. Head over to the
+https://gruntwork.io/infrastructure-as-code-library/[Gruntwork Service Catalog] and find the repos that you wish to
+use. Browse the `modules` folder each the repo to see what modules are available and the `examples` folders to see the
+various ways to combine those modules. You can also browse the <<example_ref_arch>> to find production-ready sample
+code to use as examples.
+
+Within the Service Catalog, you'll find two types of modules: (1) Terraform modules and (2) scripts and binaries. The
+next two sections of the guide will walk you through how to use each of these.
+
+=== Using Terraform Modules
+
+This section will show you how to use Terraform modules from the Gruntwork Service Catalog. As an illustrative example,
+we'll deploy the `vpc-app`  Terraform module from https://github.com/gruntwork-io/module-vpc[module-vpc].
+
+IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access `module-vpc`.
+
+You can use this module to deploy a production-grade VPC on AWS. For full background information on VPCs, check
+out <<production_grade_vpc_aws>>.
+
+==== Create a wrapper module
+
+The Terraform modules in the Gruntwork Service Catalog are intentionally designed to be unopinionated, so they do not
+configure `provider` or `backend` settings. Moreover, you will typically use a couple of the modules from the Service
+Catalog together, rather than just one at a time. Therefore, to use a Terraform module from the Gruntwork Service
+Catalog, you'll need to create a _wrapper module_ in one of your own Git repos.
+
+Let's assume you have a repo called `infrastructure-modules` and create a `vpc-app` wrapper modules in it:
+
+----
+infrastructure-modules
+  └ networking
+    └ vpc-app
+      └ main.tf
+      └ outputs.tf
+      └ variables.tf
+----
+
+==== Configure your providers
+
+Inside of `main.tf`, configure whatever Terraform providers you're using. Since the `vpc-app` and `vpc-app-network-acls`
+modules we're using in this guide are AWS modules, you'll need to configure the AWS provider:
+
+.infrastructure-modules/networking/vpc-app/main.tf
+[source,hcl]
+----
+provider "aws" {
+  # The AWS region in which all resources will be created
+  region = var.aws_region
+
+  # Require a 2.x version of the AWS provider
+  version = "~> 2.6"
+
+  # Only these AWS Account IDs may be operated on by this template
+  allowed_account_ids = var.aws_account_id
+}
+----
+
+This configures the AWS provider as follows:
+
+Use a specific AWS region::
+  The AWS region is configured via the `aws_region` input variable (you'll declare this shortly). This allows you to
+  deploy this module in multiple regions.
+
+Pin the AWS provider version::
+  The code above ensures that you always get AWS provider version `2.x` and won't accidentally get version `3.x` in the
+  future, which would be backwards incompatible. We recommend pinning the versions for all providers you're using.
+
+Pin AWS account IDs::
+  The code above will only allow you to run it against the AWS account with ID passed in via the `aws_account_id` input
+  variable (you'll declare this shortly). This is an extra safety measure to ensure you don't accidentally authenticate
+  to the wrong AWS account while deploying this code—e.g., so you don't accidentally deploy changes intended for
+  staging to production (for more info on working with multiple AWS accounts, see
+  <<production_grade_aws_account_structure>>).
+
+Let's add the corresponding input variables in `variables.tf`:
+
+.infrastructure-modules/networking/vpc-app/variables.tf
+[source,hcl]
+----
+variable "aws_region" {
+  description = "The AWS region in which all resources will be created"
+  type        = string
+}
+
+variable "aws_account_id" {
+  description = "The ID of the AWS Account in which to create resources."
+  type        = string
+}
+----
+
+==== Configure Terraform
+
+Next, configure Terraform itself in `main.tf`:
+
+.infrastructure-modules/networking/vpc-app/main.tf
+[source,hcl]
+----
+terraform {
+  # Partial configuration for the backend: https://www.terraform.io/docs/backends/config.html#partial-configuration
+  backend "s3" {}
+
+  # Only allow this Terraform version. Note that if you upgrade to a newer version, Terraform won't allow you to use an
+  # older version, so when you upgrade, you should upgrade everyone on your team and your CI servers all at once.
+  required_version = "= 0.12.6"
+}
+----
+
+This configures Terraform as follows:
+
+Configure a backend::
+  The code above configures a _backend_, which is a shared location where Terraform state can be stored and accessed by
+  your team. You can use any of the https://www.terraform.io/docs/backends/types/index.html[supported backends] (the
+  example above uses S3, which is a good choice for AWS users). See
+  https://blog.gruntwork.io/how-to-manage-terraform-state-28f5697e68fa[How to manage Terraform state] for more info.
+
+Partial configuration::
+  The backend uses a _https://www.terraform.io/docs/backends/config.html#partial-configuration[partial configuration],
+  which means most of the backend configuration (e.g., which S3 bucket and path to use) will be specified from outside
+  of the code. You'll see an example of this soon.
+
+Pin the Terraform version::
+  The code above will ONLY allow you to run it with a specific Terraform version. This is a safety measure to ensure
+  you don't accidentally pick up a new version of Terraform until you're ready. This is important because (a) Terraform
+  is a pre 1.0.0 tool, so even patch version number bumps (e.g., `0.12.6` -> `0.12.7`) are sometimes backwards
+  incompatible or buggy and (b) once you've upgraded to a newer version, Terraform will no longer allow you to deploy
+  that code with any older version. For example, if a single person on your team upgrades to `0.12.7` and runs `apply`,
+  then you'll no longer be able to use the state file with `0.12.6`, and you'll be forced to upgrade everyone on your
+  team and all your CI servers to `0.12.7`. It's best to do this explicitly, rather than accidentally, so we recommend
+  pinning Terraform versions.
+
+==== Use the modules from the Gruntwork Service Catalog
+
+Now you can pull in the Terraform modules you want from the Gruntwork Service Catalog as follows:
+
+.infrastructure-modules/networking/vpc-app/main.tf
+[source,hcl]
+----
+module "vpc" {
+  # Make sure to replace <VERSION> in this URL with the latest module-vpc release
+  source = "git@github.com:gruntwork-io/module-vpc.git//modules/vpc-mgmt?ref=<VERSION>"
+
+  aws_region       = var.aws_region
+  vpc_name         = var.vpc_name
+  cidr_block       = var.cidr_block
+  num_nat_gateways = var.num_nat_gateways
+}
+----
+
+This code does the following:
+
+Terraform module support::
+  This code pulls in a module using Terraform's native `module` functionality. For background info, see
+  https://blog.gruntwork.io/how-to-create-reusable-infrastructure-with-terraform-modules-25526d65f73d[How to create reusable infrastructure with Terraform modules].
+
+SSH Git URL::
+  The `source` URL in the code above uses a Git URL with SSH authentication (see
+  https://www.terraform.io/docs/modules/sources.html[module sources] for all the types of `source` URLs you can use).
+  If you followed the SSH instructions in <<get_access>>, this will allow you to access private repos in the Gruntwork
+  Service Catalog without having to hard-code a password in your Terraform code.
+
+Versioned URL::
+  Note the `?ref=<VERSION>` at the end of the `source` URL. This parameter allows you to pull in a specific version of
+  each module so that you don't accidentally pull in (potentially backwards incompatible code) in the future. You
+  should replace `<VERSION>` with the latest version from the releases page of the repo you're using (e.g., here's
+  https://github.com/gruntwork-io/module-vpc/releases[the releases page for module-vpc]).
+
+Module arguments::
+  Below the `source` URL, you'll need to pass in the module-specific arguments. You can find all the required and
+  optional variables defined in `vars.tf` (old name` or `variables.tf` (new name) of the module (e.g.,
+  here's https://github.com/gruntwork-io/module-vpc/blob/master/modules/vpc-app/vars.tf[the variables.tf for vpc-app]).
+  The code above sets these to input variables (which you'll define shortly) so that you can use different values in
+  different environments.
+
+Let's add the new input variables in `variables.tf`:
+
+.infrastructure-modules/networking/vpc-app/variables.tf
+[source,hcl]
+----
+variable "vpc_name" {
+  description = "Name of the VPC. Examples include 'prod', 'dev', 'mgmt', etc."
+  type        = string
+}
+
+variable "cidr_block" {
+  description = "The IP address range of the VPC in CIDR notation. A prefix of /16 is recommended. Do not use a prefix higher than /27. Example: '10.100.0.0/16'."
+  type        = string
+}
+
+variable "num_nat_gateways" {
+  description = "The number of NAT Gateways to launch for this VPC. For production VPCs, multiple NAT Gateways are recommended."
+  type        = number
+}
+----
+
+You may also want to add useful output variables in `outputs.tf`:
+
+.infrastructure-modules/networking/vpc-app/variables.tf
+[source,hcl]
+----
+output "vpc_name" {
+  description = "The VPC name"
+  value       = module.vpc.vpc_name
+}
+
+output "vpc_id" {
+  description = "The VPC ID"
+  value       = module.vpc.vpc_id
+}
+
+output "vpc_cidr_block" {
+  description = "The VPC CIDR block"
+  value       = module.vpc.vpc_cidr_block
+}
+
+output "public_subnet_cidr_blocks" {
+  description = "The CIDR blocks of the public subnets"
+  value       = module.vpc.public_subnet_cidr_blocks
+}
+
+output "private_app_subnet_cidr_blocks" {
+  description = "The CIDR blocks of the private app subnets"
+  value       = module.vpc.private_app_subnet_cidr_blocks
+}
+
+output "private_persistence_subnet_cidr_blocks" {
+  description = "The CIDR blocks of the private persistence subnets"
+  value       = module.vpc.private_persistence_subnet_cidr_blocks
+}
+
+output "public_subnet_ids" {
+  description = "The IDs of the public subnets"
+  value       = module.vpc.public_subnet_ids
+}
+
+output "private_app_subnet_ids" {
+  description = "The IDs of the private app subnets"
+  value       = module.vpc.private_app_subnet_ids
+}
+
+output "private_persistence_subnet_ids" {
+  description = "The IDs of the private persistence subnets"
+  value       = module.vpc.private_persistence_subnet_ids
+}
+----
+
+==== Manual tests
+
+Now that the code is written, you may want to test it manually. We recommend testing in a _sandbox environment_ where
+you can deploy infrastructure without affecting any other environments (especially production!). For example, if you're
+using AWS, this should be a separate AWS account.
+
+The easiest way to test is to create a `testing.tfvars` file:
+
+----
+infrastructure-modules
+  └ networking
+    └ vpc-app
+      └ main.tf
+      └ outputs.tf
+      └ variables.tf
+      └ testing.tfvars
+----
+
+Inside this file, you can set all the variables for your module to test-friendly values:
+
+.infrastructure-modules/networking/vpc-app/testing.tfvars
+[source,hcl]
+----
+aws_region       = "us-east-2"
+aws_account_id   = "555566667777"
+vpc_name         = "example-vpc"
+cidr_block       = "10.0.0.0/16"
+num_nat_gateways = 1
+----
+
+You may also want to add a `testing-backend.hcl` file:
+
+----
+infrastructure-modules
+  └ networking
+    └ vpc-app
+      └ main.tf
+      └ outputs.tf
+      └ variables.tf
+      └ testing.tfvars
+      └ testing-backend.hcl
+----
+
+In this file, you can configure test-friendly settings for your backend. For example, if you're using the S3 backend,
+you can specifiy:
+
+.infrastructure-modules/networking/vpc-app/testing-backend.hcl
+[source,hcl]
+----
+bucket = "<YOUR-BUCKET-FOR-TESTING>"
+key    = "manual-testing/<YOUR-NAME>/terraform.tfstate"
+region = "us-east-2"
+----
+
+You can now test manually as follows:
+
+. Authenticate to your sandbox environment (see
+  https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[A Comprehensive Guide to Authenticating to AWS on the Command Line])
+. Run `terraform init -backend-config=testing-backend.hcl`
+. Run `terraform apply -var-file=testing.tfvars`
+. Manually validate the code is working as you expect
+. When you're done, run `terraform destroy -var-file=testing.tfvars` to clean up after yourself
+
+==== Automated tests
+
+You may also want to create automated tests for your module. Automated tests for infrastructure code will spin up and
+tear down a lot of infrastructure, so we recommend a separate _testing environment_ (e.g. yet another AWS account) for
+running automated tests—separate even from the sandboxes you use for manual testing.
+
+The only way to build confidence that your infrastructure code works as you expect is to deploy it into a real AWS
+account. That means you'll primarily be writing integration tests that:
+
+. Run `terraform apply` to deploy your module
+. Perform a bunch of validations that the deployed infrastructure works as expected
+. Run `terraform destroy` at the end to clean up
+
+In short, you're automating the steps you took to manually test your module!
+
+You can make it easier to write tests of this format by leveraging https://github.com/gruntwork-io/terratest/[Terratest],
+an open source Go library that contains helpers for testing many types of infrastructure code, including Terraform,
+Packer, and Docker.
+
+You can define tests for your `vpc-app` module in a `vpc_app_test.go` file in a `test` folder:
+
+----
+infrastructure-modules
+  └ networking
+    └ vpc-app
+      └ main.tf
+      └ outputs.tf
+      └ variables.tf
+      └ testing.tfvars
+      └ testing-backend.hcl
+  └ test
+    └ vpc_app_test.go
+----
+
+Check out the https://github.com/gruntwork-io/terratest/#quickstart[Terratest install instructions] for how to
+configure your environment for Go and install Terratestt.
+
+Next, write some test code in `vpc_app_test.go` that looks like this:
+
+.infrastructure-modules/test/vpc_app_test.go
+[source,go]
+----
+package test
+
+import (
+	"testing"
+
+	"fmt"
+	"github.com/gruntwork-io/terratest/modules/random"
+	"github.com/gruntwork-io/terratest/modules/terraform"
+)
+
+// The ID of the your AWS account for testing
+const awsAccountId = "111122223333"
+
+// An AWS region to test in
+const awsRegionForTest = "us-east-2"
+
+// S3 bucket to use for testing
+const s3BucketForTesting = "<YOUR-S3-BUCKET>"
+
+func TestVpcApp(t *testing.T) {
+	t.Parallel()
+
+	// Unique ID to namespace resources
+	uniqueId := random.UniqueId()
+	// Generate a unique name for each VPC so tests running in parallel don't clash
+    vpcName := fmt.Sprintf("test-vpc-%s", uniqueId)
+    // Generate a unique key in the S3 bucket for the Terraform state
+    backendS3Key := fmt.Sprintf("vpc-app-test/%s/terraform.tfstate", uniqueId)
+
+	terraformOptions := &terraform.Options {
+		// Where the Terraform code is located
+		TerraformDir: "../networking/vpc-app",
+
+		// Variables to pass to the Terraform code
+		Vars: map[string]interface{}{
+		    "aws_region":       awsRegionForTest,
+            "aws_account_id":   awsAccountId,
+            "vpc_name":         vpcName,
+            "cidr_block":       "10.0.0.0/16",
+            "num_nat_gateways": 1,
+
+		},
+
+		// Backend configuration to pass to the Terraform code
+		BackendConfig: map[string]interface{}{
+            "bucket":   s3BucketForTesting,
+            "key":      backendS3Key,
+            "region":   awsRegionForTest,
+
+		},
+	}
+
+	// Run 'terraform destroy' at the end of the test to clean up
+	defer terraform.Destroy(t, terraformOptions)
+
+	// Run 'terraform init' and 'terraform apply' to deploy the module
+	terraform.InitAndApply(t, terraformOptions)
+}
+----
+
+The test code above implements a minimal test that:
+
+Configure variables::
+  This is similar to the `testing.tfvars` used in manual testing.
+
+Configure the backend::
+  This is similar to tthe `testing-backend.hcl` used in manual testing.
+
+Namespace resources::
+  The code used `random.UniqueId()` to generate unique identifiers for all the resources in this test. This allows
+  multiple tests to run in parallel (e.g., on your computer, your teammates' computers, CI servers) without the
+  any clashes (e.g., without conflicts over unique VPC names).
+
+Defer terraform destroy::
+  The test code uses `defer` to schedule `terraform.Destroy` to run at the end of the test, whether or not the test
+  passes.
+
+terraform init and apply::
+  The test runs `terraform init` and `terraform apply` on the module. If this hits any errors, the test will fail.
+
+This is a minimal test that just makes sure your module can deploy and undeploy successfully. This is a great start,
+and will catch a surprising number of bugs, but for production-grade code, you'll probably want more validation logic.
+Check out the real https://github.com/gruntwork-io/module-vpc/tree/master/test[module-vpc tests] to see how we validate
+VPCs by, for example, launching EC2 instances in various subnets and making sure that connections to some of them work,
+and others are blocked, based on the networking settings in that VPC.
+
+To run the test, authenticate to your testing environment (see
+https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[A Comprehensive Guide to Authenticating to AWS on the Command Line])
+and do the following:
+
+----
+$ cd test
+$ go test -v -timeout 45m
+----
+
+Note the use of the `-timeout 45m` argument with +go test+. By default, Go imposes a time limit of 10 minutes for
+tests, after which it forcibly kills the test run, causing the tests to not only fail, but even preventing the cleanup
+code (i.e., `terraform destroy`) from running. This VPC test should take closer to ten minutes, but whenever running a
+Go test that deploys real infrastructure, it's safer to set an extra long timeout to avoid the test being killed part
+way through and leaving all sorts of infrastructure still running.
+
+For a lot more information on writing automated tests for Terraform code, see:
+
+. https://github.com/gruntwork-io/terratest/[Terratest documentation], especially the many examples and corresponding
+  tests in the `examples` and `test` folders, respectively, and the
+  https://github.com/gruntwork-io/terratest/#testing-best-practices[testing best practices] section.
+. _https://www.terraformupandrunning.com[Terraform: Up & Running]_, 2nd edition, has an entire chapter dedicated to
+  automated testing for Terraform code, including unit tests, integration tests, end-to-end tests, dependency injection,
+  running tests in parallel, test stages, and more.
+
+==== Deploying
+
+Now that your module has been thoroughly tested, you can deploy it to your real environments (e.g., staging and
+production).
 
 
-[[deployment_walkthrough]]
-== Deployment walkthrough
 
-Let's now walk through how to deploy a production-grade VPC using the Gruntwork Service Catalog.
+- Usage with Terragrunt
+-- infra-modules
+-- infra-live
+-- DRY backend
+-- apply vs apply-all
+- Usage with TFE (coming soon)
+-- infra-modules
+-- Pull into TFE Registry
+-- Deploy workspaces
 
-[[pre_requisites]]
-=== Pre-requisites
+=== Using scripts and binaries
 
-This walkthrough has the following pre-requistes:
+- gruntwork-install
+- Packer (incl secrets)
+- Docker (incl secrets)
 
-=== Outline
+=== Combining Terraform, scripts, and binaries
 
-- Give examples using open source modules?
-- How to consume the code (Terraform, scripts, binaries)
-- How to use with TFE?
+- Combining with Terraform (diagram with Terraform -> VMs -> K8S -> Docker)
+
+=== Forking the code
+
+TODO
 
 [[next_steps]]
 == Next steps
