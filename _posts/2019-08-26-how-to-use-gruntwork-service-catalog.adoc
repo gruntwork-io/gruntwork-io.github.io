@@ -1,6 +1,7 @@
-= How to use the Gruntwork Service Catalog
+= How to use the Gruntwork Service Catalog and Reference Architecture
 :type: guide
-:description: Learn how to use Terraform modules, Terragrunt, scripts, binaries, versioning, forking, and more.
+:description: Learn about production-grade infrastructure, Terraform, Terragrunt, Packer, Docker, immutable infrastructure, versioning for infrastructure code, automated tests for infrastructure code, and more.
+// TODO: the image should be a screenshot of the service catalog?
 :image: ../assets/img/guides/service-catalog/grunty-blocks.png
 :tags: aws, gcp, terraform, terragrunt
 :toc:
@@ -19,15 +20,18 @@ toc::[]
 
 == Intro
 
-This guide will walk you through how to use code from the
-https://gruntwork.io/infrastructure-as-code-library/[Gruntwork Service Catalog], including how to use Terraform
-modules, Terragrunt, scripts, binaries, versioning, forking, and more.
+This guide will walk you through how to use the
+https://gruntwork.io/infrastructure-as-code-library/[Gruntwork Service Catalog] and the
+https://gruntwork.io/reference-architecture/[Gruntwork Reference Architecture] to build a production-grade tech stack
+for your company.
 
 === What is the Gruntwork Service Catalog?
 
 The https://gruntwork.io/infrastructure-as-code-library/[Gruntwork Service Catalog] is a collection of over 300,000
 lines of reusable, battle-tested, production-ready infrastructure code for AWS, GCP, and Azure. The Gruntwork Service
 Catalog gives your team the following benefits:
+
+// TODO: add a screenshot of the service catalog
 
 Go to prod in days, not months::
   Most teams have the same basic infrastructure needs (e.g., Docker cluster, load balancer, database, cache, CI/CD,
@@ -83,29 +87,296 @@ Feel free to read the guide start to finish or skip around to whatever part inte
 [[core_concepts]]
 == Core concepts
 
-=== How the Gruntwork Service Catalog is designed
+=== The Gruntwork Service Catalog
 
-TODO
+// TODO: add a screenshot of one repo
+
+The Gruntwork Service Catalog is a collection of over 300,000 lines of reusable, battle-tested infrastructure code.
+Here's how that code is organized:
+
+40+ GitHub repos::
+  The code lives in 40+ GitHub repos, some public and open source, and some private and only accessible to Gruntwork
+  customers. Each repo is focused on one type of infrastructure: e.g., there is one repo that contains code for
+  deploying and managing Kubernetes on AWS, one repo with code for deploying and managing the ELK stack, one repo that
+  contains a collection of CI / CD code, and so on.
+
+// TODO: add a screenshot of Terraform code? Or multiple languages side by side?
+
+Code in multiple languages::
+  The code is written using a combination of Terraform, Go, Bash, and Python. Terraform is used to to define and manage
+  most of the basic infrastructure, such as servers, databases, load balancers, and networking. The other languages
+  are used to create scripts (in Bash and Python) and binaries (compiled from Go) that run on top of that
+  infrastructure. For example, we might use Terraform to run a cluster of servers in AWS, a Bash script to install and
+  configure some software in the VM image deployed to each of the servers in the cluster, and during boot, each server
+  might execute run a Go binary to perform some bootstrapping operations. The code in each repo is organized into three
+  primary folders, `modules`, `examples`, and `test`, as described in the following sections.
+
+// TODO: add a screenshot of the modules folder
+
+Modules::
+  Each repo contains a `modules` folder that contains the main implementation code, broken down into standalone,
+  orthogonal, reusable, highly configurable modules. For example, the ELK repo (Elasticsearch, Logstash, Kubernetes)
+  isn't one giant module that deploys the entire ELK stack, but a bunch of separate modules for running Elasticsearch,
+  Kibana, Logstash, Elastalert, Beats, Collectd, and so on. This allows you to combine and compose the modules in many
+  different permutations to fit your exact needs: e.g., some use cases need the full ELK stack, while some solely use
+  Elasticsearch; sometimes you run Elasticsearch, Logstash, and Kibana each in completely separate clusters (e.g., in
+  prod, for high availability and scalability) and sometimes you run them all in a single cluster or single node (e.g.,
+  in dev, to save money).
+
+// TODO: add a screenshot of some example code
+
+Examples::
+  Each repo contains an `examples` folder that shows you how to assemble the modules from the `modules` folder into
+  different permutations. This lets you try the modules out in minutes, without having to write a line of code. In
+  other words, this is executable documentation.
+
+// TODO: add a screenshot of some test code
+
+Tests::
+  Each repo contains a `test` folder that contains automated tests for the examples in the `examples` folder. These are
+  mostly integration tests, which use https://github.com/gruntwork-io/terratest/[Terratest] under the hood to deploy
+  the examples into real environments (e.g., real AWS and GCP accounts), validate that everything works, and then tear
+  everything down. E.g., After every commit, we spin up a dozen ELK clusters, read data, write data, run backups, and
+  so on, and then tear it all down again. This is how we build confidence that the code does what we say it does—and
+  that it continues to do it over years of updates.
+
+// TODO: add a screenshot of the docs
+
+Documentation::
+  Each repo is thoroughly documented via README files, inline comments, https://gruntwork.io/training/[training videos],
+  and /guides[deployment guides].
+
+Consuming the code::
+  You'll see how to consume code from the Service Catalog in the <<deployment_walkthrough>> section.
+
+=== The Gruntwork Reference Architecture
+
+// TODO: Ref Arch diagram
+
+
 
 === The production-grade infrastructure checklist
 
-TODO
+The Gruntwork Service Catalog is a collection of _production-grade infrastructure_—that is, the type of reliable,
+secure, battle-tested infrastructure that you'd bet your company on. Every time you deploy infrastructure, you're
+betting that your infrastructure won’t fall over if traffic goes up; you're betting that your infrastructure won't lose
+your data if there's an outage; you're betting that your infrastructure won't allow your data to be compromised when
+hackers try to break in; and if these bets don't work out, your company may go out of business. That's what's at stake
+when we say "production-grade."
+
+Building production-grade infrastructure requires taking into account a long list of details, which we have captured in
+_The Production-Grade Infrastructure Checklist_:
+
+. The Production-Grade Infrastructure Checklist
+|===
+| Task | Description | Example tools
+
+| Install
+| Install the software binaries and all dependencies.
+| Bash, Chef, Ansible, Puppet
+
+| Configure
+| Configure the software at runtime. Includes port settings, TLS certs, service discovery, leaders, followers, replication, etc.
+| Bash, Chef, Ansible, Puppet
+
+| Provision
+|  Provision the infrastructure. Includes EC2 instances, load balancers, network topology, security gr oups, IAM permissions, etc.
+| Terraform, CloudFormation
+
+| Deploy
+| Deploy the service on top of the infrastructure. Roll out updates with no downtime. Includes blue-green, rolling, and canary deployments.
+| Scripts, Orchestration tools (ECS, k8s, Nomad)
+
+| High availability
+| Withstand outages of individual processes, EC2 instances, services, Availability Zones, and regions.
+| Multi AZ, multi-region, replication, ASGs, ELBs
+
+| Scalability
+| Scale up and down in response to load. Scale horizontally (more servers) and/or vertically (bigger servers).
+| ASGs, replication, sharding, caching, divide and conquer
+
+| Performance
+| Optimize CPU, memory, disk, network, GPU, and usage. Includes query tuning, benchmarking, load testing, and profiling.
+| Dynatrace, valgrind, VisualVM, ab, Jmeter
+
+| Networking
+| Configure static and dynamic IPs, ports, service discovery, firewalls, DNS, SSH access, and VPN access.
+| EIPs, ENIs, VPCs, NACLs, SGs, Route 53, OpenVPN
+
+| Security
+| Encryption in transit (TLS) and on disk, authentication, authorization, secrets management, server hardening.
+| ACM, EBS Volumes, Cognito, Vault, CIS
+
+| Metrics
+| Availability metrics, business metrics, app metrics, server metrics, events, observability, tracing, and alerting.
+| CloudWatch, DataDog, New Relic, Honeycomb
+
+| Logs
+| Rotate logs on disk. Aggregate log data to a central location.
+| CloudWatch logs, ELK, Sumo Logic, Papertrail
+
+| Backup and Restore
+| Make backups of DBs, caches, and other data on a scheduled basis. Replicate to separate region/account.
+| RDS, ElastiCache, ec2-snapper, Lambda
+
+| Cost optimization
+| Pick proper instance types, use spot and reserved instances, use auto scaling, and nuke unused resources.
+| ASGs, spot instances, reserved instances
+
+| Documentation
+| Document your code, architecture, and practices. Create playbooks to respond to incidents.
+| READMEs, wikis, Slack
+
+| Tests
+| Write automated tests for your infrastructure code. Run tests after every commit and nightly.
+| Terratest
+|===
+
+Most other collections of infrastructure code and service catalogs (e.g., AWS Quick Starts, Bitnami Application Catalog,
+the Terraform Registry, Ansible Galaxy, Chef Supermarket, etc) are useful for learning and example code, but they do
+not take most of this checklist into account, and therefore are not a good fit for direct production use. On the other
+hand, every module in the Gruntwork Service Catalog goes through the production-grade checklist and is explicitly
+designed for use directly in production.
 
 === Infrastructure as code
 
-TODO
+Everything in the Gruntwork Service Catalog is designed to allow you to define your _infrastructure as code (IaC)_.
+That is, instead of deploying infrastructure _manually_ (e.g., by clicking around a web page), the idea behind IaC is
+to write code to define, provision, and manage your infrastructure. This has a number of benefits:
+
+Self-service::
+  Most teams that deploy code manually have a small number of sysadmins (often, just one) who are the only ones who
+  know all the magic incantations to make the deployment work and are the only ones with access to production. This
+  becomes a major bottleneck as the company grows. If your infrastructure is defined in code, then the entire
+  deployment process can be automated, and developers can kick off their own deployments whenever necessary.
+
+Speed and safety::
+  If the deployment process is automated, it'll be significantly faster, since a computer can carry out the deployment
+  steps far faster than a person; and safer, since an automated process will be more consistent, more repeatable, and
+  not prone to manual error.
+
+Documentation::
+  Instead of the state of your infrastructure being locked away in a single sysadmin's head, you can represent the
+  state of your infrastructure in source files that anyone can read. In other words, IaC acts as documentation,
+  allowing everyone in the organization to understand how things work, even if the sysadmin goes on vacation.
+
+Version control::
+  You can store your IaC source files in version control, which means the entire history of your infrastructure is now
+  captured in the commit log. This becomes a powerful tool for debugging issues, as any time a problem pops up, your
+  first step will be to check the commit log and find out what changed in your infrastructure, and your second step may
+  be to resolve the problem by simply reverting back to a previous, known-good version of your IaC code.
+
+Validation::
+  If the state of your infrastructure is defined in code, then for every single change, you can perform a code review,
+  run a suite of automated tests, and pass the code through static analysis tools, all practices that are known to
+  significantly reduce the chance of defects.
+
+Happiness::
+  Deploying code and managing infrastructure manually is repetitive and tedious. Developers and sysadmins resent this
+  type of work, as it involves no creativity, no challenge, and no recognition. You could deploy code perfectly for
+  months, and no one will take notice—until that one day when you mess it up. That creates a stressful and unpleasant
+  environment. IaC offers a better alternative that allows computers to do what they do best (automation) and
+  developers to do what they do best (coding).
+
+Reuse::
+  You can package your infrastructure into reusable modules, so that instead of doing every deployment for every
+  product in every environment from scratch, you can build on top of known, documented, battle-tested pieces. You
+  can build these reusable modules yourself or use an existing collection of modules, such as the Gruntwork Service
+  Catalog.
+
+Some of the main IaC tools you'll see used and referenced in the Gruntwork Service Catalog are Terraform, Terragrunt,
+Packer, and Docker, each of which we'll discuss in the next several sections.
 
 === Terraform
 
-TODO
+https://www.terraform.io[Terraform] is an open source _provisioning_ tool that allows you to define and manage as code a
+wide variety of infrastructure (e.g., servers, load balancers, databases, network settings, and so on) across
+a wide variety of _providers_ (e.g., AWS, GCP, Azure). For example, here's some example Terraform code you can use to
+deploy an EC2 instance (a virtual server) running Ubuntu 18.04 into the `us-east-2` region of AWS:
+
+.terraform-example.tf
+[source,hcl]
+----
+# Deploy to the us-east-2 region of AWS
+provider "aws" {
+  region = "us-east-2"
+}
+
+# Deploy an EC2 instance running Ubuntu 18.04
+resource "aws_instance" "example" {
+  ami           = "ami-0c55b159cbfafe1f0"
+  instance_type = "t2.micro"
+}
+----
+
+You can deploy this server by running `terraform init` and `terraform apply`. Check out the
+https://blog.gruntwork.io/a-comprehensive-guide-to-terraform-b3d32832baca[Comprehensive Guide to Terraform] for a
+thorough introduction to the language.
+
+A large percentage of the infrastructure code in the Gruntwork Service Catalog is defined using Terraform. We even
+wrote https://www.terraformupandrunning.com[the book] on it!
 
 === Terragrunt
 
-TODO
+https://github.com/gruntwork-io/terragrunt[Terragrunt] is a thin, open source wrapper for Terraform. It is designed to
+fill in some missing features in Terraform, such as allowing you to define your Terraform backend configuration in
+one `terragrunt.hcl` file, rather than having to copy/paste the same config over and over again:
+
+.terragrunt.hcl
+[source,hcl]
+----
+remote_state {
+  backend = "s3"
+  config = {
+    bucket         = "my-terraform-state"
+    key            = "${path_relative_to_include()}/terraform.tfstate"
+    region         = "us-east-1"
+    encrypt        = true
+    dynamodb_table = "my-lock-table"
+  }
+}
+----
+
+Check out
+https://blog.gruntwork.io/terragrunt-how-to-keep-your-terraform-code-dry-and-maintainable-f61ae06959d8[Terragrunt: how to keep your Terraform code DRY and maintainable]
+for a thorough introduction.
+
+Note that while we find Terragrunt useful for deploying and managing Terraform code in production, the Terraform
+modules in the Gruntwork Service Catalog are pure Terraform and do NOT require Terragrunt.
 
 === Packer
 
-TODO
+https://www.packer.io[https://www.packer.io] is an open source tool you can use to define machine images (e.g., VM
+images, Docker images) as code. For example, here is how you can use Packer to define an Ubuntu 18.04 Amazon Machine
+Image (AMI) that has Node.js installed:
+
+.packer-example.json
+[source,json]
+----
+{
+  "builders": [{
+    "type": "amazon-ebs",
+    "region": "us-east-2",
+    "source_ami": "ami-0c55b159cbfafe1f0",
+    "instance_type": "t2.micro",
+    "ssh_username": "ubuntu",
+    "ami_name": "packer-example-{{timestamp}}"
+  }],
+  "provisioners": [{
+    "type": "shell",
+    "inline": [
+      "curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -",
+      "sudo apt-get update -y",
+      "sudo apt-get install -y nodejs"
+    ]
+  }]
+}
+----
+
+You can run `packer build packer-example.json` to build an AMI from this code and then deploy this AMI to your AWS
+account using other tools (e.g., using Terraform).
+
+
 
 === Docker
 
@@ -140,7 +411,11 @@ Let's now walk through how to deploy a production-grade VPC using the Gruntwork 
 
 This walkthrough has the following pre-requistes:
 
+=== Outline
+
 - Give examples using open source modules?
+- How to consume the code (Terraform, scripts, binaries)
+- How to use with TFE?
 
 [[next_steps]]
 == Next steps
