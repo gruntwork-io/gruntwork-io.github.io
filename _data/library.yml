@@ -882,7 +882,7 @@
       blurb: deploy a Couchbase cluster
       description: Deploy a Couchbase cluster on AWS using an Auto Scaling Group.
 
-- name: "Influx"
+- name: "Influx AWS"
   clouds:
     - AWS
   icons:
@@ -1095,3 +1095,57 @@
     - name: run-pex-as-resource
       blurb: run a Python (pex) script as a data source
       description: Run a python script with dependencies packaged together as a local-exec provisioner on a null resource in a portable way.
+
+- name: "Influx GCP"
+  clouds:
+    - GCP
+  icons:
+    - title: Terraform
+      image: icon-terraform.png
+    - title: Bash
+      image: icon-bash.png
+  aws_url: "https://github.com/gruntwork-io/terraform-google-influx"
+  type: Open Source
+  description: |
+    Deploy a best-practices TICK stack (Telegraf, InfluxDB, Chronograf, Kapacitor) in Google Cloud Platform. Includes support for automatic
+    bootstrapping, automatic node discovery, and automatic recovery of failed servers.
+  submodules:
+    - name: external-firewall
+      blurb: control external traffic into servers
+      description: control external traffic into servers
+    - name: influxdb-commons
+      blurb: common bash scripts for bootstrapping the servers
+      description: common bash scripts for bootstrapping the servers
+    - name: install-chronograf
+      blurb: install Chronograf on a Linux server
+      description: install Chronograf on a Linux server
+    - name: install-influxdb
+      blurb: install InfluxDB on a Linux server
+      description: install InfluxDB on a Linux server
+    - name: install-kapacitor
+      blurb: install Kapacitor on a Linux server
+      description: install Kapacitor on a Linux server
+    - name: install-telegraf
+      blurb: install Telegraf on a Linux server
+      description: install Telegraf on a Linux server
+    - name: run-chronograf
+      blurb: configure and run Chronograf
+      description: configure and run Chronograf
+    - name: run-influxdb
+      blurb: configure and run InfluxDB
+      description: configure and run InfluxDB
+    - name: run-kapacitor
+      blurb: configure and run Kapacitor
+      description: configure and run Kapacitor
+    - name: run-telegraf
+      blurb: configure and run Telegraf
+      description: configure and run Telegraf
+    - name: service-account-firewall-rules
+      blurb: define firewall rules used to control internal traffic across instances
+      description: define firewall rules used to control internal traffic across instances
+    - name: tick-instance-group
+      blurb: create Managed Instance Groups for InfluxDB, Kapacitor and Chronograf
+      description: create Managed Instance Groups for InfluxDB, Kapacitor and Chronograf
+    - name: tick-service-account
+      blurb: create a GCP service account for use with your TICK cluster
+      description: create a GCP service account for use with your TICK cluster
