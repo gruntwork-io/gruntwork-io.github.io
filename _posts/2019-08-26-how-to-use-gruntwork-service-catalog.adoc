@@ -1,4 +1,4 @@
-= How to use the Gruntwork Service Catalog and Reference Architecture
+= How to use the Gruntwork Service Catalog
 :type: guide
 :description: Learn about production-grade infrastructure, Terraform, Terragrunt, Packer, Docker, immutable infrastructure, versioning for infrastructure code, automated tests for infrastructure code, and more.
 // TODO: the image should be a screenshot of the service catalog?
@@ -21,15 +21,14 @@ toc::[]
 == Intro
 
 This guide will walk you through how to use the
-https://gruntwork.io/infrastructure-as-code-library/[Gruntwork Service Catalog] and the
-https://gruntwork.io/reference-architecture/[Gruntwork Reference Architecture] to build a production-grade tech stack
+https://gruntwork.io/infrastructure-as-code-library/[Gruntwork Service Catalog] to build a production-grade tech stack
 for your company.
 
-=== What is the Gruntwork Service Catalog?
+=== What is the Gruntwork Service Catalog and Reference Architecture?
 
 The https://gruntwork.io/infrastructure-as-code-library/[Gruntwork Service Catalog] is a collection of over 300,000
-lines of reusable, battle-tested, production-ready infrastructure code for AWS, GCP, and Azure. The Gruntwork Service
-Catalog gives your team the following benefits:
+lines of reusable, battle-tested, production-ready infrastructure code for AWS and GCP. Here are the benefits of using
+the Gruntwork Service Catalog:
 
 // TODO: add a screenshot of the service catalog
 
@@ -40,24 +39,24 @@ Go to prod in days, not months::
   that has been built by a team of DevOps experts and proven in production at hundreds of companies.
 
 Customize everything using infrastructure as code::
-  Everything in the Gruntwork Service Catalog is defined as code (primarily in Terraform, Go, Python, and Bash) and you
-  get full access to 100% of this code. You can combine and compose this code in any way you wish, see how everything
+  Everything in the Gruntwork Service Catalog is defined as code (primarily in Terraform, Go, Python, and Bash) and
+  you get access to 100% of this code. You can combine and compose this code in any way you wish, see how everything
   works under the hood, debug any issues you run into, and customize and modify the code to fit your exact needs.
 
 Learn best practices::
-  The Service Catalog is thoroughly documented and comes with the https://gruntwork.io/training/[DevOps Training Library],
-  a collection of video training courses that teach a variety of DevOps topics, such as infrastructure as code,
-  Terraform, Docker, Packer, AWS, GCP, security, and more.
+  The Service Catalog includes both thorough documentation and access to the
+  https://gruntwork.io/training/[DevOps Training Library], a collection of video training courses that teach a variety
+  of DevOps topics, such as infrastructure as code, Terraform, Docker, Packer, AWS, GCP, security, and more.
 
 Keep everything up to date::
-  All of the code in the Service Catalog is semantically versioned and we are constantly releasing new versions with
-  the latest best practices, new features, and bug fixes. Never miss a critical security fix again. Never waste months
-  updating to the latest version of Terraform. Just follow the instructions in our
-  https://blog.gruntwork.io/tagged/gruntwork-newsletter[monthly newsletter] to get better infrastructure through a
+  All of the code in the Gruntwork Service Catalog is semantically versioned and we are constantly releasing new
+  versions with the latest best practices, new features, and bug fixes. Never miss a critical security fix again. Never
+  waste months updating to the latest version of Terraform. Just follow the instructions in the monthly
+  https://blog.gruntwork.io/tagged/gruntwork-newsletter[Gruntwork Newsletter] to get better infrastructure through a
   version number bump.
 
 Get commercial support::
-  Get access to a team of DevOps experts who can help you set up your infrastructure, build highly available and
+  Get access to a team of DevOps experts who can help you set up your infrastructure, design highly available and
   scalable systems, automate your builds and deployments, troubleshoot issues, and avoid gotchas and pitfalls. Reach out
   to us via Slack, email, and phone/video calls, get code reviews, prioritized bug fixes, and SLAs on response times.
 
@@ -66,14 +65,15 @@ Get commercial support::
 This guide consists of four main sections:
 
 <<core_concepts>>::
-  An overview of the core concepts you need to understand to use the Gruntwork Service Catalog, including how the
-  Service Catalog is designed, infrastructure as code, Terraform, Terragrunt, Packer, Docker, immutable infrastructure,
-  versioning, automated testing, and more.
+  An overview of the core concepts you need to understand to use the Gruntwork Service Catalog, including a look into
+  how the Service Catalog is designed, how the Reference Architecture is designed, how we build production-grade
+  infrastructure, and how to make use of infrastructure as code, Terraform, Terragrunt, Packer, Docker, immutable
+  infrastructure, versioning, automated testing, and more.
 
 // TODO: link to checklist below
 <<production_grade_design>>::
-  An overview of how to use the Gruntwork Service Catalog to build production-grade infrastructure. To get a
-  sense of what production-grade means, check out the production-grade infrastructure checklist.
+  An overview of how to use the Gruntwork Service Catalog to build a production-grade tech stack. To get a sense of
+  what production-grade means, check out <<production_grade_infra_checklist>>.
 
 <<deployment_walkthrough>>::
   A step-by-step guide to deploying several services from the Gruntwork Service Catalog to give you some hands-on
@@ -89,72 +89,125 @@ Feel free to read the guide start to finish or skip around to whatever part inte
 
 === The Gruntwork Service Catalog
 
-// TODO: add a screenshot of one repo
+// TODO: add a screenshot of the service catalog
 
 The Gruntwork Service Catalog is a collection of over 300,000 lines of reusable, battle-tested infrastructure code.
-Here's how that code is organized:
+that is organized into 40+ GitHub repos, some public and open source, and some private and only accessible to Gruntwork
+customers. Each repo is focused on one type of infrastructure: e.g., there is one repo that contains code for deploying
+and managing Kubernetes on AWS, one repo with code for deploying and managing the ELK stack, one repo that
+contains a collection of CI / CD code, and so on.
 
-40+ GitHub repos::
-  The code lives in 40+ GitHub repos, some public and open source, and some private and only accessible to Gruntwork
-  customers. Each repo is focused on one type of infrastructure: e.g., there is one repo that contains code for
-  deploying and managing Kubernetes on AWS, one repo with code for deploying and managing the ELK stack, one repo that
-  contains a collection of CI / CD code, and so on.
+The code in the Gruntwork Service Catalog is written using a combination of:
 
-// TODO: add a screenshot of Terraform code? Or multiple languages side by side?
+Terraform::
+  Used to to define and manage most of the basic infrastructure, such as servers, databases, load balancers, and
+  networking. More on <<terraform>> later.
 
-Code in multiple languages::
-  The code is written using a combination of Terraform, Go, Bash, and Python. Terraform is used to to define and manage
-  most of the basic infrastructure, such as servers, databases, load balancers, and networking. The other languages
-  are used to create scripts (in Bash and Python) and binaries (compiled from Go) that run on top of that
-  infrastructure. For example, we might use Terraform to run a cluster of servers in AWS, a Bash script to install and
-  configure some software in the VM image deployed to each of the servers in the cluster, and during boot, each server
-  might execute run a Go binary to perform some bootstrapping operations. The code in each repo is organized into three
-  primary folders, `modules`, `examples`, and `test`, as described in the following sections.
+Bash::
+  Used for _install scripts_ (e.g., a Bash script that you can use to create Linux VM image with Elasticsearch
+  installed) and _run scripts_ (e.g., you use Terraform to deploy a cluster of server with the Elasticsearch VM image
+  on it and configure the servers to execute a Bash script during boot that can auto-discover and bootstrap the
+  Elasticsearch cluster).
+
+Python::
+  Used for more complicated scripts, especially those that need to run on other operating systems (e.g., Windows)
+  and/or those that need to be called directly from Terraform (e.g., to fill in some missing functionality).
+
+Go::
+  Used to build complex, cross-platform CLI applications. E.g., We have an app called `ssh-grunt` you can run on each
+  server to manage SSH access to that server via IAM groups.
+
+Why these languages? We wrote an entire blog post on
+https://blog.gruntwork.io/why-we-use-terraform-and-not-chef-puppet-ansible-saltstack-or-cloudformation-7989dad2865c[why we use Terraform];
+as for Bash, Python, and Go, we use them because they work just about everywhere, with few or no external dependencies,
+and they can be integrated with almost any configuration management tool: e.g., you can use Bash scripts with Chef,
+Puppet, Ansible, Packer, and Docker (more on <<packer>> and <<docker>> later).
+
+The code in each repo is organized into three primary folders, `modules`, `examples`, and `test`, as described in the
+following sections.
+
+=== Modules
 
 // TODO: add a screenshot of the modules folder
 
-Modules::
-  Each repo contains a `modules` folder that contains the main implementation code, broken down into standalone,
-  orthogonal, reusable, highly configurable modules. For example, the ELK repo (Elasticsearch, Logstash, Kubernetes)
-  isn't one giant module that deploys the entire ELK stack, but a bunch of separate modules for running Elasticsearch,
-  Kibana, Logstash, Elastalert, Beats, Collectd, and so on. This allows you to combine and compose the modules in many
-  different permutations to fit your exact needs: e.g., some use cases need the full ELK stack, while some solely use
-  Elasticsearch; sometimes you run Elasticsearch, Logstash, and Kibana each in completely separate clusters (e.g., in
-  prod, for high availability and scalability) and sometimes you run them all in a single cluster or single node (e.g.,
-  in dev, to save money).
+Each repo in the Gruntwork Service Catalog contains a `modules` folder that contains the main implementation code,
+broken down into standalone, orthogonal, reusable, highly configurable _modules_. For example, the ELK repo
+(Elasticsearch, Logstash, Kubernetes) isn't one giant module that deploys the entire ELK stack, but a bunch of separate
+modules for installing, running, and deploying Elasticsearch, Kibana, Logstash, Elastalert, Beats, Collectd, and so on.
+
+This allows you to combine and compose the modules in many different permutations to fit your exact needs: e.g., some
+use cases need the full ELK stack, while some solely use Elasticsearch; sometimes you run Elasticsearch, Logstash, and
+Kibana each in completely separate clusters (e.g., in prod, for high availability and scalability) and sometimes you
+run them all in a single cluster or single node (e.g., in dev, to save money).
+
+=== Examples
 
 // TODO: add a screenshot of some example code
 
-Examples::
-  Each repo contains an `examples` folder that shows you how to assemble the modules from the `modules` folder into
-  different permutations. This lets you try the modules out in minutes, without having to write a line of code. In
-  other words, this is executable documentation.
+Each repo in the Gruntwork Service Catalog contains an `examples` folder that shows you how to assemble the modules
+from the `modules` folder into different permutations. This lets you try the modules out in minutes, without having to
+write a line of code. In other words, this is executable documentation.
+
+=== Automated tests
 
 // TODO: add a screenshot of some test code
 
-Tests::
-  Each repo contains a `test` folder that contains automated tests for the examples in the `examples` folder. These are
-  mostly integration tests, which use https://github.com/gruntwork-io/terratest/[Terratest] under the hood to deploy
-  the examples into real environments (e.g., real AWS and GCP accounts), validate that everything works, and then tear
-  everything down. E.g., After every commit, we spin up a dozen ELK clusters, read data, write data, run backups, and
-  so on, and then tear it all down again. This is how we build confidence that the code does what we say it does—and
-  that it continues to do it over years of updates.
+Each repo in the Gruntwork Service Catalog contains a `test` folder that contains automated tests for the examples in
+the `examples` folder. These are mostly integration tests, which use
+https://github.com/gruntwork-io/terratest/[Terratest] under the hood to deploy the examples into real environments
+(e.g., real AWS and GCP accounts), validate that everything works, and then tear everything down.
 
-// TODO: add a screenshot of the docs
+For example, after every commit to the ELK repo, we spin up a dozen ELK clusters, perform a variety of validation steps
+(e.g., read data, write data, access Kibana, etc.) and then tear it all down again. This is how we build confidence
+that the code does what we say it does—and that it continues to do it over years of updates.
 
-Documentation::
-  Each repo is thoroughly documented via README files, inline comments, https://gruntwork.io/training/[training videos],
-  and /guides[deployment guides].
+=== Versioning
 
-Consuming the code::
-  You'll see how to consume code from the Service Catalog in the <<deployment_walkthrough>> section.
+All of the code in the Gruntwork Service Catalog is _versioned_. Every time we make a change, we put out a new
+versioned release, and announce it in the monthly
+https://blog.gruntwork.io/tagged/gruntwork-newsletter[Gruntwork Newsletter].
+
+When you use the code from the Gruntwork Service Catalog (a topic we'll cover in <<deployment_walkthrough>>), you will
+always pin yourself to a specific version of the code. That way, you are not accidentally affected by any subsequent
+changes in the Gruntwork Service Catalog until you explicitly choose to pull those changes in. And when you do want to
+pull the changes in, it's just a matter of bumping the version number!
+
+We use version numbers of the form `MAJOR.MINOR.PATCH` (e.g., `1.2.3`), following the principles of
+_https://semver.org[semantic versioning]_. In traditional semantic versioning, you increment the:
+
+. MAJOR version when you make incompatible API changes,
+. MINOR version when you add functionality in a backwards compatible manner, and
+. PATCH version when you make backwards compatible bug fixes.
+
+However, much of the Gruntwork Service Catalog is built on Terraform, and as Terraform is still not at version `1.0.0`
+(latest version as of August, 2019, was `0.12.6`), most of the Gruntwork Service Catalog is using `0.MINOR.PATCH`
+version numbers. With `0.MINOR.PATCH`, the rules are a bit different, where you increment the:
+
+. MINOR version when you make incompatible API changes
+. PATCH version when you add backwards compatible functionality or bug fixes.
 
 === The Gruntwork Reference Architecture
 
 // TODO: Ref Arch diagram
 
+The Gruntwork Reference Architecture is a production-grade, end-to-end tech stack built on top of the modules from the
+Gruntwork Service Catalog. It includes just about everything the typical company needs: multiple environments, each
+configured with server orchestration (e.g., Kubernetes), load balancers, databases, caches, network topology,
+monitoring, alerting, log aggregation, CI/CD, user management, secrets management, SSH management, VPN management, and
+so on. We wire all these pieces together according to your needs, deploy it into your AWS or GCP accounts, and give you
+100% of the code—all in about one day.
 
+Whereas the Gruntwork Service Catalog is relatively unopinionated, allowing you to combine and compose modules, tools,
+and approaches however you want ("a la carte"), the Gruntwork Reference Architecture is more opinionated, giving you a
+small set of pre-defined, standardized sets of modules, tools, and approaches to choose from ("prixe fixe"). For a
+detailed look at the Gruntwork Reference Architecture, check out
+https://blog.gruntwork.io/how-to-build-an-end-to-end-production-grade-architecture-on-aws-part-1-eae8eeb41fec[How to Build an End to End Production-Grade Architecture on AWS].
 
+If the opinionated design of the Reference Architecture looks like a good fit for your company, you may wish to
+purchase it as a way to save months on having to wire everything together and deploy it yourself. If the opinionated
+design is not a good fit, then you will want to use the Gruntwork Service Catalog directly instead.
+
+[[production_grade_infra_checklist]]
 === The production-grade infrastructure checklist
 
 The Gruntwork Service Catalog is a collection of _production-grade infrastructure_—that is, the type of reliable,
@@ -287,6 +340,7 @@ Reuse::
 Some of the main IaC tools you'll see used and referenced in the Gruntwork Service Catalog are Terraform, Terragrunt,
 Packer, and Docker, each of which we'll discuss in the next several sections.
 
+[[terraform]]
 === Terraform
 
 https://www.terraform.io[Terraform] is an open source _provisioning_ tool that allows you to define and manage as code a
@@ -341,12 +395,14 @@ Check out
 https://blog.gruntwork.io/terragrunt-how-to-keep-your-terraform-code-dry-and-maintainable-f61ae06959d8[Terragrunt: how to keep your Terraform code DRY and maintainable]
 for a thorough introduction.
 
-Note that while we find Terragrunt useful for deploying and managing Terraform code in production, the Terraform
-modules in the Gruntwork Service Catalog are pure Terraform and do NOT require Terragrunt.
+Note that while the Gruntwork Reference Architecture relies on Terragrunt as one of its opinionated tools, the
+Gruntwork Service Catalog does NOT require Terragrunt; you can use the Terraform modules in the Gruntwork
+Service Catalog with vanilla Terraform, Terraform Enterprise, Atlantis, Terragrunt, or any other tools you prefer.
 
+[[packer]]
 === Packer
 
-https://www.packer.io[https://www.packer.io] is an open source tool you can use to define machine images (e.g., VM
+https://www.packer.io[https://www.packer.io] is an open source tool you can use to define _machine images_ (e.g., VM
 images, Docker images) as code. For example, here is how you can use Packer to define an Ubuntu 18.04 Amazon Machine
 Image (AMI) that has Node.js installed:
 
@@ -374,31 +430,88 @@ Image (AMI) that has Node.js installed:
 ----
 
 You can run `packer build packer-example.json` to build an AMI from this code and then deploy this AMI to your AWS
-account using other tools (e.g., using Terraform).
+account using other tools. For example, the Gruntwork Service Catalog contains several Terraform modules that can
+deploy AMIs across one or more servers (e.g., into an AWS Auto Scaling Group), with support for auto scaling, auto
+healing, zero-downtime deployments, etc.
 
+The Gruntwork Service Catalog contains a number of scripts and binaries that you can run on your servers: e.g., the
+ELK code includes scripts you run during boot on Elasticsearch servers to bootstrap the cluster; you can also run
+the `ssh-grunt` binary on each server to allow manage SSH access to that server using IAM groups (i.e., IAM users in
+specific IAM groups will be able to SSH to specific servers using their own usernames and SSH keys).
 
+To get these scripts and binaries onto your virtual servers (e.g., onto EC2 instances in AWS or compute instances in
+GCP), we recommend using Packer to build VM images that have these scripts and binaries installed. You'll see an
+example of how to do this in the <<deployment_walkthrough>>. Note that Gruntwork Service Catalog does NOT require that
+you use Packer (e.g., you could also use Ansible or Chef to install the scripts and binaries), but the Gruntwork
+Reference Architecture does use Packer as one of its opinionated tools.
 
+[[docker]]
 === Docker
 
-TODO
+https://www.docker.com[Docker] is an open source tool you can use to run _containers_ and define _container images_ as
+code. A container is a bit like a lightweight VM, except instead of virtualizing all the hardware and OS, containers
+virtualize solely user space, which gives you many of the isolation benefits of a VM (e.g., each container is isolated
+in terms of memory, CPU, networking, hard drive, etc), but with much less memory, CPU, and start-up time overhead.
+For example, here is how you can define an Ubuntu 18.04 Docker image that has Node.js installed:
 
+.packer-example.json
+[source,Dockerfile]
+----
+FROM ubuntu:18.04
+
+RUN curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - && \
+    sudo apt-get update -y && \
+    sudo apt-get install -y nodejs
+----
+
+You can run `docker build -t example-image .` to build a Docker image from this code and then deploy the Docker image
+using a _container orchestration tool_ such as Kubernetes, ECS, nor Nomad (all of these tools are available in the
+Gruntwork Service Catalog).
+
+[[immutable_infrastructure]]
 === Immutable infrastructure
 
-TODO
+With _mutable infrastructure_, you deploy a set of servers, and you continuously update those servers in place. Every
+new update gets installed on top of the previous updates, either manually (e.g., by SSHing to each server and running
+commands), or via tools like Ansible, Chef, or Puppet. Over time, each "mutable" server builds up a history of
+changes, which can make it difficult to (a) reason about what's actually installed and (b) debug issues that are
+specific to the unique history of one server but not others.
 
-=== Versioning for infrastructure code
+The idea behind _immutable infrastructure_ is that once you deploy a server, you never change it again. If you need to
+roll out an update, you deploy a _new_ server with that update, and undeploy the old one. This paradigm is built for use
+with (a) the cloud, where you can easily spin up or tear down servers on-demand and (b) machine images, as every time
+there's a change, you can use tools like Packer or Docker to build a new, immutable, versioned machine image (e.g., VM
+image or Docker image), and deploy new servers with that image.
 
-TODO
+The advantages of immutable infrastructure are:
 
-=== Automated testing for infrastructure code
+Easier to reason about servers::
+  It's much easier to figure out what's installed on any server, as you know the exact image each server is running,
+  and that the image never changes.
 
-TODO
+You can run the same images in all environments::
+  For example, you can run the same Docker image on your laptop and in production (whereas it's rare to run Ansbile,
+  Chef, or Puppet in local dev). This helps to reduce "works on my machine" and environment-specific bugs, and makes it
+  easier to debug those issues when they do happen.
+
+Easier scaling and rollback::
+  With immutable images, you can quickly and easily spin up 100 or 1,000 servers, with no need to worry about how long
+  it'll take to configure all those servers (e.g., via Ansible, Chef, or Puppet), as all the configuration has already
+  happened and is captured in the VM or Docker image. Rollback is easier too, as you can quickly jump back to a
+  previous image, without having to wait for and worry about running a bunch of older install commands (which may no
+  longer work, e.g., if certain packages have been removed from APT or YUM).
+
 
 [[production_grade_design]]
 == Production-grade design
 
 With all the core concepts out of the way, let's now discuss how to use the Gruntwork Service Catalog to build
 production-grade infrastructure.
+
+- infra-modules
+- infra-live
+- Packer
+- Docker
 
 
 [[deployment_walkthrough]]
