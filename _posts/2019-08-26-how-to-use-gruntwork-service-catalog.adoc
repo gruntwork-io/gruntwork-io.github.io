@@ -243,7 +243,7 @@ when we say "production-grade."
 Building production-grade infrastructure requires taking into account a long list of details, which we have captured in
 _The Production-Grade Infrastructure Checklist_:
 
-. The Production-Grade Infrastructure Checklist
+.The Production-Grade Infrastructure Checklist
 |===
 | Task | Description | Example tools
 
@@ -942,9 +942,9 @@ func TestVpcApp(t *testing.T) {
 	// Unique ID to namespace resources
 	uniqueId := random.UniqueId()
 	// Generate a unique name for each VPC so tests running in parallel don't clash
-    vpcName := fmt.Sprintf("test-vpc-%s", uniqueId)
-    // Generate a unique key in the S3 bucket for the Terraform state
-    backendS3Key := fmt.Sprintf("vpc-app-test/%s/terraform.tfstate", uniqueId)
+	vpcName := fmt.Sprintf("test-vpc-%s", uniqueId)
+	// Generate a unique key in the S3 bucket for the Terraform state
+	backendS3Key := fmt.Sprintf("vpc-app-test/%s/terraform.tfstate", uniqueId)
 
 	terraformOptions := &terraform.Options {
 		// Where the Terraform code is located
@@ -952,20 +952,18 @@ func TestVpcApp(t *testing.T) {
 
 		// Variables to pass to the Terraform code
 		Vars: map[string]interface{}{
-		    "aws_region":       awsRegionForTest,
-            "aws_account_id":   awsAccountId,
-            "vpc_name":         vpcName,
-            "cidr_block":       "10.0.0.0/16",
-            "num_nat_gateways": 1,
-
+			"aws_region":       awsRegionForTest,
+			"aws_account_id":   awsAccountId,
+			"vpc_name":         vpcName,
+			"cidr_block":       "10.0.0.0/16",
+			"num_nat_gateways": 1,
 		},
 
 		// Backend configuration to pass to the Terraform code
 		BackendConfig: map[string]interface{}{
-            "bucket":   s3BucketForTesting,
-            "key":      backendS3Key,
-            "region":   awsRegionForTest,
-
+			"bucket":   s3BucketForTesting,
+			"key":      backendS3Key,
+			"region":   awsRegionForTest,
 		},
 	}
 
