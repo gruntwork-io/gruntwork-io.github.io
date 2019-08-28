@@ -38,6 +38,8 @@
   $('body').click(() => {
     displayData('showAll');
   })
+  let $noResults = $('.no-results');
+  $noResults.hide();
 
   //Search data
   let searchData = ((loaded_data, value) => {
@@ -52,7 +54,12 @@
     }
 
     displayData('show');
-    if (!searchQuery) return displayData('showAll');
+    $noResults.hide();
+    if(!searchQuery) return displayData('showAll');
+    if(hiddenSearchData.length === loaded_data.length) {
+        displayData('hide');
+        return $noResults.show();
+    };
 
     //Return items that do not match the search query
     const unMatchedItems = loaded_data.filter(item => {
