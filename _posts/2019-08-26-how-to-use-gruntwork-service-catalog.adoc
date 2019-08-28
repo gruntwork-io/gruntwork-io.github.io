@@ -420,7 +420,7 @@ for a thorough introduction.
 
 Note that while the Gruntwork Reference Architecture relies on Terragrunt as one of its opinionated tools, the
 Gruntwork Service Catalog does NOT require Terragrunt; you can use the Terraform modules in the Gruntwork
-Service Catalog with vanilla Terraform, Terraform Enterprise, Atlantis, Terragrunt, or any other tools you prefer.
+Service Catalog with plain Terraform, Terraform Enterprise, Atlantis, Terragrunt, or any other tools you prefer.
 
 [[packer]]
 === Packer
@@ -1028,19 +1028,25 @@ For a lot more information on writing automated tests for Terraform code, see:
 ==== Deploying
 
 Now that your module has been thoroughly tested, you can deploy it to your real environments (e.g., staging and
-production).
+production). There are many ways to deploy Terraform modules, so in this guide, we'll focus on three: (1) using plain
+Terraform, (2) using Terragrunt, and (3) using Terraform Enterprise.
 
+===== Deploy using plain Terraform
 
+- same as manual testing
 
-- Usage with Terragrunt
--- infra-modules
--- infra-live
--- DRY backend
--- apply vs apply-all
-- Usage with TFE (coming soon)
--- infra-modules
--- Pull into TFE Registry
--- Deploy workspaces
+===== Deploy using Terragrunt
+
+- infra-modules
+- infra-live
+- DRY backend
+- apply vs apply-all
+
+===== Deploy using Terraform Enterprise
+
+- infra-modules
+- Pull into TFE Registry
+- Deploy using workspaces
 
 === Using scripts and binaries
 
