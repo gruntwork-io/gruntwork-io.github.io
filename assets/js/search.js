@@ -4,150 +4,98 @@
 (function () {
 
   //Load json data
-  function loadData(type, option, event) {
+  let loadData = ((type, value) => {
     $.getJSON(`/json/${type}.json`, (data) => {
-      if (option == "search") {
-        searchData(data, event);
-      } else {
-        filterData(data);
-      };
+      searchData(data, value);
     });
-    // retrieveTags(loaded_data);
-  };
-
-  let hiddenSearchData = [];
-  //Search data
-  let searchData = (loaded_data, event) => {
-    let searchQuery = event.target.value;
-
-    hiddenSearchData.forEach(data => {
-      $(`#${data.id}`).show();
-    })
-
-    searchQuery = searchQuery.toLowerCase();
-
-    const results = loaded_data.filter(item => {
-      const searchContent = (item.title + item.category + item.content).toLowerCase();
-      return !searchContent.includes(searchQuery)
-    })
-
-    results.forEach(result => {
-      $(`#${result.id}`).hide();
-    })
-    hiddenSearchData = results;
-  }
-
-
-  //Called on key up within the search box in the deployment guides page
-  $('#search-box').keyup(function (event) {
-    loadData('guides', 'search', event);
   });
 
-  // let renderCheckboxes = function(tags) {
-  //     filteringOptions.innerHTML = tags.map(function (tag) {
-  //         let html = '<h2>tester</h2>' +
-  //         '<label class="checkbox">' +
-  //         '<input value="aws" type="checkbox" onchange="">' + tag + 
-  //         '</label>';
-  //         return html;
-  //     }).join('');
-  // }
+  let hiddenSearchData = [];
 
-  // // let tags = getTags();
-  // let tags = ["aws", "gcp", "terraform"];
-  // renderCheckboxes(tags);
+  // This function displays or hides item on the page
+  let displayData = (type => {
+    const removeCategoriesClass = $('.categories ul');
+    const removeCategoryHeader = $('.category-head');
 
-  let retrieveTags = function (loaded_data) {
-    let tags = [];
-    $.each(loaded_data, function (key, data) {
-      return data.tags;
-    });
-  }
+    if (hiddenSearchData.length > 0) {
+      removeCategoriesClass.hide() && removeCategoryHeader.hide();
 
-
-  let filterData = function (loaded_data) {
-    let checkBoxes = document.querySelectorAll("#filter-options li input");
-
-    $.each(loaded_data, function (key, data) {
-      let tags = data.tags;
-      let title = data.title;
-      checkBoxes.forEach(checkbox => {
-        checkbox.addEventListener('change', e => {
-            let checkBox = e.target;
-            searchData()
-            // itemsToFilter.forEach(function (item) {
-            //   if (checkBox.checked) {
-            //     let itemToShow = tags.includes(checkBox.value) && item.innerHTML.includes(title);
-            //     if (itemToShow) {
-            //       item.style.display = "none";
-            //     }
-            //   } else {
-            //     item.style.display = "block";
-            //   }
-            // })
-  
-          });
+      hiddenSearchData.forEach(data => {
+        if (type == 'show') {
+          $(`#${data.id}`).show();
+        } else if (type == 'showAll') {
+          removeCategoriesClass.show() && removeCategoryHeader.show();
+          $(`#${data.id}`).show();
+        } else {
+          $(`#${data.id}`).hide();
+        }
       })
-      for (let i = 0; i < checkBoxes.length; i++) {
-        checkBoxes[i].addEventListener('change', e => {
-          let checkbox = e.target;
-          itemsToFilter.forEach(function (item) {
-            if (checkbox.checked) {
-              let itemToShow = tags.includes(checkbox.value) && item.innerHTML.includes(title);
-              if (itemToShow) {
-                item.style.display = "none";
-              }
-            } else {
-              item.style.display = "block";
-            }
-          })
+      return hiddenSearchData;
+    }
+  });
 
-        });
+  //Display all itmes initially on the page when user click on the body of the page
+  $('body').click(() => {
+    displayData('showAll');
+  })
+
+  //Search data
+  let searchData = ((loaded_data, value) => {
+    let searchQuery;
+    if (typeof (value) !== "string") {
+      value.map(filterValues => {
+        searchQuery = filterValues;
+        return searchQuery;
+      });
+    } else {
+      searchQuery = value;
+    }
+
+    displayData('show');
+    if (!searchQuery) return displayData('showAll');
+
+    //Return items that do not match the search query
+    const unMatchedItems = loaded_data.filter(item => {
+      const searchContent = item.title + item.category + item.content + item.tags;
+      if (selectedFilters.length > 1) {
+        return selectedFilters.forEach(query => !searchContent.includes(query.toLowerCase()));
       }
+      return !searchContent.includes(searchQuery.toLowerCase());
     });
-  }
+
+    hiddenSearchData = unMatchedItems;
+
+    displayData('hide');
+    return hiddenSearchData;
+  })
 
 
-  // Retrieve the tags from the json file and flatten out the array
-  // let retrieveTags = function(loaded_data) {
-  //     let tags = [];
-  //     $.each(loaded_data, function(key, data){
-
-  //         if (data.tags.length > 0){
-  //             tags.push(data.tags.toLowerCase().split(","));
-  //             tags = tags.reduce(function(a, b){
-  //                 return a.concat(b);
-  //             }, []);
-  //         }
-  //     });
-  //     return tags;
-  // }
-
-  //   loadData()
+  //Triggered on key up within the search box in the deployment guides page
+  $('#search-box').keyup(function (event) {
+    loadData('guides', event.target.value);
+  });
 
 
-  //     // Searches through the array created and generates the html content for each result found
-  //  let createSearchContent = function(loaded_data) {
-  //     let contentSearch = [];
-  //     $.each(loaded_data, function (key, data) {
-  //         contentSearch.push= (data.title + data.content + data.category).toLowerCase();
-  //         return contentSearch;
-  //     })
-  //     return contentSearch;
-  //  }
+  //Triggered when the cloud filter buttons are clicked
+  $('.cloud-filter .btn').click(function () {
+    let $value = $(this).attr('value');
+    loadData('guides', $value);
+  });
 
-  //     let domItems = function () {
-  //       $(`.guide-card: contains(${item})`).each(function (index, element) {
-  //           $(element).addClass("has-content");
-  //         }
-  //       });
-  //     let itemsToFilter = document.querySelectorAll(".card-title b");
-  //     let item;
-  //     $.each(itemsToFilter, function (i, it) {
-  //       item = it.innerHTML.toLowerCase();
-  //     })
-  //     return item
-  //   }
 
+  let $filterCheckboxes = $('#filter-options input[type="checkbox"]');
+  let selectedFilters = [];
+
+
+  //Triggered when filter checkboxes are checked
+  $filterCheckboxes.on('change', (event) => {
+    if (event.target.checked) {
+      selectedFilters.push(event.target.value);
+      loadData('guides', selectedFilters)
+    } else {
+      selectedFilters = selectedFilters.filter(item => item !== event.target.value)
+      loadData('guides', selectedFilters)
+    }
+  });
 
 })();

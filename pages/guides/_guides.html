@@ -10,23 +10,23 @@
                         <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"><span class="dropdown-text"> Filter</span>
                         <span class="caret"></span></button>
                         <ul class="dropdown-menu dropdown-menu-form" id="filter-options">
-                                <li><label class="checkbox"><input value="aws" type="checkbox">AWS</label></li>
-                                <li><label class="checkbox"><input value="gcp" type="checkbox">GCP</label></li>
-                              </ul>
-                    </div>
-                        
+                            <li><label class="checkbox"><input value="aws" type="checkbox">AWS</label></li>
+                            <li><label class="checkbox"><input value="gcp" type="checkbox">GCP</label></li>
+                        </ul>
+                    </div> 
                 </div>
             </div>
         </div>
     </div>
     <div class="cloud-filter col-md-4 col-md-offset-5 text-center">
             <div class="btn-group btn-group-toggle" data-toggle="buttons">
-            <img class="btn" type="radio" name="options" src="/assets/img/logos-technologies/aws_logo.png" alt="aws logo">
-            <img class="btn" type="radio" name="options" src="/assets/img/logos-technologies/gcp_logo.png" alt="gcp logo">
-            <img class="btn" type="radio" name="options" src="/assets/img/logos-technologies/azure_logo.png" alt="azure logo">
+            <img class="btn" value="aws" src="/assets/img/logos-technologies/aws_logo.png" alt="aws logo">
+            <img class="btn" value="gcp" src="/assets/img/logos-technologies/gcp_logo.png" alt="gcp logo">
+            <img class="btn" value="azure" src="/assets/img/logos-technologies/azure_logo.png" alt="azure logo">
         </div>
     </div>
 </div>
+<div id="filtered-items"></div>
 <div class="guide-listing" id="listings">
     <div class="col-md-2 categories">
         {% for category in site.categories %}
