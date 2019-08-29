@@ -576,6 +576,7 @@ code to use as examples.
 Within the Service Catalog, you'll find two types of modules: (1) Terraform modules and (2) scripts and binaries. The
 next two sections of the guide will walk you through how to use each of these.
 
+[[using_terraform_modules]]
 === Using Terraform Modules
 
 This section will show you how to use Terraform modules from the Gruntwork Service Catalog. As an illustrative example,
@@ -1312,9 +1313,189 @@ terragrunt apply-all
 
 === Using scripts and binaries
 
-- gruntwork-install
-- Packer (incl secrets)
-- Docker (incl secrets)
+This section will show you how to use scripts and binaries from the Gruntwork Service Catalog. As illustrative examples,
+we'll deploy the `ip-lockdown` script and `ssh-grunt` binary from
+https://github.com/gruntwork-io/module-security[module-security].
+
+IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access `module-security`.
+
+ip-lockdown::
+  `ip-lockdown` is a Bash script you can use to lock down specific outgoing IP addresses on a Linux server so only
+  specific users can access them. The main motivation is to lock down the
+  https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html[metadata endpoint] on EC2 instances so
+  only specific users (e.g., root) can access it—and whatever IAM permissions and other secrets it confers—rather than
+  just any user who happens to get access to EC2 instance.
+
+ssh-grunt::
+  `ssh-grunt` is a binary (compiled from Go code) that allows you to manage SSH access to your EC2 instances using an
+  identity provider such as AWS IAM or any SAML-based identity provider (e.g., Active Directory, Google, Okta, etc.).
+  This allows you to grant access to specific EC2 instances by putting developers into certain groups (e.g., into
+  specific IAM groups or AD groups) and for each developer to SSH to EC2 instances using their own username and SSH
+  key.
+
+Let's walk through how to use these two tools.
+
+==== gruntwork-install
+
+The easiest way to install scripts and binaries from the Gruntwork Service Catalog is to use the
+https://github.com/gruntwork-io/gruntwork-installer[Gruntwork Installer]. This is an open source Bash script that
+allows you to install scripts and binaries via a one-liner, similar to `apt-get install` or `yum install` (if you're
+curious why we don't use `apt` or `yum` directly, see
+https://github.com/gruntwork-io/gruntwork-installer#motivation[Gruntwork Installer Motivation]).
+
+The first step is to install the Gruntwork Installer itself, which you can do as follows (make sure to replace
+`<VERSION>` below with the latest version from the
+https://github.com/gruntwork-io/gruntwork-installer/releases[Gruntwork Installer releases page]):
+
+----
+curl -LsS https://raw.githubusercontent.com/gruntwork-io/gruntwork-installer/master/bootstrap-gruntwork-installer.sh | bash /dev/stdin --version <VERSION>
+----
+
+Now you can install any script `XXX` at version `YYY` from repo `ZZZ` of the Gruntwork Service Catalog as follows:
+
+----
+gruntwork install --module-name XXX --tag YYY --repo ZZZ
+----
+
+And you can install any binary `XXX` at version `YYY` from repo `ZZZ` of the Gruntwork Service Catalog as follows:
+
+----
+gruntwork install --binary-name XXX --tag YYY --repo ZZZ
+----
+
+Note that if repo `ZZZ` is a private GitHub repo (which `module-security` is), you'll need to authenticate by setting
+your https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line[GitHub personal access token]
+as the environment variable `GITHUB_OAUTH_TOKEN`:
+
+----
+export GITHUB_OAUTH_TOKEN=(YOUR_TOKEN)
+----
+
+Once you've set this token, to install the `ip-lockdown` script and `ssh-grunt` binary, you run (make sure to replace
+`<VERSION>` with the latest version from the
+https://github.com/gruntwork-io/module-security/releases[module-security releases page]):
+
+----
+gruntwork install \
+  --module-name ip-lockdown \
+  --tag <VERSION> \
+  --repo https://github.com/gruntwork-io/module-security
+
+gruntwork install \
+  --binary-name ssh-grunt \
+  --tag <VERSION> \
+  --repo https://github.com/gruntwork-io/module-security
+----
+
+Now that you know _how_ to use `gruntwork-install`, let's talk about _where_ to use it.
+
+==== Where to run gruntwork-install
+
+You will most likely want to use the Gruntwork Installer to install scripts and binaries on your EC2 instances. We
+recommend following <<immutable_infrastructure>> practices and creating an immutable, versioned image that has the
+scripts and binaries installed. There are many ways to do this, so in this guide, we'll focus on just the following
+ones:
+
+. <<gruntwork_install_packer>>
+. <<gruntwork_install_docker>>
+
+[[gruntwork_install_packer]]
+===== Running gruntwork-install in Packer templates
+
+If you want to build machine images with scripts and binaries from the Gruntwork Service Catalog, such as an Amazon
+Machine Image (AMI) for use in AWS, you can use https://www.packer.io[Packer]. Here's an example of how to use
+`gruntwork-install` in a Packer template:
+
+.packer-example.json
+[source,json]
+----
+{
+  "builders": [{
+    "type": "amazon-ebs",
+    "region": "us-east-2",
+    "source_ami": "ami-0c55b159cbfafe1f0",
+    "instance_type": "t2.micro",
+    "ssh_username": "ubuntu",
+    "ami_name": "packer-example-{{timestamp}}",
+    "github_auth_token": "{{env `GITHUB_OAUTH_TOKEN`}}"
+  }],
+  "provisioners": [{
+    "type": "shell",
+    "inline": [
+      "curl -LsS https://raw.githubusercontent.com/gruntwork-io/gruntwork-installer/master/bootstrap-gruntwork-installer.sh | bash /dev/stdin --version v0.0.22",
+      "gruntwork install --module-name ip-lockdown --tag v0.18.4 --repo https://github.com/gruntwork-io/module-security",
+      "gruntwork install --binary-name ssh-grunt --tag v0.18.4 --repo https://github.com/gruntwork-io/module-security"
+    ],
+    "environment_vars": [
+      "GITHUB_OAUTH_TOKEN={{user `github_auth_token`}}"
+    ]
+  }]
+}
+----
+
+A few things to notice about this Packer template:
+
+* The GitHub personal access token is read from the environment variable `GITHUB_OAUTH_TOKEN` (it is NOT hard-coded
+  into the Packer template itself, as you should never store secrets in plain text) and passed to the `shell`
+  provisioner.
+* The `shell` provisioner installs the Gruntwork Installer and then uses it to install `ip-lockdown` and `ssh-grunt`
+  at specific versions.
+
+To build an AMI from this Packer template, you run:
+
+----
+export GITHUB_OAUTH_TOKEN=(YOUR_TOKEN)
+packer build packer-example.json
+----
+
+[[gruntwork_install_docker]]
+===== Running gruntwork-install in Docker images
+
+If you want to build Docker images with scripts and binaries from the Gruntwork Service Catalog, the approach is
+similar to what you saw earlier, but you have to take extra care with how you pass in your GitHub personal access
+token. You should NOT hard-code the token into your `Dockerfile` (never store secrets in plain text) and you should NOT
+naively pass it in via a Docker build argument, as build arguments get stored in the Docker image layers, and anyone
+with access to that Docker image will be able to extract your token!
+
+The safe way to pass secrets when building a Docker image is to use a
+https://docs.docker.com/develop/develop-images/multistage-build/[multi-stage build], as shown in the following example:
+
+.Dockerfile
+[source,Dockerfile]
+----
+# This is an intermediate stage. We can safely pass secrets into it, as this stage will be thrown away.
+FROM ubuntu:18.04 as intermediate
+
+# You must set a GitHub personal access token as a build arg. This will be used to access the private gruntwork-io
+# GitHub repos
+ARG GITHUB_OAUTH_TOKEN
+RUN if [ -z "$GITHUB_OAUTH_TOKEN" ]; then echo "ERROR: You must set GITHUB_OAUTH_TOKEN as a Docker build arg."; exit 1; fi
+
+RUN curl -LsS https://raw.githubusercontent.com/gruntwork-io/gruntwork-installer/master/bootstrap-gruntwork-installer.sh | bash /dev/stdin --version v0.0.22 && \
+    gruntwork install --module-name ip-lockdown --tag v0.18.4 --repo https://github.com/gruntwork-io/module-security && \
+    gruntwork install --binary-name ssh-grunt --tag v0.18.4 --repo https://github.com/gruntwork-io/module-security
+
+# This is the real Docker image that will be created in the end. It just carefully copies code from the intermediate.
+# Note that the secrets from the intermediate will NOT be copied and published.
+FROM ubuntu:18.04
+
+# Copy just what we need from the intermediate image
+COPY --from=intermediate /usr/local/bin/ip-lockdown /usr/local/bin/ip-lockdown
+COPY --from=intermediate /usr/local/bin/ssh-grunt /usr/local/bin/ssh-grunt
+----
+
+A few things to notice about this Packer template:
+
+* The GitHub personal access token is passed in as a Docker build arg to the first stage. This stage is therefore able
+  to run `gruntwork-install` against private repos.
+* The second stage copies just the installed scripts/binaries from the first stage. Note that none of the build
+  arguments get copied, so they will NOT end up in the final Docker image.
+
+To build the Docker image, you run:
+
+----
+docker build --build-arg GITHUB_OAUTH_TOKEN=(YOUR_TOKEN) -t example-image:v1 .
+----
 
 === Combining Terraform, scripts, and binaries
 
