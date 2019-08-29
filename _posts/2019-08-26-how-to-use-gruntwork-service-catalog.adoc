@@ -524,10 +524,6 @@ Easier scaling and rollback::
   previous image, without having to wait for and worry about running a bunch of older install commands (which may no
   longer work, e.g., if certain packages have been removed from APT or YUM).
 
-=== Operating system compatibility
-
-TODO
-
 [[how_to_use_the_catalog]]
 == How to use the Gruntwork Service Catalog
 
@@ -1611,6 +1607,44 @@ So, whenever possible, use the code directly from the `gruntwork-io` GitHub org,
 <<using_terraform_modules>> and <<using_scripts_binaries>>. If your team relies on NPM, Docker Hub, Maven Central,
 GitHub, or the Terraform Registry, using Gruntwork repos directly is no different. However, if your company completely
 bans all outside sources, then follow the instructions above to fork the code, and good luck!
+
+=== Operating system compatibility
+
+Here's a summary of the operating systems supported by Gruntwork the Gruntwork Service Catalog as of August, 2019:
+
+Tools::
+  The main tools we expect customers to use are Terraform, Docker, and Packer, all of which work on all major operating
+  systems.
+
+Terraform modules::
+  Just about all the Terraform modules in the Gruntwork Service Catalog work on all major operating systems. However,
+  there are a handful of modules where we were forced to call out to scripts from our Terraform code. Most of these
+  scripts are Python and work on all major operating systems (as long as Python is installed), but there are a couple
+  places where we call Bash code (mostly `sleep 30` to work around Terraform bugs). If you run into a portability
+  issue, please report it as a bug, and we'll get it fixed!
+
+Go binaries::
+  The Gruntwork Service Catalog includes a number of dev tools written in Go which are compiled into standalone
+  binaries for every major operating system. This applies to tools such as `Terragrunt`, `cloud-nuke`,
+  `openvpn-admin`, `houston`, `gruntkms`, `ssh-grunt`, `gruntsam`, and `kubergrunt`.
+
+Server scripts::
+  There are a number of scripts in the Gruntwork Service Catalog that are meant to be installed and executed on Linux
+  servers in AWS and GCP. These include `install-xxx` and `run-xxx` scripts (e.g., `install-vault`, `run-vault`,
+  `install-kafka`, `run-kafka`, `install-elasticsearch`, `run-elasticsearch`, etc.), CI / CD scripts (e.g.,
+  `aws-helpers`, `build-helpers`, `circleci-helpers`, `git-helpers`, `terraform-helpers`), and server scripts (e.g.,
+  `attach-eni`, `mount-ebs-volume`, `add-dns-a-record`). See <<using_scripts_binaries>> for how these scripts are meant
+  to be installed and used.
+
+Deployment scripts::
+  There are a handful of deployment scripts in the Gruntwork Service Catalog that are meant to be executed by a
+  developer directly, such as the `roll-out-ecs-cluster-update.py` script used to do zero-downtime rolling deployments
+  for ECS clusters. These scripts are written in Python and should work on all major operating systems.
+
+Need Windows support?::
+  While Windows users can use most of the Gruntwork Service Catalog, the vast majority of Gruntwork customers use
+  Linux or Mac, so we haven't prioritized improving our Windows support. If you would like us to improve our Windows
+  support, please https://gruntwork.io/contact/[contact us].
 
 [[next_steps]]
 == Next steps
