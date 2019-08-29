@@ -866,14 +866,21 @@ key    = "manual-testing/<YOUR-NAME>/terraform.tfstate"
 region = "us-east-2"
 ----
 
-You can now test manually as follows:
+You can now test manually by authenticate to your sandbox environment (see
+https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[A Comprehensive Guide to Authenticating to AWS on the Command Line])
+and running:
 
-. Authenticate to your sandbox environment (see
-  https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[A Comprehensive Guide to Authenticating to AWS on the Command Line])
-. Run `terraform init -backend-config=testing-backend.hcl`
-. Run `terraform apply -var-file=testing.tfvars`
-. Manually validate the code is working as you expect
-. When you're done, run `terraform destroy -var-file=testing.tfvars` to clean up after yourself
+----
+cd infrastructure-modules/networking/vpc-app
+terraform init -backend-config=testing-backend.hcl
+terraform apply -var-file=testing.tfvars
+----
+
+When you're done testing, clean up by running:
+
+----
+terraform destroy -var-file=testing.tfvars
+----
 
 ==== Automated tests
 
@@ -1006,8 +1013,8 @@ https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-
 and do the following:
 
 ----
-$ cd test
-$ go test -v -timeout 45m
+cd infrastructure-modules/test
+go test -v -timeout 45m
 ----
 
 Note the use of the `-timeout 45m` argument with +go test+. By default, Go imposes a time limit of 10 minutes for
@@ -1028,25 +1035,280 @@ For a lot more information on writing automated tests for Terraform code, see:
 ==== Deploying
 
 Now that your module has been thoroughly tested, you can deploy it to your real environments (e.g., staging and
-production). There are many ways to deploy Terraform modules, so in this guide, we'll focus on three: (1) using plain
-Terraform, (2) using Terragrunt, and (3) using Terraform Enterprise.
+production). There are many ways to deploy Terraform modules, so in this guide, we'll focus on just the following ones:
 
+. <<deploy_using_plain_terraform>>
+. <<deploy_using_terragrunt>>
+
+// TODO: add Terraform Enterprise instructions
+
+[[deploy_using_plain_terraform]]
 ===== Deploy using plain Terraform
 
-- same as manual testing
+One option is to deploy all of your environments using plain-old-Terraform. The approach is nearly identical to the
+way you did manual testing; let's walk through it for the staging environment.
 
+First, create a `staging.tfvars` file:
+
+----
+infrastructure-modules
+  └ networking
+    └ vpc-app
+      └ main.tf
+      └ outputs.tf
+      └ variables.tf
+      └ testing.tfvars
+      └ testing-backend.hcl
+      └ staging.tvars
+  └ test
+    └ vpc_app_test.go
+----
+
+Inside the file, set the variables for this module to values appropriate for this environment:
+
+.infrastructure-modules/networking/vpc-app/staging.tfvars
+[source,hcl]
+----
+aws_region       = "us-east-2"
+aws_account_id   = "888888888888"
+vpc_name         = "staging-vpc"
+cidr_block       = "10.10.0.0/16"
+num_nat_gateways = 1
+----
+
+Next, create a `staging-backend.hcl` file:
+
+----
+infrastructure-modules
+  └ networking
+    └ vpc-app
+      └ main.tf
+      └ outputs.tf
+      └ variables.tf
+      └ testing.tfvars
+      └ testing-backend.hcl
+      └ staging.tvars
+      └ staging-backend.hcl
+  └ test
+    └ vpc_app_test.go
+----
+
+Inside this file, configure the backend for staging:
+
+.infrastructure-modules/networking/vpc-app/staging-backend.hcl
+[source,hcl]
+----
+bucket         = "<YOUR-BUCKET-FOR-STAGING>"
+key            = "networking/vpc-app/terraform.tfstate"
+region         = "us-east-2"
+encrypt        = true
+dynamodb_table = "<DYNAMODB-TABLE-FOR-STAGING>"
+----
+
+And now you can deploy to the staging environment as follows:
+
+----
+cd infrastructure-modules/networking/vpc-app
+terraform apply -backend-config=staging-backend.hcl -var-file=staging.tfvars
+----
+
+To deploy to other environments, create analogous `.tfvars` and `.hcl` files (e.g., `production.tfvars` and
+`production-backend.hcl`) and run `terraform apply` with those files.
+
+[NOTE]
+.Making the backend config more DRY
+====
+In each environment, you'll most likely want to use the same backend settings (e.g., S3 bucket, DynamoDB table)
+for multiple modules. The only difference between the modules will be the `key` value, which needs to be unique for
+each module. To reduce copy/paste, you could (1) create a `common/staging-backend.hcl` file with all the backend
+settings for the staging environment except `key`, (2) create a `networking/vpc-app/backend.hcl` file that solely sets
+the `key` parameter, and then (3) deploy as follows:
+
+----
+cd infrastructure-modules/networking/vpc-app
+terraform apply \
+  -backend-config=../../common/staging-backend.hcl \
+  -backend-config=backend.hcl \
+  -var-file=staging.tfvars
+----
+====
+
+*Benefits of this approach*
+
+* No external tooling required.
+* Analogous to how you run manual and automated tests.
+* Quick feedback cycle.
+* Completely free and open source.
+
+*Drawbacks to this approach*
+
+* You're always deploying "latest" from a branch. No versioning or easy rollback.
+* Lots of command-line arguments to pass. Easy to make mistakes. Most teams end up creating hacky wrapper scripts.
+* Manually setting a unique `key` for each module is repetitive and error prone.
+* From a quick glance at the code, it's not clear what accounts, environments, or regions you deploy to. Figuring this
+  out requires digging through every `.tfvars` file.
+
+[[deploy_using_terragrunt]]
 ===== Deploy using Terragrunt
 
-- infra-modules
-- infra-live
-- DRY backend
-- apply vs apply-all
+Another option is to use https://github.com/gruntwork-io/terragrunt[Terragrunt], an open source wrapper for Terraform
+that helps with some of the drawbacks mentioned in the previous approach.
 
-===== Deploy using Terraform Enterprise
+The first step with Terragrunt is to version your code. You can do this by creating Git tags in
+`infrastructure-modules`:
 
-- infra-modules
-- Pull into TFE Registry
-- Deploy using workspaces
+----
+cd infrastructure-modules
+git tag -a "v0.0.1" -m "Created vpc-app module"
+git push --follow-tags
+----
+
+This will allow you to deploy different versions of your module in different environments (e.g., `v0.0.1` in prod and
+`v0.0.2` in stage) and rollback to previous versions if necessary. With Terragrunt, we recommend defining your live
+environments in a separate repo called `infrastructure-live` that uses a folder structure with the following format:
+
+----
+infrastructure-live
+  └ <account>
+    └ terragrunt.hcl
+    └ _global
+    └ <region>
+      └ _global
+      └ <environment>
+        └ <resource>
+          └ terragrunt.hcl
+----
+
+Where:
+
+<account>::
+  A the top level, you have accounts (e.g., an AWS account) or project (e.g., GCP project).
+
+<region>::
+  Within each account, there will be one or more regions (e.g., in AWS, `us-east-1`, `eu-west-1`, etc). There may also
+  be a `_global` folder that defines resources that are available across all the regions in this account, such as
+  IAM users and DNS settings. Each account also has a root `terragrunt.hcl` file that defines common Terraform settings
+  that apply to the entire account, such as what backend to use to store Terraform state.
+
+<environment>::
+  Within each region, there will be one or more environments, such as dev, stage, prod, etc. There may also be a
+  `_global` folder that defines resources that are available across all the environments in this region.
+
+<resource>::
+  Within each environment, you deploy one or more resources, such as servers, databases load balancers, and so on. The
+  configuration for these resources is in a `terragrunt.hcl` file.
+
+For example, if you were using AWS, with separate accounts for staging and production (see
+<<production_grade_aws_account_structure>>), and you wanted to deploy the `vpc-app` module in the `us-east-2` region in
+each of these accounts, the folder structure would look like this:
+
+----
+infrastructure-live
+  └ staging
+    └ terragrunt.hcl
+    └ us-east-2
+      └ stage
+         └ networking
+           └ vpc-app
+             └ terragrunt.hcl
+  └ production
+    └ terragrunt.hcl
+    └ us-east-2
+      └ prod
+        └ networking
+          └ vpc-app
+            └ terragrunt.hcl
+----
+
+The `terragrunt.hcl` in the root of each account defines the backend settings for that account (including special
+helpers to automatically set the `key` value). Here's an example of what `staging/terragrunt.hcl` might look
+like:
+
+.infrastructure-live/staging/terragrunt.hcl
+[source,hcl]
+----
+remote_state {
+  backend = "s3"
+  config = {
+    # Set defaults for all the backend settings for this environment
+    bucket         = "<YOUR-BUCKET-FOR-STAGING>"
+    region         = "us-east-2"
+    encrypt        = true
+    dynamodb_table = "<DYNAMODB-TABLE-FOR-STAGING>"
+
+    # Automatically set the key parameter to the relative path between this root terragrunt.hcl file and the child
+    # terragrunt.hcl file (e.g., for vpc-app, it'll end up us-east-2/stage/networking/vpc-app/terraform.tfstate).
+    key = "${path_relative_to_include()}/terraform.tfstate"
+  }
+}
+----
+
+The `terragrunt.hcl` for each child module within an account specifies what module to deploy—including the version to
+use—and sets the variables to values appropriate for that environment. Here's an example of what
+`staging/us-east-2/stage/vpc-app/terragrunt.hcl` might look like:
+
+.infrastructure-live/staging/us-east-2/stage/vpc-app/terragrunt.hcl
+[source,hcl]
+----
+# Deploy the vpc-app module at a specific version (via the ref=xxx param)
+terraform {
+  source = "git@github.com:<ORG>/infrastructure-modules.git//networking/vpc-app?ref=v0.0.1"
+}
+
+# Set the variables for the vpc-app module in this environment
+inputs = {
+  aws_region       = "us-east-2"
+  aws_account_id   = "888888888888"
+  vpc_name         = "staging-vpc"
+  cidr_block       = "10.10.0.0/16"
+  num_nat_gateways = 1
+}
+
+# Automatically include settings from the root terragrunt.hcl in this account
+include {
+  path = find_in_parent_folders()
+}
+----
+
+To deploy `vpc-app` in staging, you do the following:
+
+----
+cd infrastructure-live/staging/us-east-2/stage/vpc-app
+terragrunt apply
+----
+
+When you run this command, Terragrunt will:
+
+. Checkout the `infrastructure-modules` repo at version `v0.0.1` into a scratch directory.
+. Run `terraform init` in the scratch directory, configuring the backend to the values in the root `terragrunt.hcl`.
+. Run `terraform apply` in the scratch directory, configuring the variables to the values in the `inputs = { ... }`
+  block.
+
+You can deploy the production environment by creating an analogous
+`infrastructure-live/production/us-east-2/prod/vpc-app/terragrunt.hcl` file. If you have multiple modules and you want
+to deploy all of them, you can use `apply-all`. For example, to deploy everything in the production account, you would
+do the following:
+
+----
+cd infrastructure-live/production
+terragrunt apply-all
+----
+
+*Benefits of this approach*
+
+* All your code is versioned. You can deploy different versions in different environments, and roll back to older
+  versions if necessary.
+* Backend configuration is DRY. No more copy/pasting values, no more manually setting `key` for each module.
+* CLI arguments are DRY. No need for long commands or extra wrapper scripts.
+* The full structure of all accounts, environments, and regions is visible at a glance in the `infrastructure-live`
+  repo.
+* Completely free and open source.
+* Deploy multiple modules using `apply-all`.
+
+*Drawbacks to this approach*
+
+* You have to install, learn, and manage a new tool / abstraction layer.
+* The scratch directory can make debugging/troubleshooting tricky.
 
 === Using scripts and binaries
 
