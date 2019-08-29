@@ -1,79 +1,38 @@
 <header class="header">
-  <div id="navbar-original" hidden>
-    <nav {% if page.url contains 'guides' %} class="navbar navbar-default guides-navbar" {% else %} class="navbar navbar-default" {% endif %}>
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="/"><strong>Gruntwork</strong>.io</a>
-        </div>
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-          <ul class="nav navbar-nav navbar-right">
-            <li class="js-nav-item-central"><a href="/how-it-works/" ga-on="click" ga-event-category="nav-{{ page.path | slugify }}" ga-event-action="how-it-works">How it Works</a></li>
-            <li class="dropdown js-nav-item-central">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Products <i class="fa fa-caret-down" aria-hidden="true"></i></a>
-              <ul class="dropdown-menu dropdown-menu-left" role="menu">
-                <li><a href="/infrastructure-as-code-library/" ga-on="click" ga-event-category="nav-{{ page.path | slugify }}" ga-event-action="infrastructure-as-code-library">Infrastructure as Code Library</a></li>
-                <li><a href="/training/" ga-event-category="nav-{{ page.path | slugify }}" ga-event-action="training-library">DevOps Training Library</a></li>
-                <li><a href="/reference-architecture/" ga-event-category="nav-{{ page.path | slugify }}" ga-event-action="reference-architecture">Reference Architecture</a></li>
-                <li><a href="/houston/" ga-event-category="nav-{{ page.path | slugify }}" ga-event-action="reference-architecture">Gruntwork Houston</a></li>
-              </ul>
-            </li>
-            <li class="dropdown js-nav-item-central">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Services <i class="fa fa-caret-down" aria-hidden="true"></i></a>
-              <ul class="dropdown-menu dropdown-menu-left" role="menu">
-                <li><a href="/support/" ga-event-category="nav-{{ page.path | slugify }}" ga-event-action="support">Support</a></li>
-                <li><a href="/devops-bootcamp/" ga-on="click" ga-event-category="nav-{{ page.path | slugify }}" ga-event-action="devops-bootcamp">DevOps Bootcamp</a></li>
-                <li><a href="/custom-module-development/" ga-event-category="nav-{{ page.path | slugify }}" ga-event-action="custom-module-dev">Custom Module Development</a></li>
-              </ul>
-            </li>
-            <li><a href="/pricing/" ga-on="click" ga-event-category="nav-{{ page.path | slugify }}" ga-event-action="pricing">Pricing</a></li>
-            <li><a href="/checkout/" class="btn btn-info js-checkout-link" role="button" ga-event-category="nav-{{ page.path | slugify }}" ga-event-action="get-started">Get Started</a></li>
-          </ul>
-        </div>
+  <nav class="navbar navbar-default">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand navbar-brand-beta" href="/"><strong>Gruntwork</strong>.io</a>
       </div>
-    </nav>
-  </div>
-  <div id="navbar-beta" hidden>
-      <nav {% if page.url contains 'guides' %} class="navbar navbar-default guides-navbar" {% else %} class="navbar navbar-default" {% endif %}>
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2" aria-expanded="false">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand navbar-brand-beta" href="/"><strong>Gruntwork</strong>.io</a>
-        </div>
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
-          <ul class="nav navbar-nav navbar-right">
-            <li class="js-nav-item-central"><a href="/how-it-works-beta/" ga-on="click" ga-event-category="nav-{{ page.path | slugify }}" ga-event-action="how-it-works">How it Works</a></li>
-            <li class="dropdown js-nav-item-central">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Products <i class="fa fa-caret-down" aria-hidden="true"></i></a>
-              <ul class="dropdown-menu dropdown-menu-left" role="menu">
-                <li><a href="/infrastructure-as-code-library/" ga-on="click" ga-event-category="nav-{{ page.path | slugify }}" ga-event-action="infrastructure-as-code-library">Infrastructure as Code Library</a></li>
-                <li><a href="/training/" ga-event-category="nav-{{ page.path | slugify }}" ga-event-action="training-library">DevOps Training Library</a></li>
-                <li><a href="/reference-architecture/" ga-event-category="nav-{{ page.path | slugify }}" ga-event-action="reference-architecture">Reference Architecture</a></li>
-              </ul>
-            </li>
-            <li id="services-nav-item-beta" class="dropdown js-nav-item-central">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Services <i class="fa fa-caret-down" aria-hidden="true"></i></a>
-              <ul class="dropdown-menu dropdown-menu-left" role="menu">
-                <li><a href="/support/" ga-event-category="nav-{{ page.path | slugify }}" ga-event-action="support">Support</a></li>
-                <li><a href="/devops-bootcamp/" ga-on="click" ga-event-category="nav-{{ page.path | slugify }}" ga-event-action="devops-bootcamp">DevOps Bootcamp</a></li>
-                <li><a href="/custom-module-development/" ga-event-category="nav-{{ page.path | slugify }}" ga-event-action="custom-module-dev">Custom Module Development</a></li>
-              </ul>
-            </li>
-            <li><a href="/pricing-beta/" id="navbar-buy-now"class="btn btn-info" role="button" ga-on="click" ga-event-category="nav-{{ page.path | slugify }}" ga-event-action="buy-now">Buy Now</a></li>
-            <li><a href="/contact/" class="contact-sales" ga-on="click" ga-event-category="nav-{{ page.path | slugify }}" ga-event-action="contact-sales">Contact Sales</a></li>
-          </ul>
-        </div>
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="/how-it-works/" ga-on="click" ga-event-category="nav-{{ page.path | slugify }}" ga-event-action="how-it-works">How it Works</a></li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Products <i class="fa fa-caret-down" aria-hidden="true"></i></a>
+            <ul class="dropdown-menu dropdown-menu-left" role="menu">
+              <li><a href="/infrastructure-as-code-library/" ga-on="click" ga-event-category="nav-{{ page.path | slugify }}" ga-event-action="infrastructure-as-code-library">Infrastructure as Code Library</a></li>
+              <li><a href="/training/" ga-event-category="nav-{{ page.path | slugify }}" ga-event-action="training-library">DevOps Training Library</a></li>
+              <li><a href="/reference-architecture/" ga-event-category="nav-{{ page.path | slugify }}" ga-event-action="reference-architecture">Reference Architecture</a></li>
+            </ul>
+          </li>
+          <li id="services-nav-item-beta" class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Services <i class="fa fa-caret-down" aria-hidden="true"></i></a>
+            <ul class="dropdown-menu dropdown-menu-left" role="menu">
+              <li><a href="/support/" ga-event-category="nav-{{ page.path | slugify }}" ga-event-action="support">Support</a></li>
+              <li><a href="/devops-bootcamp/" ga-on="click" ga-event-category="nav-{{ page.path | slugify }}" ga-event-action="devops-bootcamp">DevOps Bootcamp</a></li>
+              <li><a href="/custom-module-development/" ga-event-category="nav-{{ page.path | slugify }}" ga-event-action="custom-module-dev">Custom Module Development</a></li>
+            </ul>
+          </li>
+          <li><a href="/pricing/" id="navbar-buy-now"class="btn btn-info" role="button" ga-on="click" ga-event-category="nav-{{ page.path | slugify }}" ga-event-action="buy-now">Buy Now</a></li>
+          <li><a href="/contact/" class="contact-sales" ga-on="click" ga-event-category="nav-{{ page.path | slugify }}" ga-event-action="contact-sales">Contact Sales</a></li>
+        </ul>
       </div>
-    </nav>
-  </div>
+    </div>
+  </nav>
 </header>

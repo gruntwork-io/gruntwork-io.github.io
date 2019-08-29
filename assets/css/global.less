@@ -496,20 +496,6 @@ a.caret-right{
   }
 }
 
-.navbar-beta .navbar-nav > li > a.btn {
-  margin-left: inherit;
-  @media (min-width: @screen-md-min) {
-    margin-left: 2em;
-    margin-right: 20px;
-  }
-  @media (min-width: 1200px) {
-    margin-left: 6em;
-  }
-  @media (min-width: 1400px) {
-    margin-left: 10em;
-  }
-}
-
 .navbar-nav > li > a.contact-sales {
   @media (min-width: 1200px) {
     margin-right: -5em;
@@ -532,7 +518,7 @@ a.caret-right{
 }
 
 // Home page navbar styles
-.index-page .navbar-default, .how-it-works-beta .navbar-default {
+.index-page .navbar-default, .how-it-works .navbar-default {
   border: none;
   @media (max-width: @screen-md-max) {
     background-color: @gradient-primary-start;
@@ -1493,12 +1479,12 @@ a.caret-right{
   }
 }
 
-.how-it-works-beta h1 {
+.how-it-works h1 {
   margin-bottom: 15px;
   font-size: 32px;
 }
 
-.how-it-works-beta .section-hero {
+.how-it-works .section-hero {
   color: #fff;
   &:extend(.gradient-primary.gradient-vertical);
   background: linear-gradient(@brand-primary, #06A2FF);
@@ -2852,35 +2838,6 @@ body.checkout .section-heading .gw-icon {
 }
 
 .grunty-sprite {
-  position: absolute;
-  top: -160px;
-  right: 54px;
-  width: 216px;
-  height: 180px;
-  background: url('/assets/img/grunty-sprites@2x.png') no-repeat;
-  background-size: auto 100%;
-  z-index: 1;
-
-  // Grunty sprite variations
-  &[data-sprite="0"] { background-position-x: 0px; }
-  &[data-sprite="1"] { background-position-x: -216px; }
-  &[data-sprite="2"] { background-position-x: -432px; }
-  &[data-sprite="3"] { background-position-x: -648px; }
-
-  @media (min-width: @screen-xs-min) and (max-width: @screen-md-max) {
-    top: -140px;
-    right: 0;
-  }
-  @media (max-width: @screen-xs-max) {
-    top: auto;
-    bottom: 0;
-    left: 50%;
-    right: auto;
-    transform: translateX(-50%);
-  }
-}
-
-.grunty-sprite-beta {
   position: absolute;
   top: -141px;
   left: 167px;
