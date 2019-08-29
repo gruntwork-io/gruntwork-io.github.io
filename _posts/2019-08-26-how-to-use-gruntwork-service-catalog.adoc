@@ -1311,6 +1311,7 @@ terragrunt apply-all
 * You have to install, learn, and manage a new tool / abstraction layer.
 * The scratch directory can make debugging/troubleshooting tricky.
 
+[[using_scripts_binaries]]
 === Using scripts and binaries
 
 This section will show you how to use scripts and binaries from the Gruntwork Service Catalog. As illustrative examples,
@@ -1335,7 +1336,7 @@ ssh-grunt::
 
 Let's walk through how to use these two tools.
 
-==== gruntwork-install
+==== Gruntwork Installer
 
 The easiest way to install scripts and binaries from the Gruntwork Service Catalog is to use the
 https://github.com/gruntwork-io/gruntwork-installer[Gruntwork Installer]. This is an open source Bash script that
@@ -1387,9 +1388,9 @@ gruntwork install \
   --repo https://github.com/gruntwork-io/module-security
 ----
 
-Now that you know _how_ to use `gruntwork-install`, let's talk about _where_ to use it.
+Now that you know _how_ to use Gruntwork Installer, let's talk about _where_ to use it.
 
-==== Where to run gruntwork-install
+==== Where to run the Gruntwork Installer
 
 You will most likely want to use the Gruntwork Installer to install scripts and binaries on your EC2 instances. We
 recommend following <<immutable_infrastructure>> practices and creating an immutable, versioned image that has the
@@ -1400,7 +1401,7 @@ ones:
 . <<gruntwork_install_docker>>
 
 [[gruntwork_install_packer]]
-===== Running gruntwork-install in Packer templates
+===== Running the Gruntwork Installer in Packer templates
 
 If you want to build machine images with scripts and binaries from the Gruntwork Service Catalog, such as an Amazon
 Machine Image (AMI) for use in AWS, you can use https://www.packer.io[Packer]. Here's an example of how to use
@@ -1449,7 +1450,7 @@ packer build packer-example.json
 ----
 
 [[gruntwork_install_docker]]
-===== Running gruntwork-install in Docker images
+===== Running the Gruntwork Installer in Docker images
 
 If you want to build Docker images with scripts and binaries from the Gruntwork Service Catalog, the approach is
 similar to what you saw earlier, but you have to take extra care with how you pass in your GitHub personal access
@@ -1497,15 +1498,126 @@ To build the Docker image, you run:
 docker build --build-arg GITHUB_OAUTH_TOKEN=(YOUR_TOKEN) -t example-image:v1 .
 ----
 
-=== Combining Terraform, scripts, and binaries
+==== Gruntwork Installer alternatives
 
-- Combining with Terraform (diagram with Terraform -> VMs -> K8S -> Docker)
+The Gruntwork Installer may not be a good fit for all companies, either because it's a Bash script, so it won't work on
+Windows, or perhaps due to security concerns (see
+https://github.com/gruntwork-io/gruntwork-installer#security[Gruntwork Installer Security]). If that's the case, your
+best alternative is to copy the script (from the `modules` folder of the repo) or binary (from the releases page of
+the repo) you're interested in directly to your own repositories, so it's a local file for your builds. This will allow
+you to use, for example, the `file` provisioner in Packer to copy it into your machine images, or the `COPY` command in
+Docker to copy it into your Docker images.
 
-=== Forking the code
+Note that the major drawback of copying these files is that you'll have to manually pull in new versions as we update
+the code.
 
-TODO
+=== Contributing to the Gruntwork Service Catalog
+
+Contributions to the Gruntwork Service Catalog are very welcome and appreciated! If you find a bug or want to add a new
+feature or even contribute an entirely new module, we are very happy to accept
+https://help.github.com/articles/about-pull-requests/[pull requests], provide feedback, and run your changes through
+our automated test suite.
+
+This section outlines the process for contributing.
+
+==== File a GitHub issue
+
+Before starting any work, we recommend filing a GitHub issue in this repo. This is your chance to ask questions and
+get feedback from the maintainers and the community before you sink a lot of time into writing (possibly the wrong)
+code. If there is anything you're unsure about, just ask!
+
+==== Update the documentation
+
+We recommend updating the documentation _before_ updating any code (see
+http://tom.preston-werner.com/2010/08/23/readme-driven-development.html[Readme Driven Development]. This ensures the
+documentation stays up to date and allows you to think through the problem at a high level before you get lost in the
+weeds of coding.
+
+==== Update the tests
+
+We also recommend updating the automated tests _before_ updating any code (see
+https://en.wikipedia.org/wiki/Test-driven_development[Test Driven Development]. That means you add or update a test
+case, verify that it's failing with a clear error message, and then make the code changes to get that test to pass.
+This ensures the tests stay up to date and verify all the functionality in the repo, including whatever new
+functionality you're adding in your contribution. The `test` folder in every repo will have documentation on how to run
+the tests locally.
+
+==== Update the code
+
+At this point, make your code changes and use your new test case to verify that everything is working.
+
+==== Create a pull request
+
+https://help.github.com/articles/creating-a-pull-request/[Create a pull request] with your changes. Please make sure
+to include the following:
+
+. A description of the change, including a link to your GitHub issue.
+. Any notes on backwards incompatibility.
+
+==== Merge and release
+
+The maintainers for the repo will review your code and provide feedback. If everything looks good, they will merge the
+code and release a new version.
+
+=== Forking the Gruntwork Service Catalog
+
+The https://gruntwork.io/terms/[Gruntwork Terms of Service] give you permissions to fork the code from the Gruntwork
+Service Catalog into your own repos. This is useful if your company does not allow external dependencies (e.g., you
+have a company policy that requires all source code to be pulled from an internal GitHub Enterprise or BitBucket
+server) or if you need to make modifications to the Service Catalog that you do not wish to contribute back to
+Gruntwork. This section will walk you through what you need to do to fork the code.
+
+IMPORTANT: The definition of an _Authorized User_ from the Gruntwork Terms of Service does NOT change if you fork the
+code. That is, if you create internal forks and give 50 users access to those internal forks, then the Gruntwork
+License requires that you pay for 50 Authorized Users.
+
+==== How to fork the code
+
+Here is how you fork the code in the Gruntwork Service Catalog:
+
+. Copy each Gruntwork repo into your private repositories.
+. You'll also want to copy all the versioned releases (see the `/releases` page for each repo).
+. For repos that contain pre-built binaries (such as `ssh-grunt` mentioned earlier), you'll want to copy those binaries
+  as well.
+. Within each repo, search for any cross-references to other Gruntwork repos. Most of the repos are standalone, but
+  some of the Terraform and Go code is shared across repos (e.g., the `package-kafka` and `package-zookeeper` repos
+  use the `module-asg` repo under the hood to run an Auto Scaling Group). You'll need to update Terraform source URLs
+  and Go import statements from `github.com/gruntwork-io` to your private Git repo URLs.
+
+You'll want to automate the entire process above and run it on a regular schedule (e.g., daily). The Gruntwork Service
+Catalog is updated continuously, both by the Gruntwork team and contributions from our community of customers (see
+the monthly https://blog.gruntwork.io/tagged/gruntwork-newsletter[Gruntwork Newsletter] for details), so you'll want
+to pull in these updates as quickly as you can.
+
+==== How to use your forked code
+
+Once you've forked the code, using it in is very similar to what is outlined in <<using_terraform_modules>> and
+<<using_scripts_binaries>>, except for the following differences:
+
+. Point the `source` URLs of your Terraform modules to your own Git repos, rather than the `gruntwork-io` GitHub org.
+. Point the `--repo` parameter of `gruntwork-install` to your own Git repos, rather than the `gruntwork-io` GitHub org.
+
+==== Drawbacks to forking
+
+While forking is allowed under the Gruntwork Terms of Services, it has some downsides:
+
+* You have to do a lot of work up-front to copy the repos, releases, and pre-compiled binaries and update internal
+  links.
+* You have to do more work to run this process on a regular basis and deal with merge conflicts.
+* If your team isn't directly using the Gruntwork GitHub repos on a regular basis, then you're less likely to
+  participate in issues and pull requests, and you won't be benefiting as much from the Gruntwork community.
+
+So, whenever possible, use the code directly from the `gruntwork-io` GitHub org, as documented in
+<<using_terraform_modules>> and <<using_scripts_binaries>>. If your team relies on NPM, Docker Hub, Maven Central,
+GitHub, or the Terraform Registry, using Gruntwork repos directly is no different. However, if your company completely
+bans all outside sources, then follow the instructions above to fork the code, and good luck!
 
 [[next_steps]]
 == Next steps
 
-TODO
+Now that you've learned how to use the Gruntwork Service Catalog, you can start leveraging it to build your
+infrastructure! Here are some good first steps:
+
+. <<production_grade_aws_account_structure>>
+. `How to deploy a production grade Kubernetes (EKS) cluster in AWS` _(coming soon!)_
+
