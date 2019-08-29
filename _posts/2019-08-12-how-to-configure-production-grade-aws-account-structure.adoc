@@ -25,16 +25,16 @@ manage multiple environments, users, permissions, audit logging, and more.
 
 === What is an AWS account structure?
 
-To use AWS, you sign up for an AWS account. To use AWS in production, you have to create an _AWS account structure_
-that consists of multiple inter-connected AWS accounts.
+To use AWS, you sign up for an AWS account. An _AWS account structure_ is an organized collection of inter-connected
+AWS accounts designed to run production workloads.
 
 Configuring an AWS account structure serves three primary purposes:
 
-Isolation::
-  You use separate AWS accounts to isolate different environments from each other. For example, putting your staging and
-  production environments in separate AWS accounts ensures that if an attacker manages to break into staging, they still
-  have no access whatsoever to production. Likewise, this isolation ensures a developer making changes in staging is
-  less likely to accidentally break something in production.
+Isolation (AKA compartmentalization)::
+  You use separate AWS accounts to isolate different environments from each other and to limit the "blast radius" when
+  things go wrong. For example, putting your staging and production environments in separate AWS accounts ensures that
+  if an attacker manages to break into staging, they still have no access whatsoever to production. Likewise, this
+  isolation ensures a developer making changes in staging is less likely to accidentally break something in production.
 
 Authentication and authorization::
   If you configure your AWS account structure correctly, you'll be able to manage all user accounts in one place, making
@@ -69,7 +69,7 @@ This guide consists of four main sections:
 <<next_steps>>::
   What to do once you've got your AWS account structure configured.
 
-Feel free to read the guide start to finish or skip around to whatever part interests you!
+Feel free to read the guide from start to finish or skip around to whatever part interests you!
 
 [[core_concepts]]
 == Core concepts
@@ -88,9 +88,10 @@ Feel free to read the guide start to finish or skip around to whatever part inte
 === AWS account
 
 To use AWS, you must create an AWS account. You do this by signing up at https://aws.amazon.com. Once you've created
-an account, it will get a unique
-_https://docs.aws.amazon.com/IAM/latest/UserGuide/console_account-alias.html[AWS account ID]_ (a 12 digit code) and
-you'll be logged into your new AWS account as the root user.
+an account, it will get a unique, 12-digit
+_https://docs.aws.amazon.com/IAM/latest/UserGuide/console_account-alias.html[AWS account ID]_ (note: the account ID is
+not in and of itself a secret, so it's OK to share it with trusted 3rd parties, but you might not want to go so far as
+to share it publicly on the Internet), and you will be logged into your new AWS account as the root user.
 
 === Root user
 
@@ -129,18 +130,18 @@ Multi-Factor Authentication (MFA)::
   access with access keys), you will need to use IAM policies, which are described later.
 
 Root permissions::
-  The root user has access permissions to _everything_ in your AWS account, and, by design, there's almost no way to
-  limit those permissions (similar to the root user on an operating system). If your root user account
-  gets compromised, the attacker will likely be able to take over everything in your account. Therefore, you typically
-  only use the root user during initial setup to create IAM users (the topic of the next section) with more limited
-  permissions, and then you'll likely never touch the root user account again.
+  The root user has access permissions to _everything_ in your AWS account. By design, there's almost no way to limit
+  those permissions. This is similar in concept to the root or administrator user of an operating system. If your root
+  user account gets compromised, the attacker will likely be able to take over everything in your account. Therefore,
+  you typically only use the root user during initial setup to create IAM users (the topic of the next section) with
+  more limited permissions, and then you'll likely never touch the root user account again.
 
 === IAM users
 
 In AWS, you use _https://aws.amazon.com/iam/[Identity and Access Management (IAM)]_ to manage access to your AWS
 account. One of the things you can do in IAM is create an
-_https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users.html[IAM user]_, which is a user account a human being can
-use to access an AWS account.
+_https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users.html[IAM user]_, which is an account a human being can use
+to access AWS.
 
 User name::
   Every IAM user in your AWS account must have a unique _user name_.
@@ -221,7 +222,8 @@ Managed policies::
   _https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_managed-vs-inline.html[managed policies]_, which
   are pre-defined IAM policies created and maintained by AWS. These included policies such as `AdministratorAccess`
   (full access to everything in an AWS account), `ReadOnlyAccess` (read-only access to everything in an AWS account),
-  `AmazonEC2ReadOnlyAccess` (read-only access to solely EC2 resources in an AWS account), and many others.
+  `AmazonEC2ReadOnlyAccess` (read-only access to solely EC2 resources in an AWS account), and many others. AWS managed
+  policies are owned by AWS and cannot be modified or removed.
 
 Customer-managed policies::
   While managed policies give you coarse-grained, generic permissions, to get more fine-grained, custom permissions,
@@ -265,7 +267,8 @@ Cross account access::
   another AWS account. For example, if you have an IAM user in account `A`, then by default, that IAM user cannot
   access anything in account `B`. However, you could create an IAM role in account `B` that gives access to a specific
   S3 bucket in account `B` and allow that role to be assumed by an IAM user in account `A`. That IAM user will then be
-  able to access the contents of the S3 bucket by assuming the IAM role in account `B`.
+  able to access the contents of the S3 bucket by assuming the IAM role in account `B`. This ability to assume IAM
+  roles across different AWS accounts is the critical glue that truly makes a multi AWS account structure possible.
 
 Here are some more details on how IAM roles work:
 
@@ -320,7 +323,12 @@ Assuming an IAM role::
   _temporary access keys_ you can use in follow-up API calls to authenticate as the IAM role. The temporary access keys
   will be valid for 1-12 hours, depending on IAM role settings, after which you must call `AssumeRole` again to fetch
   new keys. Note that to make the `AssumeRole` API call, you must first authenticate to AWS using some other
-  mechanism. For example, for an IAM user to assume an IAM role, you:
+  mechanism. For example, for an IAM user to assume an IAM role, the workflow looks like this:
++
+.The process for assuming an IAM role
+image::../assets/img/guides/aws-account/assume-iam-role.png[]
++
+The basic steps are:
 +
 . Authenticate using the IAM user's permanent AWS access keys
 . Make the `AssumeRole` API call
@@ -334,13 +342,13 @@ IAM roles and AWS services::
   directly with an EC2 instance, and that instance will automatically assume the IAM role every few hours, making the
   temporary credentials available in
   _https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html#instancedata-data-retrieval[EC2 instance metadata]_.
-  Just about every AWS CLI and SDK tool knows how to read temporary credentials from EC2 instance metadata, so in
-  practice, as soon as you attach an IAM role to an EC2 instance, any code running on that EC2 instance can
-  automatically make API calls on behalf of that IAM role, with whatever permissions are attached to that role. This
-  allows you to give code on your EC2 instances IAM permissions without having to manually figure out how to copy
-  credentials (access keys) onto that instance! The same strategy works with many other AWS services: e.g., you use
-  IAM roles as a secure way to give your Lambda functions, ECS services, Step Functions, and many other AWS services
-  permissions to access specific resources in your AWS account.
+  Just about every AWS CLI and SDK tool knows how to read and periodically update temporary credentials from EC2
+  instance metadata, so in practice, as soon as you attach an IAM role to an EC2 instance, any code running on that EC2
+  instance can automatically make API calls on behalf of that IAM role, with whatever permissions are attached to that
+  role. This allows you to give code on your EC2 instances IAM permissions without having to manually figure out how to
+  copy credentials (access keys) onto that instance! The same strategy works with many other AWS services: e.g., you
+  use IAM roles as a secure way to give your Lambda functions, ECS services, Step Functions, and many other AWS
+  services permissions to access specific resources in your AWS account.
 
 === Federated authentication
 
@@ -401,18 +409,19 @@ Service control policies::
   You can use
   _https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scp.html[Service control policies (SCPs)]_
   to define the maximum available permissions for a child account, overriding any permissions defined in the child
-  account itself. For example, you could use SCPs to completely block a child account from using specific AWS services
-  (e.g., Redshift or Amazon Elasticsearch), perhaps because those services do not meet your company's compliance
-  requirements (e.g., PCI, HIPAA, etc).
+  account itself. For example, you could use SCPs to completely block a child account from using specific AWS regions
+  (e.g., block all regions outside of Europe) or AWS services (e.g., Redshift or Amazon Elasticsearch), perhaps because
+  those regions or services do not meet your company's compliance requirements (e.g., PCI, HIPAA, GDPR, etc).
 
 === CloudTrail
 
-_https://aws.amazon.com/cloudtrail/[AWS CloudTrail]_ is a service you can use to log (most) of the activity within your
+_https://aws.amazon.com/cloudtrail/[AWS CloudTrail]_ is a service you can use to log most of the activity within your
 AWS account. CloudTrail automatically maintains an audit log of all API calls for
 https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-aws-service-specific-topics.html[supported services]
 in your AWS account, writing these logs to an S3 bucket, and optionally encrypting the data using
-https://aws.amazon.com/kms/[KMS]. It can be a good idea to enable CloudTrail in every AWS account, as the API call
-data is useful useful for troubleshooting, investigating security incidents, and maintaining audit logs for compliance.
+https://aws.amazon.com/kms/[KMS]. It can be a good idea to enable CloudTrail in every AWS account, with the
+multi-region feature enabled, as the API call data is useful useful for troubleshooting, investigating security
+incidents, and maintaining audit logs for compliance.
 
 [[production_grade_design]]
 == Production-grade design
@@ -427,13 +436,14 @@ image::../assets/img/guides/aws-account/aws-account-structure.png[]
 // Compliance: e.g., signing BAA for HIPAA https://aws.amazon.com/artifact/?nc2=h_m1
 // A separate "backup" account for disaster recovery
 
-Let's take a tour of this design.
+This diagram has many accounts as part of a _multi-account security strategy_. Don't worry if it looks complicated:
+we'll break it down piece by piece in the next few sections.
 
 === The root account
 
-At the top of the design, you have the root account of your AWS organization. No infrastructure runs in this account,
-and only one or a small number of trusted admins should have IAM users in this account, using it solely to create and
-manage child accounts and billing.
+At the top of the design, you have the root account of your AWS organization. This account is not used to run any
+infrastructure, and only one or a small number of trusted admins should have IAM users in this account, using it
+solely to create and manage child accounts and billing.
 
 Do NOT attach any IAM policies directly to the IAM users; instead, create a set of IAM groups, with specific IAM
 policies attached to each group, and assign all of your users to the appropriate groups. The exact set of IAM groups
@@ -447,25 +457,29 @@ IAM group that gives the finance team access to the billing details.
 The admins in the root account can create the following child accounts in your AWS organization:
 
 Security account::
-  You will want a single _security account_ for managing authentication and authorization. No infrastructure runs in
-  this account. Instead, this is where you define all of the IAM users and IAM groups for your team. None of the other
-  child accounts will have IAM users; instead, those accounts will have IAM roles that can be assumed from the
-  security account. That way, each person on your team will have a single IAM user and a single set of credentials
-  in the security account (with the exception of the small number of admins who will also have a separate IAM user in
-  the root account) and they will be able to access the other accounts by assuming IAM roles.
+  You will want a single _security account_ for managing authentication and authorization. This account is not used to
+  run any infrastructure. Instead, this is where you define all of the IAM users and IAM groups for your team (unless
+  you're using <<federated_auth>>, as described later). None of the other child accounts will have IAM users; instead,
+  those accounts will have IAM roles that can be assumed from the security account. That way, each person on your team
+  will have a single IAM user and a single set of credentials in the security account (with the exception of the small
+  number of admins who will also have a separate IAM user in the root account) and they will be able to access the
+  other accounts by assuming IAM roles.
 
 Application accounts (dev, stage, prod)::
   You can have one or more _application accounts_ for running your software. At a bare minimum, most companies will
   have a production account ("prod"), for running user-facing software, and a staging account ("stage") which is a
   replica of production (albeit with smaller or fewer servers to save money) used for internal testing. Some teams will
   have more pre-prod environments (e.g., dev, qa, uat) and some may find the need for more than one prod account (e.g.,
-  a separate account for backup and/or disaster recovery).
+  a separate account for backup and/or disaster recovery, or separate accounts to separate workloads with and without
+  compliance requirements).
 
 Shared-services account::
   The _shared-services account_ is used for infrastructure and data that is shared amongst all the application
   accounts, such as CI servers and artifact repositories. For example, in your shared-services account, you might use
   https://aws.amazon.com/ecr/[ECR] to store Docker images and Jenkins to deploy those Docker images to dev, stage, and
-  prod.
+  prod. Since the shared-services account may provide resources to (e.g., application packages) and has access to
+  most of your other accounts (e.g., for deployments), including production, from a security perspective, you should
+  treat it as a production account, and use at least the same level of precaution when locking everything down.
 
 Sandbox accounts::
   You may want to have one or more _sandbox accounts_ that developers can use for manual testing. The application
@@ -487,7 +501,7 @@ Note that for larger organizations with multiple separate business units, you ma
 multiple times. That is, in the root account, you
 https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_ous.html#create_ou[create an Organization Unit]
 for each business unit, and within each Organization Unit, you create a set of security, application, shared-services,
-sandbox, and testing accounts.
+sandbox, and testing accounts. It's not unusual for large organizations to have dozens or even hundreds of AWS accounts.
 
 === IAM roles for users
 
@@ -521,14 +535,17 @@ allow-dev-access-from-other-accounts::
   `allow-search-team-access-from-other-accounts`, `allow-frontend-team-access-from-other-accounts`,
   `allow-dba-access-from-other-accounts`, etc.
 
-openvpn-allow-certificate-requests-for-external-accounts and openvpn-allow-certificate-revocations-for-external-accounts::
-  These IAM roles allows users to request and revoke VPN certificates for an OpenVPN server running in the child
-  account. This is part of the Gruntwork https://github.com/gruntwork-io/package-openvpn/[package-openvpn] code, which
-  deploys a production-grade OpenVPN server and allows developers with access to these IAM roles to request VPN
-  certificates (self-service).
+openvpn-allow-certificate-xxx-for-external-accounts::
 +
-IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access
+IMPORTANT: This role only applies to https://gruntwork.io/[Gruntwork subscribers] who have access to
 https://github.com/gruntwork-io/package-openvpn/[package-openvpn].
++
+The `openvpn-allow-certificate-requests-for-external-accounts` and
+`openvpn-allow-certificate-revocations-for-external-accounts` IAM roles allows users to request and revoke VPN
+certificates, respectively, for an OpenVPN server running in the child account. This is part of the Gruntwork
+https://github.com/gruntwork-io/package-openvpn/[package-openvpn] code, which deploys a production-grade OpenVPN
+server and allows developers with access to these IAM roles to request VPN certificates (self-service).
+
 
 === IAM users and groups
 
@@ -606,7 +623,8 @@ allow-auto-deploy-access-from-other-accounts::
   This is an IAM role that grants permissions for automatically deploying (e.g., as part of a CI / CD pipline)
   some specific service. For example, this role may have a trust policy that allows it to be assumed by a Jenkins
   server in the shared-services account, and gives that server permissions to deploy EC2 Instances and Auto Scaling
-  Groups.
+  Groups. Note that anyone who has to your CI server (e.g., anyone who can create/modify/execute Jenkins jobs) can
+  effectively make use of all the permissions in this IAM role, so be very thoughtful about what this role can do!
 
 allow-ssh-grunt-access-from-other-accounts::
   This is an IAM role that grants permission to look up IAM group membership and the public SSH keys of IAM user
@@ -655,7 +673,8 @@ Use the right Principal::
 }
 ----
 +
-Notice that the `Principal` is set to `"ec2.amazonaws.com"`. Each AWS service has its own `Principal`: e.g., if you
+Notice that the `Principal` is set to `"Service": "ec2.amazonaws.com"`, whereas previous IAM roles you saw (those
+intended for IAM users) used the format `"AWS": "<ARN>"`. Each AWS service has its own `Principal`: e.g., if you
 want an IAM role that can be assumed by a Lambda function, the `Principal` will be `"lambda.amazonaws.com"`.
 
 Protecting IAM roles::
@@ -687,14 +706,22 @@ Machine users::
   environment variables in CircleCi). Note that you cannot require MFA for a machine user, and those credentials will
   live on an external system, so think very carefully if that system is worth trusting with access to your AWS account,
   and limit the machine user's permissions as much as possible.
++
+.Machine users are a red flag
+NOTE: When you come across a 3rd party service that requires you to create an IAM machine user, you should think of
+that as a red flag. Just about all vendors these days should support using IAM roles instead, as creating an IAM role
+and giving the vendor permissions to assume that role is significantly more secure than manually copying around
+sensitive machine user access keys.
 
 === CloudTrail
 
 You'll want to enable CloudTrail in every single AWS account so that you have an audit log of the major activity
 happening in the account. We typically recommend creating an S3 bucket in the security account and sending all the
 CloudTrail logs from the other accounts to this one S3 bucket. Also, make sure to encrypt all logs with KMS, and only
-give a small number of trusted admins access to the KMS master key and the S3 bucket.
+give a small number of trusted admins access to the KMS master key and the S3 bucket. You may also want to send the
+logs to CloudWatch Logs a second way to store/view audit logs.
 
+[[federated_auth]]
 === Federated auth
 
 If you are using federated auth—that is, you are going to access AWS using an existing IdP such as Google, Active
@@ -727,8 +754,8 @@ Different IAM role trust policies::
 }
 ----
 
-No MFA::
-  One other big difference with IAM roles for federated auth is that these roles should NOT require an MFA token.
+MFA enforced by IdP, not AWS::
+  One other big difference with IAM roles for federated auth is that these IAM roles should NOT require an MFA token.
   That's because the MFA token check in AWS IAM policies only works with AWS MFA tokens, and not whatever MFA
   configuration you have with your IdP. With federated auth, AWS fully trusts the IdP to figure out all auth details,
   so if you want to require MFA, you need to do that in the IdP itself (i.e., in Google, Active Directory, or Okta).
@@ -736,13 +763,13 @@ No MFA::
 [[deployment_walkthrough]]
 == Deployment walkthrough
 
-Let's now walk through the step-by-step process of how to create a production-grade AWS account structure using the
-Gruntwork Service Catalog.
+Let's now walk through the step-by-step process of how to create a production-grade AWS account structure, fully
+defined and managed as code, using the Gruntwork Service Catalog.
 
 [[pre_requisites]]
 === Pre-requisites
 
-This walkthrough has the following pre-requistes:
+This walkthrough has the following pre-requisites:
 
 Gruntwork Service Catalog::
   This guide uses code from the https://gruntwork.io/infrastructure-as-code-library/[Gruntwork Service Catalog], as it
@@ -766,6 +793,13 @@ Git repos::
   structure), but take note that neither this repo structure nor Terragrunt are required for this guide! Everything in
   this guide will work just fine in any other repo structure you choose (e.g., everything in one repo) and with vanilla
   Terraform (or Terraform Enterprise).
+
+Keybase (optional)::
+  As part of this guide, you will create IAM users, including, optionally, credentials for those IAM users. If you
+  choose to create credentials, those credentials will be encrypted with a PGP key. You could provide the PGP keys
+  manually, but a more manageable option may be to have your team members to sign up for https://keybase.io[Keybase],
+  create PGP keys for themselves, and then you can provide their Keybase usernames, and the PGP keys will be retrieved
+  automatically.
 
 === Create the root account
 
