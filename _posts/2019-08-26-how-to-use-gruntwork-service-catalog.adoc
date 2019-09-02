@@ -1033,7 +1033,7 @@ For a lot more information on writing automated tests for Terraform code, see:
   running tests in parallel, test stages, and more.
 
 [[deploy_terraform]]
-==== Deploying
+==== Deploying Terraform code
 
 Now that your module has been thoroughly tested, you can deploy it to your real environments (e.g., staging and
 production). There are many ways to deploy Terraform modules, so in this guide, we'll focus on just the following ones:
@@ -1135,13 +1135,13 @@ To deploy to other environments, create analogous `.tfvars` and `.hcl` files (e.
 * Lots of backend configuration to copy for each module. Manually setting a unique `key` for each module is repetitive
   and error prone.
 * From a quick glance at the code, it's not clear what accounts, environments, or regions you deploy to. Figuring this
-  out requires digging through every `.tfvars` file.
+  out requires digging through many folders.
 
 [[deploy_using_terragrunt]]
 ===== Deploy using Terragrunt
 
 Another option is to use https://github.com/gruntwork-io/terragrunt[Terragrunt], an open source wrapper for Terraform
-that helps with some of the drawbacks mentioned in the previous approach.
+that helps alleviate some of the drawbacks mentioned in the previous approach.
 
 The first step with Terragrunt is to version your code. You can do this by creating Git tags in
 `infrastructure-modules`:
@@ -1347,10 +1347,10 @@ IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access `
 
 ip-lockdown::
   `ip-lockdown` is a Bash script you can use to lock down specific outgoing IP addresses on a Linux server so only
-  specific users can access them. The main motivation is to lock down the
+  whitelisted OS users can access them. The main motivation is to lock down the
   https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html[metadata endpoint] on EC2 instances so
   only specific users (e.g., root) can access it—and whatever IAM permissions and other secrets it confers—rather than
-  just any user who happens to get access to EC2 instance.
+  just any user who happens to get access to the EC2 instance.
 
 ssh-grunt::
   `ssh-grunt` is a binary (compiled from Go code) that allows you to manage SSH access to your EC2 instances using an
@@ -1397,8 +1397,8 @@ as the environment variable `GITHUB_OAUTH_TOKEN`:
 export GITHUB_OAUTH_TOKEN=(YOUR_TOKEN)
 ----
 
-Once you've set this token, to install the `ip-lockdown` script and `ssh-grunt` binary, you run (make sure to replace
-`<VERSION>` with the latest version from the
+Once you've set this token, to install the `ip-lockdown` script and `ssh-grunt` binary, you run the following (make
+sure to replace `<VERSION>` with the latest version from the
 https://github.com/gruntwork-io/module-security/releases[module-security releases page]):
 
 ----
@@ -1434,7 +1434,19 @@ Here's an example of how to use `gruntwork-install` in a Packer template:
   "builders": [{
     "type": "amazon-ebs",
     "region": "us-east-2",
-    "source_ami": "ami-0c55b159cbfafe1f0",
+    "source_ami_filter": {
+      "filters": {
+        "virtualization-type": "hvm",
+        "architecture": "x86_64",
+        "name": "ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*",
+        "block-device-mapping.volume-type": "gp2",
+        "root-device-type": "ebs"
+      },
+      "owners": [
+        "099720109477"
+      ],
+      "most_recent": true
+    },
     "instance_type": "t2.micro",
     "ssh_username": "ubuntu",
     "ami_name": "packer-example-{{timestamp}}",
@@ -1456,6 +1468,8 @@ Here's an example of how to use `gruntwork-install` in a Packer template:
 
 A few things to notice about this Packer template:
 
+* The `type` of the builder is `amazon-ebs`, so this Packer template can be used to build an AMI.
+* The `source_ami_filter` is configured to find the latest Ubuntu 18.04 AMI to use as the base for this image.
 * The GitHub personal access token is read from the environment variable `GITHUB_OAUTH_TOKEN` (it is NOT hard-coded
   into the Packer template itself, as you should never store secrets in plain text) and passed to the `shell`
   provisioner.
@@ -1465,15 +1479,14 @@ A few things to notice about this Packer template:
 [[manual_testing_packer]]
 ===== Manually testing a Packer template
 
-To build a machine image from a Packer template, you authenticate to a sandbox environment for testing
-(see <<manual_tests_terraform>>) and run:
+To build a machine image from a Packer template, you authenticate to a sandbox environment for testing and run:
 
 ----
 export GITHUB_OAUTH_TOKEN=(YOUR_TOKEN)
 packer build packer-example.json
 ----
 
-At the end of the build, Packer will output the ID of the image you've built (e.g., the AMI ID). You can then test the
+At the end of the build, Packer will output the ID of your new image (e.g., the new AMI ID). You can then test the
 image works as you expect by deploying it into a sandbox environment. You can deploy manually or via an automated
 process, as described in <<deploy_packer>>.
 
@@ -1498,10 +1511,10 @@ section for instructions on how to write and run tests written with Terratest.
 
 ===== Using Docker for faster testing
 
-Building machine images in the cloud (i.e., in AWS and GCP) can take a while, as you have to wait to fire up a virtual
-server, run your provisioners, snapshot the server, shut it down, etc. This can add a few minutes of overhead to each
+Building machine images in the cloud (i.e., in AWS and GCP) can take a while, as you have to fire up a virtual server,
+run your provisioners, snapshot the server, shut it down, etc. This can add a few minutes of overhead to each
 Packer build. One way to speed it up for local testing is to add a Docker builder to your Packer template that uses
-the same base OS image. This will allow you to run the build completely locally _and_ run the Docker image itself
+the same base OS image. This will allow you to run the build completely locally _and_ run the built image itself
 completely locally (see <<manually_test_docker>>), both of which can dramatically improve iteration speed. Once the
 Docker image is working fully, you can then build the machine image you want, with most of the errors in your template
 already resolved.
@@ -1514,23 +1527,25 @@ details.
 
 Now that your Packer template has been thoroughly tested, you can deploy machine images to your real environments
 (e.g., staging and production). There are many ways to deploy machine images. We recommend using Terraform modules,
-as explained in <<using_terraform_modules>>. For example, you can use the following modules:
+as explained in <<using_terraform_modules>>. For example, you can use the following modules, which allow you to specify
+the machine image (i.e., AMI) to deploy via an input variable (e.g., `ami_id`):
 
-* *AWS Auto Scaling Group (stateless):* use
-  https://github.com/gruntwork-io/module-asg/tree/master/modules/asg-rolling-deploy[asg-rolling-deploy] in `module-asg`.
-  Can do auto scaling, auto healing, and zero-downtime rolling deployment.
-* *AWS Auto Scaling Group (stateful):* use
-  https://github.com/gruntwork-io/module-asg/tree/master/modules/server-group[server-group] in `module-asg`.
-  Can do auto healing, zero-downtime rolling deployment, and attach persistent EBS volumes and ENIs.
-* *Single EC2 Instance:* use
-  https://github.com/gruntwork-io/module-server/tree/master/modules/single-server[single-server] in `module-server`.
-  Can attach persistent EBS volumes and ENIs. Note that single servers are single points of failure, with no automatic
-  recover, so even for a single server, we generally recommend using one of the Auto Scaling Group modules instead.
-
-IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access `module-server` and `module-asg`.
-
-All of these modules allow you to specify the machine image (i.e., AMI) to deploy via an input variable
-(e.g., `ami_id`).
+* *AWS Auto Scaling Group:* use the
+  https://github.com/gruntwork-io/module-asg/tree/master/modules/asg-rolling-deploy[asg-rolling-deploy module] for
+  stateless apps that need auto scaling, auto healing, and zero-downtime rolling deployment; use the
+  https://github.com/gruntwork-io/module-asg/tree/master/modules/server-group[server-group module] for stateful apps
+  that need auto healing, zero-downtime rolling deployment, and persistent EBS volumes and ENIs. Both of these modules
+  are part of `module-asg`.
++
+IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access `module-asg`.
+* *Single EC2 Instance:* use the
+  https://github.com/gruntwork-io/module-server/tree/master/modules/single-server[single-server module] to run a single
+  EC2 instance that can attach persistent EBS volumes and ENIs. This module is part of `module-server`.
++
+IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access `module-server`.
++
+Note that a single server is a single point of failure, so we generally recommend using one of the Auto Scaling Group
+modules instead, even just for one server, so you get auto healing and zero-downtime deployment.
 
 ===== Updating Packer templates
 
@@ -1570,11 +1585,7 @@ If you want to build Docker images with scripts and binaries from the Gruntwork 
 
 ===== Dockerfile basics
 
-When using a `Dockerfile`, you should NOT hard-code your GitHub personal access token (or any other secret) into your
-`Dockerfile` and you should NOT naively pass it in via a Docker build argument, as build arguments get stored in the
-Docker image layers, and anyone with access to that Docker image will be able to extract your token! The safe way to
-pass secrets when building a Docker image is to use a
-https://docs.docker.com/develop/develop-images/multistage-build/[multi-stage build], as shown in the following example:
+Here's an example of how to use `gruntwork-install` in a `Dockerfile`:
 
 .Dockerfile
 [source,Dockerfile]
@@ -1602,6 +1613,9 @@ COPY --from=intermediate /usr/local/bin/ssh-grunt /usr/local/bin/ssh-grunt
 
 A few things to notice about this Packer template:
 
+* We are using a https://docs.docker.com/develop/develop-images/multistage-build/[multi-stage build]. This ensures that
+  the GitHub personal access token, which is passed in as a build argument, does not get stored in the final Docker
+  image.
 * The GitHub personal access token is passed in as a Docker build arg to the first stage. This stage is therefore able
   to run `gruntwork-install` against private repos.
 * The second stage copies just the installed scripts/binaries from the first stage. Note that none of the build
@@ -1657,6 +1671,8 @@ flag:
 
 ----
 docker run -p 80:8080 <IMAGE_NAME>:<IMAGE_TAG>
+
+# In another terminal
 curl localhost:8080
 ----
 
@@ -1693,7 +1709,7 @@ popular options are:
 
 The general workflow is:
 
-. Login to your Docker Registry: `docker login`. Check your Registry's documentation for details.
+. Login to your Docker Registry: `docker login`. Check your Registry's documentation for authentication details.
 . Build your Docker image: `docker build -t <IMAGE_NAME>:<IMAGE_TAG> .`
 . Push your Docker image to the Registry: `docker push <IMAGE_NAME>:<IMAGE_TAG>`.
 
@@ -1706,8 +1722,8 @@ highlight just the following ones:
 
 Kubernetes::
   To deploy your Docker image to Kubernetes, you'll first need to set up a Kubernetes cluster. For AWS, we recommend
-  using https://github.com/gruntwork-io/terraform-aws-eks[terraform-aws-eks] and for GCP, we recommend using
-  https://github.com/gruntwork-io/terraform-google-gke[terraform-google-gke].
+  using https://github.com/gruntwork-io/terraform-aws-eks[terraform-aws-eks] to deploy an EKS cluster and for GCP, we
+  recommend using https://github.com/gruntwork-io/terraform-google-gke[terraform-google-gke] to deploy a GKE cluster.
 +
 IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access `terraform-aws-eks`.
 +
@@ -1774,14 +1790,14 @@ the repo) you're interested in directly to your own repositories, so it's a loca
 you to use, for example, the `file` provisioner in Packer to copy it into your machine images, or the `COPY` command in
 Docker to copy it into your Docker images.
 
-Note that the major drawback of copying these files is that you'll have to manually pull in new versions as we update
-the code.
+Note that the major drawback of copying these files is that you'll have to manually pull in new versions any time the
+Gruntwork Service Catalog is updated.
 
 ==== Packer and Docker alternatives
 
 Although this guide outlines how to use Docker and Packer, you can also use the scripts and binaries in the Gruntwork
 Service Catalog and the Gruntwork Installer with any other configuration management strategy, such as Chef, Ansible,
-Puppet, or Salt. After all, they are just scripts and binaries! Check the docs for your chose configuration management
+Puppet, or Salt. After all, they are just scripts and binaries! Check the docs for your chosen configuration management
 tool on how to copy and execute scripts and binaries.
 
 === Contributing to the Gruntwork Service Catalog
@@ -1795,21 +1811,21 @@ This section outlines the process for contributing.
 
 ==== File a GitHub issue
 
-Before starting any work, we recommend filing a GitHub issue in this repo. This is your chance to ask questions and
-get feedback from the maintainers and the community before you sink a lot of time into writing (possibly the wrong)
-code. If there is anything you're unsure about, just ask!
+Before starting any work, we recommend filing a GitHub issue in the appropriate repo. This is your chance to ask
+questions and get feedback from the maintainers and the community before you sink a lot of time into writing (possibly
+the wrong) code. If there is anything you're unsure about, just ask!
 
 ==== Update the documentation
 
 We recommend updating the documentation _before_ updating any code (see
-http://tom.preston-werner.com/2010/08/23/readme-driven-development.html[Readme Driven Development]. This ensures the
+http://tom.preston-werner.com/2010/08/23/readme-driven-development.html[Readme Driven Development]). This ensures the
 documentation stays up to date and allows you to think through the problem at a high level before you get lost in the
 weeds of coding.
 
 ==== Update the tests
 
 We also recommend updating the automated tests _before_ updating any code (see
-https://en.wikipedia.org/wiki/Test-driven_development[Test Driven Development]. That means you add or update a test
+https://en.wikipedia.org/wiki/Test-driven_development[Test Driven Development]). That means you add or update a test
 case, verify that it's failing with a clear error message, and then make the code changes to get that test to pass.
 This ensures the tests stay up to date and verify all the functionality in the repo, including whatever new
 functionality you're adding in your contribution. The `test` folder in every repo will have documentation on how to run
@@ -1889,13 +1905,9 @@ bans all outside sources, then follow the instructions above to fork the code, a
 
 Here's a summary of the operating systems supported by Gruntwork the Gruntwork Service Catalog as of August, 2019:
 
-Tools::
-  The main tools we expect customers to use are Terraform, Docker, and Packer, all of which work on all major operating
-  systems.
-
 Terraform modules::
   Just about all the Terraform modules in the Gruntwork Service Catalog work on all major operating systems. However,
-  there are a handful of modules where we were forced to call out to scripts from our Terraform code. Most of these
+  there are a handful of modules where we have to call out to scripts from our Terraform code. Most of these
   scripts are Python and work on all major operating systems (as long as Python is installed), but there are a couple
   places where we call Bash code (mostly `sleep 30` to work around Terraform bugs). If you run into a portability
   issue, please report it as a bug, and we'll get it fixed!
@@ -1905,7 +1917,7 @@ Go binaries::
   binaries for every major operating system. This applies to tools such as `Terragrunt`, `cloud-nuke`,
   `openvpn-admin`, `houston`, `gruntkms`, `ssh-grunt`, `gruntsam`, and `kubergrunt`.
 
-Server scripts::
+Linux server scripts::
   There are a number of scripts in the Gruntwork Service Catalog that are meant to be installed and executed on Linux
   servers in AWS and GCP. These include `install-xxx` and `run-xxx` scripts (e.g., `install-vault`, `run-vault`,
   `install-kafka`, `run-kafka`, `install-elasticsearch`, `run-elasticsearch`, etc.), CI / CD scripts (e.g.,
