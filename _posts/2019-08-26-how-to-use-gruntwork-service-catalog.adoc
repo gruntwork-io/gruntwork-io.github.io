@@ -21,14 +21,13 @@ toc::[]
 == Intro
 
 This guide will walk you through how to use the
-https://gruntwork.io/infrastructure-as-code-library/[Gruntwork Service Catalog] to build a production-grade tech stack
-for your company.
+https://gruntwork.io/infrastructure-as-code-library/[Gruntwork Service Catalog] to define and manage a production-grade
+tech stack as code on top of AWS or GCP.
 
 === What is the Gruntwork Service Catalog and Reference Architecture?
 
 The https://gruntwork.io/infrastructure-as-code-library/[Gruntwork Service Catalog] is a collection of over 300,000
-lines of reusable, battle-tested, production-ready infrastructure code for AWS and GCP. Here are the benefits of using
-the Gruntwork Service Catalog:
+lines of reusable, battle-tested, production-ready infrastructure code for AWS and GCP that lets you:
 
 // TODO: add a screenshot of the service catalog
 
@@ -40,8 +39,9 @@ Go to prod in days, not months::
 
 Customize everything using infrastructure as code::
   Everything in the Gruntwork Service Catalog is defined as code (primarily in Terraform, Go, Python, and Bash) and
-  you get access to 100% of this code. You can combine and compose this code in any way you wish, see how everything
-  works under the hood, debug any issues you run into, and customize and modify the code to fit your exact needs.
+  as a Gruntwork Subscriber, you get access to 100% of this code. You can combine and compose this code in any way you
+  wish, see how everything works under the hood, debug any issues you run into, and customize and modify the code to
+  fit your exact needs.
 
 Learn best practices::
   The Service Catalog includes both thorough documentation and access to the
@@ -49,16 +49,15 @@ Learn best practices::
   of DevOps topics, such as infrastructure as code, Terraform, Docker, Packer, AWS, GCP, security, and more.
 
 Keep everything up to date::
-  All of the code in the Gruntwork Service Catalog is semantically versioned and we are constantly releasing new
-  versions with the latest best practices, new features, and bug fixes. Never miss a critical security fix again. Never
-  waste months updating to the latest version of Terraform. Just follow the instructions in the monthly
-  https://blog.gruntwork.io/tagged/gruntwork-newsletter[Gruntwork Newsletter] to get better infrastructure through a
-  version number bump.
+  We are constantly updating the Gruntwork Service Catalog with the latest best practices, new features, and bug fixes.
+  Instead of spending months fighting with Terraform or Kubernetes updates, better infrastructure is just a
+  version number bump away (see the monthly https://blog.gruntwork.io/tagged/gruntwork-newsletter[Gruntwork Newsletter]).
 
 Get commercial support::
-  Get access to a team of DevOps experts who can help you set up your infrastructure, design highly available and
+  Work with a team of DevOps experts who can help you set up your infrastructure, design highly available and
   scalable systems, automate your builds and deployments, troubleshoot issues, and avoid gotchas and pitfalls. Reach out
-  to us via Slack, email, and phone/video calls, get code reviews, prioritized bug fixes, and SLAs on response times.
+  to Gruntwork Support via Slack, email, and phone/video calls, get code reviews, prioritized bug fixes, and SLAs on
+  response times.
 
 === What you'll learn in this guide
 
@@ -71,7 +70,7 @@ This guide consists of three main sections:
   infrastructure, versioning, automated testing, and more.
 
 <<how_to_use_the_catalog>>::
-  An overview of how to use the Gruntwork Service Catalog.
+  A step-by-step walkthrough of how to use the Gruntwork Service Catalog.
 
 <<next_steps>>::
   What to do next once you've finished reading this guide.
@@ -88,34 +87,37 @@ Feel free to read the guide from start to finish or skip around to whatever part
 The Gruntwork Service Catalog is a collection of over 300,000 lines of reusable, battle-tested infrastructure code.
 that is organized into 40+ GitHub repos, some public and open source, and some private and only accessible to Gruntwork
 customers. Each repo is focused on one type of infrastructure: e.g., there is one repo that contains code for deploying
-and managing Kubernetes on AWS, one repo with code for deploying and managing the ELK stack, one repo that
-contains a collection of CI / CD code, and so on.
+and managing Kubernetes on AWS, one repo with code for deploying and managing the ELK (Elasticsearch, Logstash, Kibana)
+stack, one repo that contains a collection of CI / CD code, and so on.
 
 The code in the Gruntwork Service Catalog is written using a combination of:
 
 Terraform::
   Used to to define and manage most of the basic infrastructure, such as servers, databases, load balancers, and
-  networking. More on <<terraform>> later.
+  networking.
+
+Go::
+  Used to build cross-platform CLI applications. E.g., We have an app called `ssh-grunt` you can run on each
+  server to manage SSH access to that server via IAM groups.
 
 Bash::
-  Used for _install scripts_ (e.g., a Bash script that you can use to create Linux VM image with Elasticsearch
-  installed) and _run scripts_ (e.g., you use Terraform to deploy a cluster of server with the Elasticsearch VM image
-  on it and configure the servers to execute a Bash script during boot that can auto-discover and bootstrap the
-  Elasticsearch cluster).
+  Used for small scripts on Linux and macOS, including:
++
+* _Install scripts_: used to install and configure a piece of software. Example: the `install-elasticsearch` script
+  can be used to install Elasticsearch on Linux.
+* _Run scripts_: used to run a piece of software, typically during boot. Example: you can execute the
+  `run-elasticsearch` script while a server is booting to auto-discover other Elasticsearch nodes and bootstrap an
+  Elasticsearch cluster.
 
 Python::
   Used for more complicated scripts, especially those that need to run on other operating systems (e.g., Windows)
   and/or those that need to be called directly from Terraform (e.g., to fill in some missing functionality).
 
-Go::
-  Used to build complex, cross-platform CLI applications. E.g., We have an app called `ssh-grunt` you can run on each
-  server to manage SSH access to that server via IAM groups.
-
-Why these languages? We wrote an entire blog post on
+Why these tools? We wrote an entire blog post on
 https://blog.gruntwork.io/why-we-use-terraform-and-not-chef-puppet-ansible-saltstack-or-cloudformation-7989dad2865c[why we use Terraform];
-as for Bash, Python, and Go, we use them because they work just about everywhere, with few or no external dependencies,
+as for Go, Bash, and Python, we use them because they work just about everywhere, with few or no external dependencies,
 and they can be integrated with almost any configuration management tool: e.g., you can use Bash scripts with Chef,
-Puppet, Ansible, Packer, and Docker (more on <<packer>> and <<docker>> later).
+Puppet, Ansible, Packer, and Docker.
 
 The code in each repo is organized into three primary folders, `modules`, `examples`, and `test`, as described in the
 following sections.
@@ -125,14 +127,14 @@ following sections.
 // TODO: add a screenshot of the modules folder
 
 Each repo in the Gruntwork Service Catalog contains a `modules` folder that contains the main implementation code,
-broken down into standalone, orthogonal, reusable, highly configurable _modules_. For example, the ELK repo
+broken down into multiple standalone, orthogonal, reusable, highly configurable _modules_. For example, the ELK repo
 (Elasticsearch, Logstash, Kubernetes) isn't one giant module that deploys the entire ELK stack, but a bunch of separate
 modules for installing, running, and deploying Elasticsearch, Kibana, Logstash, Elastalert, Beats, Collectd, and so on.
 
 This allows you to combine and compose the modules in many different permutations to fit your exact needs: e.g., some
-use cases need the full ELK stack, while some solely use Elasticsearch; sometimes you run Elasticsearch, Logstash, and
-Kibana each in completely separate clusters (e.g., in prod, for high availability and scalability) and sometimes you
-run them all in a single cluster or single node (e.g., in dev, to save money).
+use cases need only Elasticsearch, while others need the full ELK stack, and for those that use the full stack, you
+may run each component in separate clusters in some environments (e.g., in prod, for high availability and scalability)
+and all in a single cluster in other environments (e.g., in dev, to save money).
 
 === Examples
 
@@ -161,10 +163,10 @@ All of the code in the Gruntwork Service Catalog is _versioned_. Every time we m
 versioned release, and announce it in the monthly
 https://blog.gruntwork.io/tagged/gruntwork-newsletter[Gruntwork Newsletter].
 
-When you use the code from the Gruntwork Service Catalog (a topic we'll cover in <<how_to_use_the_catalog>>), you will
-always pin yourself to a specific version of the code. That way, you are not accidentally affected by any subsequent
-changes in the Gruntwork Service Catalog until you explicitly choose to pull those changes in. And when you do want to
-pull the changes in, it's just a matter of bumping the version number!
+When you use the code from the Gruntwork Service Catalog (a topic we'll cover in <<how_to_use_the_catalog>>), you pin
+yourself to a specific version of the code. That way, you are not accidentally affected by any subsequent changes in
+the Gruntwork Service Catalog until you explicitly choose to pull those changes in. And when you do want to pull the
+changes in, it's just a matter of bumping the version number!
 
 We use version numbers of the form `MAJOR.MINOR.PATCH` (e.g., `1.2.3`), following the principles of
 _https://semver.org[semantic versioning]_. In traditional semantic versioning, you increment the:
@@ -187,7 +189,7 @@ version numbers. With `0.MINOR.PATCH`, the rules are a bit different, where you 
 The https://gruntwork.io/reference-architecture/[Gruntwork Reference Architecture] is a production-grade, end-to-end
 tech stack built on top of the modules from the Gruntwork Service Catalog.
 
-What it includes::
+What's included::
   The Reference Architecture includes just about everything the typical company needs: multiple environments, each
   configured with server orchestration (e.g., Kubernetes), load balancers, databases, caches, network topology,
   monitoring, alerting, log aggregation, CI/CD, user management, secrets management, SSH management, VPN management, and
@@ -199,10 +201,10 @@ What it includes::
 Opinionated code::
   Whereas the Gruntwork Service Catalog is relatively unopinionated, allowing you to combine and compose modules, tools,
   and approaches however you want ("a la carte"), the Gruntwork Reference Architecture is more opinionated, giving you a
-  small set of pre-defined, standardized sets of modules, tools, and approaches to choose from ("prixe fixe"). If the
-  opinionated design of the Reference Architecture looks like a good fit for your company, you may wish to purchase it
-  as a way to save months on having to wire everything together and deploy it yourself. If the opinionated design is
-  not a good fit, then you will want to use the Gruntwork Service Catalog directly instead.
+  pre-defined, standardized set of modules, tools, and approaches to choose from ("prixe fixe"). If the opinionated
+  design of the Reference Architecture looks like a good fit for your company, you may wish to purchase it as a way to
+  save months on having to wire everything together and deploy it yourself. If the opinionated design is not a good
+  fit, then you can use the Gruntwork Service Catalog directly instead.
 
 [[example_ref_arch]]
 See an example Reference Architecture::
@@ -414,7 +416,8 @@ remote_state {
 }
 ----
 
-Check out
+Once you've created your `terragrunt.hcl` configuration, you can run all the usual Terraform commands, but with
+`terragrunt` as the binary: e.g., `terragrunt plan`, `terragrunt apply`, `terragrunt destroy`. Check out
 https://blog.gruntwork.io/terragrunt-how-to-keep-your-terraform-code-dry-and-maintainable-f61ae06959d8[Terragrunt: how to keep your Terraform code DRY and maintainable]
 for a thorough introduction.
 
@@ -425,7 +428,7 @@ Service Catalog with plain Terraform, Terraform Enterprise, Atlantis, Terragrunt
 [[packer]]
 === Packer
 
-https://www.packer.io[https://www.packer.io] is an open source tool you can use to define _machine images_ (e.g., VM
+https://www.packer.io[Packer] is an open source tool you can use to define _machine images_ (e.g., VM
 images, Docker images) as code. For example, here is how you can use Packer to define an Ubuntu 18.04 Amazon Machine
 Image (AMI) that has Node.js installed:
 
@@ -458,9 +461,9 @@ deploy AMIs across one or more servers (e.g., into an AWS Auto Scaling Group), w
 healing, zero-downtime deployments, etc.
 
 The Gruntwork Service Catalog contains a number of scripts and binaries that you can run on your servers: e.g., the
-ELK code includes scripts you run during boot on Elasticsearch servers to bootstrap the cluster; you can also run
-the `ssh-grunt` binary on each server to allow manage SSH access to that server using IAM groups (i.e., IAM users in
-specific IAM groups will be able to SSH to specific servers using their own usernames and SSH keys).
+ELK code includes scripts you run during boot on Elasticsearch servers to bootstrap the cluster, and the security code
+includes an `ssh-grunt` binary you can run on each server to manage SSH access to that server using IAM groups (i.e.,
+IAM users in specific IAM groups will be able to SSH to specific servers using their own usernames and SSH keys).
 
 To get these scripts and binaries onto your virtual servers (e.g., onto EC2 instances in AWS or compute instances in
 GCP), we recommend using Packer to build VM images that have these scripts and binaries installed. You'll see an
@@ -472,12 +475,12 @@ Reference Architecture does use Packer as one of its opinionated tools.
 === Docker
 
 https://www.docker.com[Docker] is an open source tool you can use to run _containers_ and define _container images_ as
-code. A container is a bit like a lightweight VM, except instead of virtualizing all the hardware and OS, containers
-virtualize solely user space, which gives you many of the isolation benefits of a VM (e.g., each container is isolated
-in terms of memory, CPU, networking, hard drive, etc), but with much less memory, CPU, and start-up time overhead.
-For example, here is how you can define an Ubuntu 18.04 Docker image that has Node.js installed:
+code. A container is a bit like a lightweight VM, except instead of virtualizing all the hardware and the entire
+operating systems, containers virtualize solely user space, which gives you many of the isolation benefits of a VM
+(each container is isolated in terms of memory, CPU, networking, hard drive, etc), but with much less memory, CPU, and
+start-up time overhead. For example, here is how you can define an Ubuntu 18.04 Docker image that has Node.js installed:
 
-.packer-example.json
+.Dockerfile
 [source,Dockerfile]
 ----
 FROM ubuntu:18.04
@@ -487,9 +490,10 @@ RUN curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - && \
     sudo apt-get install -y nodejs
 ----
 
-You can run `docker build -t example-image .` to build a Docker image from this code and then deploy the Docker image
-using a _container orchestration tool_ such as Kubernetes, ECS, nor Nomad (all of these tools are available in the
-Gruntwork Service Catalog).
+You can run `docker build -t example-image .` to build a Docker image from this code, push the image to a Docker
+Registry (e.g., ECR or Docker Hub), and then deploy the Docker image using other tools. For example, the Gruntwork
+Service Catalog contains a number of modules for running _container orchestration tools_ such as Kubernetes, ECS, and
+Nomad that you can use to deploy and manage Docker images.
 
 [[immutable_infrastructure]]
 === Immutable infrastructure
@@ -590,7 +594,7 @@ configure `provider` or `backend` settings. Moreover, you will typically use a c
 Catalog together, rather than just one at a time. Therefore, to use a Terraform module from the Gruntwork Service
 Catalog, you'll need to create a _wrapper module_ in one of your own Git repos.
 
-Let's assume you have a repo called `infrastructure-modules` and create a `vpc-app` wrapper modules in it:
+Let's assume you have a repo called `infrastructure-modules` and create a `vpc-app` wrapper module in it:
 
 ----
 infrastructure-modules
@@ -603,8 +607,8 @@ infrastructure-modules
 
 ==== Configure your providers
 
-Inside of `main.tf`, configure whatever Terraform providers you're using. Since the `vpc-app` and `vpc-app-network-acls`
-modules we're using in this guide are AWS modules, you'll need to configure the AWS provider:
+Inside of `main.tf`, configure whatever Terraform providers you're using. Since the `vpc-app` module you're using in
+this guide is an AWS module, you'll need to configure the AWS provider:
 
 .infrastructure-modules/networking/vpc-app/main.tf
 [source,hcl]
@@ -680,7 +684,7 @@ Configure a backend::
   https://blog.gruntwork.io/how-to-manage-terraform-state-28f5697e68fa[How to manage Terraform state] for more info.
 
 Partial configuration::
-  The backend uses a _https://www.terraform.io/docs/backends/config.html#partial-configuration[partial configuration],
+  The backend uses a _https://www.terraform.io/docs/backends/config.html#partial-configuration[partial configuration]_,
   which means most of the backend configuration (e.g., which S3 bucket and path to use) will be specified from outside
   of the code. You'll see an example of this soon.
 
@@ -703,7 +707,7 @@ Now you can pull in the Terraform modules you want from the Gruntwork Service Ca
 ----
 module "vpc" {
   # Make sure to replace <VERSION> in this URL with the latest module-vpc release
-  source = "git@github.com:gruntwork-io/module-vpc.git//modules/vpc-mgmt?ref=<VERSION>"
+  source = "git@github.com:gruntwork-io/module-vpc.git//modules/vpc-app?ref=<VERSION>"
 
   aws_region       = var.aws_region
   vpc_name         = var.vpc_name
@@ -732,7 +736,7 @@ Versioned URL::
 
 Module arguments::
   Below the `source` URL, you'll need to pass in the module-specific arguments. You can find all the required and
-  optional variables defined in `vars.tf` (old name` or `variables.tf` (new name) of the module (e.g.,
+  optional variables defined in `vars.tf` (old name) or `variables.tf` (new name) of the module (e.g.,
   here's https://github.com/gruntwork-io/module-vpc/blob/master/modules/vpc-app/vars.tf[the variables.tf for vpc-app]).
   The code above sets these to input variables (which you'll define shortly) so that you can use different values in
   different environments.
@@ -760,7 +764,7 @@ variable "num_nat_gateways" {
 
 You may also want to add useful output variables in `outputs.tf`:
 
-.infrastructure-modules/networking/vpc-app/variables.tf
+.infrastructure-modules/networking/vpc-app/outputs.tf
 [source,hcl]
 ----
 output "vpc_name" {
@@ -809,7 +813,8 @@ output "private_persistence_subnet_ids" {
 }
 ----
 
-==== Manual tests
+[[manual_tests_terraform]]
+==== Manual tests for Terraform code
 
 Now that the code is written, you may want to test it manually. We recommend testing in a _sandbox environment_ where
 you can deploy infrastructure without affecting any other environments (especially production!). For example, if you're
@@ -839,7 +844,7 @@ cidr_block       = "10.0.0.0/16"
 num_nat_gateways = 1
 ----
 
-You may also want to add a `testing-backend.hcl` file:
+You should also add a `testing-backend.hcl` file:
 
 ----
 infrastructure-modules
@@ -863,7 +868,7 @@ key    = "manual-testing/<YOUR-NAME>/terraform.tfstate"
 region = "us-east-2"
 ----
 
-You can now test manually by authenticate to your sandbox environment (see
+You can now test manually by authenticating to your sandbox environment (see
 https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[A Comprehensive Guide to Authenticating to AWS on the Command Line])
 and running:
 
@@ -879,11 +884,14 @@ When you're done testing, clean up by running:
 terraform destroy -var-file=testing.tfvars
 ----
 
-==== Automated tests
+[[automated_tests_terraform]]
+==== Automated tests for Terraform code
 
 You may also want to create automated tests for your module. Automated tests for infrastructure code will spin up and
 tear down a lot of infrastructure, so we recommend a separate _testing environment_ (e.g. yet another AWS account) for
-running automated tests—separate even from the sandboxes you use for manual testing.
+running automated tests—separate even from the sandboxes you use for manual testing. You can run a tool like
+https://github.com/gruntwork-io/cloud-nuke[cloud-nuke] on a schedule to periodically clean up left-over resources in
+your testing environment (e.g., delete all resources that are older than 24h).
 
 The only way to build confidence that your infrastructure code works as you expect is to deploy it into a real AWS
 account. That means you'll primarily be writing integration tests that:
@@ -914,7 +922,7 @@ infrastructure-modules
 ----
 
 Check out the https://github.com/gruntwork-io/terratest/#quickstart[Terratest install instructions] for how to
-configure your environment for Go and install Terratestt.
+configure your environment for Go and install Terratest.
 
 Next, write some test code in `vpc_app_test.go` that looks like this:
 
@@ -931,16 +939,8 @@ import (
 	"github.com/gruntwork-io/terratest/modules/terraform"
 )
 
-// The ID of the your AWS account for testing
-const awsAccountId = "111122223333"
-
-// An AWS region to test in
-const awsRegionForTest = "us-east-2"
-
-// S3 bucket to use for testing
-const s3BucketForTesting = "<YOUR-S3-BUCKET>"
-
 func TestVpcApp(t *testing.T) {
+	// Run this test in parallel with all the others
 	t.Parallel()
 
 	// Unique ID to namespace resources
@@ -956,8 +956,8 @@ func TestVpcApp(t *testing.T) {
 
 		// Variables to pass to the Terraform code
 		Vars: map[string]interface{}{
-			"aws_region":       awsRegionForTest,
-			"aws_account_id":   awsAccountId,
+			"aws_region":       "us-east-2",
+			"aws_account_id":   "111122223333", // ID of testing account
 			"vpc_name":         vpcName,
 			"cidr_block":       "10.0.0.0/16",
 			"num_nat_gateways": 1,
@@ -965,9 +965,9 @@ func TestVpcApp(t *testing.T) {
 
 		// Backend configuration to pass to the Terraform code
 		BackendConfig: map[string]interface{}{
-			"bucket":   s3BucketForTesting,
+			"bucket":   "<YOUR-S3-BUCKET>", // bucket in testing account
+			"region":   "us-east-2", // region of bucket in testing account
 			"key":      backendS3Key,
-			"region":   awsRegionForTest,
 		},
 	}
 
@@ -989,8 +989,8 @@ Configure the backend::
 
 Namespace resources::
   The code used `random.UniqueId()` to generate unique identifiers for all the resources in this test. This allows
-  multiple tests to run in parallel (e.g., on your computer, your teammates' computers, CI servers) without the
-  any clashes (e.g., without conflicts over unique VPC names).
+  multiple tests to run in parallel (e.g., on your computer, your teammates' computers, CI servers) without running
+  into conflicts (e.g., without conflicts over unique VPC names).
 
 Defer terraform destroy::
   The test code uses `defer` to schedule `terraform.Destroy` to run at the end of the test, whether or not the test
@@ -1029,6 +1029,7 @@ For a lot more information on writing automated tests for Terraform code, see:
   automated testing for Terraform code, including unit tests, integration tests, end-to-end tests, dependency injection,
   running tests in parallel, test stages, and more.
 
+[[deploy_terraform]]
 ==== Deploying
 
 Now that your module has been thoroughly tested, you can deploy it to your real environments (e.g., staging and
@@ -1106,29 +1107,12 @@ And now you can deploy to the staging environment as follows:
 
 ----
 cd infrastructure-modules/networking/vpc-app
-terraform apply -backend-config=staging-backend.hcl -var-file=staging.tfvars
+terraform init -backend-config=staging-backend.hcl
+terraform apply -var-file=staging.tfvars
 ----
 
 To deploy to other environments, create analogous `.tfvars` and `.hcl` files (e.g., `production.tfvars` and
-`production-backend.hcl`) and run `terraform apply` with those files.
-
-[NOTE]
-.Making the backend config more DRY
-====
-In each environment, you'll most likely want to use the same backend settings (e.g., S3 bucket, DynamoDB table)
-for multiple modules. The only difference between the modules will be the `key` value, which needs to be unique for
-each module. To reduce copy/paste, you could (1) create a `common/staging-backend.hcl` file with all the backend
-settings for the staging environment except `key`, (2) create a `networking/vpc-app/backend.hcl` file that solely sets
-the `key` parameter, and then (3) deploy as follows:
-
-----
-cd infrastructure-modules/networking/vpc-app
-terraform apply \
-  -backend-config=../../common/staging-backend.hcl \
-  -backend-config=backend.hcl \
-  -var-file=staging.tfvars
-----
-====
+`production-backend.hcl`) and run `terraform init` and `terraform apply` with those files.
 
 *Benefits of this approach*
 
@@ -1141,7 +1125,8 @@ terraform apply \
 
 * You're always deploying "latest" from a branch. No versioning or easy rollback.
 * Lots of command-line arguments to pass. Easy to make mistakes. Most teams end up creating hacky wrapper scripts.
-* Manually setting a unique `key` for each module is repetitive and error prone.
+* Lots of backend configuration to copy for each module. Manually setting a unique `key` for each module is repetitive
+  and error prone.
 * From a quick glance at the code, it's not clear what accounts, environments, or regions you deploy to. Figuring this
   out requires digging through every `.tfvars` file.
 
@@ -1179,7 +1164,7 @@ infrastructure-live
 Where:
 
 <account>::
-  A the top level, you have accounts (e.g., an AWS account) or project (e.g., GCP project).
+  A the top level, you have accounts (e.g., an AWS account) or projects (e.g., GCP project).
 
 <region>::
   Within each account, there will be one or more regions (e.g., in AWS, `us-east-1`, `eu-west-1`, etc). There may also
@@ -1188,12 +1173,12 @@ Where:
   that apply to the entire account, such as what backend to use to store Terraform state.
 
 <environment>::
-  Within each region, there will be one or more environments, such as dev, stage, prod, etc. There may also be a
+  Within each region, there will be one or more environments, such as dev, stage, prod, mgmt, etc. There may also be a
   `_global` folder that defines resources that are available across all the environments in this region.
 
 <resource>::
-  Within each environment, you deploy one or more resources, such as servers, databases load balancers, and so on. The
-  configuration for these resources is in a `terragrunt.hcl` file.
+  Within each environment, you use Terraform modules to deploy one or more resources, such as servers, databases load
+  balancers, and so on. Each module is configured via a `terragrunt.hcl` file.
 
 For example, if you were using AWS, with separate accounts for staging and production (see
 <<production_grade_aws_account_structure>>), and you wanted to deploy the `vpc-app` module in the `us-east-2` region in
@@ -1282,8 +1267,9 @@ When you run this command, Terragrunt will:
   block.
 
 You can deploy the production environment by creating an analogous
-`infrastructure-live/production/us-east-2/prod/vpc-app/terragrunt.hcl` file. If you have multiple modules and you want
-to deploy all of them, you can use `apply-all`. For example, to deploy everything in the production account, you would
+`infrastructure-live/production/us-east-2/prod/vpc-app/terragrunt.hcl` file and running `terragrunt apply` in
+`infrastructure-live/production/us-east-2/prod/vpc-app/`. If you have multiple modules and you want to deploy all of
+them, you can use `terragrunt apply-all`. For example, to deploy _everything_ in the production account, you would
 do the following:
 
 ----
@@ -1306,6 +1292,42 @@ terragrunt apply-all
 
 * You have to install, learn, and manage a new tool / abstraction layer.
 * The scratch directory can make debugging/troubleshooting tricky.
+
+==== Updating
+
+Now that you have your Terraform module deployed, you can pull in updates as follows:
+
+. Subscribe to the monthly https://blog.gruntwork.io/tagged/gruntwork-newsletter[Gruntwork Newsletter] to be notified
+  of all updates to the Gruntwork Service Catalog.
+. When you find an update you'd like for a specific module, update any code using that module in
+  `infrastructure-modules` to the new version number. For example, if you were using `module-vpc` at `v0.7.2` and you
+  wanted to update to `v0.7.3`, you would change from:
++
+.infrastructure-modules/networking/vpc-app/main.tf
+[source,hcl]
+----
+module "vpc" {
+  source = "git@github.com:gruntwork-io/module-vpc.git//modules/vpc-app?ref=v0.7.2"
+  # ...
+}
+----
++
+to:
++
+.infrastructure-modules/networking/vpc-app/main.tf
+[source,hcl]
+----
+module "vpc" {
+  source = "git@github.com:gruntwork-io/module-vpc.git//modules/vpc-app?ref=v0.7.3"
+  # ...
+}
+----
+. Pay close attention to the release notes for any additional instructions. In particular, if the MINOR version number
+  was increased (e.g., `v0.6.0` -> `v0.7.0`), that implies a backwards incompatible change, and the release notes will
+  explain what you need to do (e.g., you might have to add, remove, or change arguments you pass to the module).
+. Tests your changes locally. You do this using the same process outlined in <<manual_tests_terraform>> and
+  <<automated_tests_terraform>>.
+. Deploy your changes to each environment. You do this using the same process outlined in <<deploy_terraform>>.
 
 [[using_scripts_binaries]]
 === Using scripts and binaries
@@ -1384,24 +1406,19 @@ gruntwork install \
   --repo https://github.com/gruntwork-io/module-security
 ----
 
-Now that you know _how_ to use Gruntwork Installer, let's talk about _where_ to use it.
+Now that you know _how_ to use Gruntwork Installer, let's talk about _where_ to use it. Your goal is to install the
+scripts and binaries onto your servers (e.g., EC2 instances, compute instances). To do this, we recommend following
+<<immutable_infrastructure>> practices, and creating versioned, immutable images using Packer and/or Docker, as
+described in the next two sections.
 
-==== Where to run the Gruntwork Installer
-
-You will most likely want to use the Gruntwork Installer to install scripts and binaries on your EC2 instances. We
-recommend following <<immutable_infrastructure>> practices and creating an immutable, versioned image that has the
-scripts and binaries installed. There are many ways to do this, so in this guide, we'll focus on just the following
-ones:
-
-. <<gruntwork_install_packer>>
-. <<gruntwork_install_docker>>
-
-[[gruntwork_install_packer]]
-===== Running the Gruntwork Installer in Packer templates
+==== Building images with Packer
 
 If you want to build machine images with scripts and binaries from the Gruntwork Service Catalog, such as an Amazon
-Machine Image (AMI) for use in AWS, you can use https://www.packer.io[Packer]. Here's an example of how to use
-`gruntwork-install` in a Packer template:
+Machine Image (AMI) for use in AWS, you can use https://www.packer.io[Packer].
+
+===== Packer basics
+
+Here's an example of how to use `gruntwork-install` in a Packer template:
 
 .packer-example.json
 [source,json]
@@ -1438,23 +1455,118 @@ A few things to notice about this Packer template:
 * The `shell` provisioner installs the Gruntwork Installer and then uses it to install `ip-lockdown` and `ssh-grunt`
   at specific versions.
 
-To build an AMI from this Packer template, you run:
+[[manual_testing_packer]]
+===== Manually testing a Packer template
+
+To build a machine image from a Packer template, you authenticate to a sandbox environment for testing
+(see <<manual_tests_terraform>>) and run:
 
 ----
 export GITHUB_OAUTH_TOKEN=(YOUR_TOKEN)
 packer build packer-example.json
 ----
 
-[[gruntwork_install_docker]]
-===== Running the Gruntwork Installer in Docker images
+At the end of the build, Packer will output the ID of the image you've built (e.g., the AMI ID). You can then test the
+image works as you expect by deploying it into a sandbox environment. You can deploy manually or via an automated
+process, as described in <<deploy_packer>>.
 
-If you want to build Docker images with scripts and binaries from the Gruntwork Service Catalog, the approach is
-similar to what you saw earlier, but you have to take extra care with how you pass in your GitHub personal access
-token. You should NOT hard-code the token into your `Dockerfile` (never store secrets in plain text) and you should NOT
-naively pass it in via a Docker build argument, as build arguments get stored in the Docker image layers, and anyone
-with access to that Docker image will be able to extract your token!
+[[automated_testing_packer]]
+===== Automated tests for a Packer template
 
-The safe way to pass secrets when building a Docker image is to use a
+Just as with <<automated_tests_terraform>>, you can use https://github.com/gruntwork-io/terratest/[Terratest] to create
+automated tests for your Packer template. These are typically integration tests that:
+
+. Build an artifact using Packer.
+. Deploy the artifact on top of real infrastructure (e.g., deploy the artifact onto real EC2 instances in AWS or
+  compute instances in GCP). Often, this is done by using Terraform code, passing in the artifact ID as an input
+  variable.
+. Validate infrastructure works as expected.
+. Undeploy the infrastructure.
+. Delete the artifact.
+
+Take a look at
+https://github.com/gruntwork-io/terratest/blob/master/test/terraform_packer_example_test.go[terraform_packer_example_test.go]
+for an example of an automated test that implements this exact pattern. Check out the <<automated_tests_terraform>>
+section for instructions on how to write and run tests written with Terratest.
+
+===== Using Docker for faster testing
+
+Building machine images in the cloud (i.e., in AWS and GCP) can take a while, as you have to wait to fire up a virtual
+server, run your provisioners, snapshot the server, shut it down, etc. This can add a few minutes of overhead to each
+Packer build. One way to speed it up for local testing is to add a Docker builder to your Packer template that uses
+the same base OS image. This will allow you to run the build completely locally _and_ run the Docker image itself
+completely locally (see <<manually_test_docker>>), both of which can dramatically improve iteration speed. Once the
+Docker image is working fully, you can then build the machine image you want, with most of the errors in your template
+already resolved.
+
+See https://github.com/gruntwork-io/terratest/#iterating-locally-using-docker[Iterating locally using Docker] for more
+details.
+
+[[deploy_packer]]
+===== Deploying Packer images
+
+Now that your Packer template has been thoroughly tested, you can deploy machine images to your real environments
+(e.g., staging and production). There are many ways to deploy machine images. We recommend using Terraform modules,
+as explained in <<using_terraform_modules>>. For example, you can use the following modules:
+
+* *AWS Auto Scaling Group (stateless):* use
+  https://github.com/gruntwork-io/module-asg/tree/master/modules/asg-rolling-deploy[asg-rolling-deploy] in `module-asg`.
+  Can do auto scaling, auto healing, and zero-downtime rolling deployment.
+* *AWS Auto Scaling Group (stateful):* use
+  https://github.com/gruntwork-io/module-asg/tree/master/modules/server-group[server-group] in `module-asg`.
+  Can do auto healing, zero-downtime rolling deployment, and attach persistent EBS volumes and ENIs.
+* *Single EC2 Instance:* use
+  https://github.com/gruntwork-io/module-server/tree/master/modules/single-server[single-server] in `module-server`.
+  Can attach persistent EBS volumes and ENIs. Note that single servers are single points of failure, with no automatic
+  recover, so even for a single server, we generally recommend using one of the Auto Scaling Group modules instead.
+
+IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access `module-server` and `module-asg`.
+
+All of these modules allow you to specify the machine image (i.e., AMI) to deploy via an input variable
+(e.g., `ami_id`).
+
+===== Updating Packer templates
+
+Now that you have your Packer images deployed, you can pull in updates as follows:
+
+. Subscribe to the monthly https://blog.gruntwork.io/tagged/gruntwork-newsletter[Gruntwork Newsletter] to be notified
+  of all updates to the Gruntwork Service Catalog.
+. When you find an update you'd like for a specific module, update any code using that module in your Packer templates
+  to the new version number. For example, if you were using `module-security` at `v0.18.3` and you
+  wanted to update to `v0.18.4`, you would change from:
++
+.packer-example.json
+[source,json]
+----
+"gruntwork install --module-name ip-lockdown --tag v0.18.3 --repo https://github.com/gruntwork-io/module-security"
+----
++
+to:
++
+.packer-example.json
+[source,json]
+----
+"gruntwork install --module-name ip-lockdown --tag v0.18.4 --repo https://github.com/gruntwork-io/module-security"
+----
+. Pay close attention to the release notes for any additional instructions. In particular, if the MINOR version number
+  was increased (e.g., `v0.17.0` -> `v0.18.0`), that implies a backwards incompatible change, and the release notes will
+  explain what you need to do (e.g., you might have to add, remove, or change arguments you pass to the module).
+. Tests your changes locally. You do this using the same process outlined in <<manual_testing_packer>> and
+  <<automated_testing_packer>>.
+. Deploy your changes to each environment. You do this using the same process outlined in <<deploy_packer>>.
+
+[[building_images_docker]]
+==== Building images with Docker
+
+If you want to build Docker images with scripts and binaries from the Gruntwork Service Catalog, you can create a
+`Dockerfile`.
+
+===== Dockerfile basics
+
+When using a `Dockerfile`, you should NOT hard-code your GitHub personal access token (or any other secret) into your
+`Dockerfile` and you should NOT naively pass it in via a Docker build argument, as build arguments get stored in the
+Docker image layers, and anyone with access to that Docker image will be able to extract your token! The safe way to
+pass secrets when building a Docker image is to use a
 https://docs.docker.com/develop/develop-images/multistage-build/[multi-stage build], as shown in the following example:
 
 .Dockerfile
@@ -1488,11 +1600,162 @@ A few things to notice about this Packer template:
 * The second stage copies just the installed scripts/binaries from the first stage. Note that none of the build
   arguments get copied, so they will NOT end up in the final Docker image.
 
-To build the Docker image, you run:
+[[manually_build_docker]]
+===== Building a Docker image
+
+To build a Docker image from a `Dockerfile`, you run:
 
 ----
-docker build --build-arg GITHUB_OAUTH_TOKEN=(YOUR_TOKEN) -t example-image:v1 .
+docker build --build-arg GITHUB_OAUTH_TOKEN=<YOUR_TOKEN> -t <IMAGE_NAME>:<IMAGE_TAG> .
 ----
+
+where:
+
+YOUR_TOKEN::
+  Your GitHub personal access token.
+
+IMAGE_NAME::
+  The name to use for the image. When using Docker Hub as a Docker Registry (more on registries below), this is
+  typically of the format `<ORG>/<NAME>`, where `ORG` is your organization name and `NAME` is the name for this
+  image (e.g., `gruntwork-io/example-image`). When using ECR as a Docker Registry, this will be a URL of the form
+  `<ACCOUNT_ID>.dkr.ecr.<REGION>.amazonaws.com/<NAME>`, where `ACCOUNT_ID` is your AWS account ID, `REGION` is the
+  AWS region where the ECR repo lives, and `NAME` is the name for this image
+  (e.g., `111122223333.dkr.ecr.us-east-2.amazonaws.com/example-image`).
+
+IMAGE_TAG::
+  An optional tag to add to the image. This is often used for version numbers (e.g., `v1`).
+
+[[manually_test_docker]]
+===== Manually testing a Docker image
+
+To manually test a Docker image, you run:
+
+----
+docker run <IMAGE_NAME>:<IMAGE_TAG>
+----
+
+Where `IMAGE_NAME` and `IMAGE_TAG` are the name and tag for the Docker image you built earlier, as defined in
+<<manually_build_docker>>. This will run the default command (`CMD`) defined in the `Dockerfile`. Sometimes, you may
+want to override this command. For example, to fire up a Bash prompt in your Docker image, you can typically run the
+following:
+
+----
+docker run -it <IMAGE_NAME>:<IMAGE_TAG> bash
+----
+
+Note the `-it` flags to enable an interactive TTY so you can enter commands at the bash prompt.
+
+If your Docker image needs to listen on a port, you can map this port to a port number on your host OS using the `-p`
+flag:
+
+----
+docker run -p 80:8080 <IMAGE_NAME>:<IMAGE_TAG>
+curl localhost:8080
+----
+
+If you find yourself running a lot of Docker commands, and having to remember lots of command-line arguments and
+environment variables to set for each one, look into using https://docs.docker.com/compose/[Docker Compose], which
+allows you to define one or more Docker containers to run and all the parameters for each one in a YAML file, and then
+run everything with a single `docker-compose up`.
+
+[[automated_test_docker]]
+===== Automated tests for Docker images
+
+Just as with <<automated_tests_terraform>>, you can use https://github.com/gruntwork-io/terratest/[Terratest] to create
+automated tests for your Docker images. These are typically integration tests that:
+
+. Build a Docker image.
+. Deploy the Docker image, either by running `docker run`, `docker-compose up`, or deploying it via a Docker
+  orchestration tool such as Kubernetes (more on this in <<deploying_docker_images>>).
+. Validate the Docker image works as expected.
+. Undeploy the Docker image.
+
+Take a look at
+https://github.com/gruntwork-io/terratest/blob/master/test/kubernetes_basic_example_service_check_test.go[kubernetes_basic_example_service_check_test.go]
+for an example of an automated test that implements this exact pattern. Check out the <<automated_tests_terraform>>
+section for instructions on how to write and run tests written with Terratest.
+
+===== Publishing Docker images to a registry
+
+To be able to use your Docker images beyond a single computer, you can publish them to a Docker Registry. The most
+popular options are:
+
+* https://aws.amazon.com/ecr/[Amazon ECR]: Recommended for AWS users.
+* https://cloud.google.com/container-registry/[Container Registry]: Recommended for GCP users.
+* https://hub.docker.com[Docker Hub]: Recommended for open source.
+
+The general workflow is:
+
+. Login to your Docker Registry: `docker login`. Check your Registry's documentation for details.
+. Build your Docker image: `docker build -t <IMAGE_NAME>:<IMAGE_TAG> .`
+. Push your Docker image to the Registry: `docker push <IMAGE_NAME>:<IMAGE_TAG>`.
+
+[[deploying_docker_images]]
+===== Deploying Docker images
+
+Now that your Docker image has been thoroughly tested and pushed to a Docker Registry, you can deploy it to your real
+environments (e.g., staging and production). There are many ways to deploy Docker images, so in this guide, we'll
+highlight just the following ones:
+
+Kubernetes::
+  To deploy your Docker image to Kubernetes, you'll first need to set up a Kubernetes cluster. For AWS, we recommend
+  using https://github.com/gruntwork-io/terraform-aws-eks[terraform-aws-eks] and for GCP, we recommend using
+  https://github.com/gruntwork-io/terraform-google-gke[terraform-google-gke].
++
+IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access `terraform-aws-eks`.
++
+Once you have a working cluster, there are a number of ways to deploy Docker images. The basic version is to run
+`kubectl apply` and pass it a YAML manifest. However, most teams find this too verbose and repetitive, so a more DRY
+option is to use something like Helm. To run Helm, we recommend using
+https://github.com/gruntwork-io/terraform-kubernetes-helm[terraform-kubernetes-helm] and
+https://github.com/gruntwork-io/helm-kubernetes-services[helm-kubernetes-services].
+
+ECS::
+  To deploy your Docker image to ECS, you'll first need to set up an ECS cluster, which you can do using
+  the https://github.com/gruntwork-io/module-ecs/tree/master/modules/ecs-cluster[ecs-cluster] module in `module-ecs`.
++
+IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access `module-ecs`.
++
+Once you have a working cluster, you can deploy your Docker image using one of the `ecs-service-xxx` modules in
+`module-ecs`, such as `ecs-service-with-alb` or `ecs-daemon-service`.
+
+Fargate::
+  To deploy a Docker image using Fargate, you'll first need to set up a Fargate cluster. You can do this by directly
+  using the https://www.terraform.io/docs/providers/aws/r/ecs_cluster.html[aws_ecs_cluster] Terraform resource, as
+  Fargate will manage all the worker nodes for you. Once you've created the cluster, you can deploy your image using
+  the https://github.com/gruntwork-io/module-ecs/tree/master/modules/ecs-fargate[ecs-fargate] module in `module-ecs`.
++
+IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access `module-ecs`.
+
+===== Updating Docker images
+
+Now that you have your Docker images deployed, you can pull in updates as follows:
+
+. Subscribe to the monthly https://blog.gruntwork.io/tagged/gruntwork-newsletter[Gruntwork Newsletter] to be notified
+  of all updates to the Gruntwork Service Catalog.
+. When you find an update you'd like for a specific module, update any code using that module in your `Dockerfiles`
+  to the new version number. For example, if you were using `module-security` at `v0.18.3` and you
+  wanted to update to `v0.18.4`, you would change from:
++
+.Dockerfile
+[source,Dockerfile]
+----
+RUN gruntwork install --module-name ip-lockdown --tag v0.18.3 --repo https://github.com/gruntwork-io/module-security
+----
++
+to:
++
+.Dockerfile
+[source,Dockerfile]
+----
+RUN gruntwork install --module-name ip-lockdown --tag v0.18.4 --repo https://github.com/gruntwork-io/module-security
+----
+. Pay close attention to the release notes for any additional instructions. In particular, if the MINOR version number
+  was increased (e.g., `v0.17.0` -> `v0.18.0`), that implies a backwards incompatible change, and the release notes will
+  explain what you need to do (e.g., you might have to add, remove, or change arguments you pass to the module).
+. Tests your changes locally. You do this using the same process outlined in <<manually_test_docker>> and
+  <<automated_test_docker>>.
+. Deploy your changes to each environment. You do this using the same process outlined in <<deploying_docker_images>>.
 
 ==== Gruntwork Installer alternatives
 
@@ -1506,6 +1769,13 @@ Docker to copy it into your Docker images.
 
 Note that the major drawback of copying these files is that you'll have to manually pull in new versions as we update
 the code.
+
+==== Packer and Docker alternatives
+
+Although this guide outlines how to use Docker and Packer, you can also use the scripts and binaries in the Gruntwork
+Service Catalog and the Gruntwork Installer with any other configuration management strategy, such as Chef, Ansible,
+Puppet, or Salt. After all, they are just scripts and binaries! Check the docs for your chose configuration management
+tool on how to copy and execute scripts and binaries.
 
 === Contributing to the Gruntwork Service Catalog
 
