@@ -98,8 +98,8 @@ Terraform::
   networking.
 
 Go::
-  Used to build cross-platform CLI applications. E.g., We have an app called `ssh-grunt` you can run on each
-  server to manage SSH access to that server via IAM groups.
+  Used to build cross-platform CLI applications (e.g., `ssh-grunt` is a Go app you can run on your EC2 instances to
+  manage SSH access to those instances via IAM groups) and to write automated tests for all of our modules.
 
 Bash::
   Used for small scripts on Linux and macOS, including:
@@ -352,6 +352,7 @@ Version control::
   first step will be to check the commit log and find out what changed in your infrastructure, and your second step may
   be to resolve the problem by simply reverting back to a previous, known-good version of your IaC code.
 
+// TODO: could add screenshot here of GitHub PR with plan output and tests
 Validation::
   If the state of your infrastructure is defined in code, then for every single change, you can perform a code review,
   run a suite of automated tests, and pass the code through static analysis tools, all practices that are known to
@@ -509,8 +510,8 @@ Nomad that you can use to deploy and manage Docker images.
 With _mutable infrastructure_, you deploy a set of servers, and you continuously update those servers in place. Every
 new update gets installed on top of the previous updates, either manually (e.g., by SSHing to each server and running
 commands), or via tools like Ansible, Chef, or Puppet. Over time, each "mutable" server builds up a history of
-changes, which can make it difficult to (a) reason about what's actually installed and (b) debug issues that are
-specific to the unique history of one server but not others.
+changes, and may diverge in its behavior, which can make it difficult to (a) reason about what's actually installed
+and (b) debug issues that are specific to the unique history of one server but not others.
 
 The idea behind _immutable infrastructure_ is that once you deploy a server, you never change it again. If you need to
 roll out an update, you deploy a _new_ server with that update, and undeploy the old one. This paradigm is built for use
@@ -1217,6 +1218,19 @@ infrastructure-live
             └ terragrunt.hcl
 ----
 
+[NOTE]
+.Environments within accounts
+====
+In the folder structure above, it may seem redundant to have an environment, such as `stage`, within an account, such
+as `staging`. This extra level of indirection may seem unnecessary in the simple example in this deployment guide, but
+in real-world usage, it's common to have multiple environments within a single account. For example, within the
+`staging` account, you may have not just a `stage` environment, which contains the VPC and some applications, but also
+a `mgmt` environment, which contains a separate VPC for running DevOps tooling (e.g., an OpenVPN server). Similarly, in
+the `production` account, you may have the `prod` environment for normal production apps, a `prod-pci` environment for
+PCI compliant apps and data, and a `mgmt` environment for DevOps tooling (e.g., an OpenVPN server).
+====
+
+
 The `terragrunt.hcl` in the root of each account defines the backend settings for that account (including special
 helpers to automatically set the `key` value). Here's an example of what `staging/terragrunt.hcl` might look
 like:
@@ -1313,7 +1327,8 @@ terragrunt apply-all
 Now that you have your Terraform module deployed, you can pull in updates as follows:
 
 . Subscribe to the monthly https://blog.gruntwork.io/tagged/gruntwork-newsletter[Gruntwork Newsletter] to be notified
-  of all updates to the Gruntwork Service Catalog.
+  of all updates to the Gruntwork Service Catalog. Alternatively, you can "watch" repos in GitHub that you're
+  interested in.
 . When you find an update you'd like for a specific module, update any code using that module in
   `infrastructure-modules` to the new version number. For example, if you were using `module-vpc` at `v0.7.2` and you
   wanted to update to `v0.7.3`, you would change from:
@@ -1560,7 +1575,8 @@ modules instead, even just for one server, so you get auto healing and zero-down
 Now that you have your Packer images deployed, you can pull in updates as follows:
 
 . Subscribe to the monthly https://blog.gruntwork.io/tagged/gruntwork-newsletter[Gruntwork Newsletter] to be notified
-  of all updates to the Gruntwork Service Catalog.
+  of all updates to the Gruntwork Service Catalog. Alternatively, you can "watch" repos in GitHub that you're
+  interested in.
 . When you find an update you'd like for a specific module, update any code using that module in your Packer templates
   to the new version number. For example, if you were using `module-security` at `v0.18.3` and you
   wanted to update to `v0.18.4`, you would change from:
@@ -1763,7 +1779,8 @@ IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access `
 Now that you have your Docker images deployed, you can pull in updates as follows:
 
 . Subscribe to the monthly https://blog.gruntwork.io/tagged/gruntwork-newsletter[Gruntwork Newsletter] to be notified
-  of all updates to the Gruntwork Service Catalog.
+  of all updates to the Gruntwork Service Catalog. Alternatively, you can "watch" repos in GitHub that you're
+  interested in.
 . When you find an update you'd like for a specific module, update any code using that module in your `Dockerfiles`
   to the new version number. For example, if you were using `module-security` at `v0.18.3` and you
   wanted to update to `v0.18.4`, you would change from:
