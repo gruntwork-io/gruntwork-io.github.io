@@ -613,11 +613,14 @@ Gruntwork Service Catalog::
   implements most of the production-grade design for you out of the box.
 +
 IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access this code.
++
+Make sure to read <<how_to_use_gruntwork_service_catalog>>.
 
 Terraform::
   This guide uses https://www.terraform.io/[Terraform] to define and manage all the infrastructure as code. If you're
   not familiar with Terraform, check out https://blog.gruntwork.io/a-comprehensive-guide-to-terraform-b3d32832baca[A
-  Comprehensive Guide to Terraform] and https://training.gruntwork.io/p/terraform[A Crash Course on Terraform].
+  Comprehensive Guide to Terraform], https://training.gruntwork.io/p/terraform[A Crash Course on Terraform], and
+  <<how_to_use_gruntwork_service_catalog>>.
 
 AWS accounts::
   This guide deploys infrastructure into one or more AWS accounts. Check out the
@@ -625,16 +628,6 @@ AWS accounts::
   these accounts on the CLI: check out
   https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[A Comprehensive Guide to Authenticating to AWS on the Command Line]
   for instructions.
-
-Git repos::
-  This guide assumes you have configured two Git repos for your Terraform code: an `infrastructure-modules` repo which
-  contains reusable Terraform modules and an `infrastructure-live` repo that deploys the modules from
-  `infrastructure-modules` into your live environments (i.e., into dev, stage, prod, etc). This is the recommended repo
-  structure for using https://github.com/gruntwork-io/terragrunt[Terragrunt] (see
-  https://github.com/gruntwork-io/terragrunt#motivation[keep your code DRY] for the motivation behind this folder
-  structure), but take note that neither this repo structure nor Terragrunt are required for this guide! Everything in
-  this guide will work just fine in any other repo structure you choose (e.g., everything in one repo) and with vanilla
-  Terraform (or Terraform Enterprise).
 
 [[deploy_mgmt_vpc]]
 === Deploy a management VPC
@@ -655,6 +648,11 @@ IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access `
 
 [[create_wrapper_module]]
 ==== Create a wrapper module
+
+NOTE: This guide will use https://github.com/gruntwork-io/terragrunt[Terragrunt] and its associated file and folder
+structure to deploy Terraform modules. Please note that *Terragrunt is NOT required for using Terraform modules from
+the Gruntwork Service Catalog.* Check out <<how_to_use_gruntwork_service_catalog>> for instructions on alternative
+options, such as how to <<deploy_using_plain_terraform>>.
 
 To deploy the `vpc-mgmt` module, create a _wrapper module_ called `vpc-mgmt` in your `infrastructure-modules` repo:
 
@@ -745,52 +743,8 @@ file for reference.
 [[test_wrapper_module]]
 ==== Test your wrapper module
 
-To test your `vpc-mgmt` module manually:
-
-. Configure a _sandbox environment_ where you can deploy infrastructure without affecting any other environments
-  (especially production!). Typically, this should be a separate AWS account. The gold standard is one AWS account per
-  developer on your team. This allows your developers to test infrastructure changes without having to worry at all
-  about those changes interfering or causing issues for other team members.
-. Create an _example_ of how to use your own `vpc-mgmt` wrapper module. This example will configure this module with
-  values that make manual testing easy:
-+
-.infrastructure-modules/examples/networking/vpc-mgmt/main.tf
-[source,hcl]
-----
-module "vpc" {
-  source = "../../../networking/vpc-mgmt"
-
-  aws_region       = "us-east-2"
-  aws_account_id   = "555566667777"
-  vpc_name         = "example-vpc"
-  cidr_block       = "10.0.0.0/16"
-  num_nat_gateways = 1
-}
-----
-+
-. Run `terraform apply` to deploy this example and check if it works as you expect.
-. Run `terraform destroy` after you're done testing to clean up after yourself.
-
-To create automated tests for your `vpc-mgmt` module:
-
-. Configure a _testing environment_ where you can deploy infrastructure without affecting any other environments
-  (especially production!). Typically, this should be a separate AWS account—separate even from the one you use for
-  manual testing, as automated testing accounts need to be cleaned up often.
-. Create an automated test for the same example code you were using for manual testing. The test will automate the same
-  steps you used for manual testing: that is, set some variables, run `terraform apply`, validate the infrastructure
-  works, and then run `terraform destroy`. Check out https://github.com/gruntwork-io/terratest/[Terratest] for a
-  library of helpers that make this style of testing easier. Take a look at the
-  https://github.com/gruntwork-io/module-vpc/tree/master/test[automated tests for module-vpc] for examples of how to
-  create automated tests for VPC code. And for a complete guide to automated testing, grab a copy of
-  _https://www.terraformupandrunning.com/[Terraform: Up & Running, 2nd edition]_.
-. Configure your automated tests to run after every commit.
-
-To keep your AWS bill from exploding, consider setting up a tool such as
-https://github.com/gruntwork-io/cloud-nuke[cloud-nuke] to clean up your sandbox and testing AWS accounts on a regular
-basis (e.g., as a cron job). For example, in the sandbox environment, you may want to run `cloud-nuke --older-than 72h`,
-once per day, to clean up anything more than three days old (as manual testing rarely takes longer than that), and in
-the testing environment, you may want to run `cloud-nuke --older-than 3h`, every hour, to clean up anything more than
-three hours old (as automated tetsts rarely take longer than that).
+At this point, you'll want to test your code. See <<manual_tests_terraform>> and <<automated_tests_terraform>> for
+instructions.
 
 [[merge_release_wrapper_module]]
 ==== Merge and release your wrapper module
@@ -827,16 +781,12 @@ Multiple management VPCs::
 [[configure_wrapper_module]]
 ==== Configure the wrapper module for each environment
 
-// TODO: should this guide be fully opinionated and recommend Terragrunt and the infra-live / infra-modules folder
-// structure? Or relatively unopinionated and more vague about 'terraform apply' vs 'terragrunt apply'?
-
 In each account where you want to deploy a management VPC, you will need to:
 
-. *Prepare the module.* If you using Terraform directly, you will be running commands directly in
-  `infrastructure-modules`. If you are using Terragrunt, you will need to create a `terragrunt.hcl` file in
-  `infrastructure-live`. It should go under the file path `<ACCOUNT>/<REGION>/<ENVIRONMENT>/networking/vpc-mgmt`. For
-  example, if you are deploying this VPC in your "production" account, in the `us-east-2` region, and this is your
-  "prod" environment, the file path would look like this:
+. *Prepare the module.* Create a `terragrunt.hcl` file in `infrastructure-live` under the file path
+  `<ACCOUNT>/<REGION>/<ENVIRONMENT>/networking/vpc-mgmt`. For example, if you are deploying this VPC in your
+  "production" account, in the `us-east-2` region, and this is your "prod" environment, the file path would look like
+  this:
 +
 ----
 infrastructure-live
@@ -861,8 +811,8 @@ terraform {
 +
 . *Set the variables for the VPC in that environment.* Namely, set a unique VPC name and CIDR block for each VPC, and
   set the number of gateways based on your availability needs in that environment (typically, 1 NAT Gateway for
-  pre-production environments and 2-3 NAT Gateways for production environments). You can set these values in a
-  `.tfvars` file or, if using Terragrunt, in the `inputs = { ... }` block of `terragrunt.hcl`. Example:
+  pre-production environments and 2-3 NAT Gateways for production environments). You can set these values in the
+  `inputs = { ... }` block of `terragrunt.hcl`. Example:
 +
 .infrastructure-live/production/us-east-2/prod/networking/vpc-mgmt/terragrunt.hcl
 [source,hcl]
@@ -876,10 +826,8 @@ inputs = {
 }
 ----
 +
-. *Configure the Terraform backend.* Configure the backend https://www.terraform.io/docs/backends/[backend] you want to
-  use to store your Terraform state. The https://www.terraform.io/docs/backends/types/s3.html[S3 backend] is usually
-  the best choice for AWS accounts. If you're using Terragrunt, the backend settings should be defined in a root
-  `terragrunt.hcl` file that you `include` in each child `terragrunt.hcl`:
+. *Configure the Terraform backend.* Pull in the https://www.terraform.io/docs/backends/[backend] configuration from a
+  root `terragrunt.hcl` file that you `include` in each child `terragrunt.hcl`:
 +
 .infrastructure-live/production/us-east-2/prod/networking/vpc-mgmt/terragrunt.hcl
 [source,hcl]
@@ -892,8 +840,7 @@ include {
 [[deploy_wrapper_module]]
 ==== Deploy the wrapper module for each environment
 
-Deploy the VPC by running `terraform apply -var-file=<your-file>.tfvars` or, if using Terragrunt, by running
-`terragrunt apply`:
+Deploy the VPC by running `terragrunt apply`:
 
 ----
 $ cd infrastructure-live/production/us-east-2/prod/networking/vpc-mgmt
@@ -918,6 +865,7 @@ To deploy the `vpc-app` module, create a wrapper module called `vpc-app` in your
 ----
 infrastructure-modules
   └ networking
+    └ vpc-mgmt
     └ vpc-app
       └ main.tf
       └ outputs.tf
@@ -1079,36 +1027,8 @@ file for reference.
 [[test_wrapper_module_app]]
 ==== Test your wrapper module
 
-To test your `vpc-app` module manually:
-
-. Configure a sandbox environment.
-. Create an example of how to use your own `vpc-app` wrapper module. This example will configure this module with
-  values that make manual testing easy:
-+
-.infrastructure-modules/examples/networking/vpc-app/main.tf
-[source,hcl]
-----
-module "vpc" {
-  source = "../../../networking/vpc-app"
-
-  aws_region       = "us-east-2"
-  aws_account_id   = "555566667777"
-  vpc_name         = "example-vpc"
-  cidr_block       = "10.0.0.0/16"
-  num_nat_gateways = 1
-}
-----
-+
-. Run `terraform apply` to deploy this example and check if it works as you expect.
-. Run `terraform destroy` after you're done testing to clean up after yourself.
-
-To create automated tests for your `vpc-app` module:
-
-. Configure a testing environment.
-. Create an automated test for the same example code you were using for manual testing. Use
-  https://github.com/gruntwork-io/terratest/[Terratest] to create automated tests for the example you were testing
-  manually.
-. Configure your automated tests to run after every commit.
+At this point, you'll want to test your code. See <<manual_tests_terraform>> and <<automated_tests_terraform>> for
+instructions.
 
 [[merge_release_wrapper_module_app]]
 ==== Merge and release your wrapper module
@@ -1124,16 +1044,12 @@ $ git push --follow-tags
 [[configure_wrapper_module_app]]
 ==== Configure the wrapper module for each environment
 
-// TODO: should this guide be fully opinionated and recommend Terragrunt and the infra-live / infra-modules folder
-// structure? Or relatively unopinionated and more vague about 'terraform apply' vs 'terragrunt apply'?
-
 In each account where you want to deploy an application VPC, you will need to:
 
-. *Prepare the module.* If you using Terraform directly, you will be running commands directly in
-  `infrastructure-modules`. If you are using Terragrunt, you will need to create a `terragrunt.hcl` file in
-  `infrastructure-live`. It should go under the file path `<ACCOUNT>/<REGION>/<ENVIRONMENT>/networking/vpc-app`. For
-  example, if you are deploying this VPC in your "production" account, in the `us-east-2` region, and this is your
-  "prod" environment, the file path would look like this:
+. *Prepare the module.* Create a `terragrunt.hcl` file in `infrastructure-live` under the file path
+  `<ACCOUNT>/<REGION>/<ENVIRONMENT>/networking/vpc-app`. For example, if you are deploying this VPC in your
+  "production" account, in the `us-east-2` region, and this is your "prod" environment, the file path would look like
+  this:
 +
 ----
 infrastructure-live
@@ -1158,8 +1074,8 @@ terraform {
 +
 . *Set the variables for the VPC in that environment.* Namely, set a unique VPC name and CIDR block for each VPC, and
   set the number of gateways based on your availability needs in that environment (typically, 1 NAT Gateway for
-  pre-production environments and 2-3 NAT Gateways for production environments). You can set these values in a
-  `.tfvars` file or, if using Terragrunt, in the `inputs = { ... }` block of `terragrunt.hcl`. Example:
+  pre-production environments and 2-3 NAT Gateways for production environments). You can set these values in the
+  `inputs = { ... }` block of `terragrunt.hcl`. Example:
 +
 .infrastructure-live/production/us-east-2/prod/networking/vpc-app/terragrunt.hcl
 [source,hcl]
@@ -1173,10 +1089,7 @@ inputs = {
 }
 ----
 +
-. *Configure the Terraform backend.* Configure the backend https://www.terraform.io/docs/backends/[backend] you want to
-  use to store your Terraform state. The https://www.terraform.io/docs/backends/types/s3.html[S3 backend] is usually
-  the best choice for AWS accounts. If you're using Terragrunt, the backend settings should be defined in a root
-  `terragrunt.hcl` file that you `include` in each child `terragrunt.hcl`:
+. *Configure the Terraform backend.*:
 +
 .infrastructure-live/production/us-east-2/prod/networking/vpc-app/terragrunt.hcl
 [source,hcl]
@@ -1189,8 +1102,7 @@ include {
 [[deploy_wrapper_module_app]]
 ==== Deploy the wrapper module for each environment
 
-Deploy the VPC by running `terraform apply -var-file=<your-file>.tfvars` or, if using Terragrunt, by running
-`terragrunt apply`:
+Deploy the VPC by running `terragrunt apply`:
 
 ----
 $ cd infrastructure-live/production/us-east-2/prod/networking/vpc-app
