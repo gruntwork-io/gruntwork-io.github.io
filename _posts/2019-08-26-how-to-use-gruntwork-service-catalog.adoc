@@ -27,10 +27,12 @@ tech stack as code on top of AWS or GCP.
 
 === What is the Gruntwork Service Catalog and Reference Architecture?
 
+// TODO: update screenshot of the service catalog when we launch the new design
+.The Gruntwork Service Catalog
+image::../assets/img/guides/service-catalog/gruntwork-service-catalog.png[]
+
 The https://gruntwork.io/infrastructure-as-code-library/[Gruntwork Service Catalog] is a collection of over 300,000
 lines of reusable, battle-tested, production-ready infrastructure code for AWS and GCP that lets you:
-
-// TODO: add a screenshot of the service catalog
 
 Go to prod in days, not months::
   Most teams have the same basic infrastructure needs (e.g., Docker cluster, load balancer, database, cache, CI/CD,
@@ -83,8 +85,6 @@ Feel free to read the guide from start to finish or skip around to whatever part
 
 === The Gruntwork Service Catalog
 
-// TODO: add a screenshot of the service catalog
-
 The Gruntwork Service Catalog is a collection of over 300,000 lines of reusable, battle-tested infrastructure code.
 that is organized into 40+ GitHub repos, some public and open source, and some private and only accessible to Gruntwork
 customers. Each repo is focused on one type of infrastructure: e.g., there is one repo that contains code for deploying
@@ -125,7 +125,8 @@ following sections.
 
 === Modules
 
-// TODO: add a screenshot of the modules folder
+.The modules folder of the ELK (Elasticsearch, Logstash, Kibana) repo
+image::../assets/img/guides/service-catalog/elk-modules.png[]
 
 Each repo in the Gruntwork Service Catalog contains a `modules` folder that contains the main implementation code,
 broken down into multiple standalone, orthogonal, reusable, highly configurable _modules_. For example, the ELK repo
@@ -139,7 +140,8 @@ and all in a single cluster in other environments (e.g., in dev, to save money).
 
 === Examples
 
-// TODO: add a screenshot of some example code
+.The examples folder of the ELK (Elasticsearch, Logstash, Kibana) repo
+image::../assets/img/guides/service-catalog/elk-examples.png[]
 
 Each repo in the Gruntwork Service Catalog contains an `examples` folder that shows you how to assemble the modules
 from the `modules` folder into different permutations. This lets you try the modules out in minutes, without having to
@@ -147,7 +149,8 @@ write a line of code. In other words, this is executable documentation.
 
 === Automated tests
 
-// TODO: add a screenshot of some test code
+.The test folder of the ELK (Elasticsearch, Logstash, Kibana) repo
+image::../assets/img/guides/service-catalog/elk-tests.png[]
 
 Each repo in the Gruntwork Service Catalog contains a `test` folder that contains automated tests for the examples in
 the `examples` folder. These are mostly integration tests, which use
@@ -159,6 +162,9 @@ For example, after every commit to the ELK repo, we spin up a dozen ELK clusters
 that the code does what we say it does—and that it continues to do it over years of updates.
 
 === Versioning
+
+.An example of all the versioned updates announced in the monthly Gruntwork Newsletter
+image::../assets/img/guides/service-catalog/newsletter.png[]
 
 All of the code in the Gruntwork Service Catalog is _versioned_. Every time we make a change, we put out a new
 versioned release, and announce it in the monthly
@@ -185,7 +191,8 @@ version numbers. With `0.MINOR.PATCH`, the rules are a bit different, where you 
 
 === The Gruntwork Reference Architecture
 
-// TODO: Ref Arch diagram
+.An example of the Gruntwork Reference Architecture
+image::../assets/img/guides/service-catalog/ref-arch-full.png[]
 
 The https://gruntwork.io/reference-architecture/[Gruntwork Reference Architecture] is a production-grade, end-to-end
 tech stack built on top of the modules from the Gruntwork Service Catalog.
