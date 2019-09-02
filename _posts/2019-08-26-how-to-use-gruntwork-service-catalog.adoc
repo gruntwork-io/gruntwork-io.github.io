@@ -820,7 +820,7 @@ Now that the code is written, you may want to test it manually. We recommend tes
 you can deploy infrastructure without affecting any other environments (especially production!). For example, if you're
 using AWS, this should be a separate AWS account.
 
-The easiest way to test is to create a `testing.tfvars` file:
+The easiest way to test is to create a `testing/terraform.tfvars` file:
 
 ----
 infrastructure-modules
@@ -829,12 +829,13 @@ infrastructure-modules
       └ main.tf
       └ outputs.tf
       └ variables.tf
-      └ testing.tfvars
+      └ testing
+        └ terraform.tfvars
 ----
 
 Inside this file, you can set all the variables for your module to test-friendly values:
 
-.infrastructure-modules/networking/vpc-app/testing.tfvars
+.infrastructure-modules/networking/vpc-app/testing/terraform.tfvars
 [source,hcl]
 ----
 aws_region       = "us-east-2"
@@ -844,7 +845,7 @@ cidr_block       = "10.0.0.0/16"
 num_nat_gateways = 1
 ----
 
-You should also add a `testing-backend.hcl` file:
+You should also add a `testing/backend.hcl` file:
 
 ----
 infrastructure-modules
@@ -853,14 +854,15 @@ infrastructure-modules
       └ main.tf
       └ outputs.tf
       └ variables.tf
-      └ testing.tfvars
-      └ testing-backend.hcl
+      └ testing
+        └ terraform.tfvars
+        └ backend.hcl
 ----
 
 In this file, you can configure test-friendly settings for your backend. For example, if you're using the S3 backend,
-you can specifiy:
+you can specify:
 
-.infrastructure-modules/networking/vpc-app/testing-backend.hcl
+.infrastructure-modules/networking/vpc-app/testing/backend.hcl
 [source,hcl]
 ----
 bucket = "<YOUR-BUCKET-FOR-TESTING>"
@@ -873,15 +875,15 @@ https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-
 and running:
 
 ----
-cd infrastructure-modules/networking/vpc-app
-terraform init -backend-config=testing-backend.hcl
-terraform apply -var-file=testing.tfvars
+cd infrastructure-modules/networking/vpc-app/testing
+terraform init -backend-config=backend.hcl ../
+terraform apply ../
 ----
 
 When you're done testing, clean up by running:
 
 ----
-terraform destroy -var-file=testing.tfvars
+terraform destroy ../
 ----
 
 [[automated_tests_terraform]]
@@ -915,8 +917,9 @@ infrastructure-modules
       └ main.tf
       └ outputs.tf
       └ variables.tf
-      └ testing.tfvars
-      └ testing-backend.hcl
+      └ testing
+        └ terraform.tfvars
+        └ backend.hcl
   └ test
     └ vpc_app_test.go
 ----
@@ -982,7 +985,7 @@ func TestVpcApp(t *testing.T) {
 The test code above implements a minimal test that:
 
 Configure variables::
-  This is similar to the `testing.tfvars` used in manual testing.
+  This is similar to the `testing/terraform.tfvars` used in manual testing.
 
 Configure the backend::
   This is similar to tthe `testing-backend.hcl` used in manual testing.
@@ -1046,7 +1049,7 @@ production). There are many ways to deploy Terraform modules, so in this guide, 
 One option is to deploy all of your environments using plain-old-Terraform. The approach is nearly identical to the
 way you did manual testing; let's walk through it for the staging environment.
 
-First, create a `staging.tfvars` file:
+First, create a `staging/terraform.tfvars` file:
 
 ----
 infrastructure-modules
@@ -1055,16 +1058,18 @@ infrastructure-modules
       └ main.tf
       └ outputs.tf
       └ variables.tf
-      └ testing.tfvars
-      └ testing-backend.hcl
-      └ staging.tvars
+      └ testing
+        └ terraform.tfvars
+        └ backend.hcl
+      └ staging
+        └ terraform.tfvars
   └ test
     └ vpc_app_test.go
 ----
 
 Inside the file, set the variables for this module to values appropriate for this environment:
 
-.infrastructure-modules/networking/vpc-app/staging.tfvars
+.infrastructure-modules/networking/vpc-app/staging/terraform.tfvars
 [source,hcl]
 ----
 aws_region       = "us-east-2"
@@ -1074,7 +1079,7 @@ cidr_block       = "10.10.0.0/16"
 num_nat_gateways = 1
 ----
 
-Next, create a `staging-backend.hcl` file:
+Next, create a `staging/backend.hcl` file:
 
 ----
 infrastructure-modules
@@ -1083,17 +1088,19 @@ infrastructure-modules
       └ main.tf
       └ outputs.tf
       └ variables.tf
-      └ testing.tfvars
-      └ testing-backend.hcl
-      └ staging.tvars
-      └ staging-backend.hcl
+      └ testing
+        └ terraform.tfvars
+        └ backend.hcl
+      └ staging
+        └ terraform.tfvars
+        └ backend.hcl
   └ test
     └ vpc_app_test.go
 ----
 
 Inside this file, configure the backend for staging:
 
-.infrastructure-modules/networking/vpc-app/staging-backend.hcl
+.infrastructure-modules/networking/vpc-app/staging/backend.hcl
 [source,hcl]
 ----
 bucket         = "<YOUR-BUCKET-FOR-STAGING>"
@@ -1106,13 +1113,13 @@ dynamodb_table = "<DYNAMODB-TABLE-FOR-STAGING>"
 And now you can deploy to the staging environment as follows:
 
 ----
-cd infrastructure-modules/networking/vpc-app
-terraform init -backend-config=staging-backend.hcl
-terraform apply -var-file=staging.tfvars
+cd infrastructure-modules/networking/vpc-app/staging
+terraform init -backend-config=backend.hcl ../
+terraform apply ../
 ----
 
-To deploy to other environments, create analogous `.tfvars` and `.hcl` files (e.g., `production.tfvars` and
-`production-backend.hcl`) and run `terraform init` and `terraform apply` with those files.
+To deploy to other environments, create analogous `.tfvars` and `.hcl` files (e.g., `production/terraform.tfvars` and
+`production/backend.hcl`) and run `terraform init` and `terraform apply` with those files.
 
 *Benefits of this approach*
 
