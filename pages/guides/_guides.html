@@ -1,44 +1,18 @@
-<div class="row">
-    <div class="col-md-10 searchrow col-md-offset-2 text-center">
-        <div class="col-md-10">
-            {% include_relative _search.html %}
-        </div>
-        <div class="col-md-2">   
-            <div class="guide-filter">
-                <div class="col-md-4 text-right">
-                    <div class="dropdown">
-                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"><span class="dropdown-text"> Filter</span>
-                        <span class="caret"></span></button>
-                        <ul class="dropdown-menu dropdown-menu-form" id="filter-options">
-                            <li><label class="checkbox"><input value="aws" type="checkbox">AWS</label></li>
-                            <li><label class="checkbox"><input value="gcp" type="checkbox">GCP</label></li>
-                        </ul>
-                    </div> 
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="cloud-filter col-md-4 col-md-offset-5 text-center">
-            <div class="btn-group btn-group-toggle" data-toggle="buttons">
-            <img class="btn" value="aws" src="/assets/img/logos-technologies/aws_logo.png" alt="aws logo">
-            <img class="btn" value="gcp" src="/assets/img/logos-technologies/gcp_logo.png" alt="gcp logo">
-            <img class="btn" value="azure" src="/assets/img/logos-technologies/azure_logo.png" alt="azure logo">
-        </div>
-    </div>
-</div>
 <div class="guide-listing" id="listings">
     <div class="col-md-2 categories">
         {% for category in site.categories %}
         {% capture category_name %}{{ category | first }}{% endcapture %}
-        <ul>
+        <ul id="categories">
             <li>
                 <label><b><a href="#{{category_name | slugify}}">{{category_name}}</a></b></label>
             </li>
         </ul>
         {% endfor %}
     </div>
-    <div class="col-md-10">
-        {% include_relative _no-search-results.html %}
+    <div class="col-md-8 no-padding">
+        <div style="text-align: right">
+            <small id="search-results-count"></small>
+        </div>
         {% for category in site.categories %}
         {% capture category_name %}{{ category | first }}{% endcapture %}
         <div id="#{{ category_name | slugize }}"></div>   
@@ -47,8 +21,8 @@
         {% for post in site.categories[category_name] %}
         <div class="guide-card card-shadow" id="{{ post.title | downcase | split: ' ' | join: '-' | append: '-card' }}">
             <div class="card">
-                <div class="row">
-                    <div class="col-md-2">
+                <div class="row no-padding">
+                    <div class="col-md-2 col-sm-2  no-padding">
                         <div class="card-img-top img-fluid text-center">
                             <img src="{{ post.image }}" alt="card image">
                         </div>
@@ -66,12 +40,24 @@
         </div>
         {% endfor %}
         {% endfor %}
-        {% include_relative _newsletter.html %}
     </div>
 </div>
+{% include_relative _no-search-results.html %}
 
-<!-- Newsletter success Modal -->
-{% include_relative _newsletter-modal.html %}
+<script>
+    window.guideEntries = [
+        {% for post in site.posts %}
+            {
+                "id"       : "{{ post.title | strip_html | downcase | split: ' ' | join: '-' | append: '-card' }}",
+                "title"    : "{{ post.title | strip_html | escape | downcase}}",
+                "category" : "{{post.categories | join: ', ' | downcase}}",
+                "excerpt" : "{{post.excerpt | strip_html | strip_newlines | escape | downcase}}",
+                "content"  : {{ post.content | strip_html | strip_newlines | jsonify | downcase }},
+                "tags"     : "{{ post.tags | join: ', ' }}"
+            } {% unless forloop.last %},{% endunless %}
+        {% endfor %}
+    ];
+</script>
 
 
 
