@@ -1,0 +1,94 @@
+[[how_to_deploy_prod_grade_kubernetes_cluster_aws]]
+= How to deploy a production-grade Kubernetes cluster on AWS
+:type: guide
+:description: Learn about EKS, control plane, worker nodes, auto scaling, auto healing, TLS certs, VPC tagging, DNS forwarding, Helm, and more.
+// TODO: update image!
+:image: ../assets/img/guides/service-catalog/grunty-blocks.png
+:tags: aws, kubernetes, eks, helm
+:toc:
+:toc-placement!:
+
+// GitHub specific settings. See https://gist.github.com/dcode/0cfbf2699a1fe9b46ff04c41721dda74 for details.
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+
+toc::[]
+
+== Intro
+
+This guide will walk you through the process of configuring a production-grade Kubernetes cluster on AWS.
+
+=== What is Kubernetes?
+
+TODO
+
+=== What you'll learn in this guide
+
+This guide consists of four main sections:
+
+<<core_concepts>>::
+  TODO
+
+<<production_grade_design>>::
+  TODO
+
+<<deployment_walkthrough>>::
+  A step-by-step guide to deploying a production-grade Kuberenetes cluster in AWS using code from the Gruntwork Service
+  Catalog.
+
+<<next_steps>>::
+  What to do once you've got your Kubernetes cluster deployed.
+
+Feel free to read the guide from start to finish or skip around to whatever part interests you!
+
+[[core_concepts]]
+== Core concepts
+
+TODO
+
+[[production_grade_design]]
+== Production-grade design
+
+TODO
+
+[[deployment_walkthrough]]
+== Deployment walkthrough
+
+Let's now walk through how to deploy a production-grade Kubernetes cluster, fully defined and managed as code, using
+the Gruntwork Service Catalog.
+
+[[pre_requisites]]
+=== Pre-requisites
+
+This walkthrough has the following pre-requistes:
+
+Gruntwork Service Catalog::
+  This guide uses code from the https://gruntwork.io/infrastructure-as-code-library/[Gruntwork Service Catalog], as it
+  implements most of the production-grade design for you out of the box.
++
+IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access this code.
++
+Make sure to read <<how_to_use_gruntwork_service_catalog>>.
+
+Terraform::
+  This guide uses https://www.terraform.io/[Terraform] to define and manage all the infrastructure as code. If you're
+  not familiar with Terraform, check out https://blog.gruntwork.io/a-comprehensive-guide-to-terraform-b3d32832baca[A
+  Comprehensive Guide to Terraform], https://training.gruntwork.io/p/terraform[A Crash Course on Terraform], and
+  <<how_to_use_gruntwork_service_catalog>>.
+
+AWS accounts::
+  This guide deploys infrastructure into one or more AWS accounts. Check out the
+  <<production_grade_aws_account_structure>> guide for instructions. You will also need to be able to authenticate to
+  these accounts on the CLI: check out
+  https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[A Comprehensive Guide to Authenticating to AWS on the Command Line]
+  for instructions.
+
+[[next_steps]]
+== Next steps
+
+TODO
