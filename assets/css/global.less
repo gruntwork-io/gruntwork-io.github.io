@@ -939,6 +939,8 @@ a.caret-right{
     height: 56px;
     border: none;
     color: @guides-font; 
+    .no-transform;
+    &:active {.no-transform;}
   }
 }
 
@@ -950,7 +952,7 @@ a.caret-right{
 .no-transform {
   transform: none;
   box-shadow: none;
-  outline: none;
+  outline: none !important;
 }
 
 .guides-input-box::-webkit-input-placeholder { .guides-input-placeholder; }
@@ -994,47 +996,65 @@ a.caret-right{
 }
 
 .tags-filter {
-  button {
-    border-radius: 8px;
+  border-radius: 8px;
+  background: rgba(0, 185, 248, 0.1);
+  padding: 5px;
+  width: 105px;
+  box-shadow: none;
+  border: none;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.51px;
+  text-align: center;
+  color: @guides-primary-color;
+  &:hover, &:focus, &:active{
+    .no-transform;
     background: rgba(0, 185, 248, 0.1);
-    padding: 5px;
-    width: 105px;
-    box-shadow: none;
-    border: none;
-    &:hover, &:focus{
-      .no-transform;
-      background: rgba(0, 185, 248, 0.1);
+    color: @guides-primary-color;
+  }
+}
+
+.filter-options {
+  @media (max-width: @screen-md-min) {
+    margin-top: 10%;
+  }
+  .card {
+    margin-top: 20px;
+    padding: 2em 4em;
+    border-radius: 8px;
+    background-color: #f5f9fa;
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: row;
     }
-  }
-  & button > label > a {
-    color: #28adf9;
-    font-size: 15px;
-    padding: 15px;
-  }
-  & .dropdown-menu {
-    margin-top: 11px;
-    left: 0;
-    right: 0;
-    background: #f5f9fa;
-    padding: 10px;
-    border: none;
-    box-shadow: none;
-  }
-  & .dropdown-text {
-    font-size: 18px;
-    font-weight: 600;
-    letter-spacing: 0.51px;
-    text-align: center;
-    color: @guides-primary-color;
-  }
-  & .caret {
-    color: @guides-primary-color;
-  }
-  & .checkbox input[type="checkbox"]{
-    opacity: 1;
-  }
-  label {
-    color: #7b7d7e;
+    .checkbox {
+      color: black;
+      font-size: 14px;
+      margin-right: 10px;
+      & input[type="checkbox"]{
+        opacity: 1;
+        font-size: xx-large;
+      }
+    }
+    .checkbox+.checkbox {
+      margin-top: 10px !important;
+    }
+    p {
+      letter-spacing: -0.2px;
+      color: #8f9fa7;
+      text-transform: uppercase;
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 2px;
+    }
+    label {
+      opacity: 0.5;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: -0.23px;
+      color: #000000;
+    }
   }
 }
 
@@ -1050,9 +1070,7 @@ a.caret-right{
   ul {
     font-size: 14px;
     font-weight: bold;
-    letter-spacing: -0.2px;
-    line-height: 2.5em;
-    
+    letter-spacing: -0.2px;    
     & li:hover {
       color: @guides-primary-color;
     }
@@ -1075,6 +1093,7 @@ a.caret-right{
     min-height: 100vh;
     overflow-wrap: break-word;
     display: block;
+    line-height: 2.5em;
     & li {
       list-style: none;
       > a:not(:only-child):before {
@@ -1138,6 +1157,9 @@ a.caret-right{
 
 .guide-listing {
   .categories {
+    @media (max-width: @screen-md-min) {
+      display: none;
+    }
     ul {
       list-style: none;
       line-height: normal;
@@ -1169,11 +1191,6 @@ a.caret-right{
     border-radius: 5px;
     padding-right: 10px;
     cursor: pointer;
-    & img {
-      width: 55px;
-      height: 58px;
-      margin: 22px;
-    }
     & .card-title {
       margin-top: 15px;
       margin-bottom: 2px;
@@ -1266,6 +1283,13 @@ a.caret-right{
 #newsletter-success{
   & label {
     font-size: 28px;
+    color: @guides-font;
+  }
+  p {
+    color: @guides-font;
+    font-size: 16px;
+    line-height: 22px;
+    letter-spacing: 0.45px;
   }
   & .modal-content {
     background: #fff;
@@ -1278,12 +1302,13 @@ a.caret-right{
     width: 131px;
     height: 47px;
     border-radius: 23.5px;
-    background-image: linear-gradient(to bottom, #5bcde7, #569cea);
+    background-color: @guides-primary-color;
+    color: #ffffff;
   }
 }
 
 .guides-cta-card {
-  @media (max-width: @screen-sm-min) {
+  @media (max-width: @screen-md-min) {
     visibility: hidden;
     clear: both;
     display: none;
@@ -1293,7 +1318,7 @@ a.caret-right{
   box-shadow: 3px 4px #c5c2c2;
   border-radius: 5px;
   padding: 0 24px 0;
-  margin-top: 40vh;
+  margin-top: 10px;
   & p {
     color: black;
     font-size: 14px;
@@ -1425,14 +1450,16 @@ a.caret-right{
     margin: -1%;
     position: relative;
   }
-  & button {
+  & a {
     padding: 7px 30px;
     margin-bottom: 3%;
     color: #08a9fb;
     font-size: 14px;
+    background-color: white;
   }
-  & button:active, button:hover{
+  & a:active, a:hover{
     color: #08a9fb;
+    cursor: pointer;
     text-decoration: none;
   }
 }
@@ -1693,7 +1720,6 @@ a.caret-right{
   }
  
   pre[class*="language-"] {
-    background: blue;
     background: aliceblue;
     border: none;
     font-size: 14px;

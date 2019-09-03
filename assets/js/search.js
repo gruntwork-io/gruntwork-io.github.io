@@ -26,7 +26,7 @@
   }
 
   function showItemsCount(totalCount, numSubmodules) {
-    if (entries.type == 'libraryEntries') {
+    if (searchEntry.type == 'libraryEntries') {
       if (totalCount > 0 && numSubmodules > 0) {
         $('#search-results-count').html("<strong>" + totalCount + "</strong> repos (~<strong>" + numSubmodules + "</strong> modules)");
       } else {
@@ -39,25 +39,35 @@
     }
   }
 
+  function displayFilterTags() {
+    if (searchEntry.type == 'guideEntries') {
+
+      //Filters the tags from the array of objects and flattens it out since it returns an array of arrays
+      let tags = searchEntry.entries.map(entry => entry.tags.split(',')).reduce((a, b) => a.concat(b), []);
+
+      tags.map(tag => {
+        if (tag.length != "") {
+          $('.tags').append(`<label class="checkbox"><input value=${tag} type="checkbox">${tag}</label>`);
+        }
+      });
+    }
+  }
+
   function showInitialItemsCount() {
     let numSubmodules = 0;
-    let entries = detectSearchEntry();
-    for (let i = 0; i < entries.length; i++) {
-      if (entries.type == 'libraryEntries') return numSubmodules += libraryEntries[i].num_submodules;
-      return entries;
+    for (let i = 0; i < searchEntry.length; i++) {
+      if (searchEntry.type == 'libraryEntries') return numSubmodules += libraryEntries[i].num_submodules;
+      return searchEntry;
     }
-    showItemsCount(entries.length, numSubmodules);
+    showItemsCount(searchEntry.length, numSubmodules);
   }
 
   // Show initial module count on load
-  $(showInitialItemsCount);
+  let searchEntry = detectSearchEntry();
 
-  /**
-   * A hacky function to search the IaC Lib and show/hide the proper elements in the table based on the results. Note
-   * that we wrap the function in a "debounce" so that if the user is typing quickly, we aren't trying to run searches
-   * (and fire Google Analytics events!) on every key stroke, but only when they pause from typing.
-   * @type {Function}
-   */
+  $(showInitialItemsCount);
+  $(displayFilterTags);
+
   $('#no-matches').hide();
 
   function detectSearchEntry() {
@@ -80,18 +90,28 @@
     }
   }
 
-  let searchData = debounce(function (event) {
+  //Function to track Google analytics
+  // function trackGA {
+  //    // Track what users are searching for via Google Analytics events
+  //     //   ga('send', 'event', "iac-lib", "search", "query", text);
+  // }
+
+
+   /**
+   * A function to search the IaC Lib and Deployment guides. Can also be used for other pages that need it.
+   * To show/hide the proper elements based on the results. 
+   * @type {Function}
+   */
+  function filterData(event, type) {
+
     let target = $(event.currentTarget);
-    let text = target.val();
+    let searchValue = target.val();
 
     $('#no-matches').hide();
-    let searchEntry = detectSearchEntry();
 
-    if (text && text.length > 0) {
-      // Track what users are searching for via Google Analytics events
-      //   ga('send', 'event', "iac-lib", "search", "query", text);
+    if (searchValue && searchValue.length > 0) {
 
-      let lowerText = text.toLowerCase();
+      let lowerText = searchValue.toLowerCase();
       let searchQueries = lowerText.split(" ");
 
       if (searchEntry.type == 'libraryEntries') {
@@ -113,9 +133,14 @@
           let searchContent;
           if (searchEntry.type == 'libraryEntries') {
             searchContent = entry.text;
-          } else if (searchEntry.type == 'guideEntries') {
+          } else if (searchEntry.type == 'guideEntries' && type == 'wordSearch') {
             searchContent = entry.title + entry.category + entry.content + entry.tags;
+          } else if (searchEntry.type == 'guideEntries' && type == 'tagSearch') {
+            searchContent = entry.tags;
+          } else {
+            searchContent = entry.cloud;
           }
+
           if (searchContent.indexOf(searchQuery) < 0) {
             matchesAll = false;
             break;
@@ -127,6 +152,7 @@
           matches++;
           (searchEntry.type == 'libraryEntries') ? submoduleMatches += entry.num_submodules: submoduleMatches = 0;
         }
+
       }
       if (matches === 0) {
         $('#no-matches').show();
@@ -143,12 +169,45 @@
         $('.guide-card').show() && $('.category-head').show() && $('.categories ul').show();
       }
     }
+  }
+
+  /**
+   * Note
+   * This function is wrapped in a "debounce" so that if the user is typing quickly, we aren't trying to run searches
+   * (and fire Google Analytics events!) on every key stroke, but only when they pause from typing.
+   * @type {Function}
+   */
+  let searchData = debounce(function (event) {
+    filterData(event, 'wordSearch');
   }, 250);
 
-  /* Search box on guides page */
-  $('#js-search-library').on("keyup", searchData);
+  /* Triggered when filter checkboxes are checked */
+  $(document).ready(() => {
+
+    $('.tags .checkbox input[type="checkbox"]').on('change', (event) => {
+      let checked = $('input[type="checkbox"]:checked');
+      if (!checked.length) {
+        $('.guide-card').show() && $('.category-head').show() && $('.categories ul').show();
+        return; /* Return if nothing checked */
+      }
+      checked.each(() => {
+
+        filterData(event, 'tagSearch');
+      });
+    });
+  });
 
   /* Search box on library page */
+  $('#js-search-library').on("keyup", searchData);
+
+  /* Triggered on click of any cloud filtering buttons */
+  $('.cloud-filter button').on('click', (event) => {
+
+    event.preventDefault();
+    filterData(event, 'cloudSearch');
+  });
+
+  /* Search box on guides page */
   $('#search-box').on("keyup", searchData);
 
 }());
