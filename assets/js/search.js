@@ -45,8 +45,8 @@
       //Filters the tags from the array of objects and flattens it out since it returns an array of arrays
       let tags = searchEntry.entries.map(entry => entry.tags.split(',')).reduce((a, b) => a.concat(b), []);
 
-      tags.map(tag => {
-        if (tag.length != "") {
+      tags.filter((tag, index) => {
+        if ((tags.indexOf(tag) === index) && (tag.length != "")) {
           $('.tags').append(`<label class="checkbox"><input value=${tag} type="checkbox">${tag}</label>`);
         }
       });
@@ -112,6 +112,10 @@
     if (searchValue && searchValue.length > 0) {
 
       let lowerText = searchValue.toLowerCase();
+      // if(typeof(searchQueries) == 'string'){
+      //   searchQueries.push(lowerText);
+      // }
+
       let searchQueries = lowerText.split(" ");
 
       if (searchEntry.type == 'libraryEntries') {
@@ -130,6 +134,7 @@
         let matchesAll = true;
         for (let j = 0; j < searchQueries.length; j++) {
           let searchQuery = searchQueries[j];
+
           let searchContent;
           if (searchEntry.type == 'libraryEntries') {
             searchContent = entry.text;

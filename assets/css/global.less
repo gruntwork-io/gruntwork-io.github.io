@@ -940,7 +940,9 @@ a.caret-right{
     border: none;
     color: @guides-font; 
     .no-transform;
-    &:active {.no-transform;}
+    &:active, &:focus {
+      .no-transform;
+    }
   }
 }
 
@@ -976,9 +978,10 @@ a.caret-right{
     background-color: #fff;
     position: relative;
     border-radius: 8px !important;
-    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     cursor: pointer;
-    outline-color: white;
+    border: 1px solid #dedede;
+    outline-color: #fff;
   }
 }
 
@@ -1087,10 +1090,10 @@ a.caret-right{
     }
     display: block;
     z-index: 2;
-    width: 100%;
+    width: 80%;
     padding: 25vh 5px;
-    overflow-y: scroll;
-    min-height: 100vh;
+    overflow-y: auto;
+    max-height: 100vh;
     overflow-wrap: break-word;
     display: block;
     line-height: 2.5em;
@@ -1163,16 +1166,10 @@ a.caret-right{
     ul {
       list-style: none;
       line-height: normal;
-      & li:hover, li:focus{
-        .no-transform
-        &:before {
-          margin: 0 0 0 -15px;
-          vertical-align: middle;
-          display: inline-block;
-          font-size: 25px;
-          content: "•";
-          color: @guides-primary-color;
-        }
+      a:hover, a:focus{
+        .no-transform;
+        list-style-type: disc;
+        color: @guides-primary-color;
       }
     }
     .guides-outline;
@@ -1183,22 +1180,28 @@ a.caret-right{
     line-height: normal;
     letter-spacing: 0.84px;
     color: @guides-font;
-    margin-top: 20px;
+    margin-top: 2em;
+    &:hover > a.anchorjs-link{
+      text-decoration: none;
+      display: none;
+    }
   }
   .card {
     color: @guides-font;
-    font-size: 14px;
-    border-radius: 5px;
-    padding-right: 10px;
+    padding: 5px;
     cursor: pointer;
     & .card-title {
       margin-top: 15px;
       margin-bottom: 2px;
       font-size: 20px;
       letter-spacing: 0.56px;
+      &:hover > a.anchorjs-link{
+        color: #FFFFFF;
+        text-decoration: none;
+        display: none;
+      }
     }
     & p {
-      margin-bottom: 2px;
       font-size: 13px;
       font-weight: inherit;
       line-height: 1.5;
@@ -1218,9 +1221,9 @@ a.caret-right{
   }
   
   .card-shadow:hover {
-    -webkit-box-shadow: 1px 1px 7px 4px #ccc;  /* Safari, Android, iOS */
-    -moz-box-shadow:    1px 1px 7px 4px #ccc;  /* Firefox */
-    box-shadow:         1px 1px 7px 4px #ccc;
+    -webkit-box-shadow: 0px 1px 6px 1px #ccc;  /* Safari, Android, iOS */
+    -moz-box-shadow:    0px 1px 6px 1px #ccc;  /* Firefox */
+    box-shadow:         0px 1px 6px 1px #ccc;
   }
 }
 .no-results-space:after {
@@ -1718,7 +1721,12 @@ a.caret-right{
     color: @guides-primary-color;
     font-weight: bold;
   }
- 
+  img {
+    max-width: 100%;
+    padding: 15px;
+    display: block;
+    margin: 0 auto;
+  }
   pre[class*="language-"] {
     background: aliceblue;
     border: none;

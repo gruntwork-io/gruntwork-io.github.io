@@ -16,7 +16,7 @@ custom_js:
     <div class="col-md-7 guides-section-white">
       <ol class="breadcrumb text-center">
         {% assign crumbs = page.url | remove:'/index.html' | split: '/' %}
-        <a href="/guides">Dev Ops Guides</a> 
+        <a href="/guides" ga-event-category="guide-{{ post.title | downcase}}" ga-event-action="deployment-guides">Dev Ops Guides</a> 
         {% for crumb in crumbs offset: 2 %}
           {% if forloop.last %}
            <a href="#"> / {{ crumb | replace:'-',' ' | remove:'.html' | capitalize }}</a>
@@ -55,8 +55,8 @@ custom_js:
         <img src="/assets/img/grunty-cta.png" alt="newsletter_image" class="img-center"><br>
         <div class="card-body">
           <p class="card-title">Hand off the gruntwork, we can deploy this service for you. </p>
-          <button type="button" class="btn deploy">Deploy for me</button>
-          <button type="button" class="btn btn-link dismiss-cta">Dismiss</button>
+          <button type="button" class="btn deploy" ga-event-category="guide-cta" ga-event-action="guide-deploy-cta">Deploy for me</button>
+          <button type="button" class="btn btn-link dismiss-cta" -event-category="guide-cta" ga-event-action="guide-cta-dismiss">Dismiss</button>
         </div>
       </div>
     </div>
