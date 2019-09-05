@@ -1,33 +1,31 @@
 <div class="row">
-    <div class="col-md-8 col-md-offset-2 text-center">
-        <div class="searchrow">
-            <div class="col-sm-10 no-padding">
-                <div class="input-group">
-                    <div class="input-group-btn" >
-                        <div class="btn-group" role="group"> 
-                            <button type="button" class="btn btn-primary" >
-                                <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-                            </button>
-                        </div>
-                    </div><input id="search-box" type="text" class="form-control guides-input-box" placeholder="Search guides....">
-                </div>
-            </div>
-            <div class="col-sm-2 no-padding"> 
-                <button class="btn tags-filter" type="button" data-toggle="collapse" data-target="#filter-options" aria-expanded="false" aria-controls="filter-options">
-                    Filter <i class="fa fa-caret-down" aria-hidden="true"></i>
-                </button>  
+    <div class="col-md-8 col-md-offset-2 searchrow text-center">
+        <div class="col-sm-11 no-padding">
+            <div class="input-group">
+                <div class="input-group-btn" >
+                    <div class="btn-group" role="group"> 
+                        <button type="button" class="btn btn-primary" >
+                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </div><input id="search-box" type="text" class="form-control guides-input-box" placeholder="Search guides....">
             </div>
         </div>
+        <div class="col-sm-1 no-padding"> 
+            <button class="btn tags-filter" type="button" data-toggle="collapse" data-target="#filter-options" aria-expanded="false" aria-controls="filter-options">
+                Filter <i class="fa fa-caret-down" aria-hidden="true"></i>
+            </button>  
+        </div>
     </div>
-    <div class="col-md-8 col-md-offset-2">
-        <div class="filter-options collapse" id="filter-options" aria-expanded="true">
+    <div class="col-md-8 col-md-offset-2 filter-options">
+        <div class="collapse" id="filter-options" aria-expanded="true">
             <div class="card card-body">
                 <p>Tags</p>
                 <div class="tags"></div>
             </div>
         </div>
     </div>
-    <div class="col-md-6 col-sm-offset-3 col-md-offset-4">
+    <div class="text-center">
             <div class="cloud-filter">
                 <button id="aws" value="aws" ga-event-category="guide-cloud-filter" ga-event-action="filter-aws"><img  src="/assets/img/logos-technologies/aws-logo.png" alt="aws logo"></button>
                 <button id="gcp" value="gcp" ga-event-category="guide-cloud-filter" ga-event-action="filter-gcp"><img src="/assets/img/logos-technologies/gcp-logo.png" alt="aws logo"></button>

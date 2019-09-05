@@ -15,13 +15,13 @@ custom_js:
     </div>
     <div class="col-md-7 guides-section-white">
       <ol class="breadcrumb text-center">
-        {% assign crumbs = page.url | remove:'/index.html' | split: '/' %}
+        {% assign crumbs = page.url | split: '/' %}
         <a href="/guides" ga-event-category="guide-{{ post.title | downcase}}" ga-event-action="deployment-guides">Dev Ops Guides</a> 
         {% for crumb in crumbs offset: 2 %}
           {% if forloop.last %}
-           <a href="#"> / {{ crumb | replace:'-',' ' | remove:'.html' | capitalize }}</a>
+           <a href="#"> / {{ crumb | replace:'-',' ' | capitalize }}</a>
           {% else %}
-            <a href="{{ crumb }}">/ {{ crumb | replace:'-',' ' | remove:'.html' | capitalize }}</a>
+            <a href="{{ crumb }}">/ {{ crumb | replace:'-',' ' | capitalize }}</a>
           {% endif %}
         {% endfor %}      
       </ol>

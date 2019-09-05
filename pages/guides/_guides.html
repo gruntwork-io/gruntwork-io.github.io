@@ -29,7 +29,7 @@
                         <div class="col-md-10">
                             <div class="card-body">
                                 <h5 class="card-title"><b>{{ post.title }}</b></h5>
-                                <p class="card-text">{{ post.excerpt }}</p>
+                                <p class="card-text">{{ post.excerpt | strip_html }}</p>
                             </div>
                         </div>
                     </a>
