@@ -1,10 +1,9 @@
 [[how_to_deploy_prod_grade_kubernetes_cluster_aws]]
 = How to deploy a production-grade Kubernetes cluster on AWS
 :type: guide
-:description: Learn about EKS, control plane, worker nodes, auto scaling, auto healing, TLS certs, VPC tagging, DNS forwarding, Helm, and more.
-// TODO: update image!
-:image: ../assets/img/guides/service-catalog/grunty-blocks.png
-:tags: aws, kubernetes, eks, helm
+:description: Learn about EKS, the Kubernetes control plane, worker nodes, auto scaling, auto healing, TLS certs, VPC tagging, DNS forwarding, RBAC, and more.
+:image: ../assets/img/guides/eks/amazon-eks-logo.png
+:tags: aws, kubernetes, eks
 :toc:
 :toc-placement!:
 
@@ -25,21 +24,48 @@ This guide will walk you through the process of configuring a production-grade K
 
 === What is Kubernetes?
 
-TODO
+https://kubernetes.io/[Kubernetes (K8S)] is an open-source system for managing containerized applications, including:
+
+Scheduling::
+  Deploy containers across a cluster of servers, using the available resources (data centers, servers, CPU, memory,
+  ports, etc.) as efficiently as possible.
+
+Deployments::
+  Roll out updates to containers using a variety of deployment strategies, such as rolling deployment, blue-green
+  deployment, and canary deployment, and automatically roll back if there's an error.
+
+Auto healing::
+  Monitor the health of your containers and servers and automatically replace unhealthy ones.
+
+Auto scaling::
+  Scale the number of containers and servers up or down in response to load.
+
+Load balancing::
+  Make your containers accessible to the outside world and distribute traffic across your containers.
+
+Service discovery::
+  Allow containers to find and communicate with each other over the network, automatically routing requests to the
+  proper destination.
+
+Configuration and secrets::
+  Provide containers with environment-specific configuration data and secrets.
 
 === What you'll learn in this guide
 
 This guide consists of four main sections:
 
 <<core_concepts>>::
-  TODO
+  An overview of the core concepts you need to understand to use Kubernetes, including why you may want to use
+  Kubernetes, Kubernetes architecture, the control plane, worker nodes, different ways to run Kubernetes, services,
+  deployments, auto scaling, auto healing, RBAC, and more.
 
 <<production_grade_design>>::
-  TODO
+  An overview of how to configure a secure, scalable, highly available Kubernetes cluster that you can rely on in
+  production. To get a sense of what production-grade means, check out <<production_grade_infra_checklist>>.
 
 <<deployment_walkthrough>>::
-  A step-by-step guide to deploying a Kubernetes cluster in AWS that you can rely on in production. To get a
-  sense of what production-grade means, check out <<production_grade_infra_checklist>>.
+  A step-by-step guide to deploying a production-grade Kubernetes cluster in AWS using code from the Gruntwork Service
+  Catalog.
 
 <<next_steps>>::
   What to do once you've got your Kubernetes cluster deployed.
@@ -49,10 +75,130 @@ Feel free to read the guide from start to finish or skip around to whatever part
 [[core_concepts]]
 == Core concepts
 
+// TODO: ideas to discuss in the future
+// - Istio
+// - Helm
+
+=== Why Kubernetes
+
+.The popularity of container orchestration tools. Kubernetes is dominating.
+image::../assets/img/guides/eks/docker-orchestration-google-trends.png[]
+
+Kubernetes has become the de facto container orchestration tool. Here's why:
+
+Massive feature set::
+  Kubernetes offers a huge range of functionality for managing containers, including auto scaling, auto healing,
+  rolling deployments, service discovery, secrets management, configuration management, bin packing, storage
+  orchestration, batch execution, access controls, log aggregation, SSH access, batch processing, and much more.
+
+Massive community::
+  Kubernetes has the biggest community of any orchestration tool out there, with more than 50,000 stars and 2,500
+  contributors on https://github.com/kubernetes/kubernetes[GitHub], thousands of blog posts, numerous books, hundreds
+  of meetup groups, several dedicated conferences, and a huge ecosystem of frameworks, tools, plugins, integrations,
+  and service providers.
+
+Run anywhere::
+  You can run Kubernetes on-premise, in the cloud (optionally with 1st class support from the cloud provider, e.g.,:
+  AWS offers EKS, Google Cloud offers GKE, Azure offers AKS), and on your own computer (it's built directly into the
+  Docker desktop app these days). This reduces lock-in and makes multi-cloud and hybrid-cloud more manageable, as both
+  the containers themselves and the way you manage them are portable.
+
+Proven technology::
+  Kubernetes was originally designed by Google, based on years of experience with their internal container management
+  systems (Borg and Omega), and is now maintained by the Cloud Native Computing Foundation. It's designed for massive
+  scale and resiliency (Google runs billions of containers per week) and with a huge community behind it, it's
+  continuously getting better.
+
+=== Kubernetes architecture
+
 TODO
+
+- Control plane
+- Worker nodes
+- etcd
+- Event system
+
+=== Pods
+
+TODO
+
+=== Controllers
+
+TODO
+
+=== ConfigMaps and Secrets
+
+TODO
+
+=== Service Discovery
+
+TODO
+
+=== Namespaces
+
+TODO
+
+=== Role based access control
+
+TODO
+
+=== Web UI (Dashboard)
+
+TODO
+
+=== kubectl
+
+TODO
+
+=== How to run Kubernetes in AWS
+
+TODO
+
+- EKS
+- kops
+- DIY (the hard way)
 
 [[production_grade_design]]
 == Production-grade design
+
+TODO
+
+=== Use EKS
+
+TODO
+
+=== VPC tags
+
+TODO
+
+=== Control plane and core services
+
+TODO
+
+=== Worker nodes
+
+TODO
+
+=== Lock down access
+
+TODO
+
+- Web UI
+- Vulernabilities
+
+=== IAM role mapping and RBAC
+
+TODO
+
+=== TLS
+
+TODO
+
+=== Kubergrunt
+
+TODO
+
+=== External DNS
 
 TODO
 
