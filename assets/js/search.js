@@ -208,17 +208,28 @@
 
   /* Triggered on click of any cloud filtering buttons */
   $('.cloud-filter .filter').click(function(event) {
-    let id = $(this).attr('id');
+    const id = $(this).attr('id');
+
     if(id === 'aws') {
       $(this).siblings().removeClass('active-button');
+      $(this).addClass('active-button');
+
+      if($(this).hasClass('selected')){
+        $(this).removeClass('selected');
+        showAllItems();
+      }else {
+      $(this).addClass('selected');
       filterData(id, 'cloudSearch');
+      }
     }
     else if(id !== 'aws' && $(this).hasClass('active-button')){
       $('.cloud-filter #aws').addClass('active-button');
       $(this).removeClass('active-button');
+
       showAllItems();
     } else {
       $('.cloud-filter #aws').removeClass('active-button');
+
       $(this).addClass('active-button');
       filterData(id, 'cloudSearch');
     }
