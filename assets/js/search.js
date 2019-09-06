@@ -1,7 +1,6 @@
 /**
  * Javascript specially for the IaC Library page.
  */
-
 (function () {
 
   // Returns a function, that, as long as it continues to be invoked, will not
@@ -54,6 +53,10 @@
     }
   }
 
+  function showAllItems() {
+    $('.guide-card').show() && $('.category-head').show() && $('.categories ul').show();
+  }
+
   function showInitialItemsCount() {
     let numSubmodules = 0;
     for (let i = 0; i < searchEntry.length; i++) {
@@ -97,25 +100,18 @@
   //     //   ga('send', 'event', "iac-lib", "search", "query", text);
   // }
 
-
    /**
    * A function to search the IaC Lib and Deployment guides. Can also be used for other pages that need it.
    * To show/hide the proper elements based on the results. 
    * @type {Function}
    */
-  function filterData(event, type) {
-
-    let target = $(event.currentTarget);
-    let searchValue = target.val();
+  function filterData(searchValue, type) {
 
     $('#no-matches').hide();
 
     if (searchValue && searchValue.length > 0) {
 
       let lowerText = searchValue.toLowerCase();
-      // if(typeof(searchQueries) == 'string'){
-      //   searchQueries.push(lowerText);
-      // }
 
       let searchQueries = lowerText.split(" ");
 
@@ -172,7 +168,7 @@
         $('.table-clickable-row').show();
 
       } else if (searchEntry.type = 'guideEntries') {
-        $('.guide-card').show() && $('.category-head').show() && $('.categories ul').show();
+        showAllItems();
       }
     }
   }
@@ -184,21 +180,25 @@
    * @type {Function}
    */
   let searchData = debounce(function (event) {
-    filterData(event, 'wordSearch');
+    let target = $(event.currentTarget);
+    let searchValue = target.val();
+
+    filterData(searchValue, 'wordSearch');
   }, 250);
 
   /* Triggered when filter checkboxes are checked */
   $(document).ready(() => {
 
-    $('.tags .checkbox input[type="checkbox"]').on('change', (event) => {
+    $('.tags .checkbox input[type="checkbox"]').on('change', function() {
       let checked = $('input[type="checkbox"]:checked');
-      if (!checked.length) {
-        $('.guide-card').show() && $('.category-head').show() && $('.categories ul').show();
+      if (!checked) {
+        showAllItems();
         return; /* Return if nothing checked */
       }
       checked.each(() => {
+        let searchValue = $(this).val();
 
-        filterData(event, 'tagSearch');
+        filterData(searchValue, 'tagSearch');
       });
     });
   });
@@ -207,10 +207,21 @@
   $('#js-search-library').on("keyup", searchData);
 
   /* Triggered on click of any cloud filtering buttons */
-  $('.cloud-filter button').on('click', (event) => {
-
-    event.preventDefault();
-    filterData(event, 'cloudSearch');
+  $('.cloud-filter .filter').click(function(event) {
+    let id = $(this).attr('id');
+    if(id === 'aws') {
+      $(this).siblings().removeClass('active-button');
+      filterData(id, 'cloudSearch');
+    }
+    else if(id !== 'aws' && $(this).hasClass('active-button')){
+      $('.cloud-filter #aws').addClass('active-button');
+      $(this).removeClass('active-button');
+      showAllItems();
+    } else {
+      $('.cloud-filter #aws').removeClass('active-button');
+      $(this).addClass('active-button');
+      filterData(id, 'cloudSearch');
+    }
   });
 
   /* Search box on guides page */

@@ -8,7 +8,7 @@ custom_js:
 
 <div  class="container-fluid post-bg">
   <div class="post-detail">
-    <div class="col-sm-2-5">
+    <div class="col-md-2-5">
       <div id="toc">
           {% toc %} {{page.document | tocify_asciidoc}}
       </div>
@@ -21,7 +21,7 @@ custom_js:
           {% if forloop.last %}
            <a href="#"> / {{ crumb | replace:'-',' ' | capitalize }}</a>
           {% else %}
-            <a href="{{ crumb }}">/ {{ crumb | replace:'-',' ' | capitalize }}</a>
+            <a href="/guides#{{ crumb }}">/ {{ crumb | replace:'-',' ' | capitalize }}</a>
           {% endif %}
         {% endfor %}      
       </ol>
@@ -50,7 +50,7 @@ custom_js:
           {{ content }}
       </div>
     </div>
-    <div class="col-sm-2-5">
+    <div class="col-md-2-5">
       <div class="card guides-cta-card text-center">
         <img src="/assets/img/grunty-cta.png" alt="newsletter_image" class="img-center"><br>
         <div class="card-body">

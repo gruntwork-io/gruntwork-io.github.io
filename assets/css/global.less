@@ -861,7 +861,8 @@ a.caret-right{
 //
 // Deployment guides styles
 // ==================================================
-.col-sm-2-5 {
+
+.col-md-2-5 {
   position: relative;
   min-height: 1px;
   padding-right: 15px;
@@ -869,10 +870,10 @@ a.caret-right{
 }
 
 @media (min-width: 768px) {
-  .col-sm-2-5{
+  .col-md-2-5{
       float: left;
   }
-  .col-sm-2-5 {
+  .col-md-2-5 {
       width: 20.66666667%;
   }
 }
@@ -880,7 +881,7 @@ a.caret-right{
 @guides-font:           #1e252f;
 @guides-primary-color: #06a6fd;
 
-.guides .guides-section-white{
+body .guides .guides-section-white {
   font-family: @guides-font-family;
   color: @guides-font;
 }
@@ -920,6 +921,9 @@ a.caret-right{
 .searchrow {
   margin-top: 15px;
   padding: 0;
+  .search-box{
+    width: 89%;
+  }
   .input-group {
     width: 100%;
     padding-right: 19px;
@@ -959,6 +963,17 @@ a.caret-right{
   outline: none !important;
 }
 
+
+.active-button {
+  background-color: #fff !important;
+  position: relative;
+  border-radius: 8px !important;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  cursor: pointer;
+  border: 1px solid #dedede !important;
+  outline-color: #fff;
+}
+
 .guides-input-box::-webkit-input-placeholder { .guides-input-placeholder; }
 .guides-input-box::-moz-placeholder          { .guides-input-placeholder; }
 .guides-input-box::-ms-placeholder           { .guides-input-placeholder;}
@@ -966,26 +981,24 @@ a.caret-right{
 
 .cloud-filter {
   display: inline-block;
-  button {
+  .filter {
     margin-top: 30px;
     width: 109px;
     height: 76px;
-    padding: 10px 24px;
     cursor: pointer;
     float: left; 
     border-radius: 8px;
     border: none;
     background-color: #f5f9fa;
-    &:active,
-    &:focus,
-    &:hover{
-      background-color: #fff;
-      position: relative;
-      border-radius: 8px !important;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      cursor: pointer;
-      border: 1px solid #dedede;
-      outline-color: #fff;
+    text-align: center;
+    img {
+      vertical-align: middle;
+      max-height: 43px;
+    }
+    .helper {
+      display: inline-block;
+      height: 100%;
+      vertical-align: middle;
     }
     &:nth-last-of-type(2){
       border-radius: 0;
@@ -1023,7 +1036,7 @@ a.caret-right{
   @media (max-width: @screen-md-min) {
     margin-top: 10%;
   }
-  margin-top: 15px;
+  margin-top: 10%;
   padding: 0;
   .card {
     padding: 1em 4em;
@@ -1066,7 +1079,8 @@ a.caret-right{
 }
 
 .guides-outline {
-  margin-top: 5em;
+  // margin-top: 30vh;
+  padding: 0;
   a {
     color: #999999;
   }
@@ -1075,7 +1089,7 @@ a.caret-right{
     color:@guides-primary-color;
   }
   ul {
-    font-size: 14px;
+    font-size: 16px;
     font-weight: bold;
     letter-spacing: -0.2px;    
   }
@@ -1092,7 +1106,8 @@ a.caret-right{
     display: block;
     z-index: 2;
     width: 100%;
-    padding: 25vh 5px;
+    margin-top: 28em;
+    padding: 1em 0.3em 1.8em 0.3em;
     overflow-y: auto;
     max-height: 100vh;
     overflow-wrap: break-word;
@@ -1118,17 +1133,42 @@ a.caret-right{
       }
     }
   }
+}
 
-  &.fixed {
-    position: fixed;
-    top: 0;
-    width: 290px;
+.fixed {
+  position: fixed;
+  top: 0;
+  // margin-top: 0 !important;
+  width: 20.66666667%
+}
+
+.bottom {
+  position: absolute;
+  bottom: 0;
+  top: auto;
+}
+
+.categories {
+  .guides-outline;
+  margin-top: 15em;
+  margin-bottom: 2em;
+  @media (max-width: @screen-md-min) {
+    visibility: hidden;
+    clear: both;
+    display: none;
   }
-  &.bottom {
-    position: absolute;
-    bottom: 0;
-    top: auto;
-    width: 290px;
+  ul {
+    list-style: none;
+    line-height: normal;
+    a:hover, a:focus{
+      .no-transform;
+      list-style-type: disc;
+      color: @guides-primary-color;
+    }
+    & li:hover {
+      color: @guides-primary-color;
+      list-style-type: disc !important;
+    }
   }
 }
 
@@ -1156,25 +1196,6 @@ a.caret-right{
 }
 
 .guide-listing {
-  .categories {
-    @media (max-width: @screen-md-min) {
-      display: none;
-    }
-    ul {
-      list-style: none;
-      line-height: normal;
-      a:hover, a:focus{
-        .no-transform;
-        list-style-type: disc;
-        color: @guides-primary-color;
-      }
-      & li:hover {
-        color: @guides-primary-color;
-        list-style-type: disc !important;
-      }
-    }
-    .guides-outline;
-  }
   .category-head {
     font-size: 30px;
     font-weight: 600;
@@ -1182,8 +1203,8 @@ a.caret-right{
     letter-spacing: 0.84px;
     color: @guides-font;
     margin-top: 2em;
-    &:first-child{
-      margin-top: 0;
+    &:first-of-type{
+      margin-top: 1em;
     }
     &:hover > a.anchorjs-link{
       text-decoration: none;
@@ -1256,7 +1277,6 @@ a.caret-right{
     overflow: hidden;
     padding-right: 16px;
     box-shadow: none;
-    padding-top: 20px;
     &:hover, &:active, &:focus{
       border: 1px solid #07a7fc;
       z-index: 1 !important;
@@ -1364,7 +1384,11 @@ a.caret-right{
   background-color: #fff;
   position: relative;
   color: @guides-font;
+  padding-bottom: 20px;
   font-family: @guides-font-family;
+  .container-fluid {
+    max-width: 1200px;
+  }
 }
 
 .img-center {

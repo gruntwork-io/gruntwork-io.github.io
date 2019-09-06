@@ -1,6 +1,6 @@
 <div class="row">
-    <div class="col-md-8 col-md-offset-2 searchrow text-center">
-        <div class="col-sm-11 no-padding">
+    <div class="searchrow text-center">
+        <div class="col-xs-11 no-padding search-box">
             <div class="input-group">
                 <div class="input-group-btn" >
                     <div class="btn-group" role="group"> 
@@ -11,13 +11,13 @@
                 </div><input id="search-box" type="text" class="form-control guides-input-box" placeholder="Search guides....">
             </div>
         </div>
-        <div class="col-sm-1 no-padding"> 
+        <div class="col-xs-1 no-padding"> 
             <button class="btn tags-filter" type="button" data-toggle="collapse" data-target="#filter-options" aria-expanded="false" aria-controls="filter-options">
                 Filter <i class="fa fa-caret-down" aria-hidden="true"></i>
             </button>  
         </div>
     </div>
-    <div class="col-md-8 col-md-offset-2 filter-options">
+    <div class="filter-options">
         <div class="collapse" id="filter-options" aria-expanded="true">
             <div class="card card-body">
                 <p>Tags</p>
@@ -26,11 +26,11 @@
         </div>
     </div>
     <div class="text-center">
-            <div class="cloud-filter">
-                <button id="aws" value="aws" ga-event-category="guide-cloud-filter" ga-event-action="filter-aws"><img  src="/assets/img/logos-technologies/aws-logo.png" alt="aws logo"></button>
-                <button id="gcp" value="gcp" ga-event-category="guide-cloud-filter" ga-event-action="filter-gcp"><img src="/assets/img/logos-technologies/gcp-logo.png" alt="aws logo"></button>
-                <button id="azure" value="azure" ga-event-category="guide-cloud-filter" ga-event-action="filter-azure"><img src="/assets/img/logos-technologies/azure-logo.png" alt="aws logo"></button>
-            </div>
+        <div class="cloud-filter">
+            <div class="filter active-button" id="aws"><span class="helper"></span><img  src="/assets/img/logos-technologies/aws-logo.png" alt="aws logo"></div>
+            <div class="filter" id="gcp"><span class="helper"></span><img src="/assets/img/logos-technologies/gcp-logo.png" alt="aws logo"></div>
+            <div class="filter"id="azure"><span class="helper"></span><img src="/assets/img/logos-technologies/azure-logo.png" alt="aws logo"></div>
+        </div>
     </div>
 </div>
                   
