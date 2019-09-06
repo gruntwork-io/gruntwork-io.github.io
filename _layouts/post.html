@@ -16,7 +16,7 @@ custom_js:
     <div class="col-md-7 guides-section-white">
       <ol class="breadcrumb text-center">
         {% assign crumbs = page.url | split: '/' %}
-        <a href="/guides" ga-event-category="guide-{{ post.title | downcase}}" ga-event-action="deployment-guides">Dev Ops Guides</a> 
+        <a href="/guides" ga-event-category="guide-{{ post.title | downcase}}" ga-event-action="deployment-guides">Production Deployment Guides</a> 
         {% for crumb in crumbs offset: 2 %}
           {% if forloop.last %}
            <a href="#"> / {{ crumb | replace:'-',' ' | capitalize }}</a>
