@@ -1,13 +1,14 @@
 ---
 layout: post
 type: guide
-title: Deploying a Dockerized app on GCP/GKE
+title: Deploying a Dockerized app on GCP and GKE
 permalink: /guides/:categories/:title
 image: /assets/img/guides/kubernetics_image.png
 excerpt: Before we can deploy a dockerized app, we need to first create one. For the purposes of this guide we will create a basic Node.js app that responds to requests on port 8080.
 tags: ["gcp", "gke", "docker"]
 date: 2019-05-08
-categories: Docker
+categories: Kubernetics
+cloud: gcp
 toc: true
 ---
 

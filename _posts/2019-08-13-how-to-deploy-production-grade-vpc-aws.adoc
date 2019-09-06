@@ -1,22 +1,15 @@
-[[production_grade_vpc_aws]]
+---
+categories: Networking
+image: /assets/img/guides/vpc/aws-vpc-icon.png
+excerpt: Learn how to configure subnets, route tables, Internet Gateways, NAT Gateways, NACLs, VPC Peering, and more.
+permalink: /guides/:categories/:title
+tags: [aws, networking, terraform]
+cloud: aws
+---
 = How to deploy a production-grade VPC on AWS
-:type: guide
-:description: Learn how to configure subnets, route tables, Internet Gateways, NAT Gateways, NACLs, VPC Peering, and more.
-:image: ../assets/img/guides/vpc/aws-vpc-icon.png
-:tags: aws, networking, terraform
-:toc:
-:toc-placement!:
-
-// GitHub specific settings. See https://gist.github.com/dcode/0cfbf2699a1fe9b46ff04c41721dda74 for details.
-ifdef::env-github[]
-:tip-caption: :bulb:
-:note-caption: :information_source:
-:important-caption: :heavy_exclamation_mark:
-:caution-caption: :fire:
-:warning-caption: :warning:
-endif::[]
-
-toc::[]
+:page-type: guide
+:page-layout: post
+:page-title: How to deploy a production-grade VPC on AWS
 
 == Intro
 
@@ -89,7 +82,7 @@ Before VPCs::
   over the public Internet (unless you blocked it using security groups and OS-level firewalls):
 +
 .Before VPCs, all your AWS resources were in one global IP address space anyone could access (unless you blocked them via security groups or firewalls)
-image::../assets/img/guides/vpc/no-vpc-diagram.png[]
+image::/assets/img/guides/vpc/no-vpc-diagram.png[]
 +
 From a security standpoint, this represented a step backwards compared to traditional data centers where you could
 configure most of your servers so they were physically unreachable from the public Internet.
@@ -100,7 +93,7 @@ VPCs are introduced::
   your production environment:
 +
 .With VPCs, you could separate your AWS resources into completely isolated networks
-image::../assets/img/guides/vpc/vpc-no-subnets-diagram.png[]
+image::/assets/img/guides/vpc/vpc-no-subnets-diagram.png[]
 +
 You'll see later in this guide how you can use VPCs, route tables, subnets, security groups, and NACLs to get
 fine-grained control over what network traffic can or can't reach your AWS resources.
@@ -181,7 +174,7 @@ Single IPs::
 === Subnets
 
 .VPCs partitioned into multiple subnets: public, private (services), private (persistence)
-image::../assets/img/guides/vpc/vpc-subnets-diagram.png[]
+image::/assets/img/guides/vpc/vpc-subnets-diagram.png[]
 
 Each VPC is partitioned into one or more _https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Subnets.html:[subnets]_
 (sub-networks). Each subnet controls a portion of the VPC's CIDR range. For example, a VPC with the CIDR block
@@ -334,7 +327,7 @@ uses port 80), and locking down source/destination IP addresses.
 === VPC Peering
 
 .Multiple VPCs connected via VPC peering
-image::../assets/img/guides/vpc/vpc-diagram.png[]
+image::/assets/img/guides/vpc/vpc-diagram.png[]
 
 Normally, you use VPCs to create isolated networks, so the resources in one VPC have no way to access the resources in
 another VPC. _https://docs.aws.amazon.com/vpc/latest/peering/what-is-vpc-peering.html[VPC Peering]_ is a networking
@@ -388,7 +381,7 @@ Interface endpoints::
 === Regions and availability zones
 
 .AWS regions and availability zones
-image::../assets/img/guides/vpc/aws-regions.png[]
+image::/assets/img/guides/vpc/aws-regions.png[]
 
 AWS has data centers all over the world, grouped into regions and availability zones. An _AWS region_ is a separate
 geographic area, such as `us-east-2` (Ohio), `eu-west-1` (Ireland), and `ap-southeast-2` (Sydney). Within each region,
@@ -415,13 +408,13 @@ With all the core concepts out of the way, let's now discuss how to configure a 
 something like this:
 
 .A production-grade VPC setup
-image::../assets/img/guides/vpc/vpc-diagram.png[]
+image::/assets/img/guides/vpc/vpc-diagram.png[]
 
 [[defense_in_depth]]
 === Defense in depth
 
 .Aerial view of Beaumaris Castle, showing multiple layers of walls for defense. Crown copyright 2016.
-image::../assets/img/guides/vpc/castle.jpeg[]
+image::/assets/img/guides/vpc/castle.jpeg[]
 
 People make mistakes all the time: forgetting to remove accounts, keeping ports open, including test credentials in
 production code, etc. Rather than living in an idealized model where we assume people won't make mistakes, you can
@@ -497,7 +490,7 @@ Unique CIDR blocks::
 === Multiple subnet tiers
 
 .Each VPC is partitioned into multiple tiers of subnets
-image::../assets/img/guides/vpc/subnets-diagram.png[]
+image::/assets/img/guides/vpc/subnets-diagram.png[]
 
 The third layer of defense is to use separate _subnet tiers_, where each tier contains multiple subnets configured in
 the same way. We recommend the following three theirs for most use cases:
@@ -529,7 +522,7 @@ discussed in the next section.
 === Security groups and NACLs
 
 .Security group settings for the different subnet tiers
-image::../assets/img/guides/vpc/peering-diagram.png[]
+image::/assets/img/guides/vpc/peering-diagram.png[]
 
 Use security groups and NACLs to configure the following rules for each subnet tier:
 
