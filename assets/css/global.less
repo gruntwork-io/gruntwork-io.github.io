@@ -1116,30 +1116,9 @@ a.caret-right{
       & ul {
         display: none;
       }
-      &:hover {
-        color: @guides-primary-color;
-        & ul {
-          display: block;
-          font-size: 14px;
-          & li {
-            color: @guides-primary-color;
-            & :before {
-              content: '-'; 
-              font-size: 20px;
-              font-weight: bold;
-              display: inline-block;
-              margin-left: -15px;
-              margin-top: -5px;
-              &:hover, &:focus{
-                .no-transform;
-              }
-            }
-          }
-        }
-      }
     }
   }
-  
+
   &.fixed {
     position: fixed;
     top: 0;
@@ -1150,6 +1129,29 @@ a.caret-right{
     bottom: 0;
     top: auto;
     width: 290px;
+  }
+}
+
+#toc .sectlevel1 .expanded {
+  & > a {
+    color: @guides-primary-color;
+  }
+  & ul {
+    display: block;
+    font-size: 14px;
+    & li {
+      & :before {
+        content: '-';
+        font-size: 20px;
+        font-weight: bold;
+        display: inline-block;
+        margin-left: -15px;
+        margin-top: -5px;
+        &:hover, &:focus{
+          .no-transform;
+        }
+      }
+    }
   }
 }
 
@@ -1225,7 +1227,7 @@ a.caret-right{
     border: solid 1px #dedede;
     border-radius: 8px;
   }
-  
+
   .card-shadow:hover {
     -webkit-box-shadow: 0px 1px 6px 1px #ccc;  /* Safari, Android, iOS */
     -moz-box-shadow:    0px 1px 6px 1px #ccc;  /* Firefox */

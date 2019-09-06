@@ -61,4 +61,10 @@ $(document).ready(function () {
     }
   });
 
+  //Toggle ToC children
+  $('#toc .sectlevel1 li').click((e) => {
+    // target click comes as <a> inside <li>, hence the parentNode
+    $(e.target.parentNode).toggleClass('expanded');
+  });
+
 });
