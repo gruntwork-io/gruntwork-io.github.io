@@ -8,6 +8,7 @@
   // be triggered. The function will be called after it stops being called for
   // N milliseconds. If `immediate` is passed, trigger the function on the
   // leading edge, instead of the trailing.
+  // Ensures a given task doesn't fire so often that it bricks browser performance.
   // From: https://davidwalsh.name/javascript-debounce-function
   function debounce(func, wait, immediate) {
     let timeout;
