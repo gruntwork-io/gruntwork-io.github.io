@@ -1,22 +1,17 @@
-[[production_grade_aws_account_structure]]
+---
+categories: Docker
+image: /assets/img/guides/aws-account/aws-logo.png
+excerpt: Learn about why you need multiple AWS accounts, AWS Organizations, IAM Users, IAM Roles, IAM Policies, CloudTrail, and more.
+permalink: /guides/:categories/:title
+tags: [aws, terraform]
+cloud: aws
+---
+
 = How to configure a production-grade AWS account structure
 :type: guide
-:description: Learn about why you need multiple AWS accounts, AWS Organizations, IAM Users, IAM Roles, IAM Policies, CloudTrail, and more.
-:image: ../assets/img/guides/aws-account/aws-logo.png
-:tags: aws, terraform
-:toc:
-:toc-placement!:
+:page-layout: post
+:page-title: How to deploy a production-grade VPC on AWS
 
-// GitHub specific settings. See https://gist.github.com/dcode/0cfbf2699a1fe9b46ff04c41721dda74 for details.
-ifdef::env-github[]
-:tip-caption: :bulb:
-:note-caption: :information_source:
-:important-caption: :heavy_exclamation_mark:
-:caution-caption: :fire:
-:warning-caption: :warning:
-endif::[]
-
-toc::[]
 
 == Intro
 
@@ -326,7 +321,7 @@ Assuming an IAM role::
   mechanism. For example, for an IAM user to assume an IAM role, the workflow looks like this:
 +
 .The process for assuming an IAM role
-image::../assets/img/guides/aws-account/assume-iam-role.png[]
+image::/assets/img/guides/aws-account/assume-iam-role.png[]
 +
 The basic steps are:
 +
@@ -430,7 +425,7 @@ With all the core concepts out of the way, let's now discuss how to configure a 
 that looks something like this:
 
 .A production-grade AWS account structure
-image::../assets/img/guides/aws-account/aws-account-structure.png[]
+image::/assets/img/guides/aws-account/aws-account-structure.png[]
 
 // TODO: other topics we may wish to cover:
 // Compliance: e.g., signing BAA for HIPAA https://aws.amazon.com/artifact/?nc2=h_m1

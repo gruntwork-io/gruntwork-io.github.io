@@ -1,23 +1,15 @@
-[[how_to_use_gruntwork_service_catalog]]
+---
+categories: Docker
+image: /assets/img/guides/service-catalog/grunty-blocks.png
+excerpt: Learn about production-grade infrastructure, Terraform, Terragrunt, Packer, Docker, immutable infrastructure, versioning for infrastructure code, automated tests for infrastructure code, and more.
+permalink: /guides/:categories/:title
+tags: [aws, gcp, terraform, terragrunt]
+---
 = How to use the Gruntwork Service Catalog
-:type: guide
-:description: Learn about production-grade infrastructure, Terraform, Terragrunt, Packer, Docker, immutable infrastructure, versioning for infrastructure code, automated tests for infrastructure code, and more.
-// TODO: the image should be a screenshot of the service catalog?
-:image: ../assets/img/guides/service-catalog/grunty-blocks.png
-:tags: aws, gcp, terraform, terragrunt
-:toc:
-:toc-placement!:
+:page-type: guide
+:page-layout: post
+:page-title: How to use the Gruntwork Service Catalog
 
-// GitHub specific settings. See https://gist.github.com/dcode/0cfbf2699a1fe9b46ff04c41721dda74 for details.
-ifdef::env-github[]
-:tip-caption: :bulb:
-:note-caption: :information_source:
-:important-caption: :heavy_exclamation_mark:
-:caution-caption: :fire:
-:warning-caption: :warning:
-endif::[]
-
-toc::[]
 
 == Intro
 
@@ -29,7 +21,7 @@ tech stack as code on top of AWS or GCP.
 
 // TODO: update screenshot of the service catalog when we launch the new design
 .The Gruntwork Service Catalog
-image::../assets/img/guides/service-catalog/gruntwork-service-catalog.png[]
+image::/assets/img/guides/service-catalog/gruntwork-service-catalog.png[]
 
 The https://gruntwork.io/infrastructure-as-code-library/[Gruntwork Service Catalog] is a collection of over 300,000
 lines of reusable, battle-tested, production-ready infrastructure code for AWS and GCP that lets you:
@@ -127,7 +119,7 @@ following sections.
 === Modules
 
 .The modules folder of the ELK (Elasticsearch, Logstash, Kibana) repo
-image::../assets/img/guides/service-catalog/elk-modules.png[]
+image::/assets/img/guides/service-catalog/elk-modules.png[]
 
 Each repo in the Gruntwork Service Catalog contains a `modules` folder that contains the main implementation code,
 broken down into multiple standalone, orthogonal, reusable, highly configurable _modules_. For example, the ELK repo
@@ -142,7 +134,7 @@ and all in a single cluster in other environments (e.g., in dev, to save money).
 === Examples
 
 .The examples folder of the ELK (Elasticsearch, Logstash, Kibana) repo
-image::../assets/img/guides/service-catalog/elk-examples.png[]
+image::/assets/img/guides/service-catalog/elk-examples.png[]
 
 Each repo in the Gruntwork Service Catalog contains an `examples` folder that shows you how to assemble the modules
 from the `modules` folder into different permutations. This lets you try the modules out in minutes, without having to
@@ -151,7 +143,7 @@ write a line of code. In other words, this is executable documentation.
 === Automated tests
 
 .The test folder of the ELK (Elasticsearch, Logstash, Kibana) repo
-image::../assets/img/guides/service-catalog/elk-tests.png[]
+image::/assets/img/guides/service-catalog/elk-tests.png[]
 
 Each repo in the Gruntwork Service Catalog contains a `test` folder that contains automated tests for the examples in
 the `examples` folder. These are mostly integration tests, which use
@@ -165,7 +157,7 @@ that the code does what we say it does—and that it continues to do it over yea
 === Versioning
 
 .An example of all the versioned updates announced in the monthly Gruntwork Newsletter
-image::../assets/img/guides/service-catalog/newsletter.png[]
+image::/assets/img/guides/service-catalog/newsletter.png[]
 
 All of the code in the Gruntwork Service Catalog is _versioned_. Every time we make a change, we put out a new
 versioned release, and announce it in the monthly
@@ -193,7 +185,7 @@ version numbers. With `0.MINOR.PATCH`, the rules are a bit different, where you 
 === The Gruntwork Reference Architecture
 
 .An example of the Gruntwork Reference Architecture
-image::../assets/img/guides/service-catalog/ref-arch-full.png[]
+image::/assets/img/guides/service-catalog/ref-arch-full.png[]
 
 The https://gruntwork.io/reference-architecture/[Gruntwork Reference Architecture] is a production-grade, end-to-end
 tech stack built on top of the modules from the Gruntwork Service Catalog.
