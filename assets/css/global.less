@@ -1412,67 +1412,13 @@ body .guides .guides-section-white {
   letter-spacing: 0.34px;
 }
 
-.post-detail {
-  padding-bottom: 5em;
-  .post-title {
-    color: #000000;
-    padding: 1em 2em 0 2em;
-    font-size: 34px;
-    letter-spacing: 0.98px;
-    & p {
-      font-weight: 600;
-      margin-bottom: 0px;
-      opacity: 0.5;
-      font-size: 14px;
-      letter-spacing: 0.39px;
-    }
-  }
-  .breadcrumb {
-    font-size: 14px;
-    font-weight: bold;
-    letter-spacing: -0.2px;
-    background-color: white;
-    > a {
-      color: @guides-primary-color;
-      &:last-child, &:hover {
-        text-decoration: underline;
-      }
-    }
-  }
-  & h2 {
-    border-bottom: solid 1px #07a7fc;
-  }
-
-  p {
-    font-size: 16px;
-    letter-spacing: 0.42px;
-    line-height: 22px;
-    & code {
-      background-color: #e6f6fe;
-      color: #000;
-    }
-  }
-  & .dlist {
-    padding: 0 4%;
-  }
-  & a:link{
-    color: #07a7fc;
-    text-decoration: none;
-  }
-  & h4, h3, h2,label, a {
-    color: @guides-font;
-  }
-  & section {
-    margin: 3%;
-  }
-}
-
 .admonitionblock  {
   border-top: 9px solid @guides-primary-color;
   background-color: #f5f9fa;
   font-size: 12px;
   text-align: center;
   padding: 0 0 1px;
+  margin: 10px 0;
   table tbody {
     opacity: 1 !important;
     & tr td:nth-child(even) {
@@ -1754,12 +1700,72 @@ body .guides .guides-section-white {
     }
   }
 }
-.content {
+
+
+.post-detail {
+  padding-bottom: 5em;
+  .post-title {
+    color: #000000;
+    padding: 1em 2em 0 2em;
+    font-size: 34px;
+    letter-spacing: 0.98px;
+    & p {
+      font-weight: 600;
+      margin-bottom: 0px;
+      opacity: 0.5;
+      font-size: 14px;
+      letter-spacing: 0.39px;
+    }
+  }
+  .breadcrumb {
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: -0.2px;
+    background-color: white;
+    > a {
+      color: @guides-primary-color;
+      &:last-child, &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+  & h2 {
+    border-bottom: solid 1px #07a7fc;
+  }
+
+  p {
+    font-size: 16px;
+    letter-spacing: 0.42px;
+    line-height: 22px;
+    & code {
+      background-color: #e6f6fe;
+      color: #000;
+    }
+  }
+  & .dlist, & ulist {
+    padding: 0;
+  }
+  & a:link{
+    color: #07a7fc;
+    text-decoration: none;
+  }
+  & h4, h3, h2,label, a {
+    color: @guides-font;
+  }
+  & section {
+    margin: 3%;
+  }
+}
+
+// Post Detail styles
+.post-content {
   padding: 0 2em;
+  color: @guides-font;
+  line-height: 1.38;
   p, li {
     font-size: 16px;
-    line-height: 1.38;
     letter-spacing: 0.45px;
+    margin: 0;
   }
   & a {
     color: @guides-primary-color;
@@ -1772,14 +1778,18 @@ body .guides .guides-section-white {
     margin: 0 auto;
   }
   pre, pre[class*="language-"] {
+    padding: 0px;
     background: aliceblue;
     border: none;
     font-size: 14px;
     overflow-y: scroll;
     text-overflow: ellipsis;
     max-height: 100vh;
+    margin: 10px 0;
   }
   h1, h2, h3, h4, h5, h6 {
+    color: @guides-font;
+    margin: 10px 0;
     &:hover > a.anchorjs-link{
       color: #FFFFFF;
       text-decoration: none;
@@ -1790,9 +1800,10 @@ body .guides .guides-section-white {
     font-size: 12px;
     letter-spacing: 0.34px;
     color: @guides-font;
-    margin: 15px;
+    caption {
+      color: @guides-font;
+    }
     thead {
-      opacity: 0.6;
       font-weight: 600;
       th {
         text-decoration: underline;
@@ -1802,15 +1813,15 @@ body .guides .guides-section-white {
       }
     }
     tbody{
-      opacity: 0.5;
       background-color: #f5f9fa;
       tr td {
         padding: 5px;
-        &:nth-child(even) {background-color: #eceded;}
+        &:nth-child(even) {background-color: #ffff !important;}
       }
     }
   }
 }
+
 
 // Main content styles for sub pages
 .sub-page .main {
