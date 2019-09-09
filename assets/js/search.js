@@ -55,8 +55,7 @@
           if(upperCaseTags.includes(tag)){
             tag = tag.toUpperCase();
           }
-  
-          $('.tags').append(`<label class="checkbox"><input value=${tag} type="checkbox">${tag}</label>`);
+          $('.tags').append(`<div class="checkbox"><input value=${tag} id=${tag} type="checkbox"><label for="${tag}">${tag}</label></div>`);
         }
       });
     }
