@@ -6,67 +6,41 @@ custom_js:
   - guides
 ---
 
-<div  class="container-fluid post-bg">
-  <div class="post-detail">
-    <div class="col-md-2-5">
-      <div id="toc">
-          {% toc %} {{page.document | tocify_asciidoc}}
-      </div>
-    </div>
-    <div class="col-md-7 guides-section-white">
-      <ol class="breadcrumb text-center">
-        {% assign crumbs = page.url | split: '/' %}
-        <a href="/guides" ga-event-category="guide-{{ post.title | downcase}}" ga-event-action="deployment-guides">Production Deployment Guides</a> 
-        {% for crumb in crumbs offset: 2 %}
-          {% if forloop.last %}
-           <a href="#"> / {{ crumb | replace:'-',' ' | capitalize }}</a>
-          {% else %}
-            <a href="/guides#{{ crumb }}">/ {{ crumb | replace:'-',' ' | capitalize }}</a>
-          {% endif %}
-        {% endfor %}      
-      </ol>
-      <div class="post-title text-center">
-        <img class="img-center" src="{{ page.image }}" alt="post logo">
-        <label>{{ page.title }}</label>
-        <!-- Commenting this out for now so it doesn't scare readers -->
-        <!-- <p>
-          {% assign words = content | number_of_words %} -->
-          <!-- https://help.medium.com/hc/en-us/articles/214991667-Read-time -->
-          <!-- {% if words < 265 %}
-            1 min read.
-          {% else %}
-            {{ words | divided_by:180 }} mins read.
-          {% endif %} 
-          Updated {{ page.date | date_to_string }}
-        </p> -->
-        {% if page.tags %}
-          {% for tag in page.tags %}
-            <span class="badge badge-pill badge-default">
-              {% capture tag-name %}{{tag | upcase }}{% endcapture %}
-              {% if tag-name=="AWS" or tag-name=="GCP"  or tag-name=="GKE" %} {{ tag-name }} {% else %} {{tag-name | capitalize}}{% endif %}</span>
-          {% endfor %}
-        {% endif %}
-      </div>
-      <div class="post-content">
-          {{ content }}
-      </div>
-    </div>
-    <!-- Commenting this CTA for now till we get clarification from Sam -->
-    <!-- <div class="col-md-2-5">
-      <div class="card guides-cta-card text-center">
-        <img src="/assets/img/grunty-cta.png" alt="newsletter_image" class="img-center"><br>
-        <div class="card-body">
-          <p class="card-title">Hand off the gruntwork, we can deploy this service for you. </p>
-          <button type="button" class="btn deploy" ga-event-category="guide-cta" ga-event-action="guide-deploy-cta">Deploy for me</button>
-          <button type="button" class="btn btn-link dismiss-cta" -event-category="guide-cta" ga-event-action="guide-cta-dismiss">Dismiss</button>
+<div  class="post-bg">
+  <div class="container-fluid">
+      <div class="post-detail">
+        <div class="col-md-2-5">
+          <div id="toc">
+              {% toc %} {{page.document | tocify_asciidoc}}
+          </div>
+        </div>
+        <div class="col-md-7 guides-section-white">
+          <ol class="breadcrumb text-center">
+            {% assign crumbs = page.url | split: '/' %}
+            <a href="/guides" ga-event-category="guide-{{ post.title | downcase}}" ga-event-action="deployment-guides">Production Deployment Guides</a> 
+            {% for crumb in crumbs offset: 2 %}
+              {% if forloop.last %}
+                <a href="#"> / {{ crumb | replace:'-',' ' | capitalize }}</a>
+              {% else %}
+                <a href="/guides#{{ crumb }}">/ {{ crumb | replace:'-',' ' | capitalize }}</a>
+              {% endif %}
+            {% endfor %} 
+          </ol>
+          <div class="post-title text-center">
+            <img class="img-center" src="{{ page.image }}" alt="post logo">
+            <label>{{ page.title }}</label>
+            {% if page.tags %}
+              {% for tag in page.tags %}
+                <span class="badge badge-pill badge-default">
+                  {% capture tag-name %}{{tag | upcase }}{% endcapture %}
+                  {% if tag-name=="AWS" or tag-name=="GCP"  or tag-name=="GKE" %} {{ tag-name }} {% else %} {{tag-name | capitalize}}{% endif %}</span>
+              {% endfor %}
+            {% endif %}
+          </div>
+          <div class="post-content">
+              {{ content }}
+          </div>
         </div>
       </div>
-    </div> -->
   </div>
-  <!-- Haven't decided the third party api to use 
- <div class="post-bg comments"></div>  -->
-
-<!-- To be included in another PR
-{% include newsletter.html %} -->
 </div>
-

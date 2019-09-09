@@ -1401,6 +1401,9 @@ body .guides .guides-section-white {
 
 .post-bg{
   background-color: #f6f8fa; 
+  .container-fluid {
+    max-width: 1200px;
+  }
 }
 
 .badge {
@@ -1810,14 +1813,23 @@ body .guides .guides-section-white {
         text-decoration-style: dashed;
         text-underline-position: under;
         text-decoration-color: @guides-primary-color;
+        padding: 14px 0;
       }
     }
     tbody{
       background-color: #f5f9fa;
-      tr td {
+      tr {
+        border-bottom: 30px solid #fff;
+        td {
         padding: 5px;
-        &:nth-child(even) {background-color: #ffff !important;}
+        p {
+          font-size: 12px;
+          letter-spacing: 0.34px;
+          padding: 10px;
+        }
+        &:nth-child(even) {background-color: #fafcfc;}
       }
+    }
     }
   }
 }
