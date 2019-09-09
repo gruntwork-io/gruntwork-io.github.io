@@ -1412,25 +1412,72 @@ body .guides .guides-section-white {
   letter-spacing: 0.34px;
 }
 
-.admonitionblock  {
+.admonitionblock-content  {
+  position: relative;
+  padding: 10px;
   border-top: 9px solid @guides-primary-color;
   background-color: #f5f9fa;
   font-size: 12px;
   text-align: center;
-  padding: 0 0 1px;
   margin: 10px 0;
-  table tbody {
-    opacity: 1 !important;
-    & tr td:nth-child(even) {
-      background-color: #f5f9fa !important;
+  table {
+    text-align:center; 
+    margin-left:auto; 
+    margin-right:auto;
+    & tbody tr {
+      border-bottom: none !important;
+      & td {
+        text-align: initial;
+        code {
+          background: #e5ecee !important;
+          color: black;
+        }
+        & .title {
+          margin-right: 20px;
+          line-height: 0;
+          position: relative;
+          font-size: 0;
+          text-align: center;
+          &:after {
+            display: block;
+            position: absolute;
+            color: #fff;
+            content: "!";
+            border-radius: 50%;
+            // border: 1px solid #06a6fd;
+            width: 21px;
+            height: 21px;
+            line-height: 22px;
+            font-weight: normal;
+            // background-color: #06a6fd;
+            left: 0;
+            font-size: 16px;
+            margin-top: -9px;
+          }
+        }
+        &:nth-child(even) {
+          background-color: inherit !important;
+        }  
+      }
     }
   }
 }
 
-// .admonitionblock .important {
+.admonitionblock.important, .admonitionblock.note{
+  .admonitionblock-content;
+  .title:after {
+    background-color: #06a6fd; 
+    border: 1px solid #06a6fd;
+  }
+}
 
-// }
-
+.admonitionblock.error{
+  .admonitionblock-content;
+  .title:after {
+    background-color: #ef5a73; 
+    border: 1px solid #ef5a73;
+  }
+}
 
 // Sections that have a blue background
 .section-hero-blue {
