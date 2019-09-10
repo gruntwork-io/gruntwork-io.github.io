@@ -1719,13 +1719,21 @@ body .guides .guides-section-white {
   }
   .breadcrumb {
     font-size: 14px;
-    font-weight: bold;
     letter-spacing: -0.2px;
     background-color: white;
     > a {
       color: @guides-primary-color;
-      &:last-child, &:hover {
-        text-decoration: underline;
+      &:last-child span {
+        border-bottom: 1px solid @guides-primary-color;
+        text-shadow: 0.5px 0 0;
+      }
+      &:last-child span:hover,
+      &:first-child:hover,
+      &:first-child:active, 
+      & span:hover,
+      & span:active {
+        border-bottom: 2px solid @guides-primary-color;
+        text-shadow: 0.5px 0 0;
       }
     }
   }
