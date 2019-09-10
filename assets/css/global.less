@@ -1052,19 +1052,17 @@ body .guides .guides-section-white {
       flex-direction: column;
       max-height: 133px;
     }    
-
     .checkbox {
       padding-left: 20px;
       position: relative;
       display: block;
-
+      margin-bottom: 0;
       input {
         opacity: 0;
         position: absolute;
         z-index: 1;
         cursor: pointer;
         margin-left: -20px;
-
         &:checked {
           + label {
             &::before {
@@ -1083,16 +1081,13 @@ body .guides .guides-section-white {
               border-radius: 2px;
               background-color: @guides-primary-color;
             }
-
           }
         }
       }
-
       label {
         display: inline-block;
         position: relative;
         padding-left: 10px;
-
         &::before {
           content: '';
           display: inline-block;
@@ -1104,14 +1099,15 @@ body .guides .guides-section-white {
         }
       }
     }
-
+    .checkbox+.checkbox {	
+      margin-top: 10px !important;
+    }
     .checkbox {
       input {
         &:checked {
           + label {
             &::before {
               background-color: @guides-primary-color;
-              border-color: @guides-primary-color;
             }
             &::after {
               content: '';
@@ -1119,7 +1115,6 @@ body .guides .guides-section-white {
               width: 10px;
               height: 7px;
               background: @guides-primary-color;
-              top: 4px;
               left: 3px;
               border: 2px solid #fff;
               border-top: none;
