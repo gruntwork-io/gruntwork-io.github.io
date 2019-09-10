@@ -19,9 +19,9 @@ custom_js:
         <a href="/guides" ga-event-category="guide-{{ post.title | downcase}}" ga-event-action="deployment-guides">Production Deployment Guides</a> 
         {% for crumb in crumbs offset: 2 %}
           {% if forloop.last %}
-           <a href="#"> / {{ crumb | replace:'-',' ' | capitalize }}</a>
+            <a href="#"> / <span> {{ page.title | replace:'-',' ' }}</span></a>
           {% else %}
-            <a href="/guides#{{ crumb }}">/ {{ crumb | replace:'-',' ' | capitalize }}</a>
+            <a href="/guides#{{ crumb }}" >/ <span>{{ crumb | replace:'-',' ' | capitalize }}</span></a>
           {% endif %}
         {% endfor %}      
       </ol>
