@@ -376,21 +376,111 @@ image::../assets/img/guides/eks/eks-architecture.png[]
 
 === Use EKS
 
-We recommend using https://aws.amazon.com/eks/[Amazon EKS] to run the Kubernetes cluster. 
+We recommend using https://aws.amazon.com/eks/[Amazon EKS] to run the Kubernetes cluster. It manages the control plane
+for you, which significantly reduces your operational burden; it has good integration with other AWS services; you can
+manage it entirely as code; and while EKS still has some gaps in terms of features, and is more complicated to use than
+it should be, AWS seems to be investing into it heavily, so any small benefits you get from using other solutions will
+most likely be eclipsed very quickly by future EKS releases.
 
-=== VPC tags
+=== VPC configuration
 
-TODO
+EKS relies on an a _https://aws.amazon.com/vpc/[Virtual Private Cloud (VPC)]_ to provide the basic network topology and
+to manage communication across the nodes. Follow the instructions in
+link:../networking/how-to-configure-production-grade-vpc-aws[How to deploy a production-grade VPC on AWS] to create
+a VPC for EKS that looks like this:
 
-https://github.com/gruntwork-io/terraform-aws-eks/tree/master/modules/eks-vpc-tags
+.A production-grade VPC setup
+image::../assets/img/guides/vpc/vpc-diagram.png[]
 
-=== Control plane and core services
+EKS also relies on special tags on the VPC and subnets to know which VPC resources to use for deploying infrastructure.
+For example, EKS needs to know to use the public subnet for the load balancers associated with a Service resource. See
+https://docs.aws.amazon.com/eks/latest/userguide/network_reqs.html[Cluster VPC Considerations] for more information.
 
-TODO
+=== Control plane
+
+To have EKS manage the control plane for you, you need to create an
+_https://docs.aws.amazon.com/eks/latest/userguide/clusters.html[EKS cluster]_. When you create an EKS cluster, behind
+the scenes, AWS fires up several master nodes in a highly available configuration, complete with the Kubernetes API
+Server, scheduler, controller manager, and etcd. Here are the key considerations for your EKS cluster:
+
+Kubernetes version::
+  When creating your EKS cluster, you can pick which version of Kubernetes to use. For each version of Kubernetes,
+  EKS may have one or more _https://docs.aws.amazon.com/eks/latest/userguide/platform-versions.html[platform versions]_
+  that are compatible with it. For example, Kubernetes 1.12.6 had platform versions `eks.1` and `eks.2`. AWS
+  automatically updates the control plane to use the latest platform version compatible with your chosen Kubernetes
+  minor version.
+
+Subnets::
+  Your EKS cluster will run in the subnets you specify. We strongly recommend running solely in private subnets that
+  are NOT directly accessible from the public Internet. See
+  link:../networking/how-to-configure-production-grade-vpc-aws[How to deploy a production-grade VPC on AWS] for more
+  info.
+
+Endpoint access::
+  You can configure whether the https://docs.aws.amazon.com/eks/latest/userguide/cluster-endpoint.html[API endpoint for your EKS cluster]
+  is accessible from (a) within the same VPC and/or (b) from the public Internet. We recommend allowing access from
+  within the VPC, but not from the public Internet. If you need to talk to your Kubernetes cluster from your own
+  computer (e.g., to issue commands via `kubectl`), use a bastion host or VPN server. See
+  link:../networking/how-to-configure-production-grade-vpc-aws[How to deploy a production-grade VPC on AWS] for more
+  info.
+
+Cluster IAM Role::
+  To be able to make API calls to other AWS services,
+  https://docs.aws.amazon.com/eks/latest/userguide/service_IAM_role.html[your EKS cluster must have an IAM role] with
+  the following managed IAM policies: `AmazonEKSServicePolicy` and `AmazonEKSClusterPolicy`.
+
+Security group::
+  You should define a security group that controls what traffic can go in and out of the control plane. The worker
+  nodes must be able to talk to the control plane and vice versa: see
+  https://docs.aws.amazon.com/eks/latest/userguide/sec-group-reqs.html[Cluster Security Group Considerations] for the
+  ports you should open up between them.
+
+Logging::
+  We recommend enabling https://docs.aws.amazon.com/eks/latest/userguide/control-plane-logs.html[control plane logging]
+  so that the logs from the Kubernetes API server, controller manager, scheduler, and other components are sent to
+  CloudWatch.
 
 === Worker nodes
 
-TODO
+While EKS will run the control plane for you, it's up to you to create the worker nodes. Here are the key
+considerations:
+
+Auto Scaling Group::
+  We recommend using an https://docs.aws.amazon.com/autoscaling/ec2/userguide/AutoScalingGroup.html[Auto Scaling Group]
+  to run your worker nodes. This way, failed nodes will be automatically replaced, and you can use auto scaling
+  policies to automatically scale the number of nodes up and down in response to load.
+
+Tags::
+  EKS requires that all worker node EC2 instances have a tag with the key `kubernetes.io/cluster/<CLUSTER_NAME>` and
+  value `owned`.
+
+AMI::
+  Each worker node will need Docker, kubelet,
+  https://github.com/kubernetes-sigs/aws-iam-authenticator[AWS IAM Authenticator], and a
+  https://docs.aws.amazon.com/eks/latest/userguide/launch-workers.html[bootstrap script] installed. We recommend
+  using the
+  https://docs.aws.amazon.com/eks/latest/userguide/eks-optimized-ami.html[Amazon EKS-Optimized AMI] or one of the
+  https://docs.aws.amazon.com/eks/latest/userguide/eks-partner-amis.html[EKS partner AMIs] (e.g., there is an Ubuntu
+  AMI), as these already have all the necessary software installed.
+
+User Data::
+  Each worker node must register itself to the Kubernetes API. This can be done using a
+  https://docs.aws.amazon.com/eks/latest/userguide/launch-workers.html[bootstrap script] that is bundled with the EKS
+  optimized AMI. We recommend running this bootstrap script as part of
+  https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/user-data.html[User Data] so that it executes when the EC2
+  instance is booting.
+
+IAM role::
+  In order for the kubelet on each worker node to be able to make API calls, each
+  https://docs.aws.amazon.com/eks/latest/userguide/worker_node_IAM_role.html[worker node must have an IAM role] with
+  the following managed IAM policies: `AmazonEKSWorkerNodePolicy`, `AmazonEKS_CNI_Policy`,
+  `AmazonEC2ContainerRegistryReadOnly`.
+
+Security group::
+  You should define a security group that controls what traffic can go in and out of each worker node. The worker
+  nodes must be able to talk to the control plane and vice versa: see
+  https://docs.aws.amazon.com/eks/latest/userguide/sec-group-reqs.html[Cluster Security Group Considerations] for the
+  ports you should open up between them.
 
 === Lock down access
 
@@ -415,6 +505,11 @@ https://github.com/gruntwork-io/terraform-aws-eks/tree/master/modules/eks-k8s-ro
 
 TODO
 
+=== Secure pods
+
+PodSecurityPolicy
+NetworkPolicy
+
 === Kubergrunt
 
 TODO
@@ -430,6 +525,7 @@ https://github.com/gruntwork-io/terraform-aws-eks/tree/master/modules/eks-alb-in
 
 TODO
 
+DNS forwarding?
 https://github.com/gruntwork-io/terraform-aws-eks/tree/master/modules/eks-k8s-external-dns-iam-policy
 https://github.com/gruntwork-io/terraform-aws-eks/tree/master/modules/eks-k8s-external-dns
 
