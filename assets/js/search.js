@@ -26,6 +26,7 @@
   }
 
   function showItemsCount(totalCount, numSubmodules) {
+    $('#search-results-count').show();
     if (searchEntry.type == 'libraryEntries') {
       if (totalCount > 0 && numSubmodules > 0) {
         $('#search-results-count').html("<strong>" + totalCount + "</strong> repos (~<strong>" + numSubmodules + "</strong> modules)");
@@ -34,7 +35,7 @@
       }
     } else {
       if (totalCount > 0 && numSubmodules == 0) {
-        $('#search-results-count').html("<strong>" + totalCount + "</strong> found");
+        $('#search-results-count').html("<strong>" + totalCount + "</strong> result(s) found");
       }
     }
   }
@@ -54,6 +55,7 @@
   }
 
   function showAllItems() {
+    $('#search-results-count').hide();
     $('.guide-card').show() && $('.category-head').show() && $('.categories ul').show();
   }
 
@@ -94,13 +96,7 @@
     }
   }
 
-  //Function to track Google analytics
-  // function trackGA {
-  //    // Track what users are searching for via Google Analytics events
-  //     //   ga('send', 'event', "iac-lib", "search", "query", text);
-  // }
-
-   /**
+  /**
    * A function to search the IaC Lib and Deployment guides. Can also be used for other pages that need it.
    * To show/hide the proper elements based on the results. 
    * @type {Function}
@@ -189,7 +185,7 @@
   /* Triggered when filter checkboxes are checked */
   $(document).ready(() => {
 
-    $('.tags .checkbox input[type="checkbox"]').on('change', function() {
+    $('.tags .checkbox input[type="checkbox"]').on('change', function () {
       let checked = $('input[type="checkbox"]:checked');
       if (!checked) {
         showAllItems();
@@ -207,22 +203,21 @@
   $('#js-search-library').on("keyup", searchData);
 
   /* Triggered on click of any cloud filtering buttons */
-  $('.cloud-filter .filter').click(function(event) {
+  $('.cloud-filter .filter').click(function (event) {
     const id = $(this).attr('id');
 
-    if(id === 'aws') {
+    if (id === 'aws') {
       $(this).siblings().removeClass('active-button');
       $(this).addClass('active-button');
 
-      if($(this).hasClass('selected')){
+      if ($(this).hasClass('selected')) {
         $(this).removeClass('selected');
         showAllItems();
-      }else {
-      $(this).addClass('selected');
-      filterData(id, 'cloudSearch');
+      } else {
+        $(this).addClass('selected');
+        filterData(id, 'cloudSearch');
       }
-    }
-    else if(id !== 'aws' && $(this).hasClass('active-button')){
+    } else if (id !== 'aws' && $(this).hasClass('active-button')) {
       $('.cloud-filter #aws').addClass('active-button');
       $(this).removeClass('active-button');
 
