@@ -125,6 +125,10 @@
    */
   function filterData(searchValue, type) {
 
+    // if(searchValue === 'azure') {
+    //   $('.guide-listing').addClass('#overlay');
+    // }
+
     $('#no-matches').hide();
 
     if (searchValue && searchValue.length > 0) {

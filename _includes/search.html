@@ -3,18 +3,19 @@
         <div class="col-xs-7 no-padding">
             <div class="input-group">
                 <div class="input-group-btn" >
-                    <div class="btn-group" role="group"> 
+                    <div class="btn-group" role="group">
                         <button type="button" class="btn btn-primary" >
                             <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                         </button>
                     </div>
-                </div><input id="search-box" type="text" class="form-control guides-input-box" placeholder="Search guides....">
+                </div>
+                <input id="search-box" type="text" class="form-control guides-input-box" placeholder="Search guides....">
             </div>
         </div>
-        <div class="col-xs-1 no-padding" id="tags-filter"> 
+        <div class="col-xs-1 no-padding" id="tags-filter">
             <button class="btn tags-filter" type="button" data-toggle="collapse" data-target="#filter-options" aria-expanded="false" aria-controls="filter-options">
                 Filter <i class="fa fa-caret-down" aria-hidden="true"></i>
-            </button>  
+            </button>
         </div>
     </div>
     <div class="row">
@@ -52,4 +53,7 @@
             </div>
         </div>
     </div>
+</div>
+<div id="no-azure-results">
+    {% include no-azure-results.html %}
 </div>
