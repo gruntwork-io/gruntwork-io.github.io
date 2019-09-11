@@ -919,10 +919,8 @@ body .guides .guides-section-white {
 }
 
 .searchrow {
-  margin-top: 15px;
+  margin-top: 20px;
   padding: 0;
-  display: flex;
-  justify-content: center;
   .input-group {
     width: 100%;
     padding-right: 19px;
@@ -979,8 +977,7 @@ body .guides .guides-section-white {
 .guides-input-box::placeholder               { .guides-input-placeholder;} 
 
 .cloud-filter {
-  display: flex;
-  justify-content: center;
+  .center();
   margin-bottom: 11px;
   .filter {
     width: 109px;
@@ -1037,13 +1034,8 @@ body .guides .guides-section-white {
 }
 
 .filter-options {
-  @media (max-width: @screen-md-min) {
-    margin-top: 10%;
-  }
   padding: 0;
-  display: flex;
-  justify-content: center;
-  margin: 10px;
+  margin: 16px;
   .card {
     padding: 30px 109px;
     border-radius: 8px;
@@ -1563,6 +1555,11 @@ body .guides .guides-section-white {
     background-color: #ef5a73; 
     border: 1px solid #ef5a73;
   }
+}
+
+.center {
+  display: flex;
+  justify-content: center;
 }
 
 // Sections that have a blue background

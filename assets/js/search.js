@@ -27,14 +27,14 @@
 
   function showItemsCount(totalCount, numSubmodules) {
     $('#search-results-count').show();
-    if (searchEntry.type == 'libraryEntries') {
+    if (searchEntry.type === 'libraryEntries') {
       if (totalCount > 0 && numSubmodules > 0) {
         $('#search-results-count').html("<strong>" + totalCount + "</strong> repos (~<strong>" + numSubmodules + "</strong> modules)");
       } else {
         $('#search-results-count').text("0 repos");
       }
     } else {
-      if (totalCount > 0 && numSubmodules == 0) {
+      if (totalCount > 0 && numSubmodules === 0) {
         $('#search-results-count').html("<strong>" + totalCount + "</strong> result(s) found");
       }
     }
@@ -44,7 +44,7 @@
     //A list of tags that should be in uppercase
     const upperCaseTags = ['aws', 'gke', 'gcp'];
 
-    if (searchEntry.type == 'guideEntries') {
+    if (searchEntry.type === 'guideEntries') {
 
       //Filters the tags from the array of objects and flattens it out since it returns an array of arrays
       let tags = searchEntry.entries.map(entry => entry.tags.split(',').map(tag => tag.trim())).reduce((a, b) => a.concat(b), []);
@@ -161,7 +161,9 @@
 
       }
       if (matches === 0) {
+        $('#search-results-count').hide();
         $('#no-matches').show();
+        return;
       }
 
       showItemsCount(matches, submoduleMatches);
@@ -211,7 +213,7 @@
   $('#js-search-library').on("keyup", searchData);
 
   /* Triggered on click of any cloud filtering buttons */
-  $('.cloud-filter .filter').click(function (event) {
+  $('.cloud-filter .filter').click(function () {
     const id = $(this).attr('id');
 
     if (id === 'aws') {
@@ -231,7 +233,7 @@
 
       showAllItems();
     } else {
-      $('.cloud-filter #aws').removeClass('active-button');
+      $(this).siblings().removeClass('active-button');
 
       $(this).addClass('active-button');
       filterData(id, 'cloudSearch');
