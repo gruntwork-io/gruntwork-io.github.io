@@ -1290,7 +1290,8 @@ body .guides .guides-section-white {
     color: @guides-font;
     cursor: pointer;
     min-height: 100px;
-    height: 100px;
+    overflow: hidden;
+    position: relative;
     & .card-title {
       margin-top: 0;
       margin-bottom: 2px;
@@ -1306,10 +1307,10 @@ body .guides .guides-section-white {
       padding: 16px 0;
     }
     & .img-inner {
-      position: relative;
-      display: table-cell;
-      top: 6px;
-      vertical-align: middle;
+      position: absolute;
+      top: 50%;
+      -ms-transform: translateY(-50%);
+      transform: translateY(-50%);
     }
     img {
       @media (max-width: @screen-xs-min) {
@@ -1347,6 +1348,8 @@ body .guides .guides-section-white {
     border-radius: 8px;
     transition: 0.2s all ease;
   }
+
+  .float-right{ float: right; }
 
   .card-shadow:hover {
     -webkit-box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.1);  /* Safari, Android, iOS */
