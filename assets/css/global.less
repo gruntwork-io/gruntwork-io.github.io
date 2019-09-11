@@ -1287,11 +1287,11 @@ body .guides .guides-section-white {
   }
   .card {
     color: @guides-font;
-    padding: 5px;
     cursor: pointer;
     min-height: 100px;
+    height: 100px;
     & .card-title {
-      margin-top: 15px;
+      margin-top: 0;
       margin-bottom: 2px;
       font-size: 20px;
       letter-spacing: 0.56px;
@@ -1301,14 +1301,35 @@ body .guides .guides-section-white {
         display: none;
       }
     }
+    & .card-body {
+      padding: 16px 0;
+    }
+    & .img-inner {
+      position: relative;
+      display: table-cell;
+      top: 6px;
+      vertical-align: middle;
+    }
     img {
       max-height: 100px;
+      max-width: 100%;
+      max-height: 100%;
+      display: block;
+      margin: auto auto;
+      padding: 15px;
+      height: 85px;
     }
     & p {
+      @media (max-width: @screen-xs-min) {
+        visibility: hidden;
+        clear: both;
+        display: none;
+      }
       font-size: 13px;
       font-weight: inherit;
       line-height: 1.5;
       letter-spacing: 0.34px;
+      margin: 0;
     }
     & h6, & h5, & h4, & h3, & h2, & a {
       color: @guides-font;
@@ -1321,12 +1342,16 @@ body .guides .guides-section-white {
     margin-bottom: 10px;
     border: solid 1px #dedede;
     border-radius: 8px;
+    transition: 0.2s all ease;
   }
 
   .card-shadow:hover {
-    -webkit-box-shadow: 0px 1px 6px 1px #ccc;  /* Safari, Android, iOS */
-    -moz-box-shadow:    0px 1px 6px 1px #ccc;  /* Firefox */
-    box-shadow:         0px 1px 6px 1px #ccc;
+    -webkit-box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.1);  /* Safari, Android, iOS */
+    -moz-box-shadow:    0 5px 20px 0 rgba(0, 0, 0, 0.1);  /* Firefox */
+    box-shadow:         0 5px 20px 0 rgba(0, 0, 0, 0.1);
+    border: none;
+    transform: scale(1.1);
+    margin: .5em 0;
   }
 }
 .no-results-space:after {
@@ -1466,8 +1491,8 @@ body .guides .guides-section-white {
 }
 
 .img-center {
-  max-width: 25%;
-  max-height: 25%;
+  max-width: 184px;
+  max-height: 184px;
   padding: 15px;
   display: block;
   margin: 0 auto;
@@ -1839,6 +1864,15 @@ body .guides .guides-section-white {
 
 .post-detail {
   padding-bottom: 5em;
+  h1 {
+    margin-top: -10px;
+    font-size: 35px;
+    line-height: normal;
+    letter-spacing: 0.98px;
+    text-align: center;
+    margin-bottom: auto;
+    color: @guides-font;
+  }
   .post-title {
     color: #000000;
     padding: 1em 2em 0 2em;
