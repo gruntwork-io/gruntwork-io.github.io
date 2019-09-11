@@ -963,7 +963,6 @@ body .guides .guides-section-white {
   outline: none !important;
 }
 
-
 .active-button {
   background-color: #fff !important;
   position: relative;
@@ -1015,21 +1014,25 @@ body .guides .guides-section-white {
   }
 }
 
-.tags-filter {
-  border-radius: 8px;
-  background: rgba(0, 185, 248, 0.2);
-  padding: 0 15px;
-  box-shadow: none;
-  border: none;
-  font-size: 18px;
-  font-weight: 600;
-  letter-spacing: 0.51px;
-  text-align: center;
-  color: @guides-primary-color;
-  &:hover, &:focus, &:active{
-    .no-transform;
-    background: rgba(0, 185, 248, 0.1);
+#tags-filter {
+  display: flex;
+  justify-content: flex-end;
+  button {
+    border-radius: 8px;
+    background: rgba(0, 185, 248, 0.2);
+    padding: 0 15px;
+    box-shadow: none;
+    border: none;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0.51px;
+    text-align: center;
     color: @guides-primary-color;
+    &:hover, &:focus, &:active{
+      .no-transform;
+      background: rgba(0, 185, 248, 0.1);
+      color: @guides-primary-color;
+    }
   }
 }
 
@@ -1042,25 +1045,98 @@ body .guides .guides-section-white {
   justify-content: center;
   margin: 10px;
   .card {
-    padding: 1em 4em;
+    padding: 30px 109px;
     border-radius: 8px;
     background-color: #f5f9fa;
+    min-height: 193px;
+    max-height: 193px;
     .tags {
       display: flex;
       flex-wrap: wrap;
-      flex-direction: row;
-    }
+      flex-direction: column;
+      max-height: 133px;
+    }    
     .checkbox {
-      color: black;
-      margin-right: 15px;
-      & input[type="checkbox"]{
-        opacity: 1;
-        width: 18px;
-        height: 18px;
+      padding-left: 20px;
+      position: relative;
+      display: block;
+      margin-bottom: 0;
+      input {
+        opacity: 0;
+        position: absolute;
+        z-index: 1;
+        cursor: pointer;
+        margin-left: -20px;
+        &:checked {
+          + label {
+            &::before {
+              border-color:@guides-primary-color;
+            }
+            &::after {
+              content: '';
+              display: inline-block;
+              position: absolute;
+              width: 13px;
+              height: 13px;
+              left: 2px;
+              top: 4px;
+              margin-left: -20px;
+              border: 1px solid @guides-primary-color;
+              border-radius: 2px;
+              background-color: @guides-primary-color;
+            }
+          }
+        }
+      }
+      label {
+        display: inline-block;
+        position: relative;
+        padding-left: 10px;
+        &::before {
+          content: '';
+          display: inline-block;
+          position: absolute;
+          width: 18px;
+          height: 18px;
+          border-radius: 2px;
+          background-color: #fff;
+        }
       }
     }
-    .checkbox+.checkbox {
+    .checkbox+.checkbox {	
       margin-top: 10px !important;
+    }
+    .checkbox {
+      input {
+        &:checked {
+          + label {
+            &::before {
+              background-color: @guides-primary-color;
+            }
+            &::after {
+              content: '';
+              position: absolute;
+              width: 10px;
+              height: 7px;
+              background: @guides-primary-color;
+              left: 4px;
+              border: 2px solid #fff;
+              border-top: none;
+              border-right: none;
+              -webkit-transform: rotate(-45deg);
+              -moz-transform: rotate(-45deg);
+              -o-transform: rotate(-45deg);
+              -ms-transform: rotate(-45deg);
+              transform: rotate(-45deg);
+            }
+          }
+        }
+      }
+      label {
+        &::before {
+          border-radius: 2px;
+        }
+      }
     }
     p {
       letter-spacing: -0.2px;
@@ -1077,12 +1153,12 @@ body .guides .guides-section-white {
       letter-spacing: -0.23px;
       color: #000000;
       text-transform: capitalize;
+      line-height: normal;
     }
   }
 }
 
 .guides-outline {
-  // margin-top: 30vh;
   padding: 0;
   a {
     color: #999999;
@@ -1415,25 +1491,79 @@ body .guides .guides-section-white {
   letter-spacing: 0.34px;
 }
 
-.admonitionblock  {
+.admonitionblock-content  {
+  position: relative;
+  padding: 19px;
   border-top: 9px solid @guides-primary-color;
   background-color: #f5f9fa;
-  font-size: 12px;
   text-align: center;
-  padding: 0 0 1px;
-  margin: 10px 0;
-  table tbody {
-    opacity: 1 !important;
-    & tr td:nth-child(even) {
-      background-color: #f5f9fa !important;
+  margin: 40px 0;
+  table {
+    text-align:center; 
+    margin-left:auto; 
+    margin-right:auto;
+    & tbody tr {
+      border-bottom: none !important;
+      & .icon .title {
+        margin-right: 20px;
+        line-height: 0;
+        position: relative;
+        font-size: 0;
+        text-align: center;
+        line-height: 10px;
+        &:after {
+          display: block;
+          position: absolute;
+          color: #fff;
+          content: "!";
+          border-radius: 50%;
+          width: 21px;
+          height: 21px;
+          line-height: 22px;
+          font-weight: normal;
+          left: 0;
+          font-size: 16px;
+          margin-top: -9px;
+        }
+      }
+      & td, td p {
+        text-align: initial;
+        font-size: 12px;
+        line-height: normal;
+        letter-spacing: 0.34px;
+        color: @guides-font;
+        .title {
+          margin-bottom: 12px;
+        }
+        code {
+          background: #e5ecee !important;
+          color: @guides-font;
+          font-family: AndaleMono;
+          font-weight: normal;
+        }
+        &:nth-child(even) {
+          background-color: inherit !important;
+        }  
+      }
     }
   }
 }
 
-// .admonitionblock .important {
+.admonitionblock.important, .admonitionblock.note{
+  .admonitionblock-content;
+  .title:after {
+    background-color: #06a6fd; 
+    border: 1px solid #06a6fd;
+  }
+}
 
-// }
-
+.admonitionblock.error{
+  .admonitionblock-content;
+  .title:after {
+    background-color: #ef5a73; 
+    border: 1px solid #ef5a73;
+  }
+}
 
 // Sections that have a blue background
 .section-hero-blue {
@@ -1722,13 +1852,21 @@ body .guides .guides-section-white {
   }
   .breadcrumb {
     font-size: 14px;
-    font-weight: bold;
     letter-spacing: -0.2px;
     background-color: white;
     > a {
       color: @guides-primary-color;
-      &:last-child, &:hover {
-        text-decoration: underline;
+      &:last-child span {
+        border-bottom: 1px solid @guides-primary-color;
+        text-shadow: 0.5px 0 0;
+      }
+      &:last-child span:hover,
+      &:first-child:hover,
+      &:first-child:active, 
+      & span:hover,
+      & span:active {
+        border-bottom: 2px solid @guides-primary-color;
+        text-shadow: 0.5px 0 0;
       }
     }
   }
