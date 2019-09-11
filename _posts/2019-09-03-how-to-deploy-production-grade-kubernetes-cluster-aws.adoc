@@ -368,15 +368,21 @@ Amazon Elastic Kubernetes Service::
 [[production_grade_design]]
 == Production-grade design
 
-TODO
+With all the core concepts out of the way, let's now discuss how to configure a production-grade Kubernetes cluster
+that looks something like this:
+
+.EKS architecture
+image::../assets/img/guides/eks/eks-architecture.png[]
 
 === Use EKS
 
-TODO
+We recommend using https://aws.amazon.com/eks/[Amazon EKS] to run the Kubernetes cluster. 
 
 === VPC tags
 
 TODO
+
+https://github.com/gruntwork-io/terraform-aws-eks/tree/master/modules/eks-vpc-tags
 
 === Control plane and core services
 
@@ -393,9 +399,17 @@ TODO
 - Web UI
 - Vulernabilities
 
+=== Authenticate
+
+TODO
+
+https://github.com/gruntwork-io/terraform-aws-eks/#how-do-i-authenticate-kubectl-to-the-eks-cluster
+
 === IAM role mapping and RBAC
 
 TODO
+
+https://github.com/gruntwork-io/terraform-aws-eks/tree/master/modules/eks-k8s-role-mapping
 
 === TLS
 
@@ -405,9 +419,32 @@ TODO
 
 TODO
 
+=== Ingress
+
+TODO
+
+https://github.com/gruntwork-io/terraform-aws-eks/tree/master/modules/eks-alb-ingress-controller-iam-policy
+https://github.com/gruntwork-io/terraform-aws-eks/tree/master/modules/eks-alb-ingress-controller
+
 === External DNS
 
 TODO
+
+https://github.com/gruntwork-io/terraform-aws-eks/tree/master/modules/eks-k8s-external-dns-iam-policy
+https://github.com/gruntwork-io/terraform-aws-eks/tree/master/modules/eks-k8s-external-dns
+
+=== Logging
+
+TODO
+
+https://github.com/gruntwork-io/terraform-aws-eks/tree/master/modules/eks-cluster-control-plane#control-plane-logging
+https://github.com/gruntwork-io/terraform-aws-eks/tree/master/modules/eks-cloudwatch-container-logs
+
+=== Rolling out updates
+
+TODO
+
+https://github.com/gruntwork-io/terraform-aws-eks/tree/master/modules/eks-cluster-workers#how-do-i-roll-out-an-update-to-the-instances
 
 [[deployment_walkthrough]]
 == Deployment walkthrough
