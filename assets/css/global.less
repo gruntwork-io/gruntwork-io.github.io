@@ -895,6 +895,11 @@ body .guides .guides-section-white {
   color: #0000;
 }
 
+.remove-visibility {
+  display: none;
+  clear: both;
+}
+
 .guides .section-hero {
   &:extend(.section-bg-blue);
   background: url('../img/bg-header-squares.png') center bottom no-repeat, linear-gradient(@brand-primary, #06A2FF);
@@ -1172,9 +1177,7 @@ body .guides .guides-section-white {
   .guides-outline;
   .section-nav, .sectlevel1 {
     @media (max-width: @screen-sm-min) {
-      visibility: hidden;
-      clear: both;
-      display: none;
+      .remove-visibility();
     }
     display: block;
     z-index: 2;
@@ -1225,9 +1228,7 @@ body .guides .guides-section-white {
   margin-top: 15em;
   margin-bottom: 2em;
   @media (max-width: @screen-md-min) {
-    visibility: hidden;
-    clear: both;
-    display: none;
+    .remove-visibility();
   }
   ul {
     list-style: none;
@@ -1311,6 +1312,9 @@ body .guides .guides-section-white {
       vertical-align: middle;
     }
     img {
+      @media (max-width: @screen-xs-min) {
+        .remove-visibility();
+      }
       max-height: 100px;
       max-width: 100%;
       max-height: 100%;
@@ -1321,9 +1325,8 @@ body .guides .guides-section-white {
     }
     & p {
       @media (max-width: @screen-xs-min) {
-        visibility: hidden;
-        clear: both;
-        display: none;
+        font-size: 18px;
+        .remove-visibility();
       }
       font-size: 13px;
       font-weight: inherit;
@@ -1440,9 +1443,7 @@ body .guides .guides-section-white {
 
 .guides-cta-card {
   @media (max-width: @screen-md-min) {
-    visibility: hidden;
-    clear: both;
-    display: none;
+    .remove-visibility();
   }
   background-color: white;
   color: black;
