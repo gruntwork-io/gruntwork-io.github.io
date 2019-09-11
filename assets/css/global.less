@@ -1850,6 +1850,12 @@ body .guides .guides-section-white {
       letter-spacing: 0.39px;
     }
   }
+  .imageblock > .title {
+      font-size: 12px;
+      margin: 5px 0 15px 0;
+      color: rgba(0, 0, 0, 0.54);
+      text-align: center;
+  } 
   .breadcrumb {
     font-size: 14px;
     letter-spacing: -0.2px;
@@ -1898,6 +1904,7 @@ body .guides .guides-section-white {
   }
 }
 
+
 // Post Detail styles
 .post-content {
   padding: 0 2em;
@@ -1914,10 +1921,11 @@ body .guides .guides-section-white {
   }
   img {
     max-width: 100%;
-    padding: 15px;
+    padding-top: 10px;
     display: block;
     margin: 0 auto;
   }
+ 
   pre, pre[class*="language-"] {
     padding: 0px;
     background: aliceblue;
@@ -1947,18 +1955,23 @@ body .guides .guides-section-white {
     thead {
       font-weight: 600;
       th {
-        text-decoration: underline;
-        text-decoration-style: dashed;
-        text-underline-position: under;
-        text-decoration-color: @guides-primary-color;
+        padding: 7px 0;
       }
     }
     tbody{
       background-color: #f5f9fa;
-      tr td {
+      tr {
+        border-bottom: 15px solid #fff;
+        td {
         padding: 5px;
-        &:nth-child(even) {background-color: #ffff !important;}
+        p {
+          font-size: 12px;
+          letter-spacing: 0.34px;
+          padding: 10px;
+        }
+        &:nth-child(even) {background-color: #fafcfc;}
       }
+    }
     }
   }
 }
