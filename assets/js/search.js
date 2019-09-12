@@ -36,6 +36,7 @@
       } else {
         $('#search-results-count').text("0 repos");
       }
+    } else {
       if (totalCount > 0 && numSubmodules === 0) {
         $('#search-results-count').html("<strong>" + totalCount + "</strong> post(s) found");
       }
@@ -71,9 +72,10 @@
    * Function to display all items on the page
    */
   function showAllItems() {
-    // $('#search-results-count').hide();
+    $('#search-results-count').show();
     $('.guide-card').show();
     $('.category-head').show();
+    $('.categories ul li').show();
   }
 
   /**
@@ -131,13 +133,16 @@
    * @type {Function}
    */
   function displayCategory(entry) {
-    $('.category-head').each(function () {
-       let category = $(this).text().toLowerCase();
-      if(entry.category === category){
+    let categoryArr = $.merge($('.category-head'), $('.categories ul li'));
+    categoryArr.each(function () {
+      let category = $(this).text().toLowerCase();
+      if (entry.category === category) {
+        $(`.categories ul #${category}`).show();
         $(`#${category}-1.category-head`).show();
       }
     });
   }
+
 
   /**
    * A function to search the IaC Lib and Deployment guides. Can also be used for other pages that need it.
@@ -157,7 +162,9 @@
       if (searchEntry.type == 'libraryEntries') {
         $('.table-clickable-row').hide();
       } else if (searchEntry.type == 'guideEntries') {
-        $('.guide-card').hide() && $('.category-head').hide();// elements with .category-head not hidding not sure why
+        $('.guide-card').hide() &&
+          $('.category-head').hide() &&
+          $('.categories ul li').hide();
       }
 
       let entries = searchEntry.entries;
@@ -170,7 +177,7 @@
         let matchesAll = true;
 
         searchQueries.map(searchQuery => {
-          switch(true) {
+          switch (true) {
             case searchEntry.type === 'libraryEntries':
               searchContent = entry.text;
               break;
@@ -186,7 +193,7 @@
             default:
               "Not Valid"
           }
-          
+
           if (searchContent.indexOf(searchQuery) < 0) {
             matchesAll = false;
           }
@@ -260,29 +267,16 @@
   $('.cloud-filter .filter').click(function () {
     const id = $(this).attr('id');
 
-    if (id === 'aws') {
-      $(this).siblings().removeClass('active-button');
-      $(this).addClass('active-button');
-
-      if ($(this).hasClass('selected')) {
-        $(this).removeClass('selected');
-        showAllItems();
-      } else {
-        $(this).addClass('selected');
-        filterData(id, 'cloudSearch');
-      }
-    } else if (id !== 'aws' && $(this).hasClass('active-button')) {
-      $('.cloud-filter #aws').addClass('active-button');
-      $(this).removeClass('active-button');
-
+    if ($(this).hasClass('selected') && $(this).hasClass('active-button')) {
       showAllItems();
     } else {
-      $(this).siblings().removeClass('active-button');
-
       $(this).addClass('active-button');
+      $(this).addClass('selected');
+      $(this).siblings().removeClass('active-button');
       filterData(id, 'cloudSearch');
     }
   });
+
 
   /* Search box on guides page */
   $('#search-box').on("keyup", searchData);
