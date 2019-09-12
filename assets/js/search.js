@@ -218,6 +218,8 @@
 
     if ($(this).hasClass('initialSelect') && $(this).hasClass('active-button') ) {
       $(this).removeClass('initialSelect');
+      $(this).removeClass('active-button');
+      $('#no-matches').hide();
       showAllItems();
     } else {
       $(this).addClass('active-button');
