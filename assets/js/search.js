@@ -216,11 +216,12 @@
   $('.cloud-filter .filter').click(function () {
     const id = $(this).attr('id');
 
-    if ($(this).hasClass('selected') && $(this).hasClass('active-button')) {
-          showAllItems();
+    if ($(this).hasClass('initialSelect') && $(this).hasClass('active-button') ) {
+      $(this).removeClass('initialSelect');
+      showAllItems();
     } else {
       $(this).addClass('active-button');
-      $(this).addClass('selected');
+      $(this).addClass('initialSelect');
       $(this).siblings().removeClass('active-button');
       filterData(id, 'cloudSearch');
     }
