@@ -744,8 +744,10 @@ NetworkPolicy::
 [[deployment_walkthrough]]
 == Deployment walkthrough
 
-Let's now walk through how to deploy a production-grade Kubernetes cluster, fully defined and managed as code, using
-the Gruntwork Service Catalog.
+// TODO: do we have existing code with a sane PodSecurityPolicy and NetworkPolicy?
+
+Let's now walk through how to deploy a production-grade Kubernetes cluster in AWS, fully defined and managed as code,
+using the Gruntwork Service Catalog.
 
 [[pre_requisites]]
 === Pre-requisites
@@ -773,30 +775,67 @@ AWS accounts::
   https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[A Comprehensive Guide to Authenticating to AWS on the Command Line]
   for instructions.
 
-=== Do stuff
+=== Deploy the VPC
 
 TODO
 
-For more information on setting up IAM users, IAM groups, and IAM roles, see
-link:../foundations/how-to-configure-production-grade-aws-account-structure[How to configure a production-grade AWS account structure].
+- Point to guide for VPC itself
+- Add tags
+- Add VPC forwarding
 
+=== Deploy the control plane
+
+TODO
+
+- eks-cluster-control-plane
+- enable logging
+- https://github.com/gruntwork-io/terraform-aws-eks/tree/master/modules/eks-cluster-control-plane#control-plane-logging
+
+=== Deploy the worker nodes
+
+TODO
+
+- Create worker node AMI
+- Use eks-cluster-workers to deploy ASG
+- Configure User Data
+- Rolling out updates: Deploying the worker nodes initially is not enough; you also need a strategy for updating the worker nodes, without
+  downtime, when there are new versions of Kubernetes, new AMIs, and so on. AWS does not https://github.com/gruntwork-io/kubergrunt#deploy
+
+=== Configure role mapping
+
+TODO
+
+- k8s provider
+- eks-k8s-role-mapping
+- For more information on setting up IAM users, IAM groups, and IAM roles, see
+  link:../foundations/how-to-configure-production-grade-aws-account-structure[How to configure a production-grade AWS account structure].
+
+=== Core services
+
+- ingress controller
+- ingress controller IAM permissions
 . Install the https://github.com/kubernetes-sigs/aws-alb-ingress-controller[aws-alb-ingress-controller].
 . Any services you deploy that need to work with the ingress controller will have to set their type to `NodePort`.
 . Update the worker node security group to allow inbound requests from the ALB.
 . Configure the ingress controller with a minimal set of
 https://kubernetes-sigs.github.io/aws-alb-ingress-controller/guide/controller/config/#aws-api-access[IAM permissions].
+- external DNS
+- external DNS IAM permissions
+- https://github.com/gruntwork-io/terraform-aws-eks/tree/master/modules/eks-k8s-external-dns-iam-policy
+- https://github.com/gruntwork-io/terraform-aws-eks/tree/master/modules/eks-k8s-external-dns
+- worker node logging
+- https://github.com/gruntwork-io/terraform-aws-eks/tree/master/modules/eks-cloudwatch-container-logs
 
-https://github.com/gruntwork-io/terraform-aws-eks/tree/master/modules/eks-k8s-external-dns-iam-policy
-https://github.com/gruntwork-io/terraform-aws-eks/tree/master/modules/eks-k8s-external-dns
+=== Try out the cluster
 
-https://github.com/gruntwork-io/terraform-aws-eks/tree/master/modules/eks-cluster-control-plane#control-plane-logging
-https://github.com/gruntwork-io/terraform-aws-eks/tree/master/modules/eks-cloudwatch-container-logs
+TODO
 
-Rolling out updates::
-Deploying the worker nodes initially is not enough; you also need a strategy for updating the worker nodes, without
-downtime, when there are new versions of Kubernetes, new AMIs, and so on. AWS does not https://github.com/gruntwork-io/kubergrunt#deploy
+- Use kubectl
 
 [[next_steps]]
 == Next steps
 
 TODO
+
+- Deploy services in your cluster!
+- Deploy DB
