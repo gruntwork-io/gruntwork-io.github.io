@@ -232,7 +232,7 @@ https://kubernetes.io/docs/concepts/workloads/controllers/deployment/[Deployment
 === kubectl
 
 https://kubernetes.io/docs/reference/kubectl/overview/[kubectl] is the official command-line interface (CLI) for
-working with Kubernetes. For example, to deploy a the https://hub.docker.com/r/training/webapp[training/webapp] Docker
+working with Kubernetes. For example, to deploy the https://hub.docker.com/r/training/webapp[training/webapp] Docker
 container (a simple "Hello, World" webapp) and have it listen on port 5000, you could run:
 
 ----
@@ -290,6 +290,71 @@ backend, you could configure a service called `backend` in front of the Java pod
 talk to the backend by sending requests to `backend.<NAMESPACE>.svc.cluster.local`, where `<NAMESPACE>` is the name of
 your Kubernetes namespace.
 
+=== LoadBalancer and ingress
+
+Depending on the networking plugin you use with Kubernetes, your pods are most likely accessible to other pods within
+the Kubernetes cluster, but they are not accessible to the outside world. If you need to expose your pods to the public
+Internet (e.g., for a user-facing service), the two most common ways to do it in Kubernetes are:
+
+LoadBalancer::
+  When defining a service in Kubernetes, you can set the type to
+  _https://kubernetes.io/docs/concepts/services-networking/#loadbalancer[LoadBalancer]_, and Kubernetes will spin up
+  a load balancer that listens on a specified port and distributes all traffic on that port across your pods.
++
+[source,yaml]
+----
+apiVersion: v1
+kind: Service
+metadata:
+  name: example
+spec:
+  # Route all traffic on port 80 to port 8080 of the example app
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 8080
+  selector:
+    app: example
+----
++
+Under the hood, this is implemented using different add-ons in different types of Kubernetes clusters: e.g., GKE uses a
+https://cloud.google.com/load-balancing/docs/network/[GCP Network Load Balancer], whereas EKS can use either a
+https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/introduction.html[Classic Load Balancer] or
+https://docs.aws.amazon.com/elasticloadbalancing/latest/network/introduction.html[Network Load Balancer] (see
+https://docs.aws.amazon.com/eks/latest/userguide/load-balancing.html[EKS Load Balancing] for details). The advantage
+of using a LoadBalancer is that it works with all traffic, regardless of protocol (e.g., HTTP, TCP, UDP, etc); the
+disadvantage is that it offers no other configuration (e.g., no filtering or routing) and spins up a separate load
+balancer with a separate IP or domain name for every service (which can be pricey and harder to manage).
+
+Ingress controller::
+  Another way to expose your pods is to create a standalone resource called an
+  _https://kubernetes.io/docs/concepts/services-networking/ingress[ingress controller]_:
++
+[source,yaml]
+----
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: example
+spec:
+  rules:
+  - http:
+      paths:
+      # Route the /example URL to the example service on port 80
+      - path: /example
+        backend:
+          serviceName: example
+          servicePort: 80
+----
++
+Under the hood, ingress controllers are also implemented using different add-ons in different types of Kubernetes
+clusters: for example, in GCP, the ingress controller in GKE uses the
+https://cloud.google.com/load-balancing/docs/https/[Cloud Load Balancer], whereas in AWS, you can use
+https://github.com/kubernetes-sigs/aws-alb-ingress-controller[aws-alb-ingress-controller] to spin up an
+https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html[Application Load Balancer (ALB)].
+The advantage of an ingress controller is that you can share one load balancer across many services and take advantage
+of higher-level features, such as path-based routing and SSL termination.
+
 === Configuration and secrets
 
 To allow you to use the same container in different environments with different settings (e.g., dev, stage, prod), you
@@ -336,6 +401,13 @@ _https://kubernetes.io/docs/reference/access-authn-authz/rbac/[role-based access
 roles with access to specific Kubernetes APIs (e.g., the ability to call `GET` on the secrets API in a specific
 namespace), and associate those roles with the specific user and service accounts that should have those permissions.
 
+=== kubeconfig
+
+To be able to authenticate to different EKS clusters or as different users, you can create one or more `kubectl`
+configuration files, which are typically called _kubeconfig files_ (note, the files do not actually need to be called
+`kubeconfig`). In a kubeconfig file, you can define one or more _contexts_, where each context specifies a cluster to
+connect to and a user to use for authentication. You can then use the `kubectl config use-context` command to quickly
+switch between contexts—and therefore, different clusters and users.
 
 === Options for running Kubernetes in AWS
 
@@ -385,16 +457,32 @@ most likely be eclipsed very quickly by future EKS releases.
 === VPC configuration
 
 EKS relies on an a _https://aws.amazon.com/vpc/[Virtual Private Cloud (VPC)]_ to provide the basic network topology and
-to manage communication across the nodes. Follow the instructions in
-link:../networking/how-to-configure-production-grade-vpc-aws[How to deploy a production-grade VPC on AWS] to create
-a VPC for EKS that looks like this:
+to manage communication across the nodes. We recommend that you do the following:
 
+Set up a custom VPC::
+  Follow the instructions in
+  link:../networking/how-to-configure-production-grade-vpc-aws[How to deploy a production-grade VPC on AWS] to create
+  a VPC for EKS that looks like this:
++
 .A production-grade VPC setup
 image::../assets/img/guides/vpc/vpc-diagram.png[]
 
-EKS also relies on special tags on the VPC and subnets to know which VPC resources to use for deploying infrastructure.
-For example, EKS needs to know to use the public subnet for the load balancers associated with a Service resource. See
-https://docs.aws.amazon.com/eks/latest/userguide/network_reqs.html[Cluster VPC Considerations] for more information.
+Add tags to the VPC and subnets::
+  EKS also relies on special tags on the VPC and subnets to know which VPC resources to use for deploying
+  infrastructure. For example, EKS needs to know to use the public subnet for the load balancers associated with a
+  Service resource. See https://docs.aws.amazon.com/eks/latest/userguide/network_reqs.html[Cluster VPC Considerations]
+  for more information.
+
+Configure DNS forwarding::
+  EKS supports private API endpoints so that the Kubernetes API Server can only be accessed within the VPC. The
+  hostname for this internal endpoint lives in a
+  https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/hosted-zones-private.html[Route 53 private hosted zone],
+  which works fine if you're trying to access it from within the VPC, but does not work (by default) if you try to
+  access it over a VPC peering connection. For example, if you had Kubernetes in an application VPC, and DevOps tooling
+  (e.g., and OpenVPN server or a Jenkins server) in a peered management VPC, by default, that management tooling would
+  not be able to talk to this private endpoint. To fix this issue, configure DNS forwarding by creating a
+  https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resolver-getting-started.html[Route 53 Resolver] and make
+  sure that remote VPC DNS resolution is enabled on both accepter and requester side of the connection peering.
 
 === Control plane
 
@@ -454,6 +542,12 @@ Tags::
   EKS requires that all worker node EC2 instances have a tag with the key `kubernetes.io/cluster/<CLUSTER_NAME>` and
   value `owned`.
 
+Subnets::
+  We strongly recommend running the Auto Scaling Group for your worker nodes in private subnets that are NOT directly
+  accessible from the public Internet. See
+  link:../networking/how-to-configure-production-grade-vpc-aws[How to deploy a production-grade VPC on AWS] for more
+  info.
+
 AMI::
   Each worker node will need Docker, kubelet,
   https://github.com/kubernetes-sigs/aws-iam-authenticator[AWS IAM Authenticator], and a
@@ -482,65 +576,170 @@ Security group::
   https://docs.aws.amazon.com/eks/latest/userguide/sec-group-reqs.html[Cluster Security Group Considerations] for the
   ports you should open up between them.
 
-=== Lock down access
-
-TODO
-
-- Web UI
-- Vulernabilities
+Server hardening::
+  There are a number of server-hardening best techniques that you should apply to each worker node. This includes
+  a secure base image (e.g., CIS hardened images), intrusion prevention (e.g., `fail2ban`), file integrity monitoring
+  (e.g., Tripwire), anti-virus (e.g., Sophos), automatically installing critical security updates (e.g.,
+  `unattended-upgrades` for Ubuntu), locking down EC2 metadata (e.g., `ip-lockdown`), and so on.
 
 === Authenticate
 
-TODO
+The standard way to interact with a Kubernetes cluster is to use `kubectl`. However, in order to use `kubectl` to
+access your EKS cluster, you need to first authenticate it to the cluster. EKS manages authentication to Kubernetes
+based on AWS IAM, which is not natively supported by `kubectl`. Therefore, before using `kubectl`, you have to use one
+of the following utilities to authenticate:
 
-https://github.com/gruntwork-io/terraform-aws-eks/#how-do-i-authenticate-kubectl-to-the-eks-cluster
+https://aws.amazon.com/cli/[AWS CLI]::
+  AWS now has first-class support for authenticating to EKS built directly into the `aws` CLI (minimum version:
+  `1.16.232`). See https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html[Installing the AWS CLI] for
+  setup instructions. To use it, you fist run the `update-kubeconfig` command:
++
+----
+aws eks update-kubeconfig --region <AWS_REGION> --name <EKS_CLUSTER_NAME>
+----
++
+This will update your kubeconfig so that `kubectl` will automatically call `aws eks get-token` for authentication; the
+`aws eks get-token` command will, in turn, use the standard
+https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[AWS CLI mechanisms to authenticate to AWS]:
+i.e., the credentials file at `~/.aws/credentials`, environment variables, etc. That means that can now start running
+your standard `kubectl` commands:
++
+----
+kubectl get nodes
+----
+
+https://github.com/gruntwork-io/kubergrunt[kubergrunt]::
+  A CLI tool maintained by Gruntwork that supports authentication to EKS, as well as several other important utilities,
+  such as tools for managing TLS certificates in Kubernetes. The easiest way to install it is to
+  use one of the pre-built binaries from the
+  https://github.com/gruntwork-io/kubergrunt/releases[kubergrunt releases] page. The usage is very similar to the AWS
+  CLI. You first run `kubergrunt eks configure`:
++
+----
+kubergrunt eks configure --eks-cluster-arn <EKS_CLUSTER_ARN>
+----
++
+This will update your kubeconfig to use `kubergrunt eks token` for authentication, which means you can now start
+running your normal `kubectl` commands:
++
+----
+kubectl get nodes
+----
+
+https://github.com/kubernetes-sigs/aws-iam-authenticator[AWS IAM Authenticator for Kubernetes]::
+  A CLI tool maintained by the Heptio and Amazon EKS teams. This was the main tool AWS recommended for authenticating
+  to EKS until first-class support was added directly to the AWS CLI. At this point, there is no reason to install
+  this tool separately, so we are just recording this here for historical reasons.
 
 === IAM role mapping and RBAC
 
-TODO
+You've seen that to determine _who_ the user is (authentication), EKS uses IAM. The next step is to determine _what_
+the user can do (authorization). Kubernetes uses its own roles and RBAC for authorization, so the question is, how does
+EKS know which IAM entities (that is, IAM users or roles) are associated with which Kubernetes roles?
 
-https://github.com/gruntwork-io/terraform-aws-eks/tree/master/modules/eks-k8s-role-mapping
+The answer is that EKS expects you to define a ConfigMap called `aws-auth` that defines the mapping from IAM entities
+to Kubernetes roles. When you first provision an EKS cluster, the IAM user or role that you used to authenticate is
+automatically granted admin level permissions (the `system:master` role). You can use this role to add additional role
+mappings in the `aws-auth` ConfigMap.
 
-=== TLS
+Here's an example `aws-auth` ConfigMap:
 
-TODO
+[source,yaml]
+----
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aws-auth
+  namespace: kube-system
+data:
+  mapRoles: |
+    - rolearn: arn:aws:iam::11122223333:role/example-role
+      username: system:node:{{EC2PrivateDNSName}}
+      groups:
+        - system:bootstrappers
+        - system:nodes
+  mapUsers: |
+    - userarn: arn:aws:iam::11122223333:user/example-user
+      username: designated_user
+      groups:
+        - system:masters
+----
 
-=== Secure pods
+This ConfigMap tells EKS that anyone who authenticates as the IAM role called `example-role` should automatically get
+the permissions in the `system:bootstrappers` and `system:nodes` Kubernetes roles, and anyone who authenticates with as
+the IAM user `example-user` should automatically get the permissions in the `system:masters` Kubernetes role.
 
-PodSecurityPolicy
-NetworkPolicy
+Note that, as of September, 2019, the `aws-auth` ConfigMap supports mapping IAM roles and IAM users, but not IAM groups
+(see https://docs.aws.amazon.com/en_pv/eks/latest/userguide/add-user-role.html[Managing Users or IAM Roles for your EKS Cluster]).
+Mapping every individual user in your organization is most likely difficult to manage, so we instead recommend creating
+IAM roles, mapping those IAM roles to Kubernetes roles in `aws-auth`, and allowing IAM users in specific IAM groups to
+assume those roles.
 
-=== Kubergrunt
+=== LoadBalancer and ingress
 
-TODO
+EKS has https://docs.aws.amazon.com/eks/latest/userguide/load-balancing.html[built-in support for the LoadBalancer]
+service type. It uses the Classic Load Balancer by default; if you wish to use the Network Load Balancer instead, you
+need to add the following annotation to your service:
 
-=== Ingress
+[source,yaml]
+----
+service.beta.kubernetes.io/aws-load-balancer-type: nlb
+----
 
-TODO
-
-https://github.com/gruntwork-io/terraform-aws-eks/tree/master/modules/eks-alb-ingress-controller-iam-policy
-https://github.com/gruntwork-io/terraform-aws-eks/tree/master/modules/eks-alb-ingress-controller
+For most HTTP/HTTPS use cases, you'll instead want to use an ingress controller, to take advantage of SSL termination
+and path-based routing. To support this, you will need to install and configure the
+https://github.com/kubernetes-sigs/aws-alb-ingress-controller[aws-alb-ingress-controller].
 
 === External DNS
 
-TODO
+If you're using the ingress controller, then Kubernetes will automatically spin up an ALB for you in AWS. How, then, do
+you configure DNS settings for that ALB? Normally, we recommend using Terraform to configure DNS entries (e.g., using
+the https://www.terraform.io/docs/providers/aws/r/route53_record.html[aws_route53_record resource]), but what do you do
+when the ALB is deployed (asynchronously) by Kubernetes?
 
-DNS forwarding?
-https://github.com/gruntwork-io/terraform-aws-eks/tree/master/modules/eks-k8s-external-dns-iam-policy
-https://github.com/gruntwork-io/terraform-aws-eks/tree/master/modules/eks-k8s-external-dns
+We recommend solving this by using installing the https://github.com/kubernetes-incubator/external-dns[external-dns]
+add-on, which will:
+
+. Automatically find hostnames you've defined in your ingress configurations.
+. Wait for the ingress controller to finish deploying (e.g., wait for the ALB to deploy).
+. Create DNS entries for those hostnames in your chose DNS provider (e.g., in Route 53, Google Cloud DNS, CloudFlare,
+  etc)
+
+Note that external-dns will only add DNS entries to existing domains; it's up to you to register the domains (e.g.,
+in Route 53, GoDaddy, etc) as you normally do.
 
 === Logging
 
-TODO
+We recommend enabling the following logging to help with debugging and troubleshooting:
 
-https://github.com/gruntwork-io/terraform-aws-eks/tree/master/modules/eks-cluster-control-plane#control-plane-logging
-https://github.com/gruntwork-io/terraform-aws-eks/tree/master/modules/eks-cloudwatch-container-logs
+Control plane logging::
+  Enable all https://docs.aws.amazon.com/eks/latest/userguide/control-plane-logs.html[control plane logging] in EKS,
+  including API server logs, audit logs, authenticator logs, controller manager logs, and scheduler logs. This will
+  allow you to see all the logs in CloudWatch..
 
-=== Rolling out updates
+Worker node logging::
+  We recommend installing https://github.com/helm/charts/tree/master/incubator/fluentd-cloudwatch[fluentd-cloudwatch]
+  in the EKS cluster. This will run https://www.fluentd.org/[fluentd] on each worker node and configure it to send all
+  the logs from the worker nodes (including all the pods on them) to CloudWatch.
 
-TODO
+=== Protecting pods
 
-https://github.com/gruntwork-io/terraform-aws-eks/tree/master/modules/eks-cluster-workers#how-do-i-roll-out-an-update-to-the-instances
+There are several policies you may want to enable to protect the pods in your cluster:
+
+PodSecurityPolicy::
+  You can use a _https://kubernetes.io/docs/concepts/policy/pod-security-policy/[PodSecurityPolicy]_ to define what
+  security-related features users can or can’t use in their pods. For example, you can specify if pods can run
+  `privileged` containers, which ports a container can bind to, which kernel capabilities can be added to a container,
+  what user IDs a container can run as, and so on. Follow the
+  https://en.wikipedia.org/wiki/Principle_of_least_privilege[principle of least privilege] and provide pods with as few
+  permissions as possible. You can also use RBAC to assign a different PodSecurityPolicy to different users or roles
+  (e.g., give admins a less restrictive PodSecurityPolicy than other users).
+
+NetworkPolicy::
+  You can use a _https://kubernetes.io/docs/concepts/services-networking/network-policies/[NetworkPolicy]_ to define
+  the inbound and outbound networking rules for your pods. We recommend adding a default NetworkPolicy that denies all
+  inbound and outbound traffic (again, principle of least privilege) and then adding a NetworkPolicy for each pod that
+  gives it permissions to talk solely to the other pods it should be able to access.
 
 [[deployment_walkthrough]]
 == Deployment walkthrough
@@ -573,6 +772,29 @@ AWS accounts::
   these accounts on the CLI: check out
   https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[A Comprehensive Guide to Authenticating to AWS on the Command Line]
   for instructions.
+
+=== Do stuff
+
+TODO
+
+For more information on setting up IAM users, IAM groups, and IAM roles, see
+link:../foundations/how-to-configure-production-grade-aws-account-structure[How to configure a production-grade AWS account structure].
+
+. Install the https://github.com/kubernetes-sigs/aws-alb-ingress-controller[aws-alb-ingress-controller].
+. Any services you deploy that need to work with the ingress controller will have to set their type to `NodePort`.
+. Update the worker node security group to allow inbound requests from the ALB.
+. Configure the ingress controller with a minimal set of
+https://kubernetes-sigs.github.io/aws-alb-ingress-controller/guide/controller/config/#aws-api-access[IAM permissions].
+
+https://github.com/gruntwork-io/terraform-aws-eks/tree/master/modules/eks-k8s-external-dns-iam-policy
+https://github.com/gruntwork-io/terraform-aws-eks/tree/master/modules/eks-k8s-external-dns
+
+https://github.com/gruntwork-io/terraform-aws-eks/tree/master/modules/eks-cluster-control-plane#control-plane-logging
+https://github.com/gruntwork-io/terraform-aws-eks/tree/master/modules/eks-cloudwatch-container-logs
+
+Rolling out updates::
+Deploying the worker nodes initially is not enough; you also need a strategy for updating the worker nodes, without
+downtime, when there are new versions of Kubernetes, new AMIs, and so on. AWS does not https://github.com/gruntwork-io/kubergrunt#deploy
 
 [[next_steps]]
 == Next steps
