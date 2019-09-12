@@ -457,15 +457,9 @@ most likely be eclipsed very quickly by future EKS releases.
 === VPC configuration
 
 EKS relies on an a _https://aws.amazon.com/vpc/[Virtual Private Cloud (VPC)]_ to provide the basic network topology and
-to manage communication across the nodes. We recommend that you do the following:
-
-Set up a custom VPC::
-  Follow the instructions in
-  link:../networking/how-to-configure-production-grade-vpc-aws[How to deploy a production-grade VPC on AWS] to create
-  a VPC for EKS that looks like this:
-+
-.A production-grade VPC setup
-image::../assets/img/guides/vpc/vpc-diagram.png[]
+to manage communication across the nodes (see
+link:../networking/how-to-configure-production-grade-vpc-aws[How to deploy a production-grade VPC on AWS] for more
+information on VPCs). Here are the key VPC considerations for your EKS cluster:
 
 Add tags to the VPC and subnets::
   EKS also relies on special tags on the VPC and subnets to know which VPC resources to use for deploying
@@ -713,9 +707,9 @@ in Route 53, GoDaddy, etc) as you normally do.
 We recommend enabling the following logging to help with debugging and troubleshooting:
 
 Control plane logging::
-  Enable all https://docs.aws.amazon.com/eks/latest/userguide/control-plane-logs.html[control plane logging] in EKS,
-  including API server logs, audit logs, authenticator logs, controller manager logs, and scheduler logs. This will
-  allow you to see all the logs in CloudWatch..
+  We recommend enabling https://docs.aws.amazon.com/eks/latest/userguide/control-plane-logs.html[control plane logging]
+  in EKS, at least for the API server logs, audit logs, and authenticator logs, as these are critical for debugging and
+  auditing. You may wish to enable controller manager and scheduler logs too.
 
 Worker node logging::
   We recommend installing https://github.com/helm/charts/tree/master/incubator/fluentd-cloudwatch[fluentd-cloudwatch]
@@ -777,29 +771,593 @@ AWS accounts::
 
 === Deploy the VPC
 
+NOTE: This guide will use https://github.com/gruntwork-io/terragrunt[Terragrunt] and its associated file and folder
+structure to deploy Terraform modules. Please note that *Terragrunt is NOT required for using Terraform modules from
+the Gruntwork Service Catalog.* Check out <<how_to_use_gruntwork_service_catalog>> for instructions on alternative
+options, such as how to <<deploy_using_plain_terraform>>.
+
+The first step is to deploy a VPC. Follow the instructions in
+  link:../networking/how-to-configure-production-grade-vpc-aws[How to deploy a production-grade VPC on AWS] to use
+`module-vpc` to create a VPC setup that looks like this:
+
+.A production-grade VPC setup deployed using module-vpc from the Gruntwork Service Catalog
+image::../assets/img/guides/vpc/vpc-diagram.png[]
+
+After following this guide, you should have `vpc-app` wrapper module in your `infrastructure-modules` repo:
+
+----
+infrastructure-modules
+  └ networking
+    └ vpc-mgmt
+    └ vpc-app
+      └ main.tf
+      └ outputs.tf
+      └ variables.tf
+----
+
+Here's a snippet of what the code in the `vpc-app` wrapper module looks like:
+
+.infrastructure-modules/networking/vpc-app/main.tf
+[source,hcl]
+----
+module "vpc" {
+  # Make sure to replace <VERSION> in this URL with the latest module-vpc release
+  source = "git@github.com:gruntwork-io/module-vpc.git//modules/vpc-app?ref=<VERSION>"
+
+  vpc_name         = var.vpc_name
+  aws_region       = var.aws_region
+  cidr_block       = var.cidr_block
+  num_nat_gateways = var.num_nat_gateways
+}
+
+# ... (the rest of the code is ommitted) ...
+----
+
+Update this module to use the
+https://github.com/gruntwork-io/terraform-aws-eks/tree/master/modules/eks-vpc-tags[eks-vpc-tags] module from the
+`terraform-aws-eks` repo to add the tags required by EKS:
+
+IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access `terraform-aws-eks`.
+
+.infrastructure-modules/networking/vpc-app/main.tf
+[source,hcl]
+----
+module "vpc" {
+  # Make sure to replace <VERSION> in this URL with the latest module-vpc release
+  source = "git@github.com:gruntwork-io/module-vpc.git//modules/vpc-app?ref=<VERSION>"
+
+  vpc_name         = var.vpc_name
+  aws_region       = var.aws_region
+  cidr_block       = var.cidr_block
+  num_nat_gateways = var.num_nat_gateways
+
+  custom_tags                            = module.vpc_tags.vpc_eks_tags
+  public_subnet_custom_tags              = module.vpc_tags.vpc_public_subnet_eks_tags
+  private_app_subnet_custom_tags         = module.vpc_tags.vpc_private_app_subnet_eks_tags
+  private_persistence_subnet_custom_tags = module.vpc_tags.vpc_private_persistence_subnet_eks_tags
+}
+
+module "vpc_tags" {
+  # Make sure to replace <VERSION> in this URL with the latest terraform-aws-eks release
+  source = "git::git@github.com:gruntwork-io/terraform-aws-eks.git//modules/eks-vpc-tags?ref=<VERSION>"
+
+  eks_cluster_name = var.eks_cluster_name
+}
+
+# ... (the rest of the code is ommitted) ...
+----
+
+Add a new input variable that you can use to specify the name of the EKS cluster:
+
+.infrastructure-modules/networking/vpc-app/variables.tf
+[source,hcl]
+----
+variable "eks_cluster_name" {
+  description = "The EKS cluster that will be deployed into the VPC."
+  type        = string
+}
+----
+
+Next, configure DNS forwarding rules using the
+https://github.com/gruntwork-io/module-vpc/tree/master/modules/vpc-dns-forwarder[vpc-dns-forwarder] module in
+`module-vpc`:
+
+IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access `module-vpc`.
+
+.infrastructure-modules/networking/vpc-app/main.tf
+[source,hcl]
+----
+module "dns_mgmt_to_app" {
+  # Make sure to replace <VERSION> in this URL with the latest module-vpc release
+  source = "git::git@github.com:gruntwork-io/module-vpc.git//modules/vpc-dns-forwarder?ref=<VERSION>"
+
+  origin_vpc_id                                   = data.terraform_remote_state.mgmt_vpc.outputs.vpc_id
+  origin_vpc_name                                 = data.terraform_remote_state.mgmt_vpc.outputs.vpc_name
+  origin_vpc_route53_resolver_primary_subnet_id   = element(data.terraform_remote_state.mgmt_vpc.outputs.public_subnet_ids, 0)
+  origin_vpc_route53_resolver_secondary_subnet_id = element(data.terraform_remote_state.mgmt_vpc.outputs.public_subnet_ids, 1)
+
+  destination_vpc_id                                   = module.vpc.vpc_id
+  destination_vpc_name                                 = module.vpc.vpc_name
+  destination_vpc_route53_resolver_primary_subnet_id   = element(module.vpc.public_subnet_ids, 0)
+  destination_vpc_route53_resolver_secondary_subnet_id = element(module.vpc.public_subnet_ids, 1)
+}
+----
+
+At this point, you'll want to test your code. See <<manual_tests_terraform>> and <<automated_tests_terraform>> for
+instructions.
+
+Once your updated `vpc-app` wrapper module is working the way you want, submit a pull request, get your changes merged
+into the `master` branch, and create a new versioned release by using a Git tag. For example, to create a `v0.5.0`
+release:
+
+----
+$ git tag -a "v0.5.0" -m "Added tagging and DNS forwarding for EKS"
+$ git push --follow-tags
+----
+
+Head over to your `infrastructure-live` repo and update the `terragrunt.hcl` file to deploy this new version:
+
+.infrastructure-live/production/us-east-2/stage/networking/vpc-app/terragrunt.hcl
+[source,hcl]
+----
+terraform {
+  source = "git@github.com/<YOUR_ORG>/infrastructure-modules.git//networking/vpc-app?ref=v0.5.0"
+}
+----
+
+And run `terragrunt apply` to deploy the changes:
+
+----
+$ cd infrastructure-live/production/us-east-2/stage/networking/vpc-app
+$ terragrunt apply
+----
+
+=== Configure the control plane
+
+Now that you have the VPC ready, it's time to deploy the EKS control plane using the
+https://github.com/gruntwork-io/terraform-aws-eks/tree/master/modules/eks-cluster-control-plane[eks-cluster-control-plane module]
+in `terraform-aws-eks`. Create a new module called `eks-cluster` in `infrastructure-modules:
+
+----
+infrastructure-modules
+  └ networking
+    └ vpc-mgmt
+    └ vpc-app
+  └ services
+    └ eks-cluster
+      └ main.tf
+      └ dependencies.tf
+      └ outputs.tf
+      └ variables.tf
+----
+
+Inside of `main.tf`, configure your AWS provider and Terraform settings:
+
+.infrastructure-modules/services/eks-cluster/main.tf
+[source,hcl]
+----
+provider "aws" {
+  # The AWS region in which all resources will be created
+  region = var.aws_region
+
+  # Require a 2.x version of the AWS provider
+  version = "~> 2.6"
+
+  # Only these AWS Account IDs may be operated on by this template
+  allowed_account_ids = var.aws_account_id
+}
+
+terraform {
+  # The configuration for this backend will be filled in by Terragrunt or via a backend.hcl file. See
+  # https://www.terraform.io/docs/backends/config.html#partial-configuration
+  backend "s3" {}
+
+  # Only allow this Terraform version. Note that if you upgrade to a newer version, Terraform won't allow you to use an
+  # older version, so when you upgrade, you should upgrade everyone on your team and your CI servers all at once.
+  required_version = "= 0.12.6"
+}
+----
+
+Next, use the `eks-cluster-control-plane` module to configure the EKS control plane:
+
+.infrastructure-modules/services/eks-cluster/main.tf
+[source,hcl]
+----
+module "eks_cluster" {
+  # Make sure to replace <VERSION> in this URL with the latest terraform-aws-eks release
+  source = "git::git@github.com:gruntwork-io/terraform-aws-eks.git//modules/eks-cluster-control-plane?ref=<VERSION>"
+
+  cluster_name = var.cluster_name
+
+  vpc_id                = data.terraform_remote_state.vpc.outputs.vpc_id
+  vpc_master_subnet_ids = data.terraform_remote_state.vpc.outputs.private_app_subnet_ids
+
+  enabled_cluster_log_types = ["api", "audit", "authenticator"]
+  kubernetes_version        = 1.12
+  endpoint_public_access    = false
+}
+----
+
+The code above does the following:
+
+* Fetch information about the app VPC you just deployed using the
+  https://www.terraform.io/docs/providers/terraform/d/remote_state.html[terraform_remote_state data source]. You'll see
+  the code for this shortly.
+* Configure the control plane to run in the private app subnets of that VPC.
+* Configure the API server logs, audit logs, and authenticator logs for the control plane to be sent to CloudWatch.
+* Set the Kubernetes version to 1.12.
+* Disable public access so that the Kubernetes API server is only accessible from within the VPC.
++
+NOTE: This means you MUST be in the VPC network—e.g., connected via a VPN—to access your EKS cluster.
+
+Add the `terraform_remote_state` data source to fetch the app VPC info to `dependencies.tf`:
+
+.infrastructure-modules/services/eks-cluster/dependencies.tf
+[source,hcl]
+----
+data "terraform_remote_state" "vpc" {
+  backend = "s3"
+  config = {
+    region = var.terraform_state_aws_region
+    bucket = var.terraform_state_s3_bucket
+    key    = "${var.aws_region}/${var.vpc_name}/vpc/terraform.tfstate"
+  }
+}
+----
+
+And add the corresponding input variables for this code to `variables.tf`:
+
+.infrastructure-modules/services/eks-cluster/variables.tf
+[source,hcl]
+----
+variable "aws_region" {
+  description = "The AWS region in which all resources will be created"
+  type        = string
+}
+
+variable "aws_account_id" {
+  description = "The ID of the AWS Account in which to create resources."
+  type        = string
+}
+
+variable "cluster_name" {
+  description = "The name of the EKS cluster"
+  type        = string
+}
+
+variable "vpc_name" {
+  description = "The name of the VPC in which to run the EKS cluster (e.g. stage, prod)"
+  type        = string
+}
+
+variable "terraform_state_aws_region" {
+  description = "The AWS region of the S3 bucket used to store Terraform remote state"
+  type        = string
+}
+
+variable "terraform_state_s3_bucket" {
+  description = "The name of the S3 bucket used to store Terraform remote state"
+  type        = string
+}
+----
+
+=== Configure the worker nodes
+
+The next step is to configure the worker nodes in the `eks-cluster` module. You can deploy an Auto Scaling Group to run
+the worker nodes using the
+https://github.com/gruntwork-io/terraform-aws-eks/tree/master/modules/eks-cluster-workers[eks-cluster-workers] module
+in `terraform-aws-eks`:
+
+.infrastructure-modules/services/eks-cluster/main.tf
+[source,hcl]
+----
+module "eks_workers" {
+  # Make sure to replace <VERSION> in this URL with the latest terraform-aws-eks release
+  source = "git::git@github.com:gruntwork-io/terraform-aws-eks.git//modules/eks-cluster-workers?ref=<VERSION>"
+
+  name_prefix  = "app-workers-"
+  cluster_name = var.cluster_name
+
+  vpc_id                = data.terraform_remote_state.vpc.outputs.vpc_id
+  vpc_worker_subnet_ids = data.terraform_remote_state.vpc.outputs.private_app_subnet_ids
+
+  eks_master_security_group_id = module.eks_cluster.eks_master_security_group_id
+
+  cluster_min_size = var.cluster_min_size
+  cluster_max_size = var.cluster_max_size
+
+  cluster_instance_ami          = var.cluster_instance_ami
+  cluster_instance_type         = var.cluster_instance_type
+  cluster_instance_keypair_name = var.cluster_instance_keypair_name
+  cluster_instance_user_data    = data.template_file.user_data.rendered
+}
+----
+
+The code above does the following:
+
+* Deploy the worker nodes into the same private app subnets as the EKS cluster.
+* Pass in the EKS control plane security group ID to the `eks_master_security_group_id`. The `eks-cluster-workers`
+  module will use this to open up the proper ports in the control plane and worker node security groups so they can
+  talk to each other.
+* Use variables for most of the other worker node settings: e.g., min number of nodes, max number of nodes, AMI to run,
+  instance type to run, and so on. This allows you to use different settings for the worker nodes in different
+  environments.
+* Sets the worker nodes to run a User Data script rendered from a `template_file` data source. You'll see what this
+  `template_file` data source looks like a little later.
+
+Add the corresponding input variables to `variables.tf`:
+
+.infrastructure-modules/services/eks-cluster/variables.tf
+[source,hcl]
+----
+variable "cluster_min_size" {
+  description = "The minimum number of instances to run in the EKS cluster"
+  type        = number
+}
+
+variable "cluster_max_size" {
+  description = "The maxiumum number of instances to run in the EKS cluster"
+  type        = number
+}
+
+variable "cluster_instance_type" {
+  description = "The type of instances to run in the EKS cluster (e.g. t2.medium)"
+  type        = string
+}
+
+variable "cluster_instance_ami" {
+  description = "The AMI to run on each instance in the EKS cluster. You can build the AMI using the Packer template under packer/build.json."
+  type        = string
+}
+
+variable "cluster_instance_keypair_name" {
+  description = "The name of the Key Pair that can be used to SSH to each instance in the EKS cluster"
+  type        = string
+}
+----
+
+=== Create the worker node AMI
+
+The next step is to create the Amazon Machine Image (AMI) that will run on each worker node. We recommend using the
+https://docs.aws.amazon.com/eks/latest/userguide/eks-optimized-ami.html[Amazon EKS-Optimized AMI] as the base and
+installing other tooling you need (e.g., server-hardening, monitoring, log aggregation, etc.) on top of it.
+
+Create a https://www.packer.io[Packer] template in called `eks-node.json` in your `infrastructure-modules` repo:
+
+----
+infrastructure-modules
+  └ networking
+    └ vpc-mgmt
+    └ vpc-app
+  └ services
+    └ eks-cluster
+      └ packer
+        └ eks-node.json
+      └ main.tf
+      └ dependencies.tf
+      └ outputs.tf
+      └ variables.tf
+----
+
+Here's what `eks-node.json` should look like:
+
+.infrastructure-modules/services/eks-cluster/packer/eks-node.json
+[source,json]
+----
+{
+  "variables": {
+    "aws_region": "us-east-2",
+    "github_auth_token": "{{env `GITHUB_OAUTH_TOKEN`}}",
+    "kubernetes_version": "1.12"
+  },
+  "builders": [{
+    "ami_name": "eks-cluster-instance-{{isotime | clean_ami_name}}",
+    "ami_description": "An Amazon EKS-optimized AMI that is meant to be run as part of an EKS cluster.",
+    "instance_type": "t2.micro",
+    "region": "{{user `aws_region`}}",
+    "type": "amazon-ebs",
+    "source_ami_filter": {
+      "filters": {
+        "virtualization-type": "hvm",
+        "architecture": "x86_64",
+        "name": "amazon-eks-node-{{user `kubernetes_version`}}-v*",
+        "root-device-type": "ebs"
+      },
+      "owners": ["602401143452"],
+      "most_recent": true
+    },
+    "ssh_username": "ec2-user",
+    "encrypt_boot": false,
+    "ami_users": ["087285199408", "087285199408", "087285199408"]
+  }],
+  "provisioners": [{
+    "type": "shell",
+    "inline": [
+      "echo 'Sleeping for 30 seconds to give the AMIs enough time to initialize (otherwise, packages may fail to install).'",
+      "sleep 30",
+      "echo 'Installing AWS CLI'",
+      "sudo yum update -y && sudo yum install -y aws-cli unzip perl-Digest-SHA jq"
+    ]
+  },{
+    "type": "shell",
+    "inline": "curl -Ls https://raw.githubusercontent.com/gruntwork-io/gruntwork-installer/master/bootstrap-gruntwork-installer.sh | bash /dev/stdin --version v0.0.22"
+  },{
+    "type": "shell",
+    "inline": [
+      "gruntwork-install --module-name 'bash-commons' --repo 'https://github.com/gruntwork-io/bash-commons' --tag 'v0.1.2'",
+      "gruntwork-install --module-name 'eks-scripts' --repo 'https://github.com/gruntwork-io/terraform-aws-eks' --tag 'v0.6.0'",
+      "gruntwork-install --module-name 'metrics/cloudwatch-memory-disk-metrics-scripts' --repo https://github.com/gruntwork-io/module-aws-monitoring --tag 'v0.13.2'",
+      "gruntwork-install --module-name 'logs/syslog' --repo https://github.com/gruntwork-io/module-aws-monitoring --tag 'v0.13.2'",
+      "gruntwork-install --module-name 'auto-update' --repo https://github.com/gruntwork-io/module-security --tag 'v0.18.1'",
+      "gruntwork-install --module-name 'fail2ban' --repo https://github.com/gruntwork-io/module-security --tag 'v0.18.1'",
+      "gruntwork-install --module-name 'ntp' --repo https://github.com/gruntwork-io/module-security --tag 'v0.18.1'",
+      "gruntwork-install --module-name 'ip-lockdown' --repo https://github.com/gruntwork-io/module-security --tag 'v0.18.1'",
+      "gruntwork-install --binary-name 'ssh-grunt' --repo https://github.com/gruntwork-io/module-security --tag 'v0.18.1'",
+      "sudo /usr/local/bin/ssh-grunt iam install --iam-group ssh-grunt-users --iam-group-sudo ssh-grunt-sudo-users --role-arn arn:aws:iam::087285199408:role/allow-ssh-grunt-access-from-other-accounts"
+    ],
+    "environment_vars": [
+      "GITHUB_OAUTH_TOKEN={{user `github_auth_token`}}"
+    ]
+  }]
+}
+----
+
+This Packer template installs the following on top of the EKS-optimized AMI base image:
+
+IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access the code in the `terraform-aws-eks`,
+`module-aws-monitoring`, and `module-security` repos mentioned below.
+
+https://github.com/gruntwork-io/bash-commons[bash-commons]::
+  A collection of reusable Bash functions for handling common tasks such as logging, assertions, string manipulation,
+  and more. It's used by some of the other tooling below.
+
+https://github.com/gruntwork-io/terraform-aws-eks/tree/master/modules/eks-scripts[eks-scripts]::
+  A script that takes the labels on a worker node EC2 instance and converts them to a format that can be passed to the
+  EKS bootstrap script so that those tags show up as labels in Kubernetes.
+
+https://github.com/gruntwork-io/module-aws-monitoring/tree/master/modules/metrics/cloudwatch-memory-disk-metrics-scripts[cloudwatch-memory-disk-metrics-scripts]::
+  Send memory and disk usage metrics for your EC2 Instances to CloudWatch. These metrics are not available by default
+  as they are only visible from inside a VM.
+
+https://github.com/gruntwork-io/module-aws-monitoring/tree/master/modules/logs/syslog[syslog]::
+  Configure log rotation and rate limiting for syslog.
+
+https://github.com/gruntwork-io/module-security/tree/master/modules/auto-update[auto-update]::
+  Configure a Linux server to automatically install critical security updates on a nightly basis.
+
+https://github.com/gruntwork-io/module-security/tree/master/modules/fail2ban[fail2ban]::
+  Configure a Linux server to automatically ban malicious ip addresses from connecting to the server via SSH.
+
+https://github.com/gruntwork-io/module-security/tree/master/modules/ntp[ntp]::
+  Install and configure NTP on a Linux server to prevent clock drift.
+
+https://github.com/gruntwork-io/module-security/tree/master/modules/ip-lockdown[ip-lockdown]::
+  Lock down specified IP addresses so only certain OS users can access them. Primarily used to lock down the EC2
+  instance metadata endpoint (and therefore, the IAM role attached to the EC2 instance) so that it can only be accessed
+  by specific users (e.g., only `root`).
+
+https://github.com/gruntwork-io/module-security/tree/master/modules/ssh-grunt[ssh-grunt]::
+  Allow managing SSH access to EC2 instances using IAM. Developers you add to specific IAM groups will be able to SSH
+  to specific servers using their own username and SSH key.
+
+To build an AMI from this Packer template, you run:
+
+----
+packer build eks-node.json
+----
+
+Packer will output the ID of the AMI at the end of the build. Copy this AMI down so you can deploy it later in this
+guide.
+
+=== Configure the worker node User Data script
+
+Now that you know what will be installed on each worker node AMI, you can fill in the User Data script that each worker
+node will run on boot. Create `user-data.sh` in your `infrastructure-modules` repo:
+
+----
+infrastructure-modules
+  └ networking
+    └ vpc-mgmt
+    └ vpc-app
+  └ services
+    └ eks-cluster
+      └ packer
+        └ eks-node.json
+      └ user-data
+        └ user-data.sh
+      └ main.tf
+      └ dependencies.tf
+      └ outputs.tf
+      └ variables.tf
+----
+
+Here's what `user-data.sh` should look like:
+
+.infrastructure-modules/services/eks-cluster/user-data/user-data.sh
+[source,bash]
+----
+#!/bin/bash
+
+set -e
+
+# Send the log output from this script to user-data.log, syslog, and the console
+# From: https://alestic.com/2010/12/ec2-user-data-output/
+exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+
+function start_fail2ban {
+  echo "Starting fail2ban"
+  /etc/user-data/configure-fail2ban-cloudwatch/configure-fail2ban-cloudwatch.sh --cloudwatch-namespace Fail2Ban
+}
+
+function start_cloudwatch_logs_agent {
+  local -r vpc_name="$1"
+  local -r log_group_name="$2"
+
+  echo "Starting CloudWatch Logs Agent in VPC $vpc_name"
+  /etc/user-data/cloudwatch-log-aggregation/run-cloudwatch-logs-agent.sh \
+    --vpc-name "$vpc_name" \
+    --log-group-name "$log_group_name"
+}
+
+function configure_eks_instance {
+  local -r aws_region="$1"
+  local -r eks_cluster_name="$2"
+  local -r eks_endpoint="$3"
+  local -r eks_certificate_authority="$4"
+  local -r vpc_name="$5"
+  local -r log_group_name="$6"
+
+  start_cloudwatch_logs_agent "$vpc_name" "$log_group_name"
+  start_fail2ban
+
+  echo "Running eks bootstrap script to register instance to cluster"
+  local -r node_labels="$(map-ec2-tags-to-node-labels)"
+  /etc/eks/bootstrap.sh \
+    --apiserver-endpoint "$eks_endpoint" \
+    --b64-cluster-ca "$eks_certificate_authority" \
+    --kubelet-extra-args "--node-labels=\"$node_labels\"" \
+    "$eks_cluster_name"
+
+  echo "Locking down the EC2 metadata endpoint so only the root and default users can access it"
+  /usr/local/bin/ip-lockdown 169.254.169.254 root ec2-user
+}
+
+# These variables are set by Terraform interpolation
+configure_eks_instance "${aws_region}" "${eks_cluster_name}" "${eks_endpoint}" "${eks_certificate_authority}" "${vpc_name}" "${log_group_name}"
+----
+
+The User Data script above does the following:
+
+* Starts the CloudWatch Logs Agent so that logs from the EC2 instance (especially syslog) are sent to CloudWatch Logs.
+* Starts fail2ban to protect the instance against malicious SSH attempts.
+* Runs the EKS bootstrap script to register the instance in the cluster.
+* Run `ip-lockdown` to lock down the EC2 metadata endpoint so only the `root` and `ec2-user` users can access it.
+
+Note that at the bottom of `user-data.sh`, there are some variables that are supposed to be filled in by Terraform
+interpolation. How does that work? When you configured the worker nodes earlier in this guide, you set the
+`cluster_instance_user_data` parameter to a `template_file` data source that didn't yet exist; well, this is what's
+going to provide the variables via interpolation! Add the `template_file` data source as follows:
+
+.infrastructure-modules/services/eks-cluster/main.tf
+[source,hcl]
+----
+data "template_file" "user_data" {
+  template = file("${path.module}/user-data/user-data.sh")
+
+  vars = {
+    aws_region                = var.aws_region
+    eks_cluster_name          = var.cluster_name
+    eks_endpoint              = module.eks_cluster.eks_cluster_endpoint
+    eks_certificate_authority = module.eks_cluster.eks_cluster_certificate_authority
+    vpc_name                  = var.vpc_name
+    log_group_name            = var.cluster_name
+  }
+}
+----
+
+=== Configure logging, metrics, and alarms for the worker nodes
+
 TODO
-
-- Point to guide for VPC itself
-- Add tags
-- Add VPC forwarding
-
-=== Deploy the control plane
-
-TODO
-
-- eks-cluster-control-plane
-- enable logging
-- https://github.com/gruntwork-io/terraform-aws-eks/tree/master/modules/eks-cluster-control-plane#control-plane-logging
-
-=== Deploy the worker nodes
-
-TODO
-
-- Create worker node AMI
-- Use eks-cluster-workers to deploy ASG
-- Configure User Data
-- Rolling out updates: Deploying the worker nodes initially is not enough; you also need a strategy for updating the worker nodes, without
-  downtime, when there are new versions of Kubernetes, new AMIs, and so on. AWS does not https://github.com/gruntwork-io/kubergrunt#deploy
 
 === Configure role mapping
 
@@ -809,6 +1367,61 @@ TODO
 - eks-k8s-role-mapping
 - For more information on setting up IAM users, IAM groups, and IAM roles, see
   link:../foundations/how-to-configure-production-grade-aws-account-structure[How to configure a production-grade AWS account structure].
+
+=== Configure access to the control plane and worker nodes
+
+TODO
+
+If you want to be able to SSH to the worker nodes (e.g., for debugging), you can update the worker nodes security group
+to allow SSH access from specific IPs or security groups:
+
+.infrastructure-modules/services/eks-cluster/main.tf
+[source,hcl]
+----
+resource "aws_security_group_rule" "allow_inbound_ssh" {
+  type                     = "ingress"
+  from_port                = 22
+  to_port                  = 22
+  protocol                 = "tcp"
+  security_group_id        = module.eks_workers.eks_worker_security_group_id
+  # Replace <SECURITY_GROUP_ID> with the ID of a security group from which SSH access should be allowed. E.g., If you
+  # are running a VPN server, you could use a terraform_remote_state data source to fetch its security group ID and
+  # fill it in here.
+  source_security_group_id = "<SECURITY_GROUP_ID>"
+}
+----
+
+.infrastructure-modules/services/eks-cluster/main.tf
+[source,hcl]
+----
+resource "aws_security_group_rule" "openvpn_server_control_plane_access" {
+  type                     = "ingress"
+  from_port                = 443
+  to_port                  = 443
+  protocol                 = "tcp"
+  security_group_id        = module.eks_cluster.eks_master_security_group_id
+  source_security_group_id = data.terraform_remote_state.openvpn_server.outputs.security_group_id
+}
+----
+
+.infrastructure-modules/services/eks-cluster/main.tf
+[source,hcl]
+----
+module "dns_forwarder_rule" {
+  source = "git::git@github.com:gruntwork-io/module-vpc.git//modules/vpc-dns-forwarder-rules?ref=v0.6.0"
+
+  vpc_id                                        = data.terraform_remote_state.mgmt_vpc.outputs.vpc_id
+  origin_vpc_route53_resolver_endpoint_id       = data.terraform_remote_state.vpc.outputs.origin_vpc_route53_resolver_endpoint_id
+  destination_vpc_route53_resolver_primary_ip   = data.terraform_remote_state.vpc.outputs.destination_vpc_route53_resolver_primary_ip
+  destination_vpc_route53_resolver_secondary_ip = data.terraform_remote_state.vpc.outputs.destination_vpc_route53_resolver_secondary_ip
+
+  num_endpoints_to_resolve = 1
+  endpoints_to_resolve = [
+    # endpoint returned here is of the form https://DOMAIN. We want just the domain, so we chop off the https
+    replace(lower(module.eks_cluster.eks_cluster_endpoint), "https://", ""),
+  ]
+}
+----
 
 === Core services
 
@@ -831,6 +1444,13 @@ https://kubernetes-sigs.github.io/aws-alb-ingress-controller/guide/controller/co
 TODO
 
 - Use kubectl
+
+=== Updating the worker nodes
+
+TODO
+
+- Rolling out updates: Deploying the worker nodes initially is not enough; you also need a strategy for updating the worker nodes, without
+  downtime, when there are new versions of Kubernetes, new AMIs, and so on. AWS does not https://github.com/gruntwork-io/kubergrunt#deploy
 
 [[next_steps]]
 == Next steps

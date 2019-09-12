@@ -905,7 +905,7 @@ with the latest version from the https://github.com/gruntwork-io/module-vpc/rele
 ----
 module "vpc" {
   # Make sure to replace <VERSION> in this URL with the latest module-vpc release
-  source = "git@github.com:gruntwork-io/module-vpc.git//modules/vpc-mgmt?ref=<VERSION>"
+  source = "git@github.com:gruntwork-io/module-vpc.git//modules/vpc-app?ref=<VERSION>"
 
   vpc_name         = var.vpc_name
   aws_region       = var.aws_region
