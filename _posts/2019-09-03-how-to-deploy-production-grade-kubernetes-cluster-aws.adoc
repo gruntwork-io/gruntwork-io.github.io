@@ -1192,7 +1192,7 @@ Here's what `eks-node.json` should look like:
       "gruntwork-install --module-name 'ntp' --repo https://github.com/gruntwork-io/module-security --tag 'v0.18.1'",
       "gruntwork-install --module-name 'ip-lockdown' --repo https://github.com/gruntwork-io/module-security --tag 'v0.18.1'",
       "gruntwork-install --binary-name 'ssh-grunt' --repo https://github.com/gruntwork-io/module-security --tag 'v0.18.1'",
-      "sudo /usr/local/bin/ssh-grunt iam install --iam-group ssh-grunt-users --iam-group-sudo ssh-grunt-sudo-users --role-arn arn:aws:iam::087285199408:role/allow-ssh-grunt-access-from-other-accounts"
+      "sudo /usr/local/bin/ssh-grunt iam install --iam-group ssh-grunt-users --iam-group-sudo ssh-grunt-sudo-users --role-arn arn:aws:iam::111122223333:role/allow-ssh-grunt-access-from-other-accounts"
     ],
     "environment_vars": [
       "GITHUB_OAUTH_TOKEN={{user `github_auth_token`}}"
@@ -1356,20 +1356,238 @@ data "template_file" "user_data" {
 
 === Configure logging, metrics, and alarms for the worker nodes
 
-TODO
+In order for the CloudWatch Logs Agent to be able to write to CloudWatch Logs, you need to give it the worker nodes the
+proper IAM permissions. You can do that by using the
+https://github.com/gruntwork-io/module-aws-monitoring/tree/master/modules/logs/cloudwatch-log-aggregation-iam-policy[cloudwatch-log-aggregation-iam-policy module]
+from `module-aws-monitoring`:
+
+.infrastructure-modules/services/eks-cluster/main.tf
+[source,hcl]
+----
+module "cloudwatch_log_aggregation" {
+  # Make sure to replace <VERSION> in this URL with the latest module-aws-monitoring release
+  source = "git::git@github.com:gruntwork-io/module-aws-monitoring.git//modules/logs/cloudwatch-log-aggregation-iam-policy?ref=<VERSION>"
+
+  name_prefix = var.cluster_name
+}
+
+resource "aws_iam_policy_attachment" "attach_cloudwatch_log_aggregation_policy" {
+  name       = "attach-cloudwatch-log-aggregation-policy"
+  roles      = [module.eks_workers.eks_worker_iam_role_name]
+  policy_arn = module.cloudwatch_log_aggregation.cloudwatch_log_aggregation_policy_arn
+}
+----
+
+Similarly, to be able to send disk and memory metrics to CloudWatch, you need to add more IAM permissions, this time
+using the
+https://github.com/gruntwork-io/module-aws-monitoring/tree/master/modules/metrics/cloudwatch-custom-metrics-iam-policy[cloudwatch-custom-metrics-iam-policy module]:
+
+.infrastructure-modules/services/eks-cluster/main.tf
+[source,hcl]
+----
+module "cloudwatch_metrics" {
+  # Make sure to replace <VERSION> in this URL with the latest module-aws-monitoring release
+  source = "git::git@github.com:gruntwork-io/module-aws-monitoring.git//modules/metrics/cloudwatch-custom-metrics-iam-policy?ref=<VERSION>"
+
+  name_prefix = var.cluster_name
+}
+
+resource "aws_iam_policy_attachment" "attach_cloudwatch_metrics_policy" {
+  name       = "attach-cloudwatch-metrics-policy"
+  roles      = [module.eks_workers.eks_worker_iam_role_name]
+  policy_arn = module.cloudwatch_metrics.cloudwatch_metrics_policy_arn
+}
+----
+
+Finally, you may want to configure some CloudWatch alerts to go off if the CPU usage, memory usage, or disk space
+utilization gets too high on the worker nodes. You can do this using several of the
+https://github.com/gruntwork-io/module-aws-monitoring/tree/master/modules/alarms[alarms modules] from
+`module-aws-monitoring`:
+
+.infrastructure-modules/services/eks-cluster/main.tf
+[source,hcl]
+----
+module "high_cpu_usage_alarms" {
+  # Make sure to replace <VERSION> in this URL with the latest module-aws-monitoring release
+  source = "git::git@github.com:gruntwork-io/module-aws-monitoring.git//modules/alarms/asg-cpu-alarms?ref=<VERSION>"
+
+  asg_names            = [module.eks_workers.eks_worker_asg_id]
+  num_asg_names        = 1
+  alarm_sns_topic_arns = [data.terraform_remote_state.sns_region.outputs.arn]
+}
+
+module "high_memory_usage_alarms" {
+  # Make sure to replace <VERSION> in this URL with the latest module-aws-monitoring release
+  source = "git::git@github.com:gruntwork-io/module-aws-monitoring.git//modules/alarms/asg-memory-alarms?ref=<VERSION>"
+
+  asg_names            = [module.eks_workers.eks_worker_asg_id]
+  num_asg_names        = 1
+  alarm_sns_topic_arns = [data.terraform_remote_state.sns_region.outputs.arn]
+}
+
+module "high_disk_usage_alarms" {
+  # Make sure to replace <VERSION> in this URL with the latest module-aws-monitoring release
+  source = "git::git@github.com:gruntwork-io/module-aws-monitoring.git//modules/alarms/asg-disk-alarms?ref=<VERSION>"
+
+  asg_names            = [module.eks_workers.eks_worker_asg_id]
+  num_asg_names        = 1
+  file_system          = "/dev/xvda1"
+  mount_path           = "/"
+  alarm_sns_topic_arns = [data.terraform_remote_state.sns_region.outputs.arn]
+}
+----
+
+Note that the code above assumes you've created an SNS topic to notify about these alerts in another module and pulls
+in the ARN of that SNS topic using a `terraform_remote_state` data source:
+
+.infrastructure-modules/services/eks-cluster/dependencies.tf
+[source,hcl]
+----
+data "terraform_remote_state" "sns_region" {
+  backend = "s3"
+  config = {
+    region = var.terraform_state_aws_region
+    bucket = var.terraform_state_s3_bucket
+    key    = "${var.aws_region}/_global/sns-topics/terraform.tfstate"
+  }
+}
+----
 
 === Configure role mapping
 
-TODO
+When you deploy the `eks-cluster` module later in this guide, it'll give your IAM user or IAM role (whatever you're
+authenticated as) admin permissions in the cluster. You can use these admin permissions to configure permissions for
+the other IAM users and roles on your team using the
+https://github.com/gruntwork-io/terraform-aws-eks/tree/master/modules/eks-k8s-role-mapping[eks-k8s-role-mapping module]
+in `terraform-aws-eks`:
 
-- k8s provider
-- eks-k8s-role-mapping
-- For more information on setting up IAM users, IAM groups, and IAM roles, see
-  link:../foundations/how-to-configure-production-grade-aws-account-structure[How to configure a production-grade AWS account structure].
+.infrastructure-modules/services/eks-cluster/main.tf
+[source,hcl]
+----
+module "eks_k8s_role_mapping" {
+  # Make sure to replace <VERSION> in this URL with the latest terraform-aws-eks release
+  source = "git::git@github.com:gruntwork-io/terraform-aws-eks.git//modules/eks-k8s-role-mapping?ref=<VERSION>"
+
+  eks_worker_iam_role_arns        = [module.eks_workers.eks_worker_iam_role_arn]
+  iam_role_to_rbac_group_mappings = var.iam_role_to_rbac_group_mappings
+
+  config_map_labels = {
+    eks-cluster = module.eks_cluster.eks_cluster_name
+  }
+}
+----
+
+And here's the corresponding input variable:
+
+.infrastructure-modules/services/eks-cluster/variables.tf
+[source,hcl]
+----
+variable "iam_role_to_rbac_group_mappings" {
+  description = "Mapping of AWS IAM roles to RBAC groups, where the keys are the AWS ARN of IAM roles and the values are the mapped k8s RBAC group names as a list."
+  type        = map(list(string))
+  default     = {}
+}
+----
+
+This variable allows you to map different IAM role ARNs in different environments to various Kubernetes roles. You'll
+see an example of this later in the guide.
+
+Note that the `` module uses the Kubernetes provider to talk to your Kubernetes cluster directly from Terraform. That
+means that (a) you can only apply this code from within your VPC and/or when connected via VPN and (b) you have to
+configure the Kubernetes provider. The latter requires a little bit of hackery due to Terraform limitations:
+
+.infrastructure-modules/services/eks-cluster/main.tf
+[source,hcl]
+----
+provider "kubernetes" {
+  version = "~> 1.6"
+
+  load_config_file       = false
+  host                   = data.template_file.kubernetes_cluster_endpoint.rendered
+  cluster_ca_certificate = base64decode(data.template_file.kubernetes_cluster_ca.rendered)
+  token                  = data.aws_eks_cluster_auth.kubernetes_token.token
+}
+
+# Workaround for Terraform limitation where you cannot directly set a depends on directive or interpolate from resources
+# in the provider config.
+# Specifically, Terraform requires all information for the Terraform provider config to be available at plan time,
+# meaning there can be no computed resources. We work around this limitation by creating a template_file data source
+# that does the computation.
+# See https://github.com/hashicorp/terraform/issues/2430 for more details
+data "template_file" "kubernetes_cluster_endpoint" {
+  template = module.eks_cluster.eks_cluster_endpoint
+}
+
+data "template_file" "kubernetes_cluster_ca" {
+  template = module.eks_cluster.eks_cluster_certificate_authority
+}
+
+data "aws_eks_cluster_auth" "kubernetes_token" {
+  name = module.eks_cluster.eks_cluster_name
+}
+----
 
 === Configure access to the control plane and worker nodes
 
-TODO
+If you want to make the control plane accessible outside of the cluster itself, you can add additional security group
+rules. For example, here is how you can make it possible to connect to the control plane from a VPN server:
+
+.infrastructure-modules/services/eks-cluster/main.tf
+[source,hcl]
+----
+resource "aws_security_group_rule" "openvpn_server_control_plane_access" {
+  type                     = "ingress"
+  from_port                = 443
+  to_port                  = 443
+  protocol                 = "tcp"
+  security_group_id        = module.eks_cluster.eks_master_security_group_id
+  # Replace <SECURITY_GROUP_ID> with the ID of a security group from which SSH access should be allowed. E.g., If you
+  # are running a VPN server, you could use a terraform_remote_state data source to fetch its security group ID and
+  # fill it in here.
+  source_security_group_id = "<VPN_SECURITY_GROUP_ID>"
+}
+----
+
+Note that if the VPN server is in another VPC (e.g., a management VPC), you will need to add DNS forwarding rules in
+order for the VPN server to be able to resolve the private domain name of the EKS cluster. You can add these rules
+using the
+https://github.com/gruntwork-io/module-vpc/tree/master/modules/vpc-dns-forwarder-rules[vpc-dns-forwarder-rules module]
+from `terraform-aws-eks`:
+
+.infrastructure-modules/services/eks-cluster/main.tf
+[source,hcl]
+----
+module "dns_forwarder_rule" {
+  # Make sure to replace <VERSION> in this URL with the latest terraform-aws-eks release
+  source = "git::git@github.com:gruntwork-io/module-vpc.git//modules/vpc-dns-forwarder-rules?ref=<VERSION>"
+
+  vpc_id                                        = data.terraform_remote_state.mgmt_vpc.outputs.vpc_id
+  origin_vpc_route53_resolver_endpoint_id       = data.terraform_remote_state.vpc.outputs.origin_vpc_route53_resolver_endpoint_id
+  destination_vpc_route53_resolver_primary_ip   = data.terraform_remote_state.vpc.outputs.destination_vpc_route53_resolver_primary_ip
+  destination_vpc_route53_resolver_secondary_ip = data.terraform_remote_state.vpc.outputs.destination_vpc_route53_resolver_secondary_ip
+
+  num_endpoints_to_resolve = 1
+  endpoints_to_resolve = [
+    # endpoint returned here is of the form https://DOMAIN. We want just the domain, so we chop off the https
+    replace(lower(module.eks_cluster.eks_cluster_endpoint), "https://", ""),
+  ]
+}
+----
+
+Note that this code pulls in the ID of the management VPC via a `terraform_remote_state` data source:
+
+.infrastructure-modules/services/eks-cluster/dependencies.tf
+[source,hcl]
+----
+data "terraform_remote_state" "mgmt_vpc" {
+  backend = "s3"
+  config = {
+    region = var.terraform_state_aws_region
+    bucket = var.terraform_state_s3_bucket
+    key    = "${var.aws_region}/mgmt/vpc/terraform.tfstate"
+  }
+}
+----
 
 If you want to be able to SSH to the worker nodes (e.g., for debugging), you can update the worker nodes security group
 to allow SSH access from specific IPs or security groups:
@@ -1386,40 +1604,174 @@ resource "aws_security_group_rule" "allow_inbound_ssh" {
   # Replace <SECURITY_GROUP_ID> with the ID of a security group from which SSH access should be allowed. E.g., If you
   # are running a VPN server, you could use a terraform_remote_state data source to fetch its security group ID and
   # fill it in here.
-  source_security_group_id = "<SECURITY_GROUP_ID>"
+  source_security_group_id = "<VPN_SECURITY_GROUP_ID>"
 }
 ----
+
+If you're using https://github.com/gruntwork-io/module-security/tree/master/modules/ssh-grunt[ssh-grunt] from
+`module-security` to manage SSH access with IAM groups, you'll need to give the worker nodes IAM permissions to talk to
+IAM. You can do this using the
+https://github.com/gruntwork-io/module-security/tree/master/modules/iam-policies[`iam-policies`] module from
+`module-security`:
 
 .infrastructure-modules/services/eks-cluster/main.tf
 [source,hcl]
 ----
-resource "aws_security_group_rule" "openvpn_server_control_plane_access" {
-  type                     = "ingress"
-  from_port                = 443
-  to_port                  = 443
-  protocol                 = "tcp"
-  security_group_id        = module.eks_cluster.eks_master_security_group_id
-  source_security_group_id = data.terraform_remote_state.openvpn_server.outputs.security_group_id
+module "iam_policies" {
+  # Make sure to replace <VERSION> in this URL with the latest terraform-aws-eks release
+  source = "git::git@github.com:gruntwork-io/module-security.git//modules/iam-policies?ref=<VERSION>"
+
+  aws_account_id = var.aws_account_id
+
+  # ssh-grunt is an automated app, so we can't use MFA with it
+  iam_policy_should_require_mfa   = false
+  trust_policy_should_require_mfa = false
+
+  # If your IAM users are defined in a separate AWS accounth (e.g., a security account), you can pass in the ARN of
+  # of that account via an input variable, and the IAM policy will give the worker nodes permission to assume that
+  # IAM role
+  allow_access_to_other_account_arns = [var.external_account_ssh_grunt_role_arn]
+}
+
+resource "aws_iam_role_policy" "ssh_grunt_permissions" {
+  name   = "ssh-grunt-permissions"
+  role   = module.eks_workers.eks_worker_iam_role_name
+  policy = module.iam_policies.allow_access_to_other_accounts[0]
 }
 ----
 
-.infrastructure-modules/services/eks-cluster/main.tf
+=== Deploy the EKS cluster
+
+Your `eks-cluster` module is nearly complete! The only thing left to do is to add some useful output variables to
+`outputs.tf`:
+
+.infrastructure-modules/services/eks-cluster/outputs.tf
 [source,hcl]
 ----
-module "dns_forwarder_rule" {
-  source = "git::git@github.com:gruntwork-io/module-vpc.git//modules/vpc-dns-forwarder-rules?ref=v0.6.0"
-
-  vpc_id                                        = data.terraform_remote_state.mgmt_vpc.outputs.vpc_id
-  origin_vpc_route53_resolver_endpoint_id       = data.terraform_remote_state.vpc.outputs.origin_vpc_route53_resolver_endpoint_id
-  destination_vpc_route53_resolver_primary_ip   = data.terraform_remote_state.vpc.outputs.destination_vpc_route53_resolver_primary_ip
-  destination_vpc_route53_resolver_secondary_ip = data.terraform_remote_state.vpc.outputs.destination_vpc_route53_resolver_secondary_ip
-
-  num_endpoints_to_resolve = 1
-  endpoints_to_resolve = [
-    # endpoint returned here is of the form https://DOMAIN. We want just the domain, so we chop off the https
-    replace(lower(module.eks_cluster.eks_cluster_endpoint), "https://", ""),
-  ]
+output "aws_region" {
+  value = var.aws_region
 }
+
+output "eks_cluster_arn" {
+  value = module.eks_cluster.eks_cluster_arn
+}
+
+output "eks_cluster_name" {
+  value = module.eks_cluster.eks_cluster_name
+}
+
+output "eks_cluster_asg_name" {
+  value = module.eks_workers.eks_worker_asg_name
+}
+
+output "eks_worker_security_group_id" {
+  value = module.eks_workers.eks_worker_security_group_id
+}
+
+output "eks_worker_iam_role_arn" {
+  value = module.eks_workers.eks_worker_iam_role_arn
+}
+
+output "eks_worker_iam_role_name" {
+  value = module.eks_workers.eks_worker_iam_role_name
+}
+
+output "asg_name" {
+  value = module.eks_workers.eks_worker_asg_name
+}
+----
+
+At this point, you'll want to test your code. See <<manual_tests_terraform>> and <<automated_tests_terraform>> for
+instructions.
+
+Once your `eks-cluster` module is working the way you want, submit a pull request, get your changes merged into the
+`master` branch, and create a new versioned release by using a Git tag:
+
+----
+$ git tag -a "v0.6.0" -m "Added eks-cluster module"
+$ git push --follow-tags
+----
+
+Head over to your `infrastructure-live` repo and create a `terragrunt.hcl` file to deploy your EKS cluster in one of
+your environments, such as staging:
+
+----
+infrastructure-live
+  └ root
+  └ security
+  └ stage
+    └ us-east-2
+      └ stage
+        └ services
+          └ eks-cluster
+            └ terragrunt.hcl
+  └ dev
+  └ prod
+  └ shared-services
+----
+
+Point the `source` URL in your `terragrunt.hcl` file to your `eks-cluster` module in the `infrastructure-modules`
+repo, setting the `ref` param to the version you released earlier:
+
+.infrastructure-live/stage/us-east-2/stage/services/eks-cluster/terragrunt.hcl
+[source,hcl]
+----
+terraform {
+  source = "git@github.com/<YOUR_ORG>/infrastructure-modules.git//services/eks-cluster?ref=v0.6.0"
+}
+----
+
+Set the variables for the `cloudtrail` module in this environment in the `inputs = { ... }` block of `terragrunt.hcl`:
+
+.infrastructure-live/stage/us-east-2/stage/services/eks-cluster/terragrunt.hcl
+[source,hcl]
+----
+inputs = {
+  cluster_name                  = "eks-stage"
+  cluster_instance_keypair_name = "stage-services-us-east-1-v1"
+
+  # Fill in the ID of the AMI you built from your Packer template
+  cluster_instance_ami          = "<AMI_ID>"
+
+  # Set the max size to double the min size so the extra capacity can be used to do a zero-downtime deployment of updates
+  # to the EKS Cluster Nodes (e.g. when you update the AMI). For docs on how to roll out updates to the cluster, see:
+  # https://github.com/gruntwork-io/terraform-aws-eks/tree/master/modules/eks-cluster-workers#how-do-i-roll-out-an-update-to-the-instances
+  cluster_min_size      = 3
+  cluster_max_size      = 6
+  cluster_instance_type = "t2.small"
+
+  # If your IAM users are defined in a separate AWS account (e.g., in a security account), pass in the ARN of an IAM
+  # role in that account that ssh-grunt on the worker nodes can assume to look up IAM group membership and public SSH
+  # keys
+  external_account_ssh_grunt_role_arn = "arn:aws:iam::1111222233333:role/allow-ssh-grunt-access-from-other-accounts"
+
+  # Configure your role mappings
+  iam_role_to_rbac_group_mappings = {
+    # Give anyone using the full-access IAM role admin permissions
+    "arn:aws:iam::444444444444:role/allow-full-access-from-other-accounts" = ["system:masters"]
+
+    # Give anyone using the developers IAM role developer permissions. Note that, separately, you'll need to create a
+    # developers role in your Kubernetes cluster!
+    "arn:aws:iam::444444444444:role/allow-dev-access-from-other-accounts" = ["developers"]
+  }
+}
+----
+
+Configure your Terraform backend:
+
+.infrastructure-live/stage/us-east-2/stage/services/eks-cluster/terragrunt.hcl
+[source,hcl]
+----
+include {
+  path = find_in_parent_folders()
+}
+----
+
+And run `terragrunt apply` to deploy the EKS cluster:
+
+----
+$ cd infrastructure-live/stage/us-east-2/stage/services/eks-cluster
+$ terragrunt apply
 ----
 
 === Core services
