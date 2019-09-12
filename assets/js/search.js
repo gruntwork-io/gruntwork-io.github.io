@@ -81,6 +81,7 @@
 
   $(showInitialItemsCount);
   $(displayFilterTags);
+  $(performSearch($('.cloud-filter #aws')));
 
   $('#no-matches').hide();
 
@@ -209,24 +210,31 @@
     });
   });
 
+
+  function performSearch(filterButton) {
+    const id = filterButton.attr('id');
+
+    if (filterButton.hasClass('initialSelect') && filterButton.hasClass('active-button') ) {
+      filterButton.removeClass('initialSelect');
+      filterButton.removeClass('active-button');
+      $('#no-matches').hide();
+      showAllItems();
+    } else {
+      filterButton.addClass('active-button');
+      filterButton.addClass('initialSelect');
+      filterButton.siblings().removeClass('active-button');
+      filterData(id, 'cloudSearch');
+    }
+  }
+
   /* Search box on library page */
   $('#js-search-library').on("keyup", searchData);
 
   /* Triggered on click of any cloud filtering buttons */
   $('.cloud-filter .filter').click(function () {
-    const id = $(this).attr('id');
+    const filterButton = $(this);
 
-    if ($(this).hasClass('initialSelect') && $(this).hasClass('active-button') ) {
-      $(this).removeClass('initialSelect');
-      $(this).removeClass('active-button');
-      $('#no-matches').hide();
-      showAllItems();
-    } else {
-      $(this).addClass('active-button');
-      $(this).addClass('initialSelect');
-      $(this).siblings().removeClass('active-button');
-      filterData(id, 'cloudSearch');
-    }
+    performSearch(filterButton);
   });
 
   /* Search box on guides page */
