@@ -4,7 +4,7 @@
             {% for category in site.categories %}
             {% capture category_name %}{{ category | first }}{% endcapture %}
             <ul id="categories">
-                <li>
+                <li id="{{ category_name | downcase }}">
                     <label><b><a href="#{{category_name | slugify}}">{{category_name}}</a></b></label>
                 </li>
             </ul>
