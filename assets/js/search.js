@@ -216,26 +216,12 @@
   $('.cloud-filter .filter').click(function () {
     const id = $(this).attr('id');
 
-    if (id === 'aws') {
-      $(this).siblings().removeClass('active-button');
-      $(this).addClass('active-button');
-
-      if ($(this).hasClass('selected')) {
-        $(this).removeClass('selected');
-        showAllItems();
-      } else {
-        $(this).addClass('selected');
-        filterData(id, 'cloudSearch');
-      }
-    } else if (id !== 'aws' && $(this).hasClass('active-button')) {
-      $('.cloud-filter #aws').addClass('active-button');
-      $(this).removeClass('active-button');
-
-      showAllItems();
+    if ($(this).hasClass('selected') && $(this).hasClass('active-button')) {
+          showAllItems();
     } else {
-      $(this).siblings().removeClass('active-button');
-
       $(this).addClass('active-button');
+      $(this).addClass('selected');
+      $(this).siblings().removeClass('active-button');
       filterData(id, 'cloudSearch');
     }
   });
