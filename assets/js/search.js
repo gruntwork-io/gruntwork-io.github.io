@@ -29,8 +29,8 @@
    * Function displays the total items displayed on the page
    */
   function showItemsCount(totalCount, numSubmodules) {
-    $('#search-results-count').show();
     if (searchEntry.type === 'libraryEntries') {
+      $('#search-results-count').show();
       if (totalCount > 0 && numSubmodules > 0) {
         $('#search-results-count').html("<strong>" + totalCount + "</strong> repos (~<strong>" + numSubmodules + "</strong> modules)");
       } else {
@@ -72,7 +72,6 @@
    * Function to display all items on the page
    */
   function showAllItems() {
-    $('#search-results-count').show();
     $('.guide-card').show();
     $('.category-head').show();
     $('.categories ul li').show();
@@ -99,6 +98,7 @@
     searchEntry = detectSearchEntry();
     $(displayFilterTags);
     $(showInitialItemsCount);
+    $(performSearch($('.cloud-filter #aws')));
   }
 
   // Initial entry on load
@@ -162,6 +162,7 @@
       if (searchEntry.type == 'libraryEntries') {
         $('.table-clickable-row').hide();
       } else if (searchEntry.type == 'guideEntries') {
+        $('#search-results-count').hide();
         $('.guide-card').hide() &&
           $('.category-head').hide() &&
           $('.categories ul li').hide();
@@ -260,21 +261,31 @@
     });
   });
 
+
+  function performSearch(filterButton) {
+    const id = filterButton.attr('id');
+
+    if (filterButton.hasClass('initialSelect') && filterButton.hasClass('active-button') ) {
+      filterButton.removeClass('initialSelect');
+      filterButton.removeClass('active-button');
+      $('#no-matches').hide();
+      showAllItems();
+    } else {
+      filterButton.addClass('active-button');
+      filterButton.addClass('initialSelect');
+      filterButton.siblings().removeClass('active-button');
+      filterData(id, 'cloudSearch');
+    }
+  }
+
   /* Search box on library page */
   $('#js-search-library').on("keyup", searchData);
 
   /* Triggered on click of any cloud filtering buttons */
   $('.cloud-filter .filter').click(function () {
-    const id = $(this).attr('id');
+    const filterButton = $(this);
 
-    if ($(this).hasClass('selected') && $(this).hasClass('active-button')) {
-      showAllItems();
-    } else {
-      $(this).addClass('active-button');
-      $(this).addClass('selected');
-      $(this).siblings().removeClass('active-button');
-      filterData(id, 'cloudSearch');
-    }
+    performSearch(filterButton);
   });
 
 
