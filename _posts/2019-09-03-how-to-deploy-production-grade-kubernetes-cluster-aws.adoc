@@ -796,11 +796,16 @@ NetworkPolicy::
   the inbound and outbound networking rules for your pods. We recommend adding a default NetworkPolicy that denies all
   inbound and outbound traffic (again, principle of least privilege) and then adding a NetworkPolicy for each pod that
   gives it permissions to talk solely to the other pods it should be able to access.
++
+NOTE: `NetworkPolicy` is not supported out of the box by EKS unless you use a custom networking engine such as
+https://docs.projectcalico.org/v3.9/introduction/[calico] or https://istio.io[istio].
 
 [[deployment_walkthrough]]
 == Deployment walkthrough
 
 // TODO: do we have existing code with a sane PodSecurityPolicy and NetworkPolicy?
+// Answer: we have not yet added a module for PodSecurityPolicy (EKS only added support for it recently) and EKS does
+// not natively support NetworkPolicy
 
 Let's now walk through how to deploy a production-grade Kubernetes cluster in AWS, fully defined and managed as code,
 using the Gruntwork Service Catalog.
