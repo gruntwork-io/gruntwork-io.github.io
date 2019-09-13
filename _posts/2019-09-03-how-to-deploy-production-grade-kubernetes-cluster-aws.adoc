@@ -449,15 +449,22 @@ your Kubernetes namespace.
 To allow you to use the same container in different environments with different settings (e.g., dev, stage, prod), you
 can use a _https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/[ConfigMap]_, which is a
 map of key/value pairs where the values can be strings or even entire files.  Kubernetes stores ConfigMaps in etcd and
-can expose specific key/value pairs or the contents of the entire ConfigMap to your containers as either environment
-variables or files.
+can expose specific key/value pairs or the contents of the entire ConfigMap to your containers as either
+https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/#define-container-environment-variables-using-configmap-data[environment variables]
+or
+https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/#add-configmap-data-to-a-volume[files mounted in a volume].
 
 If you need to pass sensitive information to your containers (e.g., credentials or API keys), you can instead use a
 _https://kubernetes.io/docs/concepts/configuration/secret/[Kubernetes Secret]_. Secrets work more or less the same
 way as ConfigMaps—i.e., they contain key/value pairs and can be exposed to containers as environment variables or
-files—with the main difference being that (a) Kubernetes stores Secrets in an encrypted form in etcd and (b) Kubernetes
-ensures the secret is only ever stored in memory (and never the hard disk) when exposing it to your containers.
+files—with the main difference being that:
 
+* When exposing a secret to your containers, Kubernetes ensures the secret is only ever stored in memory. If you're
+  exposing the secret as a file mounted in a volume, Kubernetes will use a volume backed by
+  https://kubernetes.io/docs/concepts/storage/volumes/#secret[tmpfs, a RAM-backed filesystem], to ensure the secret is
+  never written to disk.
+* Kubernetes stores Secrets in an encrypted form in etcd.
++
 NOTE: https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/[etcd encryption] is only available as of
 Kubernetes 1.13 and not available out of the box on all Kuberentes platforms (older versions of Kubernetes stored
 secrets unencrypted!).
