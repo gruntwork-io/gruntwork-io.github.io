@@ -1546,6 +1546,52 @@ body .guides .guides-section-white {
   }
 }
 
+.no-azure-results{
+  h2 {
+    color: @guides-font;
+    font-size: 30px;
+    line-height: normal;
+    letter-spacing: 0.84px;
+    margin-bottom: 8px;
+    margin-top: 91px;
+    &:hover > a.anchorjs-link{
+      color: #FFFFFF;
+      text-decoration: none;
+      display: none;
+    }
+  }
+  p {
+    font-size: 20px;
+    opacity: 0.7;
+    line-height: 1.5;
+    letter-spacing: 0.56px;
+    color: #000000;
+    margin-bottom: 24px;
+  }
+  .btn {
+    border-radius: 23.5px;
+    background-image: linear-gradient(to bottom, #5bcde7, #569cea);
+    &:hover, &:active {
+      outline: none;
+      transform: none;
+      box-shadow: none;
+      border-radius: 23.5px;
+      background-image: linear-gradient(to bottom, #5bcde7, #569cea);
+    }
+  }
+}
+
+.overlay {
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0.2;
+  pointer-events: none;
+}
+
 .admonitionblock.important, .admonitionblock.note{
   .admonitionblock-content;
   .title:after {
