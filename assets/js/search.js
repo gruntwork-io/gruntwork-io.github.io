@@ -41,14 +41,22 @@
   }
 
   function displayFilterTags() {
+    //A list of tags that should be in uppercase
+    const upperCaseTags = ['aws', 'gke', 'gcp'];
+
     if (searchEntry.type == 'guideEntries') {
 
       //Filters the tags from the array of objects and flattens it out since it returns an array of arrays
-      let tags = searchEntry.entries.map(entry => entry.tags.split(',')).reduce((a, b) => a.concat(b), []);
+      let tags = searchEntry.entries.map(entry => entry.tags.split(',').map(tag => tag.trim())).reduce((a, b) => a.concat(b), []);
 
       tags.filter((tag, index) => {
+
         if ((tags.indexOf(tag) === index) && (tag.length != "")) {
-          $('.tags').append(`<label class="checkbox"><input value=${tag} type="checkbox">${tag}</label>`);
+          //Converts tags that should be in uppercase
+          if(upperCaseTags.includes(tag)){
+            tag = tag.toUpperCase();
+          }
+          $('.tags').append(`<div class="checkbox"><input value=${tag} id=${tag} type="checkbox"><label for="${tag}">${tag}</label></div>`);
         }
       });
     }
