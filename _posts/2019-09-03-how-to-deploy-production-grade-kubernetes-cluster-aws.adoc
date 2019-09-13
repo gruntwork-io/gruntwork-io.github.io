@@ -61,7 +61,8 @@ This guide consists of four main sections:
 
 <<production_grade_design>>::
   An overview of how to configure a secure, scalable, highly available Kubernetes cluster that you can rely on in
-  production. To get a sense of what production-grade means, check out <<production_grade_infra_checklist>>.
+  production. To get a sense of what production-grade means, check out
+  link:/guides/gruntwork/how-to-use-gruntwork-service-catalog#production_grade_infra_checklist[The production-grade infrastructure checklist].
 
 <<deployment_walkthrough>>::
   A step-by-step guide to deploying a production-grade Kubernetes cluster in AWS using code from the Gruntwork Service
@@ -462,7 +463,7 @@ most likely be eclipsed very quickly by future EKS releases.
 
 EKS relies on an a _https://aws.amazon.com/vpc/[Virtual Private Cloud (VPC)]_ to provide the basic network topology and
 to manage communication across the nodes (see
-link:../networking/how-to-configure-production-grade-vpc-aws[How to deploy a production-grade VPC on AWS] for more
+link:/guides/networking/how-to-configure-production-grade-vpc-aws[How to deploy a production-grade VPC on AWS] for more
 information on VPCs). Here are the key VPC considerations for your EKS cluster:
 
 Add tags to the VPC and subnets::
@@ -499,7 +500,7 @@ Kubernetes version::
 Subnets::
   Your EKS cluster will run in the subnets you specify. We strongly recommend running solely in private subnets that
   are NOT directly accessible from the public Internet. See
-  link:../networking/how-to-configure-production-grade-vpc-aws[How to deploy a production-grade VPC on AWS] for more
+  link:/guides/networking/how-to-configure-production-grade-vpc-aws[How to deploy a production-grade VPC on AWS] for more
   info.
 
 Endpoint access::
@@ -507,7 +508,7 @@ Endpoint access::
   is accessible from (a) within the same VPC and/or (b) from the public Internet. We recommend allowing access from
   within the VPC, but not from the public Internet. If you need to talk to your Kubernetes cluster from your own
   computer (e.g., to issue commands via `kubectl`), use a bastion host or VPN server. See
-  link:../networking/how-to-configure-production-grade-vpc-aws[How to deploy a production-grade VPC on AWS] for more
+  link:/guides/networking/how-to-configure-production-grade-vpc-aws[How to deploy a production-grade VPC on AWS] for more
   info.
 
 Cluster IAM Role::
@@ -543,7 +544,7 @@ Tags::
 Subnets::
   We strongly recommend running the Auto Scaling Group for your worker nodes in private subnets that are NOT directly
   accessible from the public Internet. See
-  link:../networking/how-to-configure-production-grade-vpc-aws[How to deploy a production-grade VPC on AWS] for more
+  link:/guides/networking/how-to-configure-production-grade-vpc-aws[How to deploy a production-grade VPC on AWS] for more
   info.
 
 AMI::
@@ -766,13 +767,13 @@ Gruntwork Service Catalog::
 +
 IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access this code.
 +
-Make sure to read <<how_to_use_gruntwork_service_catalog>>.
+Make sure to read link:/guides/gruntwork/how-to-use-gruntwork-service-catalog[How to Use the Gruntwork Service Catalog].
 
 Terraform::
   This guide uses https://www.terraform.io/[Terraform] to define and manage all the infrastructure as code. If you're
   not familiar with Terraform, check out https://blog.gruntwork.io/a-comprehensive-guide-to-terraform-b3d32832baca[A
   Comprehensive Guide to Terraform], https://training.gruntwork.io/p/terraform[A Crash Course on Terraform], and
-  <<how_to_use_gruntwork_service_catalog>>.
+  link:/guides/gruntwork/how-to-use-gruntwork-service-catalog[How to Use the Gruntwork Service Catalog].
 
 Python and Kubergrunt::
   Some of the Terraform modules used in this guide call out to Python code and/or
@@ -782,13 +783,13 @@ Python and Kubergrunt::
 Docker and Packer::
   This guide assumes you are deploying a Kubernetes cluster for use with https://www.docker.com[Docker]. The guide also
   uses https://www.packer.io[Packer] to build VM images. If you're not familiar with Docker or Packer, check out
-https://training.gruntwork.io/p/a-crash-course-on-docker-packer[A Crash Course on Docker and Packer] and
-  <<how_to_use_gruntwork_service_catalog>>.
+  https://training.gruntwork.io/p/a-crash-course-on-docker-packer[A Crash Course on Docker and Packer] and
+  link:/guides/gruntwork/how-to-use-gruntwork-service-catalog[How to Use the Gruntwork Service Catalog].
 
 AWS accounts::
   This guide deploys infrastructure into one or more AWS accounts. Check out the
-  <<production_grade_aws_account_structure>> guide for instructions. You will also need to be able to authenticate to
-  these accounts on the CLI: check out
+  link:/guides/foundations/how-to-configure-production-grade-aws-account-structure[How to configure a production-grade AWS account structure]
+  guide for instructions. You will also need to be able to authenticate to these accounts on the CLI: check out
   https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[A Comprehensive Guide to Authenticating to AWS on the Command Line]
   for instructions.
 
@@ -796,11 +797,13 @@ AWS accounts::
 
 NOTE: This guide will use https://github.com/gruntwork-io/terragrunt[Terragrunt] and its associated file and folder
 structure to deploy Terraform modules. Please note that *Terragrunt is NOT required for using Terraform modules from
-the Gruntwork Service Catalog.* Check out <<how_to_use_gruntwork_service_catalog>> for instructions on alternative
-options, such as how to <<deploy_using_plain_terraform>>.
+the Gruntwork Service Catalog.* Check out
+link:/guides/gruntwork/how-to-use-gruntwork-service-catalog[How to Use the Gruntwork Service Catalog] for instructions
+on alternative options, such as how to
+link:/guides/gruntwork/how-to-use-gruntwork-service-catalog#deploy_using_plain_terraform[Deploy using plain Terraform].
 
 The first step is to deploy a VPC. Follow the instructions in
-  link:../networking/how-to-configure-production-grade-vpc-aws[How to deploy a production-grade VPC on AWS] to use
+link:/guides/networking/how-to-configure-production-grade-vpc-aws[How to deploy a production-grade VPC on AWS] to use
 `module-vpc` to create a VPC setup that looks like this:
 
 .A production-grade VPC setup deployed using module-vpc from the Gruntwork Service Catalog
@@ -906,8 +909,11 @@ module "dns_mgmt_to_app" {
 }
 ----
 
-At this point, you'll want to test your code. See <<manual_tests_terraform>> and <<automated_tests_terraform>> for
-instructions.
+At this point, you'll want to test your code. See
+link:/guides/gruntwork/how-to-use-gruntwork-service-catalog#manual_tests_terraform[Manual tests for Terraform code]
+and
+link:/guides/gruntwork/how-to-use-gruntwork-service-catalog#automated_tests_terraform[Automated tests for Terraform code]
+for instructions.
 
 Once your updated `vpc-app` wrapper module is working the way you want, submit a pull request, get your changes merged
 into the `master` branch, and create a new versioned release by using a Git tag. For example, to create a `v0.5.0`
@@ -1707,11 +1713,9 @@ output "asg_name" {
 }
 ----
 
-At this point, you'll want to test your code. See <<manual_tests_terraform>> and <<automated_tests_terraform>> for
-instructions.
-
-Once your `eks-cluster` module is working the way you want, submit a pull request, get your changes merged into the
-`master` branch, and create a new versioned release by using a Git tag:
+At this point, run manual and automated tests for your code. Once your `eks-cluster` module is working the way you
+want, submit a pull request, get your changes merged into the `master` branch, and create a new versioned release by
+using a Git tag:
 
 ----
 $ git tag -a "v0.6.0" -m "Added eks-cluster module"
