@@ -390,6 +390,10 @@ way as ConfigMaps—i.e., they contain key/value pairs and can be exposed to con
 files—with the main difference being that (a) Kubernetes stores Secrets in an encrypted form in etcd and (b) Kubernetes
 ensures the secret is only ever stored in memory (and never the hard disk) when exposing it to your containers.
 
+NOTE: https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/[etcd encryption] is only available as of
+Kubernetes 1.13 and not available out of the box on all Kuberentes platforms (older versions of Kubernetes stored
+secrets unencrypted!).
+
 === Kubernetes authentication
 
 Kubernetes uses authentication plugins to authenticate API requests. Depending on the plugins you're using, there are
