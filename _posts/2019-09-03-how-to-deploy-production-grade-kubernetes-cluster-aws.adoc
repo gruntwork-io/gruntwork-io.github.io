@@ -287,10 +287,10 @@ for instructions on accessing it.
 
 _https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/[Namespaces]_ allow you to logically
 partition your Kubernetes cluster into multiple virtual clusters. Every command you issue to the Kubernetes API Server
-(e.g., via `kubectl`) runs within a namespace; if you don't specify a namespace, the `default` namespace is used. By
-granting users access only to specific namespaces and by configuring the networking in your cluster to only allow
-connectivity between resources in the same namespace, you can use namespaces as a lightweight way to group applications
-and provide some isolation between them.
+(e.g., via `kubectl`) and almost every resource you create in Kubernetes (e.g., every pod) runs within a namespace; if
+you don't specify a namespace, the `default` namespace is used. By granting users access only to specific namespaces
+and by configuring your cluster to only allow connectivity between resources in the same namespace, you can use
+namespaces as a lightweight way to group applications and provide some isolation between them.
 
 === Services and Service Discovery
 
