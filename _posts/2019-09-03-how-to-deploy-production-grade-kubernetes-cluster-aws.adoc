@@ -712,14 +712,16 @@ data:
         - system:nodes
   mapUsers: |
     - userarn: arn:aws:iam::11122223333:user/example-user
-      username: designated_user
+      username: example-user
       groups:
         - system:masters
 ----
 
 This ConfigMap tells EKS that anyone who authenticates as the IAM role called `example-role` should automatically get
 the permissions in the `system:bootstrappers` and `system:nodes` Kubernetes roles, and anyone who authenticates with as
-the IAM user `example-user` should automatically get the permissions in the `system:masters` Kubernetes role.
+the IAM user `example-user` should automatically get the permissions in the `system:masters` Kubernetes role. Note that
+when users authenticate using an IAM role or IAM user, they are mapped to a Kubernetes user with the `username` you
+specify in the `aws-auth` ConfigMap (i.e., that's the username that will show up in the Kubernetes audit log).
 
 Note that, as of September, 2019, the `aws-auth` ConfigMap supports mapping IAM roles and IAM users, but not IAM groups
 (see https://docs.aws.amazon.com/en_pv/eks/latest/userguide/add-user-role.html[Managing Users or IAM Roles for your EKS Cluster]).
