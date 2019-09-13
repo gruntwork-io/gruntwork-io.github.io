@@ -95,6 +95,7 @@
 
   function initialEntry() {
     $('#no-matches').hide();
+    $('#no-azure-results').hide();
     searchEntry = detectSearchEntry();
     $(displayFilterTags);
     $(showInitialItemsCount);
@@ -151,10 +152,13 @@
    */
   function filterData(searchValue, type) {
 
-    // if(searchValue === 'azure') {
-    //   $('.guide-listing').addClass('#overlay');
-    // }
+    if(searchValue === 'azure') {
+      $('#no-azure-results').show();
+      $('#guide-listings').addClass('overlay');
+      return showAllItems();
+    }
 
+    $('#no-azure-results').hide();
     $('#no-matches').hide();
 
     if (searchValue && searchValue.length > 0) {
