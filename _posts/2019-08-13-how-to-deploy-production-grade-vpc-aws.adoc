@@ -49,9 +49,7 @@ This guide consists of four main sections:
 
 <<production_grade_design>>::
   An overview of how to configure a secure, scalable, highly available VPC that you can rely on in production. To get a
-  sense of what production-grade means, check out the production-grade infrastructure checklist.
-
-// TODO: link to checklist
+  sense of what production-grade means, check out <<production_grade_infra_checklist>>.
 
 <<deployment_walkthrough>>::
   A step-by-step guide to deploying a production-grade VPC in AWS using code from the Gruntwork Service Catalog.
@@ -900,7 +898,7 @@ with the latest version from the https://github.com/gruntwork-io/module-vpc/rele
 ----
 module "vpc" {
   # Make sure to replace <VERSION> in this URL with the latest module-vpc release
-  source = "git@github.com:gruntwork-io/module-vpc.git//modules/vpc-mgmt?ref=<VERSION>"
+  source = "git@github.com:gruntwork-io/module-vpc.git//modules/vpc-app?ref=<VERSION>"
 
   vpc_name         = var.vpc_name
   aws_region       = var.aws_region
@@ -1125,9 +1123,9 @@ Now that you have your management and application VPCs deployed, you can start b
 on top of them! Typically, the best next step is to deploy a cluster of servers for running your applications by using
 one of the following guides:
 
-. `How to deploy a production grade Kubernetes (EKS) cluster in AWS` _(coming soon!)_
-. `How to deploy a production grade ECS cluster in AWS` _(coming soon!)_
-. `How to deploy a production grade Nomad cluster in AWS` _(coming soon!)_
-. `How to deploy a production grade Auto Scaling Group in AWS` _(coming soon!)_
+. link:../docker/how-to-deploy-production-grade-kubernetes-cluster-aws[How to deploy a production-grade Kubernetes cluster on AWS]
+. `How to deploy a production grade ECS cluster on AWS` _(coming soon!)_
+. `How to deploy a production grade Nomad cluster on AWS` _(coming soon!)_
+. `How to deploy a production grade Auto Scaling Group on AWS` _(coming soon!)_
 
 If you're not sure which of these options to use, check out the `Server Cluster Comparison` guide _(coming soon!)_.
