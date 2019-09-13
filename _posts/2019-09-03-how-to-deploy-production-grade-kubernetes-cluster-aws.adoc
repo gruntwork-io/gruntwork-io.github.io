@@ -129,7 +129,8 @@ Operating system for a data center::
   In a data center, an orchestration tool like Kubernetes also abstracts away all the hardware details, but it does it
   for multiple computers (multiple servers), so that as a developer, you can deploy your applications using a
   high-level, consistent, safe API (the _Kubernetes API_), without having to worry too much about the differences
-  between the servers or about managing any of the applications running on those servers.
+  between the servers or about managing any of the applications running on those servers (i.e., the orchestration tool
+  handles deploying applications, restarting them if they fail, allowing them to communicate over the network, etc.).
 
 To use the Kernel API, your application makes system calls. To use the Kubernetes API, you make HTTPS calls, typically
 by using the official command-line utility for Kubernetes,
