@@ -1835,8 +1835,8 @@ inputs = {
     # Give anyone using the full-access IAM role admin permissions
     "arn:aws:iam::444444444444:role/allow-full-access-from-other-accounts" = ["system:masters"]
 
-    # Give anyone using the developers IAM role developer permissions. Note that, separately, you'll need to create a
-    # developers role in your Kubernetes cluster!
+    # Give anyone using the developers IAM role developer permissions. Kubernetes will automatically create this group
+    # if it doesn't exist already, but you're still responsible for binding permissions to it!
     "arn:aws:iam::444444444444:role/allow-dev-access-from-other-accounts" = ["developers"]
   }
 }
