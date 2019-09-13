@@ -194,7 +194,110 @@ kube-proxy::
   containers live at which IPs, and proxying requests from containers on the same worker node to those IPs. This is
   used for Service Discovery within Kubernetes, a topic we'll discuss later.
 
-=== Pods
+=== Kubernetes access control
+
+To access your Kubernetes cluster, you have to understand Kubernetes authentication and authorization.
+
+==== Kubernetes authentication
+
+Kubernetes uses authentication plugins to authenticate API requests. Depending on the plugins you're using, there are
+a number of supported
+_https://kubernetes.io/docs/reference/access-authn-authz/authentication/#authentication-strategies[authentication strategies]_,
+including X509 client certs, static token files, bootstrap tokens, static password files, service account tokens,
+OpenID connect tokens, and more.
+
+When you authenticate, you authenticate as one of two types of accounts:
+
+User accounts::
+  _User accounts_ are used by humans or other services outside of the Kubernetes cluster. For example, an admin at your
+  company may distribute X509 certificates to your team members, or if you're using a Kubernetes service managed by your
+  cloud provider (e.g., EKS in AWS or GKE in GCP), the user accounts may be the IAM user accounts you have in that
+  cloud.
+
+Service accounts::
+  _Service accounts_ are managed and used by resources within the Kubernetes cluster itself, such as your pods.
+  Kubernetes creates some service accounts automatically; you can create others using the Kubernetes API. The
+  credentials for service accounts are stored as secrets in Kubernetes and mounted into the pods that should have
+  access to those service accounts.
+
+==== Kubernetes authorization
+
+Once you've authenticated and the Kubernetes API Server knows _who_ you are, depending on the plugins you're using,
+it will use one of several supported
+_https://kubernetes.io/docs/reference/access-authn-authz/authorization/#authorization-modules[authorization modes]_ to
+determine _what_ you can do. The standard authorization mode is
+_https://kubernetes.io/docs/reference/access-authn-authz/rbac/[role-based access control (RBAC)]_, where you create
+roles with access to specific Kubernetes APIs (e.g., the ability to call `GET` on the secrets API in a specific
+namespace), and associate those roles with the specific user and service accounts that should have those permissions.
+
+=== Interacting with Kubernetes
+
+Once you have a Kubernetes cluster up and running, there are a number of ways to interact with it. This section will
+go through a few of the most common ones, including the API, `kubectl`, the Web UI, and Terraform.
+
+=== API
+
+Under the hood, any Kubernetes tool you use will be talking to the
+https://kubernetes.io/docs/reference/using-api/api-overview/[Kubernetes API]. However, it's relatively rare for you to
+have to make API calls directly (if you do have to, see the
+https://kubernetes.io/docs/reference/#api-client-libraries[API client libraries]), so let's quickly move on to the
+other tools that build on top of the API.
+
+==== kubectl
+
+https://kubernetes.io/docs/reference/kubectl/overview/[kubectl] is the official command-line interface (CLI) for
+working with Kubernetes. For example, to deploy the https://hub.docker.com/r/training/webapp[training/webapp] Docker
+container (a simple "Hello, World" webapp) and have it listen on port 5000, you could run:
+
+----
+$ kubectl run webapp \
+    --image=training/webapp:latest \
+    --port 5000 \
+    --generator=run-pod/v1
+----
+
+And to see the pods running in your cluster, you could run:
+
+----
+$ kubectl get pods
+NAME     READY   STATUS    RESTARTS   AGE
+webapp   1/1     Running   0          71s
+----
+
+To be able to authenticate to different EKS clusters or as different users, you can create one or more `kubectl`
+configuration files, which are typically called _kubeconfig files_ (note, the files do not actually need to be called
+`kubeconfig`). In a kubeconfig file, you can define one or more _contexts_, where each context specifies a cluster to
+connect to and a user to use for authentication. You can then use the `kubectl config use-context` command to quickly
+switch between contexts—and therefore, different clusters and users.
+
+==== Web UI (Dashboard)
+
+.The Kubernetes Dashboard
+image::../assets/img/guides/eks/kubernetes-dashboard.png[]
+
+The _https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/[Kubernetes Dashboard]_ is a
+web-based interface you can use to manage your Kubernetes cluster. The dashboard is not enabled by default in most
+Kubernetes distributions. Check out the
+https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/#deploying-the-dashboard-ui[Deploying the Dashboard UI]
+for instructions on deploying it and
+https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/#accessing-the-dashboard-ui[Accessing the Dashboard UI]
+for instructions on accessing it.
+
+==== Terraform
+
+Terraform has a https://www.terraform.io/docs/providers/kubernetes/index.html[Kubernetes provider] that allows you to
+write Terraform code that, under the hood, calls the Kubernetes API. This allows you to manage all your
+infrastructure—whether that's your VPCs, databases, a Kubernetes cluster, or Kubernetes services—using the same
+language and workflow. The downside is that the Kubernetes provider seems to lag behind considerably, and is missing
+some of the features you need for effectively working with Kubernetes, which often requires you to go outside of
+Terraform code anyway (e.g., execute a script).
+
+=== Kubernetes resources
+
+Using one of the previously mentioned tools, you can create one or more _resources_ within your Kubernetes cluster,
+such as pods, controllers, namespaces, services, and configuration.
+
+==== Pods
 
 With Kubernetes, you don't run containers directly. Instead, the basic building block in Kubernetes is a
 _https://kubernetes.io/docs/concepts/workloads/pods/pod/[pod]_, which is a group of one or more related containers that
@@ -228,7 +331,7 @@ Pods are ephemeral::
   other reasons. This is a critical idea to keep in mind as you design your system, especially when thinking about
   fault tolerance, replication, and state.
 
-=== Controllers
+==== Controllers
 
 Pods are the basic building blocks of Kubernetes, but you typically don't deploy them directly either. A single pod on
 a single worker node is a single point of failure: the kubelet on that node can restart the pod if it crashes, but
@@ -247,43 +350,7 @@ The Deployment will deploy your replicas, constantly monitor them, and automatic
 When you apply a change to your Deployment—e.g., change the Docker image tag—the Deployment will automatically roll
 that change out using one of several built-in strategies, such as rolling deployment and canary deployment.
 
-=== kubectl
-
-https://kubernetes.io/docs/reference/kubectl/overview/[kubectl] is the official command-line interface (CLI) for
-working with Kubernetes. For example, to deploy the https://hub.docker.com/r/training/webapp[training/webapp] Docker
-container (a simple "Hello, World" webapp) and have it listen on port 5000, you could run:
-
-----
-$ kubectl run webapp \
-    --image=training/webapp:latest \
-    --port 5000 \
-    --generator=run-pod/v1
-----
-
-And to see the pods running in your cluster, you could run:
-
-----
-$ kubectl get pods
-NAME     READY   STATUS    RESTARTS   AGE
-webapp   1/1     Running   0          71s
-----
-
-Under the hood, every CLI command you run with `kubectl` translates into a call to the Kubernetes API Server.
-
-=== Web UI (Dashboard)
-
-.The Kubernetes Dashboard
-image::../assets/img/guides/eks/kubernetes-dashboard.png[]
-
-The _https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/[Kubernetes Dashboard]_ is a
-web-based interface you can use to manage your Kubernetes cluster. The dashboard is not enabled by default in most
-Kubernetes distributions. Check out the
-https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/#deploying-the-dashboard-ui[Deploying the Dashboard UI]
-for instructions on deploying it and
-https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/#accessing-the-dashboard-ui[Accessing the Dashboard UI]
-for instructions on accessing it.
-
-=== Namespaces
+==== Namespaces
 
 _https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/[Namespaces]_ allow you to logically
 partition your Kubernetes cluster into multiple virtual clusters. Every command you issue to the Kubernetes API Server
@@ -292,7 +359,7 @@ you don't specify a namespace, the `default` namespace is used. By granting user
 and by configuring your cluster to only allow connectivity between resources in the same namespace, you can use
 namespaces as a lightweight way to group applications and provide some isolation between them.
 
-=== Services and Service Discovery
+==== Services and Service Discovery
 
 Every pod in Kubernetes gets an IP address, but this IP could change every time the pod is redeployed. Moreover, you
 typically don't want the IP of a single pod, but some way to talk to all the related pods that make up a logical
@@ -376,7 +443,7 @@ your Kubernetes namespace.
 //The advantage of an ingress controller is that you can share one load balancer across many services and take advantage
 //of higher-level features, such as path-based routing and SSL termination.
 
-=== Configuration and secrets
+==== Configuration and secrets
 
 To allow you to use the same container in different environments with different settings (e.g., dev, stage, prod), you
 can use a _https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/[ConfigMap]_, which is a
@@ -393,46 +460,6 @@ ensures the secret is only ever stored in memory (and never the hard disk) when 
 NOTE: https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/[etcd encryption] is only available as of
 Kubernetes 1.13 and not available out of the box on all Kuberentes platforms (older versions of Kubernetes stored
 secrets unencrypted!).
-
-=== Kubernetes authentication
-
-Kubernetes uses authentication plugins to authenticate API requests. Depending on the plugins you're using, there are
-a number of supported
-_https://kubernetes.io/docs/reference/access-authn-authz/authentication/#authentication-strategies[authentication strategies]_,
-including X509 client certs, static token files, bootstrap tokens, static password files, service account tokens,
-OpenID connect tokens, and more.
-
-When you authenticate, you authenticate as one of two types of accounts:
-
-User accounts::
-  _User accounts_ are used by humans or other services outside of the Kubernetes cluster. For example, an admin at your
-  company may distribute X509 certificates to your team members, or if you're using a Kubernetes service managed by your
-  cloud provider (e.g., EKS in AWS or GKE in GCP), the user accounts may be the IAM user accounts you have in that
-  cloud.
-
-Service accounts::
-  _Service accounts_ are managed and used by resources within the Kubernetes cluster itself, such as your pods.
-  Kubernetes creates some service accounts automatically; you can create others using the Kubernetes API. The
-  credentials for service accounts are stored as secrets in Kubernetes and mounted into the pods that should have
-  access to those service accounts.
-
-=== Kubernetes authorization
-
-Once you've authenticated and the Kubernetes API Server knows _who_ you are, depending on the plugins you're using,
-it will use one of several supported
-_https://kubernetes.io/docs/reference/access-authn-authz/authorization/#authorization-modules[authorization modes]_ to
-determine _what_ you can do. The standard authorization mode is
-_https://kubernetes.io/docs/reference/access-authn-authz/rbac/[role-based access control (RBAC)]_, where you create
-roles with access to specific Kubernetes APIs (e.g., the ability to call `GET` on the secrets API in a specific
-namespace), and associate those roles with the specific user and service accounts that should have those permissions.
-
-=== kubeconfig
-
-To be able to authenticate to different EKS clusters or as different users, you can create one or more `kubectl`
-configuration files, which are typically called _kubeconfig files_ (note, the files do not actually need to be called
-`kubeconfig`). In a kubeconfig file, you can define one or more _contexts_, where each context specifies a cluster to
-connect to and a user to use for authentication. You can then use the `kubectl config use-context` command to quickly
-switch between contexts—and therefore, different clusters and users.
 
 === Options for running Kubernetes in AWS
 
