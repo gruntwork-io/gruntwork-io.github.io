@@ -425,13 +425,14 @@ Deploy it yourself::
 
 Kubernetes deployment tools::
   There are a number of Kubernetes tools that can automatically spin up a cluster for you, including
-  https://github.com/kubernetes/kops[kops], https://kubespray.io/[kubespray], and
-  https://github.com/kubernetes/kubeadm[kubeadm]. These tools allow you to get a reasonable cluster up and running in a
-  few commands, significantly reducing the amount of work compared to doing it from scratch. However, it's typically
-  hard to customize and manage those clusters, as you don't have the infrastructure defined as code (note: `kops` can
-  generate Terraform code, but it's probably not the way you'd write the code yourself and if you modify that code,
-  it's not clear if you can still use `kops`), and most importantly, these tools put the full burden of maintenance,
-  scalability, high availability, disaster recovery, updates, etc on you.
+  https://eksctl.io[eksctl] (the official tool from AWS), https://github.com/kubernetes/kops[kops],
+  https://kubespray.io/[kubespray], and https://github.com/kubernetes/kubeadm[kubeadm]. These tools allow you to get a
+  reasonable cluster up and running in a few commands, significantly reducing the amount of work compared to doing it
+  from scratch. However, it's typically hard to customize and manage those clusters, as you don't have the
+  infrastructure defined as code (note: `kops` can generate Terraform code, but it's probably not the way you'd write
+  the code yourself and if you modify that code, it's not clear if you can still use `kops`), and most importantly,
+  these tools put the full burden of maintenance, scalability, high availability, disaster recovery, updates, etc on
+  you (except `eksctl`, which spins up an EKS cluster).
 
 Amazon Elastic Kubernetes Service::
   https://aws.amazon.com/eks/[Amazon EKS] is a managed service in AWS for using Kubernetes. It runs the entire control
@@ -599,16 +600,25 @@ This will update your kubeconfig so that `kubectl` will automatically call `aws 
 `aws eks get-token` command will, in turn, use the standard
 https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[AWS CLI mechanisms to authenticate to AWS]:
 i.e., the credentials file at `~/.aws/credentials`, environment variables, etc. That means that can now start running
-your standard `kubectl` commands:
+your standard `kubectl` commands, such as `kubectl get nodes`.
+
+https://eksctl.io[eksctl]::
+  `eksctl` is the official CLI tool for EKS. It's primary purpose is to deploy and manage the EKS cluster itself, but
+  you can also use it to authenticate to a cluster. To install `eksctl`, check out
+  https://eksctl.io/introduction/installation/[these instructions]. To authenticate with `eksctl`, you run the
+  `eksctl utils write-kubeconfig` command:
 +
 ----
-kubectl get nodes
+eksctl utils write-kubeconfig --region <AWS_REGION> --name=<EKS_CLUSTER_NAME>
 ----
++
+This will update your kubeconfig so that `kubectl` will automatically call either the AWS CLI or AWS IAM Authenticator
+for authenticationThat means that can now start running your standard `kubectl` commands, such as `kubectl get nodes`.
 
 https://github.com/gruntwork-io/kubergrunt[kubergrunt]::
   A CLI tool maintained by Gruntwork that supports authentication to EKS, as well as several other important utilities,
-  such as tools for managing TLS certificates in Kubernetes. The easiest way to install it is to
-  use one of the pre-built binaries from the
+  such as tools for doing zero-downtime rolling deployments of EKS worker nodes and managing TLS certificates in
+  Kubernetes. The easiest way to install it is to use one of the pre-built binaries from the
   https://github.com/gruntwork-io/kubergrunt/releases[kubergrunt releases] page. The usage is very similar to the AWS
   CLI. You first run `kubergrunt eks configure`:
 +
@@ -617,11 +627,7 @@ kubergrunt eks configure --eks-cluster-arn <EKS_CLUSTER_ARN>
 ----
 +
 This will update your kubeconfig to use `kubergrunt eks token` for authentication, which means you can now start
-running your normal `kubectl` commands:
-+
-----
-kubectl get nodes
-----
+running your normal `kubectl` commands, such as `kubectl get nodes`.
 
 https://github.com/kubernetes-sigs/aws-iam-authenticator[AWS IAM Authenticator for Kubernetes]::
   A CLI tool maintained by the Heptio and Amazon EKS teams. This was the main tool AWS recommended for authenticating
@@ -766,6 +772,17 @@ Terraform::
   This guide uses https://www.terraform.io/[Terraform] to define and manage all the infrastructure as code. If you're
   not familiar with Terraform, check out https://blog.gruntwork.io/a-comprehensive-guide-to-terraform-b3d32832baca[A
   Comprehensive Guide to Terraform], https://training.gruntwork.io/p/terraform[A Crash Course on Terraform], and
+  <<how_to_use_gruntwork_service_catalog>>.
+
+Python and Kubergrunt::
+  Some of the Terraform modules used in this guide call out to Python code and/or
+  https://github.com/gruntwork-io/kubergrunt[Kubergrunt] to fill in missing features in Terraform. Make sure you have
+  Python and Kubergrunt installed on any computer where you will be running Terraform.
+
+Docker and Packer::
+  This guide assumes you are deploying a Kubernetes cluster for use with https://www.docker.com[Docker]. The guide also
+  uses https://www.packer.io[Packer] to build VM images. If you're not familiar with Docker or Packer, check out
+https://training.gruntwork.io/p/a-crash-course-on-docker-packer[A Crash Course on Docker and Packer] and
   <<how_to_use_gruntwork_service_catalog>>.
 
 AWS accounts::
