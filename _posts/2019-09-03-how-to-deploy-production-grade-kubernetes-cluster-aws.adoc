@@ -147,7 +147,7 @@ image::../assets/img/guides/eks/kubernetes-architecture.png[]
 
 Kubernetes consists of two main pieces: the control plane and worker nodes. Each of these will be discussed next.
 
-=== Control plane
+==== Control plane
 
 The _https://kubernetes.io/docs/concepts/#kubernetes-control-plane[control plane]_ is responsible for managing the
 entire cluster. It consists of one or more master nodes (typically 3 master nodes for high availability), where each
@@ -177,7 +177,7 @@ etcd::
   _https://etcd.io[etcd]_ is a distributed key-value store that the master nodes use as a persistent way to store the
   cluster configuration.
 
-=== Worker nodes
+==== Worker nodes
 
 The _https://kubernetes.io/docs/concepts/architecture/nodes/[worker nodes]_ (or just _nodes_, for short) are the
 servers that run your containers. Each worker node runs several components:
@@ -1023,7 +1023,7 @@ module "eks_cluster" {
   vpc_master_subnet_ids = data.terraform_remote_state.vpc.outputs.private_app_subnet_ids
 
   enabled_cluster_log_types = ["api", "audit", "authenticator"]
-  kubernetes_version        = 1.12
+  kubernetes_version        = 1.13
   endpoint_public_access    = false
 }
 ----
@@ -1035,7 +1035,7 @@ The code above does the following:
   the code for this shortly.
 * Configure the control plane to run in the private app subnets of that VPC.
 * Configure the API server logs, audit logs, and authenticator logs for the control plane to be sent to CloudWatch.
-* Set the Kubernetes version to 1.12.
+* Set the Kubernetes version to 1.13.
 * Disable public access so that the Kubernetes API server is only accessible from within the VPC.
 +
 NOTE: This means you MUST be in the VPC network—e.g., connected via a VPN—to access your EKS cluster.
