@@ -296,7 +296,7 @@ namespaces as a lightweight way to group applications and provide some isolation
 
 Every pod in Kubernetes gets an IP address, but this IP could change every time the pod is redeployed. Moreover, you
 typically don't want the IP of a single pod, but some way to talk to all the related pods that make up a logical
-service: e.g., if you have 3 replicas of your Node.js pod, what you really you want is some way to have requests
+service: e.g., if you have 3 replicas of your Node.js pod, what you really want is some way to have requests
 load balanced across all of these pods, even as the IPs of the individual pods or the number of pods changes.
 
 To do this, you can create a Kubernetes _https://kubernetes.io/docs/concepts/services-networking/service/[service]_,
