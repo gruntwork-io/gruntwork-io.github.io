@@ -1194,7 +1194,7 @@ Here's what `eks-node.json` should look like:
   "variables": {
     "aws_region": "us-east-2",
     "github_auth_token": "{{env `GITHUB_OAUTH_TOKEN`}}",
-    "kubernetes_version": "1.12"
+    "kubernetes_version": "1.13"
   },
   "builders": [{
     "ami_name": "eks-cluster-instance-{{isotime | clean_ami_name}}",
