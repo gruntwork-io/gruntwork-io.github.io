@@ -135,7 +135,7 @@ To use the Kernel API, your application makes system calls. To use the Kubernete
 by using the official command-line utility for Kubernetes,
 https://kubernetes.io/docs/reference/kubectl/overview/[kubectl]. When working with the Kubernetes API, you express
 _what_ you want to deploy—i.e., which Docker containers, how many of them, what CPU, memory, and ports they need,
-etc—in a YAML file, use `kubectl` to make send that YAML file to Kubernetes via an API call, and Kubernetes will
+etc—in a YAML file, use `kubectl` to send that YAML file to Kubernetes via an API call, and Kubernetes will
 figure out _how_ to make that happen, including picking the best servers to handle the requirements in your YAML file,
 deploying the containers on those servers, monitoring and restarting the containers if they crash, scaling the number
 of containers up and down with load, and so on.
