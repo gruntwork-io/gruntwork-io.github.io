@@ -1578,9 +1578,10 @@ variable "iam_role_to_rbac_group_mappings" {
 This variable allows you to map different IAM role ARNs in different environments to various Kubernetes roles. You'll
 see an example of this later in the guide.
 
-Note that the `` module uses the Kubernetes provider to talk to your Kubernetes cluster directly from Terraform. That
-means that (a) you can only apply this code from within your VPC and/or when connected via VPN and (b) you have to
-configure the Kubernetes provider. The latter requires a little bit of hackery due to Terraform limitations:
+Note that the `eks-k8s-role-mapping` module uses the Kubernetes provider to talk to your Kubernetes cluster directly
+from Terraform. That means that (a) you can only apply this code from within your VPC and/or when connected via VPN and
+(b) you have to configure the Kubernetes provider. The latter requires a little bit of hackery due to Terraform
+limitations:
 
 .infrastructure-modules/services/eks-cluster/main.tf
 [source,hcl]
