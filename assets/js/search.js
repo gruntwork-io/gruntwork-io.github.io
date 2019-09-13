@@ -224,19 +224,19 @@
   /* Triggered when filter checkboxes are checked */
   $(document).ready(() => {
 
-    $('.tags .checkbox input[type="checkbox"]').on('change', function () {
+    $(document).on('click','.tags', function() {
       let checked = $('input[type="checkbox"]:checked');
       if (!checked) {
         showAllItems();
         return; /* Return if nothing checked */
       }
-      checked.each(() => {
+      checked.each(function() {
         let searchValue = $(this).val();
 
         filterData(searchValue, 'tagSearch');
       });
-    });
-  });
+    })
+  })
 
 
   function performSearch(filterButton) {
