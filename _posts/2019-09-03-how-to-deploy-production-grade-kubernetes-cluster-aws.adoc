@@ -1912,13 +1912,16 @@ kubectl get nodes
 Deploying the cluster initially is a good start. In the future, however, you'll need a way to roll out updates:
 
 Updating the control plane::
-  The `eks-cluster-control-plane` module has built-in support for updating the control plane. For example, if you bump
-  the Kubernetes version and re-run `terragrunt apply`, the module will execute a Python script to automatically roll
-  out new master nodes with the new version, updating all component versions as described in the
-  https://docs.aws.amazon.com/eks/latest/userguide/update-cluster.html[official upgrade guide]. Note: AWS warns that you
-  may "experience minor service interruptions during an update." See
-  https://docs.aws.amazon.com/eks/latest/userguide/update-cluster.html[Updating an Amazon EKS Cluster Kubernetes Version]
-  for more info.
+  EKS has built-in support for updating the control plane. The `eks-cluster-control-plane` module will also take care
+  of updating the plugins EKS uses, such as `aws-vpc-cni`, `coredns`, and `kube-proxy`. So, if you bump your Kubernetes
+  version and run `terragrunt apply`, EKS will automatically roll out new master nodes with the new version installed,
+  and the `eks-cluster-control-plane` module will automatically execute a Python script that will update all the plugin
+  versions as described in the
+  https://docs.aws.amazon.com/eks/latest/userguide/update-cluster.html[official upgrade guide].
++
+NOTE: AWS warns that you may "experience minor service interruptions during an update." See
+https://docs.aws.amazon.com/eks/latest/userguide/update-cluster.html[Updating an Amazon EKS Cluster Kubernetes Version]
+for more info.
 
 Updating the worker nodes::
   EKS does not have a built-in way to update the worker nodes without downtime. If you need to update the worker
