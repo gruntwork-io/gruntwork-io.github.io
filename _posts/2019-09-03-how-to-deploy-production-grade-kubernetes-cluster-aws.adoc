@@ -757,11 +757,12 @@ assume those roles.
 //
 //. Automatically find hostnames you've defined in your ingress configurations.
 //. Wait for the ingress controller to finish deploying (e.g., wait for the ALB to deploy).
-//. Create DNS entries for those hostnames in your chose DNS provider (e.g., in Route 53, Google Cloud DNS, CloudFlare,
-//  etc)
+//. Create DNS entries for those hostnames in your chose DNS provider
 //
-//Note that external-dns will only add DNS entries to existing domains; it's up to you to register the domains (e.g.,
-//in Route 53, GoDaddy, etc) as you normally do.
+//Note that external-dns only works with certain DNS providers (e.g., Route 53, Google Cloud DNS, CloudFlare—see the
+//https://github.com/kubernetes-incubator/external-dns#the-latest-release-v05[full list here]), and it will only add
+//DNS entries to existing domains; it's up to you to register the domains (e.g., in Route 53, GoDaddy, etc) as you
+//normally do.
 
 === Logging
 
