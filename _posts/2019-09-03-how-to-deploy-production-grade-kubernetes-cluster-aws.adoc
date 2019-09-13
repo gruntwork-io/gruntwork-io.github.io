@@ -236,19 +236,16 @@ if the entire node crashes, or if you want to run multiple pods for high availab
 higher level construct. This is where controllers come in. Controllers allow you to manage multiple pods across
 multiple nodes.
 
-Two of the most common types of controllers you're likely to use are:
+The most common controller you're likely to use is the
+https://kubernetes.io/docs/concepts/workloads/controllers/deployment/[Deployment], which allows you to specify:
 
-https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/[ReplicaSet]::
-  Allows you to specify the template for a pod to deploy, plus how may _replicas_ (copies) of that pod you want, and
-  constantly monitors the worker nodes to ensure exactly that many replicas are running at all times. For example, you
-  could use a ReplicaSet to deploy 3 replicas of your Node.js pod, and if any of the replicas crashes, the ReplicaSet
-  will automatically spin up a replacement (potentially on a different worker node).
+* What pod to deploy.
+* How many _replicas_ (copies) of that pod you want running.
+* How to roll out updates to the replicas whenever you make a change.
 
-https://kubernetes.io/docs/concepts/workloads/controllers/deployment/[Deployment]::
-  Allows you to declaratively specify how to roll out updates to a ReplicaSet. For example, you could specify that you
-  want to do a rolling deployment or canary deployment for your Node.js pods, and each time you change something in
-  your pod template (e.g., you specify a new Docker image tag), the Deployment will automatically roll that change out
-  across your replicas.
+The Deployment will deploy your replicas, constantly monitor them, and automatically replace any replicas that fail.
+When you apply a change to your Deployment—e.g., change the Docker image tag—the Deployment will automatically roll
+that change out using one of several built-in strategies, such as rolling deployment and canary deployment.
 
 === kubectl
 
