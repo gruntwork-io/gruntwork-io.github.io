@@ -1,6 +1,6 @@
 <div class="row">
-    <div class="searchrow text-center">
-        <div class="col-xs-10 no-padding search-box">
+    <div class="searchrow center">
+        <div class="col-xs-7 no-padding">
             <div class="input-group">
                 <div class="input-group-btn" >
                     <div class="btn-group" role="group"> 
@@ -11,25 +11,31 @@
                 </div><input id="search-box" type="text" class="form-control guides-input-box" placeholder="Search guides....">
             </div>
         </div>
-        <div class="col-xs-2 no-padding" id="tags-filter"> 
+        <div class="col-xs-1 no-padding" id="tags-filter"> 
             <button class="btn tags-filter" type="button" data-toggle="collapse" data-target="#filter-options" aria-expanded="false" aria-controls="filter-options">
                 Filter <i class="fa fa-caret-down" aria-hidden="true"></i>
             </button>  
         </div>
     </div>
-    <div class="filter-options">
-        <div class="collapse" id="filter-options" aria-expanded="true">
-            <div class="card card-body">
-                <p>Tags</p>
-                <div class="tags"></div>
+    <div class="row">
+        <div class="filter-options center">
+            <div class="col-xs-8 no-padding">
+                <div class="collapse" id="filter-options" aria-expanded="true">
+                    <div class="card card-body">
+                        <p>Tags</p>
+                        <div class="tags"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    <div class="text-center">
+    <div class="row">
         <div class="cloud-filter">
-            <div class="filter active-button" id="aws"><span class="helper"></span><img  src="/assets/img/logos-technologies/aws-logo.png" alt="aws logo"></div>
-            <div class="filter" id="gcp"><span class="helper"></span><img src="/assets/img/logos-technologies/gcp-logo.png" alt="aws logo"></div>
-            <div class="filter"id="azure"><span class="helper"></span><img src="/assets/img/logos-technologies/azure-logo.png" alt="aws logo"></div>
+            <div class="col-xs-4 center">
+                <div class="filter active-button" id="aws"><span class="helper"></span><img  src="/assets/img/logos-technologies/aws-logo.png" alt="aws logo"></div>
+                <div class="filter" id="gcp"><span class="helper"></span><img src="/assets/img/logos-technologies/gcp-logo.png" alt="aws logo"></div>
+                <div class="filter"id="azure"><span class="helper"></span><img src="/assets/img/logos-technologies/azure-logo.png" alt="aws logo"></div>
+            </div>
         </div>
     </div>
 </div>

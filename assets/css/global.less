@@ -919,13 +919,12 @@ body .guides .guides-section-white {
 }
 
 .searchrow {
-  margin-top: 15px;
+  margin-top: 20px;
   padding: 0;
-  .search-box{
-    width: 83%;
-  }
   .input-group {
     width: 100%;
+    padding-right: 19px;
+    z-index: 0;
   }
   button {
     border-bottom-left-radius: 8px;
@@ -978,9 +977,9 @@ body .guides .guides-section-white {
 .guides-input-box::placeholder               { .guides-input-placeholder;} 
 
 .cloud-filter {
-  display: inline-block;
+  .center();
+  margin-bottom: 11px;
   .filter {
-    margin-top: 30px;
     width: 109px;
     height: 76px;
     cursor: pointer;
@@ -989,6 +988,9 @@ body .guides .guides-section-white {
     border: none;
     background-color: #f5f9fa;
     text-align: center;
+    &:hover, &:active {
+      .active-button();
+    }
     img {
       vertical-align: middle;
       max-height: 43px;
@@ -1035,11 +1037,8 @@ body .guides .guides-section-white {
 }
 
 .filter-options {
-  @media (max-width: @screen-md-min) {
-    margin-top: 10%;
-  }
-  margin-top: 11%;
   padding: 0;
+  margin: 16px;
   .card {
     padding: 30px 109px;
     border-radius: 8px;
@@ -1213,7 +1212,6 @@ body .guides .guides-section-white {
 .fixed {
   position: fixed;
   top: 0;
-  // margin-top: 0 !important;
   width: 20.66666667%
 }
 
@@ -1235,6 +1233,7 @@ body .guides .guides-section-white {
   ul {
     list-style: none;
     line-height: normal;
+    padding: 0;
     a:hover, a:focus{
       .no-transform;
       list-style-type: disc;
@@ -1559,6 +1558,11 @@ body .guides .guides-section-white {
     background-color: #ef5a73; 
     border: 1px solid #ef5a73;
   }
+}
+
+.center {
+  display: flex;
+  justify-content: center;
 }
 
 // Sections that have a blue background

@@ -26,15 +26,16 @@
   }
 
   function showItemsCount(totalCount, numSubmodules) {
-    if (searchEntry.type == 'libraryEntries') {
+    $('#search-results-count').show();
+    if (searchEntry.type === 'libraryEntries') {
       if (totalCount > 0 && numSubmodules > 0) {
         $('#search-results-count').html("<strong>" + totalCount + "</strong> repos (~<strong>" + numSubmodules + "</strong> modules)");
       } else {
         $('#search-results-count').text("0 repos");
       }
     } else {
-      if (totalCount > 0 && numSubmodules == 0) {
-        $('#search-results-count').html("<strong>" + totalCount + "</strong> found");
+      if (totalCount > 0 && numSubmodules === 0) {
+        $('#search-results-count').html("<strong>" + totalCount + "</strong> result(s) found");
       }
     }
   }
@@ -43,7 +44,7 @@
     //A list of tags that should be in uppercase
     const upperCaseTags = ['aws', 'gke', 'gcp'];
 
-    if (searchEntry.type == 'guideEntries') {
+    if (searchEntry.type === 'guideEntries') {
 
       //Filters the tags from the array of objects and flattens it out since it returns an array of arrays
       let tags = searchEntry.entries.map(entry => entry.tags.split(',').map(tag => tag.trim())).reduce((a, b) => a.concat(b), []);
@@ -62,6 +63,7 @@
   }
 
   function showAllItems() {
+    $('#search-results-count').hide();
     $('.guide-card').show() && $('.category-head').show() && $('.categories ul').show();
   }
 
@@ -79,6 +81,7 @@
 
   $(showInitialItemsCount);
   $(displayFilterTags);
+  $(performSearch($('.cloud-filter #aws')));
 
   $('#no-matches').hide();
 
@@ -102,13 +105,7 @@
     }
   }
 
-  //Function to track Google analytics
-  // function trackGA {
-  //    // Track what users are searching for via Google Analytics events
-  //     //   ga('send', 'event', "iac-lib", "search", "query", text);
-  // }
-
-   /**
+  /**
    * A function to search the IaC Lib and Deployment guides. Can also be used for other pages that need it.
    * To show/hide the proper elements based on the results. 
    * @type {Function}
@@ -165,7 +162,9 @@
 
       }
       if (matches === 0) {
+        $('#search-results-count').hide();
         $('#no-matches').show();
+        return;
       }
 
       showItemsCount(matches, submoduleMatches);
@@ -197,7 +196,7 @@
   /* Triggered when filter checkboxes are checked */
   $(document).ready(() => {
 
-    $('.tags .checkbox input[type="checkbox"]').on('change', function() {
+    $('.tags .checkbox input[type="checkbox"]').on('change', function () {
       let checked = $('input[type="checkbox"]:checked');
       if (!checked) {
         showAllItems();
@@ -211,25 +210,31 @@
     });
   });
 
+
+  function performSearch(filterButton) {
+    const id = filterButton.attr('id');
+
+    if (filterButton.hasClass('initialSelect') && filterButton.hasClass('active-button') ) {
+      filterButton.removeClass('initialSelect');
+      filterButton.removeClass('active-button');
+      $('#no-matches').hide();
+      showAllItems();
+    } else {
+      filterButton.addClass('active-button');
+      filterButton.addClass('initialSelect');
+      filterButton.siblings().removeClass('active-button');
+      filterData(id, 'cloudSearch');
+    }
+  }
+
   /* Search box on library page */
   $('#js-search-library').on("keyup", searchData);
 
   /* Triggered on click of any cloud filtering buttons */
-  $('.cloud-filter .filter').click(function(event) {
-    let id = $(this).attr('id');
-    if(id === 'aws') {
-      $(this).siblings().removeClass('active-button');
-      filterData(id, 'cloudSearch');
-    }
-    else if(id !== 'aws' && $(this).hasClass('active-button')){
-      $('.cloud-filter #aws').addClass('active-button');
-      $(this).removeClass('active-button');
-      showAllItems();
-    } else {
-      $('.cloud-filter #aws').removeClass('active-button');
-      $(this).addClass('active-button');
-      filterData(id, 'cloudSearch');
-    }
+  $('.cloud-filter .filter').click(function () {
+    const filterButton = $(this);
+
+    performSearch(filterButton);
   });
 
   /* Search box on guides page */

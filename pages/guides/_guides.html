@@ -1,54 +1,51 @@
-<div class="col-md-2-5">
-    <div id="listings-category" class="categories">
-        {% for category in site.categories %}
-        {% capture category_name %}{{ category | first }}{% endcapture %}
-        <ul id="categories">
-            <li>
-                <label><b><a href="#{{category_name | slugify}}">{{category_name}}</a></b></label>
-            </li>
-        </ul>
-        {% endfor %}
-    </div>
-</div>
-
-<div class="col-md-8">
-    {% include search.html %}
-
-    <div class="row">
-        <div class="guide-listing" id="listings">
-            <div style="text-align: right">
-                <small id="search-results-count"></small>
-            </div>
+<div class="row">
+    <div class="col-md-2">
+        <div id="listings-category" class="categories">
             {% for category in site.categories %}
             {% capture category_name %}{{ category | first }}{% endcapture %}
-            <div id="#{{ category_name | slugize }}"></div>   
-            <h3 class="category-head">{{ category_name }}</h3>
-            <a name="{{ category_name | slugize }}"></a>
-            {% for post in site.categories[category_name] %}
-            <div class="guide-card card-shadow" id="{{ post.title | downcase | split: ' ' | join: '-' | append: '-card' }}">
-                <div class="card">
-                    <div class="row no-padding">
-                        <div class="col-sm-2 col-sm-2  no-padding">
-                            <img src="{{ post.image }}" alt="card image" class="img-center">
-                        </div>
-                        <a href="{{ post.url }}" ga-event-category="guide-{{ post.title | downcase}}" ga-event-action="deployment-guides">
-                            <div class="col-sm-10">
-                                <div class="card-body">
-                                    <h5 class="card-title"><b>{{ post.title }}</b></h5>
-                                    <p class="card-text">{{ post.excerpt | strip_html }}</p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>    
-                </div>
-            </div>
-            {% endfor %}
+            <ul id="categories">
+                <li>
+                    <label><b><a href="#{{category_name | slugify}}">{{category_name}}</a></b></label>
+                </li>
+            </ul>
             {% endfor %}
         </div>
     </div>
+    <div class="col-md-8">
+        <div class="row">
+            <div class="guide-listing" id="listings">
+                <div style="text-align: right">
+                    <small id="search-results-count"></small>
+                </div>
+                {% for category in site.categories %}
+                {% capture category_name %}{{ category | first }}{% endcapture %}
+                <div id="#{{ category_name | slugize }}"></div>   
+                <h3 class="category-head">{{ category_name }}</h3>
+                <a name="{{ category_name | slugize }}"></a>
+                {% for post in site.categories[category_name] %}
+                <div class="guide-card card-shadow" id="{{ post.title | downcase | split: ' ' | join: '-' | append: '-card' }}">
+                    <div class="card">
+                        <div class="row no-padding">
+                            <div class="col-sm-2 col-sm-2  no-padding">
+                                <img src="{{ post.image }}" alt="card image" class="img-center">
+                            </div>
+                            <a href="{{ post.url }}" ga-event-category="guide-{{ post.title | downcase}}" ga-event-action="deployment-guides">
+                                <div class="col-sm-10">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><b>{{ post.title }}</b></h5>
+                                        <p class="card-text">{{ post.excerpt | strip_html }}</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>    
+                    </div>
+                </div>
+                {% endfor %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 </div>
-{% include_relative _no-search-results.html %}
-
 <script>
     window.guideEntries = [
         {% for post in site.posts %}
