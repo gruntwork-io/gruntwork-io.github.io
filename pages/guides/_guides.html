@@ -1,5 +1,5 @@
 <div class="row" id="guide-listings">
-    <div class="col-md-2">
+    <div class="col-sm-2">
         <div id="listings-category" class="categories">
             {% for category in site.categories %}
             {% capture category_name %}{{ category | first }}{% endcapture %}
@@ -11,7 +11,7 @@
             {% endfor %}
         </div>
     </div>
-    <div class="col-md-8">
+    <div class="col-sm-8">
         <div class="row">
             <div class="guide-listing" id="listings">
                 <div style="text-align: right">
@@ -35,9 +35,10 @@
                             </a>
                         </div>
                     </div>
+                    </div>
+                    {% endfor %}
+                    {% endfor %}
                 </div>
-                {% endfor %}
-                {% endfor %}
             </div>
         </div>
     </div>
