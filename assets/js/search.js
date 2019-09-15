@@ -152,7 +152,8 @@
    */
   function filterData(searchValue, type) {
 
-    $('#guide-listings').removeClass('overlay');
+    $('#guide-listings').show();
+
     $('#no-azure-results').hide();
     $('#no-matches').hide();
 
@@ -271,7 +272,7 @@
     if (filterButton.hasClass('initialSelect') && filterButton.hasClass('active-button') ) {
       filterButton.removeClass('initialSelect');
       filterButton.removeClass('active-button');
-      $('#guide-listings').removeClass('overlay');
+      $('#guide-listings').show();
       $('#no-azure-results').hide();
       $('#no-matches').hide();
       showAllItems();
@@ -280,9 +281,9 @@
       filterButton.addClass('initialSelect');
       filterButton.siblings().removeClass('active-button');
       if(id === 'azure') {
+        $('#guide-listings').hide();
         $('#no-azure-results').show();
-        $('#guide-listings').addClass('overlay');
-        return showAllItems();
+        return;
       }
   
       filterData(id, 'cloudSearch');
