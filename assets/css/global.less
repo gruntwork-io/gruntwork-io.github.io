@@ -1276,7 +1276,8 @@ body .guides .guides-section-white {
     line-height: normal;
     letter-spacing: 0.84px;
     color: @guides-font;
-    margin-top: 2em;
+    margin-top: 40px;
+    margin-bottom: 11px;
     &:first-of-type{
       margin-top: 1em;
     }
@@ -1318,7 +1319,7 @@ body .guides .guides-section-white {
     }
   }
   .guide-card {
-    margin-bottom: .5em;
+    margin-bottom: 10px;
     border: solid 1px #dedede;
     border-radius: 8px;
   }
@@ -1458,7 +1459,7 @@ body .guides .guides-section-white {
   background-color: #fff;
   position: relative;
   color: @guides-font;
-  padding-bottom: 20px;
+  padding-bottom: 115px;
   font-family: @guides-font-family;
   .container-fluid {
     max-width: 1200px;
@@ -1480,10 +1481,12 @@ body .guides .guides-section-white {
 .badge {
   background: rgba(0,185,248,0.1);
   padding: 6px 10px;
-  border-radius: 5px;
+  border-radius: 4px;
   color: @guides-primary-color;
   font-size: 12px;
   letter-spacing: 0.34px;
+  font-weight: bold;
+  text-align: center;
 }
 
 .admonitionblock-content  {
@@ -1840,8 +1843,10 @@ body .guides .guides-section-white {
   .post-title {
     color: #000000;
     padding: 1em 2em 0 2em;
-    font-size: 34px;
     letter-spacing: 0.98px;
+    font-size: 35px;
+    line-height: normal;
+    text-align: center;
     & p {
       font-weight: 600;
       margin-bottom: 0px;
@@ -1910,10 +1915,26 @@ body .guides .guides-section-white {
   padding: 0 2em;
   color: @guides-font;
   line-height: 1.38;
+  .sect2 {
+    .paragraph, dd, dt {
+      margin-bottom: 10px;
+    }
+    dl{
+      margin: 0;
+    }
+    .listingblock {
+      margin: 20px 0;
+    }
+  }
   p, li {
     font-size: 16px;
     letter-spacing: 0.45px;
     margin: 0;
+    em {
+      font-weight: 600;
+      font-style: italic;
+      color: @guides-primary-color;
+    }
   }
   & a {
     color: @guides-primary-color;
@@ -1936,9 +1957,19 @@ body .guides .guides-section-white {
     max-height: 100vh;
     margin: 10px 0;
   }
+  h2, h3 {
+    font-size: 28px;
+    line-height: 1.43;
+    letter-spacing: 0.79px;
+  }
+  h2 {
+    margin: 40px 0 28px 0;
+  }
+  h3 {
+    margin: 30px 0 18px 0;
+  }
   h1, h2, h3, h4, h5, h6 {
     color: @guides-font;
-    margin: 10px 0;
     &:hover > a.anchorjs-link{
       color: #FFFFFF;
       text-decoration: none;
@@ -1975,6 +2006,8 @@ body .guides .guides-section-white {
     }
   }
 }
+
+
 
 
 // Main content styles for sub pages
