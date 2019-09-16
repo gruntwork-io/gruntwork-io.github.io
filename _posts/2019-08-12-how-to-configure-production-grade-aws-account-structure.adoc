@@ -1,5 +1,5 @@
 ---
-categories: Docker
+categories: Foundations
 image: /assets/img/guides/aws-account/aws-logo.png
 excerpt: Learn about why you need multiple AWS accounts, AWS Organizations, IAM Users, IAM Roles, IAM Policies, CloudTrail, and more.
 tags: [aws, terraform]
@@ -52,7 +52,8 @@ This guide consists of four main sections:
 
 <<production_grade_design>>::
   An overview of how to configure a secure, scalable, highly available AWS account structure that you can rely on in
-  production. To get a sense of what production-grade means, check out <<production_grade_infra_checklist>>.
+  production. To get a sense of what production-grade means, check out
+  link:/guides/gruntwork/how-to-use-gruntwork-service-catalog#production_grade_infra_checklist[The production-grade infrastructure checklist].
 
 <<deployment_walkthrough>>::
   A step-by-step guide to configuring a production-grade AWS account structure using code from the Gruntwork Service
@@ -643,7 +644,7 @@ No MFA::
   services. For example, if you have Jenkins running on an EC2 instance, and you give that EC2 instance access to an
   IAM role so it can deploy your apps, you should do your best to minimize the permissions that IAM role has (e.g.,
   to just `ecs` permissions if deploying to ECS) and you should ensure that your Jenkins instance runs in private
-  subnets so that it is NOT accessible from the public Internet (see <<production_grade_vpc_aws>>).
+  subnets so that it is NOT accessible from the public Internet (see link:/guides/networking/how-to-deploy-production-grade-vpc-aws[How to deploy a production-grade VPC on AWS]).
 
 Use the right Principal::
   The trust policy in service IAM roles will need to specify the appropriate `Principal` to allow an AWS service to
@@ -769,13 +770,13 @@ Gruntwork Service Catalog::
 +
 IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access this code.
 +
-Make sure to read <<how_to_use_gruntwork_service_catalog>>.
+Make sure to read link:/guides/gruntwork/how-to-use-gruntwork-service-catalog[How to use the Gruntwork Service Catalog].
 
 Terraform::
   This guide uses https://www.terraform.io/[Terraform] to define and manage all the infrastructure as code. If you're
   not familiar with Terraform, check out https://blog.gruntwork.io/a-comprehensive-guide-to-terraform-b3d32832baca[A
   Comprehensive Guide to Terraform], https://training.gruntwork.io/p/terraform[A Crash Course on Terraform], and
-  <<how_to_use_gruntwork_service_catalog>>.
+  link:/guides/gruntwork/how-to-use-gruntwork-service-catalog[How to use the Gruntwork Service Catalog].
 
 Keybase (optional)::
   As part of this guide, you will create IAM users, including, optionally, credentials for those IAM users. If you
@@ -809,8 +810,9 @@ IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access `
 
 NOTE: This guide will use https://github.com/gruntwork-io/terragrunt[Terragrunt] and its associated file and folder
 structure to deploy Terraform modules. Please note that *Terragrunt is NOT required for using Terraform modules from
-the Gruntwork Service Catalog.* Check out <<how_to_use_gruntwork_service_catalog>> for instructions on alternative
-options, such as how to <<deploy_using_plain_terraform>>.
+the Gruntwork Service Catalog.* Check out link:/guides/gruntwork/how-to-use-gruntwork-service-catalog[How to use the Gruntwork Service Catalog]
+for instructions on alternative options, such as how to
+link:/guides/gruntwork/how-to-use-gruntwork-service-catalog#deploy_using_plain_terraform[deploying how to use plain terraform].
 
 First, create a _wrapper module_ called `iam` in your `infrastructure-modules` repo:
 
@@ -1187,8 +1189,10 @@ output "user_passwords" {
 }
 ----
 
-At this point, you'll want to test your code. See <<manual_tests_terraform>> and <<automated_tests_terraform>> for
-instructions.
+At this point, you'll want to test your code. See
+link:/guides/gruntwork/how-to-use-gruntwork-service-catalog#manual_tests_terraform[Manual tests for Terraform code] and
+link:/guides/gruntwork/how-to-use-gruntwork-service-catalog#automated_tests_terraform[Automated tests for Terraform code]
+for instructions.
 
 Once your code is tested and working, commit and release your changes:
 
@@ -1526,8 +1530,10 @@ variable "force_destroy" {
 }
 ----
 
-At this point, you'll want to test your code. See <<manual_tests_terraform>> and <<automated_tests_terraform>> for
-instructions.
+At this point, you'll want to test your code. See
+link:/guides/gruntwork/how-to-use-gruntwork-service-catalog#manual_tests_terraform[Manual tests for Terraform code] and
+link:/guides/gruntwork/how-to-use-gruntwork-service-catalog#automated_tests_terraform[Automated tests for Terraform code]
+for instructions.
 
 Once tests are passing, commit and release your changes:
 
@@ -1740,8 +1746,10 @@ output "organizations_account_access_role_name" {
 }
 ----
 
-At this point, you'll want to test your code. See <<manual_tests_terraform>> and <<automated_tests_terraform>> for
-instructions.
+At this point, you'll want to test your code. See
+link:/guides/gruntwork/how-to-use-gruntwork-service-catalog#manual_tests_terraform[Manual tests for Terraform code] and
+link:/guides/gruntwork/how-to-use-gruntwork-service-catalog#automated_tests_terraform[Automated tests for Terraform code]
+for instructions.
 
 When you're done testing, commit and release your changes:
 
@@ -2312,4 +2320,4 @@ Remember to repeat this process in the other child accounts too!
 
 Now that you have your basic AWS account structure set up, the next step is to start deploying infrastructure in those
 accounts! Usually, the best starting point is to configure your network topology, as described in
-<<production_grade_vpc_aws>>.
+link:/guides/networking/how-to-deploy-production-grade-vpc-aws[How to deploy a production-grade VPC on AWS].

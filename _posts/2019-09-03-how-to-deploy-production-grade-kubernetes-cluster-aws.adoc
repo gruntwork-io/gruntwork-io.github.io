@@ -1,9 +1,14 @@
-[[how_to_deploy_prod_grade_kubernetes_cluster_aws]]
+---
+categories: Kubernetes
+image: /assets/img/guides/eks/amazon-eks-logo.png
+excerpt: Learn about EKS, the Kubernetes control plane, worker nodes, auto scaling, auto healing, TLS certs, VPC tagging, DNS forwarding, RBAC, and more.
+tags: [aws, kubernetes, eks]
+cloud: aws
+---
 = How to deploy a production-grade Kubernetes cluster on AWS
-:type: guide
-:description: Learn about EKS, the Kubernetes control plane, worker nodes, auto scaling, auto healing, TLS certs, VPC tagging, DNS forwarding, RBAC, and more.
-:image: ../assets/img/guides/eks/amazon-eks-logo.png
-:tags: aws, kubernetes, eks
+:page-type: guide
+:page-layout: post
+:page-title: How to deploy a production-grade Kubernetes cluster on AWS
 :toc:
 :toc-placement!:
 
@@ -14,9 +19,8 @@ ifdef::env-github[]
 :important-caption: :heavy_exclamation_mark:
 :caution-caption: :fire:
 :warning-caption: :warning:
-endif::[]
-
 toc::[]
+endif::[]
 
 == Intro
 
@@ -83,7 +87,7 @@ Feel free to read the guide from start to finish or skip around to whatever part
 === Why Kubernetes
 
 .The popularity of container orchestration tools
-image::../assets/img/guides/eks/docker-orchestration-google-trends.png[]
+image::/assets/img/guides/eks/docker-orchestration-google-trends.png[]
 
 Kubernetes has become the de facto choice for container orchestration. Here's why:
 
@@ -116,7 +120,7 @@ Let's start by looking at Kubernetes from a very high level, and then gradually 
 level, a simple way to think about Kubernetes is as an operating system for your data center.
 
 .Kubernetes is like an operating system for your data center, abstracting away the underlying hardware behind its API
-image::../assets/img/guides/eks/kubernetes-simple.png[]
+image::/assets/img/guides/eks/kubernetes-simple.png[]
 
 Operating system for a single computer::
   On a single computer, the operating system (e.g., Windows, Linux, macOS) abstracts away all the low-level hardware
@@ -144,7 +148,7 @@ of containers up and down with load, and so on.
 If you zoom in a bit further on the Kubernetes architecture, it looks something like this:
 
 .Kubernetes architecture
-image::../assets/img/guides/eks/kubernetes-architecture.png[]
+image::/assets/img/guides/eks/kubernetes-architecture.png[]
 
 Kubernetes consists of two main pieces: the control plane and worker nodes. Each of these will be discussed next.
 
@@ -276,7 +280,7 @@ switch between contexts—and therefore, different clusters and users.
 ==== Web UI (Dashboard)
 
 .The Kubernetes Dashboard
-image::../assets/img/guides/eks/kubernetes-dashboard.png[]
+image::/assets/img/guides/eks/kubernetes-dashboard.png[]
 
 The _https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/[Kubernetes Dashboard]_ is a
 web-based interface you can use to manage your Kubernetes cluster. The dashboard is not enabled by default in most
@@ -507,7 +511,7 @@ With all the core concepts out of the way, let's now discuss how to configure a 
 that looks something like this:
 
 .EKS architecture
-image::../assets/img/guides/eks/eks-architecture.png[]
+image::/assets/img/guides/eks/eks-architecture.png[]
 
 === Use EKS
 
@@ -873,7 +877,7 @@ link:/guides/networking/how-to-configure-production-grade-vpc-aws[How to deploy 
 `module-vpc` to create a VPC setup that looks like this:
 
 .A production-grade VPC setup deployed using module-vpc from the Gruntwork Service Catalog
-image::../assets/img/guides/vpc/vpc-diagram.png[]
+image::/assets/img/guides/vpc/vpc-diagram.png[]
 
 After following this guide, you should have `vpc-app` wrapper module in your `infrastructure-modules` repo:
 

@@ -1,5 +1,5 @@
 ---
-categories: Docker
+categories: Gruntwork
 image: /assets/img/guides/service-catalog/grunty-blocks.png
 excerpt: Learn about production-grade infrastructure, Terraform, Terragrunt, Packer, Docker, immutable infrastructure, versioning for infrastructure code, automated tests for infrastructure code, and more.
 tags: [aws, gcp, terraform, terragrunt]
@@ -206,8 +206,7 @@ Opinionated code::
   save months on having to wire everything together and deploy it yourself. If the opinionated design is not a good
   fit, then you can use the Gruntwork Service Catalog directly instead.
 
-[[example_ref_arch]]
-See an example Reference Architecture::
+[[example_ref_arch]]See an example Reference Architecture::
   You can find the code for an example Reference Architecture for a fictional Acme corporation in the following repos:
 +
 IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access these example repos.
@@ -571,8 +570,8 @@ The next step is to get access to the Gruntwork Service Catalog.
 The next step is to find the modules you want to use. Head over to the
 https://gruntwork.io/infrastructure-as-code-library/[Gruntwork Service Catalog] and find the repos that you wish to
 use. Browse the `modules` folder each the repo to see what modules are available and the `examples` folders to see the
-various ways to combine those modules. You can also browse the <<example_ref_arch>> to find production-ready sample
-code to use as examples.
+various ways to combine those modules. You can also browse the <<example_ref_arch, example Reference Architecture>>
+to find production-ready sample code to use as examples.
 
 Within the Service Catalog, you'll find two types of modules: (1) Terraform modules and (2) scripts and binaries. The
 next two sections of the guide will walk you through how to use each of these.
@@ -586,7 +585,7 @@ we'll deploy the `vpc-app`  Terraform module from https://github.com/gruntwork-i
 IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access `module-vpc`.
 
 You can use this module to deploy a production-grade VPC on AWS. For full background information on VPCs, check
-out <<production_grade_vpc_aws>>.
+out link:/guides/networking/how-to-deploy-production-grade-vpc-aws[How to deploy a production-grade VPC on AWS].
 
 ==== Create a wrapper module
 
@@ -641,7 +640,7 @@ Pin AWS account IDs::
   variable (you'll declare this shortly). This is an extra safety measure to ensure you don't accidentally authenticate
   to the wrong AWS account while deploying this code—e.g., so you don't accidentally deploy changes intended for
   staging to production (for more info on working with multiple AWS accounts, see
-  <<production_grade_aws_account_structure>>).
+  link:/guides/foundations/how-to-configure-production-grade-aws-account-structure[How to Configure a Production Grade AWS Account Structure].
 
 Let's add the corresponding input variables in `variables.tf`:
 
@@ -1189,7 +1188,8 @@ Where:
   balancers, and so on. Each module is configured via a `terragrunt.hcl` file.
 
 For example, if you were using AWS, with separate accounts for staging and production (see
-<<production_grade_aws_account_structure>>), and you wanted to deploy the `vpc-app` module in the `us-east-2` region in
+link:/guides/foundations/how-to-configure-production-grade-aws-account-structure[How to Configure a Production Grade AWS Account Structure]),
+and you wanted to deploy the `vpc-app` module in the `us-east-2` region in
 each of these accounts, the folder structure would look like this:
 
 ----
@@ -1958,6 +1958,5 @@ Need Windows support?::
 Now that you've learned how to use the Gruntwork Service Catalog, you can start leveraging it to build your
 infrastructure! Here are some good first steps:
 
-. <<production_grade_aws_account_structure>>
+. link:/guides/foundations/how-to-configure-production-grade-aws-account-structure[How to Configure a Production Grade AWS Account Structure]
 . `How to deploy a production grade Kubernetes (EKS) cluster in AWS` _(coming soon!)_
-
