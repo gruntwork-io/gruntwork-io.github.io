@@ -25,9 +25,12 @@
     };
   }
 
+  /**
+   * Function displays the total items displayed on the page
+   */
   function showItemsCount(totalCount, numSubmodules) {
-    $('#search-results-count').show();
     if (searchEntry.type === 'libraryEntries') {
+      $('#search-results-count').show();
       if (totalCount > 0 && numSubmodules > 0) {
         $('#search-results-count').html("<strong>" + totalCount + "</strong> repos (~<strong>" + numSubmodules + "</strong> modules)");
       } else {
@@ -35,11 +38,14 @@
       }
     } else {
       if (totalCount > 0 && numSubmodules === 0) {
-        $('#search-results-count').html("<strong>" + totalCount + "</strong> result(s) found");
+        $('#search-results-count').html("<strong>" + totalCount + "</strong> post(s) found");
       }
     }
   }
 
+  /**
+   * Function populates the filter checkboxes with tags
+   */
   function displayFilterTags() {
     //A list of tags that should be in uppercase
     const upperCaseTags = ['aws', 'gke', 'gcp'];
@@ -53,7 +59,7 @@
 
         if ((tags.indexOf(tag) === index) && (tag.length != "")) {
           //Converts tags that should be in uppercase
-          if(upperCaseTags.includes(tag)){
+          if (upperCaseTags.includes(tag)) {
             tag = tag.toUpperCase();
           }
           $('.tags').append(`<div class="checkbox"><input value=${tag} id=${tag} type="checkbox"><label for="${tag}">${tag}</label></div>`);
@@ -62,29 +68,45 @@
     }
   }
 
+  /**
+   * Function to display all items on the page
+   */
   function showAllItems() {
-    $('#search-results-count').hide();
-    $('.guide-card').show() && $('.category-head').show() && $('.categories ul').show();
+    $('.guide-card').show();
+    $('.category-head').show();
+    $('.categories ul li').show();
   }
 
+  /**
+   * Function that counts how many items are on the page
+   */
   function showInitialItemsCount() {
     let numSubmodules = 0;
-    for (let i = 0; i < searchEntry.length; i++) {
-      if (searchEntry.type == 'libraryEntries') return numSubmodules += libraryEntries[i].num_submodules;
-      return searchEntry;
+    for (let i = 0; i < searchEntry.entries.length; i++) {
+      if (searchEntry.type == 'libraryEntries') {
+        numSubmodules += libraryEntries[i].num_submodules;
+      }
+      searchEntry.entries;
     }
-    showItemsCount(searchEntry.length, numSubmodules);
+    showItemsCount(searchEntry.entries.length, numSubmodules);
   }
 
-  // Show initial module count on load
-  let searchEntry = detectSearchEntry();
+  let searchEntry;
 
-  $(showInitialItemsCount);
-  $(displayFilterTags);
-  $(performSearch($('.cloud-filter #aws')));
+  function initialEntry() {
+    $('#no-matches').hide();
+    searchEntry = detectSearchEntry();
+    $(displayFilterTags);
+    $(showInitialItemsCount);
+    $(performSearch($('.cloud-filter #aws')));
+  }
 
-  $('#no-matches').hide();
+  // Initial entry on load
+  $(initialEntry);
 
+  /**
+   * Function that where the search is being performed from
+   */
   function detectSearchEntry() {
     let entries = [];
     if (window.libraryEntries) {
@@ -105,6 +127,23 @@
     }
   }
 
+
+  /**
+   * A function to display or hide the category of search
+   * @type {Function}
+   */
+  function displayCategory(entry) {
+    let categoryArr = $.merge($('.category-head'), $('.categories ul li'));
+    categoryArr.each(function () {
+      let category = $(this).text().toLowerCase();
+      if (entry.category === category) {
+        $(`.categories ul #${category}`).show();
+        $(`#${category}-1.category-head`).show();
+      }
+    });
+  }
+
+
   /**
    * A function to search the IaC Lib and Deployment guides. Can also be used for other pages that need it.
    * To show/hide the proper elements based on the results. 
@@ -123,44 +162,55 @@
       if (searchEntry.type == 'libraryEntries') {
         $('.table-clickable-row').hide();
       } else if (searchEntry.type == 'guideEntries') {
-        $('.guide-card').hide() && $('.category-head').hide() && $('.categories ul').hide();
+        $('#search-results-count').hide();
+        $('.guide-card').hide() &&
+          $('.category-head').hide() &&
+          $('.categories ul li').hide();
       }
 
       let entries = searchEntry.entries;
 
       let matches = 0;
       let submoduleMatches = 0;
+      let searchContent;
 
-      for (let i = 0; i < entries.length; i++) {
-        let entry = entries[i];
+      entries.map(entry => {
         let matchesAll = true;
-        for (let j = 0; j < searchQueries.length; j++) {
-          let searchQuery = searchQueries[j];
 
-          let searchContent;
-          if (searchEntry.type == 'libraryEntries') {
-            searchContent = entry.text;
-          } else if (searchEntry.type == 'guideEntries' && type == 'wordSearch') {
-            searchContent = entry.title + entry.category + entry.content + entry.tags;
-          } else if (searchEntry.type == 'guideEntries' && type == 'tagSearch') {
-            searchContent = entry.tags;
-          } else {
-            searchContent = entry.cloud;
+        searchQueries.map(searchQuery => {
+          switch (true) {
+            case searchEntry.type === 'libraryEntries':
+              searchContent = entry.text;
+              break;
+            case searchEntry.type === 'guideEntries' && type === 'wordSearch':
+              searchContent = entry.title + entry.category + entry.content + entry.tags;
+              break;
+            case searchEntry.type === 'guideEntries' && type === 'tagSearch':
+              searchContent = entry.tags;
+              break;
+            case searchEntry.type === 'guideEntries' && type === 'cloudSearch':
+              searchContent = entry.cloud;
+              break;
+            default:
+              "Not Valid"
           }
 
           if (searchContent.indexOf(searchQuery) < 0) {
             matchesAll = false;
-            break;
           }
-        }
+        });
 
+        //Checks if results were found and displays results accordingly
         if (matchesAll) {
+          displayCategory(entry);
           $("#" + entry.id).show();
           matches++;
-          (searchEntry.type == 'libraryEntries') ? submoduleMatches += entry.num_submodules: submoduleMatches = 0;
+          (searchEntry.type === 'libraryEntries') ? submoduleMatches += entry.num_submodules: submoduleMatches = 0;
+          return;
         }
+      })
 
-      }
+
       if (matches === 0) {
         $('#search-results-count').hide();
         $('#no-matches').show();
@@ -192,6 +242,7 @@
 
     filterData(searchValue, 'wordSearch');
   }, 250);
+
 
   /* Triggered when filter checkboxes are checked */
   $(document).ready(() => {
@@ -236,6 +287,7 @@
 
     performSearch(filterButton);
   });
+
 
   /* Search box on guides page */
   $('#search-box').on("keyup", searchData);
