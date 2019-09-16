@@ -585,7 +585,7 @@ we'll deploy the `vpc-app`  Terraform module from https://github.com/gruntwork-i
 IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access `module-vpc`.
 
 You can use this module to deploy a production-grade VPC on AWS. For full background information on VPCs, check
-out link:../networking/how-to-deploy-production-grade-vpc-aws[How to deploy a production-grade VPC on AWS].
+out link:/guides/networking/how-to-deploy-production-grade-vpc-aws[How to deploy a production-grade VPC on AWS].
 
 ==== Create a wrapper module
 
@@ -640,7 +640,7 @@ Pin AWS account IDs::
   variable (you'll declare this shortly). This is an extra safety measure to ensure you don't accidentally authenticate
   to the wrong AWS account while deploying this code—e.g., so you don't accidentally deploy changes intended for
   staging to production (for more info on working with multiple AWS accounts, see
-  link:../foundations/how-to-configure-production-grade-aws-account-structure[How to Configure a Production Grade AWS Account Structure].
+  link:/guides/foundations/how-to-configure-production-grade-aws-account-structure[How to Configure a Production Grade AWS Account Structure].
 
 Let's add the corresponding input variables in `variables.tf`:
 
@@ -1188,7 +1188,7 @@ Where:
   balancers, and so on. Each module is configured via a `terragrunt.hcl` file.
 
 For example, if you were using AWS, with separate accounts for staging and production (see
-link:../foundations/how-to-configure-production-grade-aws-account-structure[How to Configure a Production Grade AWS Account Structure]),
+link:/guides/foundations/how-to-configure-production-grade-aws-account-structure[How to Configure a Production Grade AWS Account Structure]),
 and you wanted to deploy the `vpc-app` module in the `us-east-2` region in
 each of these accounts, the folder structure would look like this:
 
@@ -1958,5 +1958,5 @@ Need Windows support?::
 Now that you've learned how to use the Gruntwork Service Catalog, you can start leveraging it to build your
 infrastructure! Here are some good first steps:
 
-. link:../foundations/how-to-configure-production-grade-aws-account-structure[How to Configure a Production Grade AWS Account Structure]
+. link:/guides/foundations/how-to-configure-production-grade-aws-account-structure[How to Configure a Production Grade AWS Account Structure]
 . `How to deploy a production grade Kubernetes (EKS) cluster in AWS` _(coming soon!)_

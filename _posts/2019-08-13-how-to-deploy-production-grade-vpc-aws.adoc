@@ -48,7 +48,7 @@ This guide consists of four main sections:
 
 <<production_grade_design>>::
   An overview of how to configure a secure, scalable, highly available VPC that you can rely on in production. To get a
-  sense of what production-grade means, check out <<production_grade_infra_checklist>>.
+  sense of what production-grade means, check out link:/guides/gruntwork/how-to-use-gruntwork-service-catalog#production_grade_infra_checklist[The production-grade infrastructure checklist].
 
 <<deployment_walkthrough>>::
   A step-by-step guide to deploying a production-grade VPC in AWS using code from the Gruntwork Service Catalog.
@@ -438,7 +438,7 @@ change something in prod rather than pre-prod).
 
 Therefore, your best bet is to put pre-production environments and production environments in completely separate AWS
 accounts. This makes it easy to, for example, grant relatively lax permissions in pre-prod environments, but very
-strict permissions in production. Check out the  link:../foundations/how-to-configure-production-grade-aws-account-structure[Production Grade AWS Account Structure]
+strict permissions in production. Check out the  link:/guides/foundations/how-to-configure-production-grade-aws-account-structure[Production Grade AWS Account Structure]
 guide for instructions.
 
 [[multiple_vpcs]]
@@ -605,17 +605,17 @@ Gruntwork Service Catalog::
 +
 IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access this code.
 +
-Make sure to read link:../gruntwork/how-to-use-gruntwork-service-catalog[How to Use the Gruntwork Service Catalog].
+Make sure to read link:/guides/gruntwork/how-to-use-gruntwork-service-catalog[How to Use the Gruntwork Service Catalog].
 
 Terraform::
   This guide uses https://www.terraform.io/[Terraform] to define and manage all the infrastructure as code. If you're
   not familiar with Terraform, check out https://blog.gruntwork.io/a-comprehensive-guide-to-terraform-b3d32832baca[A
   Comprehensive Guide to Terraform], https://training.gruntwork.io/p/terraform[A Crash Course on Terraform], and
-  link:../gruntwork/how-to-use-gruntwork-service-catalog[How to Use the Gruntwork Service Catalog]
+  link:/guides/gruntwork/how-to-use-gruntwork-service-catalog[How to Use the Gruntwork Service Catalog]
 
 AWS accounts::
   This guide deploys infrastructure into one or more AWS accounts. Check out the
-  link:../foundations/how-to-configure-production-grade-aws-account-structure[Production Grade AWS Account Structure] guide for instructions.
+  link:/guides/foundations/how-to-configure-production-grade-aws-account-structure[Production Grade AWS Account Structure] guide for instructions.
   You will also need to be able to authenticate to these accounts on the CLI: check out
   https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[A Comprehensive Guide to Authenticating to AWS on the Command Line]
   for instructions.
@@ -642,9 +642,9 @@ IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access `
 
 NOTE: This guide will use https://github.com/gruntwork-io/terragrunt[Terragrunt] and its associated file and folder
 structure to deploy Terraform modules. Please note that *Terragrunt is NOT required for using Terraform modules from
-the Gruntwork Service Catalog.* Check out link:../gruntwork/how-to-use-gruntwork-service-catalog[How to Use the Gruntwork Service Catalog]
+the Gruntwork Service Catalog.* Check out link:/guides/gruntwork/how-to-use-gruntwork-service-catalog[How to Use the Gruntwork Service Catalog]
 for instructions on alternative options, such as how to
-link:../gruntwork/how-to-use-gruntwork-service-catalog#deploy_using_plain_terraform[deploy using plain terraform].
+link:/guides/gruntwork/how-to-use-gruntwork-service-catalog#deploy_using_plain_terraform[deploy using plain terraform].
 
 To deploy the `vpc-mgmt` module, create a _wrapper module_ called `vpc-mgmt` in your `infrastructure-modules` repo:
 
@@ -735,8 +735,8 @@ file for reference.
 [[test_wrapper_module]]
 ==== Test your wrapper module
 
-At this point, you'll want to test your code. See link:../gruntwork/how-to-use-gruntwork-service-catalog#manual_tests_terraform[Manual tests for Terraform code]
-and link:../gruntwork/how-to-use-gruntwork-service-catalog#automated_tests_terraform[Automated tests for Terraform code]
+At this point, you'll want to test your code. See link:/guides/gruntwork/how-to-use-gruntwork-service-catalog#manual_tests_terraform[Manual tests for Terraform code]
+and link:/guides/gruntwork/how-to-use-gruntwork-service-catalog#automated_tests_terraform[Automated tests for Terraform code]
 for instructions.
 
 [[merge_release_wrapper_module]]
@@ -1020,8 +1020,8 @@ file for reference.
 [[test_wrapper_module_app]]
 ==== Test your wrapper module
 
-At this point, you'll want to test your code. See link:../gruntwork/how-to-use-gruntwork-service-catalog#manual_tests_terraform[Manual tests for Terraform code]
-and link:../gruntwork/how-to-use-gruntwork-service-catalog#automated_tests_terraform[Automated tests for Terraform code]
+At this point, you'll want to test your code. See link:/guides/gruntwork/how-to-use-gruntwork-service-catalog#manual_tests_terraform[Manual tests for Terraform code]
+and link:/guides/gruntwork/how-to-use-gruntwork-service-catalog#automated_tests_terraform[Automated tests for Terraform code]
 for instructions.
 
 [[merge_release_wrapper_module_app]]
@@ -1126,7 +1126,7 @@ Now that you have your management and application VPCs deployed, you can start b
 on top of them! Typically, the best next step is to deploy a cluster of servers for running your applications by using
 one of the following guides:
 
-. link:../docker/how-to-deploy-production-grade-kubernetes-cluster-aws[How to deploy a production-grade Kubernetes cluster on AWS]
+. link:/guides/docker/how-to-deploy-production-grade-kubernetes-cluster-aws[How to deploy a production-grade Kubernetes cluster on AWS]
 . `How to deploy a production grade ECS cluster on AWS` _(coming soon!)_
 . `How to deploy a production grade Nomad cluster on AWS` _(coming soon!)_
 . `How to deploy a production grade Auto Scaling Group on AWS` _(coming soon!)_
