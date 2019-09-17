@@ -518,7 +518,10 @@ a.caret-right{
 }
 
 // Home page navbar styles
-.index-page .navbar-default, .how-it-works .navbar-default {
+.index-page .navbar-default,
+.how-it-works .navbar-default,
+.guides .navbar-default
+ {
   border: none;
   @media (max-width: @screen-md-max) {
     background-color: @gradient-primary-start;
@@ -917,9 +920,6 @@ body .guides .guides-section-white {
     line-height: 1.5;
     letter-spacing: 0.56px;
   }
-  @media (max-width: @screen-sm-max) {
-    margin-top: -11%;
-  }
 }
 
 .searchrow {
@@ -997,7 +997,8 @@ body .guides .guides-section-white {
     }
     img {
       vertical-align: middle;
-      max-height: 43px;
+      max-height: 55px;
+      padding: 8px;
     }
     .helper {
       display: inline-block;
@@ -1227,7 +1228,7 @@ body .guides .guides-section-white {
   .guides-outline;
   margin-top: 15em;
   margin-bottom: 2em;
-  @media (max-width: @screen-md-min) {
+  @media (max-width: @screen-sm-min) {
     .remove-visibility();
   }
   ul {
@@ -1314,9 +1315,6 @@ body .guides .guides-section-white {
       transform: translateY(-50%);
     }
     img {
-      @media (max-width: @screen-xs-min) {
-        .remove-visibility();
-      }
       max-width: 100%;
       display: block;
       margin: auto auto;
@@ -1324,10 +1322,6 @@ body .guides .guides-section-white {
       max-height: 85px;
     }
     & p {
-      @media (max-width: @screen-xs-min) {
-        font-size: 18px;
-        .remove-visibility();
-      }
       font-size: 13px;
       font-weight: inherit;
       line-height: 1.5;
@@ -1362,6 +1356,39 @@ body .guides .guides-section-white {
 .no-results-space:after {
   margin-bottom: 40%;
 }
+
+@media only screen and (max-width: @screen-xs-max) {
+  .searchrow {
+    display: none !important;
+  }
+  .img-inner {
+    .remove-visibility();
+  }
+  .guide-card-description {
+    width: 100%;
+  }
+  p {
+    font-size: 18px;
+  }
+  .card-shadow:hover {
+    -webkit-box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.1);  /* Safari, Android, iOS */
+    -moz-box-shadow:    0 5px 20px 0 rgba(0, 0, 0, 0.1);  /* Firefox */
+    box-shadow:         0 5px 20px 0 rgba(0, 0, 0, 0.1);
+    border: none;
+  }
+  .cloud-filter .filter {
+    height: 60px;
+    width: 90px;
+  }
+}
+
+@media (max-width: @screen-xs-max){
+  #listings {
+    display: flex;
+    justify-content: center;
+  }
+}
+
 
 .newsletter, .no-results {
   padding: 3em 6em 6em 7em;
