@@ -1064,7 +1064,7 @@ body .guides .guides-section-white {
         &:checked {
           + label {
             &::before {
-              border-color:@guides-primary-color;
+              border: 2px solid @guides-primary-color;
             }
             &::after {
               content: '';
@@ -1075,7 +1075,7 @@ body .guides .guides-section-white {
               left: 2px;
               top: 4px;
               margin-left: -20px;
-              border: 1px solid @guides-primary-color;
+              border: 2px solid @guides-primary-color;
               border-radius: 2px;
               background-color: @guides-primary-color;
             }
@@ -1093,6 +1093,7 @@ body .guides .guides-section-white {
           width: 18px;
           height: 18px;
           border-radius: 2px;
+          border: 2px solid #939596;
           background-color: #fff;
         }
       }
@@ -1141,13 +1142,12 @@ body .guides .guides-section-white {
       margin-bottom: 2px;
     }
     label {
-      opacity: 0.5;
       font-size: 16px;
       font-weight: 600;
       letter-spacing: -0.23px;
-      color: #000000;
+      color: #939596;
       text-transform: capitalize;
-      line-height: normal;
+      line-height: 1.3em;
     }
   }
 }
