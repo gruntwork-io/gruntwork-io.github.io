@@ -895,6 +895,11 @@ body .guides .guides-section-white {
   color: #0000;
 }
 
+.remove-visibility {
+  display: none;
+  clear: both;
+}
+
 .guides .section-hero {
   &:extend(.section-bg-blue);
   background: url('../img/bg-header-squares.png') center bottom no-repeat, linear-gradient(@brand-primary, #06A2FF);
@@ -941,7 +946,7 @@ body .guides .guides-section-white {
     min-height: 56px;
     height: 56px;
     border: none;
-    color: @guides-font; 
+    color: @guides-font;
     .no-transform;
     &:active, &:focus {
       .no-transform;
@@ -973,7 +978,7 @@ body .guides .guides-section-white {
 .guides-input-box::-webkit-input-placeholder { .guides-input-placeholder; }
 .guides-input-box::-moz-placeholder          { .guides-input-placeholder; }
 .guides-input-box::-ms-placeholder           { .guides-input-placeholder;}
-.guides-input-box::placeholder               { .guides-input-placeholder;} 
+.guides-input-box::placeholder               { .guides-input-placeholder;}
 
 .cloud-filter {
   .center();
@@ -982,7 +987,7 @@ body .guides .guides-section-white {
     width: 109px;
     height: 76px;
     cursor: pointer;
-    float: left; 
+    float: left;
     border-radius: 8px;
     border: none;
     background-color: #f5f9fa;
@@ -1049,7 +1054,7 @@ body .guides .guides-section-white {
       flex-wrap: wrap;
       flex-direction: column;
       max-height: 133px;
-    }    
+    }
     .checkbox {
       padding-left: 20px;
       position: relative;
@@ -1064,7 +1069,7 @@ body .guides .guides-section-white {
         &:checked {
           + label {
             &::before {
-              border-color:@guides-primary-color;
+              border: 2px solid @guides-primary-color;
             }
             &::after {
               content: '';
@@ -1075,7 +1080,7 @@ body .guides .guides-section-white {
               left: 2px;
               top: 4px;
               margin-left: -20px;
-              border: 1px solid @guides-primary-color;
+              border: 2px solid @guides-primary-color;
               border-radius: 2px;
               background-color: @guides-primary-color;
             }
@@ -1093,11 +1098,12 @@ body .guides .guides-section-white {
           width: 18px;
           height: 18px;
           border-radius: 2px;
+          border: 2px solid #939596;
           background-color: #fff;
         }
       }
     }
-    .checkbox+.checkbox {	
+    .checkbox+.checkbox {
       margin-top: 10px !important;
     }
     .checkbox {
@@ -1141,13 +1147,12 @@ body .guides .guides-section-white {
       margin-bottom: 2px;
     }
     label {
-      opacity: 0.5;
       font-size: 16px;
       font-weight: 600;
       letter-spacing: -0.23px;
-      color: #000000;
+      color: #939596;
       text-transform: capitalize;
-      line-height: normal;
+      line-height: 1.3em;
     }
   }
 }
@@ -1164,7 +1169,7 @@ body .guides .guides-section-white {
   ul {
     font-size: 16px;
     font-weight: bold;
-    letter-spacing: -0.2px;    
+    letter-spacing: -0.2px;
   }
 }
 
@@ -1172,9 +1177,7 @@ body .guides .guides-section-white {
   .guides-outline;
   .section-nav, .sectlevel1 {
     @media (max-width: @screen-sm-min) {
-      visibility: hidden;
-      clear: both;
-      display: none;
+      .remove-visibility();
     }
     display: block;
     z-index: 2;
@@ -1229,9 +1232,7 @@ body .guides .guides-section-white {
   margin-top: 15em;
   margin-bottom: 2em;
   @media (max-width: @screen-md-min) {
-    visibility: hidden;
-    clear: both;
-    display: none;
+    .remove-visibility();
   }
   ul {
     list-style: none;
@@ -1291,11 +1292,12 @@ body .guides .guides-section-white {
   }
   .card {
     color: @guides-font;
-    padding: 5px;
     cursor: pointer;
     min-height: 100px;
+    overflow: hidden;
+    position: relative;
     & .card-title {
-      margin-top: 15px;
+      margin-top: 0;
       margin-bottom: 2px;
       font-size: 20px;
       letter-spacing: 0.56px;
@@ -1305,14 +1307,36 @@ body .guides .guides-section-white {
         display: none;
       }
     }
+    a {text-decoration: none;}
+    & .card-body {
+      padding: 16px 30px 16px 10px;
+    }
+    & .img-inner {
+      position: absolute;
+      top: 50%;
+      -ms-transform: translateY(-50%);
+      transform: translateY(-50%);
+    }
     img {
-      max-height: 100px;
+      @media (max-width: @screen-xs-min) {
+        .remove-visibility();
+      }
+      max-width: 100%;
+      display: block;
+      margin: auto auto;
+      padding: 11px 20px 11px 30px;
+      max-height: 85px;
     }
     & p {
+      @media (max-width: @screen-xs-min) {
+        font-size: 18px;
+        .remove-visibility();
+      }
       font-size: 13px;
       font-weight: inherit;
       line-height: 1.5;
       letter-spacing: 0.34px;
+      margin: 0;
     }
     & h6, & h5, & h4, & h3, & h2, & a {
       color: @guides-font;
@@ -1321,16 +1345,22 @@ body .guides .guides-section-white {
       color: #c7254e !important;
     }
   }
+
   .guide-card {
     margin-bottom: 10px;
     border: solid 1px #dedede;
     border-radius: 8px;
+    transition: 0.2s all ease;
   }
 
+  .float-right{ float: right; }
+
   .card-shadow:hover {
-    -webkit-box-shadow: 0px 1px 6px 1px #ccc;  /* Safari, Android, iOS */
-    -moz-box-shadow:    0px 1px 6px 1px #ccc;  /* Firefox */
-    box-shadow:         0px 1px 6px 1px #ccc;
+    -webkit-box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.1);  /* Safari, Android, iOS */
+    -moz-box-shadow:    0 5px 20px 0 rgba(0, 0, 0, 0.1);  /* Firefox */
+    box-shadow:         0 5px 20px 0 rgba(0, 0, 0, 0.1);
+    border: none;
+    transform: scale(1.10) translateZ(0);
   }
 }
 .no-results-space:after {
@@ -1419,9 +1449,7 @@ body .guides .guides-section-white {
 
 .guides-cta-card {
   @media (max-width: @screen-md-min) {
-    visibility: hidden;
-    clear: both;
-    display: none;
+    .remove-visibility();
   }
   background-color: white;
   color: black;
@@ -1464,21 +1492,22 @@ body .guides .guides-section-white {
   color: @guides-font;
   padding: 20px 25px 115px 25px;
   font-family: @guides-font-family;
+  padding-bottom: 115px;
   .container-fluid {
     max-width: 1200px;
   }
 }
 
 .img-center {
-  max-width: 25%;
-  max-height: 25%;
+  max-width: 184px;
+  max-height: 184px;
   padding: 15px;
   display: block;
   margin: 0 auto;
 }
 
 .post-bg{
-  background-color: #f6f8fa; 
+  background-color: #f6f8fa;
 }
 
 .badge {
@@ -1500,8 +1529,8 @@ body .guides .guides-section-white {
   text-align: center;
   margin: 40px 0;
   table {
-    text-align:center; 
-    margin-left:auto; 
+    text-align:center;
+    margin-left:auto;
     margin-right:auto;
     & tbody tr {
       border-bottom: none !important;
@@ -1544,8 +1573,43 @@ body .guides .guides-section-white {
         }
         &:nth-child(even) {
           background-color: inherit !important;
-        }  
+        }
       }
+    }
+  }
+}
+
+.no-azure-results{
+  h2 {
+    color: @guides-font;
+    font-size: 30px;
+    line-height: normal;
+    letter-spacing: 0.84px;
+    margin-bottom: 8px;
+    margin-top: 91px;
+    &:hover > a.anchorjs-link{
+      color: #FFFFFF;
+      text-decoration: none;
+      display: none;
+    }
+  }
+  p {
+    font-size: 20px;
+    opacity: 0.7;
+    line-height: 1.5;
+    letter-spacing: 0.56px;
+    color: #000000;
+    margin-bottom: 24px;
+  }
+  .btn {
+    border-radius: 23.5px;
+    background-image: linear-gradient(to bottom, #5bcde7, #569cea);
+    &:hover, &:active {
+      outline: none;
+      transform: none;
+      box-shadow: none;
+      border-radius: 23.5px;
+      background-image: linear-gradient(to bottom, #5bcde7, #569cea);
     }
   }
 }
@@ -1553,7 +1617,7 @@ body .guides .guides-section-white {
 .admonitionblock.important, .admonitionblock.note{
   .admonitionblock-content;
   .title:after {
-    background-color: #06a6fd; 
+    background-color: #06a6fd;
     border: 1px solid #06a6fd;
   }
 }
@@ -1561,7 +1625,7 @@ body .guides .guides-section-white {
 .admonitionblock.error{
   .admonitionblock-content;
   .title:after {
-    background-color: #ef5a73; 
+    background-color: #ef5a73;
     border: 1px solid #ef5a73;
   }
 }
@@ -1573,18 +1637,27 @@ body .guides .guides-section-white {
 
 // Sections that have a blue background
 .section-hero-blue {
+  height: 409px;
   color: #fff;
-  background: url('../img/bg-header-squares.png') center bottom no-repeat, linear-gradient(#7cd7ff, #07a7fc, #57a1ea); 
+  background: url('../img/bg-header-squares.png') center bottom no-repeat, linear-gradient(#7cd7ff, #07a7fc, #57a1ea);
   & label {
-    font-size: 30px;
+    margin-bottom: 29px;
+    font-size: 35px;
+    line-height: normal;
+    letter-spacing: 0.98px;
+    text-align: center;
+    color: #ffffff;
   }
   & img {
     margin: -1%;
     position: relative;
+    height: 231px;
+    width: 112px;
+    margin-bottom: 23px;
   }
   & a {
-    padding: 7px 30px;
-    margin-bottom: 3%;
+    padding: 14px 39px;
+    margin-bottom: 49px;
     color: #08a9fb;
     font-size: 14px;
     background-color: white;
@@ -1592,7 +1665,7 @@ body .guides .guides-section-white {
   & a:active, a:hover{
     color: #08a9fb;
     cursor: pointer;
-    text-decoration: none;
+    .no-transform();
   }
 }
 
@@ -1843,6 +1916,18 @@ body .guides .guides-section-white {
 
 .post-detail {
   padding-bottom: 5em;
+  h1 {
+    margin: 20px auto;
+    font-size: 35px;
+    line-height: normal;
+    letter-spacing: 0.98px;
+    text-align: center;
+    color: @guides-font;
+  }
+  .post-title-image {
+    padding: 0px;
+    max-height: 110px;
+  }
   .post-title {
     color: #000000;
     padding: 1em 2em 0 2em;
@@ -1885,7 +1970,7 @@ body .guides .guides-section-white {
       }
       &:last-child span:hover,
       &:first-child:hover,
-      &:first-child:active, 
+      &:first-child:active,
       & span:hover,
       & span:active {
         border-bottom: 2px solid @guides-primary-color;
@@ -1967,7 +2052,7 @@ body .guides .guides-section-white {
     display: block;
     margin: 0 auto;
   }
- 
+
   pre, pre[class*="language-"] {
     padding: 0px;
     background: aliceblue;

@@ -17,17 +17,17 @@ custom_js:
         <div class="col-md-7 guides-section-white">
           <ol class="breadcrumb text-center">
             {% assign crumbs = page.url | split: '/' %}
-            <a href="/guides" ga-event-category="guide-{{ post.title | downcase}}" ga-event-action="deployment-guides">Production Deployment Guides</a> 
+            <a href="/guides" ga-event-category="guide-{{ post.title | downcase}}" ga-event-action="deployment-guides">Production Deployment Guides</a>
             {% for crumb in crumbs offset: 2 %}
               {% if forloop.last %}
                 <a href="#"> / <span> {{ page.title | replace:'-',' ' }}</span></a>
               {% else %}
                 <a href="/guides#{{ crumb }}" >/ <span>{{ crumb | replace:'-',' ' | capitalize }}</span></a>
               {% endif %}
-            {% endfor %}      
+            {% endfor %}
           </ol>
           <div class="post-title text-center">
-            <img class="img-center" src="{{ page.image }}" alt="post logo">
+            <img class="img-center post-title-image" src="{{ page.image }}" alt="post logo">
             <h1>{{ page.title }}</h1>
             {% if page.tags %}
               {% for tag in page.tags %}
