@@ -29,7 +29,7 @@ This guide will walk you through how to use the
 https://gruntwork.io/infrastructure-as-code-library/[Gruntwork Service Catalog] to define and manage a production-grade
 tech stack as code on top of AWS or GCP.
 
-=== What is the Gruntwork Service Catalog and Reference Architecture?
+=== What is the Gruntwork Service Catalog?
 
 // TODO: update screenshot of the service catalog when we launch the new design
 .The Gruntwork Service Catalog
@@ -39,8 +39,8 @@ The https://gruntwork.io/infrastructure-as-code-library/[Gruntwork Service Catal
 lines of reusable, battle-tested, production-ready infrastructure code for AWS and GCP that lets you:
 
 Go to prod in days, not months::
-  Most teams have the same basic infrastructure needs (e.g., Docker cluster, load balancer, database, cache, CI/CD,
-  monitoring, secrets management, and so on), so instead of wasting months reinventing the wheel and building these
+  Most teams have the same basic infrastructure needs—e.g., Docker cluster, load balancer, database, cache, CI/CD,
+  monitoring, secrets management, and so on—so instead of wasting months reinventing the wheel and building these
   same pieces from scratch, you get to leverage a library of reusable, battle-tested, off-the-shelf infrastructure
   that has been built by a team of DevOps experts and proven in production at hundreds of companies.
 
@@ -53,12 +53,12 @@ Customize everything using infrastructure as code::
 Learn best practices::
   The Service Catalog includes both thorough documentation and access to the
   https://gruntwork.io/training/[DevOps Training Library], a collection of video training courses that teach a variety
-  of DevOps topics, such as infrastructure as code, Terraform, Docker, Packer, AWS, GCP, security, and more.
+  of DevOps topics, including infrastructure as code, Terraform, Docker, Packer, AWS, GCP, security, and more.
 
 Keep everything up to date::
-  We are constantly updating the Gruntwork Service Catalog with the latest best practices, new features, and bug fixes.
-  Instead of spending months fighting with Terraform or Kubernetes updates, better infrastructure is just a
-  version number bump away (see the monthly https://blog.gruntwork.io/tagged/gruntwork-newsletter[Gruntwork Newsletter]).
+  The Gruuntwork team is constantly updating the Gruntwork Service Catalog with the latest best practices, new features,
+  and bug fixes. Instead of spending months fighting with Terraform or Kubernetes updates, better infrastructure is just
+  a version number bump away (see the monthly https://blog.gruntwork.io/tagged/gruntwork-newsletter[Gruntwork Newsletter]).
 
 Get commercial support::
   Work with a team of DevOps experts who can help you set up your infrastructure, design highly available and
@@ -89,11 +89,11 @@ Feel free to read the guide from start to finish or skip around to whatever part
 
 === The Gruntwork Service Catalog
 
-The Gruntwork Service Catalog is a collection of over 300,000 lines of reusable, battle-tested infrastructure code.
+The Gruntwork Service Catalog is a collection of over 300,000 lines of reusable, battle-tested infrastructure code
 that is organized into 40+ GitHub repos, some public and open source, and some private and only accessible to Gruntwork
 customers. Each repo is focused on one type of infrastructure: e.g., there is one repo that contains code for deploying
-and managing Kubernetes on AWS, one repo with code for deploying and managing the ELK (Elasticsearch, Logstash, Kibana)
-stack, one repo that contains a collection of CI / CD code, and so on.
+and managing Kubernetes on AWS, one repo with code for deploying and managing the ELK stack (Elasticsearch, Logstash,
+Kibana), one repo that contains a collection of CI / CD code, and so on.
 
 The code in the Gruntwork Service Catalog is written using a combination of:
 
@@ -103,8 +103,8 @@ Terraform::
 
 Go::
   Used to build cross-platform CLI applications (e.g., `ssh-grunt` is a Go app you can run on your EC2 instances to
-  manage SSH access to those instances via IAM groups) and to write automated tests for all of our modules (using our
-  open source Go library https://github.com/gruntwork-io/terratest/[Terratest].
+  manage SSH access to those instances via IAM groups) and to write automated tests for all of the modules (using the
+  open source Go library https://github.com/gruntwork-io/terratest/[Terratest]).
 
 Bash::
   Used for small scripts on Linux and macOS, including:
@@ -119,10 +119,10 @@ Python::
   Used for more complicated scripts, especially those that need to run on other operating systems (e.g., Windows)
   and/or those that need to be called directly from Terraform (e.g., to fill in some missing functionality).
 
-Why these tools? We wrote an entire blog post on
+Why these tools? We wrote a detailed blog post on
 https://blog.gruntwork.io/why-we-use-terraform-and-not-chef-puppet-ansible-saltstack-or-cloudformation-7989dad2865c[why we use Terraform];
 as for Go, Bash, and Python, we use them because they work just about everywhere, with few or no external dependencies,
-and they can be integrated with almost any configuration management tool: e.g., you can use Bash scripts with Chef,
+and they can be integrated with almost any configuration management approach: e.g., you can use Bash scripts with Chef,
 Puppet, Ansible, Packer, and Docker.
 
 The code in each repo is organized into three primary folders, `modules`, `examples`, and `test`, as described in the
@@ -206,17 +206,17 @@ What's included::
   The Reference Architecture includes just about everything the typical company needs: multiple environments, each
   configured with server orchestration (e.g., Kubernetes), load balancers, databases, caches, network topology,
   monitoring, alerting, log aggregation, CI/CD, user management, secrets management, SSH management, VPN management, and
-  much more (for a detailed walkthrough, see
-  https://blog.gruntwork.io/how-to-build-an-end-to-end-production-grade-architecture-on-aws-part-1-eae8eeb41fec[How to Build an End to End Production-Grade Architecture on AWS]).
-  We wire all these pieces together according to your needs, deploy it into your AWS or GCP accounts, and give you
-  100% of the code—all in about one day.
+  much more. For a detailed walkthrough, see
+  https://blog.gruntwork.io/how-to-build-an-end-to-end-production-grade-architecture-on-aws-part-1-eae8eeb41fec[How to Build an End to End Production-Grade Architecture on AWS].
+  We wire all these pieces together according to your needs, deploy everything into your AWS or GCP accounts, and give
+  you 100% of the code—all in about one day.
 
 Opinionated code::
   Whereas the Gruntwork Service Catalog is relatively unopinionated, allowing you to combine and compose modules, tools,
   and approaches however you want ("à la carte"), the Gruntwork Reference Architecture is more opinionated, giving you a
   pre-defined, standardized set of modules, tools, and approaches to choose from ("prix fixe"). If the opinionated
   design of the Reference Architecture looks like a good fit for your company, you may wish to purchase it as a way to
-  save months on having to wire everything together and deploy it yourself. If the opinionated design is not a good
+  save months of having to wire everything together and deploy it yourself. If the opinionated design is not a good
   fit, then you can use the Gruntwork Service Catalog directly instead.
 
 [[example_ref_arch]]See an example Reference Architecture::
@@ -248,11 +248,11 @@ IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access t
 === The production-grade infrastructure checklist
 
 The Gruntwork Service Catalog is a collection of _production-grade infrastructure_—that is, the type of reliable,
-secure, battle-tested infrastructure that you'd bet your company on. Every time you deploy infrastructure, you're
-betting that your infrastructure won't fall over if traffic goes up; you're betting that your infrastructure won't lose
-your data if there's an outage; you're betting that your infrastructure won't allow your data to be compromised when
-hackers try to break in; and if these bets don't work out, your company may go out of business. That's what's at stake
-when we say "production-grade."
+secure, battle-tested infrastructure that you'd bet your company on. Every time you deploy something to production,
+you're betting that your infrastructure won't fall over if traffic goes up; you're betting that your infrastructure
+won't lose your data if there's an outage; you're betting that your infrastructure won't allow your data to be
+compromised when hackers try to break in; and if these bets don't work out, your company may go out of business. That's
+what's at stake when we talk about "production-grade."
 
 Building production-grade infrastructure requires taking into account a long list of details, which we have captured in
 _The Production-Grade Infrastructure Checklist_:
@@ -1972,4 +1972,4 @@ Now that you've learned how to use the Gruntwork Service Catalog, you can start 
 infrastructure! Here are some good first steps:
 
 . link:/guides/foundations/how-to-configure-production-grade-aws-account-structure[How to Configure a Production Grade AWS Account Structure]
-. `How to deploy a production grade Kubernetes (EKS) cluster in AWS` _(coming soon!)_
+. link:/guides/kubernetes/how-to-deploy-production-grade-kubernetes-cluster-aws[How to deploy a production grade Kubernetes (EKS) cluster in AWS]
