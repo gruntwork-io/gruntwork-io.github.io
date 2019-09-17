@@ -1,47 +1,48 @@
-<div class="row" id="guide-listings">
-    <div class="col-sm-2">
-        <div id="listings-category" class="categories">
-            {% for category in site.categories %}
-            {% capture category_name %}{{ category | first }}{% endcapture %}
-            <ul id="categories">
-                <li class="{{ category_name | downcase }}">
-                    <label><b><a href="#{{category_name | slugify}}">{{category_name}}</a></b></label>
-                </li>
-            </ul>
-            {% endfor %}
-        </div>
+<div id="guide-listings">
+  <div class="col-sm-2">
+    <div class="row">
+      <div id="listings-category" class="categories">
+        {% for category in site.categories %}
+          {% capture category_name %}{{ category | first }}{% endcapture %}
+          <ul id="categories">
+              <li class="{{ category_name | downcase }}">
+                  <label><b><a href="#{{category_name | slugify}}">{{category_name}}</a></b></label>
+              </li>
+          </ul>
+        {% endfor %}
+      </div>
     </div>
-    <div class="col-sm-8">
-        <div class="row">
-            <div class="guide-listing" id="listings">
-                <div style="text-align: right">
-                    <small id="search-results-count"></small>
-                </div>
-                {% for category in site.categories %}
-                {% capture category_name %}{{ category | first }}{% endcapture %}
-                <h3 class="category-head">{{ category_name }}</h3>
-                {% for post in site.categories[category_name] %}
-                <div class="guide-card card-shadow" id="{{ post.title | downcase | split: ' ' | join: '-' | append: '-card' }}">
-                    <div class="card">
-                        <div class="row no-padding">
-                            <div class="col-sm-2 col-sm-2  img-inner no-padding">
-                                <img src="{{ post.image }}" alt="card image" class="img-center">
-                            </div>
-                            <a href="{{ post.url }}" ga-event-category="guide-{{ post.title | downcase}}" ga-event-action="deployment-guides">
-                              <div class="col-sm-10 card-body guide-card-description float-right">
-                                  <h5 class="card-title"><b>{{ post.title }}</b></h5>
-                                  <p class="card-text">{{ post.excerpt | strip_html }}</p>
-                              </div>
-                            </a>
-                        </div>
+  </div>
+  <div class="col-sm-8" id="listings">
+    <div class="row">
+      <div class="guide-listing" >
+        <div style="text-align: right">
+            <small id="search-results-count"></small>
+        </div>
+        {% for category in site.categories %}
+          {% capture category_name %}{{ category | first }}{% endcapture %}
+          <h3 class="category-head">{{ category_name }}</h3>
+          {% for post in site.categories[category_name] %}
+            <div class="guide-card card-shadow" id="{{ post.title | downcase | split: ' ' | join: '-' | append: '-card' }}">
+              <div class="card">
+                <div class="row no-padding">
+                  <div class="col-xs-2 img-inner no-padding">
+                    <img src="{{ post.image }}" alt="card image" class="img-center">
+                  </div>
+                  <a href="{{ post.url }}" ga-event-category="guide-{{ post.title | downcase}}" ga-event-action="deployment-guides">
+                    <div class="col-xs-10 card-body guide-card-description float-right">
+                      <h5 class="card-title"><b>{{ post.title }}</b></h5>
+                      <p class="card-text">{{ post.excerpt | strip_html }}</p>
                     </div>
-                    </div>
-                    {% endfor %}
-                    {% endfor %}
+                  </a>
                 </div>
+              </div>
             </div>
-        </div>
+          {% endfor %}
+        {% endfor %}
+      </div>
     </div>
+  </div>
 </div>
 <script>
     window.guideEntries = [

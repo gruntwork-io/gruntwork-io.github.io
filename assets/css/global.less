@@ -518,7 +518,7 @@ a.caret-right{
 }
 
 // Home page navbar styles
-.index-page .navbar-default, 
+.index-page .navbar-default,
 .how-it-works .navbar-default,
 .guides .navbar-default
  {
@@ -1357,11 +1357,14 @@ body .guides .guides-section-white {
   margin-bottom: 40%;
 }
 
-@media only screen and (max-width: @screen-md-max) {
-  #img-thumb {
+@media only screen and (max-width: @screen-xs-max) {
+  .searchrow {
+    display: none !important;
+  }
+  .img-inner {
     .remove-visibility();
   }
-  #card-content {
+  .guide-card-description {
     width: 100%;
   }
   p {
@@ -1374,10 +1377,8 @@ body .guides .guides-section-white {
     border: none;
   }
   .cloud-filter .filter {
-    height: inherit;
-  }
-  .filter-options .card {
-    padding: 20px;
+    height: 60px;
+    width: 90px;
   }
 }
 
