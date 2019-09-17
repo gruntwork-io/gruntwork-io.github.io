@@ -8,28 +8,29 @@ $(document).ready(function () {
 
   //To enable fixed scrolling
   $(window).scroll(function () {
-    let sidebar;
-    if ($('#toc').innerHeight()) {
-      sidebar = $('#toc');
-    } else {
-      sidebar = $('#listings-category');
-    }
-    let sidebarTop = $('.navbar-default').innerHeight();
-    let contentHeight = $('.guides-section-white').innerHeight();
-    let sidebarHeight = sidebar.height();
-    let sidebarBottomPos = contentHeight - sidebarHeight
-    let trigger = $(window).scrollTop() - sidebarTop;
+    const sidebar = $(".js-scroll-with-user");
 
-    if (trigger >= sidebarTop) {
-      sidebar.addClass('fixed');
-    } else {
-      sidebar.removeClass('fixed');
-    }
+    const scrollPosition = $(window).scrollTop();
+    const navBarHeight = $('.navbar-default').innerHeight();
 
-    if (trigger >= sidebarBottomPos) {
-      sidebar.addClass('bottom');
-    } else {
-      sidebar.removeClass('bottom');
-    }
+    const contentHeight = $('.guides-section-white').innerHeight();
+    const sidebarHeight = sidebar.height();
+    const sidebarBottomPos = sidebar.offset().top + sidebarHeight;
+
+    console.log({sidebarBottomPos, contentHeight, sidebarHeight});
+    //
+    // if (sidebarBottomPos >= contentHeight) {
+    //   sidebar.removeClass('fixed');
+    //   const topPosition = contentHeight - sidebarHeight;
+    //   console.log(`Would have set topPostion to ${topPosition}`);
+    //   sidebar.css({top: `${topPosition}px`, position: 'relative'});
+    // } else if (scrollPosition >= navBarHeight) {
+    //   sidebar.addClass('fixed');
+    //   sidebar.css({top: '', position: ''});
+    // } else {
+    //   sidebar.removeClass('fixed');
+    //   sidebar.css({top: '', position: ''});
+    // }
+
   });
 });
