@@ -1459,7 +1459,7 @@ body .guides .guides-section-white {
   background-color: #fff;
   position: relative;
   color: @guides-font;
-  padding-bottom: 115px;
+  padding: 20px 80px 115px 80px;
   font-family: @guides-font-family;
   .container-fluid {
     max-width: 1200px;
@@ -1854,6 +1854,9 @@ body .guides .guides-section-white {
       font-size: 14px;
       letter-spacing: 0.39px;
     }
+    h1, h2, h3, h4, h5, h6 {
+      color: @guides-font;
+    }
   }
   .imageblock > .title {
       font-size: 12px;
@@ -1888,7 +1891,7 @@ body .guides .guides-section-white {
   p {
     font-size: 16px;
     letter-spacing: 0.42px;
-    line-height: 22px;
+    line-height: 28px;
     & code {
       background-color: #e6f6fe;
       color: #000;
@@ -1896,6 +1899,7 @@ body .guides .guides-section-white {
   }
   & .dlist, & ulist {
     padding: 0;
+    margin: 20px 0;
   }
   & a:link{
     color: #07a7fc;
@@ -1916,7 +1920,7 @@ body .guides .guides-section-white {
   color: @guides-font;
   line-height: 1.38;
   .sect2 {
-    .paragraph, dd, dt {
+    .paragraph, dd {
       margin-bottom: 10px;
     }
     dl{
@@ -1924,6 +1928,9 @@ body .guides .guides-section-white {
     }
     .listingblock {
       margin: 20px 0;
+      pre {
+        padding: 15px;
+      }
     }
   }
   p, li {
