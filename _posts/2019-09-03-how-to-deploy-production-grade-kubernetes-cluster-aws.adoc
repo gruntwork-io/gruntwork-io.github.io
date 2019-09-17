@@ -66,7 +66,7 @@ This guide consists of four main sections:
 <<production_grade_design>>::
   An overview of how to configure a secure, scalable, highly available Kubernetes cluster that you can rely on in
   production. To get a sense of what production-grade means, check out
-  link:/guides/gruntwork/how-to-use-gruntwork-service-catalog#production_grade_infra_checklist[The production-grade infrastructure checklist].
+  link:/guides/foundations/how-to-use-gruntwork-service-catalog#production_grade_infra_checklist[The production-grade infrastructure checklist].
 
 <<deployment_walkthrough>>::
   A step-by-step guide to deploying a production-grade Kubernetes cluster in AWS using code from the Gruntwork Service
@@ -837,13 +837,13 @@ Gruntwork Service Catalog::
 +
 IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access this code.
 +
-Make sure to read link:/guides/gruntwork/how-to-use-gruntwork-service-catalog[How to Use the Gruntwork Service Catalog].
+Make sure to read link:/guides/foundations/how-to-use-gruntwork-service-catalog[How to Use the Gruntwork Service Catalog].
 
 Terraform::
   This guide uses https://www.terraform.io/[Terraform] to define and manage all the infrastructure as code. If you're
   not familiar with Terraform, check out https://blog.gruntwork.io/a-comprehensive-guide-to-terraform-b3d32832baca[A
   Comprehensive Guide to Terraform], https://training.gruntwork.io/p/terraform[A Crash Course on Terraform], and
-  link:/guides/gruntwork/how-to-use-gruntwork-service-catalog[How to Use the Gruntwork Service Catalog].
+  link:/guides/foundations/how-to-use-gruntwork-service-catalog[How to Use the Gruntwork Service Catalog].
 
 Python and Kubergrunt::
   Some of the Terraform modules used in this guide call out to Python code and/or
@@ -854,7 +854,7 @@ Docker and Packer::
   This guide assumes you are deploying a Kubernetes cluster for use with https://www.docker.com[Docker]. The guide also
   uses https://www.packer.io[Packer] to build VM images. If you're not familiar with Docker or Packer, check out
   https://training.gruntwork.io/p/a-crash-course-on-docker-packer[A Crash Course on Docker and Packer] and
-  link:/guides/gruntwork/how-to-use-gruntwork-service-catalog[How to Use the Gruntwork Service Catalog].
+  link:/guides/foundations/how-to-use-gruntwork-service-catalog[How to Use the Gruntwork Service Catalog].
 
 AWS accounts::
   This guide deploys infrastructure into one or more AWS accounts. Check out the
@@ -868,9 +868,9 @@ AWS accounts::
 NOTE: This guide will use https://github.com/gruntwork-io/terragrunt[Terragrunt] and its associated file and folder
 structure to deploy Terraform modules. Please note that *Terragrunt is NOT required for using Terraform modules from
 the Gruntwork Service Catalog.* Check out
-link:/guides/gruntwork/how-to-use-gruntwork-service-catalog[How to Use the Gruntwork Service Catalog] for instructions
+link:/guides/foundations/how-to-use-gruntwork-service-catalog[How to Use the Gruntwork Service Catalog] for instructions
 on alternative options, such as how to
-link:/guides/gruntwork/how-to-use-gruntwork-service-catalog#deploy_using_plain_terraform[Deploy using plain Terraform].
+link:/guides/foundations/how-to-use-gruntwork-service-catalog#deploy_using_plain_terraform[Deploy using plain Terraform].
 
 The first step is to deploy a VPC. Follow the instructions in
 link:/guides/networking/how-to-configure-production-grade-vpc-aws[How to deploy a production-grade VPC on AWS] to use
@@ -980,9 +980,9 @@ module "dns_mgmt_to_app" {
 ----
 
 At this point, you'll want to test your code. See
-link:/guides/gruntwork/how-to-use-gruntwork-service-catalog#manual_tests_terraform[Manual tests for Terraform code]
+link:/guides/foundations/how-to-use-gruntwork-service-catalog#manual_tests_terraform[Manual tests for Terraform code]
 and
-link:/guides/gruntwork/how-to-use-gruntwork-service-catalog#automated_tests_terraform[Automated tests for Terraform code]
+link:/guides/foundations/how-to-use-gruntwork-service-catalog#automated_tests_terraform[Automated tests for Terraform code]
 for instructions.
 
 Once your updated `vpc-app` wrapper module is working the way you want, submit a pull request, get your changes merged
