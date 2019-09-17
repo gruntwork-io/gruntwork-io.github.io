@@ -70,6 +70,7 @@
 
   function initialEntry() {
     $('#no-matches').hide();
+    $('#no-azure-results').hide();
     searchEntry = detectSearchEntry();
     $(showInitialItemsCount);
     $(performSearch($('.cloud-filter #aws')));
@@ -125,6 +126,9 @@
    */
   function filterData(searchValue, type) {
 
+    $('#guide-listings').show();
+
+    $('#no-azure-results').hide();
     $('#no-matches').hide();
 
     if (searchValue && searchValue.length > 0) {
@@ -221,19 +225,19 @@
   /* Triggered when filter checkboxes are checked */
   $(document).ready(() => {
 
-    $('.tags .checkbox input[type="checkbox"]').on('change', function () {
+    $(document).on('click','.tags', function() {
       let checked = $('input[type="checkbox"]:checked');
       if (!checked) {
         showAllItems();
         return; /* Return if nothing checked */
       }
-      checked.each(() => {
+      checked.each(function() {
         let searchValue = $(this).val();
 
         filterData(searchValue, 'tagSearch');
       });
-    });
-  });
+    })
+  })
 
 
   function performSearch(filterButton) {
@@ -242,12 +246,20 @@
     if (filterButton.hasClass('initialSelect') && filterButton.hasClass('active-button') ) {
       filterButton.removeClass('initialSelect');
       filterButton.removeClass('active-button');
+      $('#guide-listings').show();
+      $('#no-azure-results').hide();
       $('#no-matches').hide();
       showAllItems();
     } else {
       filterButton.addClass('active-button');
       filterButton.addClass('initialSelect');
       filterButton.siblings().removeClass('active-button');
+      if(id === 'azure') {
+        $('#guide-listings').hide();
+        $('#no-azure-results').show();
+        return;
+      }
+  
       filterData(id, 'cloudSearch');
     }
   }

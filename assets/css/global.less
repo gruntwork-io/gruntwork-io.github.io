@@ -1460,6 +1460,7 @@ body .guides .guides-section-white {
   color: @guides-font;
   padding: 20px 25px 115px 25px;
   font-family: @guides-font-family;
+  padding-bottom: 115px;
   .container-fluid {
     max-width: 1200px;
   }
@@ -1542,6 +1543,41 @@ body .guides .guides-section-white {
           background-color: inherit !important;
         }  
       }
+    }
+  }
+}
+
+.no-azure-results{
+  h2 {
+    color: @guides-font;
+    font-size: 30px;
+    line-height: normal;
+    letter-spacing: 0.84px;
+    margin-bottom: 8px;
+    margin-top: 91px;
+    &:hover > a.anchorjs-link{
+      color: #FFFFFF;
+      text-decoration: none;
+      display: none;
+    }
+  }
+  p {
+    font-size: 20px;
+    opacity: 0.7;
+    line-height: 1.5;
+    letter-spacing: 0.56px;
+    color: #000000;
+    margin-bottom: 24px;
+  }
+  .btn {
+    border-radius: 23.5px;
+    background-image: linear-gradient(to bottom, #5bcde7, #569cea);
+    &:hover, &:active {
+      outline: none;
+      transform: none;
+      box-shadow: none;
+      border-radius: 23.5px;
+      background-image: linear-gradient(to bottom, #5bcde7, #569cea);
     }
   }
 }
