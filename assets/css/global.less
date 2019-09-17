@@ -1633,18 +1633,27 @@ body .guides .guides-section-white {
 
 // Sections that have a blue background
 .section-hero-blue {
+  height: 409px;
   color: #fff;
   background: url('../img/bg-header-squares.png') center bottom no-repeat, linear-gradient(#7cd7ff, #07a7fc, #57a1ea);
   & label {
-    font-size: 30px;
+    margin-bottom: 29px;
+    font-size: 35px;
+    line-height: normal;
+    letter-spacing: 0.98px;
+    text-align: center;
+    color: #ffffff;
   }
   & img {
     margin: -1%;
     position: relative;
+    height: 231px;
+    width: 112px;
+    margin-bottom: 23px;
   }
   & a {
-    padding: 7px 30px;
-    margin-bottom: 3%;
+    padding: 14px 39px;
+    margin-bottom: 49px;
     color: #08a9fb;
     font-size: 14px;
     background-color: white;
@@ -1652,7 +1661,7 @@ body .guides .guides-section-white {
   & a:active, a:hover{
     color: #08a9fb;
     cursor: pointer;
-    text-decoration: none;
+    .no-transform();
   }
 }
 
