@@ -1458,7 +1458,7 @@ body .guides .guides-section-white {
   background-color: #fff;
   position: relative;
   color: @guides-font;
-  padding: 20px 80px 115px 80px;
+  padding: 20px 25px 115px 25px;
   font-family: @guides-font-family;
   .container-fluid {
     max-width: 1200px;
@@ -1921,9 +1921,14 @@ body .guides .guides-section-white {
 
 // Post Detail styles
 .post-content {
-  padding: 0 2em;
+  padding: 0;
   color: @guides-font;
   line-height: 1.38;
+
+  // Limit width so typography remains readable on wide screens: https://ux.stackexchange.com/a/108803/4869
+  max-width: 45em;
+  margin: 0 auto;
+
   .sect2 {
     .paragraph, dd {
       margin-bottom: 10px;
