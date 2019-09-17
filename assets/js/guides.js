@@ -16,8 +16,6 @@ $(document).ready(function () {
     const sidebarHeight = sidebar.height();
     const sidebarBottomPos = scrollPosition + sidebarHeight;
 
-    console.log({sidebarBottomPos, contentHeight, sidebarHeight});
-
     if (scrollPosition >= navBarHeight) {
       if (sidebarBottomPos >= contentHeight) {
         sidebar.removeClass('fixed');
