@@ -899,7 +899,6 @@ body .guides .guides-section-white {
   &:extend(.section-bg-blue);
   background: url('../img/bg-header-squares.png') center bottom no-repeat, linear-gradient(@brand-primary, #06A2FF);
   .container {
-    margin-top: 7%;
     margin-bottom: 20px;
   }
   h1 {
@@ -1459,7 +1458,7 @@ body .guides .guides-section-white {
   background-color: #fff;
   position: relative;
   color: @guides-font;
-  padding-bottom: 115px;
+  padding: 20px 25px 115px 25px;
   font-family: @guides-font-family;
   .container-fluid {
     max-width: 1200px;
@@ -1854,13 +1853,22 @@ body .guides .guides-section-white {
       font-size: 14px;
       letter-spacing: 0.39px;
     }
+    h1, h2, h3, h4, h5, h6 {
+      color: @guides-font;
+    }
   }
   .imageblock > .title {
-      font-size: 12px;
-      margin: 5px 0 15px 0;
-      color: rgba(0, 0, 0, 0.54);
-      text-align: center;
-  } 
+    font-size: 12px;
+    margin: 5px 0 15px 0;
+    color: rgba(0, 0, 0, 0.54);
+    text-align: center;
+  }
+  .listingblock > .title {
+    font-size: 12px;
+    margin: 15px 0 0 0;
+    color: rgba(0, 0, 0, 0.54);
+    text-align: left;
+  }
   .breadcrumb {
     font-size: 14px;
     letter-spacing: -0.2px;
@@ -1888,7 +1896,7 @@ body .guides .guides-section-white {
   p {
     font-size: 16px;
     letter-spacing: 0.42px;
-    line-height: 22px;
+    line-height: 28px;
     & code {
       background-color: #e6f6fe;
       color: #000;
@@ -1896,6 +1904,7 @@ body .guides .guides-section-white {
   }
   & .dlist, & ulist {
     padding: 0;
+    margin: 20px 0;
   }
   & a:link{
     color: #07a7fc;
@@ -1912,11 +1921,16 @@ body .guides .guides-section-white {
 
 // Post Detail styles
 .post-content {
-  padding: 0 2em;
+  padding: 0;
   color: @guides-font;
   line-height: 1.38;
+
+  // Limit width so typography remains readable on wide screens: https://ux.stackexchange.com/a/108803/4869
+  max-width: 42em;
+  margin: 0 auto;
+
   .sect2 {
-    .paragraph, dd, dt {
+    .paragraph, dd {
       margin-bottom: 10px;
     }
     dl{
@@ -1924,6 +1938,9 @@ body .guides .guides-section-white {
     }
     .listingblock {
       margin: 20px 0;
+      pre {
+        padding: 15px;
+      }
     }
   }
   p, li {

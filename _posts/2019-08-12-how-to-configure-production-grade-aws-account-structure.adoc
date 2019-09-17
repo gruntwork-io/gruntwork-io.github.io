@@ -53,7 +53,7 @@ This guide consists of four main sections:
 <<production_grade_design>>::
   An overview of how to configure a secure, scalable, highly available AWS account structure that you can rely on in
   production. To get a sense of what production-grade means, check out
-  link:/guides/gruntwork/how-to-use-gruntwork-service-catalog#production_grade_infra_checklist[The production-grade infrastructure checklist].
+  link:/guides/foundations/how-to-use-gruntwork-service-catalog#production_grade_infra_checklist[The production-grade infrastructure checklist].
 
 <<deployment_walkthrough>>::
   A step-by-step guide to configuring a production-grade AWS account structure using code from the Gruntwork Service
@@ -770,13 +770,13 @@ Gruntwork Service Catalog::
 +
 IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access this code.
 +
-Make sure to read link:/guides/gruntwork/how-to-use-gruntwork-service-catalog[How to use the Gruntwork Service Catalog].
+Make sure to read link:/guides/foundations/how-to-use-gruntwork-service-catalog[How to use the Gruntwork Service Catalog].
 
 Terraform::
   This guide uses https://www.terraform.io/[Terraform] to define and manage all the infrastructure as code. If you're
   not familiar with Terraform, check out https://blog.gruntwork.io/a-comprehensive-guide-to-terraform-b3d32832baca[A
   Comprehensive Guide to Terraform], https://training.gruntwork.io/p/terraform[A Crash Course on Terraform], and
-  link:/guides/gruntwork/how-to-use-gruntwork-service-catalog[How to use the Gruntwork Service Catalog].
+  link:/guides/foundations/how-to-use-gruntwork-service-catalog[How to use the Gruntwork Service Catalog].
 
 Keybase (optional)::
   As part of this guide, you will create IAM users, including, optionally, credentials for those IAM users. If you
@@ -810,9 +810,9 @@ IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access `
 
 NOTE: This guide will use https://github.com/gruntwork-io/terragrunt[Terragrunt] and its associated file and folder
 structure to deploy Terraform modules. Please note that *Terragrunt is NOT required for using Terraform modules from
-the Gruntwork Service Catalog.* Check out link:/guides/gruntwork/how-to-use-gruntwork-service-catalog[How to use the Gruntwork Service Catalog]
+the Gruntwork Service Catalog.* Check out link:/guides/foundations/how-to-use-gruntwork-service-catalog[How to use the Gruntwork Service Catalog]
 for instructions on alternative options, such as how to
-link:/guides/gruntwork/how-to-use-gruntwork-service-catalog#deploy_using_plain_terraform[deploying how to use plain terraform].
+link:/guides/foundations/how-to-use-gruntwork-service-catalog#deploy_using_plain_terraform[deploying how to use plain terraform].
 
 First, create a _wrapper module_ called `iam` in your `infrastructure-modules` repo:
 
@@ -1190,8 +1190,8 @@ output "user_passwords" {
 ----
 
 At this point, you'll want to test your code. See
-link:/guides/gruntwork/how-to-use-gruntwork-service-catalog#manual_tests_terraform[Manual tests for Terraform code] and
-link:/guides/gruntwork/how-to-use-gruntwork-service-catalog#automated_tests_terraform[Automated tests for Terraform code]
+link:/guides/foundations/how-to-use-gruntwork-service-catalog#manual_tests_terraform[Manual tests for Terraform code] and
+link:/guides/foundations/how-to-use-gruntwork-service-catalog#automated_tests_terraform[Automated tests for Terraform code]
 for instructions.
 
 Once your code is tested and working, commit and release your changes:
@@ -1531,8 +1531,8 @@ variable "force_destroy" {
 ----
 
 At this point, you'll want to test your code. See
-link:/guides/gruntwork/how-to-use-gruntwork-service-catalog#manual_tests_terraform[Manual tests for Terraform code] and
-link:/guides/gruntwork/how-to-use-gruntwork-service-catalog#automated_tests_terraform[Automated tests for Terraform code]
+link:/guides/foundations/how-to-use-gruntwork-service-catalog#manual_tests_terraform[Manual tests for Terraform code] and
+link:/guides/foundations/how-to-use-gruntwork-service-catalog#automated_tests_terraform[Automated tests for Terraform code]
 for instructions.
 
 Once tests are passing, commit and release your changes:
@@ -1747,8 +1747,8 @@ output "organizations_account_access_role_name" {
 ----
 
 At this point, you'll want to test your code. See
-link:/guides/gruntwork/how-to-use-gruntwork-service-catalog#manual_tests_terraform[Manual tests for Terraform code] and
-link:/guides/gruntwork/how-to-use-gruntwork-service-catalog#automated_tests_terraform[Automated tests for Terraform code]
+link:/guides/foundations/how-to-use-gruntwork-service-catalog#manual_tests_terraform[Manual tests for Terraform code] and
+link:/guides/foundations/how-to-use-gruntwork-service-catalog#automated_tests_terraform[Automated tests for Terraform code]
 for instructions.
 
 When you're done testing, commit and release your changes:
