@@ -6,31 +6,33 @@ $(document).ready(function () {
     $(e.target.parentNode).toggleClass('expanded');
   });
 
-  //To enable fixed scrolling
-  $(window).scroll(function () {
+  const onScroll = function () {
     const sidebar = $(".js-scroll-with-user");
 
     const scrollPosition = $(window).scrollTop();
     const navBarHeight = $('.navbar-default').innerHeight();
 
-    const contentHeight = $('.guides-section-white').innerHeight();
+    const contentHeight = $('.guides-section-white').innerHeight() + navBarHeight;
     const sidebarHeight = sidebar.height();
-    const sidebarBottomPos = sidebar.offset().top + sidebarHeight;
+    const sidebarBottomPos = scrollPosition + sidebarHeight;
 
     console.log({sidebarBottomPos, contentHeight, sidebarHeight});
-    //
-    // if (sidebarBottomPos >= contentHeight) {
-    //   sidebar.removeClass('fixed');
-    //   const topPosition = contentHeight - sidebarHeight;
-    //   console.log(`Would have set topPostion to ${topPosition}`);
-    //   sidebar.css({top: `${topPosition}px`, position: 'relative'});
-    // } else if (scrollPosition >= navBarHeight) {
-    //   sidebar.addClass('fixed');
-    //   sidebar.css({top: '', position: ''});
-    // } else {
-    //   sidebar.removeClass('fixed');
-    //   sidebar.css({top: '', position: ''});
-    // }
 
-  });
+    if (scrollPosition >= navBarHeight) {
+      if (sidebarBottomPos >= contentHeight) {
+        sidebar.removeClass('fixed');
+        sidebar.addClass('bottom');
+      } else {
+        sidebar.addClass('fixed');
+        sidebar.removeClass('bottom');
+      }
+    } else {
+      sidebar.removeClass('fixed');
+      sidebar.removeClass('bottom');
+    }
+  };
+
+  //To enable fixed scrolling
+  $(window).scroll(onScroll);
+  $(onScroll);
 });

@@ -8,9 +8,9 @@ custom_js:
 
 <div  class="post-bg">
   <div class="container-fluid">
-      <div class="post-detail">
+      <div class="post-detail row equal">
         <div class="col-md-2-5">
-          <div id="toc">
+          <div id="toc" class="js-scroll-with-user">
               {% toc %} {{page.document | tocify_asciidoc}}
           </div>
         </div>
