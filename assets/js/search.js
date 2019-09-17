@@ -227,9 +227,8 @@
 
     $(document).on('click','.tags', function() {
       let checked = $('input[type="checkbox"]:checked');
-      if (!checked) {
-        showAllItems();
-        return; /* Return if nothing checked */
+      if (checked.length === 0) {
+        return filterData("aws", 'cloudSearch');/* Return filtered to aws if nothing is checked */
       }
       checked.each(function() {
         let searchValue = $(this).val();
