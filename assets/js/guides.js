@@ -2,9 +2,10 @@ $(document)
   .ready(function () {
 
     if (window.location.href.indexOf('?') !== -1) {
-      $('#filter-section').hide();
-      $('#guide-listings').hide();
-      $('.guides-newsletter').hide();
+      //Commenting this out pending our decision
+      // $('#filter-section').hide();
+      // $('#guide-listings').hide();
+      // $('.guides-newsletter').hide();
       $("#newsletter-success").modal('show');
     } 
 
