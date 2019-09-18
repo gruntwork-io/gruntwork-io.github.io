@@ -1448,6 +1448,12 @@ body .guides .guides-section-white {
 }
 
 #newsletter-success{
+  @media (min-width: 768px){
+    .modal-dialog {
+        margin: 30px auto;
+        width: auto;
+    }
+  }
   & label {
     font-size: 28px;
     color: @guides-font;
@@ -1460,7 +1466,7 @@ body .guides .guides-section-white {
   }
   & .modal-content {
     background: #fff;
-    width: 468px;
+    max-width: 468px;
     height: 260px;
     border-radius: 8px;
   }
