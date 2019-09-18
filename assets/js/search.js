@@ -44,31 +44,6 @@
   }
 
   /**
-   * Function populates the filter checkboxes with tags
-   */
-  function displayFilterTags() {
-    //A list of tags that should be in uppercase
-    const upperCaseTags = ['aws', 'gke', 'gcp'];
-
-    if (searchEntry.type === 'guideEntries') {
-
-      //Filters the tags from the array of objects and flattens it out since it returns an array of arrays
-      let tags = searchEntry.entries.map(entry => entry.tags.split(',').map(tag => tag.trim())).reduce((a, b) => a.concat(b), []);
-
-      tags.filter((tag, index) => {
-
-        if ((tags.indexOf(tag) === index) && (tag.length != "")) {
-          //Converts tags that should be in uppercase
-          if (upperCaseTags.includes(tag)) {
-            tag = tag.toUpperCase();
-          }
-          $('.tags').append(`<div class="checkbox"><input value=${tag} id=${tag} type="checkbox"><label for="${tag}">${tag}</label></div>`);
-        }
-      });
-    }
-  }
-
-  /**
    * Function to display all items on the page
    */
   function showAllItems() {
@@ -83,7 +58,7 @@
   function showInitialItemsCount() {
     let numSubmodules = 0;
     for (let i = 0; i < searchEntry.entries.length; i++) {
-      if (searchEntry.type == 'libraryEntries') {
+      if (searchEntry.type === 'libraryEntries') {
         numSubmodules += libraryEntries[i].num_submodules;
       }
       searchEntry.entries;
@@ -95,8 +70,8 @@
 
   function initialEntry() {
     $('#no-matches').hide();
+    $('#no-azure-results').hide();
     searchEntry = detectSearchEntry();
-    $(displayFilterTags);
     $(showInitialItemsCount);
     $(performSearch($('.cloud-filter #aws')));
   }
@@ -137,8 +112,8 @@
     categoryArr.each(function () {
       let category = $(this).text().toLowerCase();
       if (entry.category === category) {
-        $(`.categories ul #${category}`).show();
-        $(`#${category}-1.category-head`).show();
+        $(`.categories ul .${category}`).show();
+        $(`#${category}.category-head`).show();
       }
     });
   }
@@ -146,11 +121,14 @@
 
   /**
    * A function to search the IaC Lib and Deployment guides. Can also be used for other pages that need it.
-   * To show/hide the proper elements based on the results. 
+   * To show/hide the proper elements based on the results.
    * @type {Function}
    */
   function filterData(searchValue, type) {
 
+    $('#guide-listings').show();
+
+    $('#no-azure-results').hide();
     $('#no-matches').hide();
 
     if (searchValue && searchValue.length > 0) {
@@ -159,9 +137,9 @@
 
       let searchQueries = lowerText.split(" ");
 
-      if (searchEntry.type == 'libraryEntries') {
+      if (searchEntry.type === 'libraryEntries') {
         $('.table-clickable-row').hide();
-      } else if (searchEntry.type == 'guideEntries') {
+      } else if (searchEntry.type === 'guideEntries') {
         $('#search-results-count').hide();
         $('.guide-card').hide() &&
           $('.category-head').hide() &&
@@ -208,7 +186,7 @@
           (searchEntry.type === 'libraryEntries') ? submoduleMatches += entry.num_submodules: submoduleMatches = 0;
           return;
         }
-      })
+      });
 
 
       if (matches === 0) {
@@ -219,12 +197,12 @@
 
       showItemsCount(matches, submoduleMatches);
     } else {
-      if (searchEntry.type == 'libraryEntries') {
+      if (searchEntry.type === 'libraryEntries') {
 
         showInitialItemsCount();
         $('.table-clickable-row').show();
 
-      } else if (searchEntry.type = 'guideEntries') {
+      } else if (searchEntry.type === 'guideEntries') {
         showAllItems();
       }
     }
@@ -247,19 +225,19 @@
   /* Triggered when filter checkboxes are checked */
   $(document).ready(() => {
 
-    $('.tags .checkbox input[type="checkbox"]').on('change', function () {
+    $(document).on('click','.tags', function() {
       let checked = $('input[type="checkbox"]:checked');
       if (!checked) {
         showAllItems();
         return; /* Return if nothing checked */
       }
-      checked.each(() => {
+      checked.each(function() {
         let searchValue = $(this).val();
 
         filterData(searchValue, 'tagSearch');
       });
-    });
-  });
+    })
+  })
 
 
   function performSearch(filterButton) {
@@ -268,12 +246,20 @@
     if (filterButton.hasClass('initialSelect') && filterButton.hasClass('active-button') ) {
       filterButton.removeClass('initialSelect');
       filterButton.removeClass('active-button');
+      $('#guide-listings').show();
+      $('#no-azure-results').hide();
       $('#no-matches').hide();
       showAllItems();
     } else {
       filterButton.addClass('active-button');
       filterButton.addClass('initialSelect');
       filterButton.siblings().removeClass('active-button');
+      if(id === 'azure') {
+        $('#guide-listings').hide();
+        $('#no-azure-results').show();
+        return;
+      }
+  
       filterData(id, 'cloudSearch');
     }
   }
