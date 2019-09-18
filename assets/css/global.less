@@ -1178,31 +1178,39 @@ body .guides .guides-section-white {
     }
     display: block;
     z-index: 2;
-    width: 100%;
-    padding: 1em 0.3em 1.8em 0.3em;
+    width: 375px;
+    padding: 1em;
     overflow-y: auto;
     max-height: 100vh;
     overflow-wrap: break-word;
-    display: block;
-    line-height: 2.5em;
     & li {
-      list-style: none;
-      > a:not(:only-child):before {
-        display: inline-block;
-        height: 7px;
-        width: 7px;
-        transform: rotate(-135deg);
-        border-top: 1px solid #000;
-        border-left: 1px solid #000;
-        margin: 0 0px 4px;
-        font-size: .8rem;
-        margin-right: 7px;
-        content: '';
-      }
-      > a:only-child:before {content: '';  margin-right: 14px;}
+      list-style-type: none;
       & ul {
         display: none;
       }
+    }
+  }
+  .sectlevel2 {
+    padding-left: 20px !important;
+
+    li {
+      line-height: 16px;
+      margin-bottom: 8px;
+    }
+  }
+
+  a.selected {
+    color: @guides-primary-color;
+    &:before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: @guides-primary-color;
+      display: inline-block;
+      margin: 1px -3px;
+      position: relative;
+      left: -8px;
     }
   }
 }
@@ -1226,8 +1234,6 @@ body .guides .guides-section-white {
 
 .categories {
   .guides-outline;
-  margin-top: 15em;
-  margin-bottom: 2em;
   @media (max-width: @screen-md-min) {
     visibility: hidden;
     clear: both;
@@ -1250,25 +1256,9 @@ body .guides .guides-section-white {
 }
 
 #toc .sectlevel1 .expanded {
-  & > a {
-    color: @guides-primary-color;
-  }
   & ul {
     display: block;
     font-size: 14px;
-    & li {
-      & :before {
-        content: '-';
-        font-size: 20px;
-        font-weight: bold;
-        display: inline-block;
-        margin-left: -15px;
-        margin-top: -5px;
-        &:hover, &:focus{
-          .no-transform;
-        }
-      }
-    }
   }
 }
 

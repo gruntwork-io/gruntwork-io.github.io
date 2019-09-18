@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row equal">
     <div class="col-md-2">
         <div id="listings-category" class="categories js-scroll-with-user">
             {% for category in site.categories %}
@@ -13,7 +13,7 @@
     </div>
     <div class="col-md-8">
         <div class="row">
-            <div class="guide-listing" id="listings">
+            <div id="listings" class="guide-listing js-scroll-spy" data-scroll-spy-nav-selector="#listings-category">
                 <div style="text-align: right">
                     <small id="search-results-count"></small>
                 </div>
