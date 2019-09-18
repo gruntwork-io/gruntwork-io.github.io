@@ -1,18 +1,29 @@
 $(document).ready(function () {
   // Move the TOC on the left side of the page with the user as the user scrolls down, so the TOC is always visible.
-  // Only start moving the TOC once the user has scrolled past the nav. Stop moving it at the bottom of the content.
+  // Only start moving the TOC once the user has scrolled past the element specified in scroll-after-selector. Stop
+  // moving it at the bottom of the content.
   const moveToCWithScrolling = function () {
     const sidebar = $(".js-scroll-with-user");
 
-    const scrollPosition = $(window).scrollTop();
-    const navBarHeight = $('.navbar-default').innerHeight();
+    const scrollAfterSelector = sidebar.data('scroll-after-selector');
+    if (!scrollAfterSelector) {
+      throw new Error(`You must specify a data-scroll-after-selector attribute for anything that uses the js-scroll-with-user class.`);
+    }
 
-    const contentHeight = $('.guides-section-white').innerHeight() + navBarHeight;
+    const scrollAfter = $(scrollAfterSelector);
+    if (scrollAfter.length !== 1) {
+      throw new Error(`Expected one element that matched selector '${scrollAfterSelector}' but got ${scrollAfter.length}`);
+    }
+
+    const scrollPosition = $(window).scrollTop();
+    const scrollAfterHeightBottom = scrollAfter.offset().top + scrollAfter.innerHeight();
+
+    const contentHeight = $('.guides-section-white').innerHeight() + scrollAfterHeightBottom;
     const sidebarHeight = sidebar.height();
     const sidebarBottomPos = scrollPosition + sidebarHeight;
 
-    // Only start moving the TOC once we're past the nav
-    if (scrollPosition >= navBarHeight) {
+    // Only start moving the TOC once we're past the scroll-after item
+    if (scrollPosition >= scrollAfterHeightBottom) {
       // Stop moving the TOC when we're at the bottom of the content
       if (sidebarBottomPos >= contentHeight) {
         sidebar.removeClass('fixed');
@@ -42,8 +53,11 @@ $(document).ready(function () {
   const scrollSpy = function() {
     const content = $(".js-scroll-spy");
     const navSelector = content.data('scroll-spy-nav-selector');
-    const nav = $(navSelector);
+    if (!navSelector) {
+      throw new Error(`You must specify a data-scroll-spy-nav-selector attribute for anything that uses the js-scroll-spy class.`);
+    }
 
+    const nav = $(navSelector);
     if (nav.length !== 1) {
       throw new Error(`Expected one nav that matched selector '${navSelector}' but got ${nav.length}`);
     }

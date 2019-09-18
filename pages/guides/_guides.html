@@ -1,19 +1,19 @@
 <div class="row equal">
     <div class="col-md-2">
-        <div id="listings-category" class="categories js-scroll-with-user">
+        <div id="toc" class="categories js-scroll-with-user" data-scroll-after-selector=".cloud-filter">
+          <ul class="sectlevel1">
             {% for category in site.categories %}
             {% capture category_name %}{{ category | first }}{% endcapture %}
-            <ul id="categories">
-                <li class="{{ category_name | downcase }}">
-                    <label><b><a href="#{{category_name | slugify}}">{{category_name}}</a></b></label>
-                </li>
-            </ul>
+              <li class="{{ category_name | downcase }}">
+                  <a href="#{{category_name | slugify}}">{{category_name}}</a>
+              </li>
             {% endfor %}
+          </ul>
         </div>
     </div>
     <div class="col-md-8">
         <div class="row">
-            <div id="listings" class="guide-listing js-scroll-spy" data-scroll-spy-nav-selector="#listings-category">
+            <div id="listings" class="guide-listing js-scroll-spy" data-scroll-spy-nav-selector="#toc">
                 <div style="text-align: right">
                     <small id="search-results-count"></small>
                 </div>
