@@ -10,7 +10,7 @@ custom_js:
   <div class="container-fluid">
       <div class="post-detail row equal">
         <div class="col-md-2-5">
-          <div id="toc" class="js-scroll-with-user" data-scroll-after-selector=".navbar-default">
+          <div id="toc" class="js-scroll-with-user" data-scroll-after-selector=".navbar-default" data-scroll-until-selector=".guides-section-white">
               {% toc %} {{page.document | tocify_asciidoc}}
           </div>
         </div>

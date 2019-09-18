@@ -1,24 +1,31 @@
 $(document).ready(function () {
+  const getElementForDataSelector = function (parentElement, selectorName, elementName) {
+    const selector = parentElement.data(selectorName);
+    if (!selector) {
+      throw new Error(`You must specify a 'data-${selectorName}' attribute for '${elementName}'.`);
+    }
+
+    const element = $(selector);
+    if (element.length !== 1) {
+      throw new Error(`Expected one element that matched selector '${selector}' for '${elementName}' but got ${element.length}`);
+    }
+
+    return element;
+  };
+
   // Move the TOC on the left side of the page with the user as the user scrolls down, so the TOC is always visible.
   // Only start moving the TOC once the user has scrolled past the element specified in scroll-after-selector. Stop
   // moving it at the bottom of the content.
   const moveToCWithScrolling = function () {
     const sidebar = $(".js-scroll-with-user");
 
-    const scrollAfterSelector = sidebar.data('scroll-after-selector');
-    if (!scrollAfterSelector) {
-      throw new Error(`You must specify a data-scroll-after-selector attribute for anything that uses the js-scroll-with-user class.`);
-    }
-
-    const scrollAfter = $(scrollAfterSelector);
-    if (scrollAfter.length !== 1) {
-      throw new Error(`Expected one element that matched selector '${scrollAfterSelector}' but got ${scrollAfter.length}`);
-    }
+    const scrollAfter = getElementForDataSelector(sidebar, 'scroll-after-selector', 'moveTocWithScrolling');
+    const scrollUntil = getElementForDataSelector(sidebar, 'scroll-until-selector', 'moveTocWithScrolling');
 
     const scrollPosition = $(window).scrollTop();
     const scrollAfterHeightBottom = scrollAfter.offset().top + scrollAfter.innerHeight();
 
-    const contentHeight = $('.guides-section-white').innerHeight() + scrollAfterHeightBottom;
+    const contentHeight = scrollUntil.innerHeight() + scrollAfterHeightBottom;
     const sidebarHeight = sidebar.height();
     const sidebarBottomPos = scrollPosition + sidebarHeight;
 
@@ -52,15 +59,8 @@ $(document).ready(function () {
   // use Bootstrap Nav classes/markup.
   const scrollSpy = function() {
     const content = $(".js-scroll-spy");
-    const navSelector = content.data('scroll-spy-nav-selector');
-    if (!navSelector) {
-      throw new Error(`You must specify a data-scroll-spy-nav-selector attribute for anything that uses the js-scroll-spy class.`);
-    }
 
-    const nav = $(navSelector);
-    if (nav.length !== 1) {
-      throw new Error(`Expected one nav that matched selector '${navSelector}' but got ${nav.length}`);
-    }
+    const nav = getElementForDataSelector(content, 'scroll-spy-nav-selector', 'scrollSpy');
 
     const allNavLinks = nav.find('a');
     allNavLinks.removeClass('selected');
