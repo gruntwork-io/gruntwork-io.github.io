@@ -2054,9 +2054,12 @@ body .guides .guides-section-white {
     }
     .listingblock {
       margin: 20px 0;
-      pre {
-        padding: 15px;
-      }
+    }
+
+    pre.highlight > code, pre:not(.highlight) {
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 1px solid #efefef;
     }
   }
   p, li {
@@ -2080,7 +2083,6 @@ body .guides .guides-section-white {
 
   pre, pre[class*="language-"] {
     padding: 0px;
-    background: aliceblue;
     border: none;
     font-size: 14px;
     overflow-y: scroll;
