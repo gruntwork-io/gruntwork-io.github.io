@@ -1,4 +1,18 @@
 $(document).ready(function () {
+
+  $('#newsletter-subscribe').click((e) => {
+    console.log("getting here=========")
+    let invalidForm = false;
+    if ($('#email').val() === '') {
+        invalidForm = true;
+        return;
+    }
+    e.preventDefault();
+  });
+
+  if (window.location.pathname === '/thankyou/') {
+    $("#newsletter-success").modal('show');
+  }
   
   //Toggle ToC children
   $('#toc .sectlevel1 li').click((e) => {

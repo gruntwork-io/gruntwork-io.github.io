@@ -1394,13 +1394,12 @@ body .guides .guides-section-white {
 }
 
 
-.newsletter, .no-results {
-  padding: 3em 6em 6em 7em;
+.guides-newsletter, .no-results {
+  padding: 5em 6em;
   font-size: 16px;
   color: @guides-font;
-  max-width: 83%;
   display: inline-block;
-  & input {
+  & .guides-input-box {
     background-color: #f5f9fa;
     border: none;
     border-top-left-radius: 20px;
@@ -1416,7 +1415,7 @@ body .guides .guides-section-white {
       border: 1px solid #07a7fc;
       z-index: 1 !important;
       padding: 12px;
-      .no-transform;
+      .no-transform();
     }
     &:invalid{
       border: 1px solid #ef5a73;
@@ -1432,7 +1431,7 @@ body .guides .guides-section-white {
   & img {
     margin-bottom: 2%;
   }
-  & .btn-group>.btn {
+  & .btn {
     text-decoration: none;
     background: #07a7fc;
     font-size: 15px;
@@ -1441,9 +1440,10 @@ body .guides .guides-section-white {
     margin-left: -13px;
     padding: 10px 24px;
     position: relative;
+    z-index: 2;
   }
-  & .btn-group>.btn:hover, .btn:focus{
-    .no-transform;
+  & .btn:hover, .btn:focus{
+    .no-transform();
   }
 }
 
@@ -1463,9 +1463,8 @@ body .guides .guides-section-white {
     width: 468px;
     height: 260px;
     border-radius: 8px;
-    margin-left: 20%;
   }
-  & button {
+  & .btn {
     width: 131px;
     height: 47px;
     border-radius: 23.5px;
@@ -1517,9 +1516,9 @@ body .guides .guides-section-white {
   background-color: #fff;
   position: relative;
   color: @guides-font;
-  padding: 20px 25px 115px 25px;
+  padding: 20px 25px 0 25px;
   font-family: @guides-font-family;
-  padding-bottom: 115px;
+  min-height: 400px;
   .container-fluid {
     max-width: 1200px;
   }
