@@ -103,6 +103,20 @@
   }
 
 
+  function hideOtherCloudTags(selectedCloud){
+    const cloudTags = window.cloudTags;
+    for(cloud in cloudTags) {
+      cloudTags[cloud].forEach((tag)=>{
+        $('.checkbox-'+tag).hide();
+      });
+    }
+
+    cloudTags[selectedCloud].forEach((tag)=>{
+     $('.checkbox-'+tag).show();
+   });
+  }
+
+
   /**
    * A function to display or hide the category of search
    * @type {Function}
@@ -254,6 +268,9 @@
       filterButton.addClass('active-button');
       filterButton.addClass('initialSelect');
       filterButton.siblings().removeClass('active-button');
+
+      hideOtherCloudTags(id);
+
       if(id === 'azure') {
         $('#guide-listings').hide();
         $('#no-azure-results').show();
