@@ -1971,6 +1971,10 @@ body .guides .guides-section-white {
   h1, h2, h3, h4, h5, h6 {
     color: @guides-font;
     margin: 10px 0; 
+    &:hover > a {
+      color:@guides-font;
+      .no-transform();
+    }
   }
   h1, h5, h6  {
     &:hover > a.anchorjs-link{
