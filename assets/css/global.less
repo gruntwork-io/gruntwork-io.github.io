@@ -1457,6 +1457,11 @@ body .guides .guides-section-white {
   & label {
     font-size: 28px;
     color: @guides-font;
+    font-weight: 600;
+    line-height: 1.43;
+    letter-spacing: 0.79px;
+    color: #1e252f;
+    margin-bottom: 10px;
   }
   p {
     color: @guides-font;
@@ -1467,8 +1472,14 @@ body .guides .guides-section-white {
   & .modal-content {
     background: #fff;
     max-width: 468px;
-    height: 260px;
+    height: 320px;
     border-radius: 8px;
+    .modal-body {
+      padding: 50px 39px;
+      .img {
+        margin-bottom: 19px;
+      }
+    }
   }
   & .btn {
     width: 131px;
@@ -1476,6 +1487,7 @@ body .guides .guides-section-white {
     border-radius: 23.5px;
     background-color: @guides-primary-color;
     color: #ffffff;
+    margin-top: 20px;
   }
 }
 
