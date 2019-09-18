@@ -1,9 +1,9 @@
 $(document).ready(function () {
-  
-  if (window.location.pathname === '/thankyou/') {
+
+  if(window.location.href.indexOf('?') !== -1){
     $("#newsletter-success").modal('show');
   }
-  
+
   //Toggle ToC children
   $('#toc .sectlevel1 li').click((e) => {
     // target click comes as <a> inside <li>, hence the parentNode

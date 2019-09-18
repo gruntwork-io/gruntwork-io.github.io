@@ -5,7 +5,7 @@
                 <img src="/assets/img/guides/layout/img-newsletter.png" alt="newsletter_image" /><br />
                 <label class="modal-title" id="newsletterModalLabel">Success! You’re signed up. </label>
                 <p>You signed up for our newsletter </p>
-                <button type="button" class="btn btn-secondary" onclick="window.location.href='/'" data-dismiss="modal">Got it</button>
+                <button type="button" class="btn btn-secondary" onclick="window.history.pushState({path: window.location.pathname },'',window.location.pathname)" data-dismiss="modal">Got it</button>
             </div>
         </div>
     </div>
