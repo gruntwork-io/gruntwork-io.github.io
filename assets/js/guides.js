@@ -2,10 +2,6 @@ $(document)
   .ready(function () {
 
     if (window.location.href.indexOf('?') !== -1) {
-      //Commenting this out pending our decision
-      // $('#filter-section').hide();
-      // $('#guide-listings').hide();
-      // $('.guides-newsletter').hide();
       $("#newsletter-success").modal('show');
     } 
 
