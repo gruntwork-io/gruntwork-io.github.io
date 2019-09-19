@@ -1,5 +1,5 @@
 # Website settings
-baseurl: "/"
+baseurl: ""
 url: "https://www.gruntwork.io"
 name: "Gruntwork | DevOps as a Service"
 description: "Your entire infrastructure. Defined as code. In about one day. At Gruntwork, we get you running on AWS & GCP with Terraform and you get 100% of the code."
@@ -25,6 +25,8 @@ asciidoc:
   page_attribute_prefix: jekyll
   require_front_matter_header: true
 asciidoctor: {}
+
+permalink: /guides/:categories/:title
 
 exclude:
  - .dockerignore

@@ -1,35 +1,34 @@
 ---
 layout: default
+slug: guides
 custom_js:
 - prism
 - guides
 ---
 
-<div>
-  <div class="container-fluid section-ghostwhite">
-    <div class="col-md-3">
-      <div id="all-guides">
-        <label class="pull-right" >
-          <a href="/guides">&lt; All Guides</a>
-        </label>
-      </div>
-        <div id="toc">
-            {% toc %} {{page.document | tocify_asciidoc}}
+<div  class="post-bg">
+  <div class="container-fluid">
+      <div class="post-detail row equal">
+        <div class="col-md-2-5">
+          <div id="toc" class="js-scroll-with-user" data-scroll-after-selector=".navbar-default" data-scroll-until-selector=".guides-section-white">
+              {% toc %} {{page.document | tocify_asciidoc}}
+          </div>
         </div>
-    </div>
-    <div class="col-md-7 post-section-white">
-        <div class="col-md-9 col-md-offset-2 post-title text-center">
-            <img src="{{ page.image }}" alt="post logo">
-            <label>{{ page.title }}</label>
-            <p>
-                {% assign words = content | number_of_words %}
-                {% if words < 360 %}
-                  1 min read.
-                {% else %}
-                  {{ words | divided_by:180 }} mins read.
-                {% endif %} 
-                Updated {{ page.date | date_to_string }}
-            </p>
+        <div class="col-md-7 guides-section-white">
+          <ol class="breadcrumb text-center">
+            {% assign crumbs = page.url | split: '/' %}
+            <a href="/guides" ga-event-category="guide-{{ post.title | downcase}}" ga-event-action="deployment-guides">Production Deployment Guides</a>
+            {% for crumb in crumbs offset: 2 %}
+              {% if forloop.last %}
+                <a href="#"> / <span> {{ page.title | replace:'-',' ' }}</span></a>
+              {% else %}
+                <a href="/guides#{{ crumb }}" >/ <span>{{ crumb | replace:'-',' ' | capitalize }}</span></a>
+              {% endif %}
+            {% endfor %}
+          </ol>
+          <div class="post-title text-center">
+            <img class="img-center post-title-image" src="{{ page.image }}" alt="post logo">
+            <h1>{{ page.title }}</h1>
             {% if page.tags %}
               {% for tag in page.tags %}
                 <span class="badge badge-pill badge-default">
@@ -38,22 +37,10 @@ custom_js:
               {% endfor %}
             {% endif %}
           </div>
-          <div class="content">
+          <div class="post-content js-scroll-spy" data-scroll-spy-nav-selector="#toc">
               {{ content }}
           </div>
-
-    </div>
-    <div class="col-md-2">
-        <div class="card contact-us-card text-center">
-          <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-            <div class="card-body">
-              <p class="card-title">Want to learn more? Feel free to contact us for support</p>
-              <a href="#" class="btn btn-primary">Support</a>
-              <a href="#">Dismiss</a>
-            </div>
-          </div>
-    </div>
-    </div>
-    </div>
+        </div>
+      </div>
   </div>
 </div>

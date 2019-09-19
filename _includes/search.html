@@ -1,0 +1,59 @@
+<div class="row">
+    <div class="searchrow center">
+        <div class="col-xs-6 col-sm-7 no-padding">
+            <div class="input-group">
+                <div class="input-group-btn" >
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-primary" >
+                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </div>
+                <input id="search-box" type="text" class="form-control guides-input-box" placeholder="Search guides....">
+            </div>
+        </div>
+        <div class="col-xs-2 col-sm-1 no-padding" id="tags-filter">
+            <button class="btn tags-filter" type="button" data-toggle="collapse" data-target="#filter-options" aria-expanded="false" aria-controls="filter-options">
+                Filter <i class="fa fa-caret-down" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="filter-options center">
+            <div class="col-xs-8 no-padding">
+                <div class="collapse" id="filter-options" aria-expanded="true">
+                    <div class="card card-body">
+                        <p>Tags</p>
+                        <div class="tags">
+                          {% assign tags_to_capitalize = "aws,gcp,azure,gke,eks" | split: "," %}
+                          {% assign tags = "" | split: "" %}
+                          {% for post in include.posts %}
+                            {% assign tags = tags | concat: post.tags %}
+                          {% endfor %}
+                          {% assign unique_tags = tags | uniq %}
+                          {% for tag in unique_tags %}
+                            {% assign tag_name = tag %}
+                            {% if tags_to_capitalize contains tag_name %}
+                              {% assign tag_name = tag | upcase %}
+                            {% endif %}
+                            <div class="checkbox"><input value="{{ tag }}" id="filter-{{ tag }}" type="checkbox"><label for="filter-{{ tag }}">{{ tag_name }}</label></div>
+                          {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="cloud-filter">
+            <div class="center">
+                <div class="filter active-button" id="aws"><span class="helper"></span><img  src="/assets/img/logos-technologies/aws-logo.png" alt="aws logo"></div>
+                <div class="filter" id="gcp"><span class="helper"></span><img src="/assets/img/logos-technologies/gcp-logo.png" alt="aws logo"></div>
+                <div class="filter"id="azure"><span class="helper"></span><img src="/assets/img/logos-technologies/azure-logo.png" alt="aws logo"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="no-azure-results">
+    {% include no-azure-results.html %}
+</div>
