@@ -1,4 +1,5 @@
 $(document).ready(function () {
+
   const getElementForDataSelector = function (parentElement, selectorName, elementName) {
     const selector = parentElement.data(selectorName);
     if (!selector) {

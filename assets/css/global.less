@@ -1363,20 +1363,22 @@ body .guides .guides-section-white {
 }
 
 
-.newsletter, .no-results {
-  padding: 3em 6em 6em 7em;
+.guides-newsletter, .no-results {
+  padding: 5em 6em;
   font-size: 16px;
   color: @guides-font;
-  max-width: 83%;
   display: inline-block;
-  & input {
+  .modal-box {
+    width: 500px;
+  }
+  & .guides-input-box {
     background-color: #f5f9fa;
     border: none;
     border-top-left-radius: 20px;
     border-bottom-left-radius: 20px;
     font-size: 16px;
     color: black;
-    height: 39px;
+    height: 42px;
     z-index: 1;
     overflow: hidden;
     padding-right: 16px;
@@ -1385,7 +1387,7 @@ body .guides .guides-section-white {
       border: 1px solid #07a7fc;
       z-index: 1 !important;
       padding: 12px;
-      .no-transform;
+      .no-transform();
     }
     &:invalid{
       border: 1px solid #ef5a73;
@@ -1401,25 +1403,38 @@ body .guides .guides-section-white {
   & img {
     margin-bottom: 2%;
   }
-  & .btn-group>.btn {
+  & .btn {
     text-decoration: none;
     background: #07a7fc;
     font-size: 15px;
     margin-top: -2px;
     border-radius: 25px !important;
     margin-left: -13px;
-    padding: 10px 24px;
+    padding: 11px 24px;
     position: relative;
+    z-index: 2;
   }
-  & .btn-group>.btn:hover, .btn:focus{
-    .no-transform;
+  & .btn:hover, .btn:focus{
+    background: @guides-primary-color;
+    .no-transform();
   }
 }
 
 #newsletter-success{
+  @media (min-width: 768px){
+    .modal-dialog {
+        margin: 30px auto;
+        width: auto;
+    }
+  }
   & label {
     font-size: 28px;
     color: @guides-font;
+    font-weight: 600;
+    line-height: 1.43;
+    letter-spacing: 0.79px;
+    color: #1e252f;
+    margin-bottom: 10px;
   }
   p {
     color: @guides-font;
@@ -1429,17 +1444,28 @@ body .guides .guides-section-white {
   }
   & .modal-content {
     background: #fff;
-    width: 468px;
-    height: 260px;
+    max-width: 468px;
+    height: 320px;
     border-radius: 8px;
-    margin-left: 20%;
+    .modal-body {
+      padding: 50px 39px;
+      .img {
+        margin-bottom: 19px;
+      }
+    }
   }
-  & button {
+  & .btn {
     width: 131px;
     height: 47px;
     border-radius: 23.5px;
     background-color: @guides-primary-color;
     color: #ffffff;
+    margin-top: 20px;
+    &:hover, &:focus{
+      background: @guides-primary-color;
+      outline: none;
+      .no-transform();
+    }
   }
 }
 
@@ -1486,9 +1512,9 @@ body .guides .guides-section-white {
   background-color: #fff;
   position: relative;
   color: @guides-font;
-  padding: 20px 25px 115px 25px;
+  padding: 20px 25px 0 25px;
   font-family: @guides-font-family;
-  padding-bottom: 115px;
+  min-height: 400px;
   .container-fluid {
     max-width: 1200px;
   }
@@ -1635,6 +1661,12 @@ body .guides .guides-section-white {
 .center {
   display: flex;
   justify-content: center;
+}
+
+.white-section{
+  background-color: #fff;
+  padding: 20px 25px 0 25px;
+  min-height: 200px;
 }
 
 // Sections that have a blue background
