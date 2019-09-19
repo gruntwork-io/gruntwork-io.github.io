@@ -154,7 +154,7 @@
               searchContent = entry.title + entry.category + entry.content + entry.tags;
               break;
             case searchEntry.type === 'guideEntries' && type === 'tagSearch':
-              searchContent = entry.tags;
+              searchContent = entry.tags + entry.cloud;
               break;
             case searchEntry.type === 'guideEntries' && type === 'cloudSearch':
               searchContent = entry.cloud;
@@ -217,13 +217,14 @@
 
     $(document).on('click','.tags', function() {
       const checked = $('input[type="checkbox"]:checked');
+      const selectedCloud = $('.cloud-filter .active-button').attr("id");
       if (checked.length === 0) {
         /* Return filtered to whatever cloud is selected if no tag is checked */
         return filterData(selectedCloud, 'cloudSearch');
       }
       checked.each(function() {
         const searchValue = $(this).val();
-        filterData(searchValue, 'tagSearch');
+        filterData(searchValue + ' ' + selectedCloud, 'tagSearch');
       });
     })
   })
