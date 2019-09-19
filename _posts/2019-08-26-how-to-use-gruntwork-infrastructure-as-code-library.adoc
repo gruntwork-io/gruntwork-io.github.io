@@ -1,7 +1,7 @@
 ---
-title: How to use the Gruntwork Service Catalog
+title: How to use the Gruntwork Infrastructure as Code Library
 categories: Foundations
-image: /assets/img/guides/service-catalog/grunty-grid.png
+image: /assets/img/guides/infrastructure-as-code-library/grunty-grid.png
 excerpt: Learn about production-grade infrastructure, Terraform, Terragrunt, Packer, Docker, immutable infrastructure, versioning for infrastructure code, automated tests for infrastructure code, and more.
 tags: ["aws", "gcp", "terraform", "terragrunt"]
 cloud: ["aws", "gcp"]
@@ -25,16 +25,16 @@ endif::[]
 == Intro
 
 This guide will walk you through how to use the
-https://gruntwork.io/infrastructure-as-code-library/[Gruntwork Service Catalog] to define and manage a production-grade
+https://gruntwork.io/infrastructure-as-code-library/[Gruntwork Infrastructure as Code Library] to define and manage a production-grade
 tech stack as code on top of AWS or GCP.
 
-=== What is the Gruntwork Service Catalog?
+=== What is the Gruntwork Infrastructure as Code Library?
 
-// TODO: update screenshot of the service catalog when we launch the new design
-.The Gruntwork Service Catalog
-image::/assets/img/guides/service-catalog/gruntwork-service-catalog.png[]
+// TODO: update screenshot of the Infrastructure as Code Library when we launch the new design
+.The Gruntwork Infrastructure as Code Library
+image::/assets/img/guides/infrastructure-as-code-library/gruntwork-infrastructure-as-code-library.png[]
 
-The https://gruntwork.io/infrastructure-as-code-library/[Gruntwork Service Catalog] is a collection of over 300,000
+The https://gruntwork.io/infrastructure-as-code-library/[Gruntwork Infrastructure as Code Library] is a collection of over 300,000
 lines of reusable, battle-tested, production-ready infrastructure code for AWS and GCP that lets you:
 
 Go to prod in days, not months::
@@ -44,18 +44,18 @@ Go to prod in days, not months::
   that has been built by a team of DevOps experts and proven in production at hundreds of companies.
 
 Customize everything using infrastructure as code::
-  Everything in the Gruntwork Service Catalog is defined as code (primarily in Terraform, Go, Python, and Bash) and
+  Everything in the Gruntwork Infrastructure as Code Library is defined as code (primarily in Terraform, Go, Python, and Bash) and
   as a Gruntwork Subscriber, you get access to 100% of this code. You can combine and compose this code in any way you
   wish, see how everything works under the hood, debug any issues you run into, and customize and modify the code to
   fit your exact needs.
 
 Learn best practices::
-  The Service Catalog includes both thorough documentation and access to the
+  The Infrastructure as Code Library includes both thorough documentation and access to the
   https://gruntwork.io/training/[DevOps Training Library], a collection of video training courses that teach a variety
   of DevOps topics, including infrastructure as code, Terraform, Docker, Packer, AWS, GCP, security, and more.
 
 Keep everything up to date::
-  The Gruuntwork team is constantly updating the Gruntwork Service Catalog with the latest best practices, new features,
+  The Gruuntwork team is constantly updating the Gruntwork Infrastructure as Code Library with the latest best practices, new features,
   and bug fixes. Instead of spending months fighting with Terraform or Kubernetes updates, better infrastructure is just
   a version number bump away (see the monthly https://blog.gruntwork.io/tagged/gruntwork-newsletter[Gruntwork Newsletter]).
 
@@ -70,13 +70,13 @@ Get commercial support::
 This guide consists of three main sections:
 
 <<core_concepts>>::
-  An overview of the core concepts you need to understand to use the Gruntwork Service Catalog, including a look into
-  how the Service Catalog is designed, how the Reference Architecture is designed, how we build production-grade
+  An overview of the core concepts you need to understand to use the Gruntwork Infrastructure as Code Library, including a look into
+  how the Infrastructure as Code Library is designed, how the Reference Architecture is designed, how we build production-grade
   infrastructure, and how to make use of infrastructure as code, Terraform, Terragrunt, Packer, Docker, immutable
   infrastructure, versioning, automated testing, and more.
 
 <<how_to_use_the_catalog>>::
-  A step-by-step walkthrough of how to use the Gruntwork Service Catalog.
+  A step-by-step walkthrough of how to use the Gruntwork Infrastructure as Code Library.
 
 <<next_steps>>::
   What to do next once you've finished reading this guide.
@@ -86,15 +86,15 @@ Feel free to read the guide from start to finish or skip around to whatever part
 [[core_concepts]]
 == Core concepts
 
-=== The Gruntwork Service Catalog
+=== The Gruntwork Infrastructure as Code Library
 
-The Gruntwork Service Catalog is a collection of over 300,000 lines of reusable, battle-tested infrastructure code
+The Gruntwork Infrastructure as Code Library is a collection of over 300,000 lines of reusable, battle-tested infrastructure code
 that is organized into 40+ GitHub repos, some public and open source, and some private and only accessible to Gruntwork
 customers. Each repo is focused on one type of infrastructure: e.g., there is one repo that contains code for deploying
 and managing Kubernetes on AWS, one repo with code for deploying and managing the ELK stack (Elasticsearch, Logstash,
 Kibana), one repo that contains a collection of CI / CD code, and so on.
 
-The code in the Gruntwork Service Catalog is written using a combination of:
+The code in the Gruntwork Infrastructure as Code Library is written using a combination of:
 
 Terraform::
   Used to to define and manage most of the basic infrastructure, such as servers, databases, load balancers, and
@@ -130,9 +130,9 @@ following sections.
 === Modules
 
 .The modules folder of the ELK (Elasticsearch, Logstash, Kibana) repo
-image::/assets/img/guides/service-catalog/elk-modules.png[]
+image::/assets/img/guides/infrastructure-as-code-library/elk-modules.png[]
 
-Each repo in the Gruntwork Service Catalog contains a `modules` folder that contains the main implementation code,
+Each repo in the Gruntwork Infrastructure as Code Library contains a `modules` folder that contains the main implementation code,
 broken down into multiple standalone, orthogonal, reusable, highly configurable _modules_. For example, the ELK repo
 (Elasticsearch, Logstash, Kubernetes) isn't one giant module that deploys the entire ELK stack, but a bunch of separate
 modules for installing, running, and deploying Elasticsearch, Kibana, Logstash, Elastalert, Beats, Collectd, and so on.
@@ -145,18 +145,18 @@ and all in a single cluster in other environments (e.g., in dev, to save money).
 === Examples
 
 .The examples folder of the ELK (Elasticsearch, Logstash, Kibana) repo
-image::/assets/img/guides/service-catalog/elk-examples.png[]
+image::/assets/img/guides/infrastructure-as-code-library/elk-examples.png[]
 
-Each repo in the Gruntwork Service Catalog contains an `examples` folder that shows you how to assemble the modules
+Each repo in the Gruntwork Infrastructure as Code Library contains an `examples` folder that shows you how to assemble the modules
 from the `modules` folder into different permutations. This lets you try the modules out in minutes, without having to
 write a line of code. In other words, this is executable documentation.
 
 === Automated tests
 
 .The test folder of the ELK (Elasticsearch, Logstash, Kibana) repo
-image::/assets/img/guides/service-catalog/elk-tests.png[]
+image::/assets/img/guides/infrastructure-as-code-library/elk-tests.png[]
 
-Each repo in the Gruntwork Service Catalog contains a `test` folder that contains automated tests for the examples in
+Each repo in the Gruntwork Infrastructure as Code Library contains a `test` folder that contains automated tests for the examples in
 the `examples` folder. These are mostly integration tests, which use
 https://github.com/gruntwork-io/terratest/[Terratest] under the hood to deploy the examples into real environments
 (e.g., real AWS and GCP accounts), validate that everything works, and then tear everything down.
@@ -168,15 +168,15 @@ that the code does what we say it does—and that it continues to do it over yea
 === Versioning
 
 .An example of all the versioned updates announced in the monthly Gruntwork Newsletter
-image::/assets/img/guides/service-catalog/newsletter.png[]
+image::/assets/img/guides/infrastructure-as-code-library/newsletter.png[]
 
-All of the code in the Gruntwork Service Catalog is _versioned_. Every time we make a change, we put out a new
+All of the code in the Gruntwork Infrastructure as Code Library is _versioned_. Every time we make a change, we put out a new
 versioned release, and announce it in the monthly
 https://blog.gruntwork.io/tagged/gruntwork-newsletter[Gruntwork Newsletter].
 
-When you use the code from the Gruntwork Service Catalog (a topic we'll cover in <<how_to_use_the_catalog>>), you pin
+When you use the code from the Gruntwork Infrastructure as Code Library (a topic we'll cover in <<how_to_use_the_catalog>>), you pin
 yourself to a specific version of the code. That way, you are not accidentally affected by any subsequent changes in
-the Gruntwork Service Catalog until you explicitly choose to pull those changes in. And when you do want to pull the
+the Gruntwork Infrastructure as Code Library until you explicitly choose to pull those changes in. And when you do want to pull the
 changes in, it's just a matter of bumping the version number!
 
 We use version numbers of the form `MAJOR.MINOR.PATCH` (e.g., `1.2.3`), following the principles of
@@ -186,8 +186,8 @@ _https://semver.org[semantic versioning]_. In traditional semantic versioning, y
 . MINOR version when you add functionality in a backwards compatible manner, and
 . PATCH version when you make backwards compatible bug fixes.
 
-However, much of the Gruntwork Service Catalog is built on Terraform, and as Terraform is still not at version `1.0.0`
-(latest version as of August, 2019, was `0.12.6`), most of the Gruntwork Service Catalog is using `0.MINOR.PATCH`
+However, much of the Gruntwork Infrastructure as Code Library is built on Terraform, and as Terraform is still not at version `1.0.0`
+(latest version as of August, 2019, was `0.12.6`), most of the Gruntwork Infrastructure as Code Library is using `0.MINOR.PATCH`
 version numbers. With `0.MINOR.PATCH`, the rules are a bit different, where you increment the:
 
 . MINOR version when you make incompatible API changes
@@ -196,10 +196,10 @@ version numbers. With `0.MINOR.PATCH`, the rules are a bit different, where you 
 === The Gruntwork Reference Architecture
 
 .An example of the Gruntwork Reference Architecture
-image::/assets/img/guides/service-catalog/ref-arch-full.png[]
+image::/assets/img/guides/infrastructure-as-code-library/ref-arch-full.png[]
 
 The https://gruntwork.io/reference-architecture/[Gruntwork Reference Architecture] is a production-grade, end-to-end
-tech stack built on top of the modules from the Gruntwork Service Catalog.
+tech stack built on top of the modules from the Gruntwork Infrastructure as Code Library.
 
 What's included::
   The Reference Architecture includes just about everything the typical company needs: multiple environments, each
@@ -211,12 +211,12 @@ What's included::
   you 100% of the code—all in about one day.
 
 Opinionated code::
-  Whereas the Gruntwork Service Catalog is relatively unopinionated, allowing you to combine and compose modules, tools,
+  Whereas the Gruntwork Infrastructure as Code Library is relatively unopinionated, allowing you to combine and compose modules, tools,
   and approaches however you want ("à la carte"), the Gruntwork Reference Architecture is more opinionated, giving you a
   pre-defined, standardized set of modules, tools, and approaches to choose from ("prix fixe"). If the opinionated
   design of the Reference Architecture looks like a good fit for your company, you may wish to purchase it as a way to
   save months of having to wire everything together and deploy it yourself. If the opinionated design is not a good
-  fit, then you can use the Gruntwork Service Catalog directly instead.
+  fit, then you can use the Gruntwork Infrastructure as Code Library directly instead.
 
 [[example_ref_arch]]See an example Reference Architecture::
   You can find the code for an example Reference Architecture for a fictional Acme corporation in the following repos:
@@ -246,7 +246,7 @@ IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access t
 [[production_grade_infra_checklist]]
 === The production-grade infrastructure checklist
 
-The Gruntwork Service Catalog is a collection of _production-grade infrastructure_—that is, the type of reliable,
+The Gruntwork Infrastructure as Code Library is a collection of _production-grade infrastructure_—that is, the type of reliable,
 secure, battle-tested infrastructure that you'd bet your company on. Every time you deploy something to production,
 you're betting that your infrastructure won't fall over if traffic goes up; you're betting that your infrastructure
 won't lose your data if there's an outage; you're betting that your infrastructure won't allow your data to be
@@ -321,15 +321,15 @@ _The Production-Grade Infrastructure Checklist_:
 | Terratest
 |===
 
-Most other collections of infrastructure code and service catalogs (e.g., AWS Quick Starts, Bitnami Application Catalog,
+Most other collections of infrastructure code (e.g., AWS Quick Starts, Bitnami Application Catalog,
 the Terraform Registry, Ansible Galaxy, Chef Supermarket, etc) are useful for learning and example code, but they do
 not take most of this checklist into account, and therefore are not a good fit for direct production use. On the other
-hand, every module in the Gruntwork Service Catalog goes through the production-grade checklist and is explicitly
+hand, every module in the Gruntwork Infrastructure as Code Library goes through the production-grade checklist and is explicitly
 designed for use directly in production.
 
 === Infrastructure as code
 
-Everything in the Gruntwork Service Catalog is designed to allow you to define your _infrastructure as code (IaC)_.
+Everything in the Gruntwork Infrastructure as Code Library is designed to allow you to define your _infrastructure as code (IaC)_.
 That is, instead of deploying infrastructure _manually_ (e.g., by clicking around a web page), the idea behind IaC is
 to write code to define, provision, and manage your infrastructure. This has a number of benefits:
 
@@ -371,10 +371,10 @@ Happiness::
 Reuse::
   You can package your infrastructure into reusable modules, so that instead of doing every deployment for every
   product in every environment from scratch, you can build on top of known, documented, battle-tested pieces. You
-  can build these reusable modules yourself or use an existing collection of modules, such as the Gruntwork Service
-  Catalog.
+  can build these reusable modules yourself or use an existing collection of modules, such as the Gruntwork
+  Infrastructure as Code Library.
 
-Some of the main IaC tools you'll see used and referenced in the Gruntwork Service Catalog are Terraform, Terragrunt,
+Some of the main IaC tools you'll see used and referenced in the Gruntwork Infrastructure as Code Library are Terraform, Terragrunt,
 Packer, and Docker, each of which we'll discuss in the next several sections.
 
 [[terraform]]
@@ -404,7 +404,7 @@ You can deploy this server by running `terraform init` and `terraform apply`. Ch
 https://blog.gruntwork.io/a-comprehensive-guide-to-terraform-b3d32832baca[Comprehensive Guide to Terraform] for a
 thorough introduction to the language.
 
-A large percentage of the infrastructure code in the Gruntwork Service Catalog is defined using Terraform. We even
+A large percentage of the infrastructure code in the Gruntwork Infrastructure as Code Library is defined using Terraform. We even
 wrote https://www.terraformupandrunning.com[the book] on it!
 
 === Terragrunt
@@ -434,8 +434,8 @@ https://blog.gruntwork.io/terragrunt-how-to-keep-your-terraform-code-dry-and-mai
 for a thorough introduction.
 
 Note that while the Gruntwork Reference Architecture relies on Terragrunt as one of its opinionated tools, the
-Gruntwork Service Catalog does NOT require Terragrunt; you can use the Terraform modules in the Gruntwork
-Service Catalog with plain Terraform, Terraform Enterprise, Atlantis, Terragrunt, or any other tools you prefer.
+Gruntwork Infrastructure as Code Library does NOT require Terragrunt; you can use the Terraform modules in the Gruntwork
+Infrastructure as Code Library with plain Terraform, Terraform Enterprise, Atlantis, Terragrunt, or any other tools you prefer.
 
 [[packer]]
 === Packer
@@ -468,18 +468,18 @@ Image (AMI) that has Node.js installed:
 ----
 
 You can run `packer build packer-example.json` to build an AMI from this code and then deploy this AMI to your AWS
-account using other tools. For example, the Gruntwork Service Catalog contains several Terraform modules that can
+account using other tools. For example, the Gruntwork Infrastructure as Code Library contains several Terraform modules that can
 deploy AMIs across one or more servers (e.g., into an AWS Auto Scaling Group), with support for auto scaling, auto
 healing, zero-downtime deployments, etc.
 
-The Gruntwork Service Catalog contains a number of scripts and binaries that you can run on your servers: e.g., the
+The Gruntwork Infrastructure as Code Library contains a number of scripts and binaries that you can run on your servers: e.g., the
 ELK code includes scripts you run during boot on Elasticsearch servers to bootstrap the cluster, and the security code
 includes an `ssh-grunt` binary you can run on each server to manage SSH access to that server using IAM groups (i.e.,
 IAM users in specific IAM groups will be able to SSH to specific servers using their own usernames and SSH keys).
 
 To get these scripts and binaries onto your virtual servers (e.g., onto EC2 instances in AWS or compute instances in
 GCP), we recommend using Packer to build VM images that have these scripts and binaries installed. You'll see an
-example of how to do this in <<how_to_use_the_catalog>>. Note that Gruntwork Service Catalog does NOT require that
+example of how to do this in <<how_to_use_the_catalog>>. Note that Gruntwork Infrastructure as Code Library does NOT require that
 you use Packer (e.g., you could also use Ansible or Chef to install the scripts and binaries), but the Gruntwork
 Reference Architecture does use Packer as one of its opinionated tools.
 
@@ -504,7 +504,7 @@ RUN curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - && \
 
 You can run `docker build -t example-image .` to build a Docker image from this code, push the image to a Docker
 Registry (e.g., ECR or Docker Hub), and then deploy the Docker image using other tools. For example, the Gruntwork
-Service Catalog contains a number of modules for running _container orchestration tools_ such as Kubernetes, ECS, and
+Infrastructure as Code Library contains a number of modules for running _container orchestration tools_ such as Kubernetes, ECS, and
 Nomad that you can use to deploy and manage Docker images.
 
 [[immutable_infrastructure]]
@@ -541,9 +541,9 @@ Easier scaling and rollback::
   longer work, e.g., if certain packages have been removed from APT or YUM).
 
 [[how_to_use_the_catalog]]
-== How to use the Gruntwork Service Catalog
+== How to use the Gruntwork Infrastructure as Code Library
 
-With all the core concepts out of the way, let's now discuss how to use the Gruntwork Service Catalog to build
+With all the core concepts out of the way, let's now discuss how to use the Gruntwork Infrastructure as Code Library to build
 production-grade infrastructure.
 
 === Learning resources
@@ -560,38 +560,38 @@ useful resources:
   checklists for learning about DevOps, AWS, Terraform, Docker, Packer, and more.
 
 [[get_access]]
-=== Get access to the Gruntwork Service Catalog
+=== Get access to the Gruntwork Infrastructure as Code Library
 
-The next step is to get access to the Gruntwork Service Catalog.
+The next step is to get access to the Gruntwork Infrastructure as Code Library.
 
 . To get access, you must become a https://gruntwork.io[Gruntwork subscriber].
-. As part of the sign up process, we'll ask for your GitHub user ID. The Gruntwork Service Catalog lives in 40+ GitHub
+. As part of the sign up process, we'll ask for your GitHub user ID. The Gruntwork Infrastructure as Code Library lives in 40+ GitHub
   repos, most of them private, so you'll need to send us a GitHub user ID so we can grant you access. If you don't
   already have a GitHub user, you can create one for free on http://github.com/[github.com].
 . If you haven't already, create an SSH key, add it to `ssh-agent`, and associate it with your GitHub user
   (https://help.github.com/en/enterprise/2.16/user/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent[instructions]).
-  You'll need a working SSH key to access Terraform modules in the Gruntwork Service Catalog (you'll see examples of
+  You'll need a working SSH key to access Terraform modules in the Gruntwork Infrastructure as Code Library (you'll see examples of
   this later in the guide).
 . If you haven't already, create a GitHub personal access token
   (https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line[instructions]). You'll
-  need a working GitHub personal access token to access scripts and binaries in the Gruntwork Service Catalog (you'll
+  need a working GitHub personal access token to access scripts and binaries in the Gruntwork Infrastructure as Code Library (you'll
   see examples of this later in the guide).
 
 === Find the modules you want to use
 
 The next step is to find the modules you want to use. Head over to the
-https://gruntwork.io/infrastructure-as-code-library/[Gruntwork Service Catalog] and find the repos that you wish to
+https://gruntwork.io/infrastructure-as-code-library/[Gruntwork Infrastructure as Code Library] and find the repos that you wish to
 use. Browse the `modules` folder each the repo to see what modules are available and the `examples` folders to see the
 various ways to combine those modules. You can also browse the <<example_ref_arch, example Reference Architecture>>
 to find production-grade code to use as a starting point.
 
-Within the Service Catalog, you'll find two types of modules: (1) Terraform modules and (2) scripts and binaries. The
+Within the Infrastructure as Code Library, you'll find two types of modules: (1) Terraform modules and (2) scripts and binaries. The
 next two sections of the guide will walk you through how to use each of these.
 
 [[using_terraform_modules]]
 === Using Terraform Modules
 
-This section will show you how to use Terraform modules from the Gruntwork Service Catalog. As an illustrative example,
+This section will show you how to use Terraform modules from the Gruntwork Infrastructure as Code Library. As an illustrative example,
 we'll deploy the `vpc-app`  Terraform module from https://github.com/gruntwork-io/module-vpc[module-vpc].
 
 IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access `module-vpc`.
@@ -601,10 +601,10 @@ out link:/guides/networking/how-to-deploy-production-grade-vpc-aws[How to deploy
 
 ==== Create a wrapper module
 
-The Terraform modules in the Gruntwork Service Catalog are intentionally designed to be unopinionated, so they do not
-configure `provider` or `backend` settings. Moreover, you will often use multiple modules from the Service Catalog,
-rather than just one at a time. Therefore, the canonical way to consume a Terraform module from the Gruntwork Service
-Catalog is to create a _wrapper module_ in one of your own Git repos.
+The Terraform modules in the Gruntwork Infrastructure as Code Library are intentionally designed to be unopinionated, so they do not
+configure `provider` or `backend` settings. Moreover, you will often use multiple modules from the Infrastructure as Code Library,
+rather than just one at a time. Therefore, the canonical way to consume a Terraform module from the Gruntwork
+Infrastructure as Code Library is to create a _wrapper module_ in one of your own Git repos.
 
 Let's assume you have a repo called `infrastructure-modules` and create a `vpc-app` wrapper module in it:
 
@@ -710,9 +710,9 @@ Pin the Terraform version::
   team and all your CI servers to `0.12.7`. It's best to do this explicitly, rather than accidentally, so we recommend
   pinning Terraform versions.
 
-==== Use the modules from the Gruntwork Service Catalog
+==== Use the modules from the Gruntwork Infrastructure as Code Library
 
-Now you can pull in the Terraform modules you want from the Gruntwork Service Catalog as follows:
+Now you can pull in the Terraform modules you want from the Gruntwork Infrastructure as Code Library as follows:
 
 .infrastructure-modules/networking/vpc-app/main.tf
 [source,hcl]
@@ -738,7 +738,7 @@ SSH Git URL::
   The `source` URL in the code above uses a Git URL with SSH authentication (see
   https://www.terraform.io/docs/modules/sources.html[module sources] for all the types of `source` URLs you can use).
   If you followed the SSH instructions in <<get_access>>, this will allow you to access private repos in the Gruntwork
-  Service Catalog without having to hard-code a password in your Terraform code.
+  Infrastructure as Code Library without having to hard-code a password in your Terraform code.
 
 Versioned URL::
   Note the `?ref=<VERSION>` at the end of the `source` URL. This parameter allows you to pull in a specific version of
@@ -1333,7 +1333,7 @@ terragrunt apply-all
 Now that you have your Terraform module deployed, you can pull in updates as follows:
 
 . Subscribe to the monthly https://blog.gruntwork.io/tagged/gruntwork-newsletter[Gruntwork Newsletter] to be notified
-  of all updates to the Gruntwork Service Catalog. Alternatively, you can "watch" repos in GitHub that you're
+  of all updates to the Gruntwork Infrastructure as Code Library. Alternatively, you can "watch" repos in GitHub that you're
   interested in.
 . When you find an update you'd like for a specific module, update any code using that module in
   `infrastructure-modules` to the new version number. For example, if you were using `module-vpc` at `v0.7.2` and you
@@ -1366,7 +1366,7 @@ module "vpc" {
 [[using_scripts_binaries]]
 === Using scripts and binaries
 
-This section will show you how to use scripts and binaries from the Gruntwork Service Catalog. As illustrative examples,
+This section will show you how to use scripts and binaries from the Gruntwork Infrastructure as Code Library. As illustrative examples,
 we'll deploy the `ip-lockdown` script and `ssh-grunt` binary from
 https://github.com/gruntwork-io/module-security[module-security].
 
@@ -1390,7 +1390,7 @@ Let's walk through how to use these two tools.
 
 ==== Gruntwork Installer
 
-The easiest way to install scripts and binaries from the Gruntwork Service Catalog is to use the
+The easiest way to install scripts and binaries from the Gruntwork Infrastructure as Code Library is to use the
 https://github.com/gruntwork-io/gruntwork-installer[Gruntwork Installer]. This is an open source Bash script that
 allows you to install scripts and binaries via a one-liner, similar to `apt-get install` or `yum install` (if you're
 curious why we don't use `apt` or `yum` directly, see
@@ -1405,14 +1405,14 @@ https://github.com/gruntwork-io/gruntwork-installer/releases[Gruntwork Installer
 curl -LsS https://raw.githubusercontent.com/gruntwork-io/gruntwork-installer/master/bootstrap-gruntwork-installer.sh | bash /dev/stdin --version <VERSION>
 ----
 
-Now you can install any script `XXX` at version `YYY` from repo `ZZZ` of the Gruntwork Service Catalog as follows:
+Now you can install any script `XXX` at version `YYY` from repo `ZZZ` of the Gruntwork Infrastructure as Code Library as follows:
 
 [source,bash]
 ----
 gruntwork install --module-name XXX --tag YYY --repo ZZZ
 ----
 
-And you can install any binary `XXX` at version `YYY` from repo `ZZZ` of the Gruntwork Service Catalog as follows:
+And you can install any binary `XXX` at version `YYY` from repo `ZZZ` of the Gruntwork Infrastructure as Code Library as follows:
 
 [source,bash]
 ----
@@ -1452,7 +1452,7 @@ described in the next two sections.
 
 ==== Building images with Packer
 
-If you want to build machine images with scripts and binaries from the Gruntwork Service Catalog, such as an Amazon
+If you want to build machine images with scripts and binaries from the Gruntwork Infrastructure as Code Library, such as an Amazon
 Machine Image (AMI) for use in AWS, you can use https://www.packer.io[Packer].
 
 ===== Packer basics
@@ -1587,7 +1587,7 @@ modules instead, even just for one server, so you get auto healing and zero-down
 Now that you have your Packer images deployed, you can pull in updates as follows:
 
 . Subscribe to the monthly https://blog.gruntwork.io/tagged/gruntwork-newsletter[Gruntwork Newsletter] to be notified
-  of all updates to the Gruntwork Service Catalog. Alternatively, you can "watch" repos in GitHub that you're
+  of all updates to the Gruntwork Infrastructure as Code Library. Alternatively, you can "watch" repos in GitHub that you're
   interested in.
 . When you find an update you'd like for a specific module, update any code using that module in your Packer templates
   to the new version number. For example, if you were using `module-security` at `v0.18.3` and you
@@ -1614,7 +1614,7 @@ to:
 [[building_images_docker]]
 ==== Building images with Docker
 
-If you want to build Docker images with scripts and binaries from the Gruntwork Service Catalog, you can create a
+If you want to build Docker images with scripts and binaries from the Gruntwork Infrastructure as Code Library, you can create a
 `Dockerfile`.
 
 ===== Dockerfile basics
@@ -1793,7 +1793,7 @@ IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access `
 Now that you have your Docker images deployed, you can pull in updates as follows:
 
 . Subscribe to the monthly https://blog.gruntwork.io/tagged/gruntwork-newsletter[Gruntwork Newsletter] to be notified
-  of all updates to the Gruntwork Service Catalog. Alternatively, you can "watch" repos in GitHub that you're
+  of all updates to the Gruntwork Infrastructure as Code Library. Alternatively, you can "watch" repos in GitHub that you're
   interested in.
 . When you find an update you'd like for a specific module, update any code using that module in your `Dockerfiles`
   to the new version number. For example, if you were using `module-security` at `v0.18.3` and you
@@ -1828,18 +1828,18 @@ you to use, for example, the `file` provisioner in Packer to copy it into your m
 Docker to copy it into your Docker images.
 
 Note that the major drawback of copying these files is that you'll have to manually pull in new versions any time the
-Gruntwork Service Catalog is updated.
+Gruntwork Infrastructure as Code Library is updated.
 
 ==== Packer and Docker alternatives
 
 Although this guide outlines how to use Docker and Packer, you can also use the scripts and binaries in the Gruntwork
-Service Catalog and the Gruntwork Installer with any other configuration management strategy, such as Chef, Ansible,
+Infrastructure as Code Library and the Gruntwork Installer with any other configuration management strategy, such as Chef, Ansible,
 Puppet, or Salt. Check the docs for your chosen configuration management tool on how to copy and execute scripts and
 binaries.
 
-=== Contributing to the Gruntwork Service Catalog
+=== Contributing to the Gruntwork Infrastructure as Code Library
 
-Contributions to the Gruntwork Service Catalog are very welcome and appreciated! If you find a bug or want to add a new
+Contributions to the Gruntwork Infrastructure as Code Library are very welcome and appreciated! If you find a bug or want to add a new
 feature or even contribute an entirely new module, we are very happy to accept
 https://help.github.com/articles/about-pull-requests/[pull requests], provide feedback, and run your changes through
 our automated test suite.
@@ -1885,12 +1885,12 @@ to include the following:
 The maintainers for the repo will review your code and provide feedback. If everything looks good, they will merge the
 code and release a new version.
 
-=== Forking the Gruntwork Service Catalog
+=== Forking the Gruntwork Infrastructure as Code Library
 
 The https://gruntwork.io/terms/[Gruntwork Terms of Service] give you permissions to fork the code from the Gruntwork
-Service Catalog into your own repos. This is useful if your company does not allow external dependencies (e.g., you
+Infrastructure as Code Library into your own repos. This is useful if your company does not allow external dependencies (e.g., you
 have a company policy that requires all source code to be pulled from an internal GitHub Enterprise or BitBucket
-server) or if you need to make modifications to the Service Catalog that you do not wish to contribute back to
+server) or if you need to make modifications to the Infrastructure as Code Library that you do not wish to contribute back to
 Gruntwork. This section will walk you through what you need to do to fork the code.
 
 IMPORTANT: The definition of an _Authorized User_ from the Gruntwork Terms of Service does NOT change if you fork the
@@ -1899,7 +1899,7 @@ License requires that you pay for 50 Authorized Users.
 
 ==== How to fork the code
 
-Here is how you fork the code in the Gruntwork Service Catalog:
+Here is how you fork the code in the Gruntwork Infrastructure as Code Library:
 
 . Copy each Gruntwork repo into your private repositories.
 . You'll also want to copy all the versioned releases (see the `/releases` page for each repo).
@@ -1910,10 +1910,10 @@ Here is how you fork the code in the Gruntwork Service Catalog:
   use the `module-asg` repo under the hood to run an Auto Scaling Group). You'll need to update Terraform source URLs
   and Go import statements from `github.com/gruntwork-io` to your private Git repo URLs.
 
-You'll want to automate the entire process above and run it on a regular schedule (e.g., daily). The Gruntwork Service
-Catalog is updated continuously, both by the Gruntwork team and contributions from our community of customers (see
-the monthly https://blog.gruntwork.io/tagged/gruntwork-newsletter[Gruntwork Newsletter] for details), so you'll want
-to pull in these updates as quickly as you can.
+You'll want to automate the entire process above and run it on a regular schedule (e.g., daily). The Gruntwork
+Infrastructure as Code Library is updated continuously, both by the Gruntwork team and contributions from our community
+of customers (see the monthly https://blog.gruntwork.io/tagged/gruntwork-newsletter[Gruntwork Newsletter] for details),
+so you'll want to pull in these updates as quickly as you can.
 
 ==== How to use your forked code
 
@@ -1940,22 +1940,22 @@ bans all outside sources, then follow the instructions above to fork the code, a
 
 === Operating system compatibility
 
-Here's a summary of the operating systems supported by Gruntwork the Gruntwork Service Catalog as of August, 2019:
+Here's a summary of the operating systems supported by Gruntwork the Gruntwork Infrastructure as Code Library as of August, 2019:
 
 Terraform modules::
-  Just about all the Terraform modules in the Gruntwork Service Catalog work on all major operating systems. However,
+  Just about all the Terraform modules in the Gruntwork Infrastructure as Code Library work on all major operating systems. However,
   there are a handful of modules where we have to call out to scripts from our Terraform code. Most of these
   scripts are Python and work on all major operating systems (as long as Python is installed), but there are a couple
   places where we call Bash code (mostly `sleep 30` to work around Terraform bugs). If you run into a portability
   issue, please report it as a bug, and we'll get it fixed!
 
 Go binaries::
-  The Gruntwork Service Catalog includes a number of dev tools written in Go which are compiled into standalone
+  The Gruntwork Infrastructure as Code Library includes a number of dev tools written in Go which are compiled into standalone
   binaries for every major operating system. This applies to tools such as `Terragrunt`, `cloud-nuke`,
   `openvpn-admin`, `houston`, `gruntkms`, `ssh-grunt`, `gruntsam`, and `kubergrunt`.
 
 Linux server scripts::
-  There are a number of scripts in the Gruntwork Service Catalog that are meant to be installed and executed on Linux
+  There are a number of scripts in the Gruntwork Infrastructure as Code Library that are meant to be installed and executed on Linux
   servers in AWS and GCP. These include `install-xxx` and `run-xxx` scripts (e.g., `install-vault`, `run-vault`,
   `install-kafka`, `run-kafka`, `install-elasticsearch`, `run-elasticsearch`, etc.), CI / CD scripts (e.g.,
   `aws-helpers`, `build-helpers`, `circleci-helpers`, `git-helpers`, `terraform-helpers`), and server scripts (e.g.,
@@ -1963,19 +1963,19 @@ Linux server scripts::
   to be installed and used.
 
 Deployment scripts::
-  There are a handful of deployment scripts in the Gruntwork Service Catalog that are meant to be executed by a
+  There are a handful of deployment scripts in the Gruntwork Infrastructure as Code Library that are meant to be executed by a
   developer directly, such as the `roll-out-ecs-cluster-update.py` script used to do zero-downtime rolling deployments
   for ECS clusters. These scripts are written in Python and should work on all major operating systems.
 
 Need Windows support?::
-  While Windows users can use most of the Gruntwork Service Catalog, the vast majority of Gruntwork customers use
+  While Windows users can use most of the Gruntwork Infrastructure as Code Library, the vast majority of Gruntwork customers use
   Linux or Mac, so we haven't prioritized improving our Windows support. If you would like us to improve our Windows
   support, please https://gruntwork.io/contact/[contact us].
 
 [[next_steps]]
 == Next steps
 
-Now that you've learned how to use the Gruntwork Service Catalog, you can start leveraging it to build your
+Now that you've learned how to use the Gruntwork Infrastructure as Code Library, you can start leveraging it to build your
 infrastructure! Here are some good first steps:
 
 . link:/guides/foundations/how-to-configure-production-grade-aws-account-structure[How to Configure a Production Grade AWS Account Structure]

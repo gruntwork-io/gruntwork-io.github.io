@@ -64,11 +64,11 @@ This guide consists of four main sections:
 <<production_grade_design>>::
   An overview of how to configure a secure, scalable, highly available AWS account structure that you can rely on in
   production. To get a sense of what production-grade means, check out
-  link:/guides/foundations/how-to-use-gruntwork-service-catalog#production_grade_infra_checklist[The production-grade infrastructure checklist].
+  link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#production_grade_infra_checklist[The production-grade infrastructure checklist].
 
 <<deployment_walkthrough>>::
-  A step-by-step guide to configuring a production-grade AWS account structure using code from the Gruntwork Service
-  Catalog.
+  A step-by-step guide to configuring a production-grade AWS account structure using code from the Gruntwork
+  Infrastructure as Code Library.
 
 <<next_steps>>::
   What to do once you've got your AWS account structure configured.
@@ -765,25 +765,25 @@ MFA enforced by IdP, not AWS::
 == Deployment walkthrough
 
 Let's now walk through the step-by-step process of how to create a production-grade AWS account structure, fully
-defined and managed as code, using the Gruntwork Service Catalog.
+defined and managed as code, using the Gruntwork Infrastructure as Code Library.
 
 [[pre_requisites]]
 === Pre-requisites
 
 This walkthrough has the following pre-requisites:
 
-Gruntwork Service Catalog::
-  This guide uses code from the https://gruntwork.io/infrastructure-as-code-library/[Gruntwork Service Catalog], as it
+Gruntwork Infrastructure as Code Library::
+  This guide uses code from the https://gruntwork.io/infrastructure-as-code-library/[Gruntwork Infrastructure as Code Library], as it
   implements most of the production-grade design for you out of the box. Make sure to read
-  link:/guides/foundations/how-to-use-gruntwork-service-catalog[How to use the Gruntwork Service Catalog].
+  link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library[How to use the Gruntwork Infrastructure as Code Library].
 +
-IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access the Gruntwork Service Catalog.
+IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access the Gruntwork Infrastructure as Code Library.
 
 Terraform::
   This guide uses https://www.terraform.io/[Terraform] to define and manage all the infrastructure as code. If you're
   not familiar with Terraform, check out https://blog.gruntwork.io/a-comprehensive-guide-to-terraform-b3d32832baca[A
   Comprehensive Guide to Terraform], https://training.gruntwork.io/p/terraform[A Crash Course on Terraform], and
-  link:/guides/foundations/how-to-use-gruntwork-service-catalog[How to use the Gruntwork Service Catalog].
+  link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library[How to use the Gruntwork Infrastructure as Code Library].
 
 Keybase (optional)::
   As part of this guide, you will create IAM users, including, optionally, credentials for those IAM users. If you
@@ -853,7 +853,7 @@ terraform {
 }
 ----
 
-Next, use the `iam-groups` module from the Gruntwork Service Catalog, making sure to replace the `<VERSION>` placeholder
+Next, use the `iam-groups` module from the Gruntwork Infrastructure as Code Library, making sure to replace the `<VERSION>` placeholder
 with the latest version from the https://github.com/gruntwork-io/module-security/releases[releases page]:
 
 .infrastructure-modules/networking/iam/main.tf
@@ -1191,8 +1191,8 @@ output "user_passwords" {
 ----
 
 At this point, you'll want to test your code. See
-link:/guides/foundations/how-to-use-gruntwork-service-catalog#manual_tests_terraform[Manual tests for Terraform code] and
-link:/guides/foundations/how-to-use-gruntwork-service-catalog#automated_tests_terraform[Automated tests for Terraform code]
+link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#manual_tests_terraform[Manual tests for Terraform code] and
+link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#automated_tests_terraform[Automated tests for Terraform code]
 for instructions.
 
 Once your code is tested and working, commit and release your changes:
@@ -1207,9 +1207,9 @@ git push --follow-tags
 
 NOTE: This guide will use https://github.com/gruntwork-io/terragrunt[Terragrunt] and its associated file and folder
 structure to deploy Terraform modules. Please note that *Terragrunt is NOT required for using Terraform modules from
-the Gruntwork Service Catalog.* Check out link:/guides/foundations/how-to-use-gruntwork-service-catalog[How to use the Gruntwork Service Catalog]
+the Gruntwork Infrastructure as Code Library.* Check out link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library[How to use the Gruntwork Infrastructure as Code Library]
 for instructions on alternative options, such as how to
-link:/guides/foundations/how-to-use-gruntwork-service-catalog#deploy_using_plain_terraform[deploying how to use plain terraform].
+link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#deploy_using_plain_terraform[deploying how to use plain terraform].
 
 Next, create a `terragrunt.hcl` file in `infrastructure-live`. It should go under the file path `root/_global/iam`:
 
@@ -1431,7 +1431,7 @@ terraform {
 }
 ----
 
-Next, use the `cloudtrail` module from the Gruntwork Service Catalog, making sure to replace the `<VERSION>` placeholder
+Next, use the `cloudtrail` module from the Gruntwork Infrastructure as Code Library, making sure to replace the `<VERSION>` placeholder
 with the latest version from the https://github.com/gruntwork-io/module-security/releases[releases page]:
 
 .infrastructure-modules/networking/cloudtrail/main.tf
@@ -1542,8 +1542,8 @@ variable "force_destroy" {
 ----
 
 At this point, you'll want to test your code. See
-link:/guides/foundations/how-to-use-gruntwork-service-catalog#manual_tests_terraform[Manual tests for Terraform code] and
-link:/guides/foundations/how-to-use-gruntwork-service-catalog#automated_tests_terraform[Automated tests for Terraform code]
+link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#manual_tests_terraform[Manual tests for Terraform code] and
+link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#automated_tests_terraform[Automated tests for Terraform code]
 for instructions.
 
 Once tests are passing, commit and release your changes:
@@ -1760,8 +1760,8 @@ output "organizations_account_access_role_name" {
 ----
 
 At this point, you'll want to test your code. See
-link:/guides/foundations/how-to-use-gruntwork-service-catalog#manual_tests_terraform[Manual tests for Terraform code] and
-link:/guides/foundations/how-to-use-gruntwork-service-catalog#automated_tests_terraform[Automated tests for Terraform code]
+link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#manual_tests_terraform[Manual tests for Terraform code] and
+link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#automated_tests_terraform[Automated tests for Terraform code]
 for instructions.
 
 When you're done testing, commit and release your changes:

@@ -60,10 +60,10 @@ This guide consists of four main sections:
 
 <<production_grade_design>>::
   An overview of how to configure a secure, scalable, highly available VPC that you can rely on in production. To get a
-  sense of what production-grade means, check out link:/guides/foundations/how-to-use-gruntwork-service-catalog#production_grade_infra_checklist[The production-grade infrastructure checklist].
+  sense of what production-grade means, check out link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#production_grade_infra_checklist[The production-grade infrastructure checklist].
 
 <<deployment_walkthrough>>::
-  A step-by-step guide to deploying a production-grade VPC in AWS using code from the Gruntwork Service Catalog.
+  A step-by-step guide to deploying a production-grade VPC in AWS using code from the Gruntwork Infrastructure as Code Library.
 
 <<next_steps>>::
   What to do once you've got your VPC(s) deployed.
@@ -604,25 +604,25 @@ allow you to manage and connect to EC2 Instances via a custom protocol managed b
 == Deployment walkthrough
 
 Let's now walk through how to deploy a production-grade VPC, fully defined and managed as code, using the Gruntwork
-Service Catalog.
+Infrastructure as Code Library.
 
 [[pre_requisites]]
 === Pre-requisites
 
 This walkthrough has the following pre-requistes:
 
-Gruntwork Service Catalog::
-  This guide uses code from the https://gruntwork.io/infrastructure-as-code-library/[Gruntwork Service Catalog], as it
+Gruntwork Infrastructure as Code Library::
+  This guide uses code from the https://gruntwork.io/infrastructure-as-code-library/[Gruntwork Infrastructure as Code Library], as it
   implements most of the production-grade design for you out of the box. Make sure to read
-  link:/guides/foundations/how-to-use-gruntwork-service-catalog[How to use the Gruntwork Service Catalog].
+  link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library[How to use the Gruntwork Infrastructure as Code Library].
 +
-IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access the Gruntwork Service Catalog.
+IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access the Gruntwork Infrastructure as Code Library.
 
 Terraform::
   This guide uses https://www.terraform.io/[Terraform] to define and manage all the infrastructure as code. If you're
   not familiar with Terraform, check out https://blog.gruntwork.io/a-comprehensive-guide-to-terraform-b3d32832baca[A
   Comprehensive Guide to Terraform], https://training.gruntwork.io/p/terraform[A Crash Course on Terraform], and
-  link:/guides/foundations/how-to-use-gruntwork-service-catalog[How to Use the Gruntwork Service Catalog]
+  link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library[How to Use the Gruntwork Infrastructure as Code Library]
 
 AWS accounts::
   This guide deploys infrastructure into one or more AWS accounts. Check out the
@@ -640,7 +640,7 @@ AWS accounts::
 
 The first step is to deploy a management VPC for DevOps tooling, such as a CI server or a bastion host. To do this, you
 can use the https://github.com/gruntwork-io/module-vpc/tree/master/modules/vpc-mgmt[vpc-mgmt] module from the
-Gruntwork Service Catalog.
+Gruntwork Infrastructure as Code Library.
 
 IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access `module-vpc`.
 
@@ -690,7 +690,7 @@ terraform {
 }
 ----
 
-Next, use the `vpc-mgmt` module from the Gruntwork Service Catalog, making sure to replace the `<VERSION>` placeholder
+Next, use the `vpc-mgmt` module from the Gruntwork Infrastructure as Code Library, making sure to replace the `<VERSION>` placeholder
 with the latest version from the https://github.com/gruntwork-io/module-vpc/releases[releases page]:
 
 .infrastructure-modules/networking/vpc-mgmt/main.tf
@@ -713,7 +713,7 @@ file for reference. This will allow you to set those variables to different valu
 accounts.
 
 You'll also want to configure the NACLs for this VPC using the `vpc-mgmt-network-acls` module from the Gruntwork
-Service Catalog:
+Infrastructure as Code Library:
 
 .infrastructure-modules/networking/vpc-mgmt/main.tf
 [source,hcl]
@@ -743,8 +743,8 @@ file for reference.
 [[test_wrapper_module]]
 ==== Test your wrapper module
 
-At this point, you'll want to test your code. See link:/guides/foundations/how-to-use-gruntwork-service-catalog#manual_tests_terraform[Manual tests for Terraform code]
-and link:/guides/foundations/how-to-use-gruntwork-service-catalog#automated_tests_terraform[Automated tests for Terraform code]
+At this point, you'll want to test your code. See link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#manual_tests_terraform[Manual tests for Terraform code]
+and link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#automated_tests_terraform[Automated tests for Terraform code]
 for instructions.
 
 [[merge_release_wrapper_module]]
@@ -785,9 +785,9 @@ Multiple management VPCs::
 
 NOTE: This guide will use https://github.com/gruntwork-io/terragrunt[Terragrunt] and its associated file and folder
 structure to deploy Terraform modules. Please note that *Terragrunt is NOT required for using Terraform modules from
-the Gruntwork Service Catalog.* Check out link:/guides/foundations/how-to-use-gruntwork-service-catalog[How to Use the Gruntwork Service Catalog]
+the Gruntwork Infrastructure as Code Library.* Check out link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library[How to Use the Gruntwork Infrastructure as Code Library]
 for instructions on alternative options, such as how to
-link:/guides/foundations/how-to-use-gruntwork-service-catalog#deploy_using_plain_terraform[deploy using plain terraform].
+link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#deploy_using_plain_terraform[deploy using plain terraform].
 
 In each account where you want to deploy a management VPC, you will need to:
 
@@ -862,7 +862,7 @@ terragrunt apply
 Now that you have your management VPC(s) deployed, the next step is to deploy application VPCs to run all of your
 services, data stores, and production infrastructure. The process is very similar to deploying the management VPC,
 except this time, you'll be using the https://github.com/gruntwork-io/module-vpc/tree/master/modules/vpc-app[vpc-app]
-module from the Gruntwork Service Catalog.
+module from the Gruntwork Infrastructure as Code Library.
 
 IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access `module-vpc`.
 
@@ -908,7 +908,7 @@ terraform {
 }
 ----
 
-Next, use the `vpc-app` module from the Gruntwork Service Catalog, making sure to replace the `<VERSION>` placeholder
+Next, use the `vpc-app` module from the Gruntwork Infrastructure as Code Library, making sure to replace the `<VERSION>` placeholder
 with the latest version from the https://github.com/gruntwork-io/module-vpc/releases[releases page]:
 
 .infrastructure-modules/networking/vpc-app/main.tf
@@ -931,7 +931,7 @@ file for reference. This will allow you to set those variables to different valu
 accounts.
 
 You'll also want to configure the NACLs for this VPC using the `vpc-app-network-acls` module from the Gruntwork
-Service Catalog:
+Infrastructure as Code Library:
 
 .infrastructure-modules/networking/vpc-app/main.tf
 [source,hcl]
@@ -1038,8 +1038,8 @@ file for reference.
 [[test_wrapper_module_app]]
 ==== Test your wrapper module
 
-At this point, you'll want to test your code. See link:/guides/foundations/how-to-use-gruntwork-service-catalog#manual_tests_terraform[Manual tests for Terraform code]
-and link:/guides/foundations/how-to-use-gruntwork-service-catalog#automated_tests_terraform[Automated tests for Terraform code]
+At this point, you'll want to test your code. See link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#manual_tests_terraform[Manual tests for Terraform code]
+and link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#automated_tests_terraform[Automated tests for Terraform code]
 for instructions.
 
 [[merge_release_wrapper_module_app]]
