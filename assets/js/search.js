@@ -213,12 +213,13 @@
 
   /* Triggered when filter checkboxes are checked */
   $(document).on('click','.tags', function() {
-    const checkedTags = $('input[type="checkbox"]:checked');
-    const selectedCloud = $('.cloud-filter .active-button').attr("id");
-    filterCloudAndTags(selectedCloud, checkedTags);
+    filterCloudAndTags();
   });
 
-  function filterCloudAndTags(selectedCloud, checkedTags){
+  function filterCloudAndTags(){
+    const checkedTags = $('input[type="checkbox"]:checked');
+    const selectedCloud = $('.cloud-filter .active-button').attr("id");
+
     if (checkedTags.length === 0) {
       // Return filtered to whatever cloud is selected if no tag is checked
       // Or all items if no cloud is selected
@@ -233,13 +234,13 @@
   function selectCloud(filterButton) {
     const id = filterButton.attr('id');
 
+
     if (filterButton.hasClass('initialSelect') && filterButton.hasClass('active-button') ) {
       filterButton.removeClass('initialSelect');
       filterButton.removeClass('active-button');
       $('#guide-listings').show();
       $('#no-azure-results').hide();
       $('#no-matches').hide();
-      showAllItems();
     } else {
       filterButton.addClass('active-button');
       filterButton.addClass('initialSelect');
@@ -250,10 +251,9 @@
         $('#no-azure-results').show();
         return;
       }
-
-      const checkedTags = $('input[type="checkbox"]:checked');
-      filterCloudAndTags(id, checkedTags);
     }
+
+    filterCloudAndTags();
   }
 
   /* Search box on library page */
