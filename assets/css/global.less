@@ -2099,7 +2099,7 @@ body .guides .guides-section-white {
       font-style: italic;
     }
   }
-  & a {
+  & p > a {
     color: @guides-primary-color;
     font-weight: bold;
   }
@@ -2133,6 +2133,15 @@ body .guides .guides-section-white {
   }
   h1, h2, h3, h4, h5, h6 {
     color: @guides-font;
+    a:link {
+      color:@guides-font;
+      font-size: .9em !important;
+      margin-left: -0.8em !important;
+      padding-right: 0.1em !important;
+      .no-transform();
+    }
+  }
+  h1, h5, h6  {
     &:hover > a.anchorjs-link{
       color: #FFFFFF;
       text-decoration: none;
