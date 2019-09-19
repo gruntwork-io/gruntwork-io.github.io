@@ -1175,6 +1175,10 @@ body .guides .guides-section-white {
 }
 
 #toc {
+  &.fixed {
+    width: inherit;
+    padding-right: 16px !important;
+  }
   .guides-outline;
   .section-nav, .sectlevel1 {
     @media (max-width: @screen-sm-min) {
@@ -1182,7 +1186,6 @@ body .guides .guides-section-white {
     }
     display: block;
     z-index: 2;
-    width: 375px;
     padding: 1em;
     overflow-y: auto;
     max-height: 100vh;
