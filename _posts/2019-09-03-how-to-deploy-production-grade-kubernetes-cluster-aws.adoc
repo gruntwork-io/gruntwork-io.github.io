@@ -834,11 +834,10 @@ This walkthrough has the following pre-requistes:
 
 Gruntwork Service Catalog::
   This guide uses code from the https://gruntwork.io/infrastructure-as-code-library/[Gruntwork Service Catalog], as it
-  implements most of the production-grade design for you out of the box.
+  implements most of the production-grade design for you out of the box. Make sure to read
+  link:/guides/foundations/how-to-use-gruntwork-service-catalog[How to use the Gruntwork Service Catalog].
 +
-IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access this code.
-+
-Make sure to read link:/guides/foundations/how-to-use-gruntwork-service-catalog[How to Use the Gruntwork Service Catalog].
+IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access the Gruntwork Service Catalog.
 
 Terraform::
   This guide uses https://www.terraform.io/[Terraform] to define and manage all the infrastructure as code. If you're
@@ -865,13 +864,6 @@ AWS accounts::
   for instructions.
 
 === Deploy the VPC
-
-NOTE: This guide will use https://github.com/gruntwork-io/terragrunt[Terragrunt] and its associated file and folder
-structure to deploy Terraform modules. Please note that *Terragrunt is NOT required for using Terraform modules from
-the Gruntwork Service Catalog.* Check out
-link:/guides/foundations/how-to-use-gruntwork-service-catalog[How to Use the Gruntwork Service Catalog] for instructions
-on alternative options, such as how to
-link:/guides/foundations/how-to-use-gruntwork-service-catalog#deploy_using_plain_terraform[Deploy using plain Terraform].
 
 The first step is to deploy a VPC. Follow the instructions in
 link:/guides/networking/how-to-configure-production-grade-vpc-aws[How to deploy a production-grade VPC on AWS] to use
@@ -994,6 +986,13 @@ release:
 $ git tag -a "v0.5.0" -m "Added tagging and DNS forwarding for EKS"
 $ git push --follow-tags
 ----
+
+NOTE: This guide will use https://github.com/gruntwork-io/terragrunt[Terragrunt] and its associated file and folder
+structure to deploy Terraform modules. Please note that *Terragrunt is NOT required for using Terraform modules from
+the Gruntwork Service Catalog.* Check out
+link:/guides/foundations/how-to-use-gruntwork-service-catalog[How to Use the Gruntwork Service Catalog] for instructions
+on alternative options, such as how to
+link:/guides/foundations/how-to-use-gruntwork-service-catalog#deploy_using_plain_terraform[Deploy using plain Terraform].
 
 Head over to your `infrastructure-live` repo and update the `terragrunt.hcl` file to deploy this new version:
 
