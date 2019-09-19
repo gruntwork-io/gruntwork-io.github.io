@@ -1,7 +1,18 @@
 /**
- * Javascript specially for the IaC Library page.
+ * Javascript specially for the search bad and filters used in the
+ * IaC Library page and the deployment guides page.
  */
 (function () {
+
+  function initialEntry() {
+    $('#no-matches').hide();
+    $('#no-azure-results').hide();
+    // Select AWS cloud by default on page load
+    selectCloud($('.cloud-filter #aws'));
+  }
+
+  // Initial entry on load
+  $(initialEntry);
 
   // Returns a function, that, as long as it continues to be invoked, will not
   // be triggered. The function will be called after it stops being called for
@@ -28,7 +39,7 @@
   /**
    * Function displays the total items displayed on the page
    */
-  function showItemsCount(totalCount, numSubmodules) {
+  function showItemsCount(searchEntry, totalCount, numSubmodules) {
     if (searchEntry.type === 'libraryEntries') {
       $('#search-results-count').show();
       if (totalCount > 0 && numSubmodules > 0) {
@@ -37,7 +48,7 @@
         $('#search-results-count').text("0 repos");
       }
     } else {
-      if (totalCount > 0 && numSubmodules === 0) {
+      if (totalCount > 0 ) {
         $('#search-results-count').html("<strong>" + totalCount + "</strong> post(s) found");
       }
     }
@@ -55,29 +66,13 @@
   /**
    * Function that counts how many items are on the page
    */
-  function showInitialItemsCount() {
+  function showInitialItemsCount(searchEntry) {
     let numSubmodules = 0;
     for (let i = 0; i < searchEntry.entries.length; i++) {
-      if (searchEntry.type === 'libraryEntries') {
-        numSubmodules += libraryEntries[i].num_submodules;
-      }
-      searchEntry.entries;
+      numSubmodules += libraryEntries[i].num_submodules;
     }
-    showItemsCount(searchEntry.entries.length, numSubmodules);
+    showItemsCount(searchEntry, searchEntry.entries.length, numSubmodules);
   }
-
-  let searchEntry;
-
-  function initialEntry() {
-    $('#no-matches').hide();
-    $('#no-azure-results').hide();
-    searchEntry = detectSearchEntry();
-    $(showInitialItemsCount);
-    $(performSearch($('.cloud-filter #aws')));
-  }
-
-  // Initial entry on load
-  $(initialEntry);
 
   /**
    * Function that where the search is being performed from
@@ -125,6 +120,7 @@
    * @type {Function}
    */
   function filterData(searchValue, type) {
+    const searchEntry = detectSearchEntry();
 
     $('#guide-listings').show();
 
@@ -132,10 +128,7 @@
     $('#no-matches').hide();
 
     if (searchValue && searchValue.length > 0) {
-
-      let lowerText = searchValue.toLowerCase();
-
-      let searchQueries = lowerText.split(" ");
+      const searchQueries = searchValue.toLowerCase().split(" ");
 
       if (searchEntry.type === 'libraryEntries') {
         $('.table-clickable-row').hide();
@@ -146,16 +139,14 @@
           $('.categories ul li').hide();
       }
 
-      let entries = searchEntry.entries;
-
       let matches = 0;
       let submoduleMatches = 0;
       let searchContent;
 
-      entries.map(entry => {
+      searchEntry.entries.forEach(entry => {
         let matchesAll = true;
 
-        searchQueries.map(searchQuery => {
+        searchQueries.forEach(searchQuery => {
           switch (true) {
             case searchEntry.type === 'libraryEntries':
               searchContent = entry.text;
@@ -164,7 +155,7 @@
               searchContent = entry.title + entry.category + entry.content + entry.tags;
               break;
             case searchEntry.type === 'guideEntries' && type === 'tagSearch':
-              searchContent = entry.tags;
+              searchContent = entry.tags + entry.cloud;
               break;
             case searchEntry.type === 'guideEntries' && type === 'cloudSearch':
               searchContent = entry.cloud;
@@ -195,11 +186,11 @@
         return;
       }
 
-      showItemsCount(matches, submoduleMatches);
+      showItemsCount(searchEntry, matches, submoduleMatches);
     } else {
       if (searchEntry.type === 'libraryEntries') {
 
-        showInitialItemsCount();
+        showInitialItemsCount(searchEntry);
         $('.table-clickable-row').show();
 
       } else if (searchEntry.type === 'guideEntries') {
@@ -223,25 +214,28 @@
 
 
   /* Triggered when filter checkboxes are checked */
-  $(document).ready(() => {
+  $(document).on('click','.tags', function() {
+    filterCloudAndTags();
+  });
 
-    $(document).on('click','.tags', function() {
-      let checked = $('input[type="checkbox"]:checked');
-      if (!checked) {
-        showAllItems();
-        return; /* Return if nothing checked */
-      }
-      checked.each(function() {
-        let searchValue = $(this).val();
+  function filterCloudAndTags(){
+    const checkedTags = $('input[type="checkbox"]:checked');
+    const selectedCloud = $('.cloud-filter .active-button').attr("id");
 
-        filterData(searchValue, 'tagSearch');
-      });
-    })
-  })
+    if (checkedTags.length === 0) {
+      // Return filtered to whatever cloud is selected if no tag is checked
+      // Or all items if no cloud is selected
+      return selectedCloud ? filterData(selectedCloud, 'cloudSearch') : showAllItems();
+    }
+    checkedTags.each(function() {
+      const searchValue = $(this).val();
+      filterData(searchValue + (selectedCloud ? ' ' + selectedCloud : ''), 'tagSearch');
+    });
+  }
 
-
-  function performSearch(filterButton) {
+  function selectCloud(filterButton) {
     const id = filterButton.attr('id');
+
 
     if (filterButton.hasClass('initialSelect') && filterButton.hasClass('active-button') ) {
       filterButton.removeClass('initialSelect');
@@ -249,19 +243,19 @@
       $('#guide-listings').show();
       $('#no-azure-results').hide();
       $('#no-matches').hide();
-      showAllItems();
     } else {
       filterButton.addClass('active-button');
       filterButton.addClass('initialSelect');
       filterButton.siblings().removeClass('active-button');
+
       if(id === 'azure') {
         $('#guide-listings').hide();
         $('#no-azure-results').show();
         return;
       }
-  
-      filterData(id, 'cloudSearch');
     }
+
+    filterCloudAndTags();
   }
 
   /* Search box on library page */
@@ -270,8 +264,7 @@
   /* Triggered on click of any cloud filtering buttons */
   $('.cloud-filter .filter').click(function () {
     const filterButton = $(this);
-
-    performSearch(filterButton);
+    selectCloud(filterButton);
   });
 
 
