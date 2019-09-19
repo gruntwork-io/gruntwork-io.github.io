@@ -387,13 +387,15 @@ $(function(){
 });
 // open accordion for direct links to panel id
 $(window).load(function() {
-  if(location.pathname.split('/')[1] !== 'guides') {
-    var getHash = location.hash; //get hash from js object location
+  var getHash = location.hash; //get hash from js object location
+  var accordion = $('a[href="' + getHash + '"]');
+  $panelHeight = accordion.parents('.panel').height();
+
+  //Handle cases that do not return a null height
+  if($panelHeight){
     function activateAccordion(id) {
       if (id.length)//check if hash isn't empty
       {
-        var accordion = $('a[href="' + id + '"]');
-        $panelHeight = accordion.parents('.panel').height();
         $('html,body').animate({
             scrollTop: accordion.parents('.panel').offset().top //scroll to accordion
         }, 100, function () {
