@@ -36,7 +36,7 @@
                             {% if tags_to_capitalize contains tag_name %}
                               {% assign tag_name = tag | upcase %}
                             {% endif %}
-                            <div class="checkbox checkbox-{{tag}}"><input value="{{ tag }}" id="filter-{{ tag }}" type="checkbox"><label for="filter-{{ tag }}">{{ tag_name }}</label></div>
+                            <div class="checkbox"><input value="{{ tag }}" id="filter-{{ tag }}" type="checkbox"><label for="filter-{{ tag }}">{{ tag_name }}</label></div>
                           {% endfor %}
                         </div>
                     </div>
@@ -57,27 +57,3 @@
 <div id="no-azure-results">
     {% include no-azure-results.html %}
 </div>
-
-<script>
-  const posts = [
-      {% for post in site.posts %}
-          {
-              "tags": ["{{ post.tags | join: '","' }}"],
-              "clouds": ["{{ post.cloud | join: '","'}}"]
-          } {% unless forloop.last %},{% endunless %}
-      {% endfor %}
-  ];
-
-  window.cloudTags = posts.map((post)=>
-    post.clouds.map((cloud)=> ({cloud: cloud, tags: post.tags})) // Repeating tags for posts with more than one cloud
-  ).flat().reduce(
-    (result, post) => ({
-      ...result,
-      [post['cloud']]: [...new Set((result[post['cloud']] || []).concat(post.tags))] // Concat unique
-    }),
-    {}
-  );
-
-  console.log(window.cloudTags);
-  // { "aws": ["tag a", "tag b"], "gcp": ["tag a", "tag c"]}
-</script>
