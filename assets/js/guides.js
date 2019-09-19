@@ -47,8 +47,8 @@ $(document).ready(function () {
 
   // Update window hash without causing a "jump." https://stackoverflow.com/a/14690177/483528
   const updateHash = function(hash) {
-    if (history.pushState) {
-      history.pushState(null, null, hash);
+    if (history.replaceState) {
+      history.replaceState(null, null, hash);
     } else {
       window.location.hash = hash;
     }
