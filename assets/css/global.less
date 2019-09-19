@@ -1415,6 +1415,7 @@ body .guides .guides-section-white {
     z-index: 2;
   }
   & .btn:hover, .btn:focus{
+    background: @guides-primary-color;
     .no-transform();
   }
 }
@@ -1460,6 +1461,11 @@ body .guides .guides-section-white {
     background-color: @guides-primary-color;
     color: #ffffff;
     margin-top: 20px;
+    & .btn:hover, .btn:focus{
+      background: @guides-primary-color;
+      outline: none;
+      .no-transform();
+    }
   }
 }
 
