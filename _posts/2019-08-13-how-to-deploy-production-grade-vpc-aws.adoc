@@ -16,7 +16,7 @@ This guide will walk you through the process of configuring a production-grade V
 
 === What is a VPC?
 
-If you were building your own data center, you would set up a _physical network_ by setting up switches, routers,
+If you were building your own data center, you would set up a _physical network_ by configuring switches, routers,
 connecting everything with ethernet cables, and so on. In the AWS cloud, you can set up a _virtual network_ (AKA a
 software-defined network) by configuring a https://aws.amazon.com/vpc/[_Virtual Private Cloud (VPC)_]. Each VPC defines
 a logical partition of your AWS account, complete with its own IP addresses, subnets, routing rules, and firewalls.
@@ -30,7 +30,7 @@ Networking::
 
 Security::
   The VPC is also the basic security layer for your AWS account. As it controls all networking and communication,
-  it's your first line of defense against attackers, protecting your resources from attackers and unwanted access.
+  it's your first line of defense against attackers, protecting your resources from unwanted access.
 
 Partitioning::
   VPCs also give you a way to create separate, logical partitions within an AWS account. For example, you could have
@@ -310,7 +310,7 @@ Stateful/Stateless::
   if you have a rule that allows an inbound connection on port 80, that connection will not be able to respond unless
   you also manually add another rule that allows outbound connections for the response. You normally don't know exactly
   which port will be used to respond: these are called
-  _https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html#nacl-ephemeral-ports[ephemeral ports]_), and
+  _https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html#nacl-ephemeral-ports[ephemeral ports]_, and
   the rules depend on the operating system.
 +
 For example, the networking stack on Linux usually picks any available port
@@ -343,7 +343,8 @@ put the DevOps tooling in its own VPC, rather than shoving it directly into the 
 ====
 If you have a large number of VPCs to interconnect, setting up a peering connection between each pair (n^2^
 connections total) can quickly become impractical. In this case, you should look into using the
-https://aws.amazon.com/transit-gateway/[AWS Transit Gateway].
+https://aws.amazon.com/transit-gateway/[AWS Transit Gateway] or
+https://docs.aws.amazon.com/vpc/latest/userguide/vpc-sharing.html[Shared VPCs].
 ====
 
 [[vpc_endpoints]]
@@ -367,11 +368,11 @@ domain names (e.g., `s3.us-east-1.amazonaws.com`) automatically route to these e
 There are two types of endpoints, each of which support different AWS services:
 
 Gateway endpoints::
-  These are the original endpoints AWS created. They are free, but only support S3 and DynamoDB.
+  This is an older type of endpoint that is free, but only support S3 and DynamoDB.
 
 Interface endpoints::
-  These are the new types of endpoints. They are backed by https://aws.amazon.com/privatelink/[PrivateLink], which is
-  a paid service, and include support for CloudTrail, Secrets Manager, EC2, SNS, and many other services
+  This is a new type of endpoint that is backed by https://aws.amazon.com/privatelink/[PrivateLink], which is
+  a paid service, and includes support for CloudTrail, Secrets Manager, EC2, SNS, and many other services
   (https://docs.aws.amazon.com/vpc/latest/userguide/vpc-endpoints.html[full list]).
 
 [[regions_azs]]
@@ -414,7 +415,7 @@ image::/assets/img/guides/vpc/vpc-diagram.png[]
 image::/assets/img/guides/vpc/castle.jpeg[]
 
 People make mistakes all the time: forgetting to remove accounts, keeping ports open, including test credentials in
-production code, etc. Rather than living in an idealized model where we assume people won't make mistakes, you can
+production code, etc. Rather than living in an idealized model where you assume people won't make mistakes, you can
 employ a link:https://en.wikipedia.org/wiki/Defense_in_depth_(computing)[Defense in Depth] strategy of setting up multiple
 layers of protection so that a failure in any single layer doesn't immediately lead to disaster. You never want to be
 one typo away from a security incident.
@@ -529,13 +530,12 @@ Public tier::
 
 Private application tier::
   The private application tier should only allow requests to/from the public tier, private application tier, private
-  persistence tier, and the management VPC. Notably, requests from the public Internet and other subnets are not
-  allowed.
+  persistence tier, and the management VPC. Requests from all other subnets and the public Internet are not allowed.
 
 Private persistence tier::
   The private persistence tier should only allow requests to/from the private application tier, private persistence
-  tier, and optionally the management VPC (e.g., if you need to run schema migrations during a CI build). Notably,
-  requests from the public Internet and other subnets—including the public subnet tier—are not allowed. This provides
+  tier, and optionally the management VPC (e.g., if you need to run schema migrations during a CI build). Requests
+  from all other subnets—including the public subnet tier—and the public Internet are not allowed. This provides
   an extra layer of defense for your data, which is the most valuable, irreplaceable, and sought-after resource at most
   companies.
 
@@ -601,11 +601,10 @@ This walkthrough has the following pre-requistes:
 
 Gruntwork Service Catalog::
   This guide uses code from the https://gruntwork.io/infrastructure-as-code-library/[Gruntwork Service Catalog], as it
-  implements most of the production-grade design for you out of the box.
+  implements most of the production-grade design for you out of the box. Make sure to read
+  link:/guides/foundations/how-to-use-gruntwork-service-catalog[How to use the Gruntwork Service Catalog].
 +
-IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access this code.
-+
-Make sure to read link:/guides/foundations/how-to-use-gruntwork-service-catalog[How to Use the Gruntwork Service Catalog].
+IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access the Gruntwork Service Catalog.
 
 Terraform::
   This guide uses https://www.terraform.io/[Terraform] to define and manage all the infrastructure as code. If you're
@@ -629,22 +628,17 @@ AWS accounts::
 
 The first step is to deploy a management VPC for DevOps tooling, such as a CI server or a bastion host. To do this, you
 can use the https://github.com/gruntwork-io/module-vpc/tree/master/modules/vpc-mgmt[vpc-mgmt] module from the
-Gruntwork Service Catalog. This module assumes you do not run any data stores in the management VPC, so it solely
-contains two tiers of subnets, public and private-app. If you will be deploying data stores in the management VPC
-(e.g., a relational database for SonarQube), then use
-https://github.com/gruntwork-io/module-vpc/tree/master/modules/vpc-app[vpc-app] instead, which has a third
-private-persistence subnet tier.
+Gruntwork Service Catalog.
 
 IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access `module-vpc`.
 
+This module assumes you do not run any data stores in the management VPC, so it solely contains two tiers of subnets,
+public and private-app. If you will be deploying data stores in the management VPC (e.g., a relational database for
+SonarQube), then use https://github.com/gruntwork-io/module-vpc/tree/master/modules/vpc-app[vpc-app] instead, which has
+a third private-persistence subnet tier.
+
 [[create_wrapper_module]]
 ==== Create a wrapper module
-
-NOTE: This guide will use https://github.com/gruntwork-io/terragrunt[Terragrunt] and its associated file and folder
-structure to deploy Terraform modules. Please note that *Terragrunt is NOT required for using Terraform modules from
-the Gruntwork Service Catalog.* Check out link:/guides/foundations/how-to-use-gruntwork-service-catalog[How to Use the Gruntwork Service Catalog]
-for instructions on alternative options, such as how to
-link:/guides/foundations/how-to-use-gruntwork-service-catalog#deploy_using_plain_terraform[deploy using plain terraform].
 
 To deploy the `vpc-mgmt` module, create a _wrapper module_ called `vpc-mgmt` in your `infrastructure-modules` repo:
 
@@ -701,8 +695,10 @@ module "vpc" {
 }
 ----
 
-Note that all of the parameters should be exposed as input variables in `variables.tf`. This will allow you to set
-those variables to different values in different environments or AWS accounts.
+Note that all of the parameters should be exposed as input variables in `variables.tf`; see this
+https://github.com/gruntwork-io/infrastructure-modules-multi-account-acme/blob/master/networking/vpc-mgmt/vars.tf[vars.tf]
+file for reference. This will allow you to set those variables to different values in different environments or AWS
+accounts.
 
 You'll also want to configure the NACLs for this VPC using the `vpc-mgmt-network-acls` module from the Gruntwork
 Service Catalog:
@@ -745,9 +741,10 @@ for instructions.
 Once the module is working the way you want, submit a pull request, get your changes merged into the `master` branch,
 and create a new versioned release by using a Git tag. For example, to create a `v0.3.0` release:
 
+[source,bash]
 ----
-$ git tag -a "v0.3.0" -m "Created vpc-mgmt module"
-$ git push --follow-tags
+git tag -a "v0.3.0" -m "Created vpc-mgmt module"
+git push --follow-tags
 ----
 
 [[pick_deployment_option]]
@@ -773,6 +770,12 @@ Multiple management VPCs::
 
 [[configure_wrapper_module]]
 ==== Configure the wrapper module for each environment
+
+NOTE: This guide will use https://github.com/gruntwork-io/terragrunt[Terragrunt] and its associated file and folder
+structure to deploy Terraform modules. Please note that *Terragrunt is NOT required for using Terraform modules from
+the Gruntwork Service Catalog.* Check out link:/guides/foundations/how-to-use-gruntwork-service-catalog[How to Use the Gruntwork Service Catalog]
+for instructions on alternative options, such as how to
+link:/guides/foundations/how-to-use-gruntwork-service-catalog#deploy_using_plain_terraform[deploy using plain terraform].
 
 In each account where you want to deploy a management VPC, you will need to:
 
@@ -835,9 +838,10 @@ include {
 
 Deploy the VPC by running `terragrunt apply`:
 
+[source,bash]
 ----
-$ cd infrastructure-live/production/us-east-2/prod/networking/vpc-mgmt
-$ terragrunt apply
+cd infrastructure-live/production/us-east-2/prod/networking/vpc-mgmt
+terragrunt apply
 ----
 
 [[deploy_application_vpcs]]
@@ -909,8 +913,10 @@ module "vpc" {
 }
 ----
 
-Note that all of the parameters should be exposed as input variables in `variables.tf`. This will allow you to set
-those variables to different values in different environments or AWS accounts.
+Note that all of the parameters should be exposed as input variables in `variables.tf`; see this
+https://github.com/gruntwork-io/infrastructure-modules-multi-account-acme/blob/master/networking/vpc-app/vars.tf[vars.tf]
+file for reference. This will allow you to set those variables to different values in different environments or AWS
+accounts.
 
 You'll also want to configure the NACLs for this VPC using the `vpc-app-network-acls` module from the Gruntwork
 Service Catalog:
@@ -1030,9 +1036,10 @@ for instructions.
 Once the module is working the way you want, submit a pull request, get your changes merged into the `master` branch,
 and create a new versioned release by using a Git tag. For example, to create a `v0.4.0` release:
 
+[source,bash]
 ----
-$ git tag -a "v0.4.0" -m "Created vpc-app module"
-$ git push --follow-tags
+git tag -a "v0.4.0" -m "Created vpc-app module"
+git push --follow-tags
 ----
 
 [[configure_wrapper_module_app]]
@@ -1098,9 +1105,10 @@ include {
 
 Deploy the VPC by running `terragrunt apply`:
 
+[source,bash]
 ----
-$ cd infrastructure-live/production/us-east-2/prod/networking/vpc-app
-$ terragrunt apply
+cd infrastructure-live/production/us-east-2/prod/networking/vpc-app
+terragrunt apply
 ----
 
 [[deploy_bastion_host]]
@@ -1115,8 +1123,9 @@ Check out the `How to deploy a production-grade bastion host on AWS` guide _(com
 In each of your production accounts, use https://github.com/gruntwork-io/cloud-nuke[cloud-nuke] to remove the Default
 VPC and Default Security Group rules:
 
+[source,bash]
 ----
-$ cloud-nuke defaults-aws
+cloud-nuke defaults-aws
 ----
 
 [[next_steps]]
@@ -1126,7 +1135,7 @@ Now that you have your management and application VPCs deployed, you can start b
 on top of them! Typically, the best next step is to deploy a cluster of servers for running your applications by using
 one of the following guides:
 
-. link:/guides/docker/how-to-deploy-production-grade-kubernetes-cluster-aws[How to deploy a production-grade Kubernetes cluster on AWS]
+. link:/guides/kubernetes/how-to-deploy-production-grade-kubernetes-cluster-aws[How to deploy a production-grade Kubernetes cluster on AWS]
 . `How to deploy a production grade ECS cluster on AWS` _(coming soon!)_
 . `How to deploy a production grade Nomad cluster on AWS` _(coming soon!)_
 . `How to deploy a production grade Auto Scaling Group on AWS` _(coming soon!)_

@@ -1363,20 +1363,22 @@ body .guides .guides-section-white {
 }
 
 
-.newsletter, .no-results {
-  padding: 3em 6em 6em 7em;
+.guides-newsletter, .no-results {
+  padding: 5em 6em;
   font-size: 16px;
   color: @guides-font;
-  max-width: 83%;
   display: inline-block;
-  & input {
+  .modal-box {
+    width: 500px;
+  }
+  & .guides-input-box {
     background-color: #f5f9fa;
     border: none;
     border-top-left-radius: 20px;
     border-bottom-left-radius: 20px;
     font-size: 16px;
     color: black;
-    height: 39px;
+    height: 42px;
     z-index: 1;
     overflow: hidden;
     padding-right: 16px;
@@ -1385,7 +1387,7 @@ body .guides .guides-section-white {
       border: 1px solid #07a7fc;
       z-index: 1 !important;
       padding: 12px;
-      .no-transform;
+      .no-transform();
     }
     &:invalid{
       border: 1px solid #ef5a73;
@@ -1401,25 +1403,38 @@ body .guides .guides-section-white {
   & img {
     margin-bottom: 2%;
   }
-  & .btn-group>.btn {
+  & .btn {
     text-decoration: none;
     background: #07a7fc;
     font-size: 15px;
     margin-top: -2px;
     border-radius: 25px !important;
     margin-left: -13px;
-    padding: 10px 24px;
+    padding: 11px 24px;
     position: relative;
+    z-index: 2;
   }
-  & .btn-group>.btn:hover, .btn:focus{
-    .no-transform;
+  & .btn:hover, .btn:focus{
+    background: @guides-primary-color;
+    .no-transform();
   }
 }
 
 #newsletter-success{
+  @media (min-width: 768px){
+    .modal-dialog {
+        margin: 30px auto;
+        width: auto;
+    }
+  }
   & label {
     font-size: 28px;
     color: @guides-font;
+    font-weight: 600;
+    line-height: 1.43;
+    letter-spacing: 0.79px;
+    color: #1e252f;
+    margin-bottom: 10px;
   }
   p {
     color: @guides-font;
@@ -1429,17 +1444,28 @@ body .guides .guides-section-white {
   }
   & .modal-content {
     background: #fff;
-    width: 468px;
-    height: 260px;
+    max-width: 468px;
+    height: 320px;
     border-radius: 8px;
-    margin-left: 20%;
+    .modal-body {
+      padding: 50px 39px;
+      .img {
+        margin-bottom: 19px;
+      }
+    }
   }
-  & button {
+  & .btn {
     width: 131px;
     height: 47px;
     border-radius: 23.5px;
     background-color: @guides-primary-color;
     color: #ffffff;
+    margin-top: 20px;
+    &:hover, &:focus{
+      background: @guides-primary-color;
+      outline: none;
+      .no-transform();
+    }
   }
 }
 
@@ -1486,9 +1512,9 @@ body .guides .guides-section-white {
   background-color: #fff;
   position: relative;
   color: @guides-font;
-  padding: 20px 25px 115px 25px;
+  padding: 20px 25px 0 25px;
   font-family: @guides-font-family;
-  padding-bottom: 115px;
+  min-height: 400px;
   .container-fluid {
     max-width: 1200px;
   }
@@ -1524,6 +1550,12 @@ body .guides .guides-section-white {
   background-color: #f5f9fa;
   text-align: center;
   margin: 40px 0;
+
+  .title {
+    font-weight: bold;
+    margin-bottom: 0 !important;
+  }
+
   table {
     text-align:center;
     margin-left:auto;
@@ -1531,12 +1563,10 @@ body .guides .guides-section-white {
     & tbody tr {
       border-bottom: none !important;
       & .icon .title {
-        margin-right: 20px;
-        line-height: 0;
+        margin-right: 40px;
         position: relative;
         font-size: 0;
         text-align: center;
-        line-height: 10px;
         &:after {
           display: block;
           position: absolute;
@@ -1545,7 +1575,7 @@ body .guides .guides-section-white {
           border-radius: 50%;
           width: 21px;
           height: 21px;
-          line-height: 22px;
+          line-height: 21px;
           font-weight: normal;
           left: 0;
           font-size: 16px;
@@ -1558,6 +1588,7 @@ body .guides .guides-section-white {
         line-height: normal;
         letter-spacing: 0.34px;
         color: @guides-font;
+        padding: 0;
         .title {
           margin-bottom: 12px;
         }
@@ -1566,6 +1597,7 @@ body .guides .guides-section-white {
           color: @guides-font;
           font-family: AndaleMono;
           font-weight: normal;
+          font-size: 12px;
         }
         &:nth-child(even) {
           background-color: inherit !important;
@@ -1576,6 +1608,7 @@ body .guides .guides-section-white {
 }
 
 .no-azure-results{
+  display: none;
   h2 {
     color: @guides-font;
     font-size: 30px;
@@ -1629,6 +1662,12 @@ body .guides .guides-section-white {
 .center {
   display: flex;
   justify-content: center;
+}
+
+.white-section{
+  background-color: #fff;
+  padding: 20px 25px 0 25px;
+  min-height: 200px;
 }
 
 // Sections that have a blue background
@@ -1931,6 +1970,11 @@ body .guides .guides-section-white {
     font-size: 35px;
     line-height: normal;
     text-align: center;
+
+    // Limit width so typography remains readable on wide screens: https://ux.stackexchange.com/a/108803/4869
+    max-width: 760px;
+    margin: 0 auto;
+
     & p {
       font-weight: 600;
       margin-bottom: 0px;
@@ -1987,9 +2031,13 @@ body .guides .guides-section-white {
       color: #000;
     }
   }
-  & .dlist, & ulist {
+  & .dlist, & .ulist {
     padding: 0;
     margin: 20px 0;
+
+    dt {
+      margin-top: 15px;
+    }
   }
   & a:link{
     color: #07a7fc;
@@ -2011,7 +2059,7 @@ body .guides .guides-section-white {
   line-height: 1.38;
 
   // Limit width so typography remains readable on wide screens: https://ux.stackexchange.com/a/108803/4869
-  max-width: 42em;
+  max-width: 760px;
   margin: 0 auto;
 
   .sect2 {
@@ -2023,9 +2071,16 @@ body .guides .guides-section-white {
     }
     .listingblock {
       margin: 20px 0;
-      pre {
-        padding: 15px;
-      }
+    }
+
+    pre.highlight > code, pre:not(.highlight) {
+      padding: 15px;
+      background: rgba(245, 245, 245, 0.3);
+      border: 1px solid #efefef;
+    }
+
+    .token.operator, .token.entity, .token.url, .token.variable {
+      background: transparent !important;
     }
   }
   p, li {
@@ -2033,9 +2088,7 @@ body .guides .guides-section-white {
     letter-spacing: 0.45px;
     margin: 0;
     em {
-      font-weight: 600;
       font-style: italic;
-      color: @guides-primary-color;
     }
   }
   & a {
@@ -2050,25 +2103,25 @@ body .guides .guides-section-white {
   }
 
   pre, pre[class*="language-"] {
-    padding: 0px;
-    background: aliceblue;
+    padding: 0;
     border: none;
     font-size: 14px;
     overflow-y: scroll;
-    text-overflow: ellipsis;
+    text-overflow: initial;
     max-height: 100vh;
     margin: 10px 0;
   }
-  h2, h3 {
+  h2 {
+    font-size: 38px;
+    line-height: 1.43;
+    letter-spacing: 0.79px;
+    margin: 70px 0 28px 0;
+  }
+  h3 {
     font-size: 28px;
     line-height: 1.43;
     letter-spacing: 0.79px;
-  }
-  h2 {
-    margin: 40px 0 28px 0;
-  }
-  h3 {
-    margin: 30px 0 18px 0;
+    margin: 40px 0 18px 0;
   }
   h1, h2, h3, h4, h5, h6 {
     color: @guides-font;
@@ -2103,15 +2156,18 @@ body .guides .guides-section-white {
       tr {
         border-bottom: 15px solid #fff;
         td {
-        padding: 5px;
-        p {
-          font-size: 12px;
-          letter-spacing: 0.34px;
-          padding: 10px;
+          padding: 5px;
+          p {
+            font-size: 12px;
+            letter-spacing: 0.34px;
+            padding: 10px;
+          }
+          &:nth-child(even) {background-color: #fafcfc;}
         }
-        &:nth-child(even) {background-color: #fafcfc;}
       }
     }
+    .tableblock {
+      line-height: 20px;
     }
   }
 }
