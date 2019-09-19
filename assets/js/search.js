@@ -66,8 +66,7 @@
   function initialEntry() {
     $('#no-matches').hide();
     $('#no-azure-results').hide();
-  //  searchEntry = detectSearchEntry();
-    performCloudSearch($('.cloud-filter #aws'));
+    selectCloud($('.cloud-filter #aws'));
   }
 
   // Initial entry on load
@@ -213,24 +212,25 @@
 
 
   /* Triggered when filter checkboxes are checked */
-  $(document).ready(() => {
+  $(document).on('click','.tags', function() {
+    const checkedTags = $('input[type="checkbox"]:checked');
+    const selectedCloud = $('.cloud-filter .active-button').attr("id");
+    filterCloudAndTags(selectedCloud, checkedTags);
+  });
 
-    $(document).on('click','.tags', function() {
-      const checked = $('input[type="checkbox"]:checked');
-      const selectedCloud = $('.cloud-filter .active-button').attr("id");
-      if (checked.length === 0) {
-        /* Return filtered to whatever cloud is selected if no tag is checked */
-        return filterData(selectedCloud, 'cloudSearch');
-      }
-      checked.each(function() {
-        const searchValue = $(this).val();
-        filterData(searchValue + ' ' + selectedCloud, 'tagSearch');
-      });
-    })
-  })
+  function filterCloudAndTags(selectedCloud, checkedTags){
+    if (checkedTags.length === 0) {
+      // Return filtered to whatever cloud is selected if no tag is checked
+      // Or all items if no cloud is selected
+      return selectedCloud ? filterData(selectedCloud, 'cloudSearch') : showAllItems();
+    }
+    checkedTags.each(function() {
+      const searchValue = $(this).val();
+      filterData(searchValue + (selectedCloud ? ' ' + selectedCloud : ''), 'tagSearch');
+    });
+  }
 
-
-  function performCloudSearch(filterButton) {
+  function selectCloud(filterButton) {
     const id = filterButton.attr('id');
 
     if (filterButton.hasClass('initialSelect') && filterButton.hasClass('active-button') ) {
@@ -251,7 +251,8 @@
         return;
       }
 
-      filterData(id, 'cloudSearch');
+      const checkedTags = $('input[type="checkbox"]:checked');
+      filterCloudAndTags(id, checkedTags);
     }
   }
 
@@ -262,7 +263,7 @@
   $('.cloud-filter .filter').click(function () {
     const filterButton = $(this);
 
-    performCloudSearch(filterButton);
+    selectCloud(filterButton);
   });
 
 
