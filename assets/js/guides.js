@@ -1,9 +1,5 @@
 $(document).ready(function () {
 
-  if (window.location.href.indexOf('newsletter_success') !== -1) {
-    $("#newsletter-success").modal('show');
-  } 
-
   const getElementForDataSelector = function (parentElement, selectorName, elementName) {
     const selector = parentElement.data(selectorName);
     if (!selector) {
