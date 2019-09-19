@@ -28,7 +28,7 @@
   /**
    * Function displays the total items displayed on the page
    */
-  function showItemsCount(totalCount, numSubmodules) {
+  function showItemsCount(searchEntry, totalCount, numSubmodules) {
     if (searchEntry.type === 'libraryEntries') {
       $('#search-results-count').show();
       if (totalCount > 0 && numSubmodules > 0) {
@@ -37,7 +37,7 @@
         $('#search-results-count').text("0 repos");
       }
     } else {
-      if (totalCount > 0 && numSubmodules === 0) {
+      if (totalCount > 0 ) {
         $('#search-results-count').html("<strong>" + totalCount + "</strong> post(s) found");
       }
     }
@@ -55,25 +55,19 @@
   /**
    * Function that counts how many items are on the page
    */
-  function showInitialItemsCount() {
+  function showInitialItemsCount(searchEntry) {
     let numSubmodules = 0;
     for (let i = 0; i < searchEntry.entries.length; i++) {
-      if (searchEntry.type === 'libraryEntries') {
-        numSubmodules += libraryEntries[i].num_submodules;
-      }
-      searchEntry.entries;
+      numSubmodules += libraryEntries[i].num_submodules;
     }
-    showItemsCount(searchEntry.entries.length, numSubmodules);
+    showItemsCount(searchEntry, searchEntry.entries.length, numSubmodules);
   }
-
-  let searchEntry;
 
   function initialEntry() {
     $('#no-matches').hide();
     $('#no-azure-results').hide();
-    searchEntry = detectSearchEntry();
-    $(showInitialItemsCount);
-    $(performSearch($('.cloud-filter #aws')));
+  //  searchEntry = detectSearchEntry();
+    performCloudSearch($('.cloud-filter #aws'));
   }
 
   // Initial entry on load
@@ -125,6 +119,7 @@
    * @type {Function}
    */
   function filterData(searchValue, type) {
+    const searchEntry = detectSearchEntry();
 
     $('#guide-listings').show();
 
@@ -132,10 +127,7 @@
     $('#no-matches').hide();
 
     if (searchValue && searchValue.length > 0) {
-
-      let lowerText = searchValue.toLowerCase();
-
-      let searchQueries = lowerText.split(" ");
+      const searchQueries = searchValue.toLowerCase().split(" ");
 
       if (searchEntry.type === 'libraryEntries') {
         $('.table-clickable-row').hide();
@@ -146,16 +138,14 @@
           $('.categories ul li').hide();
       }
 
-      let entries = searchEntry.entries;
-
       let matches = 0;
       let submoduleMatches = 0;
       let searchContent;
 
-      entries.map(entry => {
+      searchEntry.entries.forEach(entry => {
         let matchesAll = true;
 
-        searchQueries.map(searchQuery => {
+        searchQueries.forEach(searchQuery => {
           switch (true) {
             case searchEntry.type === 'libraryEntries':
               searchContent = entry.text;
@@ -195,11 +185,11 @@
         return;
       }
 
-      showItemsCount(matches, submoduleMatches);
+      showItemsCount(searchEntry, matches, submoduleMatches);
     } else {
       if (searchEntry.type === 'libraryEntries') {
 
-        showInitialItemsCount();
+        showInitialItemsCount(searchEntry);
         $('.table-clickable-row').show();
 
       } else if (searchEntry.type === 'guideEntries') {
@@ -228,7 +218,6 @@
     $(document).on('click','.tags', function() {
       const checked = $('input[type="checkbox"]:checked');
       if (checked.length === 0) {
-        const selectedCloud = $('.cloud-filter .active-button').attr("id");
         /* Return filtered to whatever cloud is selected if no tag is checked */
         return filterData(selectedCloud, 'cloudSearch');
       }
@@ -240,7 +229,7 @@
   })
 
 
-  function performSearch(filterButton) {
+  function performCloudSearch(filterButton) {
     const id = filterButton.attr('id');
 
     if (filterButton.hasClass('initialSelect') && filterButton.hasClass('active-button') ) {
@@ -272,7 +261,7 @@
   $('.cloud-filter .filter').click(function () {
     const filterButton = $(this);
 
-    performSearch(filterButton);
+    performCloudSearch(filterButton);
   });
 
 
