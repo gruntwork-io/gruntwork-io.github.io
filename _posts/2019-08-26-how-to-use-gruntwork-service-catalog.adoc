@@ -887,6 +887,7 @@ You can now test manually by authenticating to your sandbox environment (see
 https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[A Comprehensive Guide to Authenticating to AWS on the Command Line])
 and running:
 
+[source,bash]
 ----
 cd infrastructure-modules/networking/vpc-app/testing
 terraform init -backend-config=backend.hcl ../
@@ -895,6 +896,7 @@ terraform apply ../
 
 When you're done testing, clean up by running:
 
+[source,bash]
 ----
 terraform destroy ../
 ----
@@ -1023,6 +1025,7 @@ work, and others are blocked, based on the networking settings in that VPC.
 
 To run the test, authenticate to your testing environment and do the following:
 
+[source,bash]
 ----
 cd infrastructure-modules/test
 go test -v -timeout 45m
@@ -1123,6 +1126,7 @@ dynamodb_table = "<DYNAMODB-TABLE-FOR-STAGING>"
 
 And now you can deploy to the staging environment as follows:
 
+[source,bash]
 ----
 cd infrastructure-modules/networking/vpc-app/staging
 terraform init -backend-config=backend.hcl ../
@@ -1157,6 +1161,7 @@ that helps alleviate some of the drawbacks mentioned in the previous approach.
 The first step with Terragrunt is to version your code. You can do this by creating Git tags in
 `infrastructure-modules`:
 
+[source,bash]
 ----
 cd infrastructure-modules
 git tag -a "v0.0.1" -m "Created vpc-app module"
@@ -1283,6 +1288,7 @@ include {
 
 To deploy `vpc-app` in staging, you do the following:
 
+[source,bash]
 ----
 cd infrastructure-live/staging/us-east-2/stage/vpc-app
 terragrunt apply
@@ -1301,6 +1307,7 @@ You can deploy the production environment by creating an analogous
 them, you can use `terragrunt apply-all`. For example, to deploy _everything_ in the production account, you would
 do the following:
 
+[source,bash]
 ----
 cd infrastructure-live/production
 terragrunt apply-all
@@ -1394,18 +1401,21 @@ The first step is to install the Gruntwork Installer itself, which you can do as
 `<VERSION>` below with the latest version from the
 https://github.com/gruntwork-io/gruntwork-installer/releases[Gruntwork Installer releases page]):
 
+[source,bash]
 ----
 curl -LsS https://raw.githubusercontent.com/gruntwork-io/gruntwork-installer/master/bootstrap-gruntwork-installer.sh | bash /dev/stdin --version <VERSION>
 ----
 
 Now you can install any script `XXX` at version `YYY` from repo `ZZZ` of the Gruntwork Service Catalog as follows:
 
+[source,bash]
 ----
 gruntwork install --module-name XXX --tag YYY --repo ZZZ
 ----
 
 And you can install any binary `XXX` at version `YYY` from repo `ZZZ` of the Gruntwork Service Catalog as follows:
 
+[source,bash]
 ----
 gruntwork install --binary-name XXX --tag YYY --repo ZZZ
 ----
@@ -1414,6 +1424,7 @@ Note that if repo `ZZZ` is a private GitHub repo (which `module-security` is), y
 your https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line[GitHub personal access token]
 as the environment variable `GITHUB_OAUTH_TOKEN`:
 
+[source,bash]
 ----
 export GITHUB_OAUTH_TOKEN=(YOUR_TOKEN)
 ----
@@ -1422,6 +1433,7 @@ Once you've set this token, to install the `ip-lockdown` script and `ssh-grunt` 
 sure to replace `<VERSION>` with the latest version from the
 https://github.com/gruntwork-io/module-security/releases[module-security releases page]):
 
+[source,bash]
 ----
 gruntwork install \
   --module-name ip-lockdown \
@@ -1504,6 +1516,7 @@ A few things to notice about this Packer template:
 
 To build a machine image from a Packer template, you authenticate to a sandbox environment for testing and run:
 
+[source,bash]
 ----
 export GITHUB_OAUTH_TOKEN=(YOUR_TOKEN)
 packer build packer-example.json
@@ -1648,6 +1661,7 @@ A few things to notice about this Packer template:
 
 To build a Docker image from a `Dockerfile`, you run:
 
+[source,bash]
 ----
 docker build --build-arg GITHUB_OAUTH_TOKEN=<YOUR_TOKEN> -t <IMAGE_NAME>:<IMAGE_TAG> .
 ----
@@ -1673,6 +1687,7 @@ IMAGE_TAG::
 
 To manually test a Docker image, you run:
 
+[source,bash]
 ----
 docker run <IMAGE_NAME>:<IMAGE_TAG>
 ----
@@ -1682,6 +1697,7 @@ Where `IMAGE_NAME` and `IMAGE_TAG` are the name and tag for the Docker image you
 want to override this command. For example, to fire up a Bash prompt in your Docker image, you can typically run the
 following:
 
+[source,bash]
 ----
 docker run -it <IMAGE_NAME>:<IMAGE_TAG> bash
 ----
@@ -1691,6 +1707,7 @@ Note the `-it` flags to enable an interactive TTY so you can enter commands at t
 If your Docker image needs to listen on a port, you can map this port to a port number on your host OS using the `-p`
 flag:
 
+[source,bash]
 ----
 docker run -p 80:8080 <IMAGE_NAME>:<IMAGE_TAG>
 

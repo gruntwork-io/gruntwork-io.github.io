@@ -175,7 +175,7 @@ Controller Manager::
   The _https://kubernetes.io/docs/reference/command-line-tools-reference/kube-controller-manager/[controller manager]_
   runs all the _controllers_, each of which is a control loop that continuously watches the state of the cluster and
   makes changes to move the cluster towards the desired state (you define the desired state via API calls). For
-  example, the _node controller_ watches worker nodes and tries to ensure the requested number of Nodes are always
+  example, the _node controller_ watches worker nodes and tries to ensure the requested number of Nodes is always
   running and the _replication controller_ watches containers and tries to ensure the requested number of containers is
   always running.
 
@@ -222,7 +222,7 @@ User accounts::
   cloud.
 
 Service accounts::
-  _https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/Service accounts]_ are managed and
+  _https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/[Service accounts]_ are managed and
   used by resources within the Kubernetes cluster itself, such as your pods.
   Kubernetes creates some service accounts automatically; you can create others using the Kubernetes API. The
   credentials for service accounts are stored as secrets in Kubernetes and mounted into the pods that should have
@@ -257,19 +257,19 @@ https://kubernetes.io/docs/reference/kubectl/overview/[kubectl] is the official 
 working with Kubernetes. For example, to deploy the https://hub.docker.com/r/training/webapp[training/webapp] Docker
 container (a simple "Hello, World" webapp) and have it listen on port 5000, you could run:
 
+[source,bash]
 ----
-$ kubectl run webapp \
-    --image=training/webapp:latest \
-    --port 5000 \
-    --generator=run-pod/v1
+kubectl run webapp \
+  --image=training/webapp:latest \
+  --port 5000 \
+  --generator=run-pod/v1
 ----
 
 And to see the pods running in your cluster, you could run:
 
+[source,bash]
 ----
-$ kubectl get pods
-NAME     READY   STATUS    RESTARTS   AGE
-webapp   1/1     Running   0          71s
+kubectl get pods
 ----
 
 To be able to authenticate to different EKS clusters or as different users, you can create one or more `kubectl`
@@ -285,18 +285,18 @@ image::/assets/img/guides/eks/kubernetes-dashboard.png[]
 
 The _https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/[Kubernetes Dashboard]_ is a
 web-based interface you can use to manage your Kubernetes cluster. The dashboard is not enabled by default in most
-Kubernetes distributions. Check out the
+Kubernetes distributions. Check out
 https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/#deploying-the-dashboard-ui[Deploying the Dashboard UI]
-for instructions on deploying it and
+and
 https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/#accessing-the-dashboard-ui[Accessing the Dashboard UI]
-for instructions on accessing it.
+for instructions.
 
 ==== Terraform
 
 Terraform has a https://www.terraform.io/docs/providers/kubernetes/index.html[Kubernetes provider] that allows you to
 write Terraform code that, under the hood, calls the Kubernetes API. This allows you to manage all your
-infrastructure—whether that's your VPCs, databases, a Kubernetes cluster, or Kubernetes services—using the same
-language and workflow. The downside is that the Kubernetes provider seems to lag behind considerably, and is missing
+infrastructure—including your VPCs, databases, Kubernetes clusters, and Kubernetes services—using the same language and
+workflow. The downside is that the Terraform Kubernetes provider seems to lag behind considerably, and is missing
 some of the features you need for effectively working with Kubernetes, which often requires you to go outside of
 Terraform code anyway (e.g., execute a script).
 
@@ -323,7 +323,7 @@ How pods are deployed::
 
 A pod is like a logical machine::
   All the containers in a pod run in the same Linux namespace and can talk to each other over localhost (note: this
-  implies the containers in a pod must all listen on different ports), so it can be helpful to thinkk of each pod as a
+  implies the containers in a pod must all listen on different ports), so it can be helpful to think of each pod as a
   _logical machine_, with its own IP address and processes that are separate from all other pods.
 
 Sidecars::
@@ -485,7 +485,7 @@ Deploy it yourself::
   https://github.com/kelseyhightower/kubernetes-the-hard-way[Kubernetes the hard way] to create a Kubernetes cluster
   from scratch on top of EC2 instances. This gives you full control over every aspect of your Kubernetes cluster, but
   it is a considerable amount of work (3-6 months to get something production-grade, minimum) and puts the full burden
-  of maintenance, scalability, high availability, disaster recovery, updates, etc on you.
+  of maintenance, scalability, high availability, disaster recovery, and updates on you.
 
 Kubernetes deployment tools::
   There are a number of Kubernetes tools that can automatically spin up a cluster for you, including
@@ -495,14 +495,14 @@ Kubernetes deployment tools::
   from scratch. However, it's typically hard to customize and manage those clusters, as you don't have the
   infrastructure defined as code (note: `kops` can generate Terraform code, but it's probably not the way you'd write
   the code yourself and if you modify that code, it's not clear if you can still use `kops`), and most importantly,
-  these tools put the full burden of maintenance, scalability, high availability, disaster recovery, updates, etc on
+  these tools put the full burden of maintenance, scalability, high availability, disaster recovery, and updates on
   you (except `eksctl`, which spins up an EKS cluster).
 
 Amazon Elastic Kubernetes Service::
   https://aws.amazon.com/eks/[Amazon EKS] is a managed service in AWS for using Kubernetes. It runs the entire control
   plane for you, with first-class integration with other AWS services (e.g., VPCs, IAM, etc). That means you can get
   EKS running quickly, manage everything as code, and benefit from AWS handling all the maintenance, scalability,
-  high availability, disaster recovery, and updates of the control plane for you. The main drawbacks are that EKS is
+  high availability, disaster recovery, and updates of the control plane for you. The main drawbacks is that EKS is
   still fairly new, so some functionality is missing or more complicated to use than it should be.
 
 [[production_grade_design]]
@@ -511,27 +511,27 @@ Amazon Elastic Kubernetes Service::
 With all the core concepts out of the way, let's now discuss how to configure a production-grade Kubernetes cluster
 that looks something like this:
 
-.EKS architecture
+.Production-grade EKS architecture
 image::/assets/img/guides/eks/eks-architecture.png[]
 
 === Use EKS
 
-We recommend using https://aws.amazon.com/eks/[Amazon EKS] to run the Kubernetes cluster. It manages the control plane
+We recommend using https://aws.amazon.com/eks/[Amazon EKS] to run Kubernetes in AWS. It manages the control plane
 for you, which significantly reduces your operational burden; it has good integration with other AWS services; you can
 manage it entirely as code; and while EKS still has some gaps in terms of features, and is more complicated to use than
-it should be, AWS seems to be investing into it heavily, so any small benefits you get from using other solutions will
-most likely be eclipsed very quickly by future EKS releases.
+it should be, AWS seems to be heavily investing into the service, so any small benefits you get from using other
+solutions will most likely be eclipsed very quickly by future EKS releases.
 
 === VPC configuration
 
-EKS relies on an a _https://aws.amazon.com/vpc/[Virtual Private Cloud (VPC)]_ to provide the basic network topology and
+EKS relies on a _https://aws.amazon.com/vpc/[Virtual Private Cloud (VPC)]_ to provide the basic network topology and
 to manage communication across the nodes (see
 link:/guides/networking/how-to-configure-production-grade-vpc-aws[How to deploy a production-grade VPC on AWS] for more
 information on VPCs). Here are the key VPC considerations for your EKS cluster:
 
 Add tags to the VPC and subnets::
-  EKS also relies on special tags on the VPC and subnets to know which VPC resources to use for deploying
-  infrastructure. For example, EKS needs to know to use the public subnet for the load balancers associated with a
+  EKS relies on special tags on the VPC and subnets to know which VPC resources to use for deploying
+  infrastructure. For example, EKS uses tags to figure out which subnets to use for the load balancers associated with a
   Service resource. See https://docs.aws.amazon.com/eks/latest/userguide/network_reqs.html[Cluster VPC Considerations]
   for more information.
 
@@ -639,23 +639,23 @@ Security group::
   ports you should open up between them.
 
 Server hardening::
-  There are a number of server-hardening best techniques that you should apply to each worker node. This includes
+  There are a number of server-hardening techniques that you should apply to each worker node. This includes
   a secure base image (e.g., CIS hardened images), intrusion prevention (e.g., `fail2ban`), file integrity monitoring
   (e.g., Tripwire), anti-virus (e.g., Sophos), automatically installing critical security updates (e.g.,
   `unattended-upgrades` for Ubuntu), locking down EC2 metadata (e.g., `ip-lockdown`), and so on.
 
 === Authenticate
 
-The standard way to interact with a Kubernetes cluster is to use `kubectl`. However, in order to use `kubectl` to
-access your EKS cluster, you need to first authenticate it to the cluster. EKS manages authentication to Kubernetes
-based on AWS IAM, which is not natively supported by `kubectl`. Therefore, before using `kubectl`, you have to use one
-of the following utilities to authenticate:
+EKS manages authentication via AWS IAM, which is not an authentication method natively supported by most Kubernetes
+tooling, including `kubectl`. Therefore, before using `kubectl`, you have to use one of the following utilities to
+authenticate:
 
 https://aws.amazon.com/cli/[AWS CLI]::
   AWS now has first-class support for authenticating to EKS built directly into the `aws` CLI (minimum version:
   `1.16.232`). See https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html[Installing the AWS CLI] for
   setup instructions. To use it, you fist run the `update-kubeconfig` command:
 +
+[source,bash]
 ----
 aws eks update-kubeconfig --region <AWS_REGION> --name <EKS_CLUSTER_NAME>
 ----
@@ -663,8 +663,7 @@ aws eks update-kubeconfig --region <AWS_REGION> --name <EKS_CLUSTER_NAME>
 This will update your kubeconfig so that `kubectl` will automatically call `aws eks get-token` for authentication; the
 `aws eks get-token` command will, in turn, use the standard
 https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[AWS CLI mechanisms to authenticate to AWS]:
-i.e., the credentials file at `~/.aws/credentials`, environment variables, etc. That means that can now start running
-your standard `kubectl` commands, such as `kubectl get nodes`.
+i.e., the credentials file at `~/.aws/credentials`, environment variables, etc.
 
 https://eksctl.io[eksctl]::
   `eksctl` is the official CLI tool for EKS. It's primary purpose is to deploy and manage the EKS cluster itself, but
@@ -672,26 +671,27 @@ https://eksctl.io[eksctl]::
   https://eksctl.io/introduction/installation/[these instructions]. To authenticate with `eksctl`, you run the
   `eksctl utils write-kubeconfig` command:
 +
+[source,bash]
 ----
 eksctl utils write-kubeconfig --region <AWS_REGION> --name=<EKS_CLUSTER_NAME>
 ----
 +
 This will update your kubeconfig so that `kubectl` will automatically call either the AWS CLI or AWS IAM Authenticator
-for authenticationThat means that can now start running your standard `kubectl` commands, such as `kubectl get nodes`.
+for authentication.
 
 https://github.com/gruntwork-io/kubergrunt[kubergrunt]::
   A CLI tool maintained by Gruntwork that supports authentication to EKS, as well as several other important utilities,
   such as tools for doing zero-downtime rolling deployments of EKS worker nodes and managing TLS certificates in
   Kubernetes. The easiest way to install it is to use one of the pre-built binaries from the
-  https://github.com/gruntwork-io/kubergrunt/releases[kubergrunt releases] page. The usage is very similar to the AWS
-  CLI. You first run `kubergrunt eks configure`:
+  https://github.com/gruntwork-io/kubergrunt/releases[kubergrunt releases] page. To authenticate with `kubergrunt`, you
+  run `kubergrunt eks configure`:
 +
+[source,bash]
 ----
 kubergrunt eks configure --eks-cluster-arn <EKS_CLUSTER_ARN>
 ----
 +
-This will update your kubeconfig to use `kubergrunt eks token` for authentication, which means you can now start
-running your normal `kubectl` commands, such as `kubectl get nodes`.
+This will update your kubeconfig to use `kubergrunt eks token` for authentication.
 
 https://github.com/kubernetes-sigs/aws-iam-authenticator[AWS IAM Authenticator for Kubernetes]::
   A CLI tool maintained by the Heptio and Amazon EKS teams. This was the main tool AWS recommended for authenticating
@@ -834,11 +834,10 @@ This walkthrough has the following pre-requistes:
 
 Gruntwork Service Catalog::
   This guide uses code from the https://gruntwork.io/infrastructure-as-code-library/[Gruntwork Service Catalog], as it
-  implements most of the production-grade design for you out of the box.
+  implements most of the production-grade design for you out of the box. Make sure to read
+  link:/guides/foundations/how-to-use-gruntwork-service-catalog[How to use the Gruntwork Service Catalog].
 +
-IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access this code.
-+
-Make sure to read link:/guides/foundations/how-to-use-gruntwork-service-catalog[How to Use the Gruntwork Service Catalog].
+IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access the Gruntwork Service Catalog.
 
 Terraform::
   This guide uses https://www.terraform.io/[Terraform] to define and manage all the infrastructure as code. If you're
@@ -848,8 +847,8 @@ Terraform::
 
 Python and Kubergrunt::
   Some of the Terraform modules used in this guide call out to Python code and/or
-  https://github.com/gruntwork-io/kubergrunt[Kubergrunt] to fill in missing features in Terraform. Make sure you have
-  Python and Kubergrunt installed on any computer where you will be running Terraform.
+  https://github.com/gruntwork-io/kubergrunt[kubergrunt] to fill in missing features in Terraform. Make sure you have
+  Python and `kubergrunt` installed on any computer where you will be running Terraform.
 
 Docker and Packer::
   This guide assumes you are deploying a Kubernetes cluster for use with https://www.docker.com[Docker]. The guide also
@@ -865,13 +864,6 @@ AWS accounts::
   for instructions.
 
 === Deploy the VPC
-
-NOTE: This guide will use https://github.com/gruntwork-io/terragrunt[Terragrunt] and its associated file and folder
-structure to deploy Terraform modules. Please note that *Terragrunt is NOT required for using Terraform modules from
-the Gruntwork Service Catalog.* Check out
-link:/guides/foundations/how-to-use-gruntwork-service-catalog[How to Use the Gruntwork Service Catalog] for instructions
-on alternative options, such as how to
-link:/guides/foundations/how-to-use-gruntwork-service-catalog#deploy_using_plain_terraform[Deploy using plain Terraform].
 
 The first step is to deploy a VPC. Follow the instructions in
 link:/guides/networking/how-to-configure-production-grade-vpc-aws[How to deploy a production-grade VPC on AWS] to use
@@ -990,10 +982,18 @@ Once your updated `vpc-app` wrapper module is working the way you want, submit a
 into the `master` branch, and create a new versioned release by using a Git tag. For example, to create a `v0.5.0`
 release:
 
+[source,bash]
 ----
-$ git tag -a "v0.5.0" -m "Added tagging and DNS forwarding for EKS"
-$ git push --follow-tags
+git tag -a "v0.5.0" -m "Added tagging and DNS forwarding for EKS"
+git push --follow-tags
 ----
+
+NOTE: This guide will use https://github.com/gruntwork-io/terragrunt[Terragrunt] and its associated file and folder
+structure to deploy Terraform modules. Please note that *Terragrunt is NOT required for using Terraform modules from
+the Gruntwork Service Catalog.* Check out
+link:/guides/foundations/how-to-use-gruntwork-service-catalog[How to Use the Gruntwork Service Catalog] for instructions
+on alternative options, such as how to
+link:/guides/foundations/how-to-use-gruntwork-service-catalog#deploy_using_plain_terraform[Deploy using plain Terraform].
 
 Head over to your `infrastructure-live` repo and update the `terragrunt.hcl` file to deploy this new version:
 
@@ -1007,14 +1007,15 @@ terraform {
 
 And run `terragrunt apply` to deploy the changes:
 
+[source,bash]
 ----
-$ cd infrastructure-live/production/us-east-2/stage/networking/vpc-app
-$ terragrunt apply
+cd infrastructure-live/production/us-east-2/stage/networking/vpc-app
+terragrunt apply
 ----
 
 === Configure the control plane
 
-Now that you have the VPC ready, it's time to deploy the EKS control plane using the
+Now that you have the VPC ready, it's time to configure the EKS control plane using the
 https://github.com/gruntwork-io/terraform-aws-eks/tree/master/modules/eks-cluster-control-plane[eks-cluster-control-plane module]
 in `terraform-aws-eks`. Create a new module called `eks-cluster` in `infrastructure-modules:
 
@@ -1143,7 +1144,7 @@ variable "terraform_state_s3_bucket" {
 
 === Configure the worker nodes
 
-The next step is to configure the worker nodes in the `eks-cluster` module. You can deploy an Auto Scaling Group to run
+The next step is to configure the worker nodes in the `eks-cluster` module. You can use an Auto Scaling Group to run
 the worker nodes using the
 https://github.com/gruntwork-io/terraform-aws-eks/tree/master/modules/eks-cluster-workers[eks-cluster-workers] module
 in `terraform-aws-eks`:
@@ -1301,46 +1302,46 @@ Here's what `eks-node.json` should look like:
 }
 ----
 
+IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access the `terraform-aws-eks`,
+`module-aws-monitoring`, and `module-security` repos used in the Packer template above.
+
 This Packer template installs the following on top of the EKS-optimized AMI base image:
 
-IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access the code in the `terraform-aws-eks`,
-`module-aws-monitoring`, and `module-security` repos mentioned below.
+* https://github.com/gruntwork-io/bash-commons[bash-commons]: A collection of reusable Bash functions for handling
+  common tasks such as logging, assertions, string manipulation, and more. It's used by some of the other tooling below.
 
-https://github.com/gruntwork-io/bash-commons[bash-commons]::
-  A collection of reusable Bash functions for handling common tasks such as logging, assertions, string manipulation,
-  and more. It's used by some of the other tooling below.
+* https://github.com/gruntwork-io/terraform-aws-eks/tree/master/modules/eks-scripts[eks-scripts]: A script that takes
+  the labels on a worker node EC2 instance and converts them to a format that can be passed to the EKS bootstrap script
+  so that those tags show up as labels in Kubernetes.
 
-https://github.com/gruntwork-io/terraform-aws-eks/tree/master/modules/eks-scripts[eks-scripts]::
-  A script that takes the labels on a worker node EC2 instance and converts them to a format that can be passed to the
-  EKS bootstrap script so that those tags show up as labels in Kubernetes.
-
-https://github.com/gruntwork-io/module-aws-monitoring/tree/master/modules/metrics/cloudwatch-memory-disk-metrics-scripts[cloudwatch-memory-disk-metrics-scripts]::
+* https://github.com/gruntwork-io/module-aws-monitoring/tree/master/modules/metrics/cloudwatch-memory-disk-metrics-scripts[cloudwatch-memory-disk-metrics-scripts]:
   Send memory and disk usage metrics for your EC2 Instances to CloudWatch. These metrics are not available by default
   as they are only visible from inside a VM.
 
-https://github.com/gruntwork-io/module-aws-monitoring/tree/master/modules/logs/syslog[syslog]::
-  Configure log rotation and rate limiting for syslog.
+* https://github.com/gruntwork-io/module-aws-monitoring/tree/master/modules/logs/syslog[syslog]: Configure log rotation
+  and rate limiting for syslog.
 
-https://github.com/gruntwork-io/module-security/tree/master/modules/auto-update[auto-update]::
-  Configure a Linux server to automatically install critical security updates on a nightly basis.
+* https://github.com/gruntwork-io/module-security/tree/master/modules/auto-update[auto-update]: Configure a Linux
+  server to automatically install critical security updates on a nightly basis.
 
-https://github.com/gruntwork-io/module-security/tree/master/modules/fail2ban[fail2ban]::
-  Configure a Linux server to automatically ban malicious ip addresses from connecting to the server via SSH.
+* https://github.com/gruntwork-io/module-security/tree/master/modules/fail2ban[fail2ban]: Configure a Linux server to
+  automatically ban malicious ip addresses from connecting to the server via SSH.
 
-https://github.com/gruntwork-io/module-security/tree/master/modules/ntp[ntp]::
-  Install and configure NTP on a Linux server to prevent clock drift.
+* https://github.com/gruntwork-io/module-security/tree/master/modules/ntp[ntp]: Install and configure NTP on a Linux
+  server to prevent clock drift.
 
-https://github.com/gruntwork-io/module-security/tree/master/modules/ip-lockdown[ip-lockdown]::
-  Lock down specified IP addresses so only certain OS users can access them. Primarily used to lock down the EC2
-  instance metadata endpoint (and therefore, the IAM role attached to the EC2 instance) so that it can only be accessed
-  by specific users (e.g., only `root`).
+* https://github.com/gruntwork-io/module-security/tree/master/modules/ip-lockdown[ip-lockdown]: Lock down specified IP
+  addresses so only certain OS users can access them. Primarily used to lock down the EC2 instance metadata endpoint
+  (and therefore, the IAM role attached to the EC2 instance) so that it can only be accessed by specific users (e.g.,
+  only `root`).
 
-https://github.com/gruntwork-io/module-security/tree/master/modules/ssh-grunt[ssh-grunt]::
-  Allow managing SSH access to EC2 instances using IAM. Developers you add to specific IAM groups will be able to SSH
-  to specific servers using their own username and SSH key.
+* https://github.com/gruntwork-io/module-security/tree/master/modules/ssh-grunt[ssh-grunt]: Allow managing SSH access
+  to EC2 instances using IAM. Developers you add to specific IAM groups will be able to SSH to specific servers using
+  their own username and SSH key.
 
 To build an AMI from this Packer template, you run:
 
+[source,bash]
 ----
 packer build eks-node.json
 ----
@@ -1428,7 +1429,7 @@ configure_eks_instance "${aws_region}" "${eks_cluster_name}" "${eks_endpoint}" "
 The User Data script above does the following:
 
 * Starts the CloudWatch Logs Agent so that logs from the EC2 instance (especially syslog) are sent to CloudWatch Logs.
-* Starts fail2ban to protect the instance against malicious SSH attempts.
+* Starts `fail2ban` to protect the instance against malicious SSH attempts.
 * Runs the EKS bootstrap script to register the instance in the cluster.
 * Run `ip-lockdown` to lock down the EC2 metadata endpoint so only the `root` and `ec2-user` users can access it.
 
@@ -1715,7 +1716,7 @@ resource "aws_security_group_rule" "allow_inbound_ssh" {
 If you're using https://github.com/gruntwork-io/module-security/tree/master/modules/ssh-grunt[ssh-grunt] from
 `module-security` to manage SSH access with IAM groups, you'll need to give the worker nodes IAM permissions to talk to
 IAM. You can do this using the
-https://github.com/gruntwork-io/module-security/tree/master/modules/iam-policies[`iam-policies`] module from
+https://github.com/gruntwork-io/module-security/tree/master/modules/iam-policies[iam-policies] module from
 `module-security`:
 
 .infrastructure-modules/services/eks-cluster/main.tf
@@ -1789,9 +1790,10 @@ At this point, run manual and automated tests for your code. Once your `eks-clus
 want, submit a pull request, get your changes merged into the `master` branch, and create a new versioned release by
 using a Git tag:
 
+[source,bash]
 ----
-$ git tag -a "v0.6.0" -m "Added eks-cluster module"
-$ git push --follow-tags
+git tag -a "v0.6.0" -m "Added eks-cluster module"
+git push --follow-tags
 ----
 
 Head over to your `infrastructure-live` repo and create a `terragrunt.hcl` file to deploy your EKS cluster in one of
@@ -1871,9 +1873,10 @@ include {
 
 And run `terragrunt apply` to deploy the EKS cluster:
 
+[source,bash]
 ----
-$ cd infrastructure-live/stage/us-east-2/stage/services/eks-cluster
-$ terragrunt apply
+cd infrastructure-live/stage/us-east-2/stage/services/eks-cluster
+terragrunt apply
 ----
 
 // TODO: Commented out for now. This probably belongs in a separate guide on how to deploy services on top of
@@ -1899,6 +1902,7 @@ At this point, you can start interacting with your EKS cluster using `kubectl`. 
 authenticate to the cluster. Here's an example of how to do that using
 https://github.com/gruntwork-io/kubergrunt[kubergrunt]:
 
+[source,bash]
 ----
 kubergrunt eks configure --eks-cluster-arn <EKS_CLUSTER_ARN>
 ----
@@ -1908,17 +1912,18 @@ end of the `terragrunt apply`.
 
 Now you can start running typical `kubectl` commands:
 
+[source,bash]
 ----
 kubectl get nodes
 ----
 
 === Updating the worker nodes
 
-Deploying the cluster initially is a good start. In the future, however, you'll need a way to roll out updates:
+Deploying the cluster initially is a start. In the future, you'll also need a way to roll out updates:
 
 Updating the control plane::
-  EKS has built-in support for updating the control plane. The `eks-cluster-control-plane` module will also take care
-  of updating the plugins EKS uses, such as `aws-vpc-cni`, `coredns`, and `kube-proxy`. So, if you bump your Kubernetes
+  EKS has built-in support for updating the control plane; the `eks-cluster-control-plane` module has built-in support
+  for updating the plugins EKS uses, such as `aws-vpc-cni`, `coredns`, and `kube-proxy`. So, if you bump your Kubernetes
   version and run `terragrunt apply`, EKS will automatically roll out new master nodes with the new version installed,
   and the `eks-cluster-control-plane` module will automatically execute a Python script that will update all the plugin
   versions as described in the
@@ -1934,6 +1939,7 @@ Updating the worker nodes::
   https://github.com/gruntwork-io/kubergrunt#deploy[kubergrunt deploy] command, which can do a zero-downtime rolling
   deployment of the worker node Auto Scaling Group:
 +
+[source,bash]
 ----
 kubergrunt eks deploy --region <AWS_REGION> --asg-name <AUTO_SCALING_GROUP_NAME>
 ----
