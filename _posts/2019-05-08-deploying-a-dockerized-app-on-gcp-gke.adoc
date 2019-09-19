@@ -1,0 +1,623 @@
+---
+categories: Kubernetes
+image: /assets/img/guides/gke.jpg
+excerpt: Learn how to deploy a Dockerized app to a Kubernetes (GKE) cluster running on Google Cloud Platform (GCP).
+tags: ["gcp", "gke", "docker"]
+cloud: [gcp]
+---
+= Deploying a Dockerized app on GCP and GKE
+:page-type: guide
+:page-layout: post
+:page-title: Deploying a Dockerized app on GCP and GKE
+
+:toc:
+:toc-placement!:
+
+// GitHub specific settings. See https://gist.github.com/dcode/0cfbf2699a1fe9b46ff04c41721dda74 for details.
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+toc::[]
+endif::[]
+
+== Intro
+
+This guide walks you through the process of deploying a Dockerized app to a Kubernetes (GKE) cluster running on Google
+Cloud Platform (GCP).
+
+=== What is Kubernetes?
+
+https://kubernetes.io/[Kubernetes (K8S)] is an open-source system for managing containerized applications, including:
+
+Scheduling::
+  Deploy containers across a cluster of servers, using the available resources (data centers, servers, CPU, memory,
+  ports, etc.) as efficiently as possible.
+
+Deployments::
+  Roll out updates to containers using a variety of deployment strategies, such as rolling deployment, blue-green
+  deployment, and canary deployment, and automatically roll back if there's an error.
+
+Auto healing::
+  Monitor the health of your containers and servers and automatically replace unhealthy ones.
+
+Auto scaling::
+  Scale the number of containers and servers up or down in response to load.
+
+Load balancing::
+  Make your containers accessible to the outside world and distribute traffic across your containers.
+
+Service discovery::
+  Allow containers to find and communicate with each other over the network, automatically routing requests to the
+  proper destination.
+
+Configuration and secrets::
+  Provide containers with environment-specific configuration data and secrets.
+
+=== What you'll learn in this guide
+
+This guide consists of three main sections:
+
+<<core_concepts>>::
+  An overview of the core concepts you need to understand to use Kubernetes, including why you may want to use
+  Kubernetes, Kubernetes architecture, the control plane, worker nodes, different ways to run Kubernetes, services,
+  deployments, auto scaling, auto healing, RBAC, and more.
+
+<<deployment_walkthrough>>::
+  A step-by-step guide to deploying a Dockerized app on GKE using code from the Gruntwork Service Catalog.
+
+<<next_steps>>::
+  What to do once you've got your app deployed.
+
+Feel free to read the guide from start to finish or skip around to whatever part interests you!
+
+[[core_concepts]]
+== Core concepts
+
+The core concepts for Kubernetes are largely the same on every cloud, so check out the core concepts from
+link:/guides/kubernetes/how-to-deploy-production-grade-kubernetes-cluster-aws#core_concepts[How to deploy a production-grade Kubernetes cluster on AWS]
+to learn about Kubernetes architecture, the control plane, worker nodes, different ways to run Kubernetes, services,
+deployments, auto scaling, auto healing, RBAC, and more.
+
+[[deployment_walkthrough]]
+== Deployment walkthrough
+
+Let's now walk through how to deploy a production-grade Kubernetes cluster in AWS, fully defined and managed as code,
+using the Gruntwork Service Catalog.
+
+[[pre_requisites]]
+=== Pre-requisites
+
+This walkthrough has the following pre-requistes:
+
+Terraform::
+  This guide uses https://www.terraform.io/[Terraform] to define and manage all the infrastructure as code. If you're
+  not familiar with Terraform, check out https://blog.gruntwork.io/a-comprehensive-guide-to-terraform-b3d32832baca[A
+  Comprehensive Guide to Terraform], https://training.gruntwork.io/p/terraform[A Crash Course on Terraform], and
+  link:/guides/foundations/how-to-use-gruntwork-service-catalog[How to Use the Gruntwork Service Catalog].
+
+Python and Kubergrunt::
+  Some of the Terraform modules used in this guide call out to Python code and/or
+  https://github.com/gruntwork-io/kubergrunt[Kubergrunt] to fill in missing features in Terraform. Make sure you have
+  Python and Kubergrunt installed on any computer where you will be running Terraform.
+
+Docker and Packer::
+  This guide assumes you are deploying a Kubernetes cluster for use with https://www.docker.com[Docker]. The guide also
+  uses https://www.packer.io[Packer] to build VM images. If you're not familiar with Docker or Packer, check out
+  https://training.gruntwork.io/p/a-crash-course-on-docker-packer[A Crash Course on Docker and Packer] and
+  link:/guides/foundations/how-to-use-gruntwork-service-catalog[How to Use the Gruntwork Service Catalog].
+
+GCP::
+  You will need a GCP account with billing enabled. There is a https://cloud.google.com/free/[free tier] that
+  includes $300 of free credit overs a 12 month period. You will also need to install the
+  https://cloud.google.com/sdk/gcloud/[gcloud] command-line tool
+
+=== Create a Basic App
+
+For the purposes of this guide we will create a basic https://nodejs.org[Node.js] app that responds to requests on
+port `8080`.
+
+Create a file called `server.js` and paste in the following source code:
+
+.server.js
+[source,javascript]
+----
+const express = require("express");
+
+// Constants
+const PORT = 8080;
+const HOST = "0.0.0.0";
+
+// App
+const app = express();
+app.get("/", (req, res) => res.send("Hello World!"));
+
+app.listen(PORT, HOST);
+console.log(`Running on http://${HOST}:${PORT}`);
+----
+
+Next, create a `package.json` that defines your dependencies:
+
+.package.json
+[source,json]
+----
+{
+  "name": "docker_web_app",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
+----
+
+=== Dockerize the App
+
+Before you can deploy the app to GKE, you need to Dockerize it. You can do this by creating a `Dockerfile` in the same
+folder as your `server.js` and `package.json`:
+
+.Dockerfile
+[source,Dockerfile]
+----
+FROM node:12
+
+# Create app directory
+WORKDIR /usr/app
+
+COPY package*.json ./
+
+RUN npm install
+COPY . .
+
+EXPOSE 8080
+CMD [ "npm", "start" ]
+----
+
+The folder structure of the sample app should now look like this:
+
+----
+├── server.js
+├── Dockerfile
+└── package.json
+----
+
+NOTE: Real-world applications will be a lot more complicated than this, but the main point to take from here is that
+you need to ensure your Docker image is configured to `EXPOSE` the port that your app is going to need for external
+communication. See the https://docs.docker.com/samples/[Docker examples] for more information on Dockerizing popular
+app formats.
+
+To build this Docker image from the `Dockerfile`, run:
+
+[source,bash]
+----
+docker build -t simple-web-app:latest .
+----
+
+Now you can test you container to see if it is working:
+
+[source,bash]
+----
+docker run --rm -p 8080:8080 simple-web-app:latest
+----
+
+This starts the newly built container and links port 8080 on your machine to the container's port 8080. You should see
+the following output when you run the above command:
+
+----
+> docker_web_app@1.0.0 start /usr/app
+> node server.js
+
+Running on http://0.0.0.0:8080
+----
+
+Next, open the app in your browser:
+
+[source,bash]
+----
+open http://localhost:8080
+----
+
+You should be able to see the "Hello World!" message from the server.
+
+=== Dockerfile Tips
+
+Some things to note when writing up your `Dockerfile` and building your app:
+
+- Ensure your `Dockerfile` starts your app in the foreground so the container doesn't shutdown after app startup.
+- Your app should log to `stdout`/`stderr` to aid in debugging it after deployment to GKE.
+
+=== Push the Docker image
+
+So far you've successfully built a Docker image on your local computer. Now it's time to push the image to your private
+https://cloud.google.com/container-registry/[Google Container Registry], so it can be deployed from other locations,
+such as GKE.
+
+First, configure your local Docker client to be able to authenticate to Container Registry (note: you'll only need to
+do this step once):
+
+[source,bash]
+----
+export PROJECT_ID="$(gcloud config get-value project -q)"
+gcloud auth configure-docker
+----
+
+Next, tag the local Docker image for uploading:
+
+[source,bash]
+----
+docker tag simple-web-app:latest "gcr.io/${PROJECT_ID}/simple-web-app:v1"
+----
+
+Finally, push the Docker image to your private Container Registry:
+
+[source,bash]
+----
+docker push "gcr.io/${PROJECT_ID}/simple-web-app:v1"
+----
+
+=== Launch a GKE Cluster
+
+Now you've successfully pushed the Docker image to the private Container Registry, you need to launch a
+https://cloud.google.com/kubernetes-engine/[Google Kubernetes Engine (GKE)] cluster. You can quickly spin up a
+production-grade GKE cluster using the https://github.com/gruntwork-io/terraform-google-gke[terraform-google-gke modules]
+from the Gruntwork Service Catalog.
+
+First, create a `terraform` directory:
+
+[source,bash]
+----
+mkdir -p terraform
+cd terraform
+----
+
+Then create a `main.tf` file with the following code:
+
+.terraform/main.tf
+[source,hcl]
+----
+provider "google" {
+  version = "~> 2.3.0"
+  project = "${var.project}"
+  region  = "${var.region}"
+}
+
+provider "google-beta" {
+  version = "~> 2.3.0"
+  project = "${var.project}"
+  region  = "${var.region}"
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
+# DEPLOY A PRIVATE CLUSTER IN GOOGLE CLOUD PLATFORM
+# ---------------------------------------------------------------------------------------------------------------------
+
+module "gke_cluster" {
+  # Use a recent version of the gke-cluster module
+  source = "git::git@github.com:gruntwork-io/terraform-google-gke.git//modules/gke-cluster?ref=v0.1.0"
+
+  name = "${var.cluster_name}"
+
+  project  = "${var.project}"
+  location = "${var.location}"
+  network  = "${module.vpc_network.network}"
+
+  # We're deploying the cluster in the 'public' subnetwork to allow outbound internet access
+  # See the network access tier table for full details:
+  # https://github.com/gruntwork-io/terraform-google-network/tree/master/modules/vpc-network#access-tier
+  subnetwork = "${module.vpc_network.public_subnetwork}"
+
+  # When creating a private cluster, the 'master_ipv4_cidr_block' has to be defined and the size must be /28
+  master_ipv4_cidr_block = "${var.master_ipv4_cidr_block}"
+
+  # This setting will make the cluster private
+  enable_private_nodes = "true"
+
+  # To make testing easier, we keep the public endpoint available. In production, we highly recommend restricting access to only within the network boundary, requiring your users to use a bastion host or VPN.
+  disable_public_endpoint = "false"
+
+  # With a private cluster, it is highly recommended to restrict access to the cluster master
+  # However, for example purposes we will allow all inbound traffic.
+  master_authorized_networks_config = [{
+    cidr_blocks = [{
+      cidr_block   = "0.0.0.0/0"
+      display_name = "all-for-testing"
+    }]
+  }]
+
+  cluster_secondary_range_name = "${module.vpc_network.public_subnetwork_secondary_range_name}"
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
+# CREATE A NODE POOL
+# ---------------------------------------------------------------------------------------------------------------------
+
+resource "google_container_node_pool" "node_pool" {
+  provider = "google-beta"
+
+  name     = "private-pool"
+  project  = "${var.project}"
+  location = "${var.location}"
+  cluster  = "${module.gke_cluster.name}"
+
+  initial_node_count = "1"
+
+  autoscaling {
+    min_node_count = "1"
+    max_node_count = "5"
+  }
+
+  management {
+    auto_repair  = "true"
+    auto_upgrade = "true"
+  }
+
+  node_config {
+    image_type   = "COS"
+    machine_type = "n1-standard-1"
+
+    labels = {
+      private-pools-example = "true"
+    }
+
+    # Add a private tag to the instances. See the network access tier table for full details:
+    # https://github.com/gruntwork-io/terraform-google-network/tree/master/modules/vpc-network#access-tier
+    tags = [
+      "${module.vpc_network.private}",
+      "private-pool-example",
+    ]
+
+    disk_size_gb = "30"
+    disk_type    = "pd-standard"
+    preemptible  = false
+
+    service_account = "${module.gke_service_account.email}"
+
+    oauth_scopes = [
+      "https://www.googleapis.com/auth/cloud-platform",
+    ]
+  }
+
+  lifecycle {
+    ignore_changes = ["initial_node_count"]
+  }
+
+  timeouts {
+    create = "30m"
+    update = "30m"
+    delete = "30m"
+  }
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
+# CREATE A CUSTOM SERVICE ACCOUNT TO USE WITH THE GKE CLUSTER
+# ---------------------------------------------------------------------------------------------------------------------
+
+module "gke_service_account" {
+  # Use a recent version of the gke-service-account module
+  source = "git::git@github.com:gruntwork-io/terraform-google-gke.git//modules/gke-service-account?ref=v0.1.0"
+
+  name        = "${var.cluster_service_account_name}"
+  project     = "${var.project}"
+  description = "${var.cluster_service_account_description}"
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
+# ALLOW THE CUSTOM SERVICE ACCOUNT TO PULL IMAGES FROM THE GCR REPO
+# ---------------------------------------------------------------------------------------------------------------------
+
+resource "google_storage_bucket_iam_member" "member" {
+  bucket = "artifacts.${var.project}.appspot.com"
+  role   = "roles/storage.objectViewer"
+  member = "serviceAccount:${module.gke_service_account.email}"
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
+# CREATE A NETWORK TO DEPLOY THE CLUSTER TO
+# ---------------------------------------------------------------------------------------------------------------------
+
+module "vpc_network" {
+  source = "git::git@github.com:gruntwork-io/terraform-google-network.git//modules/vpc-network?ref=v0.1.0"
+
+  name_prefix = "${var.cluster_name}-network-${random_string.suffix.result}"
+  project     = "${var.project}"
+  region      = "${var.region}"
+
+  cidr_block           = "${var.vpc_cidr_block}"
+  secondary_cidr_block = "${var.vpc_secondary_cidr_block}"
+}
+
+# Use a random suffix to prevent overlap in network names
+resource "random_string" "suffix" {
+  length  = 4
+  special = false
+  upper   = false
+}
+----
+
+The `main.tf` file is responsible for creating all of the GCP resources. After that, create a `variables.tf` file with
+input variables:
+
+.terraform/variables.tf
+[source,hcl]
+----
+# ---------------------------------------------------------------------------------------------------------------------
+# REQUIRED PARAMETERS
+# These variables are expected to be passed in by the operator.
+# ---------------------------------------------------------------------------------------------------------------------
+
+variable "project" {
+  description = "The project ID where all resources will be launched."
+}
+
+variable "location" {
+  description = "The location (region or zone) of the GKE cluster."
+}
+
+variable "region" {
+  description = "The region for the network. If the cluster is regional, this must be the same region. Otherwise, it should be the region of the zone."
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
+# OPTIONAL PARAMETERS
+# These parameters have reasonable defaults.
+# ---------------------------------------------------------------------------------------------------------------------
+
+variable "cluster_name" {
+  description = "The name of the Kubernetes cluster."
+  default     = "example-private-cluster"
+}
+
+variable "cluster_service_account_name" {
+  description = "The name of the custom service account used for the GKE cluster. This parameter is limited to a maximum of 28 characters."
+  default     = "example-private-cluster-sa"
+}
+
+variable "cluster_service_account_description" {
+  description = "A description of the custom service account used for the GKE cluster."
+  default     = "Example GKE Cluster Service Account managed by Terraform"
+}
+
+variable "master_ipv4_cidr_block" {
+  description = "The IP range in CIDR notation (size must be /28) to use for the hosted master network. This range will be used for assigning internal IP addresses to the master or set of masters, as well as the ILB VIP. This range must not overlap with any other ranges in use within the cluster's network."
+  default     = "10.5.0.0/28"
+}
+
+# For the example, we recommend a /16 network for the VPC. Note that when changing the size of the network,
+# you will have to adjust the 'cidr_subnetwork_width_delta' in the 'vpc_network' -module accordingly.
+variable "vpc_cidr_block" {
+  description = "The IP address range of the VPC in CIDR notation. A prefix of /16 is recommended. Do not use a prefix higher than /27."
+  default     = "10.3.0.0/16"
+}
+
+# For the example, we recommend a /16 network for the secondary range. Note that when changing the size of the network,
+# you will have to adjust the 'cidr_subnetwork_width_delta' in the 'vpc_network' -module accordingly.
+variable "vpc_secondary_cidr_block" {
+  description = "The IP address range of the VPC's secondary address range in CIDR notation. A prefix of /16 is recommended. Do not use a prefix higher than /27."
+  default     = "10.4.0.0/16"
+}
+----
+
+And an `outputs.tf` file with output variables:
+
+.terraform/outputs.tf
+[source,hcl]
+----
+output "cluster_endpoint" {
+  description = "The IP address of the cluster master."
+  sensitive   = true
+  value       = "${module.gke_cluster.endpoint}"
+}
+
+output "client_certificate" {
+  description = "Public certificate used by clients to authenticate to the cluster endpoint."
+  value       = "${module.gke_cluster.client_certificate}"
+}
+
+output "client_key" {
+  description = "Private key used by clients to authenticate to the cluster endpoint."
+  sensitive   = true
+  value       = "${module.gke_cluster.client_key}"
+}
+
+output "cluster_ca_certificate" {
+  description = "The public certificate that is the root of trust for the cluster."
+  sensitive   = true
+  value       = "${module.gke_cluster.cluster_ca_certificate}"
+}
+----
+
+Now you can use Terraform to create the resources:
+
+. Fill in a `default` value for any variable in `variables.tf` that doesn't already have one.
+. Run `terraform init`.
+. Run `terraform plan`.
+. If the plan looks good, run `terraform apply`.
+
+Terraform will begin to create the GCP resources. This process can take several minutes, so be patient.
+
+=== Deploy the Dockerized App
+
+To deploy our Dockerized App on the GKE cluster, you can use the `kubectl` CLI tool to create a
+https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/[Kubernetes Pod]. A pod is the smallest deployable
+object in the Kubernetes object model and will contain only your `simple-web-app` Docker image.
+
+First, configure `kubectl` to use the newly created cluster:
+
+[source,bash]
+----
+gcloud container clusters get-credentials <YOUR_CLUSTER_NAME>
+----
+
+Be sure to substitute `<YOUR_CLUSTER_NAME>` with the name of your GKE cluster.
+
+Use the `kubectl run` command to create a
+https://kubernetes.io/docs/concepts/workloads/controllers/deployment/[Deployment] named `simple-web-app-deploy` on your
+cluster:
+
+[source,bash]
+----
+kubectl run simple-web-app-deploy --image="gcr.io/${PROJECT_ID}/simple-web-app:v1" --port 8080
+----
+
+To see the Pod created by the last command, you can run:
+
+[source,bash]
+----
+kubectl get pods
+----
+
+The output should look similar to the following:
+
+----
+NAME                                     READY     STATUS             RESTARTS   AGE
+simple-web-app-deploy-7fb787c449-vgtf6   0/1       ContainerCreating  0          7s
+----
+
+Now you need to expose the app to the public Internet.
+
+=== Attach a Load Balancer
+
+So far you've deployed the Dockerized app, but it is not currently accessible from the public Internet. This is because
+you have not assigned an external IP address or load balancer to the Pod. To fix this, run the following command:
+
+[source,bash]
+----
+kubectl expose deployment simple-web-app-deploy --type=LoadBalancer --port 80 --target-port 8080
+----
+
+=== Cleaning Up
+
+Once you're done testing, you may want to clean up all the infrastructure you've deployed so GCP doesn't charge you
+money for it.
+
+First, delete the Kubernetes Service:
+
+[source,bash]
+----
+kubectl delete service simple-web-app-deploy
+----
+
+This will destroy the Load Balancer created during the previous step.
+
+Next, to destroy the GKE cluster, run the `terraform destroy` command:
+
+[source,bash]
+----
+terraform destroy
+----
+
+IMPORTANT: This is a destructive command that will forcibly terminate and destroy your GKE cluster!
+
+[[next_steps]]
+== Next steps
+
+Now that you have your application deployed, you can start deploying other parts of your infrastructure by using the
+following guides:
+
+. `How to deploy a production grade database on GCP` _(coming soon!)_
+. `How to deploy a production grade distributed cache on GCP` _(coming soon!)_
