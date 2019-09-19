@@ -1937,6 +1937,11 @@ body .guides .guides-section-white {
     font-size: 35px;
     line-height: normal;
     text-align: center;
+
+    // Limit width so typography remains readable on wide screens: https://ux.stackexchange.com/a/108803/4869
+    max-width: 760px;
+    margin: 0 auto;
+
     & p {
       font-weight: 600;
       margin-bottom: 0px;
@@ -2021,7 +2026,7 @@ body .guides .guides-section-white {
   line-height: 1.38;
 
   // Limit width so typography remains readable on wide screens: https://ux.stackexchange.com/a/108803/4869
-  max-width: 42em;
+  max-width: 760px;
   margin: 0 auto;
 
   .sect2 {
