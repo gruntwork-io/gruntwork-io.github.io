@@ -257,19 +257,19 @@ https://kubernetes.io/docs/reference/kubectl/overview/[kubectl] is the official 
 working with Kubernetes. For example, to deploy the https://hub.docker.com/r/training/webapp[training/webapp] Docker
 container (a simple "Hello, World" webapp) and have it listen on port 5000, you could run:
 
+[source,bash]
 ----
-$ kubectl run webapp \
-    --image=training/webapp:latest \
-    --port 5000 \
-    --generator=run-pod/v1
+kubectl run webapp \
+  --image=training/webapp:latest \
+  --port 5000 \
+  --generator=run-pod/v1
 ----
 
 And to see the pods running in your cluster, you could run:
 
+[source,bash]
 ----
-$ kubectl get pods
-NAME     READY   STATUS    RESTARTS   AGE
-webapp   1/1     Running   0          71s
+kubectl get pods
 ----
 
 To be able to authenticate to different EKS clusters or as different users, you can create one or more `kubectl`
@@ -656,6 +656,7 @@ https://aws.amazon.com/cli/[AWS CLI]::
   `1.16.232`). See https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html[Installing the AWS CLI] for
   setup instructions. To use it, you fist run the `update-kubeconfig` command:
 +
+[source,bash]
 ----
 aws eks update-kubeconfig --region <AWS_REGION> --name <EKS_CLUSTER_NAME>
 ----
@@ -672,6 +673,7 @@ https://eksctl.io[eksctl]::
   https://eksctl.io/introduction/installation/[these instructions]. To authenticate with `eksctl`, you run the
   `eksctl utils write-kubeconfig` command:
 +
+[source,bash]
 ----
 eksctl utils write-kubeconfig --region <AWS_REGION> --name=<EKS_CLUSTER_NAME>
 ----
@@ -686,6 +688,7 @@ https://github.com/gruntwork-io/kubergrunt[kubergrunt]::
   https://github.com/gruntwork-io/kubergrunt/releases[kubergrunt releases] page. The usage is very similar to the AWS
   CLI. You first run `kubergrunt eks configure`:
 +
+[source,bash]
 ----
 kubergrunt eks configure --eks-cluster-arn <EKS_CLUSTER_ARN>
 ----
@@ -982,9 +985,10 @@ Once your updated `vpc-app` wrapper module is working the way you want, submit a
 into the `master` branch, and create a new versioned release by using a Git tag. For example, to create a `v0.5.0`
 release:
 
+[source,bash]
 ----
-$ git tag -a "v0.5.0" -m "Added tagging and DNS forwarding for EKS"
-$ git push --follow-tags
+git tag -a "v0.5.0" -m "Added tagging and DNS forwarding for EKS"
+git push --follow-tags
 ----
 
 NOTE: This guide will use https://github.com/gruntwork-io/terragrunt[Terragrunt] and its associated file and folder
@@ -1006,9 +1010,10 @@ terraform {
 
 And run `terragrunt apply` to deploy the changes:
 
+[source,bash]
 ----
-$ cd infrastructure-live/production/us-east-2/stage/networking/vpc-app
-$ terragrunt apply
+cd infrastructure-live/production/us-east-2/stage/networking/vpc-app
+terragrunt apply
 ----
 
 === Configure the control plane
@@ -1340,6 +1345,7 @@ https://github.com/gruntwork-io/module-security/tree/master/modules/ssh-grunt[ss
 
 To build an AMI from this Packer template, you run:
 
+[source,bash]
 ----
 packer build eks-node.json
 ----
@@ -1788,9 +1794,10 @@ At this point, run manual and automated tests for your code. Once your `eks-clus
 want, submit a pull request, get your changes merged into the `master` branch, and create a new versioned release by
 using a Git tag:
 
+[source,bash]
 ----
-$ git tag -a "v0.6.0" -m "Added eks-cluster module"
-$ git push --follow-tags
+git tag -a "v0.6.0" -m "Added eks-cluster module"
+git push --follow-tags
 ----
 
 Head over to your `infrastructure-live` repo and create a `terragrunt.hcl` file to deploy your EKS cluster in one of
@@ -1870,9 +1877,10 @@ include {
 
 And run `terragrunt apply` to deploy the EKS cluster:
 
+[source,bash]
 ----
-$ cd infrastructure-live/stage/us-east-2/stage/services/eks-cluster
-$ terragrunt apply
+cd infrastructure-live/stage/us-east-2/stage/services/eks-cluster
+terragrunt apply
 ----
 
 // TODO: Commented out for now. This probably belongs in a separate guide on how to deploy services on top of
@@ -1898,6 +1906,7 @@ At this point, you can start interacting with your EKS cluster using `kubectl`. 
 authenticate to the cluster. Here's an example of how to do that using
 https://github.com/gruntwork-io/kubergrunt[kubergrunt]:
 
+[source,bash]
 ----
 kubergrunt eks configure --eks-cluster-arn <EKS_CLUSTER_ARN>
 ----
@@ -1907,6 +1916,7 @@ end of the `terragrunt apply`.
 
 Now you can start running typical `kubectl` commands:
 
+[source,bash]
 ----
 kubectl get nodes
 ----
@@ -1933,6 +1943,7 @@ Updating the worker nodes::
   https://github.com/gruntwork-io/kubergrunt#deploy[kubergrunt deploy] command, which can do a zero-downtime rolling
   deployment of the worker node Auto Scaling Group:
 +
+[source,bash]
 ----
 kubergrunt eks deploy --region <AWS_REGION> --asg-name <AUTO_SCALING_GROUP_NAME>
 ----

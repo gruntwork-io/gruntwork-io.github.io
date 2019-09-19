@@ -738,9 +738,10 @@ for instructions.
 Once the module is working the way you want, submit a pull request, get your changes merged into the `master` branch,
 and create a new versioned release by using a Git tag. For example, to create a `v0.3.0` release:
 
+[source,bash]
 ----
-$ git tag -a "v0.3.0" -m "Created vpc-mgmt module"
-$ git push --follow-tags
+git tag -a "v0.3.0" -m "Created vpc-mgmt module"
+git push --follow-tags
 ----
 
 [[pick_deployment_option]]
@@ -834,9 +835,10 @@ include {
 
 Deploy the VPC by running `terragrunt apply`:
 
+[source,bash]
 ----
-$ cd infrastructure-live/production/us-east-2/prod/networking/vpc-mgmt
-$ terragrunt apply
+cd infrastructure-live/production/us-east-2/prod/networking/vpc-mgmt
+terragrunt apply
 ----
 
 [[deploy_application_vpcs]]
@@ -1029,9 +1031,10 @@ for instructions.
 Once the module is working the way you want, submit a pull request, get your changes merged into the `master` branch,
 and create a new versioned release by using a Git tag. For example, to create a `v0.4.0` release:
 
+[source,bash]
 ----
-$ git tag -a "v0.4.0" -m "Created vpc-app module"
-$ git push --follow-tags
+git tag -a "v0.4.0" -m "Created vpc-app module"
+git push --follow-tags
 ----
 
 [[configure_wrapper_module_app]]
@@ -1097,9 +1100,10 @@ include {
 
 Deploy the VPC by running `terragrunt apply`:
 
+[source,bash]
 ----
-$ cd infrastructure-live/production/us-east-2/prod/networking/vpc-app
-$ terragrunt apply
+cd infrastructure-live/production/us-east-2/prod/networking/vpc-app
+terragrunt apply
 ----
 
 [[deploy_bastion_host]]
@@ -1114,8 +1118,9 @@ Check out the `How to deploy a production-grade bastion host on AWS` guide _(com
 In each of your production accounts, use https://github.com/gruntwork-io/cloud-nuke[cloud-nuke] to remove the Default
 VPC and Default Security Group rules:
 
+[source,bash]
 ----
-$ cloud-nuke defaults-aws
+cloud-nuke defaults-aws
 ----
 
 [[next_steps]]
