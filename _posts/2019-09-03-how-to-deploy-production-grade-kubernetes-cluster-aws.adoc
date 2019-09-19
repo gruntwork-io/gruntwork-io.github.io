@@ -66,11 +66,11 @@ This guide consists of four main sections:
 <<production_grade_design>>::
   An overview of how to configure a secure, scalable, highly available Kubernetes cluster that you can rely on in
   production. To get a sense of what production-grade means, check out
-  link:/guides/foundations/how-to-use-gruntwork-service-catalog#production_grade_infra_checklist[The production-grade infrastructure checklist].
+  link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#production_grade_infra_checklist[The production-grade infrastructure checklist].
 
 <<deployment_walkthrough>>::
-  A step-by-step guide to deploying a production-grade Kubernetes cluster in AWS using code from the Gruntwork Service
-  Catalog.
+  A step-by-step guide to deploying a production-grade Kubernetes cluster in AWS using code from the Gruntwork
+  Infrastructure as Code Library.
 
 <<next_steps>>::
   What to do once you've got your Kubernetes cluster deployed.
@@ -824,25 +824,25 @@ https://docs.projectcalico.org/v3.9/introduction/[calico] or https://istio.io[is
 // not natively support NetworkPolicy
 
 Let's now walk through how to deploy a production-grade Kubernetes cluster in AWS, fully defined and managed as code,
-using the Gruntwork Service Catalog.
+using the Gruntwork Infrastructure as Code Library.
 
 [[pre_requisites]]
 === Pre-requisites
 
 This walkthrough has the following pre-requistes:
 
-Gruntwork Service Catalog::
-  This guide uses code from the https://gruntwork.io/infrastructure-as-code-library/[Gruntwork Service Catalog], as it
+Gruntwork Infrastructure as Code Library::
+  This guide uses code from the https://gruntwork.io/infrastructure-as-code-library/[Gruntwork Infrastructure as Code Library], as it
   implements most of the production-grade design for you out of the box. Make sure to read
-  link:/guides/foundations/how-to-use-gruntwork-service-catalog[How to use the Gruntwork Service Catalog].
+  link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library[How to use the Gruntwork Infrastructure as Code Library].
 +
-IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access the Gruntwork Service Catalog.
+IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access the Gruntwork Infrastructure as Code Library.
 
 Terraform::
   This guide uses https://www.terraform.io/[Terraform] to define and manage all the infrastructure as code. If you're
   not familiar with Terraform, check out https://blog.gruntwork.io/a-comprehensive-guide-to-terraform-b3d32832baca[A
   Comprehensive Guide to Terraform], https://training.gruntwork.io/p/terraform[A Crash Course on Terraform], and
-  link:/guides/foundations/how-to-use-gruntwork-service-catalog[How to Use the Gruntwork Service Catalog].
+  link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library[How to Use the Gruntwork Infrastructure as Code Library].
 
 Python and Kubergrunt::
   Some of the Terraform modules used in this guide call out to Python code and/or
@@ -853,7 +853,7 @@ Docker and Packer::
   This guide assumes you are deploying a Kubernetes cluster for use with https://www.docker.com[Docker]. The guide also
   uses https://www.packer.io[Packer] to build VM images. If you're not familiar with Docker or Packer, check out
   https://training.gruntwork.io/p/a-crash-course-on-docker-packer[A Crash Course on Docker and Packer] and
-  link:/guides/foundations/how-to-use-gruntwork-service-catalog[How to Use the Gruntwork Service Catalog].
+  link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library[How to Use the Gruntwork Infrastructure as Code Library].
 
 AWS accounts::
   This guide deploys infrastructure into one or more AWS accounts. Check out the
@@ -868,7 +868,7 @@ The first step is to deploy a VPC. Follow the instructions in
 link:/guides/networking/how-to-configure-production-grade-vpc-aws[How to deploy a production-grade VPC on AWS] to use
 `module-vpc` to create a VPC setup that looks like this:
 
-.A production-grade VPC setup deployed using module-vpc from the Gruntwork Service Catalog
+.A production-grade VPC setup deployed using module-vpc from the Gruntwork Infrastructure as Code Library
 image::/assets/img/guides/vpc/vpc-diagram.png[]
 
 After following this guide, you should have `vpc-app` wrapper module in your `infrastructure-modules` repo:
@@ -972,9 +972,9 @@ module "dns_mgmt_to_app" {
 ----
 
 At this point, you'll want to test your code. See
-link:/guides/foundations/how-to-use-gruntwork-service-catalog#manual_tests_terraform[Manual tests for Terraform code]
+link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#manual_tests_terraform[Manual tests for Terraform code]
 and
-link:/guides/foundations/how-to-use-gruntwork-service-catalog#automated_tests_terraform[Automated tests for Terraform code]
+link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#automated_tests_terraform[Automated tests for Terraform code]
 for instructions.
 
 Once your updated `vpc-app` wrapper module is working the way you want, submit a pull request, get your changes merged
@@ -989,10 +989,10 @@ git push --follow-tags
 
 NOTE: This guide will use https://github.com/gruntwork-io/terragrunt[Terragrunt] and its associated file and folder
 structure to deploy Terraform modules. Please note that *Terragrunt is NOT required for using Terraform modules from
-the Gruntwork Service Catalog.* Check out
-link:/guides/foundations/how-to-use-gruntwork-service-catalog[How to Use the Gruntwork Service Catalog] for instructions
+the Gruntwork Infrastructure as Code Library.* Check out
+link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library[How to Use the Gruntwork Infrastructure as Code Library] for instructions
 on alternative options, such as how to
-link:/guides/foundations/how-to-use-gruntwork-service-catalog#deploy_using_plain_terraform[Deploy using plain Terraform].
+link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#deploy_using_plain_terraform[Deploy using plain Terraform].
 
 Head over to your `infrastructure-live` repo and update the `terragrunt.hcl` file to deploy this new version:
 

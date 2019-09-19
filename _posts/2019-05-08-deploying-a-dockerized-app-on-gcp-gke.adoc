@@ -65,7 +65,7 @@ This guide consists of three main sections:
   deployments, auto scaling, auto healing, RBAC, and more.
 
 <<deployment_walkthrough>>::
-  A step-by-step guide to deploying a Dockerized app on GKE using code from the Gruntwork Service Catalog.
+  A step-by-step guide to deploying a Dockerized app on GKE using code from the Gruntwork Infrastructure as Code Library.
 
 <<next_steps>>::
   What to do once you've got your app deployed.
@@ -84,7 +84,7 @@ deployments, auto scaling, auto healing, RBAC, and more.
 == Deployment walkthrough
 
 Let's now walk through how to deploy a production-grade Kubernetes cluster in AWS, fully defined and managed as code,
-using the Gruntwork Service Catalog.
+using the Gruntwork Infrastructure as Code Library.
 
 [[pre_requisites]]
 === Pre-requisites
@@ -95,7 +95,7 @@ Terraform::
   This guide uses https://www.terraform.io/[Terraform] to define and manage all the infrastructure as code. If you're
   not familiar with Terraform, check out https://blog.gruntwork.io/a-comprehensive-guide-to-terraform-b3d32832baca[A
   Comprehensive Guide to Terraform], https://training.gruntwork.io/p/terraform[A Crash Course on Terraform], and
-  link:/guides/foundations/how-to-use-gruntwork-service-catalog[How to Use the Gruntwork Service Catalog].
+  link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library[How to Use the Gruntwork Infrastructure as Code Library].
 
 Python and Kubergrunt::
   Some of the Terraform modules used in this guide call out to Python code and/or
@@ -106,7 +106,7 @@ Docker and Packer::
   This guide assumes you are deploying a Kubernetes cluster for use with https://www.docker.com[Docker]. The guide also
   uses https://www.packer.io[Packer] to build VM images. If you're not familiar with Docker or Packer, check out
   https://training.gruntwork.io/p/a-crash-course-on-docker-packer[A Crash Course on Docker and Packer] and
-  link:/guides/foundations/how-to-use-gruntwork-service-catalog[How to Use the Gruntwork Service Catalog].
+  link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library[How to Use the Gruntwork Infrastructure as Code Library].
 
 GCP::
   You will need a GCP account with billing enabled. There is a https://cloud.google.com/free/[free tier] that
@@ -264,7 +264,7 @@ docker push "gcr.io/${PROJECT_ID}/simple-web-app:v1"
 Now you've successfully pushed the Docker image to the private Container Registry, you need to launch a
 https://cloud.google.com/kubernetes-engine/[Google Kubernetes Engine (GKE)] cluster. You can quickly spin up a
 production-grade GKE cluster using the https://github.com/gruntwork-io/terraform-google-gke[terraform-google-gke modules]
-from the Gruntwork Service Catalog.
+from the Gruntwork Infrastructure as Code Library.
 
 First, create a `terraform` directory:
 
