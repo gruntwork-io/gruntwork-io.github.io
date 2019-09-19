@@ -1,7 +1,18 @@
 /**
- * Javascript specially for the IaC Library page.
+ * Javascript specially for the search bad and filters used in the
+ * IaC Library page and the deployment guides page.
  */
 (function () {
+
+  function initialEntry() {
+    $('#no-matches').hide();
+    $('#no-azure-results').hide();
+    // Select AWS cloud by default on page load
+    selectCloud($('.cloud-filter #aws'));
+  }
+
+  // Initial entry on load
+  $(initialEntry);
 
   // Returns a function, that, as long as it continues to be invoked, will not
   // be triggered. The function will be called after it stops being called for
@@ -62,15 +73,6 @@
     }
     showItemsCount(searchEntry, searchEntry.entries.length, numSubmodules);
   }
-
-  function initialEntry() {
-    $('#no-matches').hide();
-    $('#no-azure-results').hide();
-    selectCloud($('.cloud-filter #aws'));
-  }
-
-  // Initial entry on load
-  $(initialEntry);
 
   /**
    * Function that where the search is being performed from
@@ -262,7 +264,6 @@
   /* Triggered on click of any cloud filtering buttons */
   $('.cloud-filter .filter').click(function () {
     const filterButton = $(this);
-
     selectCloud(filterButton);
   });
 
