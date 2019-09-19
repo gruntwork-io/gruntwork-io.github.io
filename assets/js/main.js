@@ -387,7 +387,7 @@ $(function(){
 });
 // open accordion for direct links to panel id
 $(window).load(function() {
-  if(location.pathname.indexOf('/guides') === -1) {
+  if(location.pathname.split('/')[1] !== 'guides') {
     var getHash = location.hash; //get hash from js object location
     function activateAccordion(id) {
       if (id.length)//check if hash isn't empty
