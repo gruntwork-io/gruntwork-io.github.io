@@ -387,30 +387,31 @@ $(function(){
 });
 // open accordion for direct links to panel id
 $(window).load(function() {
-  var getHash = location.hash; //get hash from js object location
-  var accordion = $('a[href="' + getHash + '"]');
-  $panelHeight = accordion.parents('.panel').height();
+  const getHash = location.hash; //get hash from js object location
 
-  //Handle cases that do not return a null height
-  if($panelHeight){
-    function activateAccordion(id) {
-      if (id.length)//check if hash isn't empty
-      {
-        $('html,body').animate({
-            scrollTop: accordion.parents('.panel').offset().top //scroll to accordion
-        }, 100, function () {
-            accordion.click(); //simulate click
-            accordion.parents('.panel').find('.panel-title a.no-scroll i.fa').addClass('panel-isOpen'); //point caret down for oepned panel
-        });
-      }
-      else{
-        //if no hash is called, open first panel
-        $('.panel-group .panel:first-child .panel-collapse').addClass('in');
-        $('.panel-group .panel:first-child .panel-title a.no-scroll i.fa').addClass('panel-isOpen');
-      }
-    };
+  function activateAccordion(id) {
+    const accordion = $('a[href="' + id + '"]');
+    const $panelHeight = accordion.parents('.panel').height();
+
+    //Handle cases that do not return a null height
+    if($panelHeight){
+        if (id.length)//check if hash isn't empty
+        {
+          $('html,body').animate({
+              scrollTop: accordion.parents('.panel').offset().top //scroll to accordion
+          }, 100, function () {
+              accordion.click(); //simulate click
+              accordion.parents('.panel').find('.panel-title a.no-scroll i.fa').addClass('panel-isOpen'); //point caret down for oepned panel
+          });
+        }
+        else{
+          //if no hash is called, open first panel
+          $('.panel-group .panel:first-child .panel-collapse').addClass('in');
+          $('.panel-group .panel:first-child .panel-title a.no-scroll i.fa').addClass('panel-isOpen');
+        }
+      };
+    }
     activateAccordion(getHash);
-  }
 });
 
 // Use regular expression to find the cookie we made. Inspired from https://stackoverflow.com/a/25490531
