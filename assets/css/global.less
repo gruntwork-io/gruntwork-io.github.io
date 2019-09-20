@@ -1367,10 +1367,13 @@ body .guides .guides-section-white {
 
 
 .guides-newsletter, .no-results {
-  padding: 1em;
+  padding: 5em 6em;
   font-size: 16px;
   color: @guides-font;
   display: inline-block;
+  @media (max-width: @screen-xs-max){
+    padding: 2em 0px;
+  }
   .modal-box {
     padding-bottom: 3em;
   }
