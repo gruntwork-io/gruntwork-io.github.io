@@ -13,7 +13,7 @@ custom_js:
               {% toc %} {{page.document | tocify_asciidoc}}
           </div>
         </div>
-        <div class="col-md-7 guides-section-white">
+        <div class="col-md-7 col-xs-12 guides-section-white">
           <ol class="breadcrumb text-center">
             {% assign crumbs = page.url | split: '/' %}
             <a href="/guides" ga-event-category="guide-{{ post.title | downcase}}" ga-event-action="deployment-guides">Production Deployment Guides</a>

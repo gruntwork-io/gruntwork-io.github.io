@@ -1367,12 +1367,12 @@ body .guides .guides-section-white {
 
 
 .guides-newsletter, .no-results {
-  padding: 5em 6em;
+  padding: 1em;
   font-size: 16px;
   color: @guides-font;
   display: inline-block;
   .modal-box {
-    width: 500px;
+    padding-bottom: 3em;
   }
   & .guides-input-box {
     background-color: #f5f9fa;
@@ -1675,7 +1675,7 @@ body .guides .guides-section-white {
 
 // Sections that have a blue background
 .section-blue {
-  background-color: #0FC0EF;	
+  background-color: #0FC0EF;
   color: #fff;
 }
 
@@ -2218,6 +2218,19 @@ body .guides .guides-section-white {
   @media (min-width: @screen-sm-min) {
     padding-top: 20px;
     padding-bottom: 20px;
+  }
+}
+
+.grunty-sub-footer {
+  @media (max-width: @screen-sm-min) {
+    font-size: 28px;
+    height: 445px;
+    label {
+      font-size: 28px;
+    }
+    img {
+      margin-top: -15px;
+    }
   }
 }
 
