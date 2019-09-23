@@ -391,19 +391,16 @@ $(window).load(function() {
 
   function activateAccordion(id) {
     const accordion = $('a[href="' + id + '"]');
-
     //Check panel class exists 
     if(accordion.length > 0 && accordion.parents('.panel').length > 0){
-      if (id.length)//check if hash isn't empty
-      {
+      if (id.length){ //check if hash isn't empty
         $('html,body').animate({
             scrollTop: accordion.parents('.panel').offset().top //scroll to accordion
         }, 100, function () {
             accordion.click(); //simulate click
             accordion.parents('.panel').find('.panel-title a.no-scroll i.fa').addClass('panel-isOpen'); //point caret down for oepned panel
         });
-      }
-      else{
+      } else {
         //if no hash is called, open first panel
         $('.panel-group .panel:first-child .panel-collapse').addClass('in');
         $('.panel-group .panel:first-child .panel-title a.no-scroll i.fa').addClass('panel-isOpen');
