@@ -1371,8 +1371,14 @@ body .guides .guides-section-white {
   font-size: 16px;
   color: @guides-font;
   display: inline-block;
-  @media (max-width: @screen-xs-max){
+  @media (max-width: 576px){
     padding: 2em 0px;
+    form {
+      padding: 0;
+      .btn {
+        padding: 10px !important;
+      }
+    }
   }
   .modal-box {
     padding-bottom: 3em;
