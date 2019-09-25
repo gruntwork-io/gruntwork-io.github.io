@@ -8,10 +8,16 @@ I read a lot of material in SEO, including going through a [guide to SEO](https:
   - Searching for site:gruntwork.io/guides will show us that our content is duplicated between the www and non www versions of the website. This is diluting our ranking. We need to add a canonical link to our headers
   - Our posts don't have meta descriptions
   - Our internal links usually have the same anchor text (the title of the guide), but Google interprets that as not being natural and will penalize us for that
-  - We don't have a [sitemap](https://support.google.com/webmasters/answer/183668?hl=en)
 - Many websites use rel=nofollow (blocks crawling and backlink ranking bonus) on all external content or on all of their comment section. This is so because linking to bad quality content penalizes their own ranking. We need to verify if it's the case before engaging in any comment marketing for SEO reasons since this nullifies SEO advantages (but might still be useful for driving users that will click on it). Backlinks are also more important from topically similar websites. Link in hashicorp >>>> link in reddit.
 - All links on a page have a [link equity](https://moz.com/learn/seo/what-is-link-equity) and our own internal links are competing for this equity. We need to add nofollow to any link that we think should not earn a share. Attention: we can be penalized for linking to bad quality content but also for linking too much to some content! We should dive deeper into this and see if this means we should add nofollow to most of our AWS docs links.
 - We could be more intentional about our robots.txt. Not crawling irrelevant pages or low performing pages raises the average performance of the website, which raises the ranking of the website.
+- The same applies to our [sitemap](https://support.google.com/webmasters/answer/183668?hl=en), there are some things [there](https://gruntwork.io/sitemap.xml) there don't seem like they should be crawled
+```
+<url>
+  <loc>https://www.gruntwork.io/assets/css/bootstrap/js/tests/visual/carousel.html</loc>
+  <lastmod>2018-10-30T22:34:51-07:00</lastmod>
+</url>
+```
 - Landing pages might not be a good idea after all. Thin content used to be good SEO practice (have multiple pages for each thing), but this does not have lots of advantages to users so now Google penalizes this. As a rule of thumb, what's good for users will be good for rankings since Google uses machine learning on user behavior. So we should watch things like time on page, bounce rate etc. identify low performing pages vs high performing pages and perhaps remove or improve low performing pages.
 
 ![https://moz.imgix.net/learn/guides/Moz-BGSEO-Ch4-01-outlines-01.svg?auto=format&ch=Width&fit=max&q=50&s=e236ac8928a1cd1940243f15ce7dbb6d](https://moz.imgix.net/learn/guides/Moz-BGSEO-Ch4-01-outlines-01.svg?auto=format&ch=Width&fit=max&q=50&s=e236ac8928a1cd1940243f15ce7dbb6d)
