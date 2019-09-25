@@ -98,6 +98,7 @@ Pros:
 
 - Allows comments to be posted without any login required.
 - Has integration to Akismet and reCaptcha. 
+- Renders everything server-side, which is better for SEO. Also, minimal page weight
 
 Cons:
 
@@ -115,6 +116,7 @@ A comment system based on GitHub Issues
 Pros:
 
 - Very easy to include on our page
+- We own the content
 
   
 Cons
