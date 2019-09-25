@@ -92,10 +92,9 @@ I read a lot of material in SEO, including going through a [guide to SEO](https:
 I actually don't think that making tags clickeable and adding more landing pages is a priority at this point. According to my research, the landing pages could even be harmful if not done correctly. My suggested approach is:
 
 
-
-1. Fix what's broken first, listed on first bullet point of take aways.
-2. Investigate if and how often we should use rel=nofollow and the advantages of optmizing breadcrumbs on guides
-3. Take the website on a tour through some of the Relevant Tools above
-4. List issues that arise from item 3. and prioritize them along with results of 2.
+1. Fix canonical urls
+2. Do a quick search on 404 intermediary urls and how problematic they can be
+3. Take the website on a tour through some of the Relevant Tools above, see if anything important pops up and reprioritize everything
+4. Investigate if and how often we should use rel=nofollow and the advantages of optmizing breadcrumbs on guides
 5. Create RFC on keyword research
 6. Create any more content
