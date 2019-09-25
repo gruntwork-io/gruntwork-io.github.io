@@ -7,7 +7,23 @@ I read a lot of material in SEO, including going through a [guide to SEO](https:
 - We currently have some broken stuff in our website that should take priority over trying to improve SEO by creating more content. Ranked by (my perceived) importance:
   - Searching for site:gruntwork.io/guides will show us that our content is duplicated between the www and non www versions of the website. This is diluting our ranking. We need to add a canonical link to our headers
   - Our posts don't have meta descriptions
-  - Our internal links usually have the same anchor text (the title of the guide), but Google interprets that as not being natural and will penalize us for that
+  - Our internal links usually have the same anchor text (the title of the guide), but Google interprets that as not being natural and will penalize us for that. While we do want the text we want to be ranked for to be represented, the question here is
+  ```
+  <a href="...">How to deploy a production-grade Kubernetes cluster on AWS</a>
+  <a href="...">How to deploy a production-grade Kubernetes cluster on AWS</a>
+  <a href="...">How to deploy a production-grade Kubernetes cluster on AWS</a>
+  ```
+  vs.
+  ```
+  our <a href="...">guide on deploying dockerized containers on AWS</a>
+  you can <a href="...">learn how to configure a Kubernetes cluster</a>
+  we have a <a href="...">whole deployment walkthrough for EKS</a>
+  ```
+
+  Quote from SEO guide I followed:
+
+    > The anchor text sends signals to search engines regarding the content of the destination page. For example, if I link to a page on my site using the anchor text “learn SEO,” that’s a good indicator to search engines that the targeted page is one at which people can learn about SEO. Be careful not to overdo it, though. Too many internal links using the same, keyword-stuffed anchor text can appear to search engines that you’re trying to manipulate a page’s ranking. It’s best to make anchor text natural rather than formulaic.
+
 - Many websites use rel=nofollow (blocks crawling and backlink ranking bonus) on all external content or on all of their comment section. This is so because linking to bad quality content penalizes their own ranking. We need to verify if it's the case before engaging in any comment marketing for SEO reasons since this nullifies SEO advantages (but might still be useful for driving users that will click on it). Backlinks are also more important from topically similar websites. Link in hashicorp >>>> link in reddit.
 - All links on a page have a [link equity](https://moz.com/learn/seo/what-is-link-equity) and our own internal links are competing for this equity. We need to add nofollow to any link that we think should not earn a share. Attention: we can be penalized for linking to bad quality content but also for linking too much to some content! We should dive deeper into this and see if this means we should add nofollow to most of our AWS docs links.
 - We could be more intentional about our robots.txt. Not crawling irrelevant pages or low performing pages raises the average performance of the website, which raises the ranking of the website.
