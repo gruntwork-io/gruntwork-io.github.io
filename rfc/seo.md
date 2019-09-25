@@ -7,6 +7,7 @@ I read a lot of material in SEO, including going through a [guide to SEO](https:
 - We currently have some broken stuff in our website that should take priority over trying to improve SEO by creating more content. Ranked by (my perceived) importance:
   - Searching for site:gruntwork.io/guides will show us that our content is duplicated between the www and non www versions of the website. This is diluting our ranking. We need to add a canonical link to our headers
   - Our posts don't have meta descriptions
+  - Because our guides url structure contain the category, one could navigate to `https://gruntwork.io/guides/kubernetes` which is a 404
   - Our internal links usually have the same anchor text (the title of the guide), but Google interprets that as not being natural and will penalize us for that. While we do want the text we want to be ranked for to be represented, the question here is
   ```
   <a href="...">How to deploy a production-grade Kubernetes cluster on AWS</a>
