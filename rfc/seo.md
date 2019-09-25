@@ -59,8 +59,14 @@ I read a lot of material in SEO, including going through a [guide to SEO](https:
 - [Google's Mobile Website Speed & Performance Tester](https://testmysite.withgoogle.com/intl/en-gb)
 - [Google Lighthouse](https://developers.google.com/web/tools/lighthouse/)  Google’s automated tool for measuring a website’s performance, accessibility, progressive web apps, and more
 - [Google Search Console](https://search.google.com/search-console/welcome) (Requires domain ownership verification)
--  [Optimizilla](https://imagecompressor.com/)or [ImageOptim](https://imageoptim.com/mac) Image compression
+- [Optimizilla](https://imagecompressor.com/)or [ImageOptim](https://imageoptim.com/mac) Image compression
 - [Link Explorer](https://moz.com/link-explorer) Free for up until a number of queries, checks link health
+- For keyword research
+    - [Google Trends](https://www.google.com/trends/)
+    - [Google Keyword Planner](http://adwords.google.com/keywordplanner)
+    - [AnswerThePublic](http://answerthepublic.com/)
+    - [SpyFu Keyword Research Tool](https://www.spyfu.com/)
+    - [Google Correlate](https://www.google.com/trends/correlate)
 
 
 
