@@ -27,7 +27,7 @@ Pros:
 - We can control the look and feel of the design
 
 - Very easy to install
-- Google indexes disqus comments based on relevance. Google focuses on the quality of the comment if it is good enough for the audience.
+- Google indexes disqus comments based on relevance. Google focuses on the quality of the comment if it is good enough for the audience. [ref](https://code-interactive.com/ad-in/2018/10/does-google-index-disqus-comments/)
 
 
 Cons
@@ -148,3 +148,6 @@ Utterances uses third-party cookies. If you run a privacy-focused browser or bro
 https://[*.]utteranc.es:443 Ref: https://robb.sh/posts/comments-utterances/
 
 N/B we can create a separate public repo to hold comments
+
+Conclusion:
+I think we can either use Utterances or Staticman. If we are more focused on a broader audience commenting on the posts not restricted to only github users, then staticman will be our best pick. 
