@@ -104,7 +104,7 @@ N/B We have to be careful of SQL injection attacks.
 
   
 
-1.  Gitmet [https://github.com/imsun/gitment](https://github.com/imsun/gitment)
+1.  Gitment [https://github.com/imsun/gitment](https://github.com/imsun/gitment)
 
 A comment system based on GitHub Issues
 
