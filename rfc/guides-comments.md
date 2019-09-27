@@ -18,13 +18,15 @@ Really good third party service and the most popular. It has 3 options:
 2. Analytics available for comments on the dashboard.
 3. We can control the look and feel of the design
 4. Very easy to install
-5. Google indexes disqus comments based on relevance. Google focuses on the quality of the comment if it is good enough for the audience. [ref](https://code-interactive.com/ad-in/2018/10/does-google-index-disqus-comments/)
+5. Google indexes disqus comments based on relevance. Google focuses on the quality of the comment if it is good enough for the audience. [ref1](https://code-interactive.com/ad-in/2018/10/does-google-index-disqus-comments/) [ref2](https://www.quora.com/Is-Disqus-actually-SEO-friendly) [ref3](https://www.quora.com/Does-Disqus-help-SEO-for-a-website)
 
 #### Cons
 1. Being a third party service, we don't know what our comments become and how disqus uses the data retrieved from the comments
 2. Disqus doesn't have a great track record on privacy
 3. Does not allow anonymous content
 4. It adds a lot of page weight. About 450kB of data
+
+> Indexing is not as good as if rendered from the server-side
 
 ### Just comments [https://just-comments.com/](https://just-comments.com/pricing.html)
 Also a third party service and very similar to Disqus
