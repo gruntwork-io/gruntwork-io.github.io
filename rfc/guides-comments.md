@@ -61,7 +61,9 @@ Also a third party service and very similar to Disqus
 7. Renders everything server-side, which is better for SEO. Also, minimal page weight
 
 #### Cons:
-1. Not sure if it is a downside but Staticman access to your Jekyll repository
+1. Staticman must access to our Jekyll repository
+2. Spamming- There is no form of authentication.
+   
 > N/B We have to be careful of XSS attacks..
 
 ### Gitment [https://github.com/imsun/gitment](https://github.com/imsun/gitment)
