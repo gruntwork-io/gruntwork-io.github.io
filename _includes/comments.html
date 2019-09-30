@@ -5,11 +5,28 @@
                 <h2 >Comments </h2>
             </div>
             <div class="center">
-                <a href="#" class="sm-icon fa fa-facebook"></a>
-                <a href="#" class="sm-icon fa fa-reddit"></a>
-                <a href="#" class="sm-icon fa fa-linkedin"></a>
-                <a href="#" class="sm-icon fa fa-twitter"></a>
-                <a href="#" class="sm-icon fa fa-yahoo"></a>
+                {% capture url %}{{ site.url }}{{ page.url }}{% endcapture %}
+                <p>{{url}}</p>
+                <a  href="https://www.facebook.com/sharer/sharer.php?u={{ url }}"
+                onclick="window.open(this.href, 'pop-up', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;"
+                title="Share on Facebook" >
+                <i class="sm-icon fa fa-facebook"></i>
+                </a>
+                <a  href="https://twitter.com/intent/tweet?text={{ page.title }}&url={{ url }}"
+                onclick="window.open(this.href, 'pop-up', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;"
+                title="Share on Twitter" >
+                <i class="sm-icon fa fa-twitter"></i>
+                </a>
+                <a  href="http://www.reddit.com/submit?url={{ url }}"
+                onclick="window.open(this.href, 'pop-up', 'left=20,top=20,width=900,height=500,toolbar=1,resizable=0'); return false;"
+                title="Share on Reddit" >
+                <i class="sm-icon fa fa-reddit-alien"> </i>
+                </a>
+                <a  href="https://www.linkedin.com/shareArticle?mini=true&url={{ url }}&title={{ page.title }}&summary={{ page.description }}&source={{ site.title }}"
+                onclick="window.open(this.href, 'pop-up', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;"
+                title="Share on LinkedIn" >
+                <i class="sm-icon fa fa-linkedin"></i>
+                </a>
             </div>
         </div>
     </div>
