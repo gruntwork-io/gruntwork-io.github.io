@@ -1,49 +1,59 @@
 ---
-layout: default
 custom_js:
 - prism
 - guides
 ---
-
-<div  class="post-bg">
-  <div class="container-fluid">
-      <div class="post-detail row equal">
-        <div class="col-md-2-5">
-          <div id="toc" class="js-scroll-with-user" data-scroll-after-selector=".navbar-default" data-scroll-until-selector=".guides-section-white">
-              {% toc %} {{page.document | tocify_asciidoc}}
-          </div>
-        </div>
-        <div class="col-md-7 col-xs-12 guides-section-white">
-          <ol class="breadcrumb text-center">
-            {% assign crumbs = page.url | split: '/' %}
-            <a href="/guides" ga-event-category="guide-{{ post.title | downcase}}" ga-event-action="deployment-guides">Production Deployment Guides</a>
-            {% for crumb in crumbs offset: 2 %}
-              {% if forloop.last %}
-                <a href="#"> / <span> {{ page.title | replace:'-',' ' }}</span></a>
-              {% else %}
-                <a href="/guides#{{ crumb }}" >/ <span>{{ crumb | replace:'-',' ' | capitalize }}</span></a>
-              {% endif %}
-            {% endfor %}
-          </ol>
-          <div class="post-title text-center">
-            <img class="img-center post-title-image" src="{{ page.image }}" alt="post logo">
-            <h1>{{ page.title }}</h1>
-            {% if page.tags %}
-              {% for tag in page.tags %}
-                <span class="badge badge-pill badge-default">
-                  {% capture tag-name %}{{tag | upcase }}{% endcapture %}
-                  {% if tag-name=="AWS" or tag-name=="GCP"  or tag-name=="GKE" %} {{ tag-name }} {% else %} {{tag-name | capitalize}}{% endif %}</span>
-              {% endfor %}
-            {% endif %}
-          </div>
-          <div class="post-content js-scroll-spy" data-scroll-spy-nav-selector="#toc">
-              {{ content }}
-          </div>
+<!doctype html>
+<html lang="en">
+    <head>
+        {% include head.html %}
+        <link rel="stylesheet" href="{{ '/assets/css/prism.css' | prepend: site.baseurl }}"/>
+    </head>
+    <body{% if page.slug %} class="{{ page.slug }}{% if page.slug != 'index-page' and page.slug !='how-it-works' and page.slug != 'guides' %} sub-page{% endif %}" {% endif %}>
+        {% include navbar.html %}
+        <div  class="post-bg">
+          <div class="container-fluid">
+              <div class="post-detail row equal">
+                <div class="col-md-2-5">
+                  <div id="toc" class="js-scroll-with-user" data-scroll-after-selector=".navbar-default" data-scroll-until-selector=".guides-section-white">
+                      {% toc %} {{page.document | tocify_asciidoc}}
+                  </div>
+                </div>
+                <div class="col-md-7 col-xs-12 guides-section-white">
+                  <ol class="breadcrumb text-center">
+                    {% assign crumbs = page.url | split: '/' %}
+                    <a href="/guides" ga-event-category="guide-{{ post.title | downcase}}" ga-event-action="deployment-guides">Production Deployment Guides</a>
+                    {% for crumb in crumbs offset: 2 %}
+                      {% if forloop.last %}
+                        <a href="#"> / <span> {{ page.title | replace:'-',' ' }}</span></a>
+                      {% else %}
+                        <a href="/guides#{{ crumb }}" >/ <span>{{ crumb | replace:'-',' ' | capitalize }}</span></a>
+                      {% endif %}
+                    {% endfor %}
+                  </ol>
+                  <div class="post-title text-center">
+                    <img class="img-center post-title-image" src="{{ page.image }}" alt="post logo">
+                    <h1>{{ page.title }}</h1>
+                    {% if page.tags %}
+                      {% for tag in page.tags %}
+                        <span class="badge badge-pill badge-default">
+                          {% capture tag-name %}{{tag | upcase }}{% endcapture %}
+                          {% if tag-name=="AWS" or tag-name=="GCP"  or tag-name=="GKE" %} {{ tag-name }} {% else %} {{tag-name | capitalize}}{% endif %}</span>
+                      {% endfor %}
+                    {% endif %}
+                  </div>
+                  <div class="post-content js-scroll-spy" data-scroll-spy-nav-selector="#toc">
+                      {{ content }}
+                  </div>
+                </div>
+            </div>
         </div>
       </div>
-  </div>
-</div>
-<div class="white-section center">
-  {% include newsletter.html %}
-</div>
-{% include grunty-sub-footer.html %}
+      <div class="white-section center">
+        {% include newsletter.html %}
+      </div>
+      {% include grunty-sub-footer.html %}
+      {% include footer.html %}
+      {% include scripts.html %}
+  </body>
+</html>
