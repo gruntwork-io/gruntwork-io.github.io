@@ -4,28 +4,45 @@
             <div class="center">
                 <h2 class="no-anchor">Comments </h2>
             </div>
-            <div class="center">
-                {% capture url %}{{ site.url }}{{ page.url }}{% endcapture %}
-                <a  href="https://www.facebook.com/sharer/sharer.php?u={{ url }}"
-                onclick="window.open(this.href, 'pop-up', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;"
-                title="Share on Facebook" >
-                <i class="sm-icon fa fa-facebook"></i>
-                </a>
-                <a  href="http://www.reddit.com/submit?url={{ url }}"
-                onclick="window.open(this.href, 'pop-up', 'left=20,top=20,width=900,height=500,toolbar=1,resizable=0'); return false;"
-                title="Share on Reddit" >
-                <i class="sm-icon fa fa-reddit-alien"> </i>
-                </a>
-                <a  href="https://www.linkedin.com/shareArticle?mini=true&url={{ url }}&title={{ page.title }}&summary={{ page.description }}&source={{ site.title }}"
-                onclick="window.open(this.href, 'pop-up', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;"
-                title="Share on LinkedIn" >
-                <i class="sm-icon fa fa-linkedin"></i>
-                </a>
-                <a  href="https://twitter.com/intent/tweet?text={{ page.title }}&url={{ url }}"
-                onclick="window.open(this.href, 'pop-up', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;"
-                title="Share on Twitter" >
-                <i class="sm-icon fa fa-twitter"></i>
-                </a>
+            <div class="center share-buttons">
+                <ul>
+                    {% capture url %}https://gruntwork.io/guides/kubernetes/how-to-deploy-production-grade-kubernetes-cluster-aws/#next_steps{% endcapture %}
+                    <li>
+                        <a  href="https://www.facebook.com/sharer/sharer.php?u={{ url }}"
+                        onclick="window.open(this.href, 'pop-up', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;"
+                        title="Share on Facebook" >
+                            <i class="sm-icon fa fa-facebook"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a  href="http://www.reddit.com/submit?url={{ url }}"
+                        onclick="window.open(this.href, 'pop-up', 'left=20,top=20,width=900,height=500,toolbar=1,resizable=0'); return false;"
+                        title="Share on Reddit" >
+                            <i class="sm-icon fa fa-reddit-alien"> </i>
+                        </a>
+                    </li>
+                    <li>
+                        <a  href="https://www.linkedin.com/shareArticle?mini=true&url={{ url }}&title={{ page.title }}&summary={{ page.description }}&source={{ site.title }}"
+                        onclick="window.open(this.href, 'pop-up', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;"
+                        title="Share on LinkedIn" >
+                            <i class="sm-icon fa fa-linkedin"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a  href="https://twitter.com/intent/tweet?text={{ page.title }}&url={{ url }}"
+                        onclick="window.open(this.href, 'pop-up', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;"
+                        title="Share on Twitter" >
+                            <i class="sm-icon fa fa-twitter"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="http://news.ycombinator.com/submitlink?u={{ url }}&t={{ page.title | default:'' | uri_escape}}"
+                        onclick="window.open(this.href, 'pop-up', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;"
+                        title="Share on Hackernews" >
+                            <i class="sm-icon fa fa-y-combinator"></i> 
+                        </a>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
