@@ -2,11 +2,10 @@
     <div class="center">
         <div class="col-md-3">
             <div class="center">
-                <h2 >Comments </h2>
+                <h2 class="no-anchor">Comments </h2>
             </div>
             <div class="center">
                 {% capture url %}{{ site.url }}{{ page.url }}{% endcapture %}
-                <p>{{url}}</p>
                 <a  href="https://www.facebook.com/sharer/sharer.php?u={{ url }}"
                 onclick="window.open(this.href, 'pop-up', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;"
                 title="Share on Facebook" >
