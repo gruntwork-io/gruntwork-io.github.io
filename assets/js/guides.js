@@ -47,7 +47,7 @@ $(document).ready(function () {
   };
 
   // Update window hash without causing a "jump." https://stackoverflow.com/a/14690177/483528
-  const updateHash = function (hash) {
+  const updateHash = function(hash) {
     if (history.replaceState) {
       history.replaceState(null, null, hash);
     } else {
@@ -58,7 +58,7 @@ $(document).ready(function () {
   // Show a dot next to the part of the TOC where the user has scrolled to. We can't use bootstrap's built-in ScrollSpy
   // because with Bootstrap 3.3.7, it only works with a Bootstrap Nav, whereas our TOC is auto-generated and does not
   // use Bootstrap Nav classes/markup.
-  const scrollSpy = function () {
+  const scrollSpy = function() {
     const content = $(".js-scroll-spy");
 
     const nav = getElementForDataSelector(content, 'scroll-spy-nav-selector', 'scrollSpy');
