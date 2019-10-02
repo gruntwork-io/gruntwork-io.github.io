@@ -47,7 +47,7 @@ $(document).ready(function () {
   };
 
   // Update window hash without causing a "jump." https://stackoverflow.com/a/14690177/483528
-  const updateHash = function(hash) {
+  const updateHash = function (hash) {
     if (history.replaceState) {
       history.replaceState(null, null, hash);
     } else {
@@ -58,7 +58,7 @@ $(document).ready(function () {
   // Show a dot next to the part of the TOC where the user has scrolled to. We can't use bootstrap's built-in ScrollSpy
   // because with Bootstrap 3.3.7, it only works with a Bootstrap Nav, whereas our TOC is auto-generated and does not
   // use Bootstrap Nav classes/markup.
-  const scrollSpy = function() {
+  const scrollSpy = function () {
     const content = $(".js-scroll-spy");
 
     const nav = getElementForDataSelector(content, 'scroll-spy-nav-selector', 'scrollSpy');
@@ -104,9 +104,52 @@ $(document).ready(function () {
     }
   };
 
+  /**
+   * Retrieves the scroll depth and returns it as percentage
+   */
+  function retrieveScrollDepth() {
+    return Math.floor(
+      ((window.pageYOffset + window.innerHeight) /
+        document.body.scrollHeight) * 100
+    )
+  }
+
+  /**
+   * Sends location and scroll depth to GA on event beforeunload
+   */
+  function exitPageView() {
+    let scrollDepth = retrieveScrollDepth();
+
+    ga('send', 'event', `Scrolling-${location.pathname}`, 'Scrolling', `label-${location.pathname}`, scrollDepth, {
+      nonInteractive: true
+    });
+  }
+
+  /**
+   * scroll tracking function
+   */
+  const scrollTracking = function () {
+
+    const timeThreshold = 15;
+
+    window.addEventListener("scroll", {scrolling: true});
+
+    window.addEventListener("beforeunload", exitPageView);
+
+    // *1000 to convert s to ms
+    setTimeout({ nonInteractive: false}, timeThreshold * 1000)
+
+  };
+
   $(window).scroll(moveToCWithScrolling);
   $(moveToCWithScrolling);
 
   $(window).scroll(scrollSpy);
   $(scrollSpy);
+
+  $(scrollTracking);
+
+  $('.post-detail img').on('click', function () {
+    window.open(this.src, '_blank')
+  })
 });
