@@ -21,7 +21,7 @@ custom_js:
               {% if forloop.last %}
                 <a href="#"> / <span> {{ page.title | replace:'-',' ' }}</span></a>
               {% else %}
-                <a href="/guides#{{ crumb }}" ga-on="click" ga-event-category="guide-{{ page.title | slugify }}" ga-event-action="deployment-guides-category">/ <span>{{ crumb | replace:'-',' ' | capitalize }}</span></a>
+                <a href="/guides#{{ crumb }}" ga-on="click" ga-event-category="guide-{{ page.title | slugify }}" ga-event-action="breadcrumb-{{ crumb }}">/ <span>{{ crumb | replace:'-',' ' | capitalize }}</span></a>
               {% endif %}
             {% endfor %}
           </ol>
