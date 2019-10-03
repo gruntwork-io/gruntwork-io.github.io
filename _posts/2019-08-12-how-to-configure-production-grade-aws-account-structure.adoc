@@ -538,7 +538,7 @@ allow-dev-access-from-other-accounts::
 
 openvpn-allow-certificate-xxx-for-external-accounts::
 +
-IMPORTANT: This role only applies to https://gruntwork.io/[Gruntwork subscribers] who have access to
+IMPORTANT: This role only applies to https://gruntwork.io/subscribe_success[Gruntwork subscribers] who have access to
 https://github.com/gruntwork-io/package-openvpn/[package-openvpn].
 +
 The `openvpn-allow-certificate-requests-for-external-accounts` and
@@ -577,7 +577,7 @@ ssh-grunt-users and ssh-grunt-sudo-users::
   that group, that user will be able to SSH to the corresponding EC2 instances using their own IAM user name and the
   https://docs.aws.amazon.com/codecommit/latest/userguide/setting-up-ssh-unixes.html#setting-up-ssh-unixes-keys[SSH key associated with their IAM user account].
 +
-IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access `ssh-grunt` in
+IMPORTANT: You must be a https://gruntwork.io/subscribe_success[Gruntwork subscriber] to access `ssh-grunt` in
 https://github.com/gruntwork-io/module-security/[module-security].
 
 === MFA policy
@@ -633,7 +633,7 @@ allow-ssh-grunt-access-from-other-accounts::
   authenticate SSH attempts using
   https://github.com/gruntwork-io/module-security/tree/master/modules/ssh-grunt[ssh-grunt].
 +
-IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access `ssh-grunt` in
+IMPORTANT: You must be a https://gruntwork.io/subscribe_success[Gruntwork subscriber] to access `ssh-grunt` in
 https://github.com/gruntwork-io/module-security/[module-security].
 
 Service roles::
@@ -695,7 +695,7 @@ Protecting IAM roles::
 ip-lockdown "169.254.169.254" "root"
 ----
 +
-IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access `ip-lockdown` in
+IMPORTANT: You must be a https://gruntwork.io/subscribe_success[Gruntwork subscriber] to access `ip-lockdown` in
 https://github.com/gruntwork-io/module-security[module-security].
 
 Machine users::
@@ -777,7 +777,7 @@ Gruntwork Infrastructure as Code Library::
   implements most of the production-grade design for you out of the box. Make sure to read
   link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library[How to use the Gruntwork Infrastructure as Code Library].
 +
-IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access the Gruntwork Infrastructure as Code Library.
+IMPORTANT: You must be a https://gruntwork.io/subscribe_success[Gruntwork subscriber] to access the Gruntwork Infrastructure as Code Library.
 
 Terraform::
   This guide uses https://www.terraform.io/[Terraform] to define and manage all the infrastructure as code. If you're
@@ -813,7 +813,7 @@ the root user account as much as possible, as we'll discuss a little later.
 Let's first create the IAM users, groups, and roles by using the `iam-groups`, `iam-users`, `iam-user-password-policy`,
 and `cross-account-iam-roles` modules from https://github.com/gruntwork-io/module-security[module-security].
 
-IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access `module-security`.
+IMPORTANT: You must be a https://gruntwork.io/subscribe_success[Gruntwork subscriber] to access `module-security`.
 
 First, create a _wrapper module_ called `iam` in your `infrastructure-modules` repo:
 
@@ -1390,7 +1390,7 @@ Enable MFA::
 Next, let's enable CloudTrail in the root account so you have an audit log of everything that happens in the account.
 You can do this using the `cloudtrail` module from https://github.com/gruntwork-io/module-security[module-security].
 
-IMPORTANT: You must be a https://gruntwork.io/[Gruntwork subscriber] to access `module-security`.
+IMPORTANT: You must be a https://gruntwork.io/subscribe_success[Gruntwork subscriber] to access `module-security`.
 
 First, create a wrapper module called `cloudtrail` in your `infrastructure-modules` repo:
 
