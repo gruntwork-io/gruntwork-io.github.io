@@ -109,4 +109,8 @@ $(document).ready(function () {
 
   $(window).scroll(scrollSpy);
   $(scrollSpy);
+
+  $('.post-detail img').on('click', function() {
+    window.open(this.src, '_blank')
+  })
 });
