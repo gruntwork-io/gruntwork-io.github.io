@@ -221,7 +221,7 @@ Opinionated code::
 [[example_ref_arch]]See an example Reference Architecture::
   You can find the code for an example Reference Architecture for a fictional Acme corporation in the following repos:
 +
-IMPORTANT: You must be a https://gruntwork.io/subscribe_success[Gruntwork subscriber] to access these example repos.
+IMPORTANT: You must be a https://gruntwork.io/?subscribe_success=1[Gruntwork subscriber] to access these example repos.
 +
 * https://github.com/gruntwork-io/infrastructure-live-multi-account-acme/tree/master/_docs[Walkthrough documentation]
   (start here!): The Reference Architecture comes with end-to-end documentation that walks you through all of the code
@@ -564,7 +564,7 @@ useful resources:
 
 The next step is to get access to the Gruntwork Infrastructure as Code Library.
 
-. To get access, you must become a https://gruntwork.io/subscribe_success[Gruntwork subscriber].
+. To get access, you must become a https://gruntwork.io/?subscribe_success=1[Gruntwork subscriber].
 . As part of the sign up process, we'll ask for your GitHub user ID. The Gruntwork Infrastructure as Code Library lives in 40+ GitHub
   repos, most of them private, so you'll need to send us a GitHub user ID so we can grant you access. If you don't
   already have a GitHub user, you can create one for free on http://github.com/[github.com].
@@ -594,7 +594,7 @@ next two sections of the guide will walk you through how to use each of these.
 This section will show you how to use Terraform modules from the Gruntwork Infrastructure as Code Library. As an illustrative example,
 we'll deploy the `vpc-app`  Terraform module from https://github.com/gruntwork-io/module-vpc[module-vpc].
 
-IMPORTANT: You must be a https://gruntwork.io/subscribe_success[Gruntwork subscriber] to access `module-vpc`.
+IMPORTANT: You must be a https://gruntwork.io/?subscribe_success=1[Gruntwork subscriber] to access `module-vpc`.
 
 You can use this module to deploy a production-grade VPC on AWS. For full background information on VPCs, check
 out link:/guides/networking/how-to-deploy-production-grade-vpc-aws[How to deploy a production-grade VPC on AWS].
@@ -1370,7 +1370,7 @@ This section will show you how to use scripts and binaries from the Gruntwork In
 we'll deploy the `ip-lockdown` script and `ssh-grunt` binary from
 https://github.com/gruntwork-io/module-security[module-security].
 
-IMPORTANT: You must be a https://gruntwork.io/subscribe_success[Gruntwork subscriber] to access `module-security`.
+IMPORTANT: You must be a https://gruntwork.io/?subscribe_success=1[Gruntwork subscriber] to access `module-security`.
 
 ip-lockdown::
   `ip-lockdown` is a Bash script you can use to lock down specific outgoing IP addresses on a Linux server so only
@@ -1572,12 +1572,12 @@ the machine image (i.e., AMI) to deploy via an input variable (e.g., `ami_id`):
   that need auto healing, zero-downtime rolling deployment, and persistent EBS volumes and ENIs. Both of these modules
   are part of `module-asg`.
 +
-IMPORTANT: You must be a https://gruntwork.io/subscribe_success[Gruntwork subscriber] to access `module-asg`.
+IMPORTANT: You must be a https://gruntwork.io/?subscribe_success=1[Gruntwork subscriber] to access `module-asg`.
 * *Single EC2 Instance:* use the
   https://github.com/gruntwork-io/module-server/tree/master/modules/single-server[single-server module] to run a single
   EC2 instance that can attach persistent EBS volumes and ENIs. This module is part of `module-server`.
 +
-IMPORTANT: You must be a https://gruntwork.io/subscribe_success[Gruntwork subscriber] to access `module-server`.
+IMPORTANT: You must be a https://gruntwork.io/?subscribe_success=1[Gruntwork subscriber] to access `module-server`.
 +
 Note that a single server is a single point of failure, so we generally recommend using one of the Auto Scaling Group
 modules instead, even just for one server, so you get auto healing and zero-downtime deployment.
@@ -1763,7 +1763,7 @@ Kubernetes::
   using https://github.com/gruntwork-io/terraform-aws-eks[terraform-aws-eks] to deploy an EKS cluster; for GCP, we
   recommend using https://github.com/gruntwork-io/terraform-google-gke[terraform-google-gke] to deploy a GKE cluster.
 +
-IMPORTANT: You must be a https://gruntwork.io/subscribe_success[Gruntwork subscriber] to access `terraform-aws-eks`.
+IMPORTANT: You must be a https://gruntwork.io/?subscribe_success=1[Gruntwork subscriber] to access `terraform-aws-eks`.
 +
 Once you have a working cluster, there are a number of ways to deploy Docker images. The basic version is to run
 `kubectl apply` and pass it a YAML manifest. However, most teams find this too verbose and repetitive, so a more DRY
@@ -1775,7 +1775,7 @@ ECS::
   To deploy your Docker image to ECS, you'll first need to set up an ECS cluster, which you can do using
   the https://github.com/gruntwork-io/module-ecs/tree/master/modules/ecs-cluster[ecs-cluster] module in `module-ecs`.
 +
-IMPORTANT: You must be a https://gruntwork.io/subscribe_success[Gruntwork subscriber] to access `module-ecs`.
+IMPORTANT: You must be a https://gruntwork.io/?subscribe_success=1[Gruntwork subscriber] to access `module-ecs`.
 +
 Once you have a working cluster, you can deploy your Docker image using one of the `ecs-service-xxx` modules in
 `module-ecs`, such as `ecs-service-with-alb` or `ecs-daemon-service`.
@@ -1786,7 +1786,7 @@ Fargate::
   Fargate will manage all the worker nodes for you. Once you've created the cluster, you can deploy your image using
   the https://github.com/gruntwork-io/module-ecs/tree/master/modules/ecs-fargate[ecs-fargate] module in `module-ecs`.
 +
-IMPORTANT: You must be a https://gruntwork.io/subscribe_success[Gruntwork subscriber] to access `module-ecs`.
+IMPORTANT: You must be a https://gruntwork.io/?subscribe_success=1[Gruntwork subscriber] to access `module-ecs`.
 
 ===== Updating Docker images
 
