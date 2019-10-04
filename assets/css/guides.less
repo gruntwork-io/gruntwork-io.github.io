@@ -927,18 +927,7 @@ body .guides .guides-section-white {
       color: @guides-font;
     }
   }
-  .imageblock > .title {
-    font-size: 12px;
-    margin: 5px 0 15px 0;
-    color: rgba(0, 0, 0, 0.54);
-    text-align: center;
-  }
-  .listingblock > .title {
-    font-size: 12px;
-    margin: 15px 0 0 0;
-    color: rgba(0, 0, 0, 0.54);
-    text-align: left;
-  }
+ 
   .breadcrumb {
     font-size: 14px;
     letter-spacing: -0.2px;
@@ -962,34 +951,6 @@ body .guides .guides-section-white {
   & h2 {
     border-bottom: solid 1px #07a7fc;
   }
-
-  p {
-    font-size: 16px;
-    letter-spacing: 0.42px;
-    line-height: 28px;
-    & code {
-      background-color: #e6f6fe;
-      color: #000;
-    }
-  }
-  & .dlist, & .ulist {
-    padding: 0;
-    margin: 20px 0;
-
-    dt {
-      margin-top: 15px;
-    }
-  }
-  & a:link{
-    color: #07a7fc;
-    text-decoration: none;
-  }
-  & h4, h3, h2,label, a {
-    color: @guides-font;
-  }
-  & section {
-    margin: 3%;
-  }
 }
 
 
@@ -1003,6 +964,14 @@ body .guides .guides-section-white {
   max-width: 760px;
   margin: 0 auto;
 
+  
+  .imageblock > .title {
+    font-size: 12px;
+    margin: 5px 0 15px 0;
+    color: rgba(0, 0, 0, 0.54);
+    text-align: center;
+  }
+
   .sect2 {
     .paragraph, dd {
       margin-bottom: 10px;
@@ -1012,6 +981,21 @@ body .guides .guides-section-white {
     }
     .listingblock {
       margin: 20px 0;
+      &.title {
+        font-size: 12px;
+        margin: 15px 0 0 0;
+        color: rgba(0, 0, 0, 0.54);
+        text-align: left;
+      }
+    }
+
+     & .dlist, & .ulist {
+      padding: 0;
+      margin: 20px 0;
+
+      dt {
+        margin-top: 15px;
+      }
     }
 
     pre.highlight > code, pre:not(.highlight) {
@@ -1031,9 +1015,15 @@ body .guides .guides-section-white {
     em {
       font-style: italic;
     }
+    & code {
+      background-color: #e6f6fe;
+      color: #000;
+    }
   }
-  & p > a {
+
+  & p > a, p > em > a {
     color: @guides-primary-color;
+    text-decoration: none;
     font-weight: bold;
   }
   img {
@@ -1170,7 +1160,13 @@ body .guides .guides-section-white {
 					font-size: 16px;
 					margin-top: -9px;
 				}
-			}
+      }
+      
+      a {
+        color: #07a7fc;
+        text-decoration: none;
+        font-weight: 600;
+      }
 
 			& td,
 			td p {
