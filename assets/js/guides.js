@@ -113,4 +113,12 @@ $(document).ready(function () {
   $('.post-detail img').on('click', function() {
     window.open(this.src, '_blank')
   })
+
+  //Add ga tracking on clicking of the subscribe cta within the guides
+  $('.admonitionblock a').on('click', function() {
+    if($(this).text().toLowerCase().includes('subscriber')){
+      ga('send', 'event', location.pathname, 'cta-subscribe');
+    }
+  })
+
 });
