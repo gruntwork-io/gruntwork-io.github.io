@@ -6,7 +6,7 @@
             </div>
             <div class="center share-buttons">
                 <ul>
-                    {% capture url %}https://gruntwork.io/guides/kubernetes/how-to-deploy-production-grade-kubernetes-cluster-aws/#next_steps{% endcapture %}
+                    {% capture url %}{{site.url}}{{page.url}}{% endcapture %}
                     <li>
                         <a  href="https://www.facebook.com/sharer/sharer.php?u={{ url }}"
                         onclick="window.open(this.href, 'pop-up', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;"
