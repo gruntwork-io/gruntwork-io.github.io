@@ -891,7 +891,6 @@ body .guides .guides-section-white {
 }
 
 .post-detail {
-  padding-bottom: 5em;
   h1 {
     margin: 20px auto;
     font-size: 35px;
@@ -1225,5 +1224,64 @@ body .guides .guides-section-white {
 	background-color: #fff;
 	padding: 20px 25px 0 25px;
 	min-height: 200px;
+}
+
+//comment styles
+.comments {
+  padding: 50px;
+  h2 {
+    font-size: 28px;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.43;
+    letter-spacing: 0.79px;
+    text-align: center;
+    color: @guides-font;
+    padding: 5px 7px;
+    margin: 0;
+    border-bottom: 2px solid @guides-primary-color;
+  }
+  .sm-icon {
+    color: #fff;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-size: 14px;
+    background-color: @guides-primary-color;
+    margin: 20px 8px 0 0;
+    text-align: center;
+    padding: 2px; 
+  }
+  .share-buttons {
+    ul {
+      padding: 0;
+      display: flex;
+      list-style-type: none;
+      li {
+      display: inline;
+        a {
+          text-decoration: none;
+        }
+      }
+    }
+  }
+  .utterances {
+    min-width: 650px;
+    margin: 20px 0 0 0;
+    body {
+      background-color: black;
+    }
+    .timeline {
+      .comment-header  {
+        background-color: #fff;
+        border-bottom: none;
+      }
+    
+    }
+  }
+}
+
+.timeline-comment.current-user .comment-header{
+  background-color: black;
 }
 
