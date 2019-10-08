@@ -1227,3 +1227,109 @@ body .guides .guides-section-white {
 	min-height: 200px;
 }
 
+
+//subscribe modal
+.subscribe-modal {
+  max-width: 600px;
+  .modal-content {
+    background: white;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    border: none;
+    -webkit-border-radius: 0px !important;
+    -moz-border-radius: 0px !important;
+    border-radius: 8px !important;
+    .modal-header {
+      background: linear-gradient(#7cd7ff, #07a7fc, #57a1ea);
+      position: relative;
+      display: block;
+      width: 100%;
+      max-height: inherit;
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+      img {
+        width: 130px;
+        margin-bottom: -12px;
+      }
+      .close {
+        position: absolute;
+        padding: 0px 20px;
+        right: 0px;
+        font-size: 34px;
+        font-weight: 100;
+      }
+    }
+    .modal-body {
+      padding: 1px 60px;
+      h2,h3,p {
+        color: #1e252f;
+      }
+      h2{
+        margin: 30px 0;
+        font-size: 28px;
+      }
+      h3 {
+        font-size: 20px;
+        line-height: 1.22;
+        letter-spacing: 0.51px;
+      }
+      p {
+        font-size: 14px;
+        line-height: 1.5;
+        letter-spacing: 0.39px;
+      }
+      a {
+        text-decoration: none;
+        font-weight: 600;
+        color: #06a6fd;
+      }
+      ul {
+        text-align: left;
+        li {
+          list-style-type: none;
+          position: relative;
+          &:before {
+            content: "";
+            background-color: transparent;
+            position: absolute;
+            left: -30px;
+            top: 0px;
+            width: 10px;
+            border-bottom: 4px solid #07a6fd;
+            height: 23px;
+            border-right: 4px solid #07a6fd;
+            transform: rotate(45deg);
+            -o-transform: rotate(45deg);
+            -ms-transform: rotate(45deg);
+            -webkit-transform: rotate(45deg)
+          }
+        }
+      }
+    }
+    .modal-footer {
+      text-align: center;
+      font-size: 14px;
+      .btn-primary {
+        background: linear-gradient(to bottom, #5bcde7, #569cea);
+        padding: 10px 27px;
+        border-radius: 23.5px;
+        height: 47px;
+        margin-bottom: 10px;
+      }
+      .btn-link {
+        letter-spacing: -0.2px;
+        color: @guides-primary-color;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 10px;
+      }
+      .btn-link, .btn-primary {
+        &:hover {
+          .no-transform();
+        }
+      }
+    }
+  }
+}
+

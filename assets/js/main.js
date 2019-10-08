@@ -45,6 +45,10 @@ $(function () {
   if (window.location.href.indexOf('newsletter_success') !== -1) {
     $("#newsletter-success").modal('show');
   }
+  
+  if (window.location.href.indexOf('subscribe_success') !== -1) {
+    $("#subscribe-success").modal('show');
+  }
 });
 
 /* Repo modal link handler */
