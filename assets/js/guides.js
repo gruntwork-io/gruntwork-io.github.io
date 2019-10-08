@@ -115,10 +115,8 @@ $(document).ready(function () {
   })
 
   //Add ga tracking on clicking of the subscribe cta within the guides
-  $('.admonitionblock a').on('click', function() {
-    if($(this).text().toLowerCase().includes('subscriber')){
-      ga('send', 'event', location.pathname, 'cta-subscribe');
-    }
+  $('.subscribe-cta').on('click', function() {
+    ga('send', 'event', location.pathname, 'subscribe-cta');
   })
 
 });
