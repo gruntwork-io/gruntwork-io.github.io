@@ -2,6 +2,7 @@
     <div class="modal-dialog modal-dialog-centered subscribe-modal " role="document">
         <div class="modal-content text-center">
             <div class="modal-header">
+                <!-- PushState removes the parameter from the route which in this case is subscribe_modal = 1 and avoids reloading the page -->
                 <button type="button" class="close" onclick="window.history.pushState({path: window.location.pathname },'',window.location.pathname)"  data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
