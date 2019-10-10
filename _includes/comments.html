@@ -23,12 +23,12 @@
                         </a>
                     </li>
                     <li>
-                        <a  href="https://twitter.com/intent/tweet?text={{ page.title }}&url={{ url | url_encode }}" target="_blank" title="Share on Twitter" >
+                        <a  href="https://twitter.com/intent/tweet?text={{ page.title | url_encode }}&url={{ url | url_encode }}" target="_blank" title="Share on Twitter" >
                             <i class="sm-icon fa fa-twitter"></i>
                         </a>
                     </li>
                     <li>
-                        <a href="http://news.ycombinator.com/submitlink?u={{ url | url_encode }}&t={{ page.title | default:'' | uri_escape}}" target="_blank" title="Share on Hackernews" >
+                        <a href="http://news.ycombinator.com/submitlink?u={{ url | url_encode }}&t={{ page.title | default:'' | uri_escape | url_encode}}" target="_blank" title="Share on Hackernews" >
                             <i class="sm-icon fa fa-y-combinator"></i> 
                         </a>
                     </li>
