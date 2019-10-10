@@ -1,0 +1,50 @@
+<div class="row">
+    <div class="center">
+        <div class="col-md-3">
+            <div class="center">
+                <h2 class="no-anchor">Comments </h2>
+            </div>
+            <div class="center share-buttons">
+                <ul>
+                    {% capture url %}{{site.url}}{{page.url}}{% endcapture %}
+                    <li>
+                        <a  href="https://www.facebook.com/sharer/sharer.php?u={{ url | url_encode }}" target="_blank" title="Share on Facebook" >
+                            <i class="sm-icon fa fa-facebook"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a  href="http://www.reddit.com/submit?url={{ url | url_encode }}" target="_blank" title="Share on Reddit" >
+                            <i class="sm-icon fa fa-reddit-alien"> </i>
+                        </a>
+                    </li>
+                    <li>
+                        <a  href="https://www.linkedin.com/shareArticle?mini=true&url={{ url | url_encode }}" target="_blank" title="Share on LinkedIn" >
+                            <i class="sm-icon fa fa-linkedin"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a  href="https://twitter.com/intent/tweet?text={{ page.title | url_encode }}&url={{ url | url_encode }}" target="_blank" title="Share on Twitter" >
+                            <i class="sm-icon fa fa-twitter"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="http://news.ycombinator.com/submitlink?u={{ url | url_encode }}&t={{ page.title | default:'' | uri_escape | url_encode}}" target="_blank" title="Share on Hackernews" >
+                            <i class="sm-icon fa fa-y-combinator"></i> 
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script src="https://utteranc.es/client.js"
+        repo="gruntwork-io/website-comments"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+    </script>
+</div>
+
+
+
+
