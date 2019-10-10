@@ -1,4 +1,4 @@
-##RFC for CTA
+## RFC for CTA
 
 ### Using Existing intercom as CTA
 #### Pros
