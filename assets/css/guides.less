@@ -644,17 +644,75 @@ body .guides .guides-section-white {
 	margin-bottom: 40%;
 }
 
+@media (max-width: @screen-md-max) {
+	.guide-listing .card-shadow {
+		&:hover, &:active {
+			transform: scale(1.05) translateZ(0);
+		}
+
+		.card img {
+			padding: 11px;
+		}
+	}
+	.filter-options .card {
+		padding: 20px 40px;
+	}
+	.categories {
+		display: none !important;
+	}
+}
+
 @media only screen and (max-width: @screen-xs-max) {
-	.searchrow {
+	.searchrow, .filter-options {
 		display: none !important;
 	}
 
-	.img-inner {
-		.remove-visibility();
+	.guides .section-hero {
+		h1 {
+			font-size: 28px;
+		}
+		p {
+			font-size: 14px;
+		}
 	}
 
-	.guide-card-description {
-		width: 100%;
+	.guide-listing {
+		.category-head {
+			font-size: 20px;
+		}
+
+		.card .card-title {
+			font-size: 16px;
+		}
+	}
+
+	.section-hero-blue {
+		label {
+			font-size: 25px;
+		}
+
+		a {
+			padding: 6px 20px;
+		}
+	}
+
+	.guides .section-hero {
+		padding-top: 0;
+	}
+
+	.guides-newsletter {
+		padding: 0!important;
+		
+		label {
+			font-size: 22px !important;
+		}
+
+		p{
+			font-size: 16px;
+		}
+		.btn {
+			padding: 6px 20px !important;
+		}
 	}
 
 	p {
@@ -690,17 +748,17 @@ body .guides .guides-section-white {
 	color: @guides-font;
 	display: inline-block;
 
-	@media (max-width: 576px) {
-		padding: 2em 0px;
+	// @media (max-width: 576px) {
+	// 	padding: 2em 0px;
 
-		form {
-			padding: 0;
+	// 	form {
+	// 		padding: 0;
 
-			.btn {
-				padding: 10px !important;
-			}
-		}
-	}
+	// 		.btn {
+	// 			padding: 10px !important;
+	// 		}
+	// 	}
+	// }
 
 	.modal-box {
 		padding-bottom: 3em;
