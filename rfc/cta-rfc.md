@@ -5,7 +5,7 @@
 
 - We can make use of the existing intercom based on our needs.
 
-- We can use can automatically set how long before the intercom pops up on a page. 
+- We can automatically set how long before intercom pops up on a page. 
 
 - We can also specify what pages to display a specific message eg. for the deployment guides, we can have, Have us deploy for you?
 
