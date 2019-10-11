@@ -645,6 +645,18 @@ body .guides .guides-section-white {
 }
 
 @media (max-width: @screen-md-max) {
+	.guides .section-hero {
+		padding-top: 0;
+	}
+
+	.filter-options .card {
+		padding: 20px 40px;
+	}
+
+	.categories {
+		display: none !important;
+	}
+	
 	.guide-listing .card-shadow {
 		&:hover, &:active {
 			transform: scale(1.05) translateZ(0);
@@ -654,26 +666,31 @@ body .guides .guides-section-white {
 			padding: 11px;
 		}
 	}
-	.filter-options .card {
-		padding: 20px 40px;
-	}
-	.categories {
-		display: none !important;
-	}
 }
 
 @media only screen and (max-width: @screen-xs-max) {
+	.guides .section-hero {
+		h1 {
+			font-size: 29px;
+		}
+
+		p {
+			font-size: 14px;
+		}
+	}
+
 	.searchrow, .filter-options {
 		display: none !important;
 	}
 
-	.guides .section-hero {
-		h1 {
-			font-size: 28px;
-		}
-		p {
-			font-size: 14px;
-		}
+	.cloud-filter .filter {
+		height: 60px;
+		width: 90px;
+	}
+
+	#listings {
+		display: flex;
+		justify-content: center;
 	}
 
 	.guide-listing {
@@ -683,6 +700,30 @@ body .guides .guides-section-white {
 
 		.card .card-title {
 			font-size: 16px;
+		}
+	}
+
+	.card-shadow:hover {
+		-webkit-box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.1);
+		/* Safari, Android, iOS */
+		-moz-box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.1);
+		/* Firefox */
+		box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.1);
+		border: none;
+	}
+
+	.guides-newsletter {
+		padding: 0!important;
+
+		label {
+			font-size: 22px !important;
+		}
+
+		p{
+			font-size: 16px;
+		}
+		.btn {
+			padding: 6px 20px !important;
 		}
 	}
 
@@ -696,48 +737,8 @@ body .guides .guides-section-white {
 		}
 	}
 
-	.guides .section-hero {
-		padding-top: 0;
-	}
-
-	.guides-newsletter {
-		padding: 0!important;
-		
-		label {
-			font-size: 22px !important;
-		}
-
-		p{
-			font-size: 16px;
-		}
-		.btn {
-			padding: 6px 20px !important;
-		}
-	}
-
 	p {
 		font-size: 18px;
-	}
-
-	.card-shadow:hover {
-		-webkit-box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.1);
-		/* Safari, Android, iOS */
-		-moz-box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.1);
-		/* Firefox */
-		box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.1);
-		border: none;
-	}
-
-	.cloud-filter .filter {
-		height: 60px;
-		width: 90px;
-	}
-}
-
-@media (max-width: @screen-xs-max) {
-	#listings {
-		display: flex;
-		justify-content: center;
 	}
 }
 
@@ -747,18 +748,6 @@ body .guides .guides-section-white {
 	font-size: 16px;
 	color: @guides-font;
 	display: inline-block;
-
-	// @media (max-width: 576px) {
-	// 	padding: 2em 0px;
-
-	// 	form {
-	// 		padding: 0;
-
-	// 		.btn {
-	// 			padding: 10px !important;
-	// 		}
-	// 	}
-	// }
 
 	.modal-box {
 		padding-bottom: 3em;
