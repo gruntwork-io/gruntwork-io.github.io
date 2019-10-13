@@ -525,7 +525,7 @@ solutions will most likely be eclipsed very quickly by future EKS releases.
 
 EKS relies on a _https://aws.amazon.com/vpc/[Virtual Private Cloud (VPC)]_ to provide the basic network topology and
 to manage communication across the nodes (see
-link:/guides/networking/how-to-configure-production-grade-vpc-aws[How to deploy a production-grade VPC on AWS] for more
+link:/guides/networking/how-to-deploy-production-grade-vpc-aws[How to deploy a production-grade VPC on AWS] for more
 information on VPCs). Here are the key VPC considerations for your EKS cluster:
 
 Add tags to the VPC and subnets::
@@ -562,7 +562,7 @@ Kubernetes version::
 Subnets::
   Your EKS cluster will run in the subnets you specify. We strongly recommend running solely in private subnets that
   are NOT directly accessible from the public Internet. See
-  link:/guides/networking/how-to-configure-production-grade-vpc-aws[How to deploy a production-grade VPC on AWS] for more
+  link:/guides/networking/how-to-deploy-production-grade-vpc-aws[How to deploy a production-grade VPC on AWS] for more
   info.
 
 Endpoint access::
@@ -570,7 +570,7 @@ Endpoint access::
   is accessible from (a) within the same VPC and/or (b) from the public Internet. We recommend allowing access from
   within the VPC, but not from the public Internet. If you need to talk to your Kubernetes cluster from your own
   computer (e.g., to issue commands via `kubectl`), use a bastion host or VPN server. See
-  link:/guides/networking/how-to-configure-production-grade-vpc-aws[How to deploy a production-grade VPC on AWS] for more
+  link:/guides/networking/how-to-deploy-production-grade-vpc-aws[How to deploy a production-grade VPC on AWS] for more
   info.
 
 Cluster IAM Role::
@@ -606,7 +606,7 @@ Tags::
 Subnets::
   We strongly recommend running the Auto Scaling Group for your worker nodes in private subnets that are NOT directly
   accessible from the public Internet. See
-  link:/guides/networking/how-to-configure-production-grade-vpc-aws[How to deploy a production-grade VPC on AWS] for more
+  link:/guides/networking/how-to-deploy-production-grade-vpc-aws[How to deploy a production-grade VPC on AWS] for more
   info.
 
 AMI::
@@ -865,7 +865,7 @@ AWS accounts::
 === Deploy the VPC
 
 The first step is to deploy a VPC. Follow the instructions in
-link:/guides/networking/how-to-configure-production-grade-vpc-aws[How to deploy a production-grade VPC on AWS] to use
+link:/guides/networking/how-to-deploy-production-grade-vpc-aws[How to deploy a production-grade VPC on AWS] to use
 `module-vpc` to create a VPC setup that looks like this:
 
 .A production-grade VPC setup deployed using module-vpc from the Gruntwork Infrastructure as Code Library
