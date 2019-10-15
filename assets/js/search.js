@@ -39,17 +39,13 @@
   /**
    * Function displays the total items displayed on the page
    */
-  function showItemsCount(searchEntry, totalCount, numSubmodules) {
-    if (searchEntry.type === 'libraryEntries') {
+  function showItemsCount(totalCount, numSubmodules) {
+    if ($('.table-clickable-row'.length > 0)) {
       $('#search-results-count').show();
       if (totalCount > 0 && numSubmodules > 0) {
-        $('#search-results-count').html("<strong>" + totalCount + "</strong> repos (~<strong>" + numSubmodules + "</strong> modules)");
+        $('#search-results-count').html("<strong>" + totalCount + "</strong>repos(~<strong>" + numSubmodules + "</strong> modules)");
       } else {
         $('#search-results-count').text("0 repos");
-      }
-    } else {
-      if (totalCount > 0) {
-        $('#search-results-count').html("<strong>" + totalCount + "</strong> post(s) found");
       }
     }
   }
@@ -58,9 +54,31 @@
    * Function to display all items on the page
    */
   function showAllItems() {
-    $('.guide-card').show();
-    $('.category-head').show();
-    $('.categories ul li').show();
+    return (
+      $('.guide-card').show() &&
+      $('.category-head').show() &&
+      $('.categories ul li').show()
+    )
+  }
+
+
+  function initialDisplay() {
+    return (
+      $('#guide-listings').show() &&
+      $('#no-azure-results').hide() &&
+      $('#no-matches').hide()
+    );
+  }
+
+  /**
+   * Function to hide items on the page
+   */
+  function hideItems() {
+    return (
+      $('.guide-card').hide() &&
+      $('.category-head').hide() &&
+      $('.categories ul li').hide()
+    )
   }
 
   /**
@@ -68,10 +86,10 @@
    */
   function showInitialItemsCount(searchEntry) {
     let numSubmodules = 0;
-    for (const i = 0; i < searchEntry.entries.length; i++) {
-      numSubmodules += libraryEntries[i].num_submodules;
+    for (let i = 0; i < searchEntry.length; i++) {
+      numSubmodules += window.libraryEntries[i].num_submodules;
     }
-    showItemsCount(searchEntry, searchEntry.entries.length, numSubmodules);
+    showItemsCount(searchEntry.length, numSubmodules);
   }
 
   /**
@@ -99,22 +117,21 @@
     });
   }
 
-  function initialDisplay() {
-    return (
-      $('#guide-listings').show() &&
-      $('#no-azure-results').hide() &&
-      $('#no-matches').hide()
-    );
+  function getSearchData(entry, type){
+    let searchContent;
+
+    if(type === 'wordSearch') {
+      searchContent = entry.text || entry.title + entry.category + entry.content + entry.tags;
+    } else if (type === 'tagSearch') {
+      searchContent = entry.tags + entry.cloud;
+    } else if (type === 'cloudSearch') {
+      searchContent = entry.cloud;
+    } else {
+      searchContent = "Not Valid";
+    }
+    return searchContent;
   }
 
-  function searchDisplay() {
-    return (
-      $('#search-results-count').hide() &&
-      $('.guide-card').hide() &&
-      $('.category-head').hide() &&
-      $('.categories ul li').hide()
-    )
-  }
 
   /**
    * A function to search the Deployment guides.
@@ -124,7 +141,7 @@
   function filterSearchData(searchValue, type) {
     let matches = 0;
     let submoduleMatches = 0;
-    
+
     const searchEntry = detectSearchEntry();
 
     if($('.guide-card').length !== 0){
@@ -134,8 +151,8 @@
     if (searchValue && searchValue.length > 0) {
       const searchQueries = searchValue.toLowerCase().split(" ");
 
-      $('.table-clickable-row'.length === 0) ? searchDisplay() : $('.table-clickable-row').hide();
-     
+      $('.table-clickable-row'.length === 0) ? hideItems() : $('.table-clickable-row').hide();
+
       searchEntry.forEach(entry => {
         let matchesAll = true;
 
@@ -154,7 +171,6 @@
           $(`#${entry.id}`).show();
           matches++;
           $('.table-clickable-row'.length > 0) ? submoduleMatches += entry.num_submodules: submoduleMatches = 0;
-          return;
         }
       });
 
@@ -163,34 +179,16 @@
         $('#no-matches').show();
         return;
       }
-      
-      showItemsCount(searchEntry, matches, submoduleMatches);
+
+      showItemsCount(matches, submoduleMatches);
+    } else if ($('.table-clickable-row'.length > 0)) {
+
+      showInitialItemsCount(searchEntry);
+      $('.table-clickable-row').show();
+
     } else {
-      if ($('.table-clickable-row'.length > 0)) {
-
-        showInitialItemsCount(searchEntry);
-        $('.table-clickable-row').show();
-
-      } else {
-        showAllItems();
-      }
+      showAllItems();
     }
-  }
-
-  function getSearchData(entry, type){
-
-    let searchContent;
-
-    if(type === 'wordSearch') {
-      searchContent = entry.text || entry.title + entry.category + entry.content + entry.tags;
-    } else if (type === 'tagSearch') {
-      searchContent = entry.tags + entry.cloud;
-    } else if (type === 'cloudSearch') {
-      searchContent = entry.cloud;
-    } else {
-      searchContent = "Not Valid";
-    }
-    return searchContent;
   }
 
   /**
@@ -207,11 +205,6 @@
   }, 250);
 
 
-  /* Triggered when filter checkboxes are checked */
-  $(document).on('click', '.tags', function () {
-    filterCloudAndTags();
-  });
-
   function filterCloudAndTags() {
     const checkedTags = $('input[type="checkbox"]:checked');
     const selectedCloud = $('.cloud-filter .active-button').attr("id");
@@ -226,6 +219,11 @@
       filterSearchData(searchValue + (selectedCloud ? ' ' + selectedCloud : ''), 'tagSearch');
     });
   }
+
+  /* Triggered when filter checkboxes are checked */
+  $(document).on('click', '.tags', function () {
+    filterCloudAndTags();
+  });
 
   function selectCloud(filterButton) {
     const id = filterButton.attr('id');
@@ -255,7 +253,7 @@
   $('#js-search-library').on("keyup", searchData);
 
   /* Triggered on click of any cloud filtering buttons */
-  $('.cloud-filter .filter').click(function () {
+  $('.cloud-filter .filter').on('click', function() {
     const filterButton = $(this);
     selectCloud(filterButton);
   });
