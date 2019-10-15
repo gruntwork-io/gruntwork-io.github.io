@@ -23,13 +23,13 @@
   function debounce(func, wait, immediate) {
     let timeout;
     return function () {
-      let context = this,
+      const context = this,
         args = arguments;
-      let later = function () {
+      const later = function () {
         timeout = null;
         if (!immediate) func.apply(context, args);
       };
-      let callNow = immediate && !timeout;
+      const callNow = immediate && !timeout;
       clearTimeout(timeout);
       timeout = setTimeout(later, wait);
       if (callNow) func.apply(context, args);
@@ -48,7 +48,7 @@
         $('#search-results-count').text("0 repos");
       }
     } else {
-      if (totalCount > 0 ) {
+      if (totalCount > 0) {
         $('#search-results-count').html("<strong>" + totalCount + "</strong> post(s) found");
       }
     }
@@ -68,7 +68,7 @@
    */
   function showInitialItemsCount(searchEntry) {
     let numSubmodules = 0;
-    for (let i = 0; i < searchEntry.entries.length; i++) {
+    for (const i = 0; i < searchEntry.entries.length; i++) {
       numSubmodules += libraryEntries[i].num_submodules;
     }
     showItemsCount(searchEntry, searchEntry.entries.length, numSubmodules);
@@ -79,22 +79,8 @@
    */
   function detectSearchEntry() {
     let entries = [];
-    if (window.libraryEntries) {
-
-      entries = window.libraryEntries;
-      return {
-        entries,
-        type: 'libraryEntries'
-      };
-
-    } else if (window.guideEntries) {
-
-      entries = window.guideEntries;
-      return {
-        entries,
-        type: 'guideEntries'
-      };
-    }
+    entries = window.libraryEntries ? window.libraryEntries : window.guideEntries;
+    return entries;
   }
 
 
@@ -103,9 +89,9 @@
    * @type {Function}
    */
   function displayCategory(entry) {
-    let categoryArr = $.merge($('.category-head'), $('.categories ul li'));
+    const categoryArr = $.merge($('.category-head'), $('.categories ul li'));
     categoryArr.each(function () {
-      let category = $(this).text().toLowerCase();
+      const category = $(this).text().toLowerCase();
       if (entry.category === category) {
         $(`.categories ul .${category}`).show();
         $(`#${category}.category-head`).show();
@@ -114,54 +100,56 @@
   }
 
 
+
+  function initalDisplay() {
+    return (
+      $('#guide-listings').show() &&
+      $('#no-azure-results').hide() &&
+      $('#no-matches').hide()
+    );
+  }
+
+  function searchDisplay() {
+    return (
+      $('#search-results-count').hide() &&
+      $('.guide-card').hide() &&
+      $('.category-head').hide() &&
+      $('.categories ul li').hide()
+    )
+  }
   /**
    * A function to search the IaC Lib and Deployment guides. Can also be used for other pages that need it.
    * To show/hide the proper elements based on the results.
    * @type {Function}
    */
   function filterData(searchValue, type) {
+    let matches = 0;
+    let submoduleMatches = 0;
+    let searchContent;
+
     const searchEntry = detectSearchEntry();
 
-    $('#guide-listings').show();
-
-    $('#no-azure-results').hide();
-    $('#no-matches').hide();
+    initalDisplay();
 
     if (searchValue && searchValue.length > 0) {
       const searchQueries = searchValue.toLowerCase().split(" ");
 
-      if (searchEntry.type === 'libraryEntries') {
-        $('.table-clickable-row').hide();
-      } else if (searchEntry.type === 'guideEntries') {
-        $('#search-results-count').hide();
-        $('.guide-card').hide() &&
-          $('.category-head').hide() &&
-          $('.categories ul li').hide();
-      }
+      searchDisplay();
 
-      let matches = 0;
-      let submoduleMatches = 0;
-      let searchContent;
-
-      searchEntry.entries.forEach(entry => {
+      searchEntry.forEach(entry => {
         let matchesAll = true;
 
         searchQueries.forEach(searchQuery => {
-          switch (true) {
-            case searchEntry.type === 'libraryEntries':
-              searchContent = entry.text;
-              break;
-            case searchEntry.type === 'guideEntries' && type === 'wordSearch':
-              searchContent = entry.title + entry.category + entry.content + entry.tags;
-              break;
-            case searchEntry.type === 'guideEntries' && type === 'tagSearch':
-              searchContent = entry.tags + entry.cloud;
-              break;
-            case searchEntry.type === 'guideEntries' && type === 'cloudSearch':
-              searchContent = entry.cloud;
-              break;
-            default:
-              "Not Valid"
+          if(entry.text) {
+            searchContent = entry.text;
+          } else if(type === 'wordSearch') {
+            searchContent = entry.title + entry.category + entry.content + entry.tags;
+          } else if (type === 'tagSearch') {
+            searchContent = entry.tags + entry.cloud;
+          } else if (type === 'cloudSearch') {
+            searchContent = entry.cloud;
+          } else {
+            return("Not Valid");
           }
 
           if (searchContent.indexOf(searchQuery) < 0) {
@@ -174,7 +162,7 @@
           displayCategory(entry);
           $("#" + entry.id).show();
           matches++;
-          (searchEntry.type === 'libraryEntries') ? submoduleMatches += entry.num_submodules: submoduleMatches = 0;
+          submoduleMatches = 0;
           return;
         }
       });
@@ -199,26 +187,79 @@
     }
   }
 
+  function filterLibraryData(searchValue) {
+    let matches = 0;
+    let submoduleMatches = 0;
+    let searchContent;
+
+    const searchEntry = detectSearchEntry();
+
+    if (searchValue && searchValue.length > 0) {
+      const searchQueries = searchValue.toLowerCase().split(" ");
+
+      $('.table-clickable-row').hide();
+     
+      searchEntry.forEach(entry => {
+        let matchesAll = true;
+
+        searchQueries.forEach(searchQuery => {
+          searchContent = entry.text;
+          
+          if (searchContent.indexOf(searchQuery) < 0) {
+            matchesAll = false;
+          }
+        });
+
+        //Checks if results were found and displays results accordingly
+        if (matchesAll) {
+          displayCategory(entry);
+          $("#" + entry.id).show();
+          matches++;
+          submoduleMatches += entry.num_submodules;
+          return;
+        }
+      });
+
+      if (matches === 0) {
+        $('#search-results-count').hide();
+        $('#no-matches').show();
+        return;
+      }
+
+      showItemsCount(searchEntry, matches, submoduleMatches);
+    } else {
+      showInitialItemsCount(searchEntry);
+      $('.table-clickable-row').show();
+    }
+  }
+
   /**
    * Note
    * This function is wrapped in a "debounce" so that if the user is typing quickly, we aren't trying to run searches
    * (and fire Google Analytics events!) on every key stroke, but only when they pause from typing.
    * @type {Function}
    */
-  let searchData = debounce(function (event) {
-    let target = $(event.currentTarget);
-    let searchValue = target.val();
+  const searchData = debounce(function (event) {
+    const target = $(event.currentTarget);
+    const searchValue = target.val();
 
     filterData(searchValue, 'wordSearch');
   }, 250);
 
+  const searchLibraryData = debounce(function (event) {
+    const target = $(event.currentTarget);
+    const searchValue = target.val();
+
+    filterLibraryData(searchValue);
+  }, 250);
+
 
   /* Triggered when filter checkboxes are checked */
-  $(document).on('click','.tags', function() {
+  $(document).on('click', '.tags', function () {
     filterCloudAndTags();
   });
 
-  function filterCloudAndTags(){
+  function filterCloudAndTags() {
     const checkedTags = $('input[type="checkbox"]:checked');
     const selectedCloud = $('.cloud-filter .active-button').attr("id");
 
@@ -227,7 +268,7 @@
       // Or all items if no cloud is selected
       return selectedCloud ? filterData(selectedCloud, 'cloudSearch') : showAllItems();
     }
-    checkedTags.each(function() {
+    checkedTags.each(function () {
       const searchValue = $(this).val();
       filterData(searchValue + (selectedCloud ? ' ' + selectedCloud : ''), 'tagSearch');
     });
@@ -236,8 +277,7 @@
   function selectCloud(filterButton) {
     const id = filterButton.attr('id');
 
-
-    if (filterButton.hasClass('initialSelect') && filterButton.hasClass('active-button') ) {
+    if (filterButton.hasClass('initialSelect') && filterButton.hasClass('active-button')) {
       filterButton.removeClass('initialSelect');
       filterButton.removeClass('active-button');
       $('#guide-listings').show();
@@ -248,7 +288,7 @@
       filterButton.addClass('initialSelect');
       filterButton.siblings().removeClass('active-button');
 
-      if(id === 'azure') {
+      if (id === 'azure') {
         $('#guide-listings').hide();
         $('#no-azure-results').show();
         return;
@@ -259,7 +299,7 @@
   }
 
   /* Search box on library page */
-  $('#js-search-library').on("keyup", searchData);
+  $('#js-search-library').on("keyup", searchLibraryData);
 
   /* Triggered on click of any cloud filtering buttons */
   $('.cloud-filter .filter').click(function () {
