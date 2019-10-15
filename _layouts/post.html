@@ -32,7 +32,7 @@ custom_js:
               {% for tag in page.tags %}
                 <span class="badge badge-pill badge-default">
                   {% capture tag-name %}{{tag | upcase }}{% endcapture %}
-                  {% if tag-name=="AWS" or tag-name=="GCP"  or tag-name=="GKE" %} {{ tag-name }} {% else %} {{tag-name | capitalize}}{% endif %}</span>
+                  {% if tag-name=="AWS" or tag-name=="GCP"  or tag-name=="GKE" or tag-name=="EKS" %} {{ tag-name }} {% else %} {{tag-name | capitalize}}{% endif %}</span>
               {% endfor %}
             {% endif %}
           </div>
