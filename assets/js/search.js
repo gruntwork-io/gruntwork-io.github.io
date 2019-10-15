@@ -99,9 +99,7 @@
     });
   }
 
-
-
-  function initalDisplay() {
+  function initialDisplay() {
     return (
       $('#guide-listings').show() &&
       $('#no-azure-results').hide() &&
@@ -117,105 +115,45 @@
       $('.categories ul li').hide()
     )
   }
+
   /**
-   * A function to search the IaC Lib and Deployment guides. Can also be used for other pages that need it.
+   * A function to search the Deployment guides.
    * To show/hide the proper elements based on the results.
    * @type {Function}
    */
-  function filterData(searchValue, type) {
+  function filterSearchData(searchValue, type) {
     let matches = 0;
     let submoduleMatches = 0;
-    let searchContent;
-
+    
     const searchEntry = detectSearchEntry();
 
-    initalDisplay();
-
-    if (searchValue && searchValue.length > 0) {
-      const searchQueries = searchValue.toLowerCase().split(" ");
-
-      searchDisplay();
-
-      searchEntry.forEach(entry => {
-        let matchesAll = true;
-
-        searchQueries.forEach(searchQuery => {
-          if(entry.text) {
-            searchContent = entry.text;
-          } else if(type === 'wordSearch') {
-            searchContent = entry.title + entry.category + entry.content + entry.tags;
-          } else if (type === 'tagSearch') {
-            searchContent = entry.tags + entry.cloud;
-          } else if (type === 'cloudSearch') {
-            searchContent = entry.cloud;
-          } else {
-            return("Not Valid");
-          }
-
-          if (searchContent.indexOf(searchQuery) < 0) {
-            matchesAll = false;
-          }
-        });
-
-        //Checks if results were found and displays results accordingly
-        if (matchesAll) {
-          displayCategory(entry);
-          $("#" + entry.id).show();
-          matches++;
-          submoduleMatches = 0;
-          return;
-        }
-      });
-
-
-      if (matches === 0) {
-        $('#search-results-count').hide();
-        $('#no-matches').show();
-        return;
-      }
-
-      showItemsCount(searchEntry, matches, submoduleMatches);
-    } else {
-      if (searchEntry.type === 'libraryEntries') {
-
-        showInitialItemsCount(searchEntry);
-        $('.table-clickable-row').show();
-
-      } else if (searchEntry.type === 'guideEntries') {
-        showAllItems();
-      }
+    if($('.guide-card').length !== 0){
+      initialDisplay();
     }
-  }
-
-  function filterLibraryData(searchValue) {
-    let matches = 0;
-    let submoduleMatches = 0;
-    let searchContent;
-
-    const searchEntry = detectSearchEntry();
 
     if (searchValue && searchValue.length > 0) {
       const searchQueries = searchValue.toLowerCase().split(" ");
 
-      $('.table-clickable-row').hide();
+      $('.table-clickable-row'.length === 0) ? searchDisplay() : $('.table-clickable-row').hide();
      
       searchEntry.forEach(entry => {
         let matchesAll = true;
 
         searchQueries.forEach(searchQuery => {
-          searchContent = entry.text;
-          
+          const searchContent = getSearchData(entry, type);
+
           if (searchContent.indexOf(searchQuery) < 0) {
             matchesAll = false;
+            $(`#${entry.id}`).hide();
           }
         });
 
         //Checks if results were found and displays results accordingly
         if (matchesAll) {
           displayCategory(entry);
-          $("#" + entry.id).show();
+          $(`#${entry.id}`).show();
           matches++;
-          submoduleMatches += entry.num_submodules;
+          $('.table-clickable-row'.length > 0) ? submoduleMatches += entry.num_submodules: submoduleMatches = 0;
           return;
         }
       });
@@ -225,12 +163,34 @@
         $('#no-matches').show();
         return;
       }
-
+      
       showItemsCount(searchEntry, matches, submoduleMatches);
     } else {
-      showInitialItemsCount(searchEntry);
-      $('.table-clickable-row').show();
+      if ($('.table-clickable-row'.length > 0)) {
+
+        showInitialItemsCount(searchEntry);
+        $('.table-clickable-row').show();
+
+      } else {
+        showAllItems();
+      }
     }
+  }
+
+  function getSearchData(entry, type){
+
+    let searchContent;
+
+    if(type === 'wordSearch') {
+      searchContent = entry.text || entry.title + entry.category + entry.content + entry.tags;
+    } else if (type === 'tagSearch') {
+      searchContent = entry.tags + entry.cloud;
+    } else if (type === 'cloudSearch') {
+      searchContent = entry.cloud;
+    } else {
+      searchContent = "Not Valid";
+    }
+    return searchContent;
   }
 
   /**
@@ -243,14 +203,7 @@
     const target = $(event.currentTarget);
     const searchValue = target.val();
 
-    filterData(searchValue, 'wordSearch');
-  }, 250);
-
-  const searchLibraryData = debounce(function (event) {
-    const target = $(event.currentTarget);
-    const searchValue = target.val();
-
-    filterLibraryData(searchValue);
+    filterSearchData(searchValue, 'wordSearch');
   }, 250);
 
 
@@ -266,11 +219,11 @@
     if (checkedTags.length === 0) {
       // Return filtered to whatever cloud is selected if no tag is checked
       // Or all items if no cloud is selected
-      return selectedCloud ? filterData(selectedCloud, 'cloudSearch') : showAllItems();
+      return selectedCloud ? filterSearchData(selectedCloud, 'cloudSearch') : showAllItems();
     }
     checkedTags.each(function () {
       const searchValue = $(this).val();
-      filterData(searchValue + (selectedCloud ? ' ' + selectedCloud : ''), 'tagSearch');
+      filterSearchData(searchValue + (selectedCloud ? ' ' + selectedCloud : ''), 'tagSearch');
     });
   }
 
@@ -299,7 +252,7 @@
   }
 
   /* Search box on library page */
-  $('#js-search-library').on("keyup", searchLibraryData);
+  $('#js-search-library').on("keyup", searchData);
 
   /* Triggered on click of any cloud filtering buttons */
   $('.cloud-filter .filter').click(function () {
