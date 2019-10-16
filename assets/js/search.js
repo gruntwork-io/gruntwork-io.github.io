@@ -14,12 +14,12 @@
   // Initial entry on load
   $(initialEntry);
 
-  // Returns a function, that, as long as it continues to be invoked, will not
-  // be triggered. The function will be called after it stops being called for
-  // N milliseconds. If `immediate` is passed, trigger the function on the
-  // leading edge, instead of the trailing.
-  // Ensures a given task doesn't fire so often that it bricks browser performance.
-  // From: https://davidwalsh.name/javascript-debounce-function
+  // Returns a function, that, as long as it continues to be invoked, will not be
+  // triggered. The function will be called after it stops being called for N
+  // milliseconds. If `immediate` is passed, trigger the function on the leading
+  // edge, instead of the trailing. Ensures a given task doesn't fire so often
+  // that it bricks browser performance. From:
+  // https://davidwalsh.name/javascript-debounce-function
   function debounce(func, wait, immediate) {
     let timeout;
     return function () {
@@ -27,20 +27,22 @@
         args = arguments;
       const later = function () {
         timeout = null;
-        if (!immediate) func.apply(context, args);
-      };
+        if (!immediate) 
+          func.apply(context, args);
+        };
       const callNow = immediate && !timeout;
       clearTimeout(timeout);
       timeout = setTimeout(later, wait);
-      if (callNow) func.apply(context, args);
-    };
+      if (callNow) 
+        func.apply(context, args);
+      };
   }
 
   /**
    * Function displays the total items displayed on the page
    */
   function showItemsCount(totalCount, numSubmodules) {
-    if ($('.table-clickable-row'.length > 0)) {
+    if ($('.table-clickable-row').length > 0) {
       $('#search-results-count').show();
       if (totalCount > 0 && numSubmodules > 0) {
         $('#search-results-count').html("<strong>" + totalCount + "</strong>repos(~<strong>" + numSubmodules + "</strong> modules)");
@@ -54,31 +56,18 @@
    * Function to display all items on the page
    */
   function showAllItems() {
-    return (
-      $('.guide-card').show() &&
-      $('.category-head').show() &&
-      $('.categories ul li').show()
-    )
+    return ($('.guide-card').show() && $('.category-head').show() && $('.categories ul li').show())
   }
 
-
   function initialDisplay() {
-    return (
-      $('#guide-listings').show() &&
-      $('#no-azure-results').hide() &&
-      $('#no-matches').hide()
-    );
+    return ($('#guide-listings').show() && $('#no-azure-results').hide() && $('#no-matches').hide());
   }
 
   /**
    * Function to hide items on the page
    */
   function hideItems() {
-    return (
-      $('.guide-card').hide() &&
-      $('.category-head').hide() &&
-      $('.categories ul li').hide()
-    )
+    return ($('.guide-card').hide() && $('.category-head').hide() && $('.categories ul li').hide())
   }
 
   /**
@@ -96,11 +85,10 @@
    * Function that where the search is being performed from
    */
   function detectSearchEntry() {
-    let entries = [];
-    entries = window.libraryEntries ? window.libraryEntries : window.guideEntries;
-    return entries;
+    return window.libraryEntries
+      ? window.libraryEntries
+      : window.guideEntries;
   }
-
 
   /**
    * A function to display or hide the category of search
@@ -117,10 +105,10 @@
     });
   }
 
-  function getSearchData(entry, type){
+  function getSearchData(entry, type) {
     let searchContent;
 
-    if(type === 'wordSearch') {
+    if (type === 'wordSearch') {
       searchContent = entry.text || entry.title + entry.category + entry.content + entry.tags;
     } else if (type === 'tagSearch') {
       searchContent = entry.tags + entry.cloud;
@@ -131,7 +119,6 @@
     }
     return searchContent;
   }
-
 
   /**
    * A function to search the Deployment guides.
@@ -144,14 +131,14 @@
 
     const searchEntry = detectSearchEntry();
 
-    if($('.guide-card').length !== 0){
+    if ($('.guide-card').length !== 0) {
       initialDisplay();
     }
 
     if (searchValue && searchValue.length > 0) {
       const searchQueries = searchValue.toLowerCase().split(" ");
 
-      $('.table-clickable-row'.length === 0) ? hideItems() : $('.table-clickable-row').hide();
+      $('.table-clickable-row').length === 0 ? hideItems() : $('.table-clickable-row').hide();
 
       searchEntry.forEach(entry => {
         let matchesAll = true;
@@ -170,7 +157,9 @@
           displayCategory(entry);
           $(`#${entry.id}`).show();
           matches++;
-          $('.table-clickable-row'.length > 0) ? submoduleMatches += entry.num_submodules: submoduleMatches = 0;
+          if ($('.table-clickable-row').length > 0) {
+            submoduleMatches += entry.num_submodules
+          }
         }
       });
 
@@ -181,7 +170,7 @@
       }
 
       showItemsCount(matches, submoduleMatches);
-    } else if ($('.table-clickable-row'.length > 0)) {
+    } else if ($('.table-clickable-row').length > 0) {
 
       showInitialItemsCount(searchEntry);
       $('.table-clickable-row').show();
@@ -204,26 +193,31 @@
     filterSearchData(searchValue, 'wordSearch');
   }, 250);
 
-
   function filterCloudAndTags() {
     const checkedTags = $('input[type="checkbox"]:checked');
     const selectedCloud = $('.cloud-filter .active-button').attr("id");
 
     if (checkedTags.length === 0) {
-      // Return filtered to whatever cloud is selected if no tag is checked
-      // Or all items if no cloud is selected
-      return selectedCloud ? filterSearchData(selectedCloud, 'cloudSearch') : showAllItems();
+      // Return filtered to whatever cloud is selected if no tag is checked Or all
+      // items if no cloud is selected
+      return selectedCloud
+        ? filterSearchData(selectedCloud, 'cloudSearch')
+        : showAllItems();
     }
-    checkedTags.each(function () {
-      const searchValue = $(this).val();
-      filterSearchData(searchValue + (selectedCloud ? ' ' + selectedCloud : ''), 'tagSearch');
-    });
+    checkedTags
+      .each(function () {
+        const searchValue = $(this).val();
+        filterSearchData(searchValue + (selectedCloud
+          ? ' ' + selectedCloud
+          : ''), 'tagSearch');
+      });
   }
 
   /* Triggered when filter checkboxes are checked */
-  $(document).on('click', '.tags', function () {
-    filterCloudAndTags();
-  });
+  $(document)
+    .on('click', '.tags', function () {
+      filterCloudAndTags();
+    });
 
   function selectCloud(filterButton) {
     const id = filterButton.attr('id');
@@ -237,7 +231,9 @@
     } else {
       filterButton.addClass('active-button');
       filterButton.addClass('initialSelect');
-      filterButton.siblings().removeClass('active-button');
+      filterButton
+        .siblings()
+        .removeClass('active-button');
 
       if (id === 'azure') {
         $('#guide-listings').hide();
@@ -253,11 +249,10 @@
   $('#js-search-library').on("keyup", searchData);
 
   /* Triggered on click of any cloud filtering buttons */
-  $('.cloud-filter .filter').on('click', function() {
+  $('.cloud-filter .filter').on('click', function () {
     const filterButton = $(this);
     selectCloud(filterButton);
   });
-
 
   /* Search box on guides page */
   $('#search-box').on("keyup", searchData);
