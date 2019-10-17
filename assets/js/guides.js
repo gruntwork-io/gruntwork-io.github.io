@@ -82,7 +82,6 @@ $(document).ready(function () {
 
       const hash = `#${selectedHeadingId}`;
       const selectedNavLink = nav.find(`a[href$='${hash}']`);
-
       if (selectedNavLink.length === 1) {
         updateHash(hash);
         selectedNavLink.addClass('selected');
@@ -96,7 +95,6 @@ $(document).ready(function () {
           // If this is a nested nav item, expand its parent nav
           allTopLevelNavListItems.removeClass('expanded');
           parentNavListItem.addClass('expanded');
-          parentNavListItem.addClass("selected");
         } else if (topLevelNavListItem.length === 1) {
           // Otherwise, this is a top-level nav item, so expand it directly
           allTopLevelNavListItems.removeClass('expanded');
@@ -123,13 +121,18 @@ $(document).ready(function () {
   })
 
   //Remove link from parent navigation item and add classes when clicked
-  $.each($("ul > li"), function (index, obj) {
+  $.each($("#toc ul > li"), function (index, obj) {
     if ($(obj).has("ul").length) {
-      $(obj).has("ul").find("a:first").removeAttr("href");
+      const parentNavItem = $(obj).has("ul");
+
+      parentNavItem.find("a:first").removeAttr("href");
+      parentNavItem.on('click', function (e) {
+        e.preventDefault();
+
+        $(this).siblings().removeClass('expanded selected')
+        $(this).toggleClass('expanded selected');
+      })
     }
-    $(obj).on('click', function () {
-      $(obj).addClass('expanded').addClass('selected');
-    })
   });
 
 });
