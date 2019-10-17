@@ -118,6 +118,7 @@ $(document).ready(function () {
 
   //Add ga tracking on clicking of the subscribe cta within the guides
   $('.js-subscribe-cta').on('click', function () {
+    $("#subscribe-success").modal('show');
     ga('send', 'event', location.pathname, 'subscribe-cta');
   })
 
