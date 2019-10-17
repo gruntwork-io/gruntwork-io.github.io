@@ -105,6 +105,9 @@
 
 		& li {
 			list-style-type: none;
+			&:hover {
+				cursor: pointer;
+			}
 
 			& ul {
 				display: none;
@@ -119,6 +122,10 @@
 			line-height: 16px;
 			margin-bottom: 8px;
 		}
+	}
+
+	li.expanded > a{
+		color: @guides-primary-color;
 	}
 
 	a.selected {
