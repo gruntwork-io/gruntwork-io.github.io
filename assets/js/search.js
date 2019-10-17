@@ -1,6 +1,8 @@
 /**
  * Javascript specially for the search bad and filters used in the
  * IaC Library page and the deployment guides page.
+ * Please note that since we will be moving to a Saas app, we will need to 
+ * make this code reuasble
  */
 (function () {
 
@@ -27,15 +29,15 @@
         args = arguments;
       const later = function () {
         timeout = null;
-        if (!immediate) 
+        if (!immediate)
           func.apply(context, args);
-        };
+      };
       const callNow = immediate && !timeout;
       clearTimeout(timeout);
       timeout = setTimeout(later, wait);
-      if (callNow) 
+      if (callNow)
         func.apply(context, args);
-      };
+    };
   }
 
   /**
@@ -56,18 +58,24 @@
    * Function to display all items on the page
    */
   function showAllItems() {
-    return ($('.guide-card').show() && $('.category-head').show() && $('.categories ul li').show())
+    $('.guide-card').show();
+    $('.category-head').show();
+    $('.categories ul li').show();
   }
 
   function initialDisplay() {
-    return ($('#guide-listings').show() && $('#no-azure-results').hide() && $('#no-matches').hide());
+    $('#guide-listings').show();
+    $('#no-azure-results').hide();
+    $('#no-matches').hide();
   }
 
   /**
    * Function to hide items on the page
    */
   function hideItems() {
-    return ($('.guide-card').hide() && $('.category-head').hide() && $('.categories ul li').hide())
+    $('.guide-card').hide();
+    $('.category-head').hide();
+    $('.categories ul li').hide();
   }
 
   /**
@@ -85,9 +93,9 @@
    * Function that where the search is being performed from
    */
   function detectSearchEntry() {
-    return window.libraryEntries
-      ? window.libraryEntries
-      : window.guideEntries;
+    return window.libraryEntries ?
+      window.libraryEntries :
+      window.guideEntries;
   }
 
   /**
@@ -200,16 +208,16 @@
     if (checkedTags.length === 0) {
       // Return filtered to whatever cloud is selected if no tag is checked Or all
       // items if no cloud is selected
-      return selectedCloud
-        ? filterSearchData(selectedCloud, 'cloudSearch')
-        : showAllItems();
+      return selectedCloud ?
+        filterSearchData(selectedCloud, 'cloudSearch') :
+        showAllItems();
     }
     checkedTags
       .each(function () {
         const searchValue = $(this).val();
-        filterSearchData(searchValue + (selectedCloud
-          ? ' ' + selectedCloud
-          : ''), 'tagSearch');
+        filterSearchData(searchValue + (selectedCloud ?
+          ' ' + selectedCloud :
+          ''), 'tagSearch');
       });
   }
 
