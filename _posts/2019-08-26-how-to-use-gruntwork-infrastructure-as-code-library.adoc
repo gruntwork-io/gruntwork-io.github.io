@@ -134,7 +134,7 @@ image::/assets/img/guides/infrastructure-as-code-library/elk-modules.png[]
 
 Each repo in the Gruntwork Infrastructure as Code Library contains a `modules` folder that contains the main implementation code,
 broken down into multiple standalone, orthogonal, reusable, highly configurable _modules_. For example, the ELK repo
-(Elasticsearch, Logstash, Kubernetes) isn't one giant module that deploys the entire ELK stack, but a bunch of separate
+(Elasticsearch, Logstash, Kibana) isn't one giant module that deploys the entire ELK stack, but a bunch of separate
 modules for installing, running, and deploying Elasticsearch, Kibana, Logstash, Elastalert, Beats, Collectd, and so on.
 
 This allows you to combine and compose the modules in many different permutations to fit your exact needs: e.g., some
@@ -231,7 +231,7 @@ IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork subscriber# to access thes
 * https://github.com/gruntwork-io/infrastructure-modules-multi-account-acme[infrastratructure-modules]: In this repo,
   you'll find the reusable modules that define the infrastructure for the entire company (in this case, for Acme).
   These are like the blueprints for a house.
-* https://github.com/gruntwork-io/infrastructure-modules-multi-account-acme[infrastratructure-live]: This repo uses
+* https://github.com/gruntwork-io/infrastructure-live-multi-account-acme[infrastratructure-live]: This repo uses
   the modules from `infrastructure-modules` to deploy all of the live environments for the company (dev, stage, prod,
   etc). These are like the real houses built from the blueprints.
 * https://github.com/gruntwork-io/sample-app-frontend-multi-account-acme[sample-app-frontend]: This repo contains a
