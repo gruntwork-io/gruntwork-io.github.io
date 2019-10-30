@@ -105,6 +105,9 @@
 
 		& li {
 			list-style-type: none;
+			&:hover {
+				cursor: pointer;
+			}
 
 			& ul {
 				display: none;
@@ -121,8 +124,9 @@
 		}
 	}
 
-	a.selected {
+	a.selected, a:hover, a:active{
 		color: @guides-primary-color;
+		text-decoration: none;
 
 		&:before {
 			content: "";
@@ -1477,5 +1481,3 @@ body .guides .guides-section-white {
     }
   }
 }
-
-
