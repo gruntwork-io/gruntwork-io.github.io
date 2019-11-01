@@ -67,4 +67,4 @@ To Deploy via Houston
 
 ## License
 
-See LICENSE.txt.
+See [LICENSE.txt](LICENSE.txt).
