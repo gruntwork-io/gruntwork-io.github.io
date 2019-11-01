@@ -67,4 +67,4 @@ To Deploy via Houston
 
 ## License
 
-This code is released under the MIT License. See LICENSE.txt.
+See LICENSE.txt.
