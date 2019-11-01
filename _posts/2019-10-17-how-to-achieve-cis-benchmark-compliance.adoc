@@ -31,8 +31,10 @@ associated modules, you can launch infrastructure that is compliant with the Ben
 out-of-the-box, and you'll be set to retain a compliant state over time because all of the infrastructure is
 defined as code.
 
+image:/assets/img/guides/cis-compliance/cis-account-architecture.png[CIS Benchmark Architecture]
+
 === What is the CIS AWS Foundations Benchmark?
-link:https://www.cisecurity.org/resources/?type=benchmark[CIS Benchmarks] are objective, consensus-driven
+The link:https://www.cisecurity.org/resources/?type=benchmark[CIS Benchmarks] are objective, consensus-driven
 configuration guidelines developed by security experts to help organizations improve their security posture.
 The AWS Foundations Benchmark is a set of configuration best practices for hardening AWS accounts to establish
 a secure foundation for running workloads on AWS. It also provides ongoing monitoring to ensure that the
@@ -88,7 +90,7 @@ the recommendation). _Not Scored_ recommendations must be checked and remediated
 compliance, each scored item must pass an audit.
 
 === Profiles
-The Benchmark defines two profiles levels. Level one recommendations are easier to implement, incur less
+The Benchmark defines two profile levels. Level one recommendations are easier to implement, incur less
 overhead, but still substantially improve security. Level two recommendations are meant for highly sensitive
 environments with a lower risk appetite. They may be more difficult to implement and/or cause more overhead in
 day-to-day usage.
@@ -171,19 +173,21 @@ the link:https://github.com/gruntwork-io/module-security/blob/master/modules/iam
 core module] creates a best practices set of IAM groups. The groups are configurable according to your needs.
 You could, for example, opt to create a group with read only access, another group with full administrator
 access, and no other groups. All Gruntwork subscribers have access to the core modules, which reside in
-Gruntwork-controlled Git repositories.
+Gruntwork's infrastructure as code repositories.
 
 [[wrapper_modules]]
 === Compliance wrapper modules
 The compliance wrapper modules are an extension of the IaC Library. They use the
 link:https://www.terraform.io/docs/modules/sources.html[`source` argument in a Terraform module block] to call
 the core module with a configuration that is customized for compliance with the CIS AWS Foundations Benchmark.
-These modules are also in a Gruntwork-controlled git repository.
+These modules are in the link:https://github.com/gruntwork-io/cis-compliance-aws[`cis-compliance-aws`
+repository] (accessible to Gruntwork Compliance subscribers).
 
 [[infrastructure_modules]]
 === infrastructure-modules
 The `infrastructure-modules` are your organization's "blueprint" for how to deploy infrastructure. You can
-use `infrastructure-modules` to customize the settings according to the needs of your environment. See the
+use `infrastructure-modules` to customize the settings according to the needs of your environment. Subscribers
+can refer to the
 canonical link:https://github.com/gruntwork-io/infrastructure-modules-multi-account-acme[ACME
 infrastructure-modules reposistory].
 
@@ -269,7 +273,7 @@ Benchmark document and refer to the link:https://aws.amazon.com/answers/security
 [[create_password_policy]]
 === Create an IAM user password policy
 After the manual configurations are complete, the next step is to create an IAM user password policy using the
-link:https://github.com/gruntwork-io/cis-compliance-aws/blob/master/examples/iam-password-policy/README.md[`iam-password-policy`
+link:https://github.com/gruntwork-io/cis-compliance-aws/blob/master/examples/iam-password-policy/README.adoc[`iam-password-policy`
 wrapper module]. Refer to the link:/examples/iam-password-policy/terraform[terraform] and
 link:/examples/iam-password-policy/terragrunt[terragrunt] usage examples. Do this before creating any IAM
 users!
@@ -306,7 +310,7 @@ account will immediately be compliant with several of the Benchmark recommendati
 Once the IdP is ready, proceed with the steps below.
 
 Set up IAM roles for SAML::
-Use the link:https://github.com/gruntwork-io/cis-compliance-aws/blob/master/modules/saml-iam-roles/README.md[`saml-iam-roles`
+Use the link:https://github.com/gruntwork-io/cis-compliance-aws/blob/master/modules/saml-iam-roles/README.adoc[`saml-iam-roles`
 wrapper module] to configure a compliant-set of IAM roles and policies. The module creates a minimal, best
 practices set of of IAM roles that may be assumed from the SAML provider. Tweak the `vars.tf` according to
 your needs.
@@ -318,7 +322,7 @@ users should have MFA, and we strongly advise doing so.
 
 Create an IAM group for access to support::
 Use the
-link:https://github.com/gruntwork-io/cis-compliance-aws/blob/master/modules/iam-groups/README.md[`iam-groups`
+link:https://github.com/gruntwork-io/cis-compliance-aws/blob/master/modules/iam-groups/README.adoc[`iam-groups`
 wrapper module] to create a standardized set of IAM groups. The module will create a group called `support`
 with the `AWSSupportAccess` managed policy attached. Customize the variables in the module to create only the
 groups you want.
@@ -339,7 +343,7 @@ the use of root].  Fortunately, most of these activities are rare, so usage of t
 a minimum.
 
 If you need to provision IAM users in addition to SAML, proceed with <<iam_user_authentication>>. Otherwise,
-continue with <<create_password_policy>>.
+continue with <<iam_roles_for_instances>>.
 
 [[iam_user_authentication]]
 ==== Steps for authentication via IAM users
@@ -354,17 +358,16 @@ roles that can be assumed from a central account using the
 link:https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html[AssumeRole] feature. This way you
 only need to create IAM users in the central account rather than in each account individually . You can create
 roles in your sub accounts using the
-link:https://github.com/gruntwork-io/cis-compliance-aws/blob/master/modules/cross-account-iam-roles/README.md[`cross-account-iam-roles`
+link:https://github.com/gruntwork-io/cis-compliance-aws/blob/master/modules/cross-account-iam-roles/README.adoc[`cross-account-iam-roles`
 wrapper module].
 
 Refer to the
 link:https://gruntwork.io/guides/foundations/how-to-configure-production-grade-aws-account-structure/#iam-roles[IAM
-roles} section of the How to configure a production-grade AWS account structure guide to learn more about
-cross-account roles.
+roles] section of the production-grade AWS account structure guide to learn more about cross-account roles.
 
 Create IAM groups::
 Next, create a compliant set of IAM groups with the
-link:https://github.com/gruntwork-io/cis-compliance-aws/blob/master/modules/iam-groups/README.md[`iam-groups`
+link:https://github.com/gruntwork-io/cis-compliance-aws/blob/master/modules/iam-groups/README.adoc[`iam-groups`
 wrapper module]. If you're using multiple AWS accounts, add the roles created in the previous step to the
 `iam_groups_for_cross_account_access` list.
 
@@ -381,7 +384,7 @@ accounts (e.g. dev, stage, and prdouction) where your applications run.
 
 (Optional) Set up custom permissions::
 If you have a need for custom permissions, use the
-link:https://github.com/gruntwork-io/cis-compliance-aws/blob/master/modules/custom-iam-entity/README.md[`custom-iam-entity`
+link:https://github.com/gruntwork-io/cis-compliance-aws/blob/master/modules/custom-iam-entity/README.adoc[`custom-iam-entity`
 wrapper module] to create additional groups and/or roles.
 
 If you need to attach a managed policy that does not require MFA, such as any of the AWS managed policies,
@@ -426,7 +429,7 @@ flow logs.
 
 [[cloudtrail]]
 ==== CloudTrail
-Use the link:https://github.com/gruntwork-io/cis-compliance-aws/blob/master/modules/cloudtrail/README.md[`cloudtrail`
+Use the link:https://github.com/gruntwork-io/cis-compliance-aws/blob/master/modules/cloudtrail/README.adoc[`cloudtrail`
 wrapper module] to establish a compliant CloudTrail configuration. The wrapper module will configure CloudTrail with the
 following characteristics:
 
@@ -448,7 +451,7 @@ CloudTrail logs at rest]
 ==== Enable AWS Config in all regions
 Gruntwork has created a code generation utility to make it simple to enable AWS Config in every region of an
 AWS account. Refer to the
-link:https://github.com/gruntwork-io/cis-compliance-aws/blob/module-wrappers/modules/generate-aws-config/README.md[`generate-aws-config`
+link:https://github.com/gruntwork-io/cis-compliance-aws/blob/master/modules/generate-aws-config/README.adoc[`generate-aws-config`
 documentation] for the details. Use the utility to enable AWS Config in all regions along with a global
 configuration recorder in one region, as per the Benchmark recommendation.
 
@@ -474,7 +477,7 @@ defaults-aws`] command to remove all default VPCs from all regions.
 The Monitoring section of the Benchmark centers on a collection of
 link:https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/MonitoringLogData.html[CloudWatch Logs Metric
 Filters]. Gruntwork has simplified this section to a single module: the
-link:https://github.com/gruntwork-io/cis-compliance-aws/blob/module-wrappers/modules/cloudwatch-logs-metric-filters/README.md[`cloudwatch-logs-metric
+link:https://github.com/gruntwork-io/cis-compliance-aws/blob/master/modules/cloudwatch-logs-metric-filters/README.adoc[`cloudwatch-logs-metric
 -filters` wrapper module]. It will create and configure all the CloudWatch Logs metric filters necessary for
 compliance with the Benchmark.
 
