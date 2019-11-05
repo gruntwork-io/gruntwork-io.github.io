@@ -1,0 +1,24 @@
+<div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="{{ include.id }}-heading">
+      <h3 class="panel-title">
+        <a role="button" data-toggle="collapse" href="#{{ include.id }}" aria-expanded="{{ include.expanded }}" aria-controls="{{ include.id }}" class="no-scroll">
+          <i class="fa fa-caret-right hidden-print" aria-hidden="true"></i> {{ include.title }}
+        </a>
+      </h3>
+    </div>
+    <div id="{{ include.id }}" class="panel-collapse{% unless include.expanded == "true" %} collapse{% endunless %}" role="tabpanel" aria-labelledby="{{ include.id }}-heading">
+      <div class="panel-body">
+        <table class="table table-striped">
+          <tbody>
+          {% for feature in include.features %}
+            <tr>
+              <th style="width: 200px">{{ feature.title }}</th>
+              <td>{{ feature.description }}</td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+</div>
+  

@@ -1,0 +1,136 @@
+infrastructure:
+  - title: Account configuration
+    description: |
+      Choose from a single or multi account/project setup where each account/project represents a distinct environment.
+
+  - title: Network Topology
+    description: |
+      For each environment, create a VPC with multiple subnet tiers, route tables, NAT Gateways, Network ACLs, etc.
+
+  - title: Server cluster
+    description: |
+      Choose from a Docker Cluster (backed by Amazon EC2 Container Service, Amazon EC2 Kubernetes Service, or Google Kubernetes Engine) or Auto Scaling Groups.
+
+  - title: Load balancer
+    description: |
+      Choose your load balancer for distributing traffic across your server cluster.
+
+  - title: Database
+    description: |
+      Choose a supported relational database, such as MySQL, PostgreSQL, MariaDB, Oracle, or SQL Server.
+
+  - title: Cache
+    description: |
+      Choose a supported distributed cache, such as Redis or Memcached.
+
+  - title: Other data stores
+    description: |
+      We have support for Kafka, ZooKeeper, MongoDB, ELK (Elasticsearch, Logstash, Kibana), SQS, Kinesis, and more.
+
+  - title: Static content
+    description: |
+      Deploy your images, CSS, and JS into an S3 or GCS bucket and configure a CDN in front of it.
+
+  - title: Bastion host
+    description: |
+      Choose from either a plain bastion host or an OpenVPN server as the sole entrypoint to your network.
+
+  - title: CI server
+    description: |
+      Choose from Jenkins, CircleCI, or TravisCI.
+
+  - title: Sample frontend app
+    description: |
+      A sample frontend application that shows how to package the code using Docker or Packer, how to manage
+      configuration across multiple environments, how to store application secrets, how to do service discovery to talk
+      to a backend app, and how to run the entire stack in the dev environment.
+
+  - title: Sample backend app
+    description: |
+      A sample backend application that shows how to package the code using Docker or Packer, how to manage
+      configuration across multiple environments, how to store application secrets, how to talk to the database and cache,
+      and how to apply schema migrations.
+
+  - title: Serverless
+    description: |
+      Optionally deploy serverless functions using Terraform.
+
+configuration:
+  - title: Environments
+    description: |
+      Choose the isolated environments you want to create: e.g., dev, qa, stage, prod.
+
+  - title: Encryption
+    description: |
+      Choose if you want to enable end-to-end encryption for all data at rest and in transit. Mandatory for compliance
+      use-cases (e.g., HIPAA, PCI, SOX, etc).
+
+  - title: Automated build &amp; deployment (CI / CD)
+    description: |
+      Run a build after every commit to test your code, package it using Docker or Packer, and, for commits to
+      certain branches or tags, automatically deploy that Docker or Packer image to specific environments.
+
+  - title: Monitoring
+    description: |
+      Configure metrics in CloudWatch or StackDriver.
+
+  - title: Alerting
+    description: |
+      Configure alerts on key metrics: e.g., high CPU usage on EC2 instances, too many 4xx or 5xx errors on
+      load balancers, low disk space on your database.
+
+  - title: Log aggregation
+    description: |
+      Configure all servers to send logs to a central location for easier searching and filtering.
+
+  - title: DNS
+    description: |
+      Configure your domain name(s).
+
+security:
+  - title: SSL/TLS
+    description: |
+      Create SSL/TLS certificates for your domain names.
+
+  - title: Server hardening
+    description: |
+      Configure every server to run fail2ban and to automatically install critical security patches on a nightly basis.
+
+  - title: SSH management
+    description: |
+      Install ssh-grunt on every server, which allows admins to grant or revoke SSH access using your identity provider
+      (e.g., IAM, Google, Active Directory) and for each developer to be able to use their own username and SSH key to
+      connect to servers.
+
+  - title: Secrets management
+    description: |
+      Use KMS to securely encrypt and decrypt application secrets, such as database passwords.
+
+  - title: Account security
+    description: |
+      Enable audit logging for all of your API calls. Create best practices IAM groups and policies for user and
+      permissions management.
+
+design:
+  - title: High Availability
+    description: |
+      All aspects of the architecture are designed for high availability: e.g., all servers are deployed across multiple
+      Availability Zones; load balancers perform health checks and automatically replace failed servers; the load
+      balancers themselves run multiple servers and do automatic failover; the database and cache can also do automatic
+      failover to standby servers in another Availability Zone; data is automatically backed up on a nightly basis.
+
+  - title: Scalability
+    description: |
+      All aspects of the architecture support easy vertical and horizontal scalability: e.g., you can use auto scaling
+      policies to resize the server cluster in response to load; the load balancers will automatically scale up and down
+      in response to load; you can configure read replicas for your database and cache.
+
+  - title: Infrastructure as code
+    description: |
+      You get 100% of the source code for everything in the Reference Architecture. It is written using a variety of
+      tools, including Terraform, Packer, Docker, Go, Python, and Bash.
+
+  - title: Documentation
+    description: |
+      Comprehensive written and video documentation of everything included in the Reference Architecture.
+
