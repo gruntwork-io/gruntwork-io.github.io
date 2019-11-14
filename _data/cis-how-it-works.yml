@@ -1,39 +1,34 @@
-- title: Choose your architecture options
+- title: Review the guide
   description: |
-    <p>You fill out an online web form to get started:</p>
+    <p>
+      Read the <a href="http://gruntwork.io/guides/compliance/how-to-achieve-cis-benchmark-compliance/">How to achieve
+      compliance with the CIS AWS Foundations Benchmark</a> guide to get a handle on the concepts and process.
+    </p>
+
+- title: Use the compliance modules
+  description: |
+    <p>
+      Use the compliance modules to configure your account according to the recommendations in the Benchmark. The modules take the following steps to configure your AWS account in a manner consistent with the Benchmark:
+    </p>
     <ul>
-      <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</li>
-      <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</li>
-      <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</li>
-      <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</li>
-      <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</li>
-      <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</li>
-      <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</li>
-      <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</li>
+      <li>Create compliant IAM users, groups, roles, and policies</li>
+      <li>Require multi-factor authentication for accessing AWS</li>
+      <li>Enable AWS Config across all regions</li>
+      <li>Remove default VPCs and unnecessary default security groups</li>
+      <li>Configure CloudTrail integration with S3, KMS, and CloudWatch Logs</li>
+      <li>Establish metrics and alarms for compliance violations</li>
+      <li>Configure VPCs with flow logs and a minimal set of peering connections</li>
+      <li>Avoid overly permissive inbound security group rules</li>
     </ul>
 
-    <p class="text-muted"><em>Are we missing something you want? Pay us a one-time fee to <a href="/custom-module-development/">build it for you</a>.</em></p>
-
-- title: We build your architecture
+- title: Pass an audit
   description: |
     <p>
-      We translate your preferences into infrastructure code written in Terraform, Bash, Python, and Go. We put the
-      code into your git repos and deploy it into your AWS or GCP account(s). For AWS, this takes about one day. For
-      GCP, <a href="/contact/">Contact Us!</a>.
+      After using the modules to configure your AWS accounts, your infrastructure will pass muster with the CIS audit steps. Take a bow after your security team inspects your account for compliance.
     </p>
 
-- title: Learn how to use it
+- title: Stay current
   description: |
     <p>
-      Use our <a href="/training/">DevOps Training Library</a> to learn how to use your new architecture with a series of
-      micro-videos that do an in-depth walkthrough of all the most common uses cases. Need to learn Terraform, Docker,
-      or Packer? We have courses on those, too!
+      Our tests ensure that the modules remain compliant over time. We'll update the modules when new versions of the Benchmark are released, and the updates are included with the subscription.
     </p>
-
-- title: Get support
-  description: |
-    <p>
-      If you run into a snag, ask a question on our community support channel via Slack.
-      Or sign up for <a href="/support/">Professional Support</a> to chat directly with Gruntwork engineers via a private shared Slack channel or email, and guarantee a timely response.
-    </p>
-
