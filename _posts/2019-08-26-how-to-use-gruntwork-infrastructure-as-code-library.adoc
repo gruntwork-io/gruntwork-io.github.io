@@ -97,7 +97,7 @@ Kibana), one repo that contains a collection of CI / CD code, and so on.
 The code in the Gruntwork Infrastructure as Code Library is written using a combination of:
 
 Terraform::
-  Used to to define and manage most of the basic infrastructure, such as servers, databases, load balancers, and
+  Used to define and manage most of the basic infrastructure, such as servers, databases, load balancers, and
   networking.
 
 Go::
@@ -118,13 +118,21 @@ Python::
   Used for more complicated scripts, especially those that need to run on other operating systems (e.g., Windows)
   and/or those that need to be called directly from Terraform (e.g., to fill in some missing functionality).
 
+Helm::
+  Used to define and manage Kubernetes applications and resources. Example: `k8s-service` is a helm chart that packages
+  your application containers into a best practices deployment for Kubernetes.
+
 Why these tools? We wrote a detailed blog post on
 https://blog.gruntwork.io/why-we-use-terraform-and-not-chef-puppet-ansible-saltstack-or-cloudformation-7989dad2865c[why we use Terraform];
 as for Go, Bash, and Python, we use them because they work just about everywhere, with few or no external dependencies,
 and they can be integrated with almost any configuration management approach: e.g., you can use Bash scripts with Chef,
 Puppet, Ansible, Packer, and Docker.
 
-The code in each repo is organized into three primary folders, `modules`, `examples`, and `test`, as described in the
+We use helm because it has a strong community (including official support from the https://www.cncf.io/[Cloud Native
+Computing Foundation]) with many vendors officially packaging their applications into a Helm Chart (e.g. Hashicorp
+uses Helm to package Vault and Consul for Kubernetes).
+
+The code in each repo is organized into three primary folders, `modules` (or `charts` for Helm), `examples`, and `test`, as described in the
 following sections.
 
 === Modules
@@ -132,7 +140,7 @@ following sections.
 .The modules folder of the ELK (Elasticsearch, Logstash, Kibana) repo
 image::/assets/img/guides/infrastructure-as-code-library/elk-modules.png[]
 
-Each repo in the Gruntwork Infrastructure as Code Library contains a `modules` folder that contains the main implementation code,
+Each repo in the Gruntwork Infrastructure as Code Library contains a `modules` (or `charts`) folder that contains the main implementation code,
 broken down into multiple standalone, orthogonal, reusable, highly configurable _modules_. For example, the ELK repo
 (Elasticsearch, Logstash, Kibana) isn't one giant module that deploys the entire ELK stack, but a bunch of separate
 modules for installing, running, and deploying Elasticsearch, Kibana, Logstash, Elastalert, Beats, Collectd, and so on.
@@ -375,7 +383,7 @@ Reuse::
   Infrastructure as Code Library.
 
 Some of the main IaC tools you'll see used and referenced in the Gruntwork Infrastructure as Code Library are Terraform, Terragrunt,
-Packer, and Docker, each of which we'll discuss in the next several sections.
+Packer, Docker, and Helm, each of which we'll discuss in the next several sections.
 
 [[terraform]]
 === Terraform
@@ -506,6 +514,34 @@ You can run `docker build -t example-image .` to build a Docker image from this 
 Registry (e.g., ECR or Docker Hub), and then deploy the Docker image using other tools. For example, the Gruntwork
 Infrastructure as Code Library contains a number of modules for running _container orchestration tools_ such as Kubernetes, ECS, and
 Nomad that you can use to deploy and manage Docker images.
+
+[[helm]]
+=== Helm
+
+https://helm.sh/[Helm] is a package and module manager for Kubernetes that allows you to define, install, and manage
+Kubernetes applications as reusable packages called _Charts_. Helm provides support for official charts in their
+repository that contains various applications such as Jenkins, MySQL, and Consul to name a few.
+
+Charts are written in go templates and allow templatization of Kubernetes manifests to allow deployment across varying
+inputs. This allows vendors to simplify distribution of their applications for Kubernetes so that users can deploy and
+upgrade their application in a single command.
+
+Each vendor distributes their charts using _chart repositories_, which is a server that serves chart packages. You can
+access any chart in a repository once you add it to your local configuration.
+
+For example, you can use the helm client to add the official Elastic repository to install ElasticSearch onto Kubernetes:
+
+[source,bash]
+----
+helm repo add elastic https://helm.elastic.co
+helm install elastic/elasticsearch
+----
+
+The Gruntwork Infrastructure as Code Library contains a number of Helm charts that help you manage your deployments of
+your applications: e.g the `k8s-service` helm chart packages your application containers into a best practices
+deployment for managing on Kubernetes. You can access the Gruntwork Helm charts by adding the Gruntwork Helm Chart
+Repository. You will see an example of how to do this in <<how_to_use_the_catalog>>.
+
 
 [[immutable_infrastructure]]
 === Immutable infrastructure
@@ -1836,6 +1872,139 @@ Although this guide outlines how to use Docker and Packer, you can also use the 
 Infrastructure as Code Library and the Gruntwork Installer with any other configuration management strategy, such as Chef, Ansible,
 Puppet, or Salt. Check the docs for your chosen configuration management tool on how to copy and execute scripts and
 binaries.
+
+
+[[using_helm_charts]]
+=== Using Helm Charts
+
+This section will show you how to use Helm charts from the Gruntwork Infrastructure as Code Library. As an illustrative
+example, we'll deploy the official Nginx docker container using the `k8s-service` helm chart from
+https://github.com/gruntwork-io/helm-kubernetes-services[helm-kubernetes-services].
+
+You can use this Helm chart to deploy any web or worker service Docker container onto Kubernetes.
+
+==== Add Gruntwork Helm chart repository
+
+The Helm charts in the Gruntwork Infrastructure as Code Library are distributed using a Helm Chart Repository. In order
+to access Helm charts that are a part of the Gruntwork Helm chart repository, you will need to add the repository for
+use with your client:
+
+[source,bash]
+----
+helm repo add gruntwork https://helmcharts.gruntwork.io
+----
+
+Once the repository is added, you can install any chart that is a part of the repository by accessing them under the
+namespace `gruntwork`. To find the available charts distributed by a particular repository, you can use the `search`
+command from the helm client:
+
+[source,bash]
+----
+helm search gruntwork
+----
+
+This will query the Gruntwork Helm chart repository for information on all the available charts distributed by the
+repository, showing you a list similar to below:
+
+[source,bash]
+----
+NAME                    CHART VERSION   APP VERSION     DESCRIPTION
+gruntwork/k8s-service   v0.0.10                         A Helm chart to package your application container for Ku...
+----
+
+==== Deploying a chart
+
+Unlike most charts in the community, Helm charts that are a part of the Gruntwork Infrastructure as Code Library have a
+set of required input values. Therefore, you can not run `helm install CHART_NAME` to install a chart on to your
+Kubernetes cluster.
+
+Each of the charts document the required and optional input values in the corresponding `values.yaml` file for the
+chart. You can access the `values.yaml` of a chart either by inspecting the source code for the chart, or using the `helm
+inspect` command. For example, to see the values of the `k8s-service` chart, you can run:
+
+[source,bash]
+----
+helm inspect values gruntwork/k8s-service
+----
+
+You can use this as a starting point to construct your own `values.yaml` file:
+
+[source,bash]
+----
+helm inspect values gruntwork/k8s-service > values.yaml
+----
+
+You can then open up this `values.yaml` file and fill in the required and optional parameters. For `k8s-service`, the two required
+parameters are `containerImage` and `applicationName`. For this example, we can fill in the official Nginx container
+from Docker Hub for the `containerImage` and `nginx` for the `applicationName`:
+
+.values.yaml
+[source,yaml]
+----
+#----------------------------------------------------------------------------------------------------------------------
+# CHART PARAMETERS
+#----------------------------------------------------------------------------------------------------------------------
+
+#----------------------------------------------------------------------------------------------------------------------
+# REQUIRED VALUES
+# These values are expected to be defined and passed in by the operator when deploying this helm chart.
+#----------------------------------------------------------------------------------------------------------------------
+
+# containerImage is a map that describes the container image that should be used to serve the application managed by
+# this chart.
+containerImage:
+  repository: nginx
+  tag: 1.16.1
+
+# applicationName is a string that names the application. This is used to label the pod and to name the main application
+# container in the pod spec. The label is keyed under "gruntwork.io/app-name"
+applicationName: "nginx"
+----
+
+Note that you are free to override any default parameters in the `values.yaml` file. When you install the chart, this
+`values.yaml` file is merged with the default `values.yaml` file distributed with the chart, allowing you to override
+those parameters.
+
+Once you have a `values.yaml` that specifies all the inputs, you can install the chart using those as inputs:
+
+[source,bash]
+----
+helm install -n nginx -f values.yaml gruntwork/k8s-service
+----
+
+This will render the yaml files in the chart using the input values as parameters and apply it onto the Kubernetes
+cluster.
+
+IMPORTANT: In the previous example, we passed in the parameter `-n nginx` to the `install` command. This allows us to
+force a release name for the deployment. When you install a chart using Helm, Helm tracks that deployment as a
+_release_ and binds all the related resources under a unique name. If you don't provide a release name, Helm will
+automatically generate a random name that is not related to the charts (e.g `witty-lobster`). This makes maintenance
+difficult as you will need to refer to this release name any time you want to make changes to the deployment.
+
+
+==== Updating a previous deployment
+
+Once a chart is installed and deployed, you can use the `update` command to make changes to it. For example, if you
+wanted to deploy an updated version of Nginx using our example, you can update the `values.yaml` file to point to a
+later version, and then run `helm update` with the updated input values and release name:
+
+[source,bash]
+----
+helm upgrade -f values.yaml nginx gruntwork/k8s-service
+----
+
+This command will render the `gruntwork/k8s-service` chart using the updated input values, and then replace the
+resources under the Helm release `nginx`.
+
+You can also use the `upgrade` command to update to a later version of the chart:
+
+[source,bash]
+----
+helm upgrade -f values.yaml --version v0.0.10 nginx gruntwork/k8s-service
+----
+
+The above command will use version `v0.0.10` of the `gruntwork/k8s-service` chart when rendering the values.
+
 
 === Contributing to the Gruntwork Infrastructure as Code Library
 
