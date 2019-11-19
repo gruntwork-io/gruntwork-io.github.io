@@ -223,7 +223,6 @@ $(function () {
 
   function _calculatePrice() {
     if (checkoutOptions.subscription_type == 'enterprise') return; // Don't calculate on enterprise
-    console.log("here===============")
 
     var total, subtotal, subscriptionTotal;
 
