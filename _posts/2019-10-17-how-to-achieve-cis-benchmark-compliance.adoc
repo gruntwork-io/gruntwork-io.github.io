@@ -411,7 +411,7 @@ Perform the steps in this section manually.
 Securing the "root" user, or the first user that is created when you set up an AWS account, is one of the
 first actions you should take in any new account. Unfortunately, there is no API or automation available for
 configuring an MFA device for the root user. Follow the manual steps outlined in the
-link:https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html#id_root-user_manage_mfa[AWS docs]. Configuring a virtual MFA device will achieve recommendation 1.13.
+link:https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html#id_root-user_manage_mfa[AWS docs]. Configuring a virtual MFA device will achieve recommendation 1.13. You can also refer to the link:https://gruntwork.io/guides/foundations/how-to-configure-production-grade-aws-account-structure/[production-grade AWS account structure guide.]
 
 For the paranoid: configure a hardware MFA device, as suggested by recommendation 1.14. We suggest using a
 link:https://www.yubico.com/[Yubikey] due to its reputation for strong security characteristics and multitude of form
@@ -613,6 +613,10 @@ Gruntwork Compliance for CIS AWS Foundations Benchmark::
 IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork Compliance subscriber# to access the Gruntwork
 Infrastructure as Code Library and the CIS AWS Foundations Benchmark modules.
 
+How to configure a production-grade AWS account structure::
+  Review the link:https://gruntwork.io/guides/foundations/how-to-configure-production-grade-aws-account-structure/[production-grade AWS account structure guide] to familiarize yourself with many of the concepts that this walkthrough depends on.
+
+
 Terraform::
   This guide uses https://www.terraform.io/[Terraform] to define and manage all the infrastructure as code. If
   you're not familiar with Terraform, check out
@@ -689,6 +693,11 @@ modules; they pass through most of the variables to the core modules without alt
 settings needed for compliance. When you call the compliance modules from your own code in
 `infrastructure-modules`, you only need to set up any variables that are custom for your environment. Often
 times the default settings are good enough.
+ +
+ +
+You can use this approach on AWS account. In many cases, you'll only need compliance for production accounts, but the
+same methodology can be applied to pre-production accounts as well.
+ +
  +
 
 If you need to brush up on how the IaC Library works, read the
@@ -1059,7 +1068,7 @@ Congratulations! If you've made it this far, you should have achieved compliance
 Benchmark. Now it's time to confirm that your configurations are correct and you didn't miss any steps.
  +
  +
- 
+
 You can enable the link:https://aws.amazon.com/security-hub/[AWS Security Hub] to check your account
 link:https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-standards.html[for compliance with the AWS CIS
 Foundations Benchmark]. The Security Hub runs the exact audit steps specified in the Benchmark using AWS Config managed
