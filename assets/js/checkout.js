@@ -12,6 +12,7 @@ $(function () {
     subscription_type: 'aws',
     pro_support: false,
     setup_deployment: false,
+    cis_benchmark_compliance: false,
     users: 20
   };
 
@@ -34,24 +35,45 @@ $(function () {
   switch ($.query.get('subscription-type')) {
     case 'aws':
       _setAwsUIDefaults();
-      _updateCheckout({ subscription_type: 'aws' });
+      _updateCheckout({
+        subscription_type: 'aws'
+      });
       break;
     case 'gcp':
       _setGcpUIDefaults();
-      _updateCheckout({ subscription_type: 'gcp' });
+      _updateCheckout({
+        subscription_type: 'gcp'
+      });
       break;
     default: // do nothing
   }
 
   // Auto toggles addons based on the URI
   switch ($.query.get('addon')) {
-    case 'subscription-type': _updateCheckout({ subscription_type: true }); break;
-    case 'setup-deployment': _updateCheckout({ setup_deployment: true }); break;
-    case 'pro-support': _updateCheckout({ pro_support: true }); break;
+    case 'subscription-type':
+      _updateCheckout({
+        subscription_type: true
+      });
+      break;
+    case 'setup-deployment':
+      _updateCheckout({
+        setup_deployment: true
+      });
+      break;
+    case 'cis-benchmark-compliance':
+      _updateCheckout({
+        cis_benchmark_compliance: true
+      });
+      break;
+    case 'pro-support':
+      _updateCheckout({
+        pro_support: true
+      });
+      break;
     default: // do nothing
   }
   if (typeof Object.assign != 'function') {
-    Object.assign = function(target) {
+    Object.assign = function (target) {
       'use strict';
       if (target == null) {
         throw new TypeError('Cannot convert undefined or null to object');
@@ -115,8 +137,9 @@ $(function () {
 
     $('.grunty-sprite').attr('data-sprite', 0);
     $('#subscription_type').val(checkoutOptions.subscription_type);
-    $('[data-switch]'+'[name="pro_support"]').prop('checked', enable_pro_support); // updates addon switch
-    $('[data-switch]'+'[name="setup_deployment"]').prop('checked', checkoutOptions.setup_deployment); // updates addon switch
+    $('[data-switch]' + '[name="pro_support"]').prop('checked', enable_pro_support); // updates addon switch
+    $('[data-switch]' + '[name="setup_deployment"]').prop('checked', checkoutOptions.setup_deployment); // updates addon switch
+    $('[data-switch]' + '[name="cis_benchmark_compliance"]').prop('checked', checkoutOptions.cis_benchmark_compliance); // updates addon switch
 
 
     // updates subscription summary box
@@ -177,6 +200,20 @@ $(function () {
       $('#subscription-addon-2').addClass('check-list-disabled');
     }
 
+    if (checkoutOptions.cis_benchmark_compliance) {
+      $('.grunty-sprite').attr('data-sprite', 1);
+      $('.checkout-price-view').addClass('move-up');
+      $('checkout-price-addon').show();
+      $('checkout-price-addon--mobile').show().css('display', 'block');
+      $('#subscription-addon-3').removeClass('check-list-disabled');
+    } else {
+      $('.checkout-price-view').removeClass('move-up');
+      $('checkout-price-addon').hide();
+      $('checkout-price-addon--mobile').hide();
+      $('#subscription-addon-3').addClass('check-list-disabled');
+    }
+
+
     if (checkoutOptions.pro_support && checkoutOptions.setup_deployment) {
       $('.grunty-sprite').attr('data-sprite', 3);
     }
@@ -190,15 +227,23 @@ $(function () {
     var total, subtotal, subscriptionTotal;
 
     switch (checkoutOptions.subscription_type) {
-      case 'aws': total = subtotal = pricing.subscriptions.aws.price.value; break;
-      case 'gcp': total = subtotal = pricing.subscriptions.gcp.price.value; break;
+      case 'aws':
+        total = subtotal = pricing.subscriptions.aws.price.value;
+        break;
+      case 'gcp':
+        total = subtotal = pricing.subscriptions.gcp.price.value;
+        break;
       default: // do nothing
     }
 
     if (checkoutOptions.pro_support) {
       switch (checkoutOptions.subscription_type) {
-        case 'aws': total += subtotal = pricing.subscriptions.aws.pro_support_price.value; break;
-        case 'gcp': total += subtotal = pricing.subscriptions.gcp.pro_support_price.value; break;
+        case 'aws':
+          total += subtotal = pricing.subscriptions.aws.pro_support_price.value;
+          break;
+        case 'gcp':
+          total += subtotal = pricing.subscriptions.gcp.pro_support_price.value;
+          break;
         default: // do nothing
       }
     }
@@ -208,11 +253,18 @@ $(function () {
       subscriptionTotal = subtotal;
       //subtotal += 4950;
     }
+    // Only AWS supports the CIS Compliance
+    if (checkoutOptions.cis_benchmark_compliance) {
+      subscriptionTotal = subtotal;
+    }
 
     $('#subscription-price').text(total.toLocaleString());
     $('#subscription-subtotal').text(subtotal.toLocaleString());
 
-    _deferCheckout(checkoutOptions.subscription_type, checkoutOptions.pro_support, checkoutOptions.setup_deployment);
+    _deferCheckout(checkoutOptions.subscription_type,
+      checkoutOptions.pro_support,
+      checkoutOptions.setup_deployment,
+      checkoutOptions.cis_benchmark_compliance);
   }
 
   // Prevents spamming Chargebee registerAgain on every change
@@ -227,32 +279,40 @@ $(function () {
       //_updateAttrs();
       Chargebee.registerAgain();
       cbInstance = Chargebee.getInstance();
-      function htmlEncode(value){
+
+      function htmlEncode(value) {
         if (value) {
           return jQuery('<div />').text(value).html();
         } else {
           return '';
         }
       }
-      cbInstance.setCheckoutCallbacks(function(cart, product) {
+      cbInstance.setCheckoutCallbacks(function (cart, product) {
         var subscriptionDetails = ("Subscription type: " + type);
-        if (support){
+        if (support) {
           subscriptionDetails += " • Professional Support";
         }
-        if (setup){
+        if (setup) {
           subscriptionDetails += " • Reference Architecture";
+        }
+        if (setup) {
+          subscriptionDetails += " • CIS Benchmark Compliance";
         }
         //console.log(subscriptionDetails);
         // you can define a custom callbacks based on cart object
-        var customer = {cf_subscription_details: subscriptionDetails};
+        var customer = {
+          cf_subscription_details: subscriptionDetails
+        };
 
         cart.setCustomer(customer);
 
         return {
-          close: function() {
+          close: function () {
             // Required to remove overflow set by the modal
             // Same as: https://lodash.com/docs/4.17.10#debounce
-            setTimeout(function() { $body.removeAttr('style'); }, 0);
+            setTimeout(function () {
+              $body.removeAttr('style');
+            }, 0);
           }
         }
       });
