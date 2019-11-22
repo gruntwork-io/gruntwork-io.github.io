@@ -209,7 +209,7 @@ link:https://www.terraform.io/docs/providers/aws/r/iam_user_login_profile.html[`
 * As instructed by recommendation 1.21, do not create API access keys for new users automatically. The intent is that
 users should create them on their own if and when needed.
 
-* To stay compliant with recommendation 1.16, be sure to never attach IAM policies directly to IAM users. Instead, create IAM groups, attach policies to those groups, and add the user to groups using the link:https://www.terraform.io/docs/providers/aws/r/iam_user_group_membership.html[`aws_iam_group_membership`]. This helps to avoid scenarios where auditing the exact permissions of IAM users becomes difficult and unmaintainable.
+* To stay compliant with recommendation 1.16, be sure to never attach IAM policies directly to IAM users. Instead, create IAM groups, attach policies to those groups, and add the user to groups using the link:https://www.terraform.io/docs/providers/aws/r/iam_user_group_membership.html[`aws_iam_user_group_membership`]. This helps to avoid scenarios where auditing the exact permissions of IAM users becomes difficult and unmaintainable.
 
 Consider the following example which creates a user with access to AWS Support:
 
