@@ -1150,7 +1150,7 @@ You'll also want to add the `cross-account-iam-roles` module to `main.tf` (again
 .infrastructure-modules/security/iam/main.tf
 [source,hcl]
 ----
-module "iam_password_policy" {
+module "iam_cross_account_roles" {
   source = "git::git@github.com:gruntwork-io/module-security.git//modules/cross-account-iam-roles?ref=<VERSION>"
 
   aws_account_id = var.aws_account_id
