@@ -803,6 +803,81 @@ the central place where you manage billing. You create this initial account manu
 . You will be asked to enter an email address and password to use as the credentials for the root user of this root
   account.
 
+=== Configure your Terraform remote state S3 bucket and DynamoDB lockfile
+Now we need to configure the backend for your root account to store your terraform state in an s3 bucket and the dynamoDB table for the lockfile.
+Create a terragrunt.hcl file in infrastructure-live/root.
+
+----
+infrastructure-live
+  └──── root
+    └── terragrunt.hcl
+----
+Replace <COMPANY_NAME> with your company name or another designation of your choosing.
+
+----
+
+ # ---------------------------------------------------------------------------------------------------------------------
+ # TERRAGRUNT CONFIGURATION
+ # Terragrunt is a thin wrapper for Terraform that provides extra tools for working with multiple Terraform modules,
+ # remote state, and locking: https://github.com/gruntwork-io/terragrunt
+ # ---------------------------------------------------------------------------------------------------------------------
+
+ # Configure Terragrunt to automatically store tfstate files in an S3 bucket
+ remote_state {
+   backend = "s3"
+   config = {
+     encrypt        = true
+     bucket         = "<COMPANY_NAME>-root-terraform-state"
+     key            = "${path_relative_to_include()}/terraform.tfstate"
+     region         = "us-east-2"
+     dynamodb_table = "<COMPANY_NAME>-root-terraform-locks"
+   }
+ }
+
+
+ # ---------------------------------------------------------------------------------------------------------------------
+ # GLOBAL PARAMETERS
+ # These variables apply to all configurations in this subfolder. These are automatically merged into the child
+ # `terragrunt.hcl` config via the include block.
+ # ---------------------------------------------------------------------------------------------------------------------
+
+ inputs = merge(
+ # Configure Terragrunt to use common vars encoded as yaml to help you keep often-repeated variables (e.g., account ID)
+ # DRY. We use yamldecode to merge the maps into the inputs, as opposed to using varfiles due to a restriction in
+ # Terraform >=0.12 that all vars must be defined as variable blocks in modules. Terragrunt inputs are not affected by
+ # this restriction.
+ yamldecode(
+ file("${get_terragrunt_dir()}/${find_in_parent_folders("region.yaml", "${path_relative_from_include()}/empty.yaml")}"),
+ ),
+ yamldecode(
+ file("${get_terragrunt_dir()}/${find_in_parent_folders("env.yaml", "${path_relative_from_include()}/empty.yaml")}"),
+ ),
+ # Additional global inputs to pass to all modules called in this directory tree.
+ {
+   aws_account_id             = "111111111111"  # < --- root account number
+   terraform_state_s3_bucket  = "<COMPANY_NAME>-root-terraform-state"
+   terraform_state_aws_region = "us-east-2"
+ },
+ )
+----
+We also need to add the file empty.yaml to infrastrucutre-live/root.
+
+----
+infrastructure-live
+  └──── root
+    └── empty.yaml
+----
+
+Place the contents below in the empty.yaml file.
+
+----
+# This is intentionally empty object. This YAML file is used as a catch all to return an empty map when expected yaml
+# vars do not exist. Note that this file can not be completely empty because terragrunt's yamldecode function expects an
+# object, and it doesn't treat empty files as an empty object (you get a syntax error).
+{}
+----
+
+
 === Create IAM groups, IAM users, and an IAM password policy in the root account
 
 The root user has unrestricted access to just about everything in your AWS account (and any child accounts),
@@ -828,7 +903,7 @@ infrastructure-modules
 
 Inside of `main.tf`, configure your AWS provider and Terraform settings:
 
-.infrastructure-modules/networking/iam/main.tf
+.infrastructure-modules/security/iam/main.tf
 [source,hcl]
 ----
 provider "aws" {
@@ -839,7 +914,7 @@ provider "aws" {
   version = "~> 2.6"
 
   # Only these AWS Account IDs may be operated on by this template
-  allowed_account_ids = var.aws_account_id
+  allowed_account_ids = [var.aws_account_id]
 }
 
 terraform {
@@ -856,7 +931,7 @@ terraform {
 Next, use the `iam-groups` module from the Gruntwork Infrastructure as Code Library, making sure to replace the `<VERSION>` placeholder
 with the latest version from the https://github.com/gruntwork-io/module-security/releases[releases page]:
 
-.infrastructure-modules/networking/iam/main.tf
+.infrastructure-modules/security/iam/main.tf
 [source,hcl]
 ----
 module "iam_groups" {
@@ -885,7 +960,7 @@ module "iam_groups" {
 
 Create all the corresponding input variables for `iam-groups` in `variables.tf`:
 
-.infrastructure-modules/networking/iam/variables.tf
+.infrastructure-modules/security/iam/variables.tf
 [source,hcl]
 ----
 variable "aws_region" {
@@ -993,7 +1068,7 @@ variable "auto_deploy_permissions" {
 
 Next, add the `iam-users` module from `module-security` to `main.tf` (again, make sure to replace `<VERSION>`):
 
-.infrastructure-modules/networking/iam/main.tf
+.infrastructure-modules/security/iam/main.tf
 [source,hcl]
 ----
 module "iam_users" {
@@ -1006,7 +1081,7 @@ module "iam_users" {
 
 Add the corresponding variables for the `iam-users` module in `variables.tf`:
 
-.infrastructure-modules/networking/iam/variables.tf
+.infrastructure-modules/security/iam/variables.tf
 [source,hcl]
 ----
 variable "users" {
@@ -1051,7 +1126,7 @@ variable "minimum_password_length" {
 Next, add the `iam-user-password-policy` module from `module-security` to `main.tf` (again, make sure to replace
 `<VERSION>`):
 
-.infrastructure-modules/networking/iam/main.tf
+.infrastructure-modules/security/iam/main.tf
 [source,hcl]
 ----
 module "iam_password_policy" {
@@ -1072,7 +1147,7 @@ module "iam_password_policy" {
 
 You'll also want to add the `cross-account-iam-roles` module to `main.tf` (again, make sure to replace `<VERSION>`):
 
-.infrastructure-modules/networking/iam/main.tf
+.infrastructure-modules/security/iam/main.tf
 [source,hcl]
 ----
 module "iam_password_policy" {
@@ -1096,7 +1171,7 @@ module "iam_password_policy" {
 
 Add the corresponding input variables in `variables.tf`:
 
-.infrastructure-modules/networking/iam/variables.tf
+.infrastructure-modules/security/iam/variables.tf
 [source,hcl]
 ----
 variable "dev_permitted_services" {
@@ -1165,16 +1240,11 @@ variable "allow_auto_deploy_from_other_account_arns" {
   # ]
 }
 
-variable "auto_deploy_permissions" {
-  description = "A list of IAM permissions (e.g. ec2:*) which will be granted for automated deployment."
-  type        = list(string)
-  default     = []
-}
 ----
 
 Finally, add some useful outputs in `outputs.tf`:
 
-.infrastructure-modules/networking/iam/outputs.tf
+.infrastructure-modules/security/iam/outputs.tf
 [source,hcl]
 ----
 output "user_arns" {
@@ -1406,7 +1476,7 @@ infrastructure-modules
 
 Inside of `main.tf`, configure your AWS provider and Terraform settings:
 
-.infrastructure-modules/networking/cloudtrail/main.tf
+.infrastructure-modules/security/cloudtrail/main.tf
 [source,hcl]
 ----
 provider "aws" {
@@ -1417,7 +1487,7 @@ provider "aws" {
   version = "~> 2.6"
 
   # Only these AWS Account IDs may be operated on by this template
-  allowed_account_ids = var.aws_account_id
+  allowed_account_ids = [var.aws_account_id]
 }
 
 terraform {
@@ -1434,7 +1504,7 @@ terraform {
 Next, use the `cloudtrail` module from the Gruntwork Infrastructure as Code Library, making sure to replace the `<VERSION>` placeholder
 with the latest version from the https://github.com/gruntwork-io/module-security/releases[releases page]:
 
-.infrastructure-modules/networking/cloudtrail/main.tf
+.infrastructure-modules/security/cloudtrail/main.tf
 [source,hcl]
 ----
 module "cloudtrail" {
@@ -1467,7 +1537,7 @@ module "cloudtrail" {
 
 Create all the corresponding input variables for `cloudtrail` in `variables.tf`:
 
-.infrastructure-modules/networking/cloudtrail/variables.tf
+.infrastructure-modules/security/cloudtrail/variables.tf
 [source,hcl]
 ----
 # ---------------------------------------------------------------------------------------------------------------------
@@ -1657,7 +1727,7 @@ infrastructure-modules
 
 Inside of `main.tf`, configure your AWS provider and Terraform settings:
 
-.infrastructure-modules/networking/organization/main.tf
+.infrastructure-modules/security/organization/main.tf
 [source,hcl]
 ----
 provider "aws" {
@@ -1668,7 +1738,7 @@ provider "aws" {
   version = "~> 2.6"
 
   # Only these AWS Account IDs may be operated on by this template
-  allowed_account_ids = var.aws_account_id
+  allowed_account_ids = [var.aws_account_id]
 }
 
 terraform {
@@ -1684,7 +1754,7 @@ terraform {
 
 Next, use the `aws_organizations_organization` resource to enable AWS Organizations in your AWS account:
 
-.infrastructure-modules/networking/organization/main.tf
+.infrastructure-modules/security/organization/main.tf
 [source,hcl]
 ----
 resource "aws_organizations_organization" "org" {
@@ -1697,7 +1767,7 @@ Now you can use the `aws_organizations_account` resource to create child account
 you need to group child accounts into Organizational Units, see the
 https://www.terraform.io/docs/providers/aws/r/organizations_organizational_unit.html:[aws_organizations_organizational_unit resource]):
 
-.infrastructure-modules/networking/organization/main.tf
+.infrastructure-modules/security/organization/main.tf
 [source,hcl]
 ----
 resource "aws_organizations_account" "child_accounts" {
@@ -1710,7 +1780,7 @@ resource "aws_organizations_account" "child_accounts" {
 
 Create all the corresponding input variables in `variables.tf`:
 
-.infrastructure-modules/networking/organization/variables.tf
+.infrastructure-modules/security/organization/variables.tf
 [source,hcl]
 ----
 # ---------------------------------------------------------------------------------------------------------------------
@@ -1744,7 +1814,7 @@ variable "organizations_account_access_role_name" {
 
 Add the corresponding output variables in `outputs.tf`:
 
-.infrastructure-modules/networking/organization/outputs.tf
+.infrastructure-modules/security/organization/outputs.tf
 [source,hcl]
 ----
 output "child_accounts" {
