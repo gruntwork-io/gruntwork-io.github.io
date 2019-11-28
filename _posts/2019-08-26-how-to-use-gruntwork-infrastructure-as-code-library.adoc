@@ -669,7 +669,7 @@ provider "aws" {
   version = "~> 2.6"
 
   # Only these AWS Account IDs may be operated on by this template
-  allowed_account_ids = var.aws_account_id
+  allowed_account_ids = [var.aws_account_id]
 }
 ----
 
