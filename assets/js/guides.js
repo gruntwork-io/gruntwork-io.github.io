@@ -137,4 +137,31 @@ $(document).ready(function () {
     }
   });
 
+  //Validate email
+  let validateEmail = email => {
+    let re = /@[\w.-]+\.[a-zA-Z]{2,6}$/;
+    return re.test(email);
+  };
+
+  $("#guides-subscribe-email").focus(() => {
+    $("#guides-subscribe-email").css("border", "1px solid #07a7fc");
+  });
+
+  $("#guides-subscribe-email").blur(() => {
+    $("#guides-subscribe-email").css("border", "none");
+  });
+
+  //Submits only when email is valid.
+  $("#newsletter-subscribe").click(e => {
+    e.preventDefault();
+
+    let email = $("#guides-subscribe-email").val();
+    if (validateEmail(email)) {
+      $("#guides-newsletter-form").submit();
+    } else {
+      $("#guides-subscribe-email").css("border", "1px solid red");
+    }
+    return false;
+  });
+
 });
