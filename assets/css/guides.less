@@ -1079,7 +1079,7 @@ body .guides .guides-section-white {
       dt {
         margin-top: 15px;
       }
-    }
+	}
 
     pre.highlight > code, pre:not(.highlight) {
       padding: 15px;
@@ -1089,6 +1089,17 @@ body .guides .guides-section-white {
 
     .token.operator, .token.entity, .token.url, .token.variable {
       background: transparent !important;
+    }
+  }
+
+  #what-youll-learn-in-this-guide ~ .dlist {
+    & .hdlist1 a {
+      color: #3cb8fd !important;
+      font-style: italic;
+  
+      &:before {
+        content: "\2192 \0020";
+      }
     }
   }
   p, li {
