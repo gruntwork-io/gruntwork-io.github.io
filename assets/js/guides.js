@@ -89,6 +89,8 @@ $(document).ready(function () {
 
       const hash = `#${selectedHeadingId}`;
       const selectedNavLink = nav.find(`a[href$='${hash}']`);
+
+      selectedNavLink.closest('li.expanded').children('a').addClass('selected');
       if (selectedNavLink.length === 1) {
         updateHash(hash);
         selectedNavLink.addClass('selected');
