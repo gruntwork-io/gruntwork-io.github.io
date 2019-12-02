@@ -20,6 +20,7 @@ $(document).ready(function () {
 
     $(".js-scroll-with-user").offset({top: firstGuideCardTop});
   }
+
   // Move the TOC on the left side of the page with the user as the user scrolls down, so the TOC is always visible.
   // Only start moving the TOC once the user has scrolled past the element specified in scroll-after-selector. Stop
   // moving it at the bottom of the content.
@@ -73,7 +74,7 @@ $(document).ready(function () {
     allNavLinks.removeClass('selected');
 
     // Only consider an item in view if it's visible in the top 20% of the screen
-    const buffer = $(window).height() / 5;
+    const buffer = $(window).height() / 7;
     const scrollPosition = $(window).scrollTop();
     const contentHeadings = content.find('h2, h3');
     const visibleHeadings = contentHeadings.filter((index, el) => scrollPosition + buffer >= $(el).offset().top);
@@ -107,6 +108,8 @@ $(document).ready(function () {
           selectedNavLink.parent().addClass('expanded');
         }
       }
+    } else {
+      $('.sectlevel1 li a').first().addClass('selected');
     }
   };
 
@@ -117,7 +120,7 @@ $(document).ready(function () {
   $(scrollSpy);
 
   $(startOutlinePosition);
-  
+
   $('.post-detail img').on('click', function () {
     window.open(this.src, '_blank')
   })
