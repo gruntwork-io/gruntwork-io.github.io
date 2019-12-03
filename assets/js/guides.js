@@ -14,13 +14,6 @@ $(document).ready(function () {
     return element;
   };
 
-  //Move Outline to top of the position of first guide card
-  const startOutlinePosition = function () {
-    const firstGuideCardTop = $('.guide-card').first().offset().top;
-
-    $(".js-scroll-with-user").offset({top: firstGuideCardTop});
-  }
-
   // Move the TOC on the left side of the page with the user as the user scrolls down, so the TOC is always visible.
   // Only start moving the TOC once the user has scrolled past the element specified in scroll-after-selector. Stop
   // moving it at the bottom of the content.
@@ -118,8 +111,6 @@ $(document).ready(function () {
 
   $(window).scroll(scrollSpy);
   $(scrollSpy);
-
-  $(startOutlinePosition);
 
   $('.post-detail img').on('click', function () {
     window.open(this.src, '_blank')
