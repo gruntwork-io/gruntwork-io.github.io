@@ -66,8 +66,8 @@ $(document).ready(function () {
     const allNavLinks = nav.find('a:visible');
     allNavLinks.removeClass('selected');
 
-    // Only consider an item in view if it's visible in the top approx. 14.3% of the screen
-    const buffer = $(window).height() / 7;
+    // Only consider an item in view if it's visible in the top 20% of the screen
+    const buffer = $(window).height() / 5;
     const scrollPosition = $(window).scrollTop();
     const contentHeadings = content.find('h2:visible, h3:visible');
     const visibleHeadings = contentHeadings.filter((index, el) => scrollPosition + buffer >= $(el).offset().top);
