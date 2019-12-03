@@ -137,12 +137,6 @@ $(document).ready(function () {
     }
   });
 
-  //Validate email
-  let validateEmail = email => {
-    let re = /@[\w.-]+\.[a-zA-Z]{2,6}$/;
-    return re.test(email);
-  };
-
   $("#guides-subscribe-email").focus(() => {
     $("#guides-subscribe-email").css("border", "1px solid #07a7fc");
   });
@@ -155,11 +149,11 @@ $(document).ready(function () {
   $("#newsletter-subscribe").click(e => {
     e.preventDefault();
 
-    let email = $("#guides-subscribe-email").val();
-    if (validateEmail(email)) {
-      $("#guides-newsletter-form").submit();
-    } else {
+    let email = $("#guides-subscribe-email");
+    if (email.is(":invalid")) {
       $("#guides-subscribe-email").css("border", "1px solid red");
+    } else {
+      $("#guides-newsletter-form").submit();
     }
     return false;
   });
