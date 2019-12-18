@@ -963,11 +963,11 @@ examples.
 
 [[aws_config]]
 ==== Enable AWS Config in all regions
-Gruntwork has created a code generation utility to make it simple to enable AWS Config in every region of an
-AWS account. Refer to the
-link:https://github.com/gruntwork-io/cis-compliance-aws/blob/master/modules/generate-aws-config/README.adoc[`generate-aws-config`
-documentation] for the details. Use the utility to enable AWS Config in all regions along with a global
-configuration recorder in one region, as per the Benchmark recommendation.
+Use the link:https://github.com/gruntwork-io/cis-compliance-aws/blob/master/modules/aws-config/README.adoc[`aws-config`
+module]
+to enable AWS Config in every region of an AWS account, along with a global configuration recorder in one region, as per
+the Benchmark recommendation.
+
 
 [[kms]]
 ==== Enable key rotation for KMS keys
@@ -1102,7 +1102,7 @@ sections above.
 1.21,<<iam_user_authentication>>,Create IAM users with the `iam-users` module
 1.22,<<iam_user_authentication>>,Use the Gruntwork modules to create best-practices groups and roles
 2.1-2.4,<<cloudtrail>>,Use the Gruntwork CloudTrail wrapper module
-2.5,<<aws_config>>,Quickly generate AWS Config for all regions
+2.5,<<aws_config>>,Enable AWS Config for all regions
 2.6-2.7,<<cloudtrail>>,Use the Gruntwork CloudTrail wrapper module
 2.8,<<kms>>,Use the KMS module
 2.9,<<vpc_flow_logs>>,Use the VPC flow logs core module
