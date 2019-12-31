@@ -29,100 +29,94 @@
   // Google Analytics Event Tracking for IAC Page A/B Tests
   const IACVersion = getCookiebyName("IACLibraryVersion");
 
+  const createEventAction = (tag) => {
+    return IACVersion ? `${tag} (${IACVersion})` : tag;
+  }
+
+  const gaEventBaseObject = {
+    hitType: "event",
+    eventCategory: "CTA Clicks",
+    eventValue: 1
+  }
+
   $("a").on("click", function() {
     const href = $(this).attr("href");
     if (!href) return;
 
     if (href.includes("/contact")) {
       const tag = "Click Contact Us";
-      const eventAction = IACVersion ? `${tag} (${IACVersion})` : tag;
+      const eventAction = createEventAction(tag);
       ga("send", {
-        hitType: "event",
-        eventCategory: "CTA Clicks",
+        ...gaEventBaseObject,
         eventAction,
-        eventLabel: "User went to Contact Page",
-        eventValue: 1
+        eventLabel: "User went to Contact Page"
       });
     } else if (href.includes("/pricing")) {
       const tag = "Click Buy Now";
-      const eventAction = IACVersion ? `${tag} (${IACVersion})` : tag;
+      const eventAction = createEventAction(tag);
       ga("send", {
-        hitType: "event",
-        eventCategory: "CTA Clicks",
+        ...gaEventBaseObject,
         eventAction,
-        eventLabel: "User went to Pricing Page",
-        eventValue: 1
+        eventLabel: "User went to Pricing Page"
       });
     } else if (href.includes("/checkout")) {
       const tag = "Select Plan";
-      const eventAction = IACVersion ? `${tag} (${IACVersion})` : tag;
+      const eventAction = createEventAction(tag);
       ga("send", {
-        hitType: "event",
-        eventCategory: "CTA Clicks",
+        ...gaEventBaseObject,
         eventAction,
-        eventLabel: "User selected Plan on Pricing Page",
-        eventValue: 1
+        eventLabel: "User selected Plan on Pricing Page"
       });
     }
   });
 
   $("#submit-button").on("click", () => {
     const tag = "Submit Contact Form";
-    const eventAction = IACVersion ? `${tag} (${IACVersion})` : tag;
+    const eventAction = createEventAction(tag);
     ga("send", {
-      hitType: "event",
-      eventCategory: "CTA Clicks",
+      ...gaEventBaseObject,
       eventAction,
-      eventLabel: "User submitted contact form",
-      eventValue: 1
+      eventLabel: "User submitted contact form"
     });
   });
 
   $("#checkout-btn").on("click", () => {
     const tag = "Click Checkout";
-    const eventAction = IACVersion ? `${tag} (${IACVersion})` : tag;
+    const eventAction = createEventAction(tag);
     ga("send", {
-      hitType: "event",
-      eventCategory: "CTA Clicks",
+      ...gaEventBaseObject,
       eventAction,
-      eventLabel: "User clicked checkout button",
-      eventValue: 1
+      eventLabel: "User clicked checkout button"
     });
   });
 
   $("#pricing-cta-aws").on("click", () => {
     const tag = "Select AWS";
-    const eventAction = IACVersion ? `${tag} (${IACVersion})` : tag;
+    const eventAction = createEventAction(tag);
     ga("send", {
-      hitType: "event",
-      eventCategory: "CTA Clicks",
+      ...gaEventBaseObject,
       eventAction,
-      eventLabel: "User selected AWS plan.",
-      eventValue: 1
+      eventLabel: "User selected AWS plan"
     });
   });
 
   $("#pricing-cta-gcp").on("click", () => {
     const tag = "Select GCP";
-    const eventAction = IACVersion ? `${tag} (${IACVersion})` : tag;
+    const eventAction = createEventAction(tag);
     ga("send", {
-      hitType: "event",
-      eventCategory: "CTA Clicks",
+      ...gaEventBaseObject,
       eventAction,
-      eventLabel: "User selected GCP plan.",
-      eventValue: 1
+      eventLabel: "User selected GCP plan"
     });
   });
 
   $("#refarch-button-gcp").on("click", () => {
     const tag = "Select GCP Refarch";
-    const eventAction = IACVersion ? `${tag} (${IACVersion})` : tag;
+    const eventAction = createEventAction(tag);
     ga("send", {
-      hitType: "event",
-      eventCategory: "CTA Clicks",
+      ...gaEventBaseObject,
       eventAction,
-      eventLabel: "User selected GCP refarch addon.",
-      eventValue: 1
+      eventLabel: "User selected GCP refarch addon"
     });
   });
 
