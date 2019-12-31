@@ -12,13 +12,122 @@
 {% if site.ga_tracker %}
 
 <script>
-  window.ga = window.ga || function () { (ga.q = ga.q || []).push(arguments) }; ga.l = +new Date;
-  ga('create', '{{ site.ga_tracker }}', 'auto');
-  ga('require', 'eventTracker');
-  ga('require', 'maxScrollTracker');
-  ga('require', 'outboundFormTracker');
-  ga('require', 'outboundLinkTracker');
-  ga('send', 'pageview');
+  window.ga =
+    window.ga ||
+    function() {
+      (ga.q = ga.q || []).push(arguments);
+    };
+  ga.l = +new Date();
+
+  ga("create", "{{ site.ga_tracker }}", "auto");
+  ga("require", "eventTracker");
+  ga("require", "maxScrollTracker");
+  ga("require", "outboundFormTracker");
+  ga("require", "outboundLinkTracker");
+  ga("send", "pageview");
+
+  // Google Analytics Event Tracking for IAC Page A/B Tests
+  const IACVersion = getCookiebyName("IACLibraryVersion");
+
+  $("a").on("click", function() {
+    const href = $(this).attr("href");
+    if (!href) return;
+
+    if (href.includes("/contact")) {
+      const tag = "Click Contact Us";
+      const eventAction = IACVersion ? `${tag} (${IACVersion})` : tag;
+      ga("send", {
+        hitType: "event",
+        eventCategory: "CTA Clicks",
+        eventAction,
+        eventLabel: "User went to Contact Page",
+        eventValue: 1
+      });
+    } else if (href.includes("/pricing")) {
+      const tag = "Click Buy Now";
+      const eventAction = IACVersion ? `${tag} (${IACVersion})` : tag;
+      ga("send", {
+        hitType: "event",
+        eventCategory: "CTA Clicks",
+        eventAction,
+        eventLabel: "User went to Pricing Page",
+        eventValue: 1
+      });
+    } else if (href.includes("/checkout")) {
+      const tag = "Select Plan";
+      const eventAction = IACVersion ? `${tag} (${IACVersion})` : tag;
+      ga("send", {
+        hitType: "event",
+        eventCategory: "CTA Clicks",
+        eventAction,
+        eventLabel: "User selected Plan on Pricing Page",
+        eventValue: 1
+      });
+    }
+  });
+
+  $("#submit-button").on("click", () => {
+    const tag = "Submit Contact Form";
+    const eventAction = IACVersion ? `${tag} (${IACVersion})` : tag;
+    ga("send", {
+      hitType: "event",
+      eventCategory: "CTA Clicks",
+      eventAction,
+      eventLabel: "User submitted contact form",
+      eventValue: 1
+    });
+  });
+
+  $("#checkout-btn").on("click", () => {
+    const tag = "Click Checkout";
+    const eventAction = IACVersion ? `${tag} (${IACVersion})` : tag;
+    ga("send", {
+      hitType: "event",
+      eventCategory: "CTA Clicks",
+      eventAction,
+      eventLabel: "User clicked checkout button",
+      eventValue: 1
+    });
+  });
+
+  $("#pricing-cta-aws").on("click", () => {
+    const tag = "Select AWS";
+    const eventAction = IACVersion ? `${tag} (${IACVersion})` : tag;
+    ga("send", {
+      hitType: "event",
+      eventCategory: "CTA Clicks",
+      eventAction,
+      eventLabel: "User selected AWS plan.",
+      eventValue: 1
+    });
+  });
+
+  $("#pricing-cta-gcp").on("click", () => {
+    const tag = "Select GCP";
+    const eventAction = IACVersion ? `${tag} (${IACVersion})` : tag;
+    ga("send", {
+      hitType: "event",
+      eventCategory: "CTA Clicks",
+      eventAction,
+      eventLabel: "User selected GCP plan.",
+      eventValue: 1
+    });
+  });
+
+  $("#refarch-button-gcp").on("click", () => {
+    const tag = "Select GCP Refarch";
+    const eventAction = IACVersion ? `${tag} (${IACVersion})` : tag;
+    ga("send", {
+      hitType: "event",
+      eventCategory: "CTA Clicks",
+      eventAction,
+      eventLabel: "User selected GCP refarch addon.",
+      eventValue: 1
+    });
+  });
+
+  // TODO: Add Tracking for GCP AND AWS Pro Support Addon. They currently use same button so not
+  // quite straightforward
 </script>
 <script async src="https://www.google-analytics.com/analytics.js"></script>
 <script async src="https://cdnjs.cloudflare.com/ajax/libs/autotrack/2.4.1/autotrack.js"></script>
