@@ -12,7 +12,6 @@ $(function () {
     subscription_type: 'aws',
     pro_support: false,
     setup_deployment: false,
-    cis_benchmark_compliance: false,
     users: 20
   };
 
@@ -58,11 +57,6 @@ $(function () {
     case 'setup-deployment':
       _updateCheckout({
         setup_deployment: true
-      });
-      break;
-    case 'cis-benchmark-compliance':
-      _updateCheckout({
-        cis_benchmark_compliance: true
       });
       break;
     case 'pro-support':
@@ -139,8 +133,6 @@ $(function () {
     $('#subscription_type').val(checkoutOptions.subscription_type);
     $('[data-switch]' + '[name="pro_support"]').prop('checked', enable_pro_support); // updates addon switch
     $('[data-switch]' + '[name="setup_deployment"]').prop('checked', checkoutOptions.setup_deployment); // updates addon switch
-    $('[data-switch]' + '[name="cis_benchmark_compliance"]').prop('checked', checkoutOptions.cis_benchmark_compliance); // updates addon switch
-
 
     // updates subscription summary box
     if (checkoutOptions.subscription_type === 'enterprise') {
@@ -200,20 +192,6 @@ $(function () {
       $('#subscription-addon-2').addClass('check-list-disabled');
     }
 
-    if (checkoutOptions.cis_benchmark_compliance) {
-      $('.grunty-sprite').attr('data-sprite', 1);
-      $('.checkout-price-view').addClass('move-up');
-      $('checkout-price-addon').show();
-      $('checkout-price-addon--mobile').show().css('display', 'block');
-      $('#subscription-addon-3').removeClass('check-list-disabled');
-    } else {
-      $('.checkout-price-view').removeClass('move-up');
-      $('checkout-price-addon').hide();
-      $('checkout-price-addon--mobile').hide();
-      $('#subscription-addon-3').addClass('check-list-disabled');
-    }
-
-
     if (checkoutOptions.pro_support && checkoutOptions.setup_deployment) {
       $('.grunty-sprite').attr('data-sprite', 3);
     }
@@ -253,18 +231,13 @@ $(function () {
       subscriptionTotal = subtotal;
       //subtotal += 4950;
     }
-    // Only AWS supports the CIS Compliance
-    if (checkoutOptions.cis_benchmark_compliance) {
-      subscriptionTotal = subtotal;
-    }
 
     $('#subscription-price').text(total.toLocaleString());
     $('#subscription-subtotal').text(subtotal.toLocaleString());
 
     _deferCheckout(checkoutOptions.subscription_type,
       checkoutOptions.pro_support,
-      checkoutOptions.setup_deployment,
-      checkoutOptions.cis_benchmark_compliance);
+      checkoutOptions.setup_deployment);
   }
 
   // Prevents spamming Chargebee registerAgain on every change
@@ -294,9 +267,6 @@ $(function () {
         }
         if (setup) {
           subscriptionDetails += " • Reference Architecture";
-        }
-        if (setup) {
-          subscriptionDetails += " • CIS Benchmark Compliance";
         }
         //console.log(subscriptionDetails);
         // you can define a custom callbacks based on cart object

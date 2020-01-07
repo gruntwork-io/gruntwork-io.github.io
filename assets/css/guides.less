@@ -82,6 +82,15 @@
 	}
 }
 
+.guides-button {
+  width: 135px;
+  height: 47px;
+  border-radius: 23.5px;
+  font-size: 14px;
+  padding: 13px 26px;
+  box-shadow: none;
+}
+
 #toc {
 	&.fixed {
 		width: inherit;
@@ -300,7 +309,6 @@ body .guides .guides-section-white {
 	}
 
 	& a {
-		padding: 14px 39px;
 		margin-bottom: 49px;
 		color: #08a9fb;
 		font-size: 14px;
@@ -450,6 +458,7 @@ body .guides .guides-section-white {
 	.btn {
 		border-radius: 23.5px;
 		background-image: linear-gradient(to bottom, #5bcde7, #569cea);
+		color: white;
 
 		&:hover,
 		&:active {
@@ -750,18 +759,11 @@ body .guides .guides-section-white {
 		p{
 			font-size: 16px;
 		}
-		.btn {
-			padding: 6px 20px !important;
-		}
 	}
 
 	.section-hero-blue {
 		label {
 			font-size: 25px;
-		}
-
-		a {
-			padding: 6px 20px;
 		}
 	}
 
@@ -793,6 +795,7 @@ body .guides .guides-section-white {
 		overflow: hidden;
 		padding-right: 16px;
 		box-shadow: none;
+		width: 60%;
 
 		&:hover,
 		&:active,
@@ -818,19 +821,16 @@ body .guides .guides-section-white {
 
 	& .btn {
 		text-decoration: none;
-		background: #07a7fc;
-		font-size: 15px;
-		margin-top: -2px;
-		border-radius: 25px !important;
+		margin-top: -3px;
 		margin-left: -13px;
-		padding: 11px 24px;
 		position: relative;
 		z-index: 2;
+		color: #fff;
+		background-image: linear-gradient(to bottom, #5bcde7, #569cea);
 	}
 
 	& .btn:hover,
 	.btn:focus {
-		background: @guides-primary-color;
 		.no-transform();
 	}
 }
@@ -1075,7 +1075,7 @@ body .guides .guides-section-white {
       dt {
         margin-top: 15px;
       }
-    }
+	}
 
     pre.highlight > code, pre:not(.highlight) {
       padding: 15px;
@@ -1085,6 +1085,17 @@ body .guides .guides-section-white {
 
     .token.operator, .token.entity, .token.url, .token.variable {
       background: transparent !important;
+    }
+  }
+
+  #what-youll-learn-in-this-guide ~ .dlist {
+    & .hdlist1 a {
+      color: #3cb8fd !important;
+      font-style: italic;
+  
+      &:before {
+        content: "\2192 \0020";
+      }
     }
   }
   p, li {

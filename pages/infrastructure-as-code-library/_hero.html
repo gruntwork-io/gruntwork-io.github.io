@@ -6,7 +6,16 @@
         {{ page.excerpt }}
       </p>
       <p class="hidden-print" style="margin-top: 30px;">
-        <a href="/contact" class="btn get-a-demo" role="button">Get a Demo</a>
+        <a
+          href="/contact"
+          class="btn get-a-demo"
+          role="button"
+          ga-on="click"
+          ga-event-category="CTA Clicks"
+          ga-event-action="Click Contact Us(Old IAC Page)"
+          ga-event-label="User clicked contact button in old IAC page"
+          >{{ link.title }}Get a Demo</a
+        >
       </p>
     </div>
   </div>

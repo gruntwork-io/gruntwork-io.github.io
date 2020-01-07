@@ -11,16 +11,17 @@
 {% endif %}
 {% if site.ga_tracker %}
 
-<script>
-  window.ga = window.ga || function () { (ga.q = ga.q || []).push(arguments) }; ga.l = +new Date;
-  ga('create', '{{ site.ga_tracker }}', 'auto');
-  ga('require', 'eventTracker');
-  ga('require', 'maxScrollTracker');
-  ga('require', 'outboundFormTracker');
-  ga('require', 'outboundLinkTracker');
-  ga('send', 'pageview');
-</script>
-<script async src="https://www.google-analytics.com/analytics.js"></script>
+<!-- Google Tag Manager (noscript) -->
+<noscript>
+  <iframe
+  src="https://www.googletagmanager.com/ns.html?id=GTM-W5PZQHS"
+  height="0"
+  width="0"
+  style="display:none;visibility:hidden"
+  >
+  </iframe>
+</noscript>
+ <!-- End Google Tag Manager (noscript) -->
 <script async src="https://cdnjs.cloudflare.com/ajax/libs/autotrack/2.4.1/autotrack.js"></script>
 <!-- Hotjar Tracking Code for gruntwork.io -->
 <script>
