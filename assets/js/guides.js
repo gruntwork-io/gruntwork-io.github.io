@@ -102,7 +102,7 @@ $(document).ready(function () {
         }
       }
     } else {
-      $('.sectlevel1 li a').first().addClass('selected');
+      $('.categories li a').first().addClass('selected');
     }
   };
 
