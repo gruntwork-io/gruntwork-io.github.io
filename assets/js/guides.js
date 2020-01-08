@@ -155,7 +155,6 @@ $(document).ready(function () {
     } else {
       $("#guides-newsletter-form").submit();
     }
-    return false;
   });
 
 });
