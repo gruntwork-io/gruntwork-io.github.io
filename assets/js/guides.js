@@ -14,13 +14,6 @@ $(document).ready(function () {
     return element;
   };
 
-  //Move Outline to top of the position of first guide card
-  const startOutlinePosition = function () {
-    const firstGuideCardTop = $('.guide-card').first().offset().top;
-
-    $(".js-scroll-with-user").offset({top: firstGuideCardTop});
-  }
-
   // Move the TOC on the left side of the page with the user as the user scrolls down, so the TOC is always visible.
   // Only start moving the TOC once the user has scrolled past the element specified in scroll-after-selector. Stop
   // moving it at the bottom of the content.
@@ -74,7 +67,7 @@ $(document).ready(function () {
     allNavLinks.removeClass('selected');
 
     // Only consider an item in view if it's visible in the top 20% of the screen
-    const buffer = $(window).height() / 7;
+    const buffer = $(window).height() / 5;
     const scrollPosition = $(window).scrollTop();
     const contentHeadings = content.find('h2:visible, h3:visible');
     const visibleHeadings = contentHeadings.filter((index, el) => scrollPosition + buffer >= $(el).offset().top);
@@ -125,8 +118,6 @@ $(document).ready(function () {
 
   $(window).scroll(scrollSpy);
   $(scrollSpy);
-
-  $(startOutlinePosition);
 
   $('.post-detail img').on('click', function () {
     window.open(this.src, '_blank')
