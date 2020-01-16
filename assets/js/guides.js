@@ -137,4 +137,24 @@ $(document).ready(function () {
     }
   });
 
+  $("#guides-subscribe-email").focus(() => {
+    $("#guides-subscribe-email").css("border", "1px solid #07a7fc");
+  });
+
+  $("#guides-subscribe-email").blur(() => {
+    $("#guides-subscribe-email").css("border", "none");
+  });
+
+  //Submits only when email is valid.
+  $("#newsletter-subscribe").click(e => {
+    e.preventDefault();
+
+    let email = $("#guides-subscribe-email");
+    if (email.is(":invalid")) {
+      $("#guides-subscribe-email").css("border", "1px solid red");
+    } else {
+      $("#guides-newsletter-form").submit();
+    }
+  });
+
 });
