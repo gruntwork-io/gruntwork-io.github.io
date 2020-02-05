@@ -141,7 +141,7 @@ $(function () {
     assert.expect(1)
     var dropdownHTML = '<ul class="tabs">'
         + '<li class="dropdown">'
-        + '<a href="/foo/" class="dropdown-toggle" data-toggle="dropdown">Dropdown</a>'
+        + '<a href="/static/foo/" class="dropdown-toggle" data-toggle="dropdown">Dropdown</a>'
         + '<ul class="dropdown-menu">'
         + '<li><a href="#">Secondary link</a></li>'
         + '<li><a href="#">Something else here</a></li>'

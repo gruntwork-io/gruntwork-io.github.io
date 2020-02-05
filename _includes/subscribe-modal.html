@@ -1,44 +1,104 @@
-<div class="modal fade" id="subscribe-success" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered subscribe-modal " role="document">
-        <div class="modal-content text-center">
-            <div class="modal-header">
-                <button type="button" class="close"  data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <img src="/assets/img/guides/img-subscribe.png" alt="subscribe_image" /><br />
-            </div>
-            
-            <div class="modal-body">
-                <h2 class="no-anchor">Subscribe to Gruntwork</h2>
-                <ul>
-                    <li>
-                        <h3 class="modal-title no-anchor">Gruntwork Service Catalog</h3>
-                        <p>Get access to over 300,000 lines of reusable, battle-tested, production-grade infrastructure code for AWS and GCP.
-                            <a href="/infrastructure-as-code-library/" target="_blank" ga-on="click" ga-event-category="subscribe-modal-{{ page.path | slugify}}" ga-event-action="iac-library-learn-more">Learn More</a>
-                        </p>
-                    </li>
-                    <li>
-                        <h3 class="modal-title no-anchor">Gruntwork Training Library</h3>
-                        <p>Learn Terraform, Docker, Packer, and other DevOps topics from a series of video courses. Learn More 
-                            <a href="/training/" target="_blank" ga-on="click" ga-event-category="subscribe-modal-{{ page.path | slugify}}" ga-event-action="training-learn-more">Learn More</a>
-                        </p>
-                    </li>
-                    <li>
-                        <h3 class="modal-title no-anchor">Gruntwork Support</h3>
-                        <p>Get help via email, chat, and phone/video from a team of DevOps experts.
-                            <a href="/support/" target="_blank" ga-on="click" ga-event-category="subscribe-modal-{{ page.path | slugify}}" ga-event-action="support-learn-more">Learn More</a>
-                        </p>
-                    </li>
-                </ul>
-            </div>
-            <div class="modal-footer">
-                <div>
-                    <a class="btn btn-primary" href="/pricing/" role="button" ga-on="click" ga-event-category="subscribe-modal-{{ page.path | slugify}}" ga-event-action="continue">Continue</a>
-                </div>
-                <div>
-                    <a class="btn btn-link" href="/contact/" role="button" ga-on="click" ga-event-category="subscribe-modal-{{ page.path | slugify}}" ga-event-action="contact-sales">Contact Sales</a>
-                </div>
-            </div>
+<div
+  class="modal fade"
+  id="subscribe-success"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div
+    class="modal-dialog modal-dialog-centered subscribe-modal "
+    role="document"
+  >
+    <div class="modal-content text-center">
+      <div class="modal-header">
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <img
+          src="/assets/img/guides/img-subscribe.png"
+          alt="subscribe_image"
+        /><br />
+      </div>
+
+      <div class="modal-body">
+        <h2 class="no-anchor">Subscribe to Gruntwork</h2>
+        <ul>
+          <li>
+            <h3 class="modal-title no-anchor">Gruntwork Service Catalog</h3>
+            <p>
+              Get access to over 300,000 lines of reusable, battle-tested,
+              production-grade infrastructure code for AWS and GCP.
+              <a
+                href="/static/infrastructure-as-code-library/"
+                target="_blank"
+                ga-on="click"
+                ga-event-category="subscribe-modal-{{ page.path | slugify}}"
+                ga-event-action="iac-library-learn-more"
+                >Learn More</a
+              >
+            </p>
+          </li>
+          <li>
+            <h3 class="modal-title no-anchor">Gruntwork Training Library</h3>
+            <p>
+              Learn Terraform, Docker, Packer, and other DevOps topics from a
+              series of video courses. Learn More
+              <a
+                href="/static/training/"
+                target="_blank"
+                ga-on="click"
+                ga-event-category="subscribe-modal-{{ page.path | slugify}}"
+                ga-event-action="training-learn-more"
+                >Learn More</a
+              >
+            </p>
+          </li>
+          <li>
+            <h3 class="modal-title no-anchor">Gruntwork Support</h3>
+            <p>
+              Get help via email, chat, and phone/video from a team of DevOps
+              experts.
+              <a
+                href="/static/support/"
+                target="_blank"
+                ga-on="click"
+                ga-event-category="subscribe-modal-{{ page.path | slugify}}"
+                ga-event-action="support-learn-more"
+                >Learn More</a
+              >
+            </p>
+          </li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <div>
+          <a
+            class="btn btn-primary"
+            href="/static/pricing/"
+            role="button"
+            ga-on="click"
+            ga-event-category="subscribe-modal-{{ page.path | slugify}}"
+            ga-event-action="continue"
+            >Continue</a
+          >
         </div>
+        <div>
+          <a
+            class="btn btn-link"
+            href="/static/contact/"
+            role="button"
+            ga-on="click"
+            ga-event-category="subscribe-modal-{{ page.path | slugify}}"
+            ga-event-action="contact-sales"
+            >Contact Sales</a
+          >
+        </div>
+      </div>
     </div>
+  </div>
 </div>

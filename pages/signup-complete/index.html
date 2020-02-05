@@ -1,26 +1,25 @@
 ---
 layout: default
 title: Signup Complete!
-permalink: /signup-complete/
+permalink: /static/signup-complete/
 slug: signup-complete
 sitemap: false
 noindex: true
 ---
 
 <style>
-  
-canvas {
-  background: white;
-  cursor: -webkit-grab;
-  display: block;
-  position: absolute;
-  top: 0;
-  z-index: -1;
-}
-  
-ol li{
-  padding-left: 10px;
-}
+  canvas {
+    background: white;
+    cursor: -webkit-grab;
+    display: block;
+    position: absolute;
+    top: 0;
+    z-index: -1;
+  }
+
+  ol li {
+    padding-left: 10px;
+  }
 </style>
 
 <div class="main">
@@ -29,16 +28,41 @@ ol li{
       <div class="row">
         <div class="col-xs-12">
           <h1 class="text-center">{{ page.title }}</h1>
-          <p>Thank you for signing up for the Gruntwork subscription. Our mission is to make software 10x easier to understand, build, and deploy, and we're delighted to start helping your team achieve that, too.</p>
+          <p>
+            Thank you for signing up for the Gruntwork subscription. Our mission
+            is to make software 10x easier to understand, build, and deploy, and
+            we're delighted to start helping your team achieve that, too.
+          </p>
           <p>Here are the next steps:</p>
           <ol>
-            <li>Please fill out our <a href="https://docs.google.com/forms/d/1dwmgLxjA7Ldwk0DQBjj4nSv0lRIze7wmbgq3_pgeIRM/edit" title="New Customer Setup form" target="_blank">New Customer Setup form.</a></li>
-            <li>A Grunt will contact you, process your order, and grant your team access to all the code, training, and support in the next 1-2 business days.</li>
-            <li>If you purchased a Reference Architecture, we'll be in touch shortly to schedule a deployment date and let you customize all the details.</li>
+            <li>
+              Please fill out our
+              <a
+                href="https://docs.google.com/forms/d/1dwmgLxjA7Ldwk0DQBjj4nSv0lRIze7wmbgq3_pgeIRM/edit"
+                title="New Customer Setup form"
+                target="_blank"
+                >New Customer Setup form.</a
+              >
+            </li>
+            <li>
+              A Grunt will contact you, process your order, and grant your team
+              access to all the code, training, and support in the next 1-2
+              business days.
+            </li>
+            <li>
+              If you purchased a Reference Architecture, we'll be in touch
+              shortly to schedule a deployment date and let you customize all
+              the details.
+            </li>
           </ol>
-          <p>Finally, if you have any questions or feedback, please <a href="/contact/">contact us</a> any time! Continuous improvement is a key part of DevOps and we greatly value your feedback.</p>
+          <p>
+            Finally, if you have any questions or feedback, please
+            <a href="/static/contact/">contact us</a> any time! Continuous
+            improvement is a key part of DevOps and we greatly value your
+            feedback.
+          </p>
           <p>We'll be in touch shortly,</p>
-          <p>The Gruntwork Team </p>
+          <p>The Gruntwork Team</p>
           <p><em>P.S. We just emailed these same instructions to you!</em></p>
         </div>
       </div>
@@ -46,140 +70,147 @@ ol li{
   </div>
 </div>
 
-<script src='https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.4/p5.min.js'></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.4/p5.min.js"></script>
 <script>
-  let fresh,
-    ancient,
-    pressure;
+  let fresh, ancient, pressure;
 
-      let themeColor = [
-        '#f44336', '#e91e63', '#9c27b0', '#673ab7', '#3f51b5',
-        '#2196f3', '#03a9f4', '#00bcd4', '#009688', '#4CAF50',
-        '#8BC34A', '#CDDC39', '#FFEB3B', '#FFC107', '#FF9800',
-        '#FF5722'
-      ];
-      class Particle {
-        constructor(parent) {
-          this.parent = parent;
-          this.gravity = parent.gravity;
-          this.reinit();
-          this.form = round(random(0, 1));
-          this.step = 0;
-          this.prize = 0;
-          this.prizeFactor = random(-0.02, 0.02);
-          this.multFactor = random(0.01, 0.08);
-          this.prizeAngle = 0;
-          this.prizeSpeed = 0.05;
-        }
-        reinit() {
+  let themeColor = [
+    "#f44336",
+    "#e91e63",
+    "#9c27b0",
+    "#673ab7",
+    "#3f51b5",
+    "#2196f3",
+    "#03a9f4",
+    "#00bcd4",
+    "#009688",
+    "#4CAF50",
+    "#8BC34A",
+    "#CDDC39",
+    "#FFEB3B",
+    "#FFC107",
+    "#FF9800",
+    "#FF5722"
+  ];
+  class Particle {
+    constructor(parent) {
+      this.parent = parent;
+      this.gravity = parent.gravity;
+      this.reinit();
+      this.form = round(random(0, 1));
+      this.step = 0;
+      this.prize = 0;
+      this.prizeFactor = random(-0.02, 0.02);
+      this.multFactor = random(0.01, 0.08);
+      this.prizeAngle = 0;
+      this.prizeSpeed = 0.05;
+    }
+    reinit() {
+      this.position = this.parent.position.copy();
+      this.position.y = random(-20, -100);
+      this.position.x = random(0, width);
+      this.velocity = createVector(random(-6, 6), random(-10, 2));
+      this.friction = random(0.995, 0.98);
+      this.height = round(random(5, 15));
+      this.half = this.height / 2;
+      this.color = color(random(themeColor));
+    }
+    draw() {
+      this.step = 0.5 + Math.sin(this.velocity.y * 20) * 0.5;
 
-          this.position = this.parent.position.copy();
-          this.position.y = random(-20, -100);
-          this.position.x = random(0, width);
-          this.velocity = createVector(random(-6, 6), random(-10, 2));
-          this.friction = random(0.995, 0.98);
-          this.height = round(random(5, 15));
-          this.half = this.height / 2;
-          this.color = color(random(themeColor));
+      this.prize =
+        this.prizeFactor + Math.cos(this.prizeAngle) * this.multFactor;
+      this.prizeAngle += this.prizeSpeed;
+      translate(this.position.x, this.position.y);
+      rotate(this.velocity.x * 2);
+      scale(1, this.step);
+      noStroke();
+      fill(this.color);
 
-        }
-        draw() {
-
-          this.step = 0.5 + Math.sin(this.velocity.y * 20) * 0.5;
-
-          this.prize = this.prizeFactor + Math.cos(this.prizeAngle) * this.multFactor;
-          this.prizeAngle += this.prizeSpeed;
-          translate(this.position.x, this.position.y);
-          rotate(this.velocity.x * 2);
-          scale(1, this.step);
-          noStroke();
-          fill(this.color);
-
-          if (this.form === 0) {
-            rect(-this.half, -this.half, this.height, this.height);
-          } else {
-            ellipse(0, 0, this.height, this.height);
-          }
-
-          resetMatrix();
-        }
-        integration() {
-          this.velocity.add(this.gravity);
-          this.velocity.x += this.prize;
-          this.velocity.mult(this.friction);
-          this.position.add(this.velocity);
-          if (this.position.y > height) {
-            //this.reinit();
-          }
-
-          if (this.position.x < 0) {
-            //this.reinit();
-          }
-          if (this.position.x > width + 10) {
-            //this.reinit();
-          }
-        }
-        render() {
-          this.integration();
-          this.draw();
-
-        }
-      }
-      class SystemeOfParticles {
-        constructor(numberMax, position, gravity) {
-          console.log(numberMax);
-          this.position = position.copy();
-          this.numberMax = numberMax;
-          this.gravity = createVector(0, 0.1);
-          this.friction = 0.98;
-          // the tables
-          this.particles = [];
-          for (var i = 0; i < this.numberMax; i++) {
-            this.particles.push(new Particle(this));
-          }
-        }
-        render() {
-          if (pressure) {
-            var force = p5.Vector.sub(fresh, ancient);
-            this.gravity.x = force.x / 20;
-            this.gravity.y = force.y / 20;
-          }
-          this.particles.forEach(particles => particles.render());
-        }
-      }
-      let confettis;
-
-      function setup() {
-        createCanvas(windowWidth, windowHeight);
-        frameRate(60);
-        ancient = createVector(0, 0);
-        fresh = createVector(0, 0);
-        confettis = new SystemeOfParticles(500, createVector(width / 2, -20));
+      if (this.form === 0) {
+        rect(-this.half, -this.half, this.height, this.height);
+      } else {
+        ellipse(0, 0, this.height, this.height);
       }
 
-      function draw() {
-        background(color("#1d252f"));
-        noFill();
-        fresh.x = mouseX;
-        fresh.y = mouseY;
-        confettis.render();
-        ancient.x = fresh.x;
-        ancient.y = fresh.y;
+      resetMatrix();
+    }
+    integration() {
+      this.velocity.add(this.gravity);
+      this.velocity.x += this.prize;
+      this.velocity.mult(this.friction);
+      this.position.add(this.velocity);
+      if (this.position.y > height) {
+        //this.reinit();
       }
 
-      function windowResized() {
-        resizeCanvas(windowWidth, windowHeight);
-        confettis.position = createVector(width / 2, -40);
+      if (this.position.x < 0) {
+        //this.reinit();
       }
+      if (this.position.x > width + 10) {
+        //this.reinit();
+      }
+    }
+    render() {
+      this.integration();
+      this.draw();
+    }
+  }
+  class SystemeOfParticles {
+    constructor(numberMax, position, gravity) {
+      console.log(numberMax);
+      this.position = position.copy();
+      this.numberMax = numberMax;
+      this.gravity = createVector(0, 0.1);
+      this.friction = 0.98;
+      // the tables
+      this.particles = [];
+      for (var i = 0; i < this.numberMax; i++) {
+        this.particles.push(new Particle(this));
+      }
+    }
+    render() {
+      if (pressure) {
+        var force = p5.Vector.sub(fresh, ancient);
+        this.gravity.x = force.x / 20;
+        this.gravity.y = force.y / 20;
+      }
+      this.particles.forEach(particles => particles.render());
+    }
+  }
+  let confettis;
 
-      function mousePressed() {
-        next = 0;
-        pressure = true;
-      }
+  function setup() {
+    createCanvas(windowWidth, windowHeight);
+    frameRate(60);
+    ancient = createVector(0, 0);
+    fresh = createVector(0, 0);
+    confettis = new SystemeOfParticles(500, createVector(width / 2, -20));
+  }
 
-      function mouseReleased() {
-        pressure = false;
-        confettis.gravity.y = 0.1;
-        confettis.gravity.x = 0;
-      }
+  function draw() {
+    background(color("#1d252f"));
+    noFill();
+    fresh.x = mouseX;
+    fresh.y = mouseY;
+    confettis.render();
+    ancient.x = fresh.x;
+    ancient.y = fresh.y;
+  }
+
+  function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);
+    confettis.position = createVector(width / 2, -40);
+  }
+
+  function mousePressed() {
+    next = 0;
+    pressure = true;
+  }
+
+  function mouseReleased() {
+    pressure = false;
+    confettis.gravity.y = 0.1;
+    confettis.gravity.x = 0;
+  }
 </script>

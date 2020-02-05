@@ -8,7 +8,7 @@
  */
 
 (function ($) { "use strict";
-  var cookieInnerHtml = '<div><p>By using this website you agree to our <a href="/cookie-policy/">cookie policy</a></p><button id="cookieModalClose" class="btn btn-primary">OK</button></div>';
+  var cookieInnerHtml = '<div><p>By using this website you agree to our <a href="/static/cookie-policy/">cookie policy</a></p><button id="cookieModalClose" class="btn btn-primary">OK</button></div>';
 
   var initCookie = function () {
 
