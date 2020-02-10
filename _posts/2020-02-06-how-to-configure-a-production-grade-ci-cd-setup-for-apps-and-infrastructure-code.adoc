@@ -1,0 +1,97 @@
+---
+title: How to configure a production-grade CI/CD workflows for application and infrastructure code
+categories: Foundations
+image: TODO
+excerpt: Learn about CI/CD workflows for application and infrastructure code, including the differences between the two, different CI servers, threat models, and more.
+tags: ["aws", "terraform", "cicd"]
+cloud: ["aws"]
+---
+:page-type: guide
+:page-layout: post
+
+:toc:
+:toc-placement!:
+
+// GitHub specific settings. See https://gist.github.com/dcode/0cfbf2699a1fe9b46ff04c41721dda74 for details.
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+toc::[]
+endif::[]
+
+== Intro
+
+This guide is a comprehensive overview of how to design, configure, and implement a Continuous Integration and
+Continuous Delivery pipeline for your application and infrastructure code.
+
+=== What is Continuous Integration and Continuous Delivery?
+
+TODO
+
+=== What you'll learn in this guide
+
+This guide consists of four main sections:
+
+<<core_concepts>>::
+  An overview of the core concepts you need to understand what a typical CI/CD pipeline entails for appliction and
+  infrastructure code, including a sample workflow, infrastructure to support CI/CD, and threat models to consider to
+  protect your infrastructure.
+
+<<production_grade_design>>::
+  An overview of how to configure a secure, scalable, and robust CI/CD workflow that you can rely on for your
+  production application and infrastructure code. To get a sense of what production-grade means, check out
+  link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#production_grade_infra_checklist[The production-grade infrastructure checklist].
+
+<<deployment_walkthrough>>::
+  A step-by-step guide to deploying a production-grade CI/CD pipeline in AWS using code from the Gruntwork
+  Infrastructure as Code Library.
+
+<<next_steps>>::
+  What to do once you've got your CI/CD pipeline set up.
+
+
+== Core Concepts
+
+=== Why is it important to have CI/CD?
+
+=== CI/CD for application code
+
+=== CI/CD for infrastructure code
+
+=== CI/CD platforms
+
+=== Threat model of CI/CD
+
+
+== Production-grade design
+
+=== Use CI servers as workflow engine
+
+=== Identify minimal IAM permissions for a deployment
+
+=== Run infrastructure deployment outside of CI servers
+
+=== Implement approval flows
+
+=== Lock down VCS systems
+
+
+== Deployment walkthrough
+
+=== Pre-requisites
+
+=== Lock down VCS
+
+=== Deploy a VPC
+
+=== Deploy the ECS Deploy Runner
+
+=== Configure IAM permissions for the ECS Task
+
+=== Configure CI server
+
+
+== Next steps
