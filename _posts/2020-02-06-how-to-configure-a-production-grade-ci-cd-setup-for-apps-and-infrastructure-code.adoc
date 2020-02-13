@@ -88,17 +88,89 @@ Automated testing and feature toggling strategies for infrastructure code::
 
 === Why is it important to have CI/CD?
 
-TODO
+TODO: Include ISS image
+
+To understand the benefits of CI/CD, it is worth exploring the opposite: _late integration and late delivery (LI/LD)_.
+We will explain LI/LD using a thought experiment about building the International Space Station (ISS).
+
+The ISS consists of dozens of components, as shown in the image above. Each component is built by a team from a
+different country, with a central team responsible for managing how to organize the development. In LI/LD,
+you would organize the development by coming up with a design for all the components up front and then have each team go
+off and work on their component in _total isolation_. There is complete trust in the design and the teams such that
+there is no need to check in and integrate the components along the way. When all the teams are done, each team launches
+the component into space and then put all the components together at the same time in space, _for the first time_.
+
+It isn't hard to imagine that this could be disastrous: one team would think the other team was responsible for wiring
+while that team thought everything would be wireless; all the teams would use the metric system except one; everyone cut
+toilets from the scope thinking some other team is sure to include it. Finding all of this out once everything has
+already been built and is floating in outer space means that fixing the problems will be very difficule and expensive.
+
+
+TODO: Include branching image
+
+While it is hard to imagine that anyone would build the ISS in this way, unfortunately this model of development is
+fairly common in the software industry. Developers work in total isolation for weeks or months at a time on _feature
+branches_ without integrating their work with other teams, and then try to merge all the work together at the last
+minute moments before release. Oftentimes the integration process is very expensive and takes days or weeks fixing merge
+conflicts, tracking down subtle bugs, and trying to stabilize release branches.
+
+In contrast, the Continuous Integration and Continuous Delivery model of development promotes more cross team
+communication and integration work as development progresses. Going back to the ISS thought experiment, a CI/CD style of
+building the ISS would work by coming up with a design up front, but instead of each team working in isolation there
+would be regular checkpoints throughout the process where the teams come together to try to test and integrate all the
+components, and update the design if there are problems. As components are completed and integration tests validate the
+design, they are launched into space and assembled incrementally as new components arrive.
+
+Instead of integrating at the last moment, CI/CD encourages development teams to integrate their work together on a
+regular basis, with smaller packages of development. This exposes problems with the design earlier in the process and
+ensures that there is ample time to improve the design.
 
 
 === Trunk-based development model
 
-The most common way to implement Continuous Integration is to use a _trunk-based development model_.
+TODO: Include trunk image
 
-TODO
+The most common way to implement CI/CD is to use a _trunk-based development model_. In trunk-based development, all the
+work is done on the same branch, called `trunk` or `master` depending on the Version Control System (VCS). You would
+still have feature branches that developers work on to facilitate review processes, but typically these are tiny and
+short lived containing only a handful of commits. Everyone actively merges their work back into trunk on a regular
+basis, oftentimes multiple times per day (Continuous Integration). Then, as `trunk` or `master` is updated, the work is
+immediately deployed into the active environments so that they can be tested further (Continuous Delivery).
+
+Can having all developers work on a single branch really scale? It turns out that trunk-based development is used by
+thousands of developers at https://www.wired.com/2013/04/linkedin-software-revolution/[LinkedIn],
+https://paulhammant.com/2013/03/13/facebook-tbd-take-2/[Facebook], and
+https://www.youtube.com/watch?v=W71BTkUbdqE[Google]. How are these software giants able to manage active trunks on the
+scale of billions of lines of code with 10s of thousands of commits per day?
+
+There are two factors that make this possible:
+
+Smaller integration scope from small frequent commits::
+  It turns out that if you integrating small amounts of code on a regular basis, the number of conflicts that arise is
+  also fairly small. Instead of having big, monolithic merge conflicts, each conflict that arises will be in a tiny
+  portion of the work being integrated. In fact, oftentimes these conflicts are desirable as it is a sign that there is
+  a design flaw and is a nature of the software work. You'll have to deal with conflicts no matter what, and it is going
+  to be eaiser to deal with conflicts that arise from one or two days of work than with conflicts that represents months
+  of work.
+
+Automated testing::
+  When frequent development happens on `trunk`/`master`, naturally it can make the branch unstable. A broken
+  `trunk`/`master` is something you want to avoid at all costs in trunk-based development as it could block all
+  development. To prevent this, it is important to have a self-testing build with a solid automated testing suite. A
+  self-testing build is a fully automated build process that is triggered on any work being committed to the repository.
+  The associated test suite should be complete enough that when they pass, you can be confident the code is stable.
+  Typically code is only merged into the trunk when the self-testing build passes.
 
 
-=== CI/CD for application code
+=== Sample CI/CD workflows
+
+Now that we have gone over what, why, and how CI/CD works, let's take a look at a more concrete example walking through
+the workflow with application code, and then with infrastructure code.
+
+- <<cicd_for_application_code>>
+- <<cicd_for_infrastructure_code>>
+
+==== CI/CD for application code
 
 Before diving into what a CI/CD workflow for infrastructure code might look like, let's first start by going over a
 typical workflow of taking application code (e.g, a Ruby on Rails or Java/Spring app) from development to production.
@@ -107,71 +179,83 @@ familiar with parts of it.
 
 For the purposes of going through this workflow, we will assume the following:
 
-- The application code lives in source control.
-- We are using a trunk-based development model (link:#trunk-based-development-model[described above]).
+- The application code lives in version control.
+- We are using a trunk-based development model.
 - The application has already been in development for sometime and there is a version of it in production.
 
-==== Clone copy of source code and create a new branch
+The following list covers the steps of a typical CI/CD workflow for application code. You can refer to the section
+https://blog.gruntwork.io/how-to-use-terraform-as-a-team-251bc1104973#1bff[A workflow for deploying application code]
+from our blog post **How to use Terraform as a team** for more details.
 
-The first step in making changes to the code in the repository is to ensure a version of the code exists locally.
-You will also want to ensure that you can run the code locally to verify your changes in an iterative manner. Note
-being able to run the code locally is likely to slow your development process as the only way to know if your changes
-work is through the CI infrastructure which is typically considerably slower to work interactively.
+Clone copy of source code and create a new branch::
+  Since the code lives in version control, you want to ensure that a version of the code exists locally so that you can
+  start to make changes. As such typically the first step in making changes to the code base is to make a local clone of
+  the repository. It is also important to start by making a new branch of the code so that it can be pushed back to the
+  repository without worrying about breaking the main line of code (trunk) that everyone is working off of.
 
-Additionally, you will want to ensure that your work doesn't conflict or break the workflow of others. In the initial
-stages of development, your code is likely to be more erratic as it will not have gone through all the automated checks
-of the workflow (e.g automated tests and code reviews). You will want to avoid integrating code at this stage, until you
-have gone through enough checks to feel confident in the code. Typically you create a separate, shortlived branch from
-trunk that you use for tracking your work.
+Run the code locally::
+  Once you have a local copy, typically it is a good practice to sanity check the local copy before making any changes
+  to it. You want to ensure that you are starting from a clean slate to avoid conflicting an existing bug that breaks
+  the code with something that you introduced during development. If any issues have slipped through the cracks and were
+  merged to master, you want to know those before starting on your implementation.
 
-==== Run the code locally
+Make code changes::
+  Now that you have a working local copy, you can start to make changes to the code. This process is done iteratively,
+  while checking for validity of the changes along the way with manual or automated testing. Since all the testing is
+  local, the feedback cycle for development should be short. That is, you should be getting immediate feedback whether
+  or not the code changes work as you iterate.
 
-Typically it is a good practice to sanity check the local copy before making any changes to it. You want to ensure that
-you are starting from a clean slate to avoid conflicting an existing bug that breaks the code with something that you
-introduced during development. If any issues have slipped through the cracks and were merged to master, you want to know
-those before starting on your implementation.
+Submit changes for review::
+  Once the code implementation is done and the testing passes, the next step is to submit it for review. Not everything
+  can be checked through automated testing (e.g general code design and readability, or potential performance issues on
+  larger data sets), and since the cost of broken code making it into trunk is high in continuous integration (as it can
+  stop development for the entire team), most workflows include a code review process to minimize the chances of
+  breakage during integration.
 
-Testing the code locally typically includes both manual and automated tests. For example, if you had a web application
-written in a general purpose programming language such as Ruby, you might manually test the code by starting the server
-and hitting a few known endpoints with `curl`:
+Run automated tests::
+  To help with code review, you should also set up a CI server (such as Jenkins or CircleCI) with commit hooks to
+  automatically trigger automated testing to run for any branch that is submitted for review. Running the automated
+  tests in this fashion not only ensures that the code passes all the tests, but also verifies that it runs on multiple
+  platforms and not just on the developer machines.
 
-----
-$ ruby web-server.rb
+Merge and release::
+  Once the code passes automated checks and goes through the review process, it is ready to be integrated into the
+  trunk. At this point, you have done the best you could to ensure the code won't break the current trunk and additional
+  checks are likely to hit diminishing returns. Once you merge the code into trunk, you will also want to generate a
+  release artifact that can be deployed. Depending on how the code is packaged and deployed, this could be anything from
+  a new Docker image, a new virtual machine image, a `.jar` file, or `.tar` source archive. Typically this process is
+  automated by a CI server in reaction to a new git tag.
 
-[2019-06-15 15:43:17] INFO  WEBrick 1.3.1
-[2019-06-15 15:43:17] INFO  ruby 2.3.7 (2018-03-28)
-[2019-06-15 15:43:17] INFO  WEBrick::HTTPServer#start: port=8000
+Deploy::
+  The final stage of the CI/CD workflow is to deploy the code to your environments (the CD portion). There are a number
+  of deployment strategies you can take to safely roll out the changes (e.g canary, blue/green, rolling, etc), but
+  almost all pipelines have a concept of promoting arifacts across environments. That is, you want to deploy the release
+  artifact to a pre-production environment first, do some automated and/or manual checks, before moving on to deploying
+  the artifact to production. It is important to note that this should be happening automatically. That is, deployments
+  to pre-production and automated testing against the pre-production environment should happen when the release tag and
+  artifact is created. The only manual step you might have in the process is to hold for approval before promoting the
+  artifact to production, depending on how confident you are in your automated tests.
 
-$ curl http://localhost:8000
-Hello, World
-----
 
-You might also run the automated test suite for your web server locally to get a wider coverage area than just the
-manual testing:
+One thing to note here is that this process typically happens in short cycles. You want to set up your cycle and servers
+so that all the steps in this process can happen multiple times per day. A key factor of continuous integration is to
+keep the code packages small so that you are integrating small change sets to avoid an expensive and painful integration
+process.
 
-----
-$ ruby web-server-test.rb
+Also note the amount of automated testing throughout the entire process. These testing cycles are put in place to ensure
+that you can have confidence in the code you implemented for merging into trunk. The last thing you want is to merge and
+integrate a change that breaks the main branch such that all development comes to a halt. Automated testing allows you
+to run thousands of various checks in a short amount of time.
 
-(...)
-
-Finished in 0.633175 seconds.
-\--------------------------------------------
-8 tests, 24 assertions, 0 failures, 0 errors
-100% passed
-\--------------------------------------------
-----
-
-It is important to note that you can verify and test the code entirely in the local environment. This is not true for
-infrastructure code where testing requires spinning up infrastructure in the cloud.
-
-==== Make code changes
-
-Now t
+These factors are important to consider when taking a look at CI/CD for infrastructure code, where you can't have local
+environments.
 
 
 === CI/CD for infrastructure code
 
+
 === CI/CD platforms
+
 
 === Threat model of CI/CD
 
