@@ -88,7 +88,7 @@ Automated testing and feature toggling strategies for infrastructure code::
 
 === Why is it important to have CI/CD?
 
-TODO: Include ISS image
+image::/assets/img/guides/infrastructure-cicd-pipeline/iss-components.png[Image of ISS components]
 
 To understand the benefits of CI/CD, it is worth exploring the opposite: _late integration and late delivery (LI/LD)_.
 We will explain LI/LD using a thought experiment about building the International Space Station (ISS).
@@ -106,7 +106,7 @@ toilets from the scope thinking some other team is sure to include it. Finding a
 already been built and is floating in outer space means that fixing the problems will be very difficule and expensive.
 
 
-TODO: Include branching image
+image::/assets/img/guides/infrastructure-cicd-pipeline/feature-branch-merge-conflict.png[Many branches merging at the same time]
 
 While it is hard to imagine that anyone would build the ISS in this way, unfortunately this model of development is
 fairly common in the software industry. Developers work in total isolation for weeks or months at a time on _feature
@@ -128,7 +128,7 @@ ensures that there is ample time to improve the design.
 
 === Trunk-based development model
 
-TODO: Include trunk image
+image::/assets/img/guides/infrastructure-cicd-pipeline/trunk.png[Trunk with continuous commits]
 
 The most common way to implement CI/CD is to use a _trunk-based development model_. In trunk-based development, all the
 work is done on the same branch, called `trunk` or `master` depending on the Version Control System (VCS). You would
@@ -252,6 +252,273 @@ environments.
 
 
 === CI/CD for infrastructure code
+
+Now let's take a look at what the workflow for infrastructure code (Terraform, Ansible, Chef, Puppet, Packer, Docker,
+etc) might look like. Since infrastructure code is software just like application code, ideally we would want to use the
+similar, or even the same pipeline. However, there are important differences with infrastructure code that makes it
+difficult to use the exact same pipeline as application code:
+
+- *There is no rollback in infrastructure code*. With application code, oftentimes you will be able to roll back to a
+  previous change to undo any bugs you might have introduced. With infrastructure code, a bug might destroy your entire
+  database with no undo. This means that deploying infrastructure code requires a lot more care than application code.
+
+- *The existence of out-of-band changes and conflicts stemming from it*. With application code, it is much harder to make
+  out-of-band changes than with infrastructure code. You have login to a server, manually update the code, rebuild the
+  code, and restart the services. It is probably going to be much easier for the developer to rely on the process to
+  make these changes as a lot of the tedious steps (such as building the code) is automated. On the other hand, with
+  infrastructure code, you can easily make changes to the infrastructure through the UI. You can add, modify, or delete
+  infrastructure with a few clicks in the AWS UI. The problem with out-of-band changes is that it cause configuration
+  drift and leads to complicated bugs.
+
+- *There is only one environment for the code*. Unlike with application code where you can easily have many copies of the
+  code running at the same time, having duplicate environments of infrastructure code is very expensive. It is expensive
+  as is having additional copies of your infrastructure for dev, stage, and prod, imagine having three copies of that
+  triplet for infrastructure (e.g `infra-dev-dev`, `infra-dev-stage`, `infra-dev-prod` and so on). This not only makes
+  testing the infrastructure code hard, but also limits branching strategies: you don't want any long lived branches,
+  and you don't want to deploy any infrastructure from feature branches to avoid state conflicts.
+
+With these differences in mind, let's discuss what the workflow for infrastructure code looks like.
+
+==== Repository organization
+
+Just like with application code, it is important to use version control for infrastructure code. Version control is
+critical for being able to track changes and implementing review processes for your code. However, unlike with
+application code, you will typically want at least two separate version control repositories for your infrastructure
+code: one for infrastructure modules (typically called `infrastructure-modules` or just `modules`), and one for your live
+environment configuration (typically called `infrastructure-live` or just `live`).
+
+modules::
+  This repository should contain reusable infrastructure code to deploy common components of your infrastructure. Think
+  of this repo as the "blueprints" that define the way your company configures infrastructure. For example, you might
+  define an infrastructure module for deploying RDS databases.
+
+live::
+  This repository should contain the live configuration of your infrastructure for each of your environments. If
+  `modules` contain "blueprints" then this repo contain the "houses" that were built using the "blueprints." For
+  example, you might define an environment that contains multiple RDS databases, each configured with different
+  parameter options (e.g name, server size, disk configuration, etc).
+
+Since the nature of the release artifacts for the two repositories are different, naturally the CI/CD pipeline for the
+repositories will also be different.
+
+For `modules`, release artifacts will be versioned immutable snapshots of the code that you can consume in the `live`
+configuration. The versioned artifacts ensure that you get a known configuration that won't change overtime (unless you
+request a different version). This helps facilitate consistent roll out of the particular infrastructure component
+across multiple environments.
+
+In contrast, for `live`, there is typically no release artifact. Instead, you would apply the code to the cloud to mark
+a "release." Unlike with `modules`, the `live` code is a reflection of the actual infrastructure that is deployed. As
+such, it is important that the code is regularly applied so that it closely matches reality. We call this _The Golden
+Rule of Terraform_:
+
+  The master branch of the live repository should be a 1:1 representation of what's actually deployed in production.
+
+Let's break this sentence down, starting at the end and working our way back:
+
+"... what's actually deployed"::
+  The only way to ensure that the infrastructure code in the `live` repository is an up-to-date representation of what's
+  actually deployed is to never make out-of-bound changes. As discussed in the previous section, out-of-bound changes
+  are sources of subtle bugs and undesirable actions in infrastructure code. If you get into a habit of making
+  out-of-bound changes, your infrastructure code will constantly need to make large amounts of changes to resolve the
+  configuration drift. This not only void many of the benefits of managing your infrastructure as code (e.g
+  reproducibility), it can also be a source of distrust in the code base. Note that the flip side is true as well: you
+  want to ensure that the code is continuously applied so that the code doesn't move too far ahead of the existing
+  infrastructure.
+
+"... a 1:1 representation ..."::
+  Keeping track of the infrastructure that has been deployed is a critical part of Site Reliability Engineering. If you
+  are not aware of all the environments that have been deployed, it is not only hard to make sense of any of the
+  monitoring alarms and metrics, it can also be a source of frustration when you need to debug an issue. Ensuring that
+  all the configuration for the environments are captured as code and live in your `live` repository provides an easy
+  and obvious way to know what has been deployed and the exact configuration in which the deployment happened. This not
+  only means avoiding out-of-bound changes, but also avoiding tooling where the configurations live outside the live
+  codebase (e.g using Terraform workspaces).
+
+"The master branch ..."::
+  You should only deploy your infrastructure from a single branch. This relates to the challenge of being able to only
+  have a single environment for the code. Since you can't have multiple deployed environments of the code, it becomes
+  hard to manage the shared infrastructure state across multiple copies of the code. This is most obvious with
+  Terraform and it's state tracking. Given the cost of spinning up multiple copies of your entire infrastructure, you
+  are typically forced to only maintain a single environment for your infrastructure code that everyone shares. This
+  means that applying the infrastructure from separate branches is the same as making out-of-band changes, because the
+  view is not unified. That is, terraform can only get the full view of the infrastructure if it merges all the changes
+  from the active branch together. In this fragmented view, there is a high likelihood that applying the infrastructure
+  in one branch can undo (as in, delete the infrastructure) the work of another branch because the configuration doesn't
+  include it. To avoid this, you need to have a single source of truth that is consistent. In trunk-based development,
+  that is the `master` branch.
+
+With these two repository structures in mind, let's take a look at what the CI/CD workflow looks like for each.
+
+- <<cicd_for_infrastructure_modules>>
+- <<cicd_for_live_infrastructure>>
+
+==== CI/CD for infrastructure modules
+
+The CI/CD process for infrastructure modules closely aligns that of application code. Since infrastructure modules do
+not track live infrastructure, you can deploy a sandbox environment containing just the components that are being
+developed for testing purposes. Additionally, you can release the code without rolling it out to the different
+environments. Since each release is immutable, you can guarantee that if an environment is pointing to one version of
+the code, it will still get the same code even after new versions are released. This allows you to roll out the module
+changes in stages across your dev, stage, and prod application environments. This makes it considerably easy to design
+and implement automated testing around it, as well as continuously deploy the code in a safe manner.
+
+Given that, let's look at the stages in detail:
+
+Clone copy of source code and create a new branch::
+  Just like with application code, you will want to make sure you do your work in a different branch to trunk to keep
+  the trunk stable.
+
+Run the code locally::
+  Unlike with application code, you can't have a local environment for your infrastructure code, even at the module
+  level. For example, you can't deploy an AWS Auto Scaling Group to your laptop. This means that running a local
+  environment in total isolation is not feasible. Looking at the plan is also insufficient as the local plan does not
+  capture all the constraints of the AWS API (e.g maximum number of characters for an ECS service namme). The only way
+  to fully test Terraform code is to actually deploy real infrastructure against a real AWS account. This is typically
+  done in a sandbox AWS account where infrastructure developers have full permissions to freely spin up new
+  environments of the infrastructure component. By having each developer spin up their own test infrastructure using the
+  module, you can ensure that the developers won't conflict with each other when testing their code.
+
+Make code changes::
+  Once you have a test environment, you can iterate on your changes by continuously applying the code to the test
+  environment. Just like with application code, you will want to make the changes by checking for validity with manual
+  or automated testing. Automated testing is more complicated with infrastructure code as you need to deploy real
+  infrastructure. Refer to the <<infrastructure_automated_testing>> section to learn more about various testing
+  strategies for infrastructure code.
+
+Submit changes for review::
+  Just like with application code, you will want to have a code review process before changes make it into trunk. This
+  is even more important with infrastructure code where the amount of testing you can do is limited.
+
+Run automated tests::
+  To the extent that is possible, you should design and write automated tests that you can run on your infrastructure
+  code, and you should hook up your repository to a CI server so that the automated tests run on every commit. At the
+  bare minimum, you should be running some form of static analysis on the infrastructure code. If the platform supports
+  it, you should also do a dry run of the infrastructure code (e.g `terraform plan`). While they are more useful with
+  live infrastructure, typically you can use the `plan` for infrastructure modules to do quick sanity checks of your
+  looping or conditional logic. That is, you can check if terraform will plan to create the exact number of resources
+  that you requested through the inputs. However, the best case scenario is to have a suite of automated tests that will
+  deploy the infrastructure, validate it, and destroy it at the end using a tool such as
+  https://github.com/gruntwork-io/terratest[Terratest]. Refer to the <<infrastructure_automated_testing>> section to
+  learn more about various testing strategies for infrastructure code.
+
+Merge and release::
+  After the code has been reviewed and the automated checks pass, you can merge the code into trunk and be prepared for
+  release. For infrastructure modules, releasing the code only involves tagging the specific version of the code with a
+  human friendly name (e.g https://semver.org[semantic versioning]). With application code, you might have to package
+  the code into a release artifact (e.g `.jar` file, Docker container, virtual machine image, etc) but with
+  infrastructure code, they are usually pulled directly from the repository at runtime. In this case, the specific tag
+  of the source code is the immutable, versioned artifact that will be deployed.
+
+Deploy::
+  Once the infrastructure module is released, you will want to deploy the code to your environments. With application
+  code, you might immediately deploy the artifact. However, with infrastructure code, you will want to stage the
+  releases and roll out in a more controlled fashion. Since you have limited capabilities of automate testing, and with
+  no ability to roll back and with deep consequences for bugs in the infrastructure code, it is important to have a few
+  more checks in the deployment process. As such, typically the CI/CD workflow for infrastructure modules stop short of
+  deploying it to the live environment, and instead you have a separate CI/CD workflow that is triggered by manually
+  updating the code in the live environment, which we will cover in the next section.
+
+
+In summary, here are the key differences with infrastructure modules when compared to application code:
+
+- Infrastructure code doesn't have a local environment. You need to deploy real infrastructure even to manually test the
+  code. This requires more coordination to avoid developers stepping on each others' toes.
+
+- The amount of automated testing you can do with infrastructure code is limited. It is very rare to have enough testing
+  to build enough confidence to automatically deploy your infrastructure code, although you can get close with
+  deployment testing in sandbox environments.
+
+- There are no release artifacts to bundle or build with infrastructure modules.
+
+- Deploying infrastructure modules involves updating the code in the `live` repository, and is typically a completely
+  separate workflow.
+
+==== CI/CD for live infrastructure
+
+With the infrastructure modules pipeline, you get a CI/CD workflow that ends with immutable, versioned artifacts of well
+tested infrastructure modules to deploy individual components. However, unless you are building an Infrastructure as
+Code library that is consumed by other teams (e.g like Gruntwork), the modules have to be deployed and rolled out to
+your live infrastructure. This is done by making changes to the `live` repo and deploying those changes with the
+specific IaC tool (e.g `terraform apply`).
+
+However, since the `live` repo tracks live infrastructure environments, the CI/CD pipeline typically looks vastly
+different from what you had with application code and infrastructure modules, although the basic flow of steps is the
+same. Here is what it might look like:
+
+Clone copy of source code and create a new branch::
+  Since we are still using a trunk-based model even for the `live` repo, there is no difference in the branching
+  strategy. You should still cut a development branch where you make the live configuration changes.
+
+Run the code locally::
+  This is where there is a major difference between the live infrastructure repo and the infrastructure modules repo.
+  With the infrastructure modules, you were typically working with infrastructure code to deploy a component in
+  isolation. This means that you could deploy that infrastructure in an isolated sandbox environment, provided that all
+  the dependencies were deployed together with it. However, with the live infrastructure config, the code reflects and
+  represents the live infrastructure (remember the _Golden Rule of Terraform_). This means that the only way to run the
+  code is either a dry run (`terraform plan`) or to deploy it (`terraform apply`). With that said, a good sanity check
+  of the live config is to do a dry run on the cleanly checked out code to verify that the configuration hasn't drifted.
+  By starting from a clean slate where there is no planned changes from the current infrastructure code, it makes it
+  easier to review and test your changes by focusing only on the planned changes coming out of your updated code.
+
+Make code changes::
+  Once you verify that you are starting off of a clean slate, you can start to make changes to the live configuration.
+  With the other two kinds of code we covered, the code changes happened in an iterative fashion with frequent testing
+  to validate the changes. You can do a similar kind of workflow here, although you will be limited to the basic sanity
+  checks offered by static analysis and the dry run. While this vastly limits the amount of testing you can do with the
+  configuration, the changes you need to make to the live config are typically minimal (unless you are deploying a
+  completely new environment). Oftentimes the changes involved are version bumps of the underlying infrastructure
+  modules. Since all the testing and developmental hard work has already been done in the infrastructure modules, most
+  of the time there isn't much need for iteration, other than to possibly go back to the infrastructure modules to fix a
+  bug you found in the `plan`.
+
+Dev before Stage before Prod::
+  This isn't a step in the CI/CD pipeline, but you will want to fully roll out your changes to your preproduction
+  environmennts (dev and stage) before rolling out to prod. You will want to avoid updating all your environments at
+  once. You can only test the changes by applying to an existing, live environment, and you would not want to be testing
+  new code on production for the first time. Always make your changes and roll out to your preproduction environments in
+  full before making the changes  to stage and prod. This might mean repeating the whole process from step 1 three
+  times. While tedious, in practice you will move a lot faster as you will very rarely encounter issues by the time the
+  code makes it to production.
+
+Submit changes for review::
+  Once all the configuration changes have been made and you have sanity checked the plan, you will want to submit the
+  code for review. Reviewing the live infrastructure config is no different than reviewing infrastructure code or
+  application code. However, there is more weight and importance in the review process here as merging this code will
+  update the live infrastructure.
+
+Run plan automatically::
+  As mentioned above, there is very little automated testing you can do with the live config. As such, the only form of
+  automation you can add to the review process is to do a dry run of the infrastructure and make it available so that
+  the reviewer can take a look.
+
+Merge and deploy::
+  Once the code has been reviewed and the plan makes sense, it is time to merge and deploy the change. Given the _Golden
+  Rule of Terraform_, where the master should be a 1:1 representation of what is actually deployed, the live
+  configuration typically does not have a release process. That is, typically you do not cut a release and artifact the
+  code. Instead, you design the CI/CD workflow so that on merge to master the code is immediately scheduled for
+  deployment. However, just like with any other code, you can introduce subtle integration bugs in the merge process.
+  Just looking at the plan from the feature branch PR is not sufficient to automatically run deploy the configuration
+  after merging the code since there is no guarantee that the exact same plan will be produced after the code has merged
+  into trunk. This is because other changes not available on your feature branch may have been made in the meantime,
+  causing both the infrastructure and code to change. Therefore it is always important to rerun the plan before
+  deploying the infrastructure, and having an approval process baked into the CD pipeline itself. That is, your
+  automated pipeline should:
+
+    1. Do a dry run (`terraform plan`) from the updated trunk.
+    1. Notify that a deployment is scheduled and a plan is available for review.
+    1. Wait for manual approval.
+    1. Deploy the code only after it has been reviewed for correctness.
+
+In summary, here are the key differences with live infrastructure configurations and the other two kinds of code we have
+discussed:
+
+- There is almost no form of automated testing you can implement in the predeployment stage. The only thing you can do
+  is perform a dry run and review the plan.
+
+- Similarly, there is no alternative environment where you can test the code manually during development; not even a
+  sandbox environment.
+
+- There are no release artifacts or tag with the live code. Everything is deployed immediately after reaching trunk.
 
 
 === CI/CD platforms
