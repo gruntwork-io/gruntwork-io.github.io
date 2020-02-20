@@ -84,11 +84,14 @@ Automated testing and feature toggling strategies for infrastructure code::
   infrastructure code, but will not do a deep dive on the subject.
 
 
+[[core_concepts]]
 == Core Concepts
 
+[[why_is_it_important_to_have_cicd]]
 === Why is it important to have CI/CD?
 
-image::/assets/img/guides/infrastructure-cicd-pipeline/iss-components.png[Image of ISS components]
+.Components of the International Space Station
+image::/assets/img/guides/infrastructure-cicd-pipeline/iss-components.png[]
 
 To understand the benefits of CI/CD, it is worth exploring the opposite: _late integration and late delivery (LI/LD)_.
 We will explain LI/LD using a thought experiment about building the International Space Station (ISS).
@@ -105,8 +108,8 @@ while that team thought everything would be wireless; all the teams would use th
 toilets from the scope thinking some other team is sure to include it. Finding all of this out once everything has
 already been built and is floating in outer space means that fixing the problems will be very difficule and expensive.
 
-
-image::/assets/img/guides/infrastructure-cicd-pipeline/feature-branch-merge-conflict.png[Many branches merging at the same time]
+.Many long living branches merging at the same time have a higher chance of having conflicts.
+image::/assets/img/guides/infrastructure-cicd-pipeline/feature-branch-merge-conflict.png[]
 
 While it is hard to imagine that anyone would build the ISS in this way, unfortunately this model of development is
 fairly common in the software industry. Developers work in total isolation for weeks or months at a time on _feature
@@ -126,9 +129,11 @@ regular basis, with smaller packages of development. This exposes problems with 
 ensures that there is ample time to improve the design.
 
 
+[[trunk_based_development_model]]
 === Trunk-based development model
 
-image::/assets/img/guides/infrastructure-cicd-pipeline/trunk.png[Trunk with continuous commits]
+.Trunk branch with a continuous stream of commits.
+image::/assets/img/guides/infrastructure-cicd-pipeline/trunk.png[]
 
 The most common way to implement CI/CD is to use a _trunk-based development model_. In trunk-based development, all the
 work is done on the same branch, called `trunk` or `master` depending on the Version Control System (VCS). You would
@@ -162,6 +167,7 @@ Automated testing::
   Typically code is only merged into the trunk when the self-testing build passes.
 
 
+[[sample_cicd_workflows]]
 === Sample CI/CD workflows
 
 Now that we have gone over what, why, and how CI/CD works, let's take a look at a more concrete example walking through
@@ -170,6 +176,7 @@ the workflow with application code, and then with infrastructure code.
 - <<cicd_for_application_code>>
 - <<cicd_for_infrastructure_code>>
 
+[[cicd_for_application_code]]
 ==== CI/CD for application code
 
 Before diving into what a CI/CD workflow for infrastructure code might look like, let's first start by going over a
@@ -251,6 +258,7 @@ These factors are important to consider when taking a look at CI/CD for infrastr
 environments.
 
 
+[[cicd_for_infrastructure_code]]
 === CI/CD for infrastructure code
 
 Now let's take a look at what the workflow for infrastructure code (Terraform, Ansible, Chef, Puppet, Packer, Docker,
@@ -279,6 +287,7 @@ difficult to use the exact same pipeline as application code:
 
 With these differences in mind, let's discuss what the workflow for infrastructure code looks like.
 
+[[repository_organization]]
 ==== Repository organization
 
 Just like with application code, it is important to use version control for infrastructure code. Version control is
@@ -352,6 +361,7 @@ With these two repository structures in mind, let's take a look at what the CI/C
 - <<cicd_for_infrastructure_modules>>
 - <<cicd_for_live_infrastructure>>
 
+[[cicd_for_infrastructure_modules]]
 ==== CI/CD for infrastructure modules
 
 The CI/CD process for infrastructure modules closely aligns that of application code. Since infrastructure modules do
@@ -433,6 +443,11 @@ In summary, here are the key differences with infrastructure modules when compar
 - Deploying infrastructure modules involves updating the code in the `live` repository, and is typically a completely
   separate workflow.
 
+
+Given the relative similarity to CI/CD for application code, you can apply all the patterns from application code to
+infrastructure modules. The rest of this guide will focus on CI/CD for live infrastructure.
+
+[[cicd_for_live_infrastructure]]
 ==== CI/CD for live infrastructure
 
 With the infrastructure modules pipeline, you get a CI/CD workflow that ends with immutable, versioned artifacts of well
@@ -520,39 +535,1511 @@ discussed:
 
 - There are no release artifacts or tag with the live code. Everything is deployed immediately after reaching trunk.
 
+Now that we have an idea of what CI/CD pipelines look like, let's take a step back and define a threat model for CI/CD.
+This threat model will help us ensure that we implement the necessary security controls in these CI/CD pipelines so that
+we cover the common types of attack vectors for this type of workflow.
 
-=== CI/CD platforms
 
-
+[[threat_model_of_cicd]]
 === Threat model of CI/CD
 
+To implement a CI/CD pipeline for infrastructure code, it is required that the ultimate entity or system running the
+infrastructure code has the permissions to deploy the infrastructure defined by code. Unfortunately, to support
+arbitrary CI/CD workflows, it is necessary to grant wide ranging permissions to the target environment. As such, it is
+important to consider ways to mitigate potential attacks against the various systems involved in the pipeline to avoid
+attackers gaining access to deploy targets, which could be catastrophic in the case of a breach of the production
+environment.
 
+Here we define our threat model to explicitly cover what attacks are taken into consideration in the design, as well as
+what attacks are __not__ considered. The goal of the threat model is to be realistic about the threats that are
+addressable with the tools available. By explicitly focusing attention on more likely and realistic threats, we can
+avoid overengineering and compromising the usability of the solution against threats that are unlikely to exist (e.g
+a 5 person startup with 100 end users is unlikely to be the subject of a targeted attack by a government agency).
+
+In this design, the following threat assumptions are made:
+
+- Attackers' goals are to gain access to an environment that they do not already have access to. Access to an
+  environment includes but is not limited to:
+    - The ability to read secrets that grant access to potentially sensitive data (e.g the database in prod
+      environment).
+    - Full access over all resources to cause damage to the business (e.g ability to delete the database and all its
+      backups in prod).
+
+- Attackers can originate from both external and internal sources (in relation to the organization).
+- External attacks are limited to those that can get full access to a CI environment, but not the underlying source
+  code. Note that __any__ CI/CD solution can likely be compromised if an attacker has access to your source code.
+- Internal attackers are limited to those with restricted access to the environments. This means that the threat model
+  does not consider attackers with enough privileges to already have access to the deploy target accounts (e.g an
+  internal ops admin with full access to the prod environment). However, an internal attacker with permissions in the
+  dev environment trying to elevate their access to the prod environment is considered.
+- Similarly, internal attackers are limited to those with restricted access in the CI environment and git repository. A
+  threat where the internal attackers can bypass admin approval in a CI pipeline or can force push deployment branches
+  is not considered.
+- Internal attackers can have (limited) access to the CI environment and the underlying code of the infrastructure (e.g
+  the git repository).
+
+With this threat model in mind, let's take a look at the different CI/CD platforms.
+
+
+[[cicd_platforms]]
+=== CI/CD platforms
+
+Over the years as practices for CI/CD for application code developed many platforms emerged to support CI/CD workflows
+triggered from source control. Here we will list out a few of the major CI/CD platforms that exist to support these
+workflows. Note that this isn't an exhaustive list, or an endorsement of the platforms that are listed here. The goal of
+this section is to give a few examples of existing platforms and solutions, and cover the trade offs that you should
+consider when selecting a platform to implement your workflow on. The production grade design that we cover in the guide
+is compatible with almost any generic CI/CD platform that you select, but is an alternative to the specialized platforms
+for infrastructure code.
+
+In general, CI/CD platforms fit one of two categories: self-hosted or Saas. Self-hosted CI/CD platforms are designed as
+infrastructure that you run in your data center and cloud for managing the infrastructure in your account, while Saas
+CI/CD platforms are hosted by the vendor that provides the platform. In most cases, Saas platforms are preferred to
+self-hosted platforms to avoid the overhead of maintaining additional infrastructure to enable developer workflows,
+which not only cost money but also time from your operations team to maintain the infrastructure with patches, upgrades,
+uptime, etc. However, in certain fields with strict compliance requirements it is unavoidable to have self-hosted CI/CD
+platforms due to the threat model and the amount of permissions that are granted to the platform to ensure the software
+can be deployed. These fields manage sensitive data that make it hard to entrust third party platforms that are publicly
+accessible with the "keys to the kingdom" that hold that data.
+
+Additionally, CI/CD platforms can be further divided into generic platforms for any code, and specialized platforms for
+application code or infrastructure code. Depending on your use case, it may be desirable to use a specialized platform
+that accelerates the implementation of specific workflows as opposed to configuring a generic platform.
+
+Here are a few examples of well known platforms, the general category that they fit in, major features that the platform
+provides, as well as how they mitigate the threat model that we cover:
+
+https://jenkins.io/[Jenkins] (self-hosted, generic)::
+  One of the oldest CI/CD platforms, with its history going as far back as 2005 (when it was previously called
+  _Hudson_). Jenkins is a popular and generic platform that can be configured to support almost any kind of CI/CD, with
+  a wide range of plugins that enhance the experience. However, given the role that it plays in organizations, combined
+  with its nature of being a popular, open source platform, it is the target of frequent attacks and vulnerabilities.
+  Most vulnerabilities are mitigated by locking down the platform so that it is only internally accessible within a
+  corporate network over VPN, as well as by keeping the server frequently patched. This does mean that you shouldn't
+  expose the server externally to implement webhook based workflows, but rather rely on polling to detect changes.
+  Jenkins also provides a wide range of fine-grained permissions in its user model that allows you to lock down the
+  actions that your internal users can take.
+
+https://circleci.com/[CircleCI] (Saas, generic)::
+  CircleCI is a generic Saas CI/CD platform that is more optimized for application based CI/CD workflows than
+  infrastructure CI/CD, although it can be configured to implement infrastructure CI/CD workflows. The strength of
+  CircleCI lies in the simplicity of its infrastructure. Being a fully managed Saas platform with first class support
+  for a wide range of platforms, it is fairly easy to get up and running on the platform in a matter of minutes.
+  However, the downside is that you must be comfortable with using a Saas platform for your CI/CD workflows and having
+  it hold your secrets that provide access to your infrastructure. Note that CircleCI employs a respectable security
+  model, having passed numerous compliance audits including FedRamp. They provide a wide variety of features to mitigate
+  potential threats, including runtime environment isolation, restricted contexts for finer grained permissions
+  modeling, and audit logging to continuously monitor access.
+
+https://about.gitlab.com/[GitLab] (self-hosted and Saas, generic)::
+  GitLab is an all comprehensive platform that supports both a self-hosted mode (enterprise) or Saas platform. Since
+  GitLab also provides hosting for git repositories, it creates a tight integration between the git workflows and the
+  CI/CD workflows that you can implement on the platform. Although GitLab is a generic CI/CD platform that can be
+  configured to run any workflow, GitLab also provides specialized workflows for popular infrastructure platforms like
+  Kubernetes. Some of its continuous deployment features include first class support for feature toggles, canary
+  deployments, and building docker images. While the Saas platform is subject to external attacks, GitLab employs a
+  respectable security model with end to end encryption, frequent testing, and compliance audits, in addition to being
+  an open source and open core platform that allows for wider inspection and review of its practices. For those that can
+  not rely on the Saas platform for CI/CD, you can always run GitLab EE in your own data center.
+
+https://www.runatlantis.io/[Atlantis] (self-hosted, specialized)::
+  Atlantis is an open source tool optimized for git based Terraform workflows, with additional support for Terragrunt.
+  At its core, the platform will automatically run `terraform plan` on commits and annotate any open Pull Requests with
+  the `plan` output. This `plan` is stored in plan file format so that when upon merge, the exact plan is applied using
+  `terraform apply`. Note that Atlantis is optimized for this single workflow. That is, it cannot be made to implement
+  other workflows, such as building images or running infrastructure tests using terratest. Being a self-hosted
+  platform, you can keep your credentials internal to your data center and lock down server level access. However,
+  Atlantis requires a public facing endpoint to be available so that it can listen on webhooks from the major VCS
+  platforms (GitHub/GitLab/Bitbucket/Azure DevOps). This means that you are relying on the security model of the
+  Atlantis platform to ensure that it doesn't accidentally run infrastructure code from unwanted sources with the
+  credentials of the platform. To prevent unwanted deployments, you will want to ensure that you are following
+  https://www.runatlantis.io/docs/security.html#mitigations[all the security best practices] of the platform.
+
+https://www.hashicorp.com/products/terraform/[Terraform Enterprise and Terraform Cloud] (self-hosted and Saas, specialized)::
+  Terraform Cloud (Saas) and Terraform Enterprise (self-hosted) are platforms provided by HashiCorp (the creator of
+  Terraform) that are optimized for Terraform workflows. Both services provide a web UI for remotely running `terraform
+  plan` and `terraform apply`, and can be integrated with VCS platforms to implement CI/CD workflows that remotely run
+  `terraform` in reaction to git. Additionally, Terraform Enterprise in particular provides the ability to manage
+  deployment policies and permissions as code. Note that Terraform Cloud and Enterprise are both optimized for running
+  `terraform`. That is, they do not support the use of external binaries such as `terragrunt` or `docker`, even when
+  called from within `terraform` using a `local-exec` provisioner or external data source. In terms of the threat model,
+  Terraform Cloud and Enterprise both implement respectable security practices, including end to end encryption backed
+  by HashiCorp Vault, and you have the option to run in your own data center with Terraform Enterprise to lock it down.
+  Note that Terraform Enterprise relies on API based integrations with the VCS platforms instead of webhooks, so it is
+  not necessary to have a publicly facing service when running in self-hosted mode.
+
+
+[[production_grade_design]]
 == Production-grade design
 
-=== Use CI servers as workflow engine
+With all the core concepts out of the way, let's now discuss how to configure a production-grade CI/CD workflow for
+infrastructure code, using a platform that looks something like this:
 
-=== Identify minimal IAM permissions for a deployment
+.Architecture of platform for running Terraform/Terragrunt CI/CD workflows.
+image::/assets/img/guides/infrastructure-cicd-pipeline/tftg-pipeline-architecture.png[]
 
-=== Run infrastructure deployment outside of CI servers
+.Sequence diagram of running Terraform/Terragrunt CI/CD workflows.
+image::/assets/img/guides/infrastructure-cicd-pipeline/tftg-pipeline-sequence-diagram.png[]
 
-=== Implement approval flows
 
+[[use_generic_cicd_platforms_as_a_workflow_engine_but_run_infrastructure_deployments_from_within_your_account]]
+=== Use generic CI/CD platforms as a workflow engine but run infrastructure deployments from within your account
+
+As we covered in the <<cicd_platforms>> section of the Core Concepts, all CI/CD platforms support some form of
+integration with VCS repositories. Additionally, CI/CD platforms are optimized for implementing workflows and pipelines
+that react to VCS activities. They all support a way to start executing a pipeline on commits, approval steps in the
+pipeline, and a way to report back to the VCS repository by annotating commits with status of a pipeline execution.
+With the abundance of CI/CD platforms out there, you are bound to find one that suits your needs. It doesn't matter
+which one you use, but be sure to choose one that has enough support for your application code so that you can use the
+same platform for both application and infrastructure CI/CD workflows. In addition, we recommend selecting a Saas
+based CI/CD platform to avoid the overhead of managing additional infrastructure for the VCS integration and workflow
+execution.
+
+However, instead of relying on the CI/CD platform to run infrastructure deployments (e.g calling `terraform apply`), use
+a specialized self-hosted deployment platform for running your infrastructure deployments. This can be Terraform
+Enterprise if you are only using `terraform`, or Gruntwork's ECS Deploy Runner stack for a more general purpose
+platform. In order to support arbitrary infrastructure deployments, it will be inevitable that the system running your
+deployments will have de factor admin status to the environments that you are deploying into. As such, it is important
+that these systems are locked down. You do not want any third party publicly facing system to hold powerful credentials
+to your cloud environments.
+
+This design implements separates out the concerns so that we take full advantage of the strengths of each platform,
+while covering the weaknesses: relying on the CI/CD platforms to manage the workflow/pipline, but have it trigger
+infrastructure deployments on self-hosted systems that are more locked down. In this model, the CI/CD platforms only
+need enough permissions to trigger a deployment, but not necessarily all the permissions required for running a
+deployment. Instead, you can have a system that is closed off in your isolated network hold the credentials
+necessary to actually run the deployment.
+
+
+[[use_serverless_platforms_for_infrastructure_deployments]]
+=== Use serverless platforms for infrastructure deployments
+
+For running infrastructure deployments, choose a system that makes use of serverless platforms. For example, Gruntwork's
+ECS Deploy Runner utilizes ECS Fargate to run the infrastructure code, with AWS Lambda as a frontend to provide a
+callable function (driven by the AWS SDK and authorization managed by IAM). By utilizing Fargate and AWS Lambda, we have
+a purely serverless architecture where no infrastructure needs to be managed, and IAM credentials are short lived. This
+not only helps reduce the overhead of running the system, but it also helps reduce the attack surface (e.g you don't
+have to worry about a permanent, externally available server that needs to be constantly patched).
+
+
+[[use_a_vpc_to_lock_down_infrastructure_deployer]]
+=== Use a VPC to lock down infrastructure deployer
+
+Run your infrastructure deployment workloads in a https://aws.amazon.com/vpc/[Virtual Private Cloud (VPC)] to isolate
+the workloads in a restricted network topology (see link:/guides/networking/how-to-deploy-production-grade-vpc-aws[How
+to deploy a production-grade VPC on AWS] for more information on VPCs). Configure to run all workloads in private
+subnets that are not publicly accessible.
+
+
+[[use_minimal_iam_permissions_for_a_deployment]]
+=== Use minimal IAM permissions for a deployment
+
+Avoid having a single system with admin permissions for running a deployment. Instead, deploy specialized versions of
+the deployment platforms with varying permissions for handling specific workflows. By separting out the concerns for
+each pipeline, you can reduce the blast radius of the damage that can be done with each set of credentials. At a minimum
+you should have two versions of the infrastructure deployment system: one for deploying the application code, and which
+only has the minimal permissions necessary for deploying that application; and one for deploying infrastructure code,
+which has full access to the environments.
+
+
+[[use_approval_flows]]
+=== Use approval flows
+
+It is important that human review is baked into each deployment. As covered in <<cicd_for_infrastructure_code>>, it is
+difficult to build an automated test suite that builds enough confidence in your infrastructure code to do the right
+thing. This is important, as failed infrastructure deployments could be catastrophic to your business, and there is no
+concept of rollback with infrastructure deployment tools. This means that you will almost always want to have some form
+of approval workflow for your infrastructure CI/CD pipeline so that you can review what is about to be deployed. Most
+generic CI/CD platforms support approval workflows. For example, CircleCI supports
+https://circleci.com/docs/2.0/workflows/#holding-a-workflow-for-a-manual-approval[approval steps in its workflow
+engine], in addition to https://circleci.com/docs/2.0/contexts/#restricting-a-context[restricted contexts] to limit who
+can approve the workflow.
+
+
+[[lock_down_vcs_systems]]
 === Lock down VCS systems
 
+It is a good practice to define and store the deployment pipeline as code in the same repo that it is used. For example,
+you should define the CI/CD deployment pipeline for your infrastructure code in the `modules` and `live` repositories.
+However, this means that anyone with access to those repositories are free to modify the pipeline, __even on feature
+branches__. This can be exploited to skip any approval process you have defined in the pipeline by creating a new branch
+that overwrites the pipeline configuration.
 
+This is not a concern if only admin users had access to the infrastructure code. Typically, however, many operations
+teams want contributions to the infrastruture code from developers as well, and having any developer have the ability to
+deploy arbitrary infrastructure to production without any review can be undesirable. To mitigate these concerns, you
+should lock down your VCS systems:
+
+Only deploy from protected branches::
+  In most git hosting platforms, there is a concept of protected branches (see
+  https://help.github.com/en/github/administering-a-repository/about-protected-branches[GitHub docs] for example).
+  Protected branches allow you to implement policies for controlling what code can be merged in. For most platforms, you
+  can protect a branch such that: (a) it can never be force pushed, (b) it can never be merged to or commit to from the
+  cli, (c) merges require status checks to pass, (d) merges require approval from N reviewers. By only building CI
+  pipelines from protected branches, you can add checks and balances to ensure review of potentially harmful
+  infrastructure actions.
+
+Consider a forking based workflow for pull requests::
+  When exposing your repository to a wider audience for contribution, you can consider implemmenting a forking based
+  workflow. In this model, you only allow your trusted admins to have access to the main infrastructure repo, but anyone
+  on the team can read and fork the code. When non-admins want to implement changes, instead of branching from the repo,
+  they will fork the repo, implement changes on their fork, and then open a PR from the fork. The advantage of this
+  approach is that many CI platforms do not automatically run builds from a fork for security reasons. Instead, admins
+  manually trigger a build by pushing the forked branch to an internal branch. While this is an inconvenience to devs as
+  you won't automatically see the `plan`, it prevents unwanted access to secrets by modifying the CI pipeline to log
+  internal environment variables or show infrastructure secrets using external data sources.
+
+
+[[summary_of_mitigations]]
+=== Summary of mitigations
+
+With this production design in mind, let's take a look at how each of the design decisions address the concerns of the
+threat model:
+
+Minimal access to target environments::
+  All the infrastructure is deployed from within the accounts using a serverless platform. This means that attackers
+  that gain access to the underlying AWS secrets used by the CI environments will at most have the ability to run
+  deployments against a predefined set of code. This means that external attackers who do not have access to the source
+  code will at most be able to: (a) deploy code that has already been deployed before, (b) see the plan of the
+  infrastructure between two points of time. They will not be able to write arbitrary infrastructure code to read DB
+  secrets, for example. It is important to note that the IAM policies are set up such that the IAM user for CI only has
+  access to trigger predefined events. They do not have access to arbitrarily invoke the ECS task, as that could
+  potentially expose arbitrary deployments by modifying the command property (e.g use command to `echo` some
+  infrastructure code and run `terraform`).
+    - Note that there is still risk of rolling back the existing infrastructure by attempting to deploy a previous
+      version. See below for potential ways to mitigate this type of attack.
+    - Similarly, this alone does not mitigate threats from internal attackers who have access to the source code, as a
+      potential attacker with access to the source code can write arbitrary code to destroy or lookup arbitrary
+      infrastructure in the target environment. See below for potential ways to mitigate this type of attack.
+
+Minimal options for deployment::
+  The Lambda function exposes a minimal interface for triggering deployments. Attackers will only be able to trigger a
+  deployment against a known repo and known git refs (branches, tags, etc). To further limit the scope, the lambda
+  function can be restricted to only allow references to repositories that matches a predefined regular expression.
+  Terraform Enterprise exposes similar configuration parameters to restrict what deployments can be triggered. This
+  prevents attackers from creating an open source repo with malicious code that they subsequently deploy by pointing the
+  deploy runner to it.
+
+Restricted refs for `apply`::
+  Since many CI systems depend on the pipeline being managed as code in the same repository, internal attackers can
+  easily circumvent approval flows by modifying the CI configuration on a test branch. This means that potential
+  attackers can run an `apply` to destroy the environment or open backdoors by running infrastructure code from test
+  branches without having the code approved. To mitigate this, the Lambda function allows specifying a list of git refs
+  (branches, tags, etc) as the source of `apply` and `apply-all`. If you limit the source of `apply` to only protected
+  branches (see below), it prevents attackers from having the ability to run `apply` unless it has been reviewed.
+
+CI server does not need access to the source code::
+  Since the deployments are being done remotely in separate infrastructure, the actual CI server does not need to clone the
+  underlying repository to deploy the infrastructure. This means that you can design your CI pipeline to only have
+  access to the webhook events and possibly the change list of files (to know which module to deploy), but not the
+  source code itself. This can further decrease the effect of a potential breach of the CI server, as the attacker will
+  not have the ability to read or modify the infrastructure code to use the pipeline to their advantage.
+
+These mitigations alone will not prevent all attacks defined in the threat model. For example, an internal
+attacker with access to the source code can still do damage to the target environments by merging in code that removes
+all the infrastructure resources, thereby destroying all infrastructure when the `apply` command is run. Or, they could
+expose secrets by writing infrastructure code that will leak the secrets in the logs via a `local-exec` provisioner.
+Note that __any__ CI/CD solution can likely be compromised if an attacker has full access to your source code.
+
+For these types of threats, your best bet is to implement various policies and controls on the source control repository
+and build configurations:
+
+<<use_approval_flows>>::
+  In addition to providing a moment to pause and inspect the exact infrastructure changes that are about to be deployed,
+  approval workflows in the CI server can mitigate attacks such that attackers will need enough privileges on the CI
+  server to approve builds in order to actually modify infrastructure. This can mitigate potential attacks where the
+  attacker has access to the CI server to trigger arbitrary builds manually (e.g to run a previous job that is deplying
+  an older version to roll back the infrastructure), but not enough access to approve the job. Note that this will not
+  mitigate potential threats from internal attackers who have enough permissions to approve builds.
+
+<<lock_down_vcs_systems>>::
+  As mentioned in the previous section, it is important that you implement various controls on the VCS repositories.
+  Once you implement a CI/CD pipeline, access to source code translates to access to your infrastructure environments,
+  so you will want to reflect the same kind of security controls you implement on your environments in your VCS
+  repositories.
+
+Avoid logging secrets::
+  Our threat model assumes that attackers can get access to the CI servers, which means they will have access to the
+  deployment logs. This will include detailed outputs from a `terraform plan` or `apply`. While it is impossible to
+  prevent terraform from leaking secrets into the state, it is possible to avoid terraform from logging sensitive
+  information. Make use of pgp encryption functions or encrypted environment variables / config files (in the case of
+  service deployments) to ensure sensitive data does not show up in the plan output. Additionally, tag sensitive outputs
+  with the `sensitive` keyword so that terraform will mask the outputs.
+
+
+[[deployment_walkthrough]]
 == Deployment walkthrough
 
+Let’s now walk through the step-by-step process of how to create a production-grade CI/CD pipeline for your
+infrastructure code, fully defined and managed as code, using the Gruntwork Infrastructure as Code Library and CircleCI
+as the CI server. Although this guide uses CircleCI, the configuration can be adapted with any CI platform.
+
+We will implement the following workflow for `live` infrastructure:
+
+.CI/CD Pipeline for live infrastructure code.
+image::/assets/img/guides/infrastructure-cicd-pipeline/cicd-pipeline-live-repo.png[]
+
+
+[[pre_requisites]]
 === Pre-requisites
 
-=== Lock down VCS
+This walkthrough has the following pre-requisites:
+
+Gruntwork Infrastructure as Code Library::
+  This guide uses code from the https://gruntwork.io/infrastructure-as-code-library/[Gruntwork Infrastructure as Code Library], as it
+  implements most of the production-grade design for you out of the box. Make sure to read
+  link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library[How to use the Gruntwork Infrastructure as Code Library].
++
+IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork subscriber# to access the Gruntwork Infrastructure as Code Library.
+
+Terraform::
+  This guide uses https://www.terraform.io/[Terraform] to define and manage all the infrastructure as code. If you're
+  not familiar with Terraform, check out https://blog.gruntwork.io/a-comprehensive-guide-to-terraform-b3d32832baca[A
+  Comprehensive Guide to Terraform], https://training.gruntwork.io/p/terraform[A Crash Course on Terraform], and
+  link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library[How to Use the Gruntwork Infrastructure as Code Library]
+
+CircleCI::
+  This guide uses https://circleci.com/[CircleCI] as the CI platform. Although the approach is compatible with any CI
+  platform, a basic understanding of the CircleCI configuration will be useful for translating the configuration format
+  to other platforms. You can take a look at https://circleci.com/docs/2.0/getting-started/#section=getting-started[the
+  official getting started guide] to get a basic understanding of CircleCI and their configuration format.
+
+AWS accounts::
+  This guide deploys infrastructure into one or more AWS accounts. Check out the
+  link:/guides/foundations/how-to-configure-production-grade-aws-account-structure[Production Grade AWS Account Structure] guide for instructions.
+  You will also need to be able to authenticate to these accounts on the CLI: check out
+  https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[A Comprehensive Guide to Authenticating to AWS on the Command Line]
+  for instructions.
+
+Repository structure::
+  This guide assumes your infrastructure code is organized in a manner similar to that covered in the
+  https://gruntwork.io/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library/#using_terraform_modules[Using
+  Terraform Modules section of the How to Use the Gruntwork Infrastructure as Code Library] guide. This means that you
+  should have two repositories for your infrastructure code, `infrastructure-modules` and `infrastructure-live`. Make
+  sure that the `infrastructure-live` repository is locked down as recommended in <<lock_down_vcs_systems>>. This guide
+  will assume that `master` is the protected branch where infrastructure is deployed from.
+
+NOTE: This guide will use https://github.com/gruntwork-io/terragrunt[Terragrunt] and its associated file and folder
+structure to deploy Terraform modules. Please note that *Terragrunt is NOT required for using Terraform modules from
+the Gruntwork Infrastructure as Code Library.* Check out
+link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library[How to Use the Gruntwork Infrastructure as Code Library] for instructions
+on alternative options, such as how to
+link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#deploy_using_plain_terraform[Deploy using plain Terraform].
+
 
 === Deploy a VPC
 
+The first step is to deploy a VPC. Follow the instructions in
+link:/guides/networking/how-to-deploy-production-grade-vpc-aws[How to deploy a production-grade VPC on AWS] to use
+`module-vpc` to create a VPC setup that looks like this:
+
+.A production-grade VPC setup deployed using module-vpc from the Gruntwork Infrastructure as Code Library
+image::/assets/img/guides/vpc/vpc-diagram.png[]
+
+We will use the Mgmt VPC to deploy our infrastructure deployment CD platform, since the infrastructure deployment
+platform is a management infrastructure that is designed to deploy to multiple environments.
+
+After following this guide, you should have a `vpc-mgmt` wrapper module in your `infrastructure-modules` repo:
+
+----
+infrastructure-modules
+  └ networking
+    └ vpc-mgmt
+      └ main.tf
+      └ outputs.tf
+      └ variables.tf
+----
+
+Here's a snippet of what the code in the `vpc-mgmt` wrapper module looks like:
+
+.infrastructure-modules/networking/vpc-app/main.tf
+[source,hcl]
+----
+module "vpc" {
+  # Make sure to replace <VERSION> in this URL with the latest module-vpc release
+  source = "git@github.com:gruntwork-io/module-vpc.git//modules/vpc-mgmt?ref=<VERSION>"
+
+  vpc_name         = var.vpc_name
+  aws_region       = var.aws_region
+  cidr_block       = var.cidr_block
+  num_nat_gateways = var.num_nat_gateways
+}
+
+# ... (the rest of the code is ommitted) ...
+----
+
+You should also have a corresponding live configuration in your `infrastructure-live` repo to deploy the VPC. For
+example, for your production environment, there should be a folder called `production` in the `infrastructure-live` repo
+that looks as follows:
+
+----
+infrastructure-live
+  └ production
+    └ terragrunt.hcl
+    └ us-east-2
+      └ prod
+        └ networking
+          └ vpc-mgmt
+            └ terragrunt.hcl
+----
+
+Here's a snippet of what the code in the `vpc-mgmt` terragrunt configuration file looks like:
+
+.infrastructure-live/production/us-east-2/prod/networking/vpc-mgmt/terragrunt.hcl
+[source,hcl]
+----
+# Pull in the backend and provider configurations from a root terragrunt.hcl file that you include in each child terragrunt.hcl:
+include {
+  path = find_in_parent_folders()
+}
+
+# Set the source to an immutable released version of the infrastructure module being deployed:
+terraform {
+  source = "git@github.com/<YOUR_ORG>/infrastructure-modules.git//networking/vpc-mgmt?ref=v0.3.0"
+}
+
+# Configure input values for the specific environment being deployed:
+inputs = {
+  aws_region       = "us-east-2"
+  aws_account_id   = "111122223333"
+  vpc_name         = "mgmt-prod"
+  cidr_block       = "10.0.0.0/16"
+  num_nat_gateways = 3
+}
+----
+
 === Deploy the ECS Deploy Runner
 
-=== Configure IAM permissions for the ECS Task
+// TODO: update link to use service catalog so it is publicly visiable
+For this guide, we will use
+https://github.com/gruntwork-io/module-ci/blob/master/README-Terraform-Terragrunt-Pipeline.adoc[Gruntwork's ECS Deploy
+Runner stack] as our infrastructure deployment CD platform. We will deploy the stack in to the private subnet of our
+mgmt VPC using the https://github.com/gruntwork-io/module-ci/tree/master/modules/ecs-deploy-runner[ecs-deploy-runner
+module] in `module-ci`.
 
-=== Configure CI server
+To deploy the ECS Deploy Runner, we will follow three steps:
+
+- <<create_ecr_repo>>
+- <<create_docker_image>>
+- <<deploy_ecs_deploy_runner_stack>>
+
+[[create_ecr_repo]]
+==== Create ECR repo
+
+The ECS Deploy Runner uses an ECS Task to run the infrastructure deployment. In order to run the ECS task, we need a
+Docker image that contains all the necessary software for the deployment, as well as an ECR repository to store that
+Docker image. We will start by creating the ECR repo.
+
+Create a new module called `ecr-repo` in `infrastructure-modules`:
+
+----
+infrastructure-modules
+  └ cicd
+    └ ecr-repo
+      └ main.tf
+      └ outputs.tf
+      └ variables.tf
+  └ networking
+    └ vpc-mgmt
+      └ main.tf
+      └ outputs.tf
+      └ variables.tf
+----
+
+Inside of `main.tf`, configure the ECR repository:
+
+.infrastructure-modules/cicd/ecr-repo/main.tf
+[source,hcl]
+----
+resource "aws_ecr_repository" "repo" {
+  name                 = var.name
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+}
+----
+
+This defines a new ECR repository with a name configured by an input variable, and indicates that images should be
+scanned automatically on push.
+
+Add the corresponding `name` variable to `variables.tf`:
+
+.infrastructure-modules/cicd/ecr-repo/variables.tf
+[source,hcl]
+----
+variable "name" {
+  description = "The name of the ECR repository to be created."
+  type        = string
+}
+----
+
+Also make sure that the repository URL is exposed in `outputs.tf`, as we will need it later when deploying the ECS
+Deploy Runner:
+
+.infrastructure-modules/cicd/ecr-repo/outputs.tf
+[source,hcl]
+----
+output "url" {
+  description = "The Docker URL for the created ECR repository. This can be used as the push URL for containers."
+  value       = aws_ecr_repository.repo.repository_url
+}
+----
+
+At this point, you'll want to test your code. See
+link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#manual_tests_terraform[Manual tests for Terraform code]
+and
+link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#automated_tests_terraform[Automated tests for Terraform code]
+for instructions.
+
+Once your `ecr-repo` module is working the way you want, submit a pull request, get your changes merged into the
+`master` branch, and create a new versioned release by using a Git tag. For example, to create a `v0.5.0` release:
+
+[source,bash]
+----
+git tag -a "v0.5.0" -m "Added module for creating ECR repositories"
+git push --follow-tags
+----
+
+Now that we have a module for managing an ECR repo, head over to your `infrastructure-live` repo and add a
+`terragrunt.hcl` file for creating the ECR repo for the ECS deploy runner:
+
+----
+infrastructure-live
+  └ production
+    └ terragrunt.hcl
+    └ us-east-2
+      └ prod
+        └ cicd
+          └ ecr-repo
+            └ terragrunt.hcl
+        └ networking
+          └ vpc-mgmt
+            └ terragrunt.hcl
+----
+
+.infrastructure-live/production/us-east-2/prod/cicd/ecr-repo/terragrunt.hcl
+[source,hcl]
+----
+# Pull in the backend and provider configurations from a root terragrunt.hcl file that you include in each child terragrunt.hcl:
+include {
+  path = find_in_parent_folders()
+}
+
+# Set the source to an immutable released version of the infrastructure module being deployed:
+terraform {
+  source = "git@github.com/<YOUR_ORG>/infrastructure-modules.git//cicd/ecr-repo?ref=v0.5.0"
+}
+
+# Configure input values for the specific environment being deployed:
+inputs = {
+  name = "ecs-deploy-runner"
+}
+----
+
+And run `terragrunt apply` to deploy the changes:
+
+[source,bash]
+----
+cd infrastructure-live/production/us-east-2/prod/cicd/ecr-repo
+terragrunt apply
+----
+
+Make sure to note the repository URL. You can store it in an environment variable for easy reference when building the
+Docker image:
+
+[source,bash]
+----
+cd infrastructure-live/production/us-east-2/prod/cicd/ecr-repo
+export ECR_REPO_URL=$(terragrunt output url)
+----
+
+
+
+[[create_docker_image]]
+==== Create Docker Image
+
+Once we have the ECR repository to house Docker images, we need to create the Docker image for the infrastructure
+deployer. This Docker image should contain everything you need to deploy your infrastructure, such as `terraform` and
+`terragrunt`. In addition, the Docker image should include the
+https://github.com/gruntwork-io/module-ci/tree/master/modules/infrastructure-deploy-script[infrastructure-deploy-script].
+This is a python script that does the following:
+
+- Clone the repository containing the infrastructure code using git.
+- Change the working directory to the desired path passed in the parameters.
+- Run `terraform` or `terragrunt` with `plan` or `apply` depending on the passed in parameters, streaming the output to
+  `stdout` and `stderr`.
+- Exit with the appropriate exit code depending on if the underlying command succeeded or failed.
+
+Create a placeholder module called `ecs-deploy-runner` in `infrastructure-modules`, with a folder `docker` with the
+`Dockerfile` for creating the Docker image and the `known_hosts` file. Copy over the `Dockerfile` and `known_hosts` file
+from https://github.com/gruntwork-io/module-ci/tree/master/modules/ecs-deploy-runner/docker[module-ci]:
+
+----
+infrastructure-modules
+  └ cicd
+    └ ecs-deploy-runner
+      └ docker
+        └ Dockerfile
+        └ known_hosts
+    └ ecr-repo
+      └ main.tf
+      └ outputs.tf
+      └ variables.tf
+  └ networking
+    └ vpc-mgmt
+      └ main.tf
+      └ outputs.tf
+      └ variables.tf
+----
+
+This `Dockerfile` includes various tools and utilities that are necessary for deploying anything from the Gruntwork
+Infrastructure as Code Library. You should modify this `Dockerfile` to include additional tools that are necessary for
+your environment.
+
+Next, build the Docker image locally:
+
+[source,bash]
+----
+cd infrastructure-modules/cicd/ecs-deploy-runner/docker
+# Make sure you have set the environment variable GITHUB_OAUTH_TOKEN with a GitHub personal access token that has access
+# to the Gruntwork repositories
+docker build --build-arg GITHUB_OAUTH_TOKEN --tag "$ECR_REPO_URL:v1" .
+----
+
+Then, push the Docker image to the ECR repository so that it is available to ECS:
+
+[source,bash]
+----
+# Authenticate docker so that you can access the ECR Repository
+eval "$(aws ecr get-login --region "us-east-2" --no-include-email)"
+docker push "$ECR_REPO_URL:v1"
+----
+
+
+[[deploy_ecs_deploy_runner_stack]]
+==== Deploy ECS Deploy Runner stack
+
+Once we have the ECR repo with an available Docker image, it is time to configure the ECS task and Lambda function
+invoker. We will deploy both using the
+https://github.com/gruntwork-io/module-ci/tree/master/modules/ecs-deploy-runner[ecs-deploy-runner module] in
+`module-ci`.
+
+Add the Terraform files for the `ecs-deploy-runner` in `infrastructure-modules`:
+
+----
+infrastructure-modules
+  └ cicd
+    └ ecs-deploy-runner
+      └ docker
+        └ Dockerfile
+        └ known_hosts
+      └ main.tf
+      └ variables.tf
+    └ ecr-repo
+      └ main.tf
+      └ outputs.tf
+      └ variables.tf
+  └ networking
+    └ vpc-mgmt
+      └ main.tf
+      └ outputs.tf
+      └ variables.tf
+----
+
+Inside of `main.tf`, configure the ECS Deploy Runner:
+
+.infrastructure-modules/cicd/ecs-deploy-runner/main.tf
+[source,hcl]
+----
+module "ecs_deploy_runner" {
+  # Make sure to replace <VERSION> in this URL with the latest module-ci release
+  source = "git::git@github.com:gruntwork-io/module-ci.git//modules/ecs-deploy-runner?ref=<VERSION>"
+
+  name            = var.name
+  container_image = var.container_image
+  vpc_id          = var.vpc_id
+  vpc_subnet_ids  = var.private_subnet_ids
+
+  repository                          = var.repository
+  ssh_private_key_secrets_manager_arn = var.ssh_private_key_secrets_manager_arn
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
+# CREATE IAM POLICY WITH PERMISSIONS TO INVOKE THE ECS DEPLOY RUNNER VIA THE LAMBDA FUNCTION AND ATTACH TO USERS
+# ---------------------------------------------------------------------------------------------------------------------
+
+module "invoke_policy" {
+  # Make sure to replace <VERSION> in this URL with the latest module-ci release
+  source = "git::git@github.com:gruntwork-io/module-ci.git//modules/ecs-deploy-runner-invoke-iam-policy?ref=<VERSION>"
+
+  name                                      = "invoke-${var.name}"
+  deploy_runner_invoker_lambda_function_arn = module.ecs_deploy_runner.invoker_function_arn
+  deploy_runner_ecs_cluster_arn             = module.ecs_deploy_runner.ecs_cluster_arn
+  deploy_runner_cloudwatch_log_group_name   = module.ecs_deploy_runner.cloudwatch_log_group_name
+}
+
+resource "aws_iam_role_policy_attachment" "attach_invoke_to_roles" {
+  for_each   = length(var.iam_roles) > 0 ? { for k in var.iam_roles : k => k } : {}
+  role       = each.key
+  policy_arn = module.invoke_policy.arn
+}
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# ATTACH FULL ACCESS PERMISSIONS TO REQUESTED SERVICES TO ECS TASK
+# ---------------------------------------------------------------------------------------------------------------------
+
+resource "aws_iam_role_policy" "full_access_to_services" {
+  count  = length(var.permitted_services) > 0 ? 1 : 0
+  name   = "full-access-to-services"
+  role   = module.ecs_deploy_runner.ecs_task_iam_role_name
+  policy = data.aws_iam_policy_document.full_access_to_services.json
+}
+
+data "aws_iam_policy_document" "full_access_to_services" {
+  statement {
+    actions   = formatlist("%s:*", var.permitted_services)
+    resources = ["*"]
+    effect    = "Allow"
+  }
+}
+----
+
+This module call does the following:
+
+- Create an ECS cluster that can be used to run ECS Fargate tasks
+- Deploy an ECS Task Definition for the provided container image with support for Fargate (`var.container_image`).
+- Configure the ECS Task to expose the secrets in the Secrets Manager entry with the ARN
+  `var.ssh_private_key_secrets_manager_arn` as environment variables.
+- Deploy a Lambda function that is configured to invoke the ECS task to run on Fargate in the provided VPC and subnet
+  (`var.vpc_id` and `var.private_subnet_ids`).
+  Restrict the interface so that it can only be triggered to deploy code from the configured git repository
+  (`var.repository`).
+- Grant permissions to invoke the Invoker Lambda function to the given list of IAM users.
+- Grant permissions to access the provided AWS services to the ECS Task.
+
+Add the corresponding input variables to `variables.tf`:
+
+.infrastructure-modules/cicd/ecs-deploy-runner/variables.tf
+[source,hcl]
+----
+variable "vpc_id" {
+  description = "ID of the VPC where the ECS task and Lambda function should run."
+  type        = string
+}
+
+variable "private_subnet_ids" {
+  description = "List of IDs of private subnets that can be used for running the ECS task and Lambda function."
+  type        = list(string)
+}
+
+variable "container_image" {
+  description = "Docker image (repo and tag) to use for the ECS task. Should contain the infrastructure-deploy-script for the pipeline to work. Refer to the Dockerfile in /modules/ecs-deploy-runner/docker/Dockerfile for a sample container you can use."
+  type = object({
+    repo = string
+    tag  = string
+  })
+}
+
+variable "repository" {
+  description = "Git repository where source code is located."
+  type        = string
+}
+
+variable "ssh_private_key_secrets_manager_arn" {
+  description = "ARN of the AWS Secrets Manager entry to use for sourcing the SSH private key for cloning repositories. Set to null if you are only using public repos."
+  type        = string
+}
+
+variable "name" {
+  description = "Name of this instance of the deploy runner stack. Used to namespace all resources."
+  type        = string
+  default     = "ecs-deploy-runner"
+}
+
+variable "iam_roles" {
+  description = "List of AWS IAM roles that should be given access to invoke the deploy runner."
+  type        = list(string)
+  default     = []
+}
+
+variable "permitted_services" {
+  description = "A list of AWS services for which the Deploy Runner ECS Task will receive full permissions. For example, to grant the deploy runner access only to EC2 and Amazon Machine Learning, use the value [\"ec2\",\"machinelearning\"]."
+  type        = list(string)
+  default     = []
+}
+----
+
+Since all the lookups for the ECS Deploy Runner can be done by name, it is not necessary for this module to expose any
+outputs.
+
+Once you test your code and the `ecs-deploy-runner` module is working the way you want, submit a pull request submit a
+pull request, get your changes merged into the `master` branch, and create a new versioned release by using a Git tag.
+
+Next, we will want to deploy the stack to the environments. Before deploying, we need to make sure we have a SSH key
+pair we can use to access our private repositories:
+
+1. Create a machine user on your version control platform.
+
+1. Create a new SSH key pair on the command line using
+`ssh-keygen`:
+[source,bash]
+----
+ssh-keygen -t rsa -b 4096 -C "MACHINE_USER_EMAIL"
+----
+Make sure to set a different path to store the key (to avoid overwriting any existing key). Also avoid setting a
+passphrase on the key.
+
+1. Upload the SSH key pair to the machine user. See the following docs for the major VCS platforms:
+* https://help.github.com/en/github/authenticating-to-github/adding-a-new-ssh-key-to-your-github-account[GitHub]
+* https://docs.gitlab.com/ee/ssh/README.html#adding-an-ssh-key-to-your-gitlab-account[GitLab]
+* https://confluence.atlassian.com/bitbucket/set-up-an-ssh-key-728138079.html#SetupanSSHkey-#installpublickeyStep3.AddthepublickeytoyourBitbucketsettings[BitBucket] (Note: you will need to expand one of the instructions to see the full instructions for adding an SSH key to the machine user account)
+
+1. Create an AWS Secrets Manager entry with the contents of the private key. In the following example, we use the aws
+CLI to create the entry in `us-east-2`, sourcing the contents from the SSH private key file `~/.ssh/machine_user`:
+[source,bash]
+----
+cat ~/.ssh/machine_user \
+    | xargs -0 aws secretsmanager create-secret --region us-east-2 --name "SSHPrivateKeyForECSDeployRunner" --secret-string
+----
+When you run this command, you should see a JSON output with metadata about the created secret:
+[source,json]
+----
+{
+    "ARN": "arn:aws:secretsmanager:us-east-2:000000000000:secret:SSHPrivateKeyForECSDeployRunner-SOME_RANDOM_STRING",
+    "Name": "SSHPrivateKeyForECSDeployRunner",
+    "VersionId": "21cda90e-84e0-4976-8914-7954cb6151bd"
+}
+----
+
+Finally, head over to your `infrastructure-live` repo to deploy the stack to your environments. Add a new
+`terragrunt.hcl` file that calls the module. We will use Terragrunt `dependency` blocks to get the outputs of our
+dependencies to pass them to the module:
+
+----
+infrastructure-live
+  └ production
+    └ terragrunt.hcl
+    └ us-east-2
+      └ prod
+        └ cicd
+          └ ecr-repo
+            └ terragrunt.hcl
+          └ ecs-deploy-runner
+            └ terragrunt.hcl
+        └ networking
+          └ vpc-mgmt
+            └ terragrunt.hcl
+----
+
+.infrastructure-live/production/us-east-2/prod/cicd/ecs-deploy-runner/terragrunt.hcl
+[source,hcl]
+----
+# Pull in the backend and provider configurations from a root terragrunt.hcl file that you include in each child terragrunt.hcl:
+include {
+  path = find_in_parent_folders()
+}
+
+# Set the source to an immutable released version of the infrastructure module being deployed:
+terraform {
+  source = "git@github.com/<YOUR_ORG>/infrastructure-modules.git//cicd/ecr-repo?ref=v0.5.0"
+}
+
+# Look up the VPC and ECR repository information using dependency blocks:
+dependency "vpc" {
+  config_path = "${get_terragrunt_dir()}/../../networking/vpc-mgmt"
+}
+dependency "ecr" {
+  config_path = "${get_terragrunt_dir()}/../ecr-repo"
+}
+
+# Configure input values for the specific environment being deployed:
+inputs = {
+  vpc_id             = dependency.vpc.outputs.vpc_id
+  private_subnet_ids = dependency.vpc.outputs.vpc_id
+
+  container_image = {
+    repo = dependency.ecr.outputs.url
+    tag  = "v1"
+  }
+
+  repository = "git@github.com:<YOUR_ORG>/infrastructure-live.git"
+
+  # Set this to the Secrets Manager ARN that was outputted when you created the Secrets Manager entry.
+  ssh_private_key_secrets_manager_arn = "ARN_TO_SECRETS_MANAGER_WITH_SSH_PRIVATE_KEY"
+
+  # Set this to the AWS IAM role that your machine user will assume.
+  iam_roles = ["allow-auto-deploy-from-other-accounts"]
+  # This list should include all the services that you want this ECS deploy runner to manage.
+  permitted_services = [
+    "iam",
+    "s3",
+    "lambda",
+    "apigateway",
+    "dynamodb",
+  ]
+}
+----
+
+And run `terragrunt apply` to deploy the changes:
+
+[source,bash]
+----
+cd infrastructure-live/production/us-east-2/prod/cicd/ecs-deploy-runner
+terragrunt apply
+----
+
+Repeat for each environment that you want to support the ECS Deploy Runner stack.
+
+=== Try out the ECS Deploy Runner
+
+At this point, you can see if the ECS Deploy Runner can be used to deploy your infrastructure. To test, use the
+https://github.com/gruntwork-io/module-ci/tree/master/modules/infrastructure-deployer[infrastructure-deployer CLI].
+
+To use the `infrastructure-deployer` CLI, use `gruntwork-install` to install a precompiled version for your system:
+
+[source,bash]
+----
+# Update <VERSION> to the latest version of module-ci
+gruntwork-install --binary-name "infrastructure-deployer" --repo "https://github.com/gruntwork-io/module-ci" --tag "<VERSION>"
+----
+
+Then, invoke the `infrastructure-deployer` against the `master` branch of your live infrastructure to run a `plan` on
+the `vpc-mgmt` module (don't forget to assume the role):
+
+[source,bash]
+----
+# NOTE: you should assume the IAM role allow-auto-deploy-from-other-accounts before running this step
+infrastructure-deployer \
+  --aws-region "us-east-2" \
+  --ref "master" \
+  --binary "terragrunt" \
+  --command "plan" \
+  --deploy-path "production/us-east-2/prod/networking/vpc-mgmt"
+----
+
+If everything is set up correctly, you should see a stream of logs that indicate a `terragrunt plan` running on the
+`vpc-mgmt` module.
+
+
+[[define_pipeline_as_code]]
+=== Define pipeline as code
+
+NOTE: This guide will use https://circleci.com/[CircleCI] as the CI server, but *it is NOT required for using the ECS
+Deploy Runner stack*. You can configure any other CI server in a similar fashion to invoke deployments against the ECS
+Deploy Runner.
+
+Now that we have a working ECS Deploy Runner stack, the final step is to configure our CI/CD pipeline in our CI server
+of choice. For this guide, we will configure CircleCI to implement the workflow described at the beginning of this
+section.
+
+Create the CircleCI configuration folder in your `infrastructure-live` repo:
+
+----
+infrastructure-live
+  └ .circleci
+    └ config.yml
+    └ deploy.sh
+    └ install.sh
+  └ production
+    └ terragrunt.hcl
+    └ us-east-2
+      └ prod
+        └ cicd
+          └ ecr-repo
+            └ terragrunt.hcl
+          └ ecs-deploy-runner
+            └ terragrunt.hcl
+        └ networking
+          └ vpc-mgmt
+            └ terragrunt.hcl
+----
+
+The scripts `deploy.sh` and `install.sh` are helper scripts to make the CircleCI configuration more readable. Here are
+the contents of the scripts:
+
+.infrastructure-live/.circleci/install.sh
+[source,bash]
+----
+#!/bin/bash
+#
+# Script used by CircleCI to install the necessary helpers for the CI/CD pipeline
+#
+# Required environment variables:
+# - GRUNTWORK_INSTALLER_VERSION : The version of the gruntwork-installer helper utility used to install scripts from the
+#                                 Gruntwork IaC Library.
+# - MODULE_CI_VERSION : The version of the module-ci repository to use when installing the terraform helpers and
+#                       infrastructure-deployer CLI.
+# - MODULE_SECURITY_VERSION : The version of the module-security repository to use when installing the aws-auth utility.
+#
+
+set -e
+
+function run {
+  local -r gruntwork_installer_version="$1"
+  local -r module_ci_version="$2"
+  local -r module_security_version="$3"
+
+  curl -Ls https://raw.githubusercontent.com/gruntwork-io/gruntwork-installer/master/bootstrap-gruntwork-installer.sh \
+    | bash /dev/stdin --version "$gruntwork_installer_version"
+  gruntwork-install --repo "https://github.com/gruntwork-io/module-ci" \
+    --binary-name "infrastructure-deployer" \
+    --tag "$module_ci_version"
+  gruntwork-install --repo "https://github.com/gruntwork-io/module-ci" \
+    --module-name "terraform-helpers" \
+    --tag "$module_ci_version"
+  gruntwork-install --repo "https://github.com/gruntwork-io/module-security" \
+    --module-name "aws-auth" \
+    --tag "$module_security_version"
+}
+
+run "${GRUNTWORK_INSTALLER_VERSION}" "${MODULE_CI_VERSION}" "${MODULE_SECURITY_VERSION}"
+----
+
+.infrastructure-live/.circleci/deploy.sh
+[source,bash]
+----
+#!/bin/bash
+#
+# Script used by CircleCI to trigger deployments via the infrastructure-deployer CLI utility.
+#
+# Required environment variables:
+# - REGION : The AWS Region where the ECS Deploy Runner exists.
+# - SOURCE_REF : The starting point for identifying all the changes. The diff between SOURCE_REF and REF will be
+#                evaluated to determine all the changed files.
+# - REF : The end point for identifying all the changes. The diff between SOURCE_REF and REF will be evaluated to
+#         determine all the changed files.
+# - COMMAND : The command to run. Should be one of plan or apply.
+#
+
+set -e
+
+# A function that uses aws-auth to assume the IAM role for invoking the ECS Deploy Runner.
+function assume_role_for_environment {
+  local -r environment="$1"
+
+  # NOTE: Make sure to set the respective ACCOUNT_ID to the AWS account ID for each of the environments.
+  if [[ "$environment" == "production" ]]; then
+    aws-auth --role-arn "arn:aws:iam::<PRODUCTION_ACCOUNT_ID>:role/allow-auto-deploy-from-other-accounts
+  elif [[ "$environment" == "staging" ]]; then
+    aws-auth --role-arn "arn:aws:iam::<STAGING_ACCOUNT_ID>:role/allow-auto-deploy-from-other-accounts
+  else
+    echo "ERROR: Unknown environment $environment. Can not assume role."
+    exit 1
+  fi
+}
+
+# Function that invoke the ECS Deploy Runner using the infrastructure-deployer CLI. This will also make sure to assume
+# the correct IAM role based on the deploy path.
+function invoke_infrastructure_deployer {
+  local -r region="$1"
+  local -r ref="$2"
+  local -r command="$3"
+  local -r deploy_path="$4"
+
+  local assume_role_exports
+  if [[ $deploy_path =~ ^([^/]+)/.+$ ]]; then
+    assume_role_exports="$(assume_role_for_environment "${BASH_REMATCH[1]}")"
+  else
+    echo "ERROR: Could not extract environment from deployment path $deploy_path."
+    exit 1
+  fi
+
+  (eval "$assume_role_exports" && \
+    infrastructure-deployer --aws-region "$region" --ref "$ref" --binary "terragrunt" --command "$command" --deploy-path "$deploy_path")
+}
+
+function run {
+  local -r region="$1"
+  local -r source_ref="$2"
+  local -r ref="$3"
+  local -r command="$4"
+
+  # We must export the functions so that they can be invoked through xargs
+  export -f invoke_infrastructure_deployer
+  export -f assume_role_for_environment
+
+  # Use git-updated-folders to find all the terragrunt modules that changed, and pipe that through to the
+  # infrastructure-deployer.
+  # NOTE: the tee in the middle of the pipeline is used so we can see the detected folders that were updated in the
+  # logs. The last step is a check to see if there was any output from the previous command, which will be empty if no
+  # modules were updated.
+  git-updated-folders --source-ref "$source_ref" --terragrunt \
+    | tee /dev/tty \
+    | xargs -L1 --no-run-if-empty \
+        invoke_infrastructure_deployer "$region" "$ref" "$command"
+    |& grep . || echo "No terragrunt modules were updated. Skipping plan."
+}
+
+run "${REGION}" "${SOURCE_REF}" "${REF}" "$@"
+----
+
+We will call out to these scripts in the CI pipeline to setup our environment for the deployments. With the scripts
+defined, let's start building out our CircleCI config. We will start by defining the workflows, which acts as the basis
+of our pipeline:
+
+.infrastructure-live/.circleci/config.yml
+[source,yaml]
+----
+version: 2.1
+
+workflows:
+  continuous-deploy:
+    jobs:
+      - plan
+
+      - notify:
+          requires:
+            - plan
+          filters:
+            branches:
+              only: master
+
+      - hold:
+          type: approval
+          requires:
+            - notify
+          filters:
+            branches:
+              only: master
+
+      - deploy:
+          requires:
+            - hold
+          filters:
+            branches:
+              only: master
+----
+
+Our workflow consists of four steps:
+
+- `plan`: Run `terragrunt plan` on all the files that changed. This is run on commits to all branches.
+- `notify`: Notify on slack that there is an approval available for review. This should only run on `master` (our
+            deployment branch). The rest of the pipeline will also only be restricted to commits on `master`.
+- `hold`: The approval stage. We will hold all deployments for approval after running plan, but before proceeding to
+          running `terragrunt apply` so that an admin has a chance to review the exact changes that are about to be
+          rolled out.
+- `deploy`: Run `terragrunt apply` on all the files that changed. This should only happen after approval.
+
+Next, we will update our config to start defining the jobs. Since all the jobs will have common elements, we will
+define a few aliases in the config to reuse common components.
+
+The first is the runtime environment of each job:
+
+.infrastructure-live/.circleci/config.yml
+[source,yaml]
+----
+# Global constants for the jobs. This includes:
+# - Using machine executor
+# - Tools versions
+defaults: &defaults
+  machine:
+    image: "ubuntu-1604:201903-01"
+  environment:
+    GRUNTWORK_INSTALLER_VERSION: v0.0.22
+    MODULE_CI_VERSION: v0.17.0
+    MODULE_SECURITY_VERSION: v0.24.1
+    REGION: us-east-2
+----
+
+We will also want to figure out a friendly name for the deployment. CircleCI gives us a few environment variables that
+are related to the commit that has triggered the build, but for notification purposes we would like to know whether the
+build is a tag, branch, or SHA. The following routine updates the runtime with the environment variable
+`CIRCLE_FRIENDLY_REF` which tells us whether the change was a tag, branch, or bare commit:
+
+.infrastructure-live/.circleci/config.yml
+[source,yaml]
+----
+# This common step is used to determine the user friendly Git Ref name of the build, either the branch or tag.
+set_friendly_git_ref: &set_friendly_git_ref
+  run:
+    name: set friendly git ref name
+    command: |
+      if [[ ! -z "$CIRCLE_TAG" ]]; then
+        echo 'export CIRCLE_FRIENDLY_REF="$CIRCLE_TAG"' >> $BASH_ENV
+      elif [[ ! -z "$CIRCLE_BRANCH" ]]; then
+        echo 'export CIRCLE_FRIENDLY_REF="$CIRCLE_BRANCH"' >> $BASH_ENV
+      else
+        echo 'export CIRCLE_FRIENDLY_REF="$CIRCLE_SHA1"' >> $BASH_ENV
+      fi
+----
+
+We also need to know what the base comparison point is for finding updated modules. We will set this as the environment
+variable `SOURCE_REF` in the runtime environment:
+
+.infrastructure-live/.circleci/config.yml
+[source,yaml]
+----
+# This is used to determine what to use as the base comparison point for determining what modules to deploy. The logic
+# is as follows:
+#   - If we are on the master branch, the comparison is only the current commit.
+#   - If we are not on master, the comparison is to the current state of the master branch.
+set_source_ref: &set_source_ref
+  run:
+    name: set source ref
+    command: |
+      if [[ "$CIRCLE_BRANCH" == "master" ]]; then
+        echo 'export SOURCE_REF=HEAD^' >> $BASH_ENV
+      else
+        # We have to use origin/master because the checkout routine in CircleCI sets the local master to HEAD.
+        echo 'export SOURCE_REF=origin/master' >> $BASH_ENV
+      fi
+----
+
+Finally, we need to import functionality to notify on Slack. We will use the
+https://github.com/CircleCI-Public/slack-orb[official Slack Orb] from CircleCI:
+
+.infrastructure-live/.circleci/config.yml
+[source,yaml]
+----
+orbs:
+  slack: circleci/slack@3.4.2
+----
+
+Once we have the common elements defined as aliases, we can start defining each of the jobs. We will start with the
+`plan` job:
+
+.infrastructure-live/.circleci/config.yml
+[source,yaml]
+----
+  plan:
+    <<: *defaults
+    steps:
+      - <<: *set_friendly_git_ref
+      - <<: *set_source_ref
+      - checkout
+      - run:
+          name: install utilities
+          command: ./.circleci/install.sh
+      - run:
+          name: run plan
+          command: ./.circleci/deploy.sh plan
+      - slack/status:
+          channel: workflow-approvals
+          success_message: "PLAN from $CIRCLE_FRIENDLY_REF ($CIRCLE_SHA1) successful. Click 'Visit Job' to see output."
+          failure_message: "PLAN from $CIRCLE_FRIENDLY_REF ($CIRCLE_SHA1) failed. Click 'Visit Job' to see output."
+----
+
+This job will do the following:
+
+- Set common environment variables for knowing a friendly name for the git ref that triggered the change and the source
+  ref for the changes.
+- Checkout the code in the repository.
+- Call `install.sh` which will install gruntwork utilities necessary for invoking a deployment.
+- Call `deploy.sh` which will use the `git-updated-folders` and `infrastructure-deployer` utilities to run plan on the
+  updated modules.
+- Notify in the `workflow-approvals` slack channel whether the plan was successful or had failed.
+
+Next, we will define the `deploy` job, which will closely resemble the `plan` job:
+
+.infrastructure-live/.circleci/config.yml
+[source,yaml]
+----
+  deploy:
+    <<: *defaults
+    steps:
+      - <<: *set_friendly_git_ref
+      - <<: *set_source_ref
+      - slack/notify:
+          channel: workflow-approvals
+          message: "A deployment was approved by $CIRCLE_USERNAME for $CIRCLE_FRIENDLY_REF ($CIRCLE_SHA1). Click 'Visit Job' to see output."
+      - checkout
+      - run:
+          name: install utilities
+          command: ./.circleci/install.sh
+      - run:
+          name: run apply
+          command: ./.circleci/deploy.sh apply
+      - slack/status:
+          channel: workflow-approvals
+          success_message: "APPLY from $CIRCLE_FRIENDLY_REF ($CIRCLE_SHA1) was successful. Click 'Visit Job' to see output."
+          failure_message: "APPLY from $CIRCLE_FRIENDLY_REF ($CIRCLE_SHA1) failed. Click 'Visit Job' to see output."
+----
+
+This is very similar to the `plan` job, with two differences:
+
+- Before invoking the deployment, send a message to the `workflow-approvals` slack channel indicating that a deployment
+  had started in response to an approval event.
+- Call `apply` instead of `plan`.
+
+Finally, we define the jobs for the approval notifications:
+
+.infrastructure-live/.circleci/config.yml
+[source,yaml]
+----
+  notify:
+    <<: *defaults
+    steps:
+      - <<: *set_friendly_git_ref
+      - slack/approval:
+          channel: workflow-approvals
+          message: "A deployment for $CIRCLE_FRIENDLY_REF ($CIRCLE_SHA1) is pending approval. Click 'Visit Workflow' to approve."
+----
+
+This job will send a message to the `workflow-approvals` slack channel that there is a deployment that is pending
+approval.
+
+For convenience, here is the full configuration in its entirety, with a few components reorganized for readability:
+
+.infrastructure-live/.circleci/config.yml
+[source,yaml]
+----
+version: 2.1
+
+workflows:
+  continuous-deploy:
+    jobs:
+      - plan
+
+      - notify:
+          requires:
+            - plan
+          filters:
+            branches:
+              only: master
+
+      - hold:
+          type: approval
+          requires:
+            - notify
+          filters:
+            branches:
+              only: master
+
+      - deploy:
+          requires:
+            - hold
+          filters:
+            branches:
+              only: master
+
+orbs:
+  slack: circleci/slack@3.4.2
+
+# Global constants for the jobs. This includes:
+# - Using machine executor
+# - Tools versions
+defaults: &defaults
+  machine:
+    image: "ubuntu-1604:201903-01"
+  environment:
+    GRUNTWORK_INSTALLER_VERSION: v0.0.22
+    MODULE_CI_VERSION: v0.17.0
+    MODULE_SECURITY_VERSION: v0.24.1
+    REGION: us-east-2
+
+# This common step is used to determine the user friendly Git Ref name of the build, either the branch or tag.
+set_friendly_git_ref: &set_friendly_git_ref
+  run:
+    name: set friendly git ref name
+    command: |
+      if [[ ! -z "$CIRCLE_TAG" ]]; then
+        echo 'export CIRCLE_FRIENDLY_REF="$CIRCLE_TAG"' >> $BASH_ENV
+      elif [[ ! -z "$CIRCLE_BRANCH" ]]; then
+        echo 'export CIRCLE_FRIENDLY_REF="$CIRCLE_BRANCH"' >> $BASH_ENV
+      else
+        echo 'export CIRCLE_FRIENDLY_REF="$CIRCLE_SHA1"' >> $BASH_ENV
+      fi
+
+# This is used to determine what to use as the base comparison point for determining what modules to deploy. The logic
+# is as follows:
+#   - If we are on the master branch, the comparison is only the current commit.
+#   - If we are not on master, the comparison is to the current state of the master branch.
+set_source_ref: &set_source_ref
+  run:
+    name: set source ref
+    command: |
+      if [[ "$CIRCLE_BRANCH" == "master" ]]; then
+        echo 'export SOURCE_REF=HEAD^' >> $BASH_ENV
+      else
+        # We have to use origin/master because the checkout routine in CircleCI sets the local master to HEAD.
+        echo 'export SOURCE_REF=origin/master' >> $BASH_ENV
+      fi
+
+jobs:
+  plan:
+    <<: *defaults
+    steps:
+      - <<: *set_friendly_git_ref
+      - <<: *set_source_ref
+      - checkout
+      - run:
+          name: install utilities
+          command: ./.circleci/install.sh
+      - run:
+          name: run plan
+          command: ./.circleci/deploy.sh plan
+      - slack/status:
+          channel: workflow-approvals
+          success_message: "PLAN from $CIRCLE_FRIENDLY_REF ($CIRCLE_SHA1) successful. Click 'Visit Job' to see output."
+          failure_message: "PLAN from $CIRCLE_FRIENDLY_REF ($CIRCLE_SHA1) failed. Click 'Visit Job' to see output."
+  deploy:
+    <<: *defaults
+    steps:
+      - <<: *set_friendly_git_ref
+      - <<: *set_source_ref
+      - slack/notify:
+          channel: workflow-approvals
+          message: "A deployment was approved by $CIRCLE_USERNAME for $CIRCLE_FRIENDLY_REF ($CIRCLE_SHA1). Click 'Visit Job' to see output."
+      - checkout
+      - run:
+          name: install utilities
+          command: ./.circleci/install.sh
+      - run:
+          name: run apply
+          command: ./.circleci/deploy.sh apply
+      - slack/status:
+          channel: workflow-approvals
+          success_message: "APPLY from $CIRCLE_FRIENDLY_REF ($CIRCLE_SHA1) was successful. Click 'Visit Job' to see output."
+          failure_message: "APPLY from $CIRCLE_FRIENDLY_REF ($CIRCLE_SHA1) failed. Click 'Visit Job' to see output."
+  notify:
+    <<: *defaults
+    steps:
+      - <<: *set_friendly_git_ref
+      - slack/approval:
+          channel: workflow-approvals
+          message: "A deployment for $CIRCLE_FRIENDLY_REF ($CIRCLE_SHA1) is pending approval. Click 'Visit Workflow' to approve."
+----
+
+
+[[configure_ci_server]]
+=== Configure CI Server
+
+Once we have our pipeline defined as code in our repository, we can hook it up to our CI server to start building.
+Configure CircleCI to start building the `infrastructure-live` repo by adding the project to your org.
+
+To add the `infrastructure-live` repo:
+
+- Login to CircleCI as **the machine user**. If you don't have an account for the machine user, sign up using the github
+  account of the machine user.
+- Go to the projects page for your org and click the **Add Projects** button.
+- Look for the `infrastructure-live` repo in the list, and click the **Set Up Project** button next to the repo.
+- Click the **Start Building** button to trigger the first build. Note that this build is expected to fail since we
+  haven't configured the required environment variables.
+
+Next, we need to configure the environment variables for the build:
+
+- Click the gear icon in the top right for the job to configure the job.
+- Add a **User Key** in the **Checkout SSH keys** settings for the build.
+- Click **Environment Variables** and add the following variables to the build:
+    - `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`: The AWS access key pair for the machine user to access your AWS
+      account. This should be a user in the security account with the ability to assume the auto deploy role in each of
+      the environments that you wish to configure CI/CD for.
+    - `GITHUB_OAUTH_TOKEN`: A personal access token for the machine user with access to Gruntwork Infrastructure as Code
+      Library.
+    - `SLACK_WEBHOOK`: A webhook for posting messages to your Slack org. You can refer to
+      https://api.slack.com/messaging/webhooks[the official Slack documentation] for instructions on how to configure a
+      webhook for your Slack org.
+
+Once you have these configurations set, you should be able to start deploying your infrastructure in reaction to git
+events!
 
 
 == Next steps
+
+Now that you have a CI/CD pipeline for your infrastructure code, test it out by doing one of the following;
+
+- Add a new component to `infrastructure-live` and see how it flows through the pipeline.
+- Make a change to one of the existing components that you have already deployed and see how it flows through the
+  pipeline.
