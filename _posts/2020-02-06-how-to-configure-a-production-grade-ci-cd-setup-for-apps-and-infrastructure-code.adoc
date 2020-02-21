@@ -95,11 +95,11 @@ Automated testing and feature toggling strategies for infrastructure code::
 [[why_is_it_important_to_have_cicd]]
 === Why is it important to have CI/CD?
 
-.Components of the International Space Station
-image::/assets/img/guides/infrastructure-cicd-pipeline/iss-components.png[]
-
 To understand the benefits of CI/CD, it is worth exploring the opposite: _late integration and late delivery (LI/LD)_.
 We will explain LI/LD using a thought experiment about building the International Space Station (ISS).
+
+.Components of the International Space Station
+image::/assets/img/guides/infrastructure-cicd-pipeline/iss-components.png[]
 
 The ISS consists of dozens of components, as shown in the image above. Each component is built by a team from a
 different country, with a central team responsible for organizing development. In LI/LD,
@@ -113,14 +113,14 @@ while that team thought everything would be wireless; all the teams would use th
 toilets from the scope thinking some other team is sure to include it. Finding all of this out once everything has
 already been built and is floating in outer space means that fixing the problems will be very difficult and expensive.
 
-.Many long living branches merging at the same time have a higher chance of having conflicts.
-image::/assets/img/guides/infrastructure-cicd-pipeline/feature-branch-merge-conflict.png[]
-
 While it is hard to imagine that anyone would build the ISS in this way, unfortunately this model of development is
 fairly common in the software industry. Developers work in total isolation for weeks or months at a time on _feature
 branches_ without integrating their work with other teams, and then try to merge all the work together at the last
 minute moments before release. As a result, the integration process is very expensive and takes days or weeks fixing merge
 conflicts, tracking down subtle bugs, and trying to stabilize release branches.
+
+.Many teams employ a practice of working on their features over long periods of time on isolated branches. These long lived feature branches have higher chances of having big conflicts to resolve when integrated.
+image::/assets/img/guides/infrastructure-cicd-pipeline/feature-branch-merge-conflict.png[]
 
 In contrast, the Continuous Integration and Continuous Delivery model of development promotes more cross team
 communication and integration work as development progresses. Going back to the ISS thought experiment, a CI/CD style of
