@@ -29,7 +29,7 @@ Continuous Delivery pipeline for your application and infrastructure code.
 
 === What is Continuous Integration and Continuous Delivery?
 
-Continuous Integration and Continuous Delivery (also widely known as CI/CD) is a software development practice that
+Continuous Integration and Continuous Delivery (also widely known as CI/CD) are software development practices that
 involves developers merging their work together and deploying it to production on a regular basis (oftentimes as
 frequent as multiple times per day). The goal of a Continuous Integration process is to integrate the various feature
 work that the developers are individually doing often enough such that you can identify problems with the design earlier
@@ -80,7 +80,7 @@ Automated testing and feature toggling strategies for infrastructure code::
   An important factor of CI/CD pipelines is the existence of automated testing and feature toggles. Automated tests give
   you the confidence in the code before it is deployed to production. Similarly, feature toggles allow you to partially
   integrate and deploy code for a feature without enabling it. By doing so, you are able to continuously integrate
-  lareger new developments over time. This guide will briefly introduce automated testing and feature toggles for
+  new developments over time. This guide will briefly introduce automated testing and feature toggles for
   infrastructure code, but will not do a deep dive on the subject.
 
 
@@ -97,8 +97,8 @@ To understand the benefits of CI/CD, it is worth exploring the opposite: _late i
 We will explain LI/LD using a thought experiment about building the International Space Station (ISS).
 
 The ISS consists of dozens of components, as shown in the image above. Each component is built by a team from a
-different country, with a central team responsible for managing how to organize the development. In LI/LD,
-you would organize the development by coming up with a design for all the components up front and then have each team go
+different country, with a central team responsible for organizing development. In LI/LD,
+you would organize the development by designing all the components in advance, and then have each team go
 off and work on their component in _total isolation_. There is complete trust in the design and the teams such that
 there is no need to check in and integrate the components along the way. When all the teams are done, each team launches
 the component into space and then put all the components together at the same time in space, _for the first time_.
@@ -106,7 +106,7 @@ the component into space and then put all the components together at the same ti
 It isn't hard to imagine that this could be disastrous: one team would think the other team was responsible for wiring
 while that team thought everything would be wireless; all the teams would use the metric system except one; everyone cut
 toilets from the scope thinking some other team is sure to include it. Finding all of this out once everything has
-already been built and is floating in outer space means that fixing the problems will be very difficule and expensive.
+already been built and is floating in outer space means that fixing the problems will be very difficult and expensive.
 
 .Many long living branches merging at the same time have a higher chance of having conflicts.
 image::/assets/img/guides/infrastructure-cicd-pipeline/feature-branch-merge-conflict.png[]
@@ -114,12 +114,12 @@ image::/assets/img/guides/infrastructure-cicd-pipeline/feature-branch-merge-conf
 While it is hard to imagine that anyone would build the ISS in this way, unfortunately this model of development is
 fairly common in the software industry. Developers work in total isolation for weeks or months at a time on _feature
 branches_ without integrating their work with other teams, and then try to merge all the work together at the last
-minute moments before release. Oftentimes the integration process is very expensive and takes days or weeks fixing merge
+minute moments before release. As a result, the integration process is very expensive and takes days or weeks fixing merge
 conflicts, tracking down subtle bugs, and trying to stabilize release branches.
 
 In contrast, the Continuous Integration and Continuous Delivery model of development promotes more cross team
 communication and integration work as development progresses. Going back to the ISS thought experiment, a CI/CD style of
-building the ISS would work by coming up with a design up front, but instead of each team working in isolation there
+building the ISS would work by collaborating on a design. Rather than each team working in isolation, there
 would be regular checkpoints throughout the process where the teams come together to try to test and integrate all the
 components, and update the design if there are problems. As components are completed and integration tests validate the
 design, they are launched into space and assembled incrementally as new components arrive.
@@ -150,12 +150,12 @@ scale of billions of lines of code with 10s of thousands of commits per day?
 
 There are two factors that make this possible:
 
-Smaller integration scope from small frequent commits::
+Small, frequent commits reduce the scope of each integration::
   It turns out that if you integrating small amounts of code on a regular basis, the number of conflicts that arise is
   also fairly small. Instead of having big, monolithic merge conflicts, each conflict that arises will be in a tiny
-  portion of the work being integrated. In fact, oftentimes these conflicts are desirable as it is a sign that there is
-  a design flaw and is a nature of the software work. You'll have to deal with conflicts no matter what, and it is going
-  to be eaiser to deal with conflicts that arise from one or two days of work than with conflicts that represents months
+  portion of the work being integrated. In fact, these conflicts can be viewed as helpful as it is a sign that there is
+  a design flaw. These integration challenges are part and parcel to distributed software development projects. You'll have to deal with conflicts no matter what, and it is going
+  to be easier to deal with conflicts that arise from one or two days of work than with conflicts that represents months
   of work.
 
 Automated testing::
@@ -181,27 +181,27 @@ the workflow with application code, and then with infrastructure code.
 
 Before diving into what a CI/CD workflow for infrastructure code might look like, let's first start by going over a
 typical workflow of taking application code (e.g, a Ruby on Rails or Java/Spring app) from development to production.
-CI/CD workflows for application code is reasonably well understood in the DevOps industry, so you'll probably be
+CI/CD workflows for application code are reasonably well understood in the DevOps industry, so you may be
 familiar with parts of it.
 
-For the purposes of going through this workflow, we will assume the following:
+For the purposes of illustrating this workflow, we will assume the following:
 
 - The application code lives in version control.
 - We are using a trunk-based development model.
-- The application has already been in development for sometime and there is a version of it in production.
+- The application has already been in development for a while and there is a version running in production.
 
 The following list covers the steps of a typical CI/CD workflow for application code. You can refer to the section
 https://blog.gruntwork.io/how-to-use-terraform-as-a-team-251bc1104973#1bff[A workflow for deploying application code]
 from our blog post **How to use Terraform as a team** for more details.
 
-Clone copy of source code and create a new branch::
+Clone a copy of the source code and create a new branch::
   Since the code lives in version control, you want to ensure that a version of the code exists locally so that you can
   start to make changes. As such typically the first step in making changes to the code base is to make a local clone of
   the repository. It is also important to start by making a new branch of the code so that it can be pushed back to the
   repository without worrying about breaking the main line of code (trunk) that everyone is working off of.
 
 Run the code locally::
-  Once you have a local copy, typically it is a good practice to sanity check the local copy before making any changes
+  Once you have a local copy, it's a good practice to sanity check the local copy before making any changes
   to it. You want to ensure that you are starting from a clean slate to avoid conflicting an existing bug that breaks
   the code with something that you introduced during development. If any issues have slipped through the cracks and were
   merged to master, you want to know those before starting on your implementation.
@@ -220,25 +220,25 @@ Submit changes for review::
   breakage during integration.
 
 Run automated tests::
-  To help with code review, you should also set up a CI server (such as Jenkins or CircleCI) with commit hooks to
-  automatically trigger automated testing to run for any branch that is submitted for review. Running the automated
+  To help with code review, you should also set up a CI server (such as Jenkins or CircleCI) with commit hooks that
+  automatically trigger automated testing of any branch that is submitted for review. Running the automated
   tests in this fashion not only ensures that the code passes all the tests, but also verifies that it runs on multiple
-  platforms and not just on the developer machines.
+  platforms and not just on the developer's local workstation.
 
 Merge and release::
   Once the code passes automated checks and goes through the review process, it is ready to be integrated into the
   trunk. At this point, you have done the best you could to ensure the code won't break the current trunk and additional
   checks are likely to hit diminishing returns. Once you merge the code into trunk, you will also want to generate a
   release artifact that can be deployed. Depending on how the code is packaged and deployed, this could be anything from
-  a new Docker image, a new virtual machine image, a `.jar` file, or `.tar` source archive. Typically this process is
+  a new Docker image, a new virtual machine image, a `.jar` file, or `.tar` source archive. Typically the packaging process is
   automated by a CI server in reaction to a new git tag.
 
 Deploy::
-  The final stage of the CI/CD workflow is to deploy the code to your environments (the CD portion). There are a number
+  Continuous deployment (CD) is the final stage of the CI/CD workflow. There are a number
   of deployment strategies you can take to safely roll out the changes (e.g canary, blue/green, rolling, etc), but
   almost all pipelines have a concept of promoting arifacts across environments. That is, you want to deploy the release
   artifact to a pre-production environment first, do some automated and/or manual checks, before moving on to deploying
-  the artifact to production. It is important to note that this should be happening automatically. That is, deployments
+  the artifact to production. Importantly, this should happen automatically. That is, deployments
   to pre-production and automated testing against the pre-production environment should happen when the release tag and
   artifact is created. The only manual step you might have in the process is to hold for approval before promoting the
   artifact to production, depending on how confident you are in your automated tests.
@@ -274,7 +274,7 @@ difficult to use the exact same pipeline as application code:
   out-of-band changes than with infrastructure code. You have login to a server, manually update the code, rebuild the
   code, and restart the services. It is probably going to be much easier for the developer to rely on the process to
   make these changes as a lot of the tedious steps (such as building the code) is automated. On the other hand, with
-  infrastructure code, you can easily make changes to the infrastructure through the UI. You can add, modify, or delete
+  infrastructure code, you can easily make changes to the infrastructure through the UI. For instance, you can add, modify, or delete
   infrastructure with a few clicks in the AWS UI. The problem with out-of-band changes is that it cause configuration
   drift and leads to complicated bugs.
 
@@ -310,12 +310,12 @@ live::
 Since the nature of the release artifacts for the two repositories are different, naturally the CI/CD pipeline for the
 repositories will also be different.
 
-For `modules`, release artifacts will be versioned immutable snapshots of the code that you can consume in the `live`
+For `modules`, artifacts will be versioned, immutable snapshots of the code that you can consume in the `live`
 configuration. The versioned artifacts ensure that you get a known configuration that won't change overtime (unless you
 request a different version). This helps facilitate consistent roll out of the particular infrastructure component
 across multiple environments.
 
-In contrast, for `live`, there is typically no release artifact. Instead, you would apply the code to the cloud to mark
+In contrast, for `live`, there is generally no release artifact. Instead, you would apply the code to the cloud to mark
 a "release." Unlike with `modules`, the `live` code is a reflection of the actual infrastructure that is deployed. As
 such, it is important that the code is regularly applied so that it closely matches reality. We call this _The Golden
 Rule of Terraform_:
@@ -329,7 +329,7 @@ Let's break this sentence down, starting at the end and working our way back:
   actually deployed is to never make out-of-bound changes. As discussed in the previous section, out-of-bound changes
   are sources of subtle bugs and undesirable actions in infrastructure code. If you get into a habit of making
   out-of-bound changes, your infrastructure code will constantly need to make large amounts of changes to resolve the
-  configuration drift. This not only void many of the benefits of managing your infrastructure as code (e.g
+  configuration drift. This not only voids many of the benefits of managing your infrastructure as code (e.g
   reproducibility), it can also be a source of distrust in the code base. Note that the flip side is true as well: you
   want to ensure that the code is continuously applied so that the code doesn't move too far ahead of the existing
   infrastructure.
@@ -340,7 +340,7 @@ Let's break this sentence down, starting at the end and working our way back:
   monitoring alarms and metrics, it can also be a source of frustration when you need to debug an issue. Ensuring that
   all the configuration for the environments are captured as code and live in your `live` repository provides an easy
   and obvious way to know what has been deployed and the exact configuration in which the deployment happened. This not
-  only means avoiding out-of-bound changes, but also avoiding tooling where the configurations live outside the live
+  only means avoiding out-of-bound changes, but also avoiding tooling where the configurations reside outside the live
   codebase (e.g using Terraform workspaces).
 
 "The master branch ..."::
@@ -364,7 +364,7 @@ With these two repository structures in mind, let's take a look at what the CI/C
 [[cicd_for_infrastructure_modules]]
 ==== CI/CD for infrastructure modules
 
-The CI/CD process for infrastructure modules closely aligns that of application code. Since infrastructure modules do
+The CI/CD process for infrastructure modules closely aligns with that of application code. Since infrastructure modules do
 not track live infrastructure, you can deploy a sandbox environment containing just the components that are being
 developed for testing purposes. Additionally, you can release the code without rolling it out to the different
 environments. Since each release is immutable, you can guarantee that if an environment is pointing to one version of
@@ -374,7 +374,7 @@ and implement automated testing around it, as well as continuously deploy the co
 
 Given that, let's look at the stages in detail:
 
-Clone copy of source code and create a new branch::
+Clone a copy of the source code and create a new branch::
   Just like with application code, you will want to make sure you do your work in a different branch to trunk to keep
   the trunk stable.
 
@@ -396,13 +396,13 @@ Make code changes::
   strategies for infrastructure code.
 
 Submit changes for review::
-  Just like with application code, you will want to have a code review process before changes make it into trunk. This
+  Just like with application code, a code review process can help to prevent bugs and design issues before changes make their way into trunk. This
   is even more important with infrastructure code where the amount of testing you can do is limited.
 
 Run automated tests::
-  To the extent that is possible, you should design and write automated tests that you can run on your infrastructure
+  To the extent that it is possible, you should design and write automated tests that you can run on your infrastructure
   code, and you should hook up your repository to a CI server so that the automated tests run on every commit. At the
-  bare minimum, you should be running some form of static analysis on the infrastructure code. If the platform supports
+  bare minimum, you should be running some form of linting (a la https://github.com/terraform-linters/tflint/[tflint]) and/or static analysis on the infrastructure code. If the platform supports
   it, you should also do a dry run of the infrastructure code (e.g `terraform plan`). While they are more useful with
   live infrastructure, typically you can use the `plan` for infrastructure modules to do quick sanity checks of your
   looping or conditional logic. That is, you can check if terraform will plan to create the exact number of resources
@@ -460,7 +460,7 @@ However, since the `live` repo tracks live infrastructure environments, the CI/C
 different from what you had with application code and infrastructure modules, although the basic flow of steps is the
 same. Here is what it might look like:
 
-Clone copy of source code and create a new branch::
+Clone a copy of the source code and create a new branch::
   Since we are still using a trunk-based model even for the `live` repo, there is no difference in the branching
   strategy. You should still cut a development branch where you make the live configuration changes.
 
@@ -488,7 +488,7 @@ Make code changes::
 
 Dev before Stage before Prod::
   This isn't a step in the CI/CD pipeline, but you will want to fully roll out your changes to your preproduction
-  environmennts (dev and stage) before rolling out to prod. You will want to avoid updating all your environments at
+  environments (dev and stage) before rolling out to prod. You will want to avoid updating all your environments at
   once. You can only test the changes by applying to an existing, live environment, and you would not want to be testing
   new code on production for the first time. Always make your changes and roll out to your preproduction environments in
   full before making the changes  to stage and prod. This might mean repeating the whole process from step 1 three
@@ -569,7 +569,7 @@ In this design, the following threat assumptions are made:
 - External attacks are limited to those that can get full access to a CI environment, but not the underlying source
   code. Note that __any__ CI/CD solution can likely be compromised if an attacker has access to your source code.
 - Internal attackers are limited to those with restricted access to the environments. This means that the threat model
-  does not consider attackers with enough privileges to already have access to the deploy target accounts (e.g an
+  does not consider highly trusted insiders who abuse their privileges with malicious intent.
   internal ops admin with full access to the prod environment). However, an internal attacker with permissions in the
   dev environment trying to elevate their access to the prod environment is considered.
 - Similarly, internal attackers are limited to those with restricted access in the CI environment and git repository. A
@@ -592,9 +592,9 @@ consider when selecting a platform to implement your workflow on. The production
 is compatible with almost any generic CI/CD platform that you select, but is an alternative to the specialized platforms
 for infrastructure code.
 
-In general, CI/CD platforms fit one of two categories: self-hosted or Saas. Self-hosted CI/CD platforms are designed as
+In general, CI/CD platforms fit one of two categories: self-hosted or SaaS. Self-hosted CI/CD platforms are designed as
 infrastructure that you run in your data center and cloud for managing the infrastructure in your account, while Saas
-CI/CD platforms are hosted by the vendor that provides the platform. In most cases, Saas platforms are preferred to
+CI/CD platforms are hosted by the vendor that provides the platform. In most cases, SaaS platforms are preferred to
 self-hosted platforms to avoid the overhead of maintaining additional infrastructure to enable developer workflows,
 which not only cost money but also time from your operations team to maintain the infrastructure with patches, upgrades,
 uptime, etc. However, in certain fields with strict compliance requirements it is unavoidable to have self-hosted CI/CD
@@ -615,19 +615,19 @@ https://jenkins.io/[Jenkins] (self-hosted, generic)::
   a wide range of plugins that enhance the experience. However, given the role that it plays in organizations, combined
   with its nature of being a popular, open source platform, it is the target of frequent attacks and vulnerabilities.
   Most vulnerabilities are mitigated by locking down the platform so that it is only internally accessible within a
-  corporate network over VPN, as well as by keeping the server frequently patched. This does mean that you shouldn't
+  corporate network over VPN, as well as by keeping the server, the Jenkins software, and the Jenkins plugins frequently patched. This does mean that you shouldn't
   expose the server externally to implement webhook based workflows, but rather rely on polling to detect changes.
   Jenkins also provides a wide range of fine-grained permissions in its user model that allows you to lock down the
   actions that your internal users can take.
 
 https://circleci.com/[CircleCI] (Saas, generic)::
-  CircleCI is a generic Saas CI/CD platform that is more optimized for application based CI/CD workflows than
+  CircleCI is a generic SaaS CI/CD platform that is more optimized for application based CI/CD workflows than
   infrastructure CI/CD, although it can be configured to implement infrastructure CI/CD workflows. The strength of
   CircleCI lies in the simplicity of its infrastructure. Being a fully managed Saas platform with first class support
   for a wide range of platforms, it is fairly easy to get up and running on the platform in a matter of minutes.
   However, the downside is that you must be comfortable with using a Saas platform for your CI/CD workflows and having
   it hold your secrets that provide access to your infrastructure. Note that CircleCI employs a respectable security
-  model, having passed numerous compliance audits including FedRamp. They provide a wide variety of features to mitigate
+  model, having passed numerous compliance audits including FedRAMP. They provide a wide variety of features to mitigate
   potential threats, including runtime environment isolation, restricted contexts for finer grained permissions
   modeling, and audit logging to continuously monitor access.
 
@@ -699,7 +699,7 @@ However, instead of relying on the CI/CD platform to run infrastructure deployme
 a specialized self-hosted deployment platform for running your infrastructure deployments. This can be Terraform
 Enterprise if you are only using `terraform`, or Gruntwork's ECS Deploy Runner stack for a more general purpose
 platform. In order to support arbitrary infrastructure deployments, it will be inevitable that the system running your
-deployments will have de factor admin status to the environments that you are deploying into. As such, it is important
+deployments will have de facto admin status to the environments that you are deploying into. As such, it is important
 that these systems are locked down. You do not want any third party publicly facing system to hold powerful credentials
 to your cloud environments.
 
