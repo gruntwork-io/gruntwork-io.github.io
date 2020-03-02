@@ -727,10 +727,10 @@ wrapper module]. Complete this step before creating any IAM users!
 
 [[wrapper_code]]
 ==== Using the wrapper module
-This section demonstrates how to use the password policy wrapper module to create a password policy. Follow this pattern for each of the wrapper modules discussed throughout this walkthrough.
+This section demonstrates how to use the CIS compliance password policy wrapper module to create a password policy. Follow this pattern for each of the wrapper modules discussed throughout this walkthrough.
 
 ===== Using the wrapper module with Terraform
-If you're using Terraform, first create a module in your `infrastructure-modules` repository.
+If you're using Terraform without Terragrunt, use this section to create a module in your `infrastructure-modules` repository.
 
 ----
 infrastructure-modules
@@ -805,7 +805,7 @@ link:https://github.com/gruntwork-io/cis-compliance-aws/tree/master/examples/iam
 
 ===== Using the compliance wrapper module with Terragrunt
 
-If you're using Terragrunt, configure a `terragrunt.hcl` to invoke the wrapper module. First, create a directory for the password policy in your `infrastructure-live` repository:
+If you're using Terragrunt, you can use the password policy Terraform module in the CIS compliance repository from a Terragrunt configuration directly, with no need to create a Terraform module of your own! In this case, `cis-compliance-aws` is the canonical Terraform module. To do so, configure a `terragrunt.hcl` to invoke the module. First, create a directory for the password policy in your `infrastructure-live` repository:
 
 ----
 infrastructure-live
@@ -815,7 +815,7 @@ infrastructure-live
             └── terragrunt.hcl
 ----
 
-In this directory structure above, `<your account>` is a friendly name for the account you're configuring for compliance. For example, the `prod` account or the `security` account. If this doesn't make sense, see link:https://blog.gruntwork.io/terragrunt-how-to-keep-your-terraform-code-dry-and-maintainable-f61ae06959d8[this post] for more information on Terragrunt.
+In the directory structure above, `<your account>` is a friendly name for the account you're configuring for compliance. For example, the `prod` account or the `security` account. If this doesn't make sense, see link:https://blog.gruntwork.io/terragrunt-how-to-keep-your-terraform-code-dry-and-maintainable-f61ae06959d8[this post] for more information on Terragrunt.
 
 Next, create `terragrunt.hcl` with the following contents:
 
