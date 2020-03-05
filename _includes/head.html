@@ -1,33 +1,72 @@
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700" rel="stylesheet">
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-<link rel="stylesheet" href="{{ '/assets/css/prism.css' | prepend: site.baseurl }}">
+<link
+  href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700"
+  rel="stylesheet"
+/>
+<link
+  href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+  rel="stylesheet"
+  type="text/css"
+/>
+<link
+  rel="stylesheet"
+  href="{{ '/assets/css/prism.css' | prepend: site.baseurl }}"
+/>
 <!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-W5PZQHS');</script>
+<script>
+  var dataLayer = [];
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+  function getCookie(name) {
+    var match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
+    if (match) return match[2];
+  }
+
+  var prodAccount = "GTM-W5PZQHS";
+  var devAccount = "GTM-WK4FP9N";
+
+  var cookieName = "gruntwork-experiment-id";
+  var experimentId = "OPufs8HkS8ipGNdYblRm4w";
+  var gaExpVar = getCookie(cookieName) === "old-site" ? 0 : 1;
+
+  dataLayer.push({
+    gaExpId: experimentId,
+    gaExpVar: gaExpVar
+  });
+
+  (function(w, d, s, l, i) {
+    w[l] = w[l] || [];
+    w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+    var f = d.getElementsByTagName(s)[0],
+      j = d.createElement(s),
+      dl = l != "dataLayer" ? "&l=" + l : "";
+    j.async = true;
+    j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+    f.parentNode.insertBefore(j, f);
+  })(window, document, "script", "dataLayer", devAccount);
+</script>
 <!-- End Google Tag Manager -->
 
 <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
-<title>{% if page.title %}{{ page.title }}{% else %}{{ site.name }}{% endif %}</title>
-<meta name="description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines }}{% else %}{{ site.description }}{% endif %}">
-<link rel="canonical" href="{% include canonical-url.html %}">
-{% if page.noindex == true  %}
-<meta name="robots" CONTENT="noindex">
+<title>
+  {% if page.title %}{{ page.title }}{% else %}{{ site.name }}{% endif %}
+</title>
+<meta
+  name="description"
+  content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines }}{% else %}{{ site.description }}{% endif %}"
+/>
+<link rel="canonical" href="{% include canonical-url.html %}" />
+{% if page.noindex == true %}
+<meta name="robots" content="noindex" />
 {% else %}
-<META NAME="robots" CONTENT="index">
-{% endif %}
-{% include styles.html %}
-{% include favicon.html %}
-{% include share-meta.html %}
-{% include newsletter-modal.html %}
-{% include subscribe-modal.html %}
-
+<meta name="robots" content="index" />
+{% endif %} {% include styles.html %} {% include favicon.html %} {% include
+share-meta.html %} {% include newsletter-modal.html %} {% include
+subscribe-modal.html %}
