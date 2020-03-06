@@ -668,20 +668,63 @@ types of attack vectors for this type of workflow.
 [[threat_model_of_cicd]]
 === Threat model of CI/CD
 
-To implement a CI/CD pipeline for infrastructure code, it is required that the ultimate entity or system running the
-infrastructure code has the permissions to deploy the infrastructure defined by code. Unfortunately, to support
-arbitrary CI/CD workflows, it is necessary to grant wide ranging permissions to the target environment. As such, it is
-important to consider ways to mitigate potential attacks against the various systems involved in the pipeline to avoid
-attackers gaining access to deploy targets, which could be catastrophic in the case of a breach of the production
-environment.
+The threat model of CI/CD is different between application code, infrastructure modules, and live infrastructure config.
+This largely stems from the amount of permissions required to implement each workflow:
 
-Here we define our threat model to explicitly cover what attacks are taken into consideration in the design, as well as
-what attacks are __not__ considered. The goal of the threat model is to be realistic about the threats that are
-addressable with the tools available. By explicitly focusing attention on more likely and realistic threats, we can
-avoid overengineering and compromising the usability of the solution against threats that are unlikely to exist (e.g
-a 5 person startup with 100 end users is unlikely to be the subject of a targeted attack by a government agency).
+.Permissions needed for CI/CD of each code type.
+[cols="1h,2,2,2"]
+|===
+|Permissions |Application Code |Infrastructure Modules |Live Infrastructure Config
 
-In this design, the following threat assumptions are made:
+|CI server logs
+|Limited (typically only need summary report as you can reproduce failures locally)
+|Full (can not debug without seeing the full deployment log)
+|Full (can not debug without seeing the full deployment log)
+
+|Sandbox environments
+|Limited (minimal necessary to deploy artifact)
+|Full
+|Full
+
+|Non-prod environments
+|Limited (minimal necessary to deploy artifact)
+|None
+|Full
+
+|Prod environments
+|Limited (minimal necessary to deploy artifact)
+|None
+|Full
+
+|===
+
+Note how CI/CD for infrastructure code requires full permissions to CI logs as well as at least one of your
+environments, whereas application code can be deployed with limited permissions to the environments. This difference is
+due to the fact that infrastructure modules and live infrastructure config can be used to manage any infrastructure
+deployed in your environments, whereas application code is scoped to infrastructure that is relevant to the application.
+Given that, the threat against CI/CD in infrastructure code is orders of magnitude higher than with application code.
+
+Compromising the credentials used for application code may be used to take down your application in a denial of service,
+but most likely will not affect databases and backups, making it recoverable after locking out the attacker.
+
+Compromising the credentials used for infrastructure modules can cause an attacker to maliciously use your cloud
+environments for various purposes, potentially costing you lots of money, but will not affect your production
+environment and application. In most cases though, you can recover the costs by reporting fraud. AWS for
+example is known to refund bills of accounts that were compromised.
+
+However, compromising the credentials used for live infrastructure config can cause an attacker to do anything including
+deleting all your backups. This is potentially a business ending event.
+
+In this section we will focus on the threat model for CI/CD on live infrastructure config. However, the threats and
+mitigation tactics covered are generally applicable to CI/CD for all three flavors of code.
+
+A threat model explicitly covers what attacks are taken into consideration in the design, as well as what attacks are
+__not__ considered. The goal of the threat model is to be realistic about the threats that are addressable with the
+tools available. By explicitly focusing attention on more likely and realistic threats, we can avoid overengineering and
+compromising the usability of the solution against threats that are unlikely to exist (e.g a 5 person startup with 100
+end users is unlikely to be the subject of a targeted attack by a government agency).
+
+In this guide, the following threat assumptions are made:
 
 - Attackers' goals are to gain access to an environment that they do not already have access to. Access to an
   environment includes but is not limited to:
