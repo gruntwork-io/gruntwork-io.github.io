@@ -754,9 +754,9 @@ With this threat model in mind, let's take a look at the different CI/CD platfor
 
 Over the years as practices for CI/CD for application code developed many platforms emerged to support CI/CD workflows
 triggered from source control. Here we will list out a few of the major CI/CD platforms that exist to support these
-workflows. Note that this isn't an exhaustive list, or an endorsement of the platforms that are listed here. The goal of
+workflows. Note that this isn't an exhaustive list or an endorsement of the platforms that are listed here. The goal of
 this section is to give a few examples of existing platforms and solutions, and cover the trade offs that you should
-consider when selecting a platform to implement your workflow on. The production grade design that we cover in the guide
+consider when selecting a platform to implement your workflow on. The production-grade design that we cover in the guide
 is compatible with almost any generic CI/CD platform that you select, but is an alternative to the specialized platforms
 for infrastructure code.
 
@@ -765,16 +765,16 @@ infrastructure that you run in your data center and cloud for managing the infra
 CI/CD platforms are hosted by the vendor that provides the platform. In most cases, SaaS platforms are preferred to
 self-hosted platforms to avoid the overhead of maintaining additional infrastructure to enable developer workflows,
 which not only cost money but also time from your operations team to maintain the infrastructure with patches, upgrades,
-uptime, etc. However, in certain fields with strict compliance requirements it is unavoidable to have self-hosted CI/CD
+uptime, etc. However, in certain fields with strict compliance requirements, it is unavoidable to have self-hosted CI/CD
 platforms due to the threat model and the amount of permissions that are granted to the platform to ensure the software
-can be deployed. These fields manage sensitive data that make it hard to entrust third party platforms that are publicly
+can be deployed. These fields manage sensitive data that make it hard to entrust third-party platforms that are publicly
 accessible with the "keys to the kingdom" that hold that data.
 
 Additionally, CI/CD platforms can be further divided into generic platforms for any code, and specialized platforms for
 application code or infrastructure code. Depending on your use case, it may be desirable to use a specialized platform
 that accelerates the implementation of specific workflows as opposed to configuring a generic platform.
 
-Here are a few examples of well known platforms, the general category that they fit in, major features that the platform
+Here are a few examples of well-known platforms, the general category that they fit in, major features that the platform
 provides, as well as how they mitigate the threat model that we cover:
 
 https://jenkins.io/[Jenkins] (self-hosted, generic)::
@@ -820,7 +820,7 @@ https://www.runatlantis.io/[Atlantis] (self-hosted, specialized)::
   `terraform apply`. Note that Atlantis is optimized for this single workflow. That is, it cannot be made to implement
   other workflows, such as building images or running infrastructure tests using terratest. Being a self-hosted
   platform, you can keep your credentials internal to your data center and lock down server level access. However,
-  Atlantis requires a public facing endpoint to be available so that it can listen on webhooks from the major VCS
+  Atlantis requires a public-facing endpoint to be available so that it can listen on webhooks from the major VCS
   platforms (GitHub/GitLab/Bitbucket/Azure DevOps). This means that you are relying on the security model of the
   Atlantis platform to ensure that it doesn't accidentally run infrastructure code from unwanted sources with the
   credentials of the platform. To prevent unwanted deployments, you will want to ensure that you are following
