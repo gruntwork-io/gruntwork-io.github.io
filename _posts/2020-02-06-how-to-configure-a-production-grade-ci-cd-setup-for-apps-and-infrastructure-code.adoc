@@ -761,7 +761,7 @@ is compatible with almost any generic CI/CD platform that you select, but is an 
 for infrastructure code.
 
 In general, CI/CD platforms fit one of two categories: self-hosted or SaaS. Self-hosted CI/CD platforms are designed as
-infrastructure that you run in your data center and cloud for managing the infrastructure in your account, while Saas
+infrastructure that you run in your data center and cloud for managing the infrastructure in your account, while SaaS
 CI/CD platforms are hosted by the vendor that provides the platform. In most cases, SaaS platforms are preferred to
 self-hosted platforms to avoid the overhead of maintaining additional infrastructure to enable developer workflows,
 which not only cost money but also time from your operations team to maintain the infrastructure with patches, upgrades,
@@ -788,27 +788,30 @@ https://jenkins.io/[Jenkins] (self-hosted, generic)::
   Jenkins also provides a wide range of fine-grained permissions in its user model that allows you to lock down the
   actions that your internal users can take.
 
-https://circleci.com/[CircleCI] (Saas, generic)::
-  CircleCI is a generic SaaS CI/CD platform that is more optimized for application based CI/CD workflows than
-  infrastructure CI/CD, although it can be configured to implement infrastructure CI/CD workflows. The strength of
-  CircleCI lies in the simplicity of its infrastructure. Being a fully managed Saas platform with first class support
-  for a wide range of platforms, it is fairly easy to get up and running on the platform in a matter of minutes.
-  However, the downside is that you must be comfortable with using a Saas platform for your CI/CD workflows and having
-  it hold your secrets that provide access to your infrastructure. Note that CircleCI employs a respectable security
-  model, having passed numerous compliance audits including FedRAMP. They provide a wide variety of features to mitigate
-  potential threats, including runtime environment isolation, restricted contexts for finer grained permissions
-  modeling, and audit logging to continuously monitor access.
+https://circleci.com/[CircleCI] (SaaS, generic)::
+  CircleCI is a generic SaaS CI/CD platform that is more optimized for CI/CD workflows for application code than
+  infrastructure CI/CD, although it can be configured to implement infrastructure CI/CD workflows. It has first class
+  support for various application based workflows like parsing test results into a nice report in the UI, reacting to
+  version control events, and official docker containers for various programming languages and frameworks. However, it
+  does not have first class support for features that are useful with infrastructure code, such as encrypting logs
+  and fine grained permissions. The strength of CircleCI lies in the simplicity of its infrastructure. Being a fully
+  managed SaaS platform with first class support for a wide range of platforms, it is fairly easy to get up and running
+  on the platform in a matter of minutes. However, the downside is that you must be comfortable with using a SaaS
+  platform for your CI/CD workflows and having it hold your secrets that provide access to your infrastructure. Note
+  that CircleCI employs a respectable security model, having passed numerous compliance audits including FedRAMP. They
+  provide a wide variety of features to mitigate potential threats, including runtime environment isolation, restricted
+  contexts for finer grained permissions modeling, and audit logging to continuously monitor access.
 
-https://about.gitlab.com/[GitLab] (self-hosted and Saas, generic)::
-  GitLab is an all comprehensive platform that supports both a self-hosted mode (enterprise) or Saas platform. Since
+https://about.gitlab.com/[GitLab] (self-hosted and SaaS, generic)::
+  GitLab is an all comprehensive platform that supports both a self-hosted mode (enterprise) or SaaS platform. Since
   GitLab also provides hosting for git repositories, it creates a tight integration between the git workflows and the
   CI/CD workflows that you can implement on the platform. Although GitLab is a generic CI/CD platform that can be
   configured to run any workflow, GitLab also provides specialized workflows for popular infrastructure platforms like
   Kubernetes. Some of its continuous deployment features include first class support for feature toggles, canary
-  deployments, and building docker images. While the Saas platform is subject to external attacks, GitLab employs a
+  deployments, and building docker images. While the SaaS platform is subject to external attacks, GitLab employs a
   respectable security model with end to end encryption, frequent testing, and compliance audits, in addition to being
   an open source and open core platform that allows for wider inspection and review of its practices. For those that can
-  not rely on the Saas platform for CI/CD, you can always run GitLab EE in your own data center.
+  not rely on the SaaS platform for CI/CD, you can always run GitLab EE in your own data center.
 
 https://www.runatlantis.io/[Atlantis] (self-hosted, specialized)::
   Atlantis is an open source tool optimized for git based Terraform workflows, with additional support for Terragrunt.
@@ -823,8 +826,8 @@ https://www.runatlantis.io/[Atlantis] (self-hosted, specialized)::
   credentials of the platform. To prevent unwanted deployments, you will want to ensure that you are following
   https://www.runatlantis.io/docs/security.html#mitigations[all the security best practices] of the platform.
 
-https://www.hashicorp.com/products/terraform/[Terraform Enterprise and Terraform Cloud] (self-hosted and Saas, specialized)::
-  Terraform Cloud (Saas) and Terraform Enterprise (self-hosted) are platforms provided by HashiCorp (the creator of
+https://www.hashicorp.com/products/terraform/[Terraform Enterprise and Terraform Cloud] (self-hosted and SaaS, specialized)::
+  Terraform Cloud (SaaS) and Terraform Enterprise (self-hosted) are platforms provided by HashiCorp (the creator of
   Terraform) that are optimized for Terraform workflows. Both services provide a web UI for remotely running `terraform
   plan` and `terraform apply`, and can be integrated with VCS platforms to implement CI/CD workflows that remotely run
   `terraform` in reaction to git. Additionally, Terraform Enterprise in particular provides the ability to manage
@@ -859,7 +862,7 @@ that react to VCS activities. They all support a way to start executing a pipeli
 pipeline, and a way to report back to the VCS repository by annotating commits with status of a pipeline execution.
 With the abundance of CI/CD platforms out there, you are bound to find one that suits your needs. It doesn't matter
 which one you use, but be sure to choose one that has enough support for your application code so that you can use the
-same platform for both application and infrastructure CI/CD workflows. In addition, we recommend selecting a Saas
+same platform for both application and infrastructure CI/CD workflows. In addition, we recommend selecting a SaaS
 based CI/CD platform to avoid the overhead of managing additional infrastructure for the VCS integration and workflow
 execution.
 
