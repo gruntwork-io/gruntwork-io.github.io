@@ -67,8 +67,8 @@ This guide consists of four main sections:
 
 === What this guide will not cover
 
-CI/CD for infrastructure code is a large topic and a single guide cannot cover everything there is to the topic. As
-such there are several items that this guide will not cover, including:
+CI/CD for infrastructure code is a large topic and a single guide cannot cover everything there is to the topic. There
+are several items that this guide will not cover, including:
 
 A pipeline for setting up new environments::
   This guide will focus on a CI/CD workflow for making changes to infrastructure in an environment that is already set
@@ -153,15 +153,15 @@ https://paulhammant.com/2013/03/13/facebook-tbd-take-2/[Facebook], and
 https://www.youtube.com/watch?v=W71BTkUbdqE[Google]. How are these software giants able to manage active trunks on the
 scale of billions of lines of code with 10s of thousands of commits per day?
 
-There are two factors that make this possible:
+There are three factors that make this possible:
 
 Small, frequent commits reduce the scope of each integration::
   It turns out that if you integrating small amounts of code on a regular basis, the number of conflicts that arise is
   also fairly small. Instead of having big, monolithic merge conflicts, each conflict that arises will be in a tiny
   portion of the work being integrated. In fact, these conflicts can be viewed as helpful as it is a sign that there is
-  a design flaw. These integration challenges are part and parcel to distributed software development projects. You'll have to deal with conflicts no matter what, and it is going
-  to be easier to deal with conflicts that arise from one or two days of work than with conflicts that represents months
-  of work.
+  a design flaw. These integration challenges are part and parcel to distributed software development projects. You'll
+  have to deal with conflicts no matter what, and it is going to be easier to deal with conflicts that arise from one or
+  two days of work than with conflicts that represents months of work.
 
 Automated testing::
   When frequent development happens on `trunk`/`master`, naturally it can make the branch unstable. A broken
@@ -171,12 +171,26 @@ Automated testing::
   The associated test suite should be complete enough that when they pass, you can be confident the code is stable.
   Typically code is only merged into the trunk when the self-testing build passes.
 
+Feature toggles::
+  One potential problem with continuous integration is that it can be difficult to break down your work to bite sized
+  units. Major features can not be implemented in a day. How can you ship parts of your feature without breaking the
+  overall functionality of the application? Feature toggles are constructs in your code that allow you to disable or
+  enable entire features in the application. This allows you to continuously develop, integrate, and ship partially
+  working features without compromising the overall functionality. Examples of feature toggles include tags on
+  users such that only those users can see the new feature, or configuration in the code that avoid the feature path
+  when disabled.
+
+CI/CD requires all of these factors to implement successfully and at scale.
+
+Now that we have observed the benefits of CI/CD, let's take a look at what it means to implement CI/CD with
+infrastructure code.
+
 
 [[types_of_infrastructure_code]]
 === Types of infrastructure code
 
-Before diving into CI/CD workflows, it is important to understand the different types of infrastructure code that is
-available. There are two distinct types of infrastructure code:
+Before diving into infrastructure CI/CD workflows, it is important to understand the different types of infrastructure
+code that is available. There are two distinct types of infrastructure code:
 
 Infrastructure Modules::
   Modules are bundles of infrastructure code that can be used to deploy a specific component of your architecture.
@@ -250,6 +264,7 @@ For the purposes of illustrating this workflow, we will assume the following:
 - We are using a trunk-based development model.
 - The code has already been in development for a while and there is a version running in production.
 
+Here are the steps:
 
 . <<clone_a_copy_of_the_source_code>>
 . <<run_the_code_locally>>
@@ -276,8 +291,8 @@ completed and merged in a few days to avoid large merge conflicts.
 If you are using `git`, this step translates to:
 
 ----
-git clone REPO_URL
-git checkout -B NEW_BRANCH_NAME
+git clone $REPO_URL
+git checkout -b $NEW_BRANCH_NAME
 ----
 
 Whether you are developing application code, infrastructure modules, or live infrastructure config, making changes on a
@@ -317,14 +332,10 @@ Live Infrastructure Config::
   Locally testing live infrastructure config is more difficult than either application code or infrastructure modules.
   Unlike with infrastructure modules, it is difficult to deploy the live infrastructure config temporarily as the code
   is tied to a specific live environment by nature of the code. After all, this is the configuration to manage live
-  infrastructure. To illustrate this point, consider a scenario where you are working on adding a new component to your
-  environments, and you are at the point of reflecting your changes to prod. Would you want to deploy that code to your
-  live production environment off of an unreviewed branch? Given that, the only real test you can do for live
-  infrastructure config is to do a dry run of your infrastructure code. Most Infrastructure as Code tools support a dry
-  run of the code to check what it would do against your environment. For example, with Terraform, you could run
-  `terraform plan` to sanity check the planned actions Terraform will take. This is especially useful for sanity
-  checking a fresh clone of the code. The trunk should be a true reflection of the live environment, so you should
-  expect there to be no changes to make on a fresh clone of trunk.
+  infrastructure. To illustrate this point, consider a scenario where you are working on updating the cross account IAM
+  roles to access your environments, and you are at the point of reflecting your changes to prod. Would you want to
+  deploy that code to your live production environment off of an unreviewed branch? +
+  The only real test you can do for live infrastructure config is to do a dry run of your infrastructure code. Most Infrastructure as Code tools support a dry run of the code to check what it would do against your environment. For example, with Terraform, you could run `terraform plan` to sanity check the planned actions Terraform will take. This is especially useful for sanity checking a fresh clone of the code. The trunk should be a true reflection of the live environment, so you should expect there to be no changes to make on a fresh clone of trunk.
 
 
 [[make_code_changes]]
@@ -355,8 +366,8 @@ valuable insights on the code that you might not have thought of.
 
 How thorough the review should be depends on the amount of automated testing. If you have a comprehensive test suite
 that everyone on the team has confidence in, then it is not necessary to have a thorough review process. On the other
-hand, if you no automated tests or working on an area that can't be tested automatically (e.g live infrastructure code),
-then you'll want as many eyes as possible reviewing the code.
+hand, if you have no automated tests or working on an area that can't be tested automatically (e.g live infrastructure
+code), then you'll want as many eyes as possible reviewing the code.
 
 
 [[run_automated_tests]]
@@ -401,8 +412,9 @@ At this point, you have done the best you could to ensure the code won't break t
 are likely to hit diminishing returns. Once you merge the code into trunk, you will also want to generate a new,
 immutable, versioned release artifact that can be deployed (see
 https://blog.gruntwork.io/why-we-use-terraform-and-not-chef-puppet-ansible-saltstack-or-cloudformation-7989dad2865c#b264:[Mutable
-infrastructure vs Immutable infrastructure] for a discussion on a benefit of immutable artifacts). What the release
-artifact looks like depends on the type of code you are working with:
+infrastructure vs Immutable infrastructure] from our blog post, _Why we use Terraform and not Chef, Puppet, Ansible,
+SaltStack, or CloudFormation_ for a discussion on the benefits of immutable artifacts). What the release artifact looks
+like depends on the type of code you are working with:
 
 Application Code::
   The release artifact will vary widely from project to project for application code. This could be anything from a
@@ -433,8 +445,9 @@ changes that are being introduced, since you don't want to be differentiating be
 applied from trunk and the changes that will be applied with your new code.
 
 Given that, the definition of a "clean build" for the trunk with live infrastructure config is that a dry run returns no
-changes to make. This in turn means that the latest state of trunk that you are working off of, should be a
-representation of what is actually deployed in your environments.
+changes to make. This in turn means that the latest state of trunk that you are working off of should be a
+representation of what is actually deployed in your environments. Therefore, to ensure the trunk is clean, you will need
+to make sure that you continuously deploy and apply the trunk as new code is merged in.
 
 This leads to what we call _The Golden Rule of Infrastructure Code:_
 
@@ -463,9 +476,8 @@ Application Code::
   it is running. For docker images, this might mean updating your service definitions for the docker cluster (e.g ECS or
   Kubernetes). For machine images, this might mean updating your autoscaling group to deploy instances with the new
   image. Regardless of how your application is deployed, it is important to reflect the changes in your live
-  infrastructure config to perform the deployment, so that you maintain the Golden Rule of Infrastructure Code. Note
-  that there are various strategies for deploying application code, such as canary and blue-green deployments. We will
-  not get into details here, but you can refer to our post
+  infrastructure config to perform the deployment. Note that there are various strategies for deploying application
+  code, such as canary and blue-green deployments. We will not get into details here, but you can refer to our post
   https://blog.gruntwork.io/how-to-use-terraform-as-a-team-251bc1104973#7dd3[How to use Terraform as a team] for an
   overview of various rollout strategies.
 
@@ -494,7 +506,7 @@ Application Code::
   For application code, you should be able to automate the entire deployment as the surface area of each change should
   be fairly small and localized to just the application. Additionally, application code have standard rollback
   practices that make it easy to undo. Automating the deployment of application code requires automatically patching
-  your live infrastructure config. In most cases, the changes are simple enough that a single regex or sed call should
+  your live infrastructure config. In most cases, the changes are simple enough that a single `sed` call should
   be sufficient (e.g bumping the version tag of a docker image). Note that the roll out of the deployment should be
   handled as part of the automated deployment of the live infrastructure config.
 
@@ -503,18 +515,19 @@ Infrastructure Modules::
   world where a single name change could cause the database to be recreated, it pays off to be extra cautious with the
   deployment. At most, you should only automatically deploy infrastructure modules to a sandbox or dev environment,
   where the damage from a catastrophic failure causing the environment to be taken down is limited. Similar to
-  application code, automating this process could be handled with a regex or sed call that updates the ref tag in the
+  application code, automating this process could be handled with a single `sed` call that updates the ref tag in the
   live infrastructure config, with the rollout being handled by the automated deployment pipeline for that code.
 
 Live Infrastructure Config::
-  Similar to infrastructure modules, automatically deploying live infrastructure code without any oversight might be
+  Like with infrastructure modules, automatically deploying live infrastructure config without any oversight might be
   risky depending on the change. You may want to automate specific infrastructure deployments that happen frequently and
   are low risk (e.g deploying your application), but automating arbitrary infrastructure changes that may include
-  destroying your productiond database is not advisable. With that said, it is not practical to always manually roll out
+  destroying your production database is not advisable. With that said, it is not practical to always manually roll out
   deployments, and in some circumstances that can be more risky from a security perspective (e.g increasing attack
   surface by passing out admin credentials to all your developers). A typical workflow for deploying live infrastructure
   config is to have the CI server perform a dry run first, and ask for approval from an admin before proceeding to apply
-  the change.
+  the change. In this way, the actual deployment steps are automated, but the trigger for deployment is manual, allowing
+  you to pause and review the deployment to make sure nothing bad will happen.
 
 
 ==== Summary
@@ -531,21 +544,21 @@ flavor of code:
 |
 ----
 git clone $REPO
-git checkout -B $NAME
+git checkout -b $NAME
 ----
 {nbsp} +
 
 |
 ----
 git clone $REPO
-git checkout -B $NAME
+git checkout -b $NAME
 ----
 {nbsp} +
 
 |
 ----
 git clone $REPO
-git checkout -B $NAME
+git checkout -b $NAME
 ----
 {nbsp} +
 
@@ -660,9 +673,11 @@ git checkout -B $NAME
 |===
 
 The rest of the document will discuss how we can implement the automated pieces of the workflow in a secure manner that
-is ready for production. To start, let's take a step back and define a threat model for CI/CD. This threat model will
-help us ensure that we implement the necessary security controls in these CI/CD pipelines so that we cover the common
-types of attack vectors for this type of workflow.
+is ready for production.
+
+To start, let's take a step back and define a threat model for CI/CD. This threat model will help us ensure that we
+implement the necessary security controls in these CI/CD pipelines so that we cover the common types of attack vectors
+for this type of workflow.
 
 
 [[threat_model_of_cicd]]
@@ -704,19 +719,24 @@ due to the fact that infrastructure modules and live infrastructure config can b
 deployed in your environments, whereas application code is scoped to infrastructure that is relevant to the application.
 Given that, the threat against CI/CD in infrastructure code is orders of magnitude higher than with application code.
 
-Compromising the credentials used for application code may be used to take down your application in a denial of service,
-but most likely will not affect databases and backups, making it recoverable after locking out the attacker.
+Application Code::
+  Compromising the credentials used for application code may be used to take down your application in a denial of service
+  attack, but most likely will not affect databases and backups, making it recoverable after locking out the attacker.
 
-Compromising the credentials used for infrastructure modules can cause an attacker to maliciously use your cloud
-environments for various purposes, potentially costing you lots of money, but will not affect your production
-environment and application. In most cases though, you can recover the costs by reporting fraud. AWS for
-example is known to refund bills of accounts that were compromised.
+Infrastructure Modules::
+  Compromising the credentials used for infrastructure modules can cause an attacker to maliciously use your cloud
+  environments for various purposes, potentially costing you lots of money. However, since the credentials do not grant
+  access to your production (or even pre-prod) environment, it can't be used to take down your application or steal data.
+  While this could cost your business financially, in most cases, you can recover the costs by reporting fraud. AWS for
+  example is known to refund bills of accounts that were compromised.
 
-However, compromising the credentials used for live infrastructure config can cause an attacker to do anything including
-deleting all your backups. This is potentially a business ending event.
+Live Infrastructure Config::
+  Compromising the credentials used for live infrastructure config has the highest consequences. Attackers with access
+  to these credentials can do anything in any environment, including deleting all your backups. This is potentially a
+  business ending event.
 
-In this section we will focus on the threat model for CI/CD on live infrastructure config. However, the threats and
-mitigation tactics covered are generally applicable to CI/CD for all three flavors of code.
+Given the potential consequences of leaked credentials from CI/CD, it is important to evaluate the threats and
+mitigation tactics for those threats. This is where threat modeling helps.
 
 A threat model explicitly covers what attacks are taken into consideration in the design, as well as what attacks are
 __not__ considered. The goal of the threat model is to be realistic about the threats that are addressable with the
@@ -728,16 +748,17 @@ In this guide, the following threat assumptions are made:
 
 - Attackers' goals are to gain access to an environment that they do not already have access to. Access to an
   environment includes but is not limited to:
-    - The ability to read secrets that grant access to potentially sensitive data (e.g the database in prod
+
+    * The ability to read secrets that grant access to potentially sensitive data (e.g the database in prod
       environment).
-    - Full access over all resources to cause damage to the business (e.g ability to delete the database and all its
+    * Full access over all resources to cause damage to the business (e.g ability to delete the database and all its
       backups in prod).
 
 - Attackers can originate from both external and internal sources (in relation to the organization).
 - External attacks are limited to those that can get full access to a CI environment, but not the underlying source
   code. Note that __any__ CI/CD solution can likely be compromised if an attacker has access to your source code.
 - Internal attackers are limited to those with restricted access to the environments. This means that the threat model
-  does not consider highly trusted insiders who abuse their privileges with malicious intent.
+  does not consider highly trusted insiders who abuse their privileges with malicious intent (e.g
   internal ops admin with full access to the prod environment). However, an internal attacker with permissions in the
   dev environment trying to elevate their access to the prod environment is considered.
 - Similarly, internal attackers are limited to those with restricted access in the CI environment and git repository. A
@@ -795,7 +816,7 @@ https://circleci.com/[CircleCI] (SaaS, generic)::
   version control events, and official docker containers for various programming languages and frameworks. However, it
   does not have first class support for features that are useful with infrastructure code, such as encrypting logs
   and fine grained permissions. The strength of CircleCI lies in the simplicity of its infrastructure. Being a fully
-  managed SaaS platform with first class support for a wide range of platforms, it is fairly easy to get up and running
+  managed SaaS platform with first class support for a wide range of environments, it is fairly easy to get up and running
   on the platform in a matter of minutes. However, the downside is that you must be comfortable with using a SaaS
   platform for your CI/CD workflows and having it hold your secrets that provide access to your infrastructure. Note
   that CircleCI employs a respectable security model, having passed numerous compliance audits including FedRAMP. They
@@ -832,12 +853,13 @@ https://www.hashicorp.com/products/terraform/[Terraform Enterprise and Terraform
   plan` and `terraform apply`, and can be integrated with VCS platforms to implement CI/CD workflows that remotely run
   `terraform` in reaction to git. Additionally, Terraform Enterprise in particular provides the ability to manage
   deployment policies and permissions as code. Note that Terraform Cloud and Enterprise are both optimized for running
-  `terraform`. That is, they do not support the use of external binaries such as `terragrunt` or `docker`, even when
-  called from within `terraform` using a `local-exec` provisioner or external data source. In terms of the threat model,
-  Terraform Cloud and Enterprise both implement respectable security practices, including end to end encryption backed
-  by HashiCorp Vault, and you have the option to run in your own data center with Terraform Enterprise to lock it down.
-  Note that Terraform Enterprise relies on API based integrations with the VCS platforms instead of webhooks, so it is
-  not necessary to have a publicly facing service when running in self-hosted mode.
+  `terraform`. Both do not support directly calling external binaries such as `terragrunt` or `docker` in a workflow.
+  Terraform Cloud in particular does not support the use of external binaries even when called from within `terraform`
+  using a `local-exec` provisioner or external data source. In terms of the threat model, Terraform Cloud and Enterprise
+  both implement respectable security practices, including end to end encryption backed by HashiCorp Vault, and you have
+  the option to run in your own data center with Terraform Enterprise to lock it down. Note that Terraform Enterprise
+  relies on API based integrations with the VCS platforms instead of webhooks, so it is not necessary to have a publicly
+  facing service when running in self-hosted mode.
 
 Here is a table that highlights some of the features of each CI platform and their strengths and weaknesses that can be
 useful in making tradeoffs:
