@@ -916,7 +916,7 @@ image::/assets/img/guides/infrastructure-cicd-pipeline/tftg-pipeline-sequence-di
 As we covered in the <<cicd_platforms>> section of the Core Concepts, all CI/CD platforms support some form of
 integration with VCS repositories. Additionally, CI/CD platforms are optimized for implementing workflows and pipelines
 that react to VCS activities. They all support a way to start executing a pipeline on commits, approval steps in the
-pipeline, and a way to report back to the VCS repository by annotating commits with status of a pipeline execution.
+pipeline, and a way to report back to the VCS repository by annotating commits with the status of a pipeline execution.
 With the abundance of CI/CD platforms out there, you are bound to find one that suits your needs. It doesn't matter
 which one you use, but be sure to choose one that has enough support for your application code so that you can use the
 same platform for both application and infrastructure CI/CD workflows. In addition, we recommend selecting a SaaS
@@ -931,8 +931,8 @@ deployments will have de facto admin status to the environments that you are dep
 that these systems are locked down. You do not want any third party publicly facing system to hold powerful credentials
 to your cloud environments.
 
-This design implements separates out the concerns so that we take full advantage of the strengths of each platform,
-while covering the weaknesses: relying on the CI/CD platforms to manage the workflow/pipline, but have it trigger
+This design implements separation of the concerns so that we take full advantage of the strengths of each platform,
+while covering the weaknesses: relying on the CI/CD platforms to manage the workflow/pipeline, but have it trigger
 infrastructure deployments on self-hosted systems that are more locked down. In this model, the CI/CD platforms only
 need enough permissions to trigger a deployment, but not necessarily all the permissions required for running a
 deployment. Instead, you can have a system that is closed off in your isolated network hold the credentials
@@ -963,8 +963,8 @@ subnets that are not publicly accessible.
 === Use minimal IAM permissions for a deployment
 
 Avoid having a single system with admin permissions for running a deployment. Instead, deploy specialized versions of
-the deployment platforms with varying permissions for handling specific workflows. By separting out the concerns for
-each pipeline, you can reduce the blast radius of the damage that can be done with each set of credentials. At a minimum
+the deployment platforms with varying permissions for handling specific workflows. By separating out the concerns for
+each pipeline, you can reduce the blast radius of the damage that can be done with each set of credentials. At a minimum,
 you should have two versions of the infrastructure deployment system: one for deploying the application code, and which
 only has the minimal permissions necessary for deploying that application; and one for deploying infrastructure code,
 which has full access to the environments.
@@ -994,7 +994,7 @@ branches__. This can be exploited to skip any approval process you have defined 
 that overwrites the pipeline configuration.
 
 This is not a concern if only admin users had access to the infrastructure code. Typically, however, many operations
-teams want contributions to the infrastruture code from developers as well, and having any developer have the ability to
+teams want contributions to the infrastructure code from developers as well, and having any developer have the ability to
 deploy arbitrary infrastructure to production without any review can be undesirable. To mitigate these concerns, you
 should lock down your VCS systems:
 
@@ -1004,11 +1004,11 @@ Only deploy from protected branches::
   Protected branches allow you to implement policies for controlling what code can be merged in. For most platforms, you
   can protect a branch such that: (a) it can never be force pushed, (b) it can never be merged to or commit to from the
   cli, (c) merges require status checks to pass, (d) merges require approval from N reviewers. By only building CI
-  pipelines from protected branches, you can add checks and balances to ensure review of potentially harmful
+  pipelines from protected branches, you can add checks and balances to ensure a review of potentially harmful
   infrastructure actions.
 
 Consider a forking based workflow for pull requests::
-  When exposing your repository to a wider audience for contribution, you can consider implemmenting a forking based
+  When exposing your repository to a wider audience for contribution, you can consider implementing a forking based
   workflow. In this model, you only allow your trusted admins to have access to the main infrastructure repo, but anyone
   on the team can read and fork the code. When non-admins want to implement changes, instead of branching from the repo,
   they will fork the repo, implement changes on their fork, and then open a PR from the fork. The advantage of this
@@ -1021,7 +1021,7 @@ Consider a forking based workflow for pull requests::
 [[summary_of_mitigations]]
 === Summary of mitigations
 
-With this production design in mind, let's take a look at how each of the design decisions address the concerns of the
+With this production design in mind, let's take a look at how each of the design decisions addresses the concerns of the
 threat model:
 
 Minimal access to target environments::
@@ -1032,9 +1032,9 @@ Minimal access to target environments::
   infrastructure between two points of time. They will not be able to write arbitrary infrastructure code to read DB
   secrets, for example. It is important to note that the IAM policies are set up such that the IAM user for CI only has
   access to trigger predefined events. They do not have access to arbitrarily invoke the ECS task, as that could
-  potentially expose arbitrary deployments by modifying the command property (e.g use command to `echo` some
+  potentially expose arbitrary deployments by modifying the command property (e.g use a command to `echo` some
   infrastructure code and run `terraform`).
-    - Note that there is still risk of rolling back the existing infrastructure by attempting to deploy a previous
+    - Note that there is still a risk of rolling back the existing infrastructure by attempting to deploy a previous
       version. See below for potential ways to mitigate this type of attack.
     - Similarly, this alone does not mitigate threats from internal attackers who have access to the source code, as a
       potential attacker with access to the source code can write arbitrary code to destroy or lookup arbitrary
@@ -1076,7 +1076,7 @@ and build configurations:
   In addition to providing a moment to pause and inspect the exact infrastructure changes that are about to be deployed,
   approval workflows in the CI server can mitigate attacks such that attackers will need enough privileges on the CI
   server to approve builds in order to actually modify infrastructure. This can mitigate potential attacks where the
-  attacker has access to the CI server to trigger arbitrary builds manually (e.g to run a previous job that is deplying
+  attacker has access to the CI server to trigger arbitrary builds manually (e.g to run a previous job that is deploying
   an older version to roll back the infrastructure), but not enough access to approve the job. Note that this will not
   mitigate potential threats from internal attackers who have enough permissions to approve builds.
 
@@ -1090,7 +1090,7 @@ Avoid logging secrets::
   Our threat model assumes that attackers can get access to the CI servers, which means they will have access to the
   deployment logs. This will include detailed outputs from a `terraform plan` or `apply`. While it is impossible to
   prevent terraform from leaking secrets into the state, it is possible to avoid terraform from logging sensitive
-  information. Make use of pgp encryption functions or encrypted environment variables / config files (in the case of
+  information. Make use of PGP encryption functions or encrypted environment variables / config files (in the case of
   service deployments) to ensure sensitive data does not show up in the plan output. Additionally, tag sensitive outputs
   with the `sensitive` keyword so that terraform will mask the outputs.
 
@@ -1211,7 +1211,7 @@ infrastructure-live
             └ terragrunt.hcl
 ----
 
-Here's a snippet of what the code in the `vpc-mgmt` terragrunt configuration file looks like:
+Here's a snippet of what the code in the `vpc-mgmt` Terragrunt configuration file looks like:
 
 .infrastructure-live/production/us-east-2/prod/networking/vpc-mgmt/terragrunt.hcl
 [source,hcl]
@@ -1241,7 +1241,7 @@ inputs = {
 // TODO: update link to use service catalog so it is publicly visiable
 For this guide, we will use
 https://github.com/gruntwork-io/module-ci/blob/master/README-Terraform-Terragrunt-Pipeline.adoc[Gruntwork's ECS Deploy
-Runner stack] as our infrastructure deployment CD platform. We will deploy the stack in to the private subnet of our
+Runner stack] as our infrastructure deployment CD platform. We will deploy the stack into the private subnet of our
 mgmt VPC using the https://github.com/gruntwork-io/module-ci/tree/master/modules/ecs-deploy-runner[ecs-deploy-runner
 module] in `module-ci`.
 
@@ -1288,7 +1288,7 @@ resource "aws_ecr_repository" "repo" {
 }
 ----
 
-This defines a new ECR repository with a name configured by an input variable, and indicates that images should be
+This defines a new ECR repository with a name configured by an input variable and indicates that images should be
 scanned automatically on push.
 
 Add the corresponding `name` variable to `variables.tf`:
@@ -1602,7 +1602,7 @@ variable "permitted_services" {
 Since all the lookups for the ECS Deploy Runner can be done by name, it is not necessary for this module to expose any
 outputs.
 
-Once you test your code and the `ecs-deploy-runner` module is working the way you want, submit a pull request submit a
+Once you test your code and the `ecs-deploy-runner` module is working the way you want, submit a
 pull request, get your changes merged into the `master` branch, and create a new versioned release by using a Git tag.
 
 Next, we will want to deploy the stack to the environments. Before deploying, we need to make sure we have a SSH key
@@ -2239,7 +2239,7 @@ Configure CircleCI to start building the `infrastructure-live` repo by adding th
 
 To add the `infrastructure-live` repo:
 
-- Login to CircleCI as **the machine user**. If you don't have an account for the machine user, sign up using the github
+- Login to CircleCI as **the machine user**. If you don't have an account for the machine user, sign up using the GitHub
   account of the machine user.
 - Go to the projects page for your org and click the **Add Projects** button.
 - Look for the `infrastructure-live` repo in the list, and click the **Set Up Project** button next to the repo.
