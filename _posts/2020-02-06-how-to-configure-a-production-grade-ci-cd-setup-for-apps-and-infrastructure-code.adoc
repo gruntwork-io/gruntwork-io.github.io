@@ -906,9 +906,6 @@ infrastructure code, using a platform that looks something like this:
 .Architecture of platform for running Terraform/Terragrunt CI/CD workflows.
 image::/assets/img/guides/infrastructure-cicd-pipeline/tftg-pipeline-architecture.png[]
 
-.Sequence diagram of running Terraform/Terragrunt CI/CD workflows.
-image::/assets/img/guides/infrastructure-cicd-pipeline/tftg-pipeline-sequence-diagram.png[]
-
 
 [[use_generic_cicd_platforms_as_a_workflow_engine_but_run_infrastructure_deployments_from_within_your_account]]
 === Use generic CI/CD platforms as a workflow engine but run infrastructure deployments from within your account
@@ -1093,6 +1090,14 @@ Avoid logging secrets::
   information. Make use of PGP encryption functions or encrypted environment variables / config files (in the case of
   service deployments) to ensure sensitive data does not show up in the plan output. Additionally, tag sensitive outputs
   with the `sensitive` keyword so that terraform will mask the outputs.
+
+
+=== Summary of deployment sequence
+
+To put it all together, the following sequence diagram shows how all the various components work together:
+
+.Sequence diagram of running Terraform/Terragrunt CI/CD workflows.
+image::/assets/img/guides/infrastructure-cicd-pipeline/tftg-pipeline-sequence-diagram.png[]
 
 
 [[deployment_walkthrough]]
