@@ -839,6 +839,63 @@ https://www.hashicorp.com/products/terraform/[Terraform Enterprise and Terraform
   Note that Terraform Enterprise relies on API based integrations with the VCS platforms instead of webhooks, so it is
   not necessary to have a publicly facing service when running in self-hosted mode.
 
+Here is a table that highlights some of the features of each CI platform and their strengths and weaknesses that can be
+useful in making tradeoffs:
+
+[cols="1h,2,2,2,2,2"]
+|===
+| |Jenkins |CircleCI |GitLab |Atlantis |TFE and TFC
+
+|Hosting
+|Self-hosted
+|SaaS
+|SaaS or Self-hosted
+|Self-hosted
+|SaaS or Self-hosted
+
+|Generic?
+|Yes
+|Yes
+|Yes
+|Specialized to terraform
+|Specialized to terraform
+
+|VCS integration
+|Yes, with plugins
+|Yes
+|Yes
+|Yes
+|Yes
+
+|Provides static IP addresses for IP whitelisting
+|Yes
+|No
+|Yes (self-hosted)
+|Yes
+|Yes (TFE)
+
+|Update commit statuses
+|Yes
+|Yes
+|Yes
+|Yes
+|Yes
+
+|Annotate pull requests
+|Requires custom scripting
+|Requires custom scripting
+|Requires custom scripting
+|Yes
+|Yes
+
+|Supports multiple infrastructure tools
+|Yes
+|Yes
+|Yes
+|Limited (terraform only; additional binaries can be installed, but can not be called directly)
+|No (terraform only; TFE can support additional binaries, but TFC does not)
+|===
+
 
 [[production_grade_design]]
 == Production-grade design
