@@ -894,6 +894,7 @@ useful in making tradeoffs:
 |Yes
 |Limited (terraform only; additional binaries can be installed, but can not be called directly)
 |No (terraform only; TFE can support additional binaries, but TFC does not)
+
 |===
 
 
@@ -910,50 +911,82 @@ image::/assets/img/guides/infrastructure-cicd-pipeline/tftg-pipeline-architectur
 [[use_generic_cicd_platforms_as_a_workflow_engine_but_run_infrastructure_deployments_from_within_your_account]]
 === Use generic CI/CD platforms as a workflow engine but run infrastructure deployments from within your account
 
-As we covered in the <<cicd_platforms>> section of the Core Concepts, all CI/CD platforms support some form of
-integration with VCS repositories. Additionally, CI/CD platforms are optimized for implementing workflows and pipelines
-that react to VCS activities. They all support a way to start executing a pipeline on commits, approval steps in the
-pipeline, and a way to report back to the VCS repository by annotating commits with the status of a pipeline execution.
-With the abundance of CI/CD platforms out there, you are bound to find one that suits your needs. It doesn't matter
-which one you use, but be sure to choose one that has enough support for your application code so that you can use the
-same platform for both application and infrastructure CI/CD workflows. In addition, we recommend selecting a SaaS
-based CI/CD platform to avoid the overhead of managing additional infrastructure for the VCS integration and workflow
-execution.
+Given the limitations and tradeoffs of the various platforms we covered in <<cicd_platforms>>, we don't recommend
+relying on a single platform for implementing the entire workflow. Instead, we recommend a hybrid solution that takes
+advantage of the strengths of each platform, and cover the weaknesses. The design looks as follows:
 
-However, instead of relying on the CI/CD platform to run infrastructure deployments (e.g calling `terraform apply`), use
-a specialized self-hosted deployment platform for running your infrastructure deployments. This can be Terraform
-Enterprise if you are only using `terraform`, or Gruntwork's ECS Deploy Runner stack for a more general purpose
-platform. In order to support arbitrary infrastructure deployments, it will be inevitable that the system running your
-deployments will have de facto admin status to the environments that you are deploying into. As such, it is important
-that these systems are locked down. You do not want any third party publicly facing system to hold powerful credentials
-to your cloud environments.
+- Use any generic CI/CD server you wish to integrate with your VCS repositories.
+- Deploy a self-hosted deployment server within your AWS account that cannot be accessed by anyone but a few admins plus
+  a limited trigger we'll define below.
+- Define your CI workflows so that the CI/CD server triggers deployments against the deploy server.
 
 This design implements separation of the concerns so that we take full advantage of the strengths of each platform,
 while covering the weaknesses: relying on the CI/CD platforms to manage the workflow/pipeline, but have it trigger
-infrastructure deployments on self-hosted systems that are more locked down. In this model, the CI/CD platforms only
-need enough permissions to trigger a deployment, but not necessarily all the permissions required for running a
-deployment. Instead, you can have a system that is closed off in your isolated network hold the credentials
-necessary to actually run the deployment.
+infrastructure deployments on self-hosted systems that are more locked down.
+
+We don't want to give the CI/CD servers permissions to deploy and manage arbitrary infrastructure. CI/CD servers are
+typically not secure enough to handle sensitive information, and you don't want a server that is used for executing
+arbitrary code and regularly used (and written to) by your entire dev team to have admin permissions.
+
+Instead, we delegate this responsibility to an isolated, closed off system in the AWS account that only expose a limited
+set of actions that can be triggered. That way, if anyone gets access to your CI server, they can at most kick off
+builds on existing code, but they don't get arbitrary admin access.
 
 
-[[use_serverless_platforms_for_infrastructure_deployments]]
-=== Use serverless platforms for infrastructure deployments
+[[options_for_deploy_server]]
+=== Options for deploy server
 
-For running infrastructure deployments, choose a system that makes use of serverless platforms. For example, Gruntwork's
-ECS Deploy Runner utilizes ECS Fargate to run the infrastructure code, with AWS Lambda as a frontend to provide a
-callable function (driven by the AWS SDK and authorization managed by IAM). By utilizing Fargate and AWS Lambda, we have
-a purely serverless architecture where no infrastructure needs to be managed, and IAM credentials are short lived. This
-not only helps reduce the overhead of running the system, but it also helps reduce the attack surface (e.g you don't
-have to worry about a permanent, externally available server that needs to be constantly patched).
+The deploy server needs to be a self-hosted platform in order to satisfy the requirement for isolation. It should also
+avoid executing arbitrary workflows. Finally, it should support configurations options that limit what code can run on
+the server. This limits the options for what you can use as your deploy server. Here is a list of platforms that satisfy
+these constraints, and their strengths and weaknesses:
+
+Gruntwork ECS Deploy Runner Stack::
+  This is a stack you can deploy in your AWS account that sets up an ECS task with a customizable docker container for
+  running `terraform validate`, `terraform plan`, and `terraform apply`, or the Terragrunt equivalent. It is also
+  extensible to support other commands as well, such as running `go test` for Terratest or `packer build` for building
+  images. To limit the ability to run arbitrary code, the stack includes a Lambda function that can be used as a trigger
+  which exposes a limited set of options and additional checks for source repository. It relies on serverless
+  technologies to limit the amount of overhead required for maintaining the system.
+
+Terraform Enterprise::
+  Terraform enterprise provides an API for triggering runs manually (as opposed to Atlantis which only supports VCS
+  webhook based triggers). As a self hosted solution, it supports running in your own account. Additionally, it provides
+  many configuration options to limit the scope of actions including managing deployment policies as code through the
+  sentinel feature. However, being a stateful server, there is a high maintenance cost to keeping it up and running, in
+  addition to licensing cost for using the service.
+
+In this guide, we will use the ECS Deploy Runner Stack as the deploy server. Note that although we will not explicitly
+cover it, the design is compatible with using Terraform Enterprise as the deploy server.
+
+
+[[limit_triggers_for_deploy_server]]
+=== Limit triggers for deploy server
+
+The deploy server should only expose a limited set of options for triggering deployments. That is, it should not allow
+arbitrary deployments on arbitrary code. For example, the default configuration of Atlantis allows webhooks from any
+repository. This means that any public repo can cause your Atlantis server to run `terraform plan` and `terraform apply`
+on custom code you do not control using the permissions granted to that server. Instead, you will want to configure it
+so that only certain repositories, branches, and users can trigger the workflow.
+
+The Gruntwork ECS Deploy Runner stack mitigates this concern by only allowing triggers from a Lambda function that
+exposes a limited set of actions against the deploy runner task. The lambda function:
+
+- Requires a single repository to trigger deployments by default.
+- Can be configured to limit deployments to specific branches.
+- Requires explicit IAM permissions to trigger.
+
+You can find similar mechanisms for limiting deployments in the various deploy server options.
 
 
 [[use_a_vpc_to_lock_down_infrastructure_deployer]]
-=== Use a VPC to lock down infrastructure deployer
+=== Use a VPC to lock down deploy server
 
 Run your infrastructure deployment workloads in a https://aws.amazon.com/vpc/[Virtual Private Cloud (VPC)] to isolate
 the workloads in a restricted network topology (see link:/guides/networking/how-to-deploy-production-grade-vpc-aws[How
 to deploy a production-grade VPC on AWS] for more information on VPCs). Configure to run all workloads in private
-subnets that are not publicly accessible.
+subnets that are not publicly accessible. Make sure to block all inbound internet access and consider blocking all
+outbound access except for the minimum required (e.g, allow access to AWS APIs).
 
 
 [[use_minimal_iam_permissions_for_a_deployment]]
