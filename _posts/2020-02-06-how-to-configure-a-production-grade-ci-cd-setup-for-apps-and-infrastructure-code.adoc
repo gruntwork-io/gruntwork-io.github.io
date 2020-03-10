@@ -799,9 +799,12 @@ Given the limitations and tradeoffs of the various platforms we covered in <<cic
 relying on a single platform for implementing the entire workflow. Instead, we recommend a hybrid solution that takes
 advantage of the strengths of each platform, and cover the weaknesses. The design looks as follows:
 
-- Use any generic CI/CD server you wish to integrate with your VCS repositories.
-- Deploy a self-hosted deployment server within your AWS account that cannot be accessed by anyone but a few admins plus
-  a limited trigger we'll define below.
+- Deploy a self-hosted deploy server within your AWS account that has the permissions it needs to run infrastructure
+  deployments and is locked down so it is only accessible via a trigger that can be used to define pre-defined commands
+  (e.g., `terraform plan` and `terraform apply`) in pre-defined repos (e.g., `infrastructure-live`).
+- Use any generic CI/CD server (e.g., Jenkins, CircleCI, GitLab) to implement a CI/CD workflow where you trigger a
+  dry-run in the deploy server (e.g., `terraform plan`), get approval to proceed from an admin on your team (e.g., via a
+  Slack notification), and then trigger a deployment in the deploy server (e.g., `terraform apply`).
 - Define your CI workflows so that the CI/CD server triggers deployments against the deploy server.
 
 This design implements separation of the concerns so that we take full advantage of the strengths of each platform,
