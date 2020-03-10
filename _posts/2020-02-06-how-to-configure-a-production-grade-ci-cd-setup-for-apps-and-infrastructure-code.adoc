@@ -801,7 +801,7 @@ relying on a single platform for implementing the entire workflow. Instead, we r
 advantage of the strengths of each platform, and cover the weaknesses. The design looks as follows:
 
 - Deploy a self-hosted deploy server within your AWS account that has the permissions it needs to run infrastructure
-  deployments and is locked down so it is only accessible via a trigger that can be used to define pre-defined commands
+  deployments and is locked down so it is only accessible via a trigger that can be used to run pre-defined commands
   (e.g., `terraform plan` and `terraform apply`) in pre-defined repos (e.g., `infrastructure-live`).
 - Use any generic CI/CD server (e.g., Jenkins, CircleCI, GitLab) to implement a CI/CD workflow where you trigger a
   dry-run in the deploy server (e.g., `terraform plan`), get approval to proceed from an admin on your team (e.g., via a
