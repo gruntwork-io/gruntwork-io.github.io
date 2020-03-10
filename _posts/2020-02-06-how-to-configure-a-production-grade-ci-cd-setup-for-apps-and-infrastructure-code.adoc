@@ -1566,6 +1566,7 @@ terraform {
 dependency "vpc" {
   config_path = "${get_terragrunt_dir()}/../../networking/vpc-mgmt"
 }
+
 dependency "ecr" {
   config_path = "${get_terragrunt_dir()}/../ecr-repo"
 }
