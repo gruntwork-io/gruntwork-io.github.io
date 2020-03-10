@@ -203,7 +203,8 @@ Live Infrastructure Configurations::
   environment as a series of configuration files for the modules that specify the various parameters specific to
   development (e.g small instance sizes, naming instances with a `dev` prefix, using cloud provider accounts that are accessible to all developers,
   etc). If the modules are "blueprints" then the live configuration contain the "houses" that were built using the
-  "blueprints."
+  "blueprints." Each "house" may have slightly different features or customizations, even though they share a common
+  blueprint.
 
 Typically you would have separate repositories for each of these (e.g `infrastructure-modules` for modules and
 `infrastructure-live` for live configuration). Organizing your infrastructure code in this way ensures that you can
