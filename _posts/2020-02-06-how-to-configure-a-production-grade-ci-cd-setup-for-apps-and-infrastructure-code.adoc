@@ -428,8 +428,7 @@ You will want to do everything that is in your power to maintain this representa
 [[deploy]]
 ==== Deploy
 
-Now that you have a release artifact, the final stage of the process is to deploy the code. The act of deploying the
-code immediately after generating the release is Continuous Deployment (CD).
+Now that you have a release artifact, the final stage of the process is to deploy the code.
 
 What it means to "deploy the code" is significantly different across the three flavors. In fact, deploying your
 application code and infrastructure modules require changing and deploying live infrastructure config. After all, your
@@ -456,9 +455,7 @@ Infrastructure Modules::
   config. However, if the module is being deployed for the first time, then this will require creating a new
   configuration in your live infrastructure config to deploy the module. In either case, the only way to deploy
   infrastructure modules is by making the corresponding edits to the live infrastructure config to roll out the changes
-  across your environments. Note that because infrastructure changes are higher risk than application code, you will
-  want to make sure to roll out your infrastructure in stages. That is, you should fully roll out the changes in a
-  pre-prod environment before moving on to deploying in prod.
+  across your environments.
 
 Live Infrastructure Config::
   For live infrastructure config, deploying the code is the act of applying the code to the live environment. This
