@@ -627,56 +627,11 @@ for this type of workflow.
 === Threat model of CI/CD
 
 The threat model of CI/CD is different between application code, infrastructure modules, and live infrastructure config.
-This largely stems from the amount of permissions required to implement each workflow:
-
-.Permissions needed for CI/CD of each code type.
-[cols="1h,2,2,2"]
-|===
-|Permissions |Application Code |Infrastructure Modules |Live Infrastructure Config
-
-|CI server logs
-|Limited (typically only need summary report as you can reproduce failures locally)
-|Full (cannot debug without seeing the full deployment log)
-|Full (cannot debug without seeing the full deployment log)
-
-|Sandbox environments
-|Limited (minimal necessary to deploy artifact)
-|Full
-|Full
-
-|Non-prod environments
-|Limited (minimal necessary to deploy artifact)
-|None
-|Full
-
-|Prod environments
-|Limited (minimal necessary to deploy artifact)
-|None
-|Full
-
-|===
-
-Note how CI/CD for infrastructure code requires full permissions to CI logs as well as at least one of your
-environments, whereas application code can be deployed with limited permissions to the environments. This difference is
-due to the fact that infrastructure modules and live infrastructure config can be used to manage any infrastructure
-deployed in your environments, whereas application code is scoped to infrastructure that is relevant to the application.
-Given that, the threat against CI/CD in infrastructure code is orders of magnitude higher than with application code.
-
-Application Code::
-  Compromising the credentials used for application code may be used to take down your application in a denial of service
-  attack, but most likely will not affect databases and backups, making it recoverable after locking out the attacker.
-
-Infrastructure Modules::
-  Compromising the credentials used for infrastructure modules can cause an attacker to maliciously use your cloud
-  environments for various purposes, potentially costing you lots of money. However, since the credentials do not grant
-  access to your production (or even pre-prod) environment, it can't be used to take down your application or steal data.
-  While this could cost your business financially, in most cases, you can recover the costs by reporting fraud. AWS for
-  example is known to refund bills of accounts that were compromised.
-
-Live Infrastructure Config::
-  Compromising the credentials used for live infrastructure config has the highest consequences. Attackers with access
-  to these credentials can do anything in any environment, including deleting all your backups. This is potentially a
-  business ending event.
+This largely stems from the amount of permissions required to implement each workflow. For a limited deployment workflow
+like application code, you only need a limited set of permissions to the infrastructure environments to conduct a
+deployment. However, for infrastructure modules and live infrastructure config, where you handle arbitrary
+infrastructure changes (including permissions changes, like a new AWS IAM role), you will need full access to all the
+environments, including production.
 
 Given the potential consequences of leaked credentials from CI/CD, it is important to evaluate the threats and
 mitigation tactics for those threats. This is where threat modeling helps.
