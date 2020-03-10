@@ -26,7 +26,7 @@ endif::[]
 
 This is a comprehensive guide of how to design, configure, and implement a Continuous Integration and Continuous
 Delivery pipeline for your infrastructure code. This guide will walk you through the steps to set up a secure CI/CD
-pipeline using your favorite CI/CD platform (e.g Jenkins, Circle, GitLab, etc).
+pipeline for your favorite infrastructure as code tools (e.g., Terraform) using your favorite CI/CD platform (e.g Jenkins, Circle, GitLab, etc).
 
 === What is Continuous Integration and Continuous Delivery?
 
@@ -67,7 +67,7 @@ This guide consists of four main sections:
 
 === What this guide will not cover
 
-CI/CD for infrastructure code is a large topic and a single guide cannot cover everything there is to the topic. There
+CI/CD for infrastructure code is a large topic and a single guide cannot cover everything. There
 are several items that this guide will not cover, including:
 
 A pipeline for setting up new environments::
@@ -119,7 +119,7 @@ branches_ without integrating their work with other teams, and then try to merge
 minute moments before release. As a result, the integration process is very expensive and takes days or weeks fixing merge
 conflicts, tracking down subtle bugs, and trying to stabilize release branches.
 
-.Many teams employ a practice of working on their features over long periods of time on isolated branches. These long lived feature branches have higher chances of having big conflicts to resolve when integrated.
+.Many teams employ a practice of working on their features over long periods of time on isolated branches. These long lived feature branches have a higher chance of merge conflicts when they're finally ready to be integrated.
 image::/assets/img/guides/infrastructure-cicd-pipeline/feature-branch-merge-conflict.png[]
 
 In contrast, the Continuous Integration and Continuous Delivery model of development promotes more cross team
@@ -172,8 +172,8 @@ Automated testing::
   Typically code is only merged into the trunk when the self-testing build passes.
 
 Feature toggles::
-  One potential problem with continuous integration is that it can be difficult to break down your work to bite sized
-  units. Major features can not be implemented in a day. How can you ship parts of your feature without breaking the
+  One potential problem with continuous integration is that it can be difficult to break down your work to bite-sized
+  units. Major features cannot be implemented in a day. How can you ship parts of your feature without breaking the
   overall functionality of the application? Feature toggles are constructs in your code that allow you to disable or
   enable entire features in the application. This allows you to continuously develop, integrate, and ship partially
   working features without compromising the overall functionality. Examples of feature toggles include tags on
@@ -202,13 +202,13 @@ Live Infrastructure Configurations::
   Live infrastructure configurations are specific parameters for each component in your architecture. The live
   configurations are the frontend for your infrastructure deployments. For example, you might define your dev
   environment as a series of configuration files for the modules that specify the various parameters specific to
-  development (e.g sizing small instances, naming them with `dev`, using accounts that are accessible by all developers,
+  development (e.g small instance sizes, naming instances with a `dev` prefix, using cloud provider accounts that are accessible to all developers,
   etc). If the modules are "blueprints" then the live configuration contain the "houses" that were built using the
   "blueprints."
 
 Typically you would have separate repositories for each of these (e.g `infrastructure-modules` for modules and
 `infrastructure-live` for live configuration). Organizing your infrastructure code in this way ensures that you can
-better test the code before they are used to deploy your environments.
+better test the code before it is used to deploy your environments.
 
 Isolating modules from live configuration allows you to:
 
@@ -319,7 +319,7 @@ Application Code::
   iteration.
 
 Infrastructure Modules::
-  You will need to bring up live infrastructure to test infrastructure code. Unlike with application code, there is no
+  You will need to bring up real infrastructure to test infrastructure code. Unlike with application code, there is no
   way to have a true and complete local copy of a cloud. Therefore, the only way to know for sure your infrastructure
   code works is by making the actual API calls to the cloud to deploy it. With infrastructure modules, this involves
   deploying the module into a sandbox environment. For example, to test a terraform module, you can define example code
@@ -408,12 +408,10 @@ Live Infrastructure Config::
 ==== Merge and release
 
 Once the code passes automated checks and goes through the review process, it is ready to be integrated into the trunk.
-At this point, you have done the best you could to ensure the code won't break the current trunk and additional checks
-are likely to hit diminishing returns. Once you merge the code into trunk, you will also want to generate a new,
+Once you merge the code into trunk, you will also want to generate a new,
 immutable, versioned release artifact that can be deployed (see
 https://blog.gruntwork.io/why-we-use-terraform-and-not-chef-puppet-ansible-saltstack-or-cloudformation-7989dad2865c#b264:[Mutable
-infrastructure vs Immutable infrastructure] from our blog post, _Why we use Terraform and not Chef, Puppet, Ansible,
-SaltStack, or CloudFormation_ for a discussion on the benefits of immutable artifacts). What the release artifact looks
+infrastructure vs Immutable infrastructure]). What the release artifact looks
 like depends on the type of code you are working with:
 
 Application Code::
@@ -433,11 +431,11 @@ Live Infrastructure Config::
   For live infrastructure config, there is typically no release artifact. Live infrastructure code doesn't need to be
   packaged to deploy as it is directly consumable. For example, for Terraform or Terragrunt live config, you can
   directly run `terraform apply` or `terragrunt apply` on the repo. In general, it is not necessary to tag your commits
-  for live infrastructure config because in practice you will end up deploying every commit of trunk.
+  for live infrastructure config because in practice you will end up deploying every commit off trunk.
 
 
 It is worth expanding a bit on the reason why live infrastructure config does not have any release artifact. To
-understand this, it is worth looking at what it means to have a working trunk on live infrastructure config. If you
+understand this, consider what it means to have a working trunk on live infrastructure config. If you
 recall from <<run_the_code_locally>>, the only way to test live infrastructure config is by doing a dry run of the code.
 If the only way to test live infrastructure config is with dry runs, then you would want to make sure that there are no
 new changes to make to the live environments when you start. This is so that you get an accurate representation of the
@@ -693,8 +691,8 @@ This largely stems from the amount of permissions required to implement each wor
 
 |CI server logs
 |Limited (typically only need summary report as you can reproduce failures locally)
-|Full (can not debug without seeing the full deployment log)
-|Full (can not debug without seeing the full deployment log)
+|Full (cannot debug without seeing the full deployment log)
+|Full (cannot debug without seeing the full deployment log)
 
 |Sandbox environments
 |Limited (minimal necessary to deploy artifact)
@@ -773,7 +771,7 @@ With this threat model in mind, let's take a look at the different CI/CD platfor
 [[cicd_platforms]]
 === CI/CD platforms
 
-Over the years as practices for CI/CD for application code developed many platforms emerged to support CI/CD workflows
+Over the years, as practices for CI/CD for application code developed, many platforms emerged to support CI/CD workflows
 triggered from source control. Here we will list out a few of the major CI/CD platforms that exist to support these
 workflows. Note that this isn't an exhaustive list or an endorsement of the platforms that are listed here. The goal of
 this section is to give a few examples of existing platforms and solutions, and cover the trade offs that you should
@@ -824,7 +822,7 @@ https://circleci.com/[CircleCI] (SaaS, generic)::
   contexts for finer grained permissions modeling, and audit logging to continuously monitor access.
 
 https://about.gitlab.com/[GitLab] (self-hosted and SaaS, generic)::
-  GitLab is an all comprehensive platform that supports both a self-hosted mode (enterprise) or SaaS platform. Since
+  GitLab is a comprehensive platform that supports both a self-hosted mode (enterprise) or SaaS platform. Since
   GitLab also provides hosting for git repositories, it creates a tight integration between the git workflows and the
   CI/CD workflows that you can implement on the platform. Although GitLab is a generic CI/CD platform that can be
   configured to run any workflow, GitLab also provides specialized workflows for popular infrastructure platforms like
@@ -943,14 +941,14 @@ advantage of the strengths of each platform, and cover the weaknesses. The desig
 - Define your CI workflows so that the CI/CD server triggers deployments against the deploy server.
 
 This design implements separation of the concerns so that we take full advantage of the strengths of each platform,
-while covering the weaknesses: relying on the CI/CD platforms to manage the workflow/pipeline, but have it trigger
+while covering the weaknesses: relying on the CI/CD platforms to manage the workflow/pipeline, but having it trigger
 infrastructure deployments on self-hosted systems that are more locked down.
 
 We don't want to give the CI/CD servers permissions to deploy and manage arbitrary infrastructure. CI/CD servers are
 typically not secure enough to handle sensitive information, and you don't want a server that is used for executing
 arbitrary code and regularly used (and written to) by your entire dev team to have admin permissions.
 
-Instead, we delegate this responsibility to an isolated, closed off system in the AWS account that only expose a limited
+Instead, we delegate this responsibility to an isolated, closed off system in the AWS account that only exposes a limited
 set of actions that can be triggered. That way, if anyone gets access to your CI server, they can at most kick off
 builds on existing code, but they don't get arbitrary admin access.
 
@@ -1006,7 +1004,7 @@ You can find similar mechanisms for limiting deployments in the various deploy s
 
 Run your infrastructure deployment workloads in a https://aws.amazon.com/vpc/[Virtual Private Cloud (VPC)] to isolate
 the workloads in a restricted network topology (see link:/guides/networking/how-to-deploy-production-grade-vpc-aws[How
-to deploy a production-grade VPC on AWS] for more information on VPCs). Configure to run all workloads in private
+to deploy a production-grade VPC on AWS] for more information on VPCs). Configure it to run all workloads in private
 subnets that are not publicly accessible. Make sure to block all inbound internet access and consider blocking all
 outbound access except for the minimum required (e.g, allow access to AWS APIs).
 
@@ -1017,9 +1015,9 @@ outbound access except for the minimum required (e.g, allow access to AWS APIs).
 Avoid having a single system with admin permissions for running a deployment. Instead, deploy specialized versions of
 the deployment platforms with varying permissions for handling specific workflows. By separating out the concerns for
 each pipeline, you can reduce the blast radius of the damage that can be done with each set of credentials. At a minimum,
-you should have two versions of the infrastructure deployment system: one for deploying the application code, and which
+you should have two versions of the infrastructure deployment system: one for deploying the application code, which
 only has the minimal permissions necessary for deploying that application; and one for deploying infrastructure code,
-which has full access to the environments.
+which has more access to the environments.
 
 
 [[use_approval_flows]]
@@ -1041,7 +1039,7 @@ can approve the workflow.
 
 It is a good practice to define and store the deployment pipeline as code in the same repo that it is used. For example,
 you should define the CI/CD deployment pipeline for your infrastructure code in the `modules` and `live` repositories.
-However, this means that anyone with access to those repositories are free to modify the pipeline, __even on feature
+However, this means that anyone with access to those repositories could modify the pipeline, __even on feature
 branches__. This can be exploited to skip any approval process you have defined in the pipeline by creating a new branch
 that overwrites the pipeline configuration.
 
@@ -1082,7 +1080,7 @@ Minimal access to target environments::
   deployments against a predefined set of code. This means that external attackers who do not have access to the source
   code will at most be able to: (a) deploy code that has already been deployed before, (b) see the plan of the
   infrastructure between two points of time. They will not be able to write arbitrary infrastructure code to read DB
-  secrets, for example. It is important to note that the IAM policies are set up such that the IAM user for CI only has
+  secrets, for example. The IAM policies are set up such that the IAM user for CI only has
   access to trigger predefined events. They do not have access to arbitrarily invoke the ECS task, as that could
   potentially expose arbitrary deployments by modifying the command property (e.g use a command to `echo` some
   infrastructure code and run `terraform`).
@@ -1119,7 +1117,7 @@ These mitigations alone will not prevent all attacks defined in the threat model
 attacker with access to the source code can still do damage to the target environments by merging in code that removes
 all the infrastructure resources, thereby destroying all infrastructure when the `apply` command is run. Or, they could
 expose secrets by writing infrastructure code that will leak the secrets in the logs via a `local-exec` provisioner.
-Note that __any__ CI/CD solution can likely be compromised if an attacker has full access to your source code.
+However, the reality is that __any__ CI/CD solution can likely be compromised if an attacker has full access to your source code.
 
 For these types of threats, your best bet is to implement various policies and controls on the source control repository
 and build configurations:
