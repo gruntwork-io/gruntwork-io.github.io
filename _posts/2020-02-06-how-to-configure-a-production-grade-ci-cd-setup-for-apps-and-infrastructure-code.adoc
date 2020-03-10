@@ -223,10 +223,16 @@ infrastructure modules, and live infrastructure configuration.
 Now that we have gone over what, why, and how CI/CD works, let's take a look at a more concrete example walking through
 the workflow.
 
-The following covers the steps of a typical CI/CD workflow. Any CI/CD workflow, whether it be for infrastructure code or
-application code, generally follow these steps. However, the details of some of the steps differ widely. We'll go over
-each step of the process and then highlight the differences in implementation for the three flavors of code we covered:
-application code, infrastructure modules, and live infrastructure configuration.
+The following covers the steps of a typical CI/CD workflow. Most code will go through this workflow, whether it be for
+infrastructure code or application code. However, the details of the steps may differ significantly due to the
+properties of infrastructure code.
+
+In this section, we will compare each step of the workflow for application code, infrastructure modules, and live
+infrastructure config side by side. Application code refers to code to run an application written in a general purpose
+programming language (e.g Ruby, Java, Python, etc), while infrastructure modules and live infrastructure config refer to
+infrastructure code (e.g Terraform, CloudFormation, Ansible, etc) organized as described in the previous section. CI/CD
+for application code is well understood in the industry, so we show it side by side with infrastructure code here to
+as a reference point to make it easier to understand the workflow for infrastructure code.
 
 For the purposes of illustrating this workflow, we will assume the following:
 
