@@ -207,38 +207,8 @@ Live Infrastructure Configurations::
   blueprint.
 
 Typically you would have separate repositories for each of these (e.g `infrastructure-modules` for modules and
-`infrastructure-live` for live configuration). Organizing your infrastructure code in this way ensures that you can
-better test the code before it is used to deploy your environments.
-
-Isolating modules from live configuration allows you to:
-
-Update component infrastructure code without affecting environments::
-  If you use versioned, immutable snapshots of the module code, you can decouple the modules from the environments that
-  use them. For example, prod might use version `0.4.2` of your RDS module, while dev might be using version `0.5.0`
-  which includes a number of improvements to help with debugging performance issues. But since there is a backwards
-  incompatibility between the two versions, you are waiting to roll out `0.5.0` to prod until you have a window of
-  opportunity to have scheduled downtime with prod. By decoupling the module code from the live infrastructure, you can
-  continue improving the component infrastructure code in isolation.
-
-Test infrastructure at the component level::
-  Focusing modules down to specific components makes it easier to write tests for your infrastructure code. For example,
-  to test your RDS module, you might use relaxed network constraints that make your database wide open at test time. You
-  would not want to do this in any environment that runs your application, but when you are focusing on whether or not
-  your RDS module deploys a functional database, having to worry about bastion hosts and tunneling requests might get in
-  the way. If you were not separating out module code from live configuration, the infrastructure code can't be reused
-  to deploy an RDS database in an isolated sandbox account, because it will be hard coded to the specific environment it
-  was written for. Testing in this way allows you to build confidence in your infrastructure code prior to rolling it
-  out to each environment.
-
-Keep your live configuration DRY::
-  Decoupling the component infrastructure code from the environment configurations allows you to reuse the component
-  code for each of your environments. Your `dev`, `staging`, and `production` environments are likely to be
-  architecturally similar, using the same components across the stack. Like with any code, you don't want to repeat
-  yourself with lots of boilerplate, and instead only want to specify what is different across the environments.
-  Separating out your code between modules and live configurations allows you to focus the live configuration code on
-  reusing the modules across each environment by invoking them with different inputs that are specific to the
-  environment.
-
+`infrastructure-live` for live configuration). Organizing your infrastructure code in this way makes it easier to test
+the module code, promote immutable versions across environments, and keep it DRY.
 
 There are distinct differences in the way the code is tested, used, and deployed between the two flavors of
 infrastructure code. These differences are important to consider when designing CI/CD workflows, as they lead to many
