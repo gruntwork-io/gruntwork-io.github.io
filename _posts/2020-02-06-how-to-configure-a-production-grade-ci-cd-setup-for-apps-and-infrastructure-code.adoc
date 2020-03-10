@@ -26,7 +26,8 @@ endif::[]
 
 This is a comprehensive guide of how to design, configure, and implement a Continuous Integration and Continuous
 Delivery pipeline for your infrastructure code. This guide will walk you through the steps to set up a secure CI/CD
-pipeline for your favorite infrastructure as code tools (e.g., Terraform) using your favorite CI/CD platform (e.g Jenkins, Circle, GitLab, etc).
+pipeline for your favorite infrastructure as code tools (e.g., Terraform) using your favorite CI/CD platform (e.g.,
+Jenkins, Circle, GitLab, etc).
 
 === What is Continuous Integration and Continuous Delivery?
 
@@ -194,19 +195,19 @@ code that is available. There are two distinct types of infrastructure code:
 Infrastructure Modules::
   Modules are bundles of infrastructure code that can be used to deploy a specific component of your architecture.
   For example, many companies have modules for deploying private networks using Virtual Private Clouds (VPCs),
-  databases, docker clusters (e.g Elastic Container Service, Kubernetes, Nomad), etc. Think of modules as the
+  databases, docker clusters (e.g., Elastic Container Service, Kubernetes, Nomad), etc. Think of modules as the
   "blueprints" that define the way your company configures infrastructure.
 
 Live Infrastructure Configurations::
   Live infrastructure configurations are specific parameters for each component in your architecture. The live
   configurations are the frontend for your infrastructure deployments. For example, you might define your dev
   environment as a series of configuration files for the modules that specify the various parameters specific to
-  development (e.g small instance sizes, naming instances with a `dev` prefix, using cloud provider accounts that are accessible to all developers,
+  development (e.g., small instance sizes, naming instances with a `dev` prefix, using cloud provider accounts that are accessible to all developers,
   etc). If the modules are "blueprints" then the live configuration contain the "houses" that were built using the
   "blueprints." Each "house" may have slightly different features or customizations, even though they share a common
   blueprint.
 
-Typically you would have separate repositories for each of these (e.g `infrastructure-modules` for modules and
+Typically you would have separate repositories for each of these (e.g., `infrastructure-modules` for modules and
 `infrastructure-live` for live configuration). Organizing your infrastructure code in this way makes it easier to test
 the module code, promote immutable versions across environments, and keep it DRY.
 
@@ -229,8 +230,8 @@ properties of infrastructure code.
 
 In this section, we will compare each step of the workflow for application code, infrastructure modules, and live
 infrastructure config side by side. Application code refers to code to run an application written in a general purpose
-programming language (e.g Ruby, Java, Python, etc), while infrastructure modules and live infrastructure config refer to
-infrastructure code (e.g Terraform, CloudFormation, Ansible, etc) organized as described in the previous section. CI/CD
+programming language (e.g., Ruby, Java, Python, etc), while infrastructure modules and live infrastructure config refer to
+infrastructure code (e.g., Terraform, CloudFormation, Ansible, etc) organized as described in the previous section. CI/CD
 for application code is well understood in the industry, so we show it side by side with infrastructure code here to
 as a reference point to make it easier to understand the workflow for infrastructure code.
 
@@ -284,9 +285,9 @@ How to run the code locally will be very different depending on the type of code
 Application Code::
   You can typically spin up a local environment for application code to test it out. For example, if you had a simple
   web server written in a general purpose programming language such as Ruby, you can run the server code to bring up a
-  local copy of the application that you can interact with (e.g `ruby web-server.rb`). You can then manually test it by
+  local copy of the application that you can interact with (e.g., `ruby web-server.rb`). You can then manually test it by
   loading the web server in the browser. Alternatively, you could run the automated test suite associated with your
-  application (e.g `ruby web-server-test.rb`). The point is that (almost) everything can be done locally for fast
+  application (e.g., `ruby web-server-test.rb`). The point is that (almost) everything can be done locally for fast
   iteration.
 
 Infrastructure Modules::
@@ -441,7 +442,7 @@ Application Code::
   Deploying the release artifact to your environment depends on how the code is packaged. If it is a library, then it
   will be deployed when the application that consumes it updates the library version. In this case, nothing needs to be
   done to deploy it to the application. For services, you would need to deploy the application onto live servers so that
-  it is running. For docker images, this might mean updating your service definitions for the docker cluster (e.g ECS or
+  it is running. For docker images, this might mean updating your service definitions for the docker cluster (e.g., ECS or
   Kubernetes). For machine images, this might mean updating your autoscaling group to deploy instances with the new
   image. Regardless of how your application is deployed, it is important to reflect the changes in your live
   infrastructure config to perform the deployment. Note that there are various strategies for deploying application
@@ -459,7 +460,7 @@ Infrastructure Modules::
   across your environments. In terms of automation, an automated deployment of infrastructure modules may be risky as a
   simple change could destroy your database. +
   With that said, it is not practical to always manually roll out deployments even for infrastructure modules, and in
-  some circumstances that can be more risky from a security perspective (e.g increasing attack surface by passing out
+  some circumstances that can be more risky from a security perspective (e.g., increasing attack surface by passing out
   admin credentials to all your developers). To handle this, we impose human verification to the automated steps of the
   workflow. That is, we do automated deployments like with application code, but include a human approval step of the
   `plan` before proceeding.
@@ -639,7 +640,7 @@ mitigation tactics for those threats. This is where threat modeling helps.
 A threat model explicitly covers what attacks are taken into consideration in the design, as well as what attacks are
 __not__ considered. The goal of the threat model is to be realistic about the threats that are addressable with the
 tools available. By explicitly focusing attention on more likely and realistic threats, we can avoid overengineering and
-compromising the usability of the solution against threats that are unlikely to exist (e.g a 5 person startup with 100
+compromising the usability of the solution against threats that are unlikely to exist (e.g., a 5 person startup with 100
 end users is unlikely to be the subject of a targeted attack by a government agency).
 
 In this guide, the following threat assumptions are made:
@@ -647,9 +648,9 @@ In this guide, the following threat assumptions are made:
 - Attackers' goals are to gain access to an environment that they do not already have access to. Access to an
   environment includes but is not limited to:
 
-    * The ability to read secrets that grant access to potentially sensitive data (e.g the database in prod
+    * The ability to read secrets that grant access to potentially sensitive data (e.g., the database in prod
       environment).
-    * Full access over all resources to cause damage to the business (e.g ability to delete the database and all its
+    * Full access over all resources to cause damage to the business (e.g., ability to delete the database and all its
       backups in prod).
 
 - Attackers can originate from both external and internal sources (in relation to the organization).
@@ -949,7 +950,7 @@ Minimal access to target environments::
   infrastructure between two points of time. They will not be able to write arbitrary infrastructure code to read DB
   secrets, for example. The IAM policies are set up such that the IAM user for CI only has
   access to trigger predefined events. They do not have access to arbitrarily invoke the ECS task, as that could
-  potentially expose arbitrary deployments by modifying the command property (e.g use a command to `echo` some
+  potentially expose arbitrary deployments by modifying the command property (e.g., use a command to `echo` some
   infrastructure code and run `terraform`).
     - Note that there is still a risk of rolling back the existing infrastructure by attempting to deploy a previous
       version. See below for potential ways to mitigate this type of attack.
@@ -993,7 +994,7 @@ and build configurations:
   In addition to providing a moment to pause and inspect the exact infrastructure changes that are about to be deployed,
   approval workflows in the CI server can mitigate attacks such that attackers will need enough privileges on the CI
   server to approve builds in order to actually modify infrastructure. This can mitigate potential attacks where the
-  attacker has access to the CI server to trigger arbitrary builds manually (e.g to run a previous job that is deploying
+  attacker has access to the CI server to trigger arbitrary builds manually (e.g., to run a previous job that is deploying
   an older version to roll back the infrastructure), but not enough access to approve the job. Note that this will not
   mitigate potential threats from internal attackers who have enough permissions to approve builds.
 
