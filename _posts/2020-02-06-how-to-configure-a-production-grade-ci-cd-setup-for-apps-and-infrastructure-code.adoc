@@ -1109,24 +1109,6 @@ infrastructure-modules
       └ variables.tf
 ----
 
-Here's a snippet of what the code in the `vpc-mgmt` wrapper module looks like:
-
-.infrastructure-modules/networking/vpc-app/main.tf
-[source,hcl]
-----
-module "vpc" {
-  # Make sure to replace <VERSION> in this URL with the latest module-vpc release
-  source = "git@github.com:gruntwork-io/module-vpc.git//modules/vpc-mgmt?ref=<VERSION>"
-
-  vpc_name         = var.vpc_name
-  aws_region       = var.aws_region
-  cidr_block       = var.cidr_block
-  num_nat_gateways = var.num_nat_gateways
-}
-
-# ... (the rest of the code is ommitted) ...
-----
-
 You should also have a corresponding live configuration in your `infrastructure-live` repo to deploy the VPC. For
 example, for your production environment, there should be a folder called `production` in the `infrastructure-live` repo
 that looks as follows:
@@ -1140,31 +1122,6 @@ infrastructure-live
         └ networking
           └ vpc-mgmt
             └ terragrunt.hcl
-----
-
-Here's a snippet of what the code in the `vpc-mgmt` Terragrunt configuration file looks like:
-
-.infrastructure-live/production/us-east-2/prod/networking/vpc-mgmt/terragrunt.hcl
-[source,hcl]
-----
-# Pull in the backend and provider configurations from a root terragrunt.hcl file that you include in each child terragrunt.hcl:
-include {
-  path = find_in_parent_folders()
-}
-
-# Set the source to an immutable released version of the infrastructure module being deployed:
-terraform {
-  source = "git@github.com/<YOUR_ORG>/infrastructure-modules.git//networking/vpc-mgmt?ref=v0.3.0"
-}
-
-# Configure input values for the specific environment being deployed:
-inputs = {
-  aws_region       = "us-east-2"
-  aws_account_id   = "111122223333"
-  vpc_name         = "mgmt-prod"
-  cidr_block       = "10.0.0.0/16"
-  num_nat_gateways = 3
-}
 ----
 
 === Deploy the ECS Deploy Runner
