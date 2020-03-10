@@ -696,87 +696,23 @@ that accelerates the implementation of specific workflows as opposed to configur
 Here are a few examples of well-known platforms, the general category that they fit in, major features that the platform
 provides, as well as how they mitigate the threat model that we cover:
 
-https://jenkins.io/[Jenkins] (self-hosted, generic)::
-  One of the oldest CI/CD platforms, with its history going as far back as 2005 (when it was previously called
-  _Hudson_). Jenkins is a popular and generic platform that can be configured to support almost any kind of CI/CD, with
-  a wide range of plugins that enhance the experience. However, given the role that it plays in organizations, combined
-  with its nature of being a popular, open source platform, it is the target of frequent attacks and vulnerabilities.
-  Most vulnerabilities are mitigated by locking down the platform so that it is only internally accessible within a
-  corporate network over VPN, as well as by keeping the server, the Jenkins software, and the Jenkins plugins frequently patched. This does mean that you shouldn't
-  expose the server externally to implement webhook based workflows, but rather rely on polling to detect changes.
-  Jenkins also provides a wide range of fine-grained permissions in its user model that allows you to lock down the
-  actions that your internal users can take.
-
-https://circleci.com/[CircleCI] (SaaS, generic)::
-  CircleCI is a generic SaaS CI/CD platform that is more optimized for CI/CD workflows for application code than
-  infrastructure CI/CD, although it can be configured to implement infrastructure CI/CD workflows. It has first class
-  support for various application based workflows like parsing test results into a nice report in the UI, reacting to
-  version control events, and official docker containers for various programming languages and frameworks. However, it
-  does not have first class support for features that are useful with infrastructure code, such as encrypting logs
-  and fine grained permissions. The strength of CircleCI lies in the simplicity of its infrastructure. Being a fully
-  managed SaaS platform with first class support for a wide range of environments, it is fairly easy to get up and running
-  on the platform in a matter of minutes. However, the downside is that you must be comfortable with using a SaaS
-  platform for your CI/CD workflows and having it hold your secrets that provide access to your infrastructure. Note
-  that CircleCI employs a respectable security model, having passed numerous compliance audits including FedRAMP. They
-  provide a wide variety of features to mitigate potential threats, including runtime environment isolation, restricted
-  contexts for finer grained permissions modeling, and audit logging to continuously monitor access.
-
-https://about.gitlab.com/[GitLab] (self-hosted and SaaS, generic)::
-  GitLab is a comprehensive platform that supports both a self-hosted mode (enterprise) or SaaS platform. Since
-  GitLab also provides hosting for git repositories, it creates a tight integration between the git workflows and the
-  CI/CD workflows that you can implement on the platform. Although GitLab is a generic CI/CD platform that can be
-  configured to run any workflow, GitLab also provides specialized workflows for popular infrastructure platforms like
-  Kubernetes. Some of its continuous deployment features include first class support for feature toggles, canary
-  deployments, and building docker images. While the SaaS platform is subject to external attacks, GitLab employs a
-  respectable security model with end to end encryption, frequent testing, and compliance audits, in addition to being
-  an open source and open core platform that allows for wider inspection and review of its practices. For those that can
-  not rely on the SaaS platform for CI/CD, you can always run GitLab EE in your own data center.
-
-https://www.runatlantis.io/[Atlantis] (self-hosted, specialized)::
-  Atlantis is an open source tool optimized for git based Terraform workflows, with additional support for Terragrunt.
-  At its core, the platform will automatically run `terraform plan` on commits and annotate any open Pull Requests with
-  the `plan` output. This `plan` is stored in plan file format so that when upon merge, the exact plan is applied using
-  `terraform apply`. Note that Atlantis is optimized for this single workflow. That is, it cannot be made to implement
-  other workflows, such as building images or running infrastructure tests using terratest. Being a self-hosted
-  platform, you can keep your credentials internal to your data center and lock down server level access. However,
-  Atlantis requires a public-facing endpoint to be available so that it can listen on webhooks from the major VCS
-  platforms (GitHub/GitLab/Bitbucket/Azure DevOps). This means that you are relying on the security model of the
-  Atlantis platform to ensure that it doesn't accidentally run infrastructure code from unwanted sources with the
-  credentials of the platform. To prevent unwanted deployments, you will want to ensure that you are following
-  https://www.runatlantis.io/docs/security.html#mitigations[all the security best practices] of the platform.
-
-https://www.hashicorp.com/products/terraform/[Terraform Enterprise and Terraform Cloud] (self-hosted and SaaS, specialized)::
-  Terraform Cloud (SaaS) and Terraform Enterprise (self-hosted) are platforms provided by HashiCorp (the creator of
-  Terraform) that are optimized for Terraform workflows. Both services provide a web UI for remotely running `terraform
-  plan` and `terraform apply`, and can be integrated with VCS platforms to implement CI/CD workflows that remotely run
-  `terraform` in reaction to git. Additionally, Terraform Enterprise in particular provides the ability to manage
-  deployment policies and permissions as code. Note that Terraform Cloud and Enterprise are both optimized for running
-  `terraform`. Both do not support directly calling external binaries such as `terragrunt` or `docker` in a workflow.
-  Terraform Cloud in particular does not support the use of external binaries even when called from within `terraform`
-  using a `local-exec` provisioner or external data source. In terms of the threat model, Terraform Cloud and Enterprise
-  both implement respectable security practices, including end to end encryption backed by HashiCorp Vault, and you have
-  the option to run in your own data center with Terraform Enterprise to lock it down. Note that Terraform Enterprise
-  relies on API based integrations with the VCS platforms instead of webhooks, so it is not necessary to have a publicly
-  facing service when running in self-hosted mode.
-
-Here is a table that highlights some of the features of each CI platform and their strengths and weaknesses that can be
-useful in making tradeoffs:
-
 [cols="1h,2,2,2,2,2"]
 |===
-| |Jenkins |CircleCI |GitLab |Atlantis |TFE and TFC
+| |https://jenkins.io/[Jenkins] |https://circleci.com/[CircleCI] |https://buildkite.com/[BuildKite] |https://gitlab.com/[GitLab] |https://www.runatlantis.io[Atlantis] |https://www.hashicorp.com/products/terraform/[TFE and TFC]
 
 |Hosting
 |Self-hosted
 |SaaS
+|Hybrid (SaaS control plane, Self-hosted workers)
 |SaaS or Self-hosted
 |Self-hosted
 |SaaS or Self-hosted
 
-|Generic?
-|Yes
-|Yes
-|Yes
+|Purpose
+|Generic CI/CD tool
+|Generic CI/CD tool
+|Generic CI/CD tool
+|Generic CI/CD tool
 |Specialized to terraform
 |Specialized to terraform
 
@@ -786,15 +722,42 @@ useful in making tradeoffs:
 |Yes
 |Yes
 |Yes
+|Yes
 
 |Provides static IP addresses for IP whitelisting
 |Yes
 |No
+|Yes (for workers)
 |Yes (self-hosted)
 |Yes
 |Yes (TFE)
 
+|Built-in workflows
+|None
+|None
+|None
+|Kubernetes Workflows
+|Terraform Workflows
+|Terraform Workflows
+
+|Custom workflows
+|Yes
+|Yes
+|Yes
+|Yes
+|No (Only supports a fixed Terraform-based workflow)
+|No (Only supports a fixed Terraform-based workflow)
+
+|Credentials storage
+|Managed by you
+|Shared with 3rd party
+|Managed by you
+|Shared with 3rd party (SaaS); Managed by you (Self-hosted)
+|Managed by you
+|Shared with 3rd party (TFC); Managed by you (TFE)
+
 |Update commit statuses
+|Yes
 |Yes
 |Yes
 |Yes
@@ -809,6 +772,7 @@ useful in making tradeoffs:
 |Yes
 
 |Supports multiple infrastructure tools
+|Yes
 |Yes
 |Yes
 |Yes
