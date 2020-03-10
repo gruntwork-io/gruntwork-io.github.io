@@ -898,12 +898,12 @@ which has more access to the environments.
 [[use_approval_flows]]
 === Use approval flows
 
-It is important that human review is baked into each deployment. As covered in <<cicd_for_infrastructure_code>>, it is
-difficult to build an automated test suite that builds enough confidence in your infrastructure code to do the right
-thing. This is important, as failed infrastructure deployments could be catastrophic to your business, and there is no
-concept of rollback with infrastructure deployment tools. This means that you will almost always want to have some form
-of approval workflow for your infrastructure CI/CD pipeline so that you can review what is about to be deployed. Most
-generic CI/CD platforms support approval workflows. For example, CircleCI supports
+It is important that human review is baked into each deployment. As covered in <<cicd_workflows>>, it is difficult to
+build an automated test suite that builds enough confidence in your infrastructure code to do the right thing. This is
+important, as failed infrastructure deployments could be catastrophic to your business, and there is no concept of
+rollback with infrastructure deployment tools. This means that you will almost always want to have some form of approval
+workflow for your infrastructure CI/CD pipeline so that you can review what is about to be deployed. Most generic CI/CD
+platforms support approval workflows. For example, CircleCI supports
 https://circleci.com/docs/2.0/workflows/#holding-a-workflow-for-a-manual-approval[approval steps in its workflow
 engine], in addition to https://circleci.com/docs/2.0/contexts/#restricting-a-context[restricted contexts] to limit who
 can approve the workflow.
@@ -982,11 +982,9 @@ Restricted refs for `apply`::
   branches (see below), it prevents attackers from having the ability to run `apply` unless it has been reviewed.
 
 CI server does not need access to the source code::
-  Since the deployments are being done remotely in separate infrastructure, the actual CI server does not need to clone the
-  underlying repository to deploy the infrastructure. This means that you can design your CI pipeline to only have
-  access to the webhook events and possibly the change list of files (to know which module to deploy), but not the
-  source code itself. This can further decrease the effect of a potential breach of the CI server, as the attacker will
-  not have the ability to read or modify the infrastructure code to use the pipeline to their advantage.
+  Since the deployments are being done remotely in separate infrastructure, the actual CI server does not need to make
+  any modifications to the code for the deployment. You can limit the CI server to read only access to the underlying
+  repository, limiting the damage from a potential breach of the CI server.
 
 These mitigations alone will not prevent all attacks defined in the threat model. For example, an internal
 attacker with access to the source code can still do damage to the target environments by merging in code that removes
