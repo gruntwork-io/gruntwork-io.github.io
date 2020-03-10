@@ -447,7 +447,8 @@ Application Code::
   infrastructure config to perform the deployment. Note that there are various strategies for deploying application
   code, such as canary and blue-green deployments. We will not get into details here, but you can refer to our post
   https://blog.gruntwork.io/how-to-use-terraform-as-a-team-251bc1104973#7dd3[How to use Terraform as a team] for an
-  overview of various rollout strategies.
+  overview of various rollout strategies. In terms of automation, you should be able to automate the entire deployment
+  as the surface area of each change should be fairly small and localized to just the application.
 
 Infrastructure Modules::
   To deploy your infrastructure modules, you need to create or update references to the modules in your live
@@ -455,45 +456,23 @@ Infrastructure Modules::
   config. However, if the module is being deployed for the first time, then this will require creating a new
   configuration in your live infrastructure config to deploy the module. In either case, the only way to deploy
   infrastructure modules is by making the corresponding edits to the live infrastructure config to roll out the changes
-  across your environments.
+  across your environments. In terms of automation, an automated deployment of infrastructure modules may be risky as a
+  simple change could destroy your database. At most, you should only automatically deploy infrastructure modules to a
+  sandbox or dev environment.
 
 Live Infrastructure Config::
   For live infrastructure config, deploying the code is the act of applying the code to the live environment. This
   depends on the tool. For example, your terraform code can be applied with `terraform apply` or `terragrunt apply`,
-  while Kubernetes manifests require `kubectl apply`.
-
-
-Regardless of the code, the important thing about the deployment process is that you should automate as many steps of
-the process as possible. Just like with automated testing on code review, you should set up a CI server to automatically
-deploy your code across the various environments, to the extent that it is safe. You can automate many steps of the
-deployment depending on the risk profile of the change:
-
-Application Code::
-  For application code, you should be able to automate the entire deployment as the surface area of each change should
-  be fairly small and localized to just the application. Additionally, application code have standard rollback
-  practices that make it easy to undo. Automating the deployment of application code requires automatically patching
-  your live infrastructure config. In most cases, the changes are simple enough that a single `sed` call should
-  be sufficient (e.g bumping the version tag of a docker image). Note that the roll out of the deployment should be
-  handled as part of the automated deployment of the live infrastructure config.
-
-Infrastructure Modules::
-  With infrastructure modules, depending on which module is being updated, an automated deployment may be risky. In a
-  world where a single name change could cause the database to be recreated, it pays off to be extra cautious with the
-  deployment. At most, you should only automatically deploy infrastructure modules to a sandbox or dev environment,
-  where the damage from a catastrophic failure causing the environment to be taken down is limited. Similar to
-  application code, automating this process could be handled with a single `sed` call that updates the ref tag in the
-  live infrastructure config, with the rollout being handled by the automated deployment pipeline for that code.
-
-Live Infrastructure Config::
-  Like with infrastructure modules, automatically deploying live infrastructure config without any oversight might be
-  risky depending on the change. You may want to automate specific infrastructure deployments that happen frequently and
-  are low risk (e.g deploying your application), but automating arbitrary infrastructure changes that may include
-  destroying your production database is not advisable. With that said, it is not practical to always manually roll out
-  deployments, and in some circumstances that can be more risky from a security perspective (e.g increasing attack
-  surface by passing out admin credentials to all your developers). A typical workflow for deploying live infrastructure
-  config is to have the CI server perform a dry run first, and ask for approval from an admin before proceeding to apply
-  the change. In this way, the actual deployment steps are automated, but the trigger for deployment is manual, allowing
-  you to pause and review the deployment to make sure nothing bad will happen.
+  while Kubernetes manifests require `kubectl apply`. In terms of automation, since live infrastructure config changes
+  include both modules and application code, what you automate should depend on the nature of the change. Which
+  deployments to automated depend on the nature of the change, so typically the pipeline differs based on which
+  configurations were updated. +
+  With that said, it is not practical to always manually roll out deployments even for infrastructure modules, and in
+  some circumstances that can be more risky from a security perspective (e.g increasing attack surface by passing out
+  admin credentials to all your developers). A typical workflow for deploying live infrastructure config is to have the
+  CI server perform a dry run first, and ask for approval from an admin before proceeding to apply the change. In this
+  way, the actual deployment steps are automated, but the trigger for deployment is manual, allowing you to pause and
+  review the deployment to make sure nothing bad will happen.
 
 
 ==== Summary
