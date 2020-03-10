@@ -839,10 +839,17 @@ Gruntwork ECS Deploy Runner Stack::
 
 Terraform Enterprise::
   Terraform enterprise provides an API for triggering runs manually (as opposed to Atlantis which only supports VCS
-  webhook based triggers). As a self hosted solution, it supports running in your own account. Additionally, it provides
-  many configuration options to limit the scope of actions including managing deployment policies as code through the
-  sentinel feature. However, being a stateful server, there is a high maintenance cost to keeping it up and running, in
-  addition to licensing cost for using the service.
+  webhook based triggers). In addition, Terraform Enterprise supports
+  https://www.terraform.io/docs/cloud/sentinel/manage-policies.html[Sentinel Policies], a feature to enforce that
+  the Terraform code are in compliance with company policies (e.g., it has the appropriate tags). As a self hosted
+  solution, it supports running in your own account. However, being a stateful server, there is a high maintenance cost
+  to keeping it up and running, in addition to licensing cost for using the service.
+
+Depending on your needs, you may choose to use either option. For example, large enterprise organizations may have a
+risk profile that requires the automated validation you get from the sentinel policies of Terraform Enterprise such that
+the overhead of maintaining TFE is well worth the cost. On the other hand, a small startup may not have a high enough
+risk profile from internal threats such that the simpler infrastructure of the ECS Deploy Runner Stack may be
+sufficient.
 
 In this guide, we will use the ECS Deploy Runner Stack as the deploy server. Note that although we will not explicitly
 cover it, the design is compatible with using Terraform Enterprise as the deploy server.
