@@ -303,10 +303,15 @@ Live Infrastructure Config::
   Locally testing live infrastructure config is more difficult than either application code or infrastructure modules.
   Unlike with infrastructure modules, it is difficult to deploy the live infrastructure config temporarily as the code
   is tied to a specific live environment by nature of the code. After all, this is the configuration to manage live
-  infrastructure. To illustrate this point, consider a scenario where you are working on updating the cross account IAM
+  infrastructure. +
+  To illustrate this point, consider a scenario where you are working on updating the cross account IAM
   roles to access your environments, and you are at the point of reflecting your changes to prod. Would you want to
   deploy that code to your live production environment off of an unreviewed branch? +
-  The only real test you can do for live infrastructure config is to do a dry run of your infrastructure code. Most Infrastructure as Code tools support a dry run of the code to check what it would do against your environment. For example, with Terraform, you could run `terraform plan` to sanity check the planned actions Terraform will take. This is especially useful for sanity checking a fresh clone of the code. The trunk should be a true reflection of the live environment, so you should expect there to be no changes to make on a fresh clone of trunk.
+  The only real test you can do for live infrastructure config is to do a dry run of your infrastructure code. Most
+  Infrastructure as Code tools support a dry run of the code to check what it would do against your environment. For
+  example, with Terraform, you could run `terraform plan` to sanity check the planned actions Terraform will take. This
+  is especially useful for sanity checking a fresh clone of the code. The trunk should be a true reflection of the live
+  environment, so you should expect there to be no changes to make on a fresh clone of trunk.
 
 
 [[make_code_changes]]
