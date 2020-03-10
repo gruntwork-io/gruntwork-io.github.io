@@ -346,9 +346,9 @@ valuable insights on the code that you might not have thought of.
 
 To help with code review, you should also set up a CI server (such as Jenkins or CircleCI) with commit hooks that
 automatically trigger testing of any branch that is submitted for review. Running the automated tests in this fashion
-not only ensures that the code passes all the tests, but also verifies that it runs on multiple platforms and not just
-on the developer's local workstation. This is also a good way to run an extensive test suite that takes a long time to
-run. Most developers will run a subset of the tests that relate to the feature work being done, as it leads to faster
+not only ensures that the code passes all the tests, but also ensures that you can have a consistent build process on a
+repeatable and isolated platform. This is also a good way to run an extensive test suite that takes a long time to run.
+Most developers will run a subset of the tests that relate to the feature work being done, as it leads to faster
 feedback cycles.
 
 The tests that the CI server runs will be different across the three flavors of code:
