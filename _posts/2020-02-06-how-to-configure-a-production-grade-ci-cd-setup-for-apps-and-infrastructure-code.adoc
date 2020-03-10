@@ -457,8 +457,12 @@ Infrastructure Modules::
   configuration in your live infrastructure config to deploy the module. In either case, the only way to deploy
   infrastructure modules is by making the corresponding edits to the live infrastructure config to roll out the changes
   across your environments. In terms of automation, an automated deployment of infrastructure modules may be risky as a
-  simple change could destroy your database. At most, you should only automatically deploy infrastructure modules to a
-  sandbox or dev environment.
+  simple change could destroy your database. +
+  With that said, it is not practical to always manually roll out deployments even for infrastructure modules, and in
+  some circumstances that can be more risky from a security perspective (e.g increasing attack surface by passing out
+  admin credentials to all your developers). To handle this, we impose human verification to the automated steps of the
+  workflow. That is, we do automated deployments like with application code, but include a human approval step of the
+  `plan` before proceeding.
 
 Live Infrastructure Config::
   For live infrastructure config, deploying the code is the act of applying the code to the live environment. This
@@ -466,13 +470,7 @@ Live Infrastructure Config::
   while Kubernetes manifests require `kubectl apply`. In terms of automation, since live infrastructure config changes
   include both modules and application code, what you automate should depend on the nature of the change. Which
   deployments to automated depend on the nature of the change, so typically the pipeline differs based on which
-  configurations were updated. +
-  With that said, it is not practical to always manually roll out deployments even for infrastructure modules, and in
-  some circumstances that can be more risky from a security perspective (e.g increasing attack surface by passing out
-  admin credentials to all your developers). A typical workflow for deploying live infrastructure config is to have the
-  CI server perform a dry run first, and ask for approval from an admin before proceeding to apply the change. In this
-  way, the actual deployment steps are automated, but the trigger for deployment is manual, allowing you to pause and
-  review the deployment to make sure nothing bad will happen.
+  configurations were updated.
 
 
 ==== Summary
