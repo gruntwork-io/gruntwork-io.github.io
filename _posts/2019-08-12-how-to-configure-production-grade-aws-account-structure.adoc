@@ -2901,6 +2901,136 @@ terragrunt apply
 
 Remember to repeat this process in the other child accounts too!
 
+=== Enable GuardDuty in the security account
+
+The next step is to configure GuardDuty in all your child accounts. You can do this using the `guardduty` module you
+created in `infrastructure-modules` earlier.
+
+Create a `terragrunt.hcl` file in `infrastructure-live` under the file path `security/_global/guardduty`:
+
+----
+infrastructure-live
+  └ root
+  └ security
+    └ _global
+      └ iam
+      └ cloudtrail
+      └ aws-config
+      └ guardduty
+        └ terragrunt.hcl
+  └ stage
+  └ dev
+  └ prod
+  └ shared-services
+----
+
+Point the `source` URL in your `terragrunt.hcl` file to your `guardduty` wrapper module in the `infrastructure-modules`
+repo, setting the `ref` param to the version you released earlier:
+
+.infrastructure-live/security/_global/guardduty/terragrunt.hcl
+[source,hcl]
+----
+terraform {
+  source = "git@github.com/<YOUR_ORG>/infrastructure-modules.git//security/guardduty?ref=v0.3.3"
+}
+----
+
+Set the variables for the `guardduty` module in this environment in the `inputs = { ... }` block of `terragrunt.hcl`:
+
+.infrastructure-live/security/_global/guardduty/terragrunt.hcl
+[source,hcl]
+----
+inputs = {
+  # Fill in your region you want to use (only used for API calls) and the ID of your security AWS account
+  seed_region    = "us-east-2"
+  aws_account_id = "444444444444"
+
+  # The name of the SNS topic where findings are published.
+  findings_sns_topic_name = "<COMPANY_NAME>-security-guardduty-finding-events"
+
+  # The name of the Cloudwatch event rule.
+  cloudwatch_event_rule_name = "<COMPANY_NAME>-security-guardduty-finding-events"
+}
+----
+
+Since you already deleted the access keys for the root user in the security account, you should authenticate as your
+IAM user, making sure to set the MFA token on the CLI, and deploy the `guardduty` module by running `terragrunt apply`:
+
+[source,bash]
+----
+cd infrastructure-live/security/_global/guardduty
+terragrunt apply
+----
+
+=== Enable GuardDuty in the other child accounts
+
+Create `terragrunt.hcl` files in `infrastructure-live` under the file paths `<ACCOUNT>/_global/guardduty`, where
+`<ACCOUNT>` is one of these other child accounts, such as dev, stage, prod, and shared-services. In the rest of this
+example, we'll look solely at the stage account, but make sure you follow the analogous steps for ALL of your child
+accounts.
+
+----
+infrastructure-live
+  └ root
+  └ security
+  └ stage
+    └ _global
+      └ iam
+      └ cloudtrail
+      └ aws-config
+      └ guardduty
+        └ terragrunt.hcl
+  └ dev
+  └ prod
+  └ shared-services
+----
+
+Point the `source` URL in your `terragrunt.hcl` file to your `guardduty` wrapper module in the `infrastructure-modules`
+repo, setting the `ref` param to the version you released earlier:
+
+.infrastructure-live/stage/_global/guardduty/terragrunt.hcl
+[source,hcl]
+----
+terraform {
+  source = "git@github.com/<YOUR_ORG>/infrastructure-modules.git//security/guardduty?ref=v0.3.3"
+}
+----
+
+Set the variables for the `guardduty` module in this environment in the `inputs = { ... }` block of `terragrunt.hcl`:
+
+.infrastructure-live/stage/_global/guardduty/terragrunt.hcl
+[source,hcl]
+----
+inputs = {
+  # Fill in your region you want to use (only used for API calls) and the ID of your stage AWS account
+  seed_region    = "us-east-2"
+  aws_account_id = "777777777777"
+
+  # The name of the SNS topic where findings are published.
+  findings_sns_topic_name = "<COMPANY_NAME>-stage-guardduty-finding-events"
+
+  # The name of the Cloudwatch event rule.
+  cloudwatch_event_rule_name = "<COMPANY_NAME>-stage-guardduty-finding-events"
+}
+----
+
+Configure your Terraform backend:
+
+Authenticate to each child account by (a) authenticating to the security account (b) assuming an IAM role in the child
+account and (c) using an MFA token. This can be fairly complicated to do, so check out
+https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[A Comprehensive Guide to Authenticating to AWS on the Command Line]
+for instructions.
+
+Finally, deploy the `guardduty` module by running `terragrunt apply`:
+
+[source,bash]
+----
+cd infrastructure-live/stage/_global/guardduty
+terragrunt apply
+----
+
+Remember to repeat this process in the other child accounts too!
+
 [[next_steps]]
 == Next steps
 
