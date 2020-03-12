@@ -2,7 +2,7 @@
 title: How to configure a production-grade CI/CD workflow for infrastructure code
 categories: Automations and Workflows
 image: /assets/img/guides/infrastructure-cicd-pipeline/terraform-icon.png
-excerpt: Learn about CI/CD workflows for infrastructure code, including the differences with application code, different CI servers, threat models, and more.
+excerpt: Learn about CI/CD workflows for Terraform and Terragrunt, including the differences between application code, different CI servers, threat models, and more.
 tags: ["aws", "terraform", "cicd"]
 cloud: ["aws"]
 ---
@@ -28,6 +28,12 @@ This is a comprehensive guide of how to design, configure, and implement a Conti
 Delivery pipeline for your infrastructure code. This guide will walk you through the steps to set up a secure CI/CD
 pipeline for your favorite infrastructure as code tools (e.g., Terraform) using your favorite CI/CD platform (e.g.,
 Jenkins, Circle, GitLab, etc).
+
+TLDR: If you follow this guide, you'll be able to set up a pipeline that works like this:
+
+.For an extended version with audio commentary, see https://youtu.be/iYXghJK7YdU
+image::/assets/img/guides/infrastructure-cicd-pipeline/walkthrough.gif[]
+
 
 === What is Continuous Integration and Continuous Delivery?
 
