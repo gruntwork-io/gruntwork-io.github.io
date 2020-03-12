@@ -1414,7 +1414,7 @@ Enable MFA::
   https://www.theverge.com/2017/9/18/16328172/sms-two-factor-authentication-hack-password-bitcoin[vulnerabilities with the cellular system],
   so using a virtual or hardware MFA device is preferable; that said, MFA with SMS is still better than no MFA at all.
 
-=== Enable CloudTrail on the root account
+=== Enable CloudTrail in the root account
 
 Next, let's enable CloudTrail in the root account so you have an audit log of everything that happens in the account.
 You can do this using the `cloudtrail` module from https://github.com/gruntwork-io/module-security[module-security].
@@ -1665,7 +1665,7 @@ cd infrastructure-live/root/_global/cloudtrail
 terragrunt apply
 ----
 
-=== Enable AWS Config on the root account
+=== Enable AWS Config in the root account
 
 Next, let's enable AWS Config in the root account so you can assess, audit, and evaluate the configurations of your AWS resources.
 You can do this using the `aws-config` module from https://github.com/gruntwork-io/module-security[module-security].
