@@ -424,6 +424,28 @@ https://aws.amazon.com/kms/[KMS]. It can be a good idea to enable CloudTrail in 
 multi-region feature enabled, as the API call data is useful useful for troubleshooting, investigating security
 incidents, and maintaining audit logs for compliance.
 
+=== AWS Config
+
+_https://aws.amazon.com/config/[AWS Config]_ is a service that enables you to assess, audit, and evaluate the configurations of
+your https://docs.aws.amazon.com/config/latest/developerguide/resource-config-reference.html[AWS resources]. You can use AWS
+Config to ensure that AWS resources are configured in a manner that is in compliance with your company policies or regulatory
+requirements. This enables you to simplify compliance auditing, security analysis, change management, and operational
+troubleshooting.
+
+AWS Config Rules::
+  Config rules are expressions of a desired configuration state, written in code and executed as Lambda functions. When a
+  resource configuration changes, AWS Config fires the relevant Lambda functions to evaluate whether the configuration changes
+  the state of compliance with the desired configuration. AWS has developed a set of pre-written rules called
+  https://docs.aws.amazon.com/config/latest/developerguide/managed-rules-by-aws-config.html[AWS Config Managed Rules], but you
+  can also author your own https://docs.aws.amazon.com/config/latest/developerguide/evaluate-config_develop-rules_nodejs.html[custom rules].
+
+=== GuardDuty
+
+_https://aws.amazon.com/guardduty/[Amazon GuardDuty]_ is a threat detection service that continuously monitors for malicious
+activity and unauthorized behavior in an AWS account. The service analyzes events across multiple AWS data sources, such as
+AWS CloudTrail, Amazon VPC Flow Logs, and DNS logs, and uses machine learning, anomaly detection, and integrated threat
+intelligence to identify and prioritize potential threats.
+
 [[production_grade_design]]
 == Production-grade design
 
@@ -721,6 +743,18 @@ happening in the account. We typically recommend creating an S3 bucket in the se
 CloudTrail logs from the other accounts to this one S3 bucket. Also, make sure to encrypt all logs with KMS, and only
 give a small number of trusted admins access to the KMS master key and the S3 bucket. You may also want to send the
 logs to CloudWatch Logs a second way to store/view audit logs.
+
+=== AWS Config
+
+You'll want to enable AWS Config in all available regions in each of your AWS accounts so that you can track AWS
+resource configuration changes over time. We typically recommend creating an S3 bucket for each region and storing
+all of the configuration items there for a set number of days, after which they should be moved to Amazon S3 Glacier.
+
+=== GuardDuty
+
+You'll want to enable GuardDuty in all available regions in each of your AWS accounts so that you can protect both
+your accounts and workloads against malicious activity and unauthorized behavior. We typically recommend publishing
+GuardDuty's findings to a dedicated Amazon SNS topic.
 
 [[federated_auth]]
 === Federated auth
