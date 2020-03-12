@@ -2751,6 +2751,77 @@ terragrunt apply
 
 Remember to repeat this process in the other child accounts too!
 
+=== Enable AWS Config in the security account
+
+The next step is to configure AWS Config in all your child accounts. You can do this using the `aws-config` module you
+created in `infrastructure-modules` earlier.
+
+Create a `terragrunt.hcl` file in `infrastructure-live` under the file path `security/_global/aws-config`:
+
+----
+infrastructure-live
+  └ root
+  └ security
+    └ _global
+      └ iam
+      └ cloudtrail
+      └ aws-config
+        └ terragrunt.hcl
+  └ stage
+  └ dev
+  └ prod
+  └ shared-services
+----
+
+Point the `source` URL in your `terragrunt.hcl` file to your `aws-config` wrapper module in the `infrastructure-modules`
+repo, setting the `ref` param to the version you released earlier:
+
+.infrastructure-live/security/_global/aws-config/terragrunt.hcl
+[source,hcl]
+----
+terraform {
+  source = "git@github.com/<YOUR_ORG>/infrastructure-modules.git//security/aws-config?ref=v0.3.3"
+}
+----
+
+Set the variables for the `aws-config` module in this environment in the `inputs = { ... }` block of `terragrunt.hcl`:
+
+.infrastructure-live/security/_global/aws-config/terragrunt.hcl
+[source,hcl]
+----
+inputs = {
+  # Fill in your region you want to use (only used for API calls) and the ID of your security AWS account
+  aws_region     = "us-east-2"
+  aws_account_id = "444444444444"
+
+  # Name the S3 bucket
+  s3_bucket_name            = "<COMPANY_NAME>-security-aws-config"
+  s3_bucket_already_exists  = false
+
+  num_days_after_which_archive_log_data = 30
+  num_days_after_which_delete_log_data  = 365
+
+  # The name of the SNS topic to which Config notifications will be delivered.
+  sns_topic_name = "<COMPANY_NAME>-security-aws-config-topic"
+
+  # The name of an IAM role for Config service to assume. Must be globally unique.
+  iam_role_name = "<COMPANY_NAME>-aws-config-role"
+
+  # Only set this to true if, when running 'terragrunt destroy', you want to delete the contents of the S3 bucket that
+  # stores the AWS Config configuration changes. Note that you must set this to true and run 'terragrunt apply' FIRST, before running 'destroy'.
+  force_destroy = false
+}
+----
+
+Since you already deleted the access keys for the root user in the security account, you should authenticate as your
+IAM user, making sure to set the MFA token on the CLI, and deploy the `aws-config` module by running `terragrunt apply`:
+
+[source,bash]
+----
+cd infrastructure-live/security/_global/aws-config
+terragrunt apply
+----
+
 [[next_steps]]
 == Next steps
 
