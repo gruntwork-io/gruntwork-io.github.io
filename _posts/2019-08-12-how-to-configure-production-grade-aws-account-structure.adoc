@@ -1748,6 +1748,11 @@ variable "aws_region" {
   type        = string
 }
 
+variable "aws_account_id" {
+  description = "The ID of the AWS Account in which to create resources."
+  type        = string
+}
+
 variable "s3_bucket_name" {
   description = "The name of the S3 Bucket where Config items will be stored."
   type        = string
@@ -1756,6 +1761,16 @@ variable "s3_bucket_name" {
 variable "s3_bucket_already_exists" {
   description = "The name of the S3 Bucket where Config items will be stored."
   type        = bool
+}
+
+variable "num_days_after_which_archive_log_data" {
+  description = "After this number of days, log files should be transitioned from S3 to Glacier. Enter 0 to never archive log data."
+  type        = number
+}
+
+variable "num_days_after_which_delete_log_data" {
+  description = "After this number of days, log files should be deleted from S3. Enter 0 to never delete log data."
+  type        = number
 }
 
 variable "sns_topic_name" {
@@ -1814,7 +1829,7 @@ repo, setting the `ref` param to the version you released earlier:
 [source,hcl]
 ----
 terraform {
-  source = "git@github.com/<YOUR_ORG>/infrastructure-modules.git//security/aws-config?ref=v0.3.1"
+  source = "git@github.com/<YOUR_ORG>/infrastructure-modules.git//security/aws-config?ref=v0.3.2"
 }
 ----
 
@@ -1826,6 +1841,7 @@ Set the variables for the `aws-config` module in this environment in the `inputs
 inputs = {
   # Fill in your region you want to use (only used for API calls) and the ID of your root AWS account
   aws_region     = "us-east-2"
+  aws_account_id = "111122223333"
 
   # Name the S3 bucket
   s3_bucket_name            = "<COMPANY_NAME>-root-aws-config"
@@ -1864,9 +1880,178 @@ cd infrastructure-live/root/_global/aws-config
 terragrunt apply
 ----
 
-=== Enable GuardDuty on the root account
+=== Enable GuardDuty in the root account
 
+Next, let's enable GuardDuty in the root account so you can continuously monitor your AWS accounts and workloads against malicious
+activity and unauthorized behavior. You can do this using the `guardduty` module from https://github.com/gruntwork-io/module-security[module-security].
 
+IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork subscriber# to access `module-security`.
+
+First, create a wrapper module called `guardduty` in your `infrastructure-modules` repo:
+
+----
+infrastructure-modules
+  └ security
+    └ iam
+    └ cloudtrail
+    └ aws-config
+    └ guardduty
+      └ main.tf
+      └ outputs.tf
+      └ variables.tf
+----
+
+Inside of `main.tf`, configure your AWS provider and Terraform settings:
+
+.infrastructure-modules/security/guardduty/main.tf
+[source,hcl]
+----
+provider "aws" {
+  # The AWS region in which all resources will be created
+  region = var.aws_region
+
+  # Require a 2.x version of the AWS provider
+  version = "~> 2.6"
+
+  # Only these AWS Account IDs may be operated on by this template
+  allowed_account_ids = [var.aws_account_id]
+}
+
+terraform {
+  # The configuration for this backend will be filled in by Terragrunt or via a backend.hcl file. See
+  # https://www.terraform.io/docs/backends/config.html#partial-configuration
+  backend "s3" {}
+
+  # Only allow this Terraform version. Note that if you upgrade to a newer version, Terraform won't allow you to use an
+  # older version, so when you upgrade, you should upgrade everyone on your team and your CI servers all at once.
+  required_version = "= 0.12.6"
+}
+----
+
+Next, use the `guardduty` module from the Gruntwork Infrastructure as Code Library, making sure to replace the `<VERSION>` placeholder
+with the latest version from the https://github.com/gruntwork-io/module-security/releases[releases page]:
+
+.infrastructure-modules/security/guardduty/main.tf
+[source,hcl]
+----
+module "guardduty_master" {
+  source = "git::git@github.com:gruntwork-io/module-security.git//modules/guardduty?ref=<VERSION>"
+
+  aws_account_id = var.aws_account_id
+  seed_region    = var.seed_region
+
+  publish_findings_to_sns      = true
+  findings_sns_topic_name      = var.findings_sns_topic_name
+  cloudwatch_event_rule_name   = var.cloudwatch_event_rule_name
+  finding_publishing_frequency = "FIFTEEN_MINUTES"
+}
+----
+
+Create all the corresponding input variables for `guardduty` in `variables.tf`:
+
+.infrastructure-modules/security/guardduty/variables.tf
+[source,hcl]
+----
+# ---------------------------------------------------------------------------------------------------------------------
+# MODULE PARAMETERS
+# These variables are expected to be passed in by the operator
+# ---------------------------------------------------------------------------------------------------------------------
+
+variable "aws_account_id" {
+  description = "The AWS Account ID the template should be operated on. This avoids misconfiguration errors caused by environment variables."
+  type        = string
+}
+
+variable "seed_region" {
+  description = "An AWS region (e.g us-east-1) that is known to be enabled in the account. This region is used to query AWS for all enabled regions in the account."
+  type        = string
+}
+
+variable "findings_sns_topic_name" {
+  description = "Specifies a name for the created SNS topics where findings are published. publish_findings_to_sns must be set to true."
+  type        = string
+}
+
+variable "cloudwatch_event_rule_name" {
+  description = "Name of the Cloudwatch event rule."
+  type        = string
+}
+----
+
+At this point, you'll want to test your code. See
+link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#manual_tests_terraform[Manual tests for Terraform code] and
+link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#automated_tests_terraform[Automated tests for Terraform code]
+for instructions.
+
+Once tests are passing, commit and release your changes:
+
+[source,bash]
+----
+git add security/aws-config
+git commit -m "Add guardduty wrapper module"
+git tag -a "v0.3.3" -m "Created guardduty module"
+git push --follow-tags
+----
+
+Create a `terragrunt.hcl` file in `infrastructure-live` under the file path `root/_global/guardduty`:
+
+----
+infrastructure-live
+  └ root
+    └ _global
+      └ iam
+      └ cloudtrail
+      └ aws-config
+      └ guardduty
+        └ terragrunt.hcl
+----
+
+Point the `source` URL in your `terragrunt.hcl` file to your `guardduty` wrapper module in the `infrastructure-modules`
+repo, setting the `ref` param to the version you released earlier:
+
+.infrastructure-live/root/_global/guardduty/terragrunt.hcl
+[source,hcl]
+----
+terraform {
+  source = "git@github.com/<YOUR_ORG>/infrastructure-modules.git//security/guardduty?ref=v0.3.3"
+}
+----
+
+Set the variables for the `guardduty` module in this environment in the `inputs = { ... }` block of `terragrunt.hcl`:
+
+.infrastructure-live/root/_global/guardduty/terragrunt.hcl
+[source,hcl]
+----
+inputs = {
+  # Fill in your region you want to use (only used for API calls) and the ID of your root AWS account
+  seed_region    = "us-east-2"
+  aws_account_id = "111122223333"
+
+  # The name of the SNS topic where findings are published.
+  findings_sns_topic_name = "<COMPANY_NAME>-root-guardduty-finding-events"
+
+  # The name of the Cloudwatch event rule.
+  cloudwatch_event_rule_name = "<COMPANY_NAME>-root-guardduty-finding-events"
+}
+----
+
+As before, configure the backend you want to use by including the settings from the root `terragrunt.hcl`:
+
+.infrastructure-live/root/_global/guardduty/terragrunt.hcl
+[source,hcl]
+----
+include {
+  path = find_in_parent_folders()
+}
+----
+
+Finally, deploy the `guardduty` module by running `terragrunt apply`:
+
+[source,bash]
+----
+cd infrastructure-live/root/_global/guardduty
+terragrunt apply
+----
 
 === Create child accounts
 
