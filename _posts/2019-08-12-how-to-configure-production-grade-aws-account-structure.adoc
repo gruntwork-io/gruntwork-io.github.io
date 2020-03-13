@@ -837,6 +837,365 @@ the central place where you manage billing. You create this initial account manu
 . You will be asked to enter an email address and password to use as the credentials for the root user of this root
   account.
 
+=== Apply the security baseline to the root account
+
+Next, we'll apply a security baseline to the root account that is responsible for configuring AWS Organizations, IAM Roles, IAM Users,
+IAM Groups, IAM Password Policies, Amazon GuardyDuty, AWS CloudTrail and AWS Config including setting up the child accounts.
+
+Let's first apply the security baseline by using the `account-baseline-root` module from https://github.com/gruntwork-io/module-security[module-security].
+
+IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork subscriber# to access `module-security`.
+
+First, create a _wrapper module_ called `account-baseline-root` in your `infrastructure-modules` repo under the `landingzone` subdirectory:
+
+----
+infrastructure-modules
+  └ landingzone
+    └ account-baseline-root
+      └ main.tf
+      └ outputs.tf
+      └ variables.tf
+----
+
+Inside of `main.tf`, configure your AWS provider and Terraform settings:
+
+.infrastructure-modules/landingzone/account-baseline-root/main.tf
+[source,hcl]
+----
+provider "aws" {
+  # The AWS region in which all resources will be created
+  region = var.aws_region
+
+  # Require a 2.x version of the AWS provider
+  version = "~> 2.6"
+
+  # Only these AWS Account IDs may be operated on by this template
+  allowed_account_ids = [var.aws_account_id]
+}
+
+terraform {
+  # The configuration for this backend will be filled in by Terragrunt or via a backend.hcl file. See
+  # https://www.terraform.io/docs/backends/config.html#partial-configuration
+  backend "s3" {}
+
+  # Only allow this Terraform version. Note that if you upgrade to a newer version, Terraform won't allow you to use an
+  # older version, so when you upgrade, you should upgrade everyone on your team and your CI servers all at once.
+  required_version = "= 0.12.6"
+}
+----
+
+Next, use the `account-baseline-root` module from the Gruntwork Infrastructure as Code Library, making sure to replace the `<VERSION>` placeholder
+with the latest version from the https://github.com/gruntwork-io/module-security/releases[releases page]:
+
+.infrastructure-modules/landingzone/account-baseline-root/main.tf
+[source,hcl]
+----
+module "root_baseline" {
+  source = "git::git@github.com:gruntwork-io/module-security.git//modules/account-baseline-root?ref=<VERSION>"
+
+  aws_account_id = var.aws_account_id
+  aws_region     = var.aws_region
+  name_prefix    = var.name_prefix
+
+  // If you're running the example against an account that doesn't have AWS Organization created, change the following value to true
+  create_organization = var.create_organization
+
+  child_accounts = var.child_accounts
+}
+----
+
+Create all the corresponding input variables for `account-baseline-root` in `variables.tf`:
+
+.infrastructure-modules/landingzone/account-baseline-root/variables.tf
+[source,hcl]
+----
+# ---------------------------------------------------------------------------------------------------------------------
+# MODULE PARAMETERS
+# These variables are expected to be passed in by the operator
+# ---------------------------------------------------------------------------------------------------------------------
+
+variable "name_prefix" {
+  description = "The name used to prefix AWS Config and Cloudtrail resources, including the S3 bucket names and SNS topics used for each."
+  type        = string
+}
+
+variable "aws_region" {
+  description = "The AWS Region to use as the global config recorder and seed region for AWS GuardDuty."
+  type        = string
+}
+
+variable "aws_account_id" {
+  description = "The AWS Account ID the template should be operated on. This avoids misconfiguration errors caused by environment variables."
+  type        = string
+}
+
+variable "create_organization" {
+  description = "Flag indicating whether the organization should be created."
+  type        = bool
+}
+
+variable "child_accounts" {
+  description = "Map of child accounts to create. The map key is the name of the account and the value is an object containing account configuration variables."
+
+  # Ideally, this would be a map of (string, object), but object does not support optional properties, and we want
+  # users to be able to specify, say, tags for some accounts, but not for others. We can't use a map(any) either, as that
+  # would require the values to all have the same type, and due to optional parameters, that wouldn't work either. So,
+  # we have to lamely fall back to any.
+  type = any
+
+  # Expected value for the `child_accounts` is a map of child accounts. The map key is the name of the account and
+  # the value is another map with one required key (email) and several optional keys:
+  #
+  # - email (required):
+  #   Email address for the account.
+  #
+  # - parent_id:
+  #   Parent Organizational Unit ID or Root ID for the account
+  #   Defaults to the Organization default Root ID.
+  #
+  # - role_name:
+  #   The name of an IAM role that Organizations automatically preconfigures in the new member account. This role trusts
+  #   the master account, allowing users in the master account to assume the role, as permitted by the master account
+  #   administrator. The role has administrator permissions in the new member account. Note that the Organizations API
+  #   provides no method for reading this information after account creation.
+  #   If no value is present and no ´default_role_name´ is provided, AWS automatically assigns a value.
+  #
+  # - iam_user_access_to_billing:
+  #   If set to ´ALLOW´, the new account enables IAM users to access account billing information if they have the required
+  #   permissions. If set to ´DENY´, then only the root user of the new account can access account billing information.
+  #   Defaults to ´default_iam_user_access_to_billing´.
+  #
+  # - tags:
+  #   Key-value mapping of resource tags.
+  #
+  #
+  # Example:
+  #
+  # child_accounts = {
+  #   security = {
+  #     email                       = "security-master@acme.com",
+  #     parent_id                   = "my-org-unit-id",
+  #     role_name                   = "OrganizationAccountAccessRole",
+  #     iam_user_access_to_billing  = "DENY",
+  #     tags = {
+  #       Tag-Key = "tag-value"
+  #     }
+  #   },
+  #   sandbox = {
+  #     email                       = "sandbox@acme.com"
+  #   }
+  # }
+}
+----
+
+Finally, add some useful outputs in `outputs.tf`:
+
+.infrastructure-modules/landingzone/account-baseline-root/outputs.tf
+[source,hcl]
+----
+output "organization_arn" {
+  description = "ARN of the organization."
+  value       = module.root_baseline.organization_arn
+}
+
+output "organization_id" {
+  description = "Identifier of the organization."
+  value       = module.root_baseline.organization_id
+}
+
+output "master_account_arn" {
+  description = "ARN of the master account."
+  value       = module.root_baseline.master_account_arn
+}
+
+output "master_account_id" {
+  description = "Identifier of the master account."
+  value       = module.root_baseline.master_account_id
+}
+
+output "master_account_email" {
+  description = "Email address of the master account."
+  value       = module.root_baseline.master_account_email
+}
+
+# See https://www.terraform.io/docs/providers/aws/r/organizations_organization.html#accounts for available attributes
+output "accounts" {
+  description = "List of organization accounts including the master account."
+  value       = module.root_baseline.accounts
+}
+
+# See https://www.terraform.io/docs/providers/aws/r/organizations_organization.html#non_master_accounts for available attributes
+output "non_master_accounts" {
+  description = "List of organization accounts excluding the master account."
+  value       = module.root_baseline.non_master_accounts
+}
+
+# See https://www.terraform.io/docs/providers/aws/r/organizations_organization.html#roots for available attributes
+output "root_accounts" {
+  description = "List of organization roots."
+  value       = module.root_baseline.root_accounts
+}
+
+// Majority of the module outputs omitted in the example
+----
+
+At this point, you'll want to test your code. See
+link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#manual_tests_terraform[Manual tests for Terraform code] and
+link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#automated_tests_terraform[Automated tests for Terraform code]
+for instructions.
+
+Once your code is tested and working, commit and release your changes:
+
+[source,bash]
+----
+git add security/iam
+git commit -m "Add root account baseline wrapper module"
+git tag -a "v0.3.0" -m "Created root account basline module"
+git push --follow-tags
+----
+
+NOTE: This guide will use https://github.com/gruntwork-io/terragrunt[Terragrunt] and its associated file and folder
+structure to deploy Terraform modules. Please note that *Terragrunt is NOT required for using Terraform modules from
+the Gruntwork Infrastructure as Code Library.* Check out link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library[How to use the Gruntwork Infrastructure as Code Library]
+for instructions on alternative options, such as how to
+link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#deploy_using_plain_terraform[deploying how to use plain terraform].
+
+Next, create a `terragrunt.hcl` file in `infrastructure-live`. It should go under the file path `root/_global/account-baseline`:
+
+----
+infrastructure-live
+  └ root
+    └ _global
+      └ account-baseline
+        └ terragrunt.hcl
+----
+
+Point the `source` URL in your `terragrunt.hcl` file to your `account-baseline` wrapper module in the `infrastructure-modules`
+repo, setting the `ref` param to the version you released earlier:
+
+.infrastructure-live/root/_global/account-baseline/terragrunt.hcl
+[source,hcl]
+----
+terraform {
+  source = "git@github.com/<YOUR_ORG>/infrastructure-modules.git//landingzone/account-baseline-root?ref=v0.3.0"
+}
+----
+
+Set the variables for the `account-baseline-root` module in this environment in the `inputs = { ... }` block of `terragrunt.hcl`:
+
+.infrastructure-live/root/_global/account-baseline/terragrunt.hcl
+[source,hcl]
+----
+inputs = {
+  # Fill in your region you want to use (only used for API calls) and the ID of your root AWS account
+  aws_region     = "us-east-2"
+  aws_account_id = "111122223333"
+
+  # Prefix all resources with this name
+  name_prefix = "ref-arch"
+
+  // If you're running the example against an account that doesn't have AWS Organization created, change the following value to true
+  create_organization = true
+
+  child_accounts = var.child_accounts
+
+  # The child AWS accounts to create in this AWS organization
+  child_accounts = {
+    security = {
+      email = "root-accounts+security@acme.com",
+    },
+    shared-services = {
+      email = "root-accounts+shared-services@acme.com"
+    },
+    dev = {
+      email = "root-accounts+dev@acme.com"
+    },
+    stage = {
+      email = "root-accounts+stage@acme.com"
+    },
+    prod = {
+      email = "root-accounts+prod@acme.com"
+    }
+  }
+
+  # The IAM users to create in this account. Since this is the root account, we should only create IAM users for a
+  # small handful of trusted admins.
+  users = {
+    alice = {
+      groups               = ["full-access"]
+      pgp_key              = "keybase:alice"
+      create_login_profile = true
+      create_access_keys   = false
+    },
+    bob = {
+      groups               = ["full-access"]
+      pgp_key              = "keybase:bob"
+      create_login_profile = true
+      create_access_keys   = false
+    }
+    alice = {
+      groups               = ["billing"]
+      pgp_key              = "keybase:carol"
+      create_login_profile = true
+      create_access_keys   = false
+    }
+  }
+}
+----
+
+The example above creates a `full-access` IAM group (for admins) and a `billing` IAM group (for the finance team), as
+well as the IAM users `alice`, `bob`, and `carol`, adding `alice` and `bob` to the `full-access` IAM group and `carol`
+to the `billing` IAM group. The code will also generate a password for each user and encrypt it with that user's PGP
+key from Keybase (we'll come back to how to handle the passwords shortly). You should follow this pattern to create an
+IAM user for yourself, as well as the small number of other trusted admins at your company who should have access to
+the root account.
+
+Pull in the https://www.terraform.io/docs/backends/[backend] settings from a root `terragrunt.hcl` file that you
+`include` in each child `terragrunt.hcl`:
+
+.infrastructure-live/root/_global/account-baseline/terragrunt.hcl
+[source,hcl]
+----
+include {
+  path = find_in_parent_folders()
+}
+----
+
+https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html#id_root-user_manage_add-key[Create a set of access keys for your root user]
+and https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[use those access keys to authenticate on the CLI].
+Finally, deploy the `account-baseline` module by running `terragrunt apply`:
+
+[source,bash]
+----
+cd infrastructure-live/root/_global/account-baseline
+terragrunt apply
+----
+
+After `apply` completes, the module will output the encrypted passwords for `alice`, `bob`, and `carol`:
+
+[source,hcl]
+----
+user_passwords = {
+  "alice" = "wcBMA7E6Kn/t1YPfAQgAVSXlUzumcs4UyO8E5q099YnnU="
+  "bob" = "wcBMA7E6Kn/t1YPfAQgACgbdb1mYtQx7EL4hnVWtYAi="
+  "carol" = "wcBMA7E6Kn/t1YPfAQgACgbdb1mYtQx7EL4hnVWtYAi="
+}
+----
+
+Send the encrypted password to each user, along with their user name, and the IAM user sign-in URL for the account. Each
+user can then decrypt the password on their own computer (which should have their PGP key) as follows:
+
+[source,bash]
+----
+echo "<PASSWORD>" | base64 --decode | keybase pgp decrypt
+----
+
+=== Apply the security baseline to the security account
+
+=== Apply the security baseline to the other child accounts
+
+
+
 === Create IAM groups, IAM users, and an IAM password policy in the root account
 
 The root user has unrestricted access to just about everything in your AWS account (and any child accounts),
