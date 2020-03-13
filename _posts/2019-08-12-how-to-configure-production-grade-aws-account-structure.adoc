@@ -1190,12 +1190,6 @@ user can then decrypt the password on their own computer (which should have thei
 echo "<PASSWORD>" | base64 --decode | keybase pgp decrypt
 ----
 
-=== Apply the security baseline to the security account
-
-=== Apply the security baseline to the other child accounts
-
-
-
 === Create IAM groups, IAM users, and an IAM password policy in the root account
 
 The root user has unrestricted access to just about everything in your AWS account (and any child accounts),
@@ -2636,6 +2630,10 @@ you a reset link, which you can click to go to a page that will allow you to con
 Use this process to reset the password for the root user of each child account you created. With access to the root
 user in each account, you can configure IAM users, IAM groups, and IAM roles in those accounts, as described in the
 next couple sections.
+
+=== Apply the security baseline to the security account
+
+=== Apply the security baseline to the other child accounts
 
 === Create IAM users and groups in the security account
 
