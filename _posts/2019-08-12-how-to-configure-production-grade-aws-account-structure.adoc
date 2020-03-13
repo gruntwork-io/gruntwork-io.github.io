@@ -2074,7 +2074,7 @@ infrastructure-modules
 
 Inside of `main.tf`, configure your AWS provider and Terraform settings:
 
-.infrastructure-modules/security/organization/main.tf
+.infrastructure-modules/security/aws-organizations/main.tf
 [source,hcl]
 ----
 provider "aws" {
@@ -2101,7 +2101,7 @@ terraform {
 
 Next, use the `aws_organizations_organization` resource to enable AWS Organizations in your AWS account:
 
-.infrastructure-modules/security/organization/main.tf
+.infrastructure-modules/security/aws-organizations/main.tf
 [source,hcl]
 ----
 resource "aws_organizations_organization" "org" {
@@ -2114,7 +2114,7 @@ Now you can use the `aws_organizations_account` resource to create child account
 you need to group child accounts into Organizational Units, see the
 https://www.terraform.io/docs/providers/aws/r/organizations_organizational_unit.html:[aws_organizations_organizational_unit resource]):
 
-.infrastructure-modules/security/organization/main.tf
+.infrastructure-modules/security/aws-organizations/main.tf
 [source,hcl]
 ----
 resource "aws_organizations_account" "child_accounts" {
@@ -2127,7 +2127,7 @@ resource "aws_organizations_account" "child_accounts" {
 
 Create all the corresponding input variables in `variables.tf`:
 
-.infrastructure-modules/security/organization/variables.tf
+.infrastructure-modules/security/aws-organizations/variables.tf
 [source,hcl]
 ----
 # ---------------------------------------------------------------------------------------------------------------------
@@ -2161,7 +2161,7 @@ variable "organizations_account_access_role_name" {
 
 Add the corresponding output variables in `outputs.tf`:
 
-.infrastructure-modules/security/organization/outputs.tf
+.infrastructure-modules/security/aws-organizations/outputs.tf
 [source,hcl]
 ----
 output "child_accounts" {
@@ -2186,8 +2186,8 @@ When you're done testing, commit and release your changes:
 [source,bash]
 ----
 git add security/organization
-git commit -m "Add organization wrapper module"
-git tag -a "v0.3.2" -m "Created organization module"
+git commit -m "Add aws organizations wrapper module"
+git tag -a "v0.3.4" -m "Created aws organizations module"
 git push --follow-tags
 ----
 
@@ -2210,7 +2210,7 @@ repo, setting the `ref` param to the version you released earlier:
 [source,hcl]
 ----
 terraform {
-  source = "git@github.com/<YOUR_ORG>/infrastructure-modules.git//security/organization?ref=v0.3.2"
+  source = "git@github.com/<YOUR_ORG>/infrastructure-modules.git//security/aws-organizations?ref=v0.3.4"
 }
 ----
 
@@ -2851,7 +2851,7 @@ repo, setting the `ref` param to the version you released earlier:
 [source,hcl]
 ----
 terraform {
-  source = "git@github.com/<YOUR_ORG>/infrastructure-modules.git//security/aws-config?ref=v0.3.3"
+  source = "git@github.com/<YOUR_ORG>/infrastructure-modules.git//security/aws-config?ref=v0.3.2"
 }
 ----
 
