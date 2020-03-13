@@ -1143,7 +1143,16 @@ inputs = {
 }
 ----
 
-The example above creates a `full-access` IAM group (for admins) and a `billing` IAM group (for the finance team), as
+The example above configures 5 child AWS accounts. Note that AWS requires that you associate an email address with each
+child account, and that this email address must be _globally_ unique, so it cannot be the email address you used for
+the root account or any of the other child accounts. You'll have to either create multiple email accounts in your
+company's email system, or, if your company uses Gmail (perhaps as part of G Suite), you can take advantage of the fact
+that https://gmail.googleblog.com/2008/03/2-hidden-ways-to-get-more-from-your.html[Gmail ignores everything after a plus sign in an email address],
+so that while AWS will see `root-accounts+security@your-company.com`, `root-accounts+shared@your-company.com`, and
+`root-accounts+dev@your-company.com` as three unique email addresses, Gmail will see them all as the same email address,
+`root-accounts@your-company.com`.
+
+The code also creates a `full-access` IAM group (for admins) and a `billing` IAM group (for the finance team), as
 well as the IAM users `alice`, `bob`, and `carol`, adding `alice` and `bob` to the `full-access` IAM group and `carol`
 to the `billing` IAM group. The code will also generate a password for each user and encrypt it with that user's PGP
 key from Keybase (we'll come back to how to handle the passwords shortly). You should follow this pattern to create an
