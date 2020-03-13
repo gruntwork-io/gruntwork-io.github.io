@@ -1143,11 +1143,11 @@ inputs = {
 }
 ----
 
-The example above configures 5 child AWS accounts. Note that AWS requires that you associate an email address with each
-child account, and that this email address must be _globally_ unique, so it cannot be the email address you used for
-the root account or any of the other child accounts. You'll have to either create multiple email accounts in your
-company's email system, or, if your company uses Gmail (perhaps as part of G Suite), you can take advantage of the fact
-that https://gmail.googleblog.com/2008/03/2-hidden-ways-to-get-more-from-your.html[Gmail ignores everything after a plus sign in an email address],
+The example above creates the 5 child AWS accounts detailed in the <<child_accounts>> sections. Note that AWS requires
+that you associate an email address with each child account, and that this email address must be _globally_ unique, so
+it cannot be the email address you used for the root account or any of the other child accounts. You'll have to either
+create multiple email accounts in your company's email system, or, if your company uses Gmail (perhaps as part of G
+Suite), you can take advantage of the fact that https://gmail.googleblog.com/2008/03/2-hidden-ways-to-get-more-from-your.html[Gmail ignores everything after a plus sign in an email address],
 so that while AWS will see `root-accounts+security@your-company.com`, `root-accounts+shared@your-company.com`, and
 `root-accounts+dev@your-company.com` as three unique email addresses, Gmail will see them all as the same email address,
 `root-accounts@your-company.com`.
@@ -2415,20 +2415,29 @@ cd infrastructure-live/root/_global/guardduty
 terragrunt apply
 ----
 
-=== Create child accounts
+=== Reset the root user password in each child account
 
-Now that your root account is fully configured, you can create child accounts. In this guide, we will be creating the
-accounts detailed in the <<child_accounts>> section, but feel free to adjust this as necessary based on the accounts
-your company needs.
+When creating the child accounts, you may have noticed that you provided an email address for each root user, but
+confusingly, not a password. So how do you login as the root user then? It's not obvious, but the answer is that you
+https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys_retrieve.html#reset-root-password[reset the root user password],
+using the "Forgot your password?" prompt on the https://console.aws.amazon.com/[root user login page]. AWS will email
+you a reset link, which you can click to go to a page that will allow you to configure a password for the root user.
 
-Create a new module called `organization` in your `infrastructure-modules` repo:
+Use this process to reset the password for the root user of each child account you created. With access to the root
+user in each account, you can configure IAM users, IAM groups, and IAM roles in those accounts, as described in the
+next couple sections.
+
+=== Apply the security baseline to the security account
+
+Now that your root account is fully configured, we need to apply the security baseline to the security account.
+
+Create a new module called `account-baseline-security` in your `infrastructure-modules` repo:
 
 ----
 infrastructure-modules
-  └ security
-    └ iam
-    └ cloudtrail
-    └ organization
+  └ landingzone
+    └ account-baseline-root
+    └ account-baseline-security
       └ main.tf
       └ outputs.tf
       └ variables.tf
@@ -2436,7 +2445,7 @@ infrastructure-modules
 
 Inside of `main.tf`, configure your AWS provider and Terraform settings:
 
-.infrastructure-modules/security/aws-organizations/main.tf
+.infrastructure-modules/landingzone/account-baseline-security/main.tf
 [source,hcl]
 ----
 provider "aws" {
@@ -2461,35 +2470,24 @@ terraform {
 }
 ----
 
-Next, use the `aws_organizations_organization` resource to enable AWS Organizations in your AWS account:
+Next, use the `account-baseline-security` module from the Gruntwork Infrastructure as Code Library, making sure to replace the `<VERSION>` placeholder
+with the latest version from the https://github.com/gruntwork-io/module-security/releases[releases page]:
 
-.infrastructure-modules/security/aws-organizations/main.tf
+.infrastructure-modules/landingzone/account-baseline-security/main.tf
 [source,hcl]
 ----
-resource "aws_organizations_organization" "org" {
-  feature_set                   = "ALL"
-  aws_service_access_principals = ["cloudtrail.amazonaws.com"]
+module "security_baseline" {
+  source = "git::git@github.com:gruntwork-io/module-security.git//modules/account-baseline-security?ref=<VERSION>"
+
+  aws_account_id = var.aws_account_id
+  aws_region     = var.aws_region
+  name_prefix    = var.name_prefix
 }
 ----
 
-Now you can use the `aws_organizations_account` resource to create child accounts within the organization (note: if
-you need to group child accounts into Organizational Units, see the
-https://www.terraform.io/docs/providers/aws/r/organizations_organizational_unit.html:[aws_organizations_organizational_unit resource]):
+Create all the corresponding input variables for `account-baseline-security` in `variables.tf`:
 
-.infrastructure-modules/security/aws-organizations/main.tf
-[source,hcl]
-----
-resource "aws_organizations_account" "child_accounts" {
-  for_each = var.child_accounts
-  name     = each.key
-  email    = each.value["email"]
-  role     = var.organizations_account_access_role_name
-}
-----
-
-Create all the corresponding input variables in `variables.tf`:
-
-.infrastructure-modules/security/aws-organizations/variables.tf
+.infrastructure-modules/landingzone/account-baseline-security/variables.tf
 [source,hcl]
 ----
 # ---------------------------------------------------------------------------------------------------------------------
@@ -2497,44 +2495,89 @@ Create all the corresponding input variables in `variables.tf`:
 # These variables are expected to be passed in by the operator
 # ---------------------------------------------------------------------------------------------------------------------
 
+variable "name_prefix" {
+  description = "The name used to prefix AWS Config and CloudTrail resources, including the S3 bucket names and SNS topics used for each."
+  type        = string
+}
+
 variable "aws_region" {
-  description = "The AWS region in which all resources will be created"
+  description = "The AWS Region to use as the global config recorder and seed region for AWS GuardDuty."
   type        = string
 }
 
 variable "aws_account_id" {
-  description = "The ID of the AWS Account in which to create resources."
+  description = "The AWS Account ID the template should be operated on. This avoids misconfiguration errors caused by environment variables."
   type        = string
 }
 
-variable "child_accounts" {
-  description = "The child accounts to create. This is a map where the key is the name of the account and the value is the email address to use for the root user (this email must be globally unique amongst all AWS accounts!."
-  type        = map(string)
+variable "iam_groups_for_cross_account_access" {
+  description = "This variable is used to create groups that allow allow IAM users to assume roles in your other AWS accounts. It should be a list of maps, where each map has the keys group_name and iam_role_arn. For each entry in the list, we will create an IAM group that allows users to assume the given IAM role in the other AWS account. This allows you to define all your IAM users in one account (e.g. the users account) and to grant them access to certain IAM roles in other accounts (e.g. the stage, prod, audit accounts)."
+  type = list(object({
+    group_name   = string
+    iam_role_arn = string
+  }))
+  default = []
+
+  # Example:
+  # default = [
+  #   {
+  #     group_name   = "stage-full-access"
+  #     iam_role_arn = "arn:aws:iam::123445678910:role/mgmt-full-access"
+  #   },
+  #   {
+  #     group_name   = "prod-read-only-access"
+  #     iam_role_arn = "arn:aws:iam::9876543210:role/prod-read-only-access"
+  #   }
+  # ]
 }
 
-variable "organizations_account_access_role_name" {
-  description = "The name to use for the IAM role that will be created in child accounts. Users in the root account will be able to assume this role to get admin access to those child accounts."
-  type        = string
-  default     = "OrganizationAccountAccessRole"
+variable "should_create_iam_group_full_access" {
+  description = "Should we create the IAM Group for full access? Allows full access to all AWS resources. (true or false)"
+  type        = bool
+  default     = true
+}
+
+variable "users" {
+  description = "A map of users to create. The keys are the user names and the values are an object with the optional keys 'groups' (a list of IAM groups to add the user to), 'tags' (a map of tags to apply to the user), 'pgp_key' (either a base-64 encoded PGP public key, or a keybase username in the form keybase:username, used to encrypt the user's credentials; required if create_login_profile or create_access_keys is true), 'create_login_profile' (if set to true, create a password to login to the AWS Web Console), 'create_access_keys' (if set to true, create access keys for the user), 'path' (the path), and 'permissions_boundary' (the ARN of the policy that is used to set the permissions boundary for the user)."
+
+  # Ideally, this would be a map of (string, object), but object does not support optional properties, and we want
+  # users to be able to specify, say, tags for some users, but not for others. We can't use a map(any) either, as that
+  # would require the values to all have the same type, and due to optional parameters, that wouldn't work either. So,
+  # we have to lamely fall back to any.
+  type = any
+
+  # Example:
+  # default = {
+  #   alice = {
+  #     groups = ["user-self-mgmt", "developers", "ssh-sudo-users"]
+  #   }
+  #
+  #   bob = {
+  #     path   = "/"
+  #     groups = ["user-self-mgmt", "ops", "admins"]
+  #     tags   = {
+  #       foo = "bar"
+  #     }
+  #   }
+  #
+  #   carol = {
+  #     groups               = ["user-self-mgmt", "developers", "ssh-users"]
+  #     pgp_key              = "keybase:carol_on_keybase"
+  #     create_login_profile = true
+  #     create_access_keys   = true
+  #   }
+  # }
 }
 ----
 
-// TODO: find a way to require MFA to assume the OrganizationAccountAccessRole
+Finally, add some useful outputs in `outputs.tf`:
 
-Add the corresponding output variables in `outputs.tf`:
-
-.infrastructure-modules/security/aws-organizations/outputs.tf
+.infrastructure-modules/landingzone/account-baseline-security/outputs.tf
 [source,hcl]
 ----
-output "child_accounts" {
-  value = {
-    for key, value in aws_organizations_account.child_accounts:
-    key => { id: value.id, arn: value.arn }
-  }
-}
-
-output "organizations_account_access_role_name" {
-  value = var.organizations_account_access_role_name
+output "user_access_keys" {
+  description = "A map of usernames to that user's access keys (a map with keys access_key_id and secret_access_key), with the secret_access_key encrypted with that user's PGP key (only shows up for users with create_access_keys = true). You can decrypt the secret_access_key on the CLI: echo <secret_access_key> | base64 --decode | keybase pgp decrypt"
+  value       = module.security_baseline.user_access_keys
 }
 ----
 
@@ -2547,68 +2590,110 @@ When you're done testing, commit and release your changes:
 
 [source,bash]
 ----
-git add security/organization
-git commit -m "Add aws organizations wrapper module"
-git tag -a "v0.3.4" -m "Created aws organizations module"
+git add landingzone/account-baseline-security
+git commit -m "Add security account baseline wrapper module"
+git tag -a "v0.3.1" -m "Created security account baseline module"
 git push --follow-tags
 ----
 
-Create a `terragrunt.hcl` file in `infrastructure-live` under the file path `root/_global/organization`:
+Create a `terragrunt.hcl` file in `infrastructure-live` under the file path `security/_global/account-baseline`:
 
 ----
 infrastructure-live
   └ root
+  └ security
     └ _global
-      └ iam
-      └ cloudtrail
-      └ organization
+      └ account-baseline
         └ terragrunt.hcl
 ----
 
-Point the `source` URL in your `terragrunt.hcl` file to your `organization` wrapper module in the `infrastructure-modules`
+Point the `source` URL in your `terragrunt.hcl` file to your `account-baseline-security` wrapper module in the `infrastructure-modules`
 repo, setting the `ref` param to the version you released earlier:
 
-.infrastructure-live/root/_global/organization/terragrunt.hcl
+.infrastructure-live/security/_global/account-baseline/terragrunt.hcl
 [source,hcl]
 ----
 terraform {
-  source = "git@github.com/<YOUR_ORG>/infrastructure-modules.git//security/aws-organizations?ref=v0.3.4"
+  source = "git@github.com/<YOUR_ORG>/infrastructure-modules.git//landingzone/account-baseline-security?ref=v0.3.1"
 }
 ----
 
-Set the variables for the `organization` module in this environment in the `inputs = { ... }` block of `terragrunt.hcl`:
+Set the variables for the `account-baseline-security` module in this environment in the `inputs = { ... }` block of `terragrunt.hcl`:
 
-.infrastructure-live/root/_global/organization/terragrunt.hcl
+.infrastructure-live/security/_global/account-baseline/terragrunt.hcl
 [source,hcl]
 ----
 inputs = {
-  # Fill in your region you want to use (only used for API calls) and the ID of your root AWS account
+  # Fill in your region you want to use (only used for API calls) and the ID of your security AWS account
   aws_region     = "us-east-2"
-  aws_account_id = "111122223333"
+  aws_account_id = "444444444444"
 
-  # Specify the child accounts you want
-  child_accounts = {
-    security        = "account-root+security@your-company.com"
-    shared-services = "account-root+shared@your-company.com"
-    dev             = "account-root+dev@your-company.com"
-    stage           = "account-root+stage@your-company.com"
-    prod            = "account-root+prod@your-company.com"
+  # Prefix all resources with this name
+  name_prefix = "<COMPANY_NAME>-security"
+
+  # Send CloudTrail logs to this bucket
+  cloudtrail_s3_bucket_name = "<COMPANY_NAME>-security-cloudtrail"
+
+  # This IAM group gives access to other AWS accounts
+  should_create_iam_group_full_access = true
+  iam_groups_for_cross_account_access = [
+    {
+      group_name   = "_account.stage-full-access"
+      iam_role_arn = "arn:aws:iam::<STAGE_ACCOUNT_ID>:role/allow-full-access-from-other-accounts"
+    },
+    {
+      group_name   = "_account.stage-read-only"
+      iam_role_arn = "arn:aws:iam::<STAGE_ACCOUNT_ID>:role/allow-read-only-access-from-other-accounts"
+    },
+    {
+      group_name   = "_account.prod-full-access"
+      iam_role_arn = "arn:aws:iam::<PROD_ACCOUNT_ID>:role/allow-full-access-from-other-accounts"
+    },
+    {
+      group_name   = "_account.prod-read-only"
+      iam_role_arn = "arn:aws:iam::<PROD_ACCOUNT_ID>:role/allow-read-only-access-from-other-accounts"
+    },
+  ]
+
+  # The IAM users to create in this account. Since this is the security account, this is where we create all of our
+  # IAM users and add them to IAM groups.
+  users = {
+    alice = {
+      groups               = ["full-access", "access-all-external-accounts", "ssh-grunt-sudo-users"]
+      pgp_key              = "keybase:alice_on_keybase"
+      create_login_profile = true
+      create_access_keys   = false
+    }
+
+    bob = {
+      groups               = ["_account.stage-full-access", "_account.prod-read-only", "ssh-grunt-sudo-users"]
+      pgp_key              = "keybase:bob_on_keybase"
+      create_login_profile = true
+      create_access_keys   = false
+    }
+
+    carol = {
+      groups               = ["_account.stage-full-access"]
+      pgp_key              = "keybase:carol_on_keybase"
+      create_login_profile = true
+      create_access_keys   = false
+    }
   }
 }
 ----
 
-The code above configures 5 child AWS accounts. Note that AWS requires that you associate an email address with each
-child account, and that this email address must be _globally_ unique, so it cannot be the email address you used for
-the root account or any of the other child accounts. You'll have to either create multiple email accounts in your
-company's email system, or, if your company uses Gmail (perhaps as part of G Suite), you can take advantage of the fact
-that https://gmail.googleblog.com/2008/03/2-hidden-ways-to-get-more-from-your.html[Gmail ignores everything after a plus sign in an email address],
-so that while AWS will see `account-root+security@your-company.com`, `account-root+shared@your-company.com`, and
-`account-root+dev@your-company.com` as three unique email addresses, Gmail will see them all as the same email address,
-`account-root@your-company.com`.
+The example above configures the security account of an AWS Organization (the one where all your IAM users and IAM groups are defined), including setting up
+AWS Config, AWS CloudTrail, Amazon Guard Duty, IAM users, IAM groups, IAM password policy, and more. We create a handful of IAM groups including a `full-access`
+group (solely for a few trusted admins), plus a number of groups that give specific permissions in all your other child accounts (e.g., full-access in dev,
+read-only in prod, etc). Create an IAM user for yourself in the `full-access` group, plus IAM users for the rest of your team in the appropriate groups.
+
+Like the root account, the code will also generate a password for each user and encrypt it with that user’s PGP key from Keybase (see below for how to handle
+the passwords). You should follow this pattern to create an IAM user for yourself, as well as the small number of other trusted admins at your company who should
+have access to the root account.
 
 Configure your Terraform backend:
 
-.infrastructure-live/root/_global/organization/terragrunt.hcl
+.infrastructure-live/security/_global/account-baseline/terragrunt.hcl
 [source,hcl]
 ----
 include {
@@ -2616,33 +2701,42 @@ include {
 }
 ----
 
-Authenticate on the CLI as your IAM user in the root account and deploy the `organization` module by running
-`terragrunt apply`:
+https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html#id_root-user_manage_add-key[Create a set of access keys for the root user in the security account]
+and https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[use those access keys to authenticate on the CLI].
+Finally, deploy the `iam` module by running `terragrunt apply`:
 
 [source,bash]
 ----
-cd infrastructure-live/root/_global/organization
+cd infrastructure-live/security/_global/iam
 terragrunt apply
 ----
 
-When `apply` finishes, it'll output the account IDs and ARNs of the new child accounts, plus the name of the IAM role
-you can use to access those accounts from the root account.
+When `apply` finishes, the module will output the encrypted passwords for the users defined above. Send the encrypted password to each user, along with their user
+name, and the IAM user sign-in URL for the account. Each user can then decrypt the password on their own computer (which should have their PGP key) as follows:
 
-=== Reset the root user password in each child account
-
-When creating the child accounts, you may have noticed that you provided an email address for each root user, but
-confusingly, not a password. So how do you login as the root user then? It's not obvious, but the answer is that you
-https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys_retrieve.html#reset-root-password[reset the root user password],
-using the "Forgot your password?" prompt on the https://console.aws.amazon.com/[root user login page]. AWS will email
-you a reset link, which you can click to go to a page that will allow you to configure a password for the root user.
-
-Use this process to reset the password for the root user of each child account you created. With access to the root
-user in each account, you can configure IAM users, IAM groups, and IAM roles in those accounts, as described in the
-next couple sections.
-
-=== Apply the security baseline to the security account
+[source,bash]
+----
+echo "<PASSWORD>" | base64 --decode | keybase pgp decrypt
+----
 
 === Apply the security baseline to the other child accounts
+
+Now that your security account is fully configured, we need to apply the security baseline to the remaining child
+accounts as fully detailed in the <<child_accounts> section, but feel free to adjust this as necessary based on
+the accounts your company needs.
+
+Create a new module called `account-baseline-security` in your `infrastructure-modules` repo:
+
+----
+infrastructure-modules
+  └ landingzone
+    └ account-baseline-root
+    └ account-baseline-security
+      └ main.tf
+      └ outputs.tf
+      └ variables.tf
+----
+
 
 === Create IAM users and groups in the security account
 
