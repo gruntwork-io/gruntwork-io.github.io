@@ -432,12 +432,12 @@ Config to ensure that AWS resources are configured in a manner that is in compli
 requirements. This enables you to simplify compliance auditing, security analysis, change management, and operational
 troubleshooting.
 
-AWS Config Rules::
-  Config rules are expressions of a desired configuration state, written in code and executed as Lambda functions. When a
-  resource configuration changes, AWS Config fires the relevant Lambda functions to evaluate whether the configuration changes
-  the state of compliance with the desired configuration. AWS has developed a set of pre-written rules called
-  https://docs.aws.amazon.com/config/latest/developerguide/managed-rules-by-aws-config.html[AWS Config Managed Rules], but you
-  can also author your own https://docs.aws.amazon.com/config/latest/developerguide/evaluate-config_develop-rules_nodejs.html[custom rules].
+The way you specify your company's policies is by using
+https://docs.aws.amazon.com/config/latest/developerguide/evaluate-config.html[AWS Config Rules] which are expressions of a desired
+configuration state, written in code and executed as Lambda functions. When a resource configuration changes, AWS Config fires the
+relevant Lambda functions to evaluate whether the configuration changes the state of compliance with the desired configuration. AWS
+has developed a set of pre-written rules called https://docs.aws.amazon.com/config/latest/developerguide/managed-rules-by-aws-config.html[AWS Config Managed Rules],
+but you can also author your own https://docs.aws.amazon.com/config/latest/developerguide/evaluate-config_develop-rules_nodejs.html[custom rules].
 
 === GuardDuty
 
