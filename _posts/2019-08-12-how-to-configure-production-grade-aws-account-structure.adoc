@@ -1,5 +1,5 @@
 ---
-title: How to configure a production-grade AWS account structure using Gruntwork Landing Zone
+title: How to configure a production-grade AWS account structure using Gruntwork AWS Landing Zone
 categories: Foundations
 image: /assets/img/guides/aws-account/aws-logo.png
 excerpt: Learn about why you need multiple AWS accounts and how to create and manage them with a customizable security baseline defined in Terraform.
@@ -25,8 +25,8 @@ endif::[]
 
 == Intro
 
-This guide will walk you through the process of configuring a production-grade AWS account structure, including how to
-manage multiple environments, users, permissions, audit logging, and more.
+This guide will walk you through the process of configuring a production-grade AWS account structure using the Gruntwork
+Landing Zone solution, including how to manage multiple environments, users, permissions, audit logging, and more.
 
 === What is an AWS account structure?
 
@@ -67,13 +67,24 @@ This guide consists of four main sections:
   link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#production_grade_infra_checklist[The production-grade infrastructure checklist].
 
 <<deployment_walkthrough>>::
-  A step-by-step guide to configuring a production-grade AWS account structure using code from the Gruntwork
-  Infrastructure as Code Library.
+  A step-by-step guide to configuring a production-grade AWS account structure using the Gruntwork AWS Landing Zone
+  solution including how to manage it all with customizable security baselines defined in Terraform.
 
 <<next_steps>>::
   What to do once you've got your AWS account structure configured.
 
 Feel free to read the guide from start to finish or skip around to whatever part interests you.
+
+=== Gruntwork AWS Landing Zone vs the competition
+
+When we evaluated the market, we found a number of pre-built "Landing Zone" solutions that were either expensive,
+low-quality, UI-driven, and/or didn't allow customization. The Gruntwork AWS Landing Zone solution allows you to
+set up production-grade AWS accounts out of the box in minutes, but it's also 100% defined as code, so you can
+fully customize it to your needs. Our solution follows a "Terraform-native" approach that doesn't require you to
+install anything extra and uses Terraform to deploy and configure all of the new AWS accounts. It makes it easy
+to customize your landing zone configuration using our example security baseline modules or by leveraging
+Gruntwork's upstream updates. Under the hood, our new security baseline modules use a variety of other modules
+such as our GuardDuty module, AWS Config, IAM roles, IAM groups, and so on.
 
 [[core_concepts]]
 == Core concepts
@@ -804,8 +815,14 @@ MFA enforced by IdP, not AWS::
 [[deployment_walkthrough]]
 == Deployment walkthrough
 
-Let's now walk through the step-by-step process of how to create a production-grade AWS account structure, fully
-defined and managed as code, using the Gruntwork Infrastructure as Code Library.
+Let's now walk through the step-by-step process of how to create a production-grade AWS account structure using the
+Gruntwork AWS Landing Zone solution. Doing this from scratch is time-consuming and complicated, and all the pre-built
+"Landing Zone" solutions we tried were expensive, low-quality, UI-driven, and/or didn't allow customization. The
+Gruntwork AWS Landing Zone solution allows us to do this in minutes, but it's also 100% defined as code, so you can
+fully customize it to your needs. The best part is that it automatically configures your accounts with a variety of
+authentication, access controls and security features by using AWS Organizations, IAM Roles, IAM Users, IAM Groups,
+IAM Password Policies, Amazon GuardyDuty, AWS CloudTrail, AWS Config, and a whole lot more so we can avoid doing
+this manually.
 
 [[pre_requisites]]
 === Pre-requisites
