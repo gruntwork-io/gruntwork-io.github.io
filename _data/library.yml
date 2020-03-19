@@ -262,6 +262,15 @@
     A collection of security best practices for managing secrets, credentials, and servers. Includes streamlined support
     for CloudTrail, KMS, SSH key management via IAM, IAM Groups, fail2ban, NTP, and OS hardening.
   submodules:
+    - name: account-baseline-app
+      blurb: account baseline for app accounts
+      description: A security baseline for AWS Landing Zone for configuring the app accounts.
+    - name: account-baseline-root
+      blurb: account baseline for root accounts
+      description: A security baseline for AWS Landing Zone for configuring the root account.
+    - name: account-baseline-security
+      blurb: account baseline for security accounts
+      description: A security baseline for AWS Landing Zone for configuring the security accounts.
     - name: auto-update
       blurb: automatically patch servers
       description: Configure your servers to automatically install critical security patches.
@@ -271,9 +280,24 @@
     - name: aws-config
       blurb: enable the AWS Config service
       description: Enable AWS Config to monitor, audit, and assess an AWS account for compliance.
+    - name: aws-config-multi-region
+      blurb: enable the AWS Config service in all regions
+      description: Enable AWS Config in all enabled regions for the AWS account.
+    - name: aws-organizations
+      blurb: manage AWS organizations
+      description: Manage your AWS Organization and accounts that are part of it.
+    - name: aws-organizations-config-rules
+      blurb: AWS organizations config rules
+      description: Configure a best-practices set of AWS Config Managed Rules for your organization.
     - name: cloudtrail
       blurb: configure audit logging in AWS
       description: Configure CloudTrail in an AWS account to audit all API calls.
+    - name: guardduty
+      blurb: enable the GuardDuty service
+      description: Detect threats and monitor your AWS accounts for malicious activity and unauthorized behavior.
+    - name: guardduty-multi-region
+      blurb: enable the GuardDuty service in all regions
+      description: Enable GuardDuty in all enabled regions for the AWS account.
     - name: kms-master-key
       blurb: create a KMS master key
       description: Create a master key in Amazon's Key Management Service and configure permissions for that key.
@@ -286,12 +310,18 @@
     - name: iam-groups
       blurb: create and manage IAM groups
       description: Create a best-practices set of IAM groups for managing access to your AWS account.
+    - name: iam-policies
+      blurb: create and manage IAM policies
+      description: Create a set of IAM policy documents that can be used in IAM users, groups and roles.
     - name: custom-iam-entity
       blurb: create IAM groups and roles with managed policies
       description: Create an IAM group or role and attach a custom set of managed policies
     - name: iam-user-password-policy
       blurb: create an AWS account password policy
       description: Set the AWS Account Password Policy that will govern password requirements for IAM Users.
+    - name: iam-users
+      blurb: create and manage IAM users
+      description: Create a set of IAM users for managing access to your AWS account.
     - name: cross-account-iam-roles
       blurb: create IAM roles for cross-account access
       description: Create IAM roles that allow IAM users to easily switch between AWS accounts.
@@ -303,7 +333,7 @@
       description: Install fail2ban on your servers to automatically ban malicious users.
     - name: os-hardening
       blurb: CIS hardening for Linux
-      description: Build a hardened Linux-AMI that implements certian CIS benchmarks.
+      description: Build a hardened Linux-AMI that implements certain CIS benchmarks.
     - name: ntp
       blurb: install and configure NTP
       description: Install and configures NTP on a Linux server.
