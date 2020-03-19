@@ -76,21 +76,50 @@ Feel free to read the guide from start to finish or skip around to whatever part
 
 === Gruntwork AWS Landing Zone vs the competition
 
-When we evaluated the market, we found a number of pre-built "Landing Zone" solutions that were either expensive,
-low-quality, UI-driven, and/or didn't allow customization. The Gruntwork AWS Landing Zone solution allows you to
-set up production-grade AWS accounts out of the box in minutes, but it's also 100% defined as code, so you can
-fully customize it to your needs. Our solution follows a "Terraform-native" approach that doesn't require you to
-install anything extra and uses Terraform to deploy and configure all of the new AWS accounts. It makes it easy
-to customize your landing zone configuration using our example security baseline modules or by leveraging
-Gruntwork's upstream updates. Under the hood, our new security baseline modules use a variety of other modules
-such as our GuardDuty module, AWS Config, IAM roles, IAM groups, and so on.
+In June 2018, Amazon https://aws.amazon.com/about-aws/whats-new/2018/06/introducing-aws-landing-zone/[announced]
+AWS Landing Zone, which solved three core problems:
+
+1. Streamline the process of creating a new AWS account;
+2. Configure that new AWS account according to best practices;
+3. And make it possible to configure a best-practices multi-AWS-account setup.
+
+Almost every AWS customer that creates more than a few accounts needs to solve these problems, so over time we
+saw additional solutions enter the market. We call all of these options "Landing Zone solutions" and when we
+evaluated them, we found that they varied along the following dimensions:
+
+* **Customizability.** Some users are content to stick with AWS's default definition of "best
+practices" for how their newly created account should be configured, but other customers would like to add to,
+subtract from or modify that definition and some Landing Zones offer very little customization at all.
+
+* **Automatable.** Many users want to define their own custom pipeline for creating new AWS accounts, but not all
+Landing Zone solutions can be integrated into an arbitrary pipeline. For example, AWS Control Tower includes
+Landing Zone functionality, but does not expose any kind of API and is usable only from the management console.
+
+* **UI-driven.** Some AWS users want a first-class UI they can use to deploy new AWS accounts, but not all Landing
+Zone solutions expose a UI.
+
+* **Terraform-native.** Terraform users often want 100% of their deployed infrastructure to be codified in Terraform,
+but some Landing Zone solutions only offer support for CloudFormation or no infrastructure as code at all.
+
+* **No dependencies.** Some AWS Landing Zone solutions depend on purchasing related commercial products or services
+to have access to them or to make them work, whereas other Landing Zone solutions stand on their own without any
+third-party or related-service dependencies.
+
+With these dimensions in mind, we set out to build a Landing Zone solution that:
+
+* Is fully customizable
+* Is easily automatable as part of a separate pipeline
+* Is 100% Terraform-native
+* Does not depend on any third-party products or related services
+
+Because we use Terraform, we do not currently see the need for adding a first-class UI to our Landing Zone
+solution, however some users may wish to add UI or UI-like functionality through their CI system or other Terraform
+automation tools.
 
 [[core_concepts]]
 == Core concepts
 
 // TODO: topics to consider adding in the future
-// GuardDuty
-// AWS Config
 // Security Hub
 // Trusted Advisor
 // Amazon Inspector
@@ -1563,7 +1592,7 @@ include {
 
 https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html#id_root-user_manage_add-key[Create a set of access keys for the root user in the security account]
 and https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[use those access keys to authenticate on the CLI].
-Finally, deploy the `iam` module by running `terragrunt apply`:
+Finally, deploy the `account-baseline` module by running `terragrunt apply`:
 
 [source,bash]
 ----
