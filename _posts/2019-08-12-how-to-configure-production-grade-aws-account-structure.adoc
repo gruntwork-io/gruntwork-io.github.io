@@ -758,8 +758,8 @@ logs to CloudWatch Logs a second way to store/view audit logs.
 
 You'll want to enable AWS Config in every one of your AWS accounts, plus any AWS Config Rules that are relevant to your
 company, so that you can track AWS resource configuration changes over time and enforce company policy. Note that you
-should enable AWS Config in every AWS region, and not just the region(s) you're using for the rest of your infrastructure
-that way, if an employee (perhaps accidentally), or even worse, an attacker, runs something in a region you don't typically
+should enable AWS Config in every AWS region, and not just the region(s) you're using for the rest of your infrastructure.
+That way, if an employee (perhaps accidentally), or even worse, an attacker, runs something in a region you don't typically
 use, it'll still be recorded in AWS Config, and your rules will still be enforced. We typically recommend creating a separate
 S3 bucket for each region and storing all of the configuration items there for a set number of days, after which they should
 be moved to Glacier.
