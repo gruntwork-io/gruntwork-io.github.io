@@ -1727,7 +1727,7 @@ run "${GRUNTWORK_INSTALLER_VERSION}" "${MODULE_CI_VERSION}" "${MODULE_SECURITY_V
 #
 # Script used by CircleCI to trigger deployments via the infrastructure-deployer CLI utility.
 #
-# Required environment variables:
+# Required positional arguments, in order:
 # - REGION : The AWS Region where the ECS Deploy Runner exists.
 # - SOURCE_REF : The starting point for identifying all the changes. The diff between SOURCE_REF and REF will be
 #                evaluated to determine all the changed files.
@@ -1744,9 +1744,9 @@ function assume_role_for_environment {
 
   # NOTE: Make sure to set the respective ACCOUNT_ID to the AWS account ID for each of the environments.
   if [[ "$environment" == "production" ]]; then
-    aws-auth --role-arn "arn:aws:iam::<PRODUCTION_ACCOUNT_ID>:role/allow-auto-deploy-from-other-accounts
+    aws-auth --role-arn "arn:aws:iam::<PRODUCTION_ACCOUNT_ID>:role/allow-auto-deploy-from-other-accounts"
   elif [[ "$environment" == "staging" ]]; then
-    aws-auth --role-arn "arn:aws:iam::<STAGING_ACCOUNT_ID>:role/allow-auto-deploy-from-other-accounts
+    aws-auth --role-arn "arn:aws:iam::<STAGING_ACCOUNT_ID>:role/allow-auto-deploy-from-other-accounts"
   else
     echo "ERROR: Unknown environment $environment. Can not assume role."
     exit 1
@@ -1790,12 +1790,12 @@ function run {
   # modules were updated.
   git-updated-folders --source-ref "$source_ref" --terragrunt \
     | tee /dev/tty \
-    | xargs -L1 --no-run-if-empty \
-        invoke_infrastructure_deployer "$region" "$ref" "$command"
-    |& grep . || echo "No terragrunt modules were updated. Skipping plan."
+    | xargs -I{} --no-run-if-empty \
+        bash -c "invoke_infrastructure_deployer \"$region\" \"$ref\" \"$command\" {}" \
+    |& bash -c "grep . || echo 'No terragrunt modules were updated. Skipping plan.'"
 }
 
-run "${REGION}" "${SOURCE_REF}" "${REF}" "$@"
+run "$@"
 ----
 
 We will call out to these scripts in the CI pipeline to setup our environment for the deployments. With the scripts
@@ -1937,7 +1937,7 @@ Once we have the common elements defined as aliases, we can start defining each 
           command: ./.circleci/install.sh
       - run:
           name: run plan
-          command: ./.circleci/deploy.sh plan
+          command: ./.circleci/deploy.sh "$REGION" "$SOURCE_REF" "$CIRCLE_SHA1" plan
       - slack/status:
           channel: workflow-approvals
           success_message: "PLAN from $CIRCLE_FRIENDLY_REF ($CIRCLE_SHA1) successful. Click 'Visit Job' to see output."
@@ -1973,7 +1973,7 @@ Next, we will define the `deploy` job, which will closely resemble the `plan` jo
           command: ./.circleci/install.sh
       - run:
           name: run apply
-          command: ./.circleci/deploy.sh apply
+          command: ./.circleci/deploy.sh "$REGION" "$SOURCE_REF" "$CIRCLE_BRANCH" apply
       - slack/status:
           channel: workflow-approvals
           success_message: "APPLY from $CIRCLE_FRIENDLY_REF ($CIRCLE_SHA1) was successful. Click 'Visit Job' to see output."
@@ -2092,7 +2092,7 @@ jobs:
           command: ./.circleci/install.sh
       - run:
           name: run plan
-          command: ./.circleci/deploy.sh plan
+          command: ./.circleci/deploy.sh "$REGION" "$SOURCE_REF" "$CIRCLE_SHA1" plan
       - slack/status:
           channel: workflow-approvals
           success_message: "PLAN from $CIRCLE_FRIENDLY_REF ($CIRCLE_SHA1) successful. Click 'Visit Job' to see output."
@@ -2111,7 +2111,7 @@ jobs:
           command: ./.circleci/install.sh
       - run:
           name: run apply
-          command: ./.circleci/deploy.sh apply
+          command: ./.circleci/deploy.sh "$REGION" "$SOURCE_REF" "$CIRCLE_BRANCH" apply
       - slack/status:
           channel: workflow-approvals
           success_message: "APPLY from $CIRCLE_FRIENDLY_REF ($CIRCLE_SHA1) was successful. Click 'Visit Job' to see output."
