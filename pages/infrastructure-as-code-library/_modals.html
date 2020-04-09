@@ -44,7 +44,7 @@
                 <th>Links</th>
                 <td>
                   {% if package.docs_url %}<div><a href="{{ package.docs_url }}" target="_blank" rel="noopener">Public Docs</a></div>{% endif %}
-                  {% if package.subscriber_url %}<div><a href="{{ package.subscriber_url }}" target="_blank" rel="noopener">Full Repo</a> (<strong>ONLY</strong> accessible to <a href="/pricing">Gruntwork subscribers</a>!)</div>{% endif %}
+                  {% if package.subscriber_url %}<div><a href="{{ package.subscriber_url }}" target="_blank" rel="noopener">Full Repo</a> (<strong>ONLY</strong> accessible to <a href="/static/pricing">Gruntwork subscribers</a>!)</div>{% endif %}
                   {% if package.aws_url %}<div><a href="{{ package.aws_url }}" target="_blank" rel="noopener">AWS Version</a></div>{% endif %}
                   {% if package.gcp_url %}<div><a href="{{ package.gcp_url }}" target="_blank" rel="noopener">GCP Version</a></div>{% endif %}
                   {% if package.azure_url %}<div><a href="{{ package.azure_url }}" target="_blank" rel="noopener">Azure Version</a></div>{% endif %}

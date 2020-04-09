@@ -16,12 +16,12 @@ custom_js:
         <div class="col-md-7 col-xs-12 guides-section-white">
           <ol class="breadcrumb text-center">
             {% assign crumbs = page.url | split: '/' %}
-            <a href="/guides" ga-on="click" ga-event-category="guide-{{ page.title | slugify }}" ga-event-action="deployment-guides-home">Production Deployment Guides</a>
+            <a href="/static/guides" ga-on="click" ga-event-category="guide-{{ page.title | slugify }}" ga-event-action="deployment-guides-home">Production Deployment Guides</a>
             {% for crumb in crumbs offset: 2 %}
               {% if forloop.last %}
                 <a href="#"> / <span> {{ page.title | replace:'-',' ' }}</span></a>
               {% else %}
-                <a href="/guides#{{ crumb }}" ga-on="click" ga-event-category="guide-{{ page.title | slugify }}" ga-event-action="breadcrumb-{{ crumb }}">/ <span>{{ crumb | replace:'-',' ' | capitalize }}</span></a>
+                <a href="/static/guides#{{ crumb }}" ga-on="click" ga-event-category="guide-{{ page.title | slugify }}" ga-event-action="breadcrumb-{{ crumb }}">/ <span>{{ crumb | replace:'-',' ' | capitalize }}</span></a>
               {% endif %}
             {% endfor %}
           </ol>
