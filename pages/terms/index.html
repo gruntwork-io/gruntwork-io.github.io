@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Terms of Service
-modified_date: October 15, 2019
+modified_date: February 10, 2020
 permalink: /static/terms/
 slug: terms
 ---
@@ -12,58 +12,88 @@ slug: terms
       <div class="row">
         <div class="col-xs-12">
           <h1>{{ page.title }}</h1>
-          <h2 class="h3 hidden-print">This page outlines the terms of service and use of Gruntwork’s products and services.</h2>
-          <p class="hidden-print"><strong>It’s important to understand these Terms of Service, as they define your rights and our rights in our relationship.</strong> But legalese is not always easy to understand, so we’ve provided “plain English” summaries on the left side of the page to help you understand the official legal language on the right side of the page. Remember that we’re providing you these summaries for informational purposes only. Our actual Terms are the ones on the right under "Legalese" and will apply if we ever need to work through any issues.</p>
+          <h2 class="h3 hidden-print">
+            This page outlines the terms of service and use of Gruntwork’s
+            products and services.
+          </h2>
+          <p class="hidden-print">
+            <strong
+              >It’s important to understand these Terms of Service, as they
+              define your rights and our rights in our relationship.</strong
+            >
+            But legalese is not always easy to understand, so we’ve provided
+            “plain English” summaries on the left side of the page to help you
+            understand the official legal language on the right side of the
+            page. Remember that we’re providing you these summaries for
+            informational purposes only. Our actual Terms are the ones on the
+            right under "Legalese" and will apply if we ever need to work
+            through any issues.
+          </p>
           <p><em>Last Modified: {{ page.modified_date }}</em></p>
           <p><a href="/static/changelog">View CHANGELOG</a></p>
           <h2 class="h3 hidden-print">Need to modify these terms?</h2>
-          <p class="hidden-print">Modifying these Terms of Service requires an "Enterprise Subscription" with us. For details, see
-             <a href="/static/pricing/#how-can-i-modify-your-terms-of-service">How can I modify these Terms of Service?</a> in our FAQ.</p>
+          <p class="hidden-print">
+            Modifying these Terms of Service requires an "Enterprise
+            Subscription" with us. For details, see
+            <a href="/static/pricing/#how-can-i-modify-your-terms-of-service"
+              >How can I modify these Terms of Service?</a
+            >
+            in our FAQ.
+          </p>
         </div>
       </div>
       <div class="row">
-        <div class="col-xs-12 col-sm-offset-3 col-sm-9 visible-xs-block visible-sm-block hidden-print">
+        <div
+          class="col-xs-12 col-sm-offset-3 col-sm-9 visible-xs-block visible-sm-block hidden-print"
+        >
           <div class="switch-group">
             <label class="switch">
-              <input type="checkbox" id="human" data-switch="" name="humanese">
+              <input
+                type="checkbox"
+                id="human"
+                data-switch=""
+                name="humanese"
+              />
               <span class="slider round"></span>
             </label>
-            <span class="switch-label small bold" title="">Translate legalese to human-friendly</span>
+            <span class="switch-label small bold" title=""
+              >Translate legalese to human-friendly</span
+            >
           </div>
         </div>
         <div class="col-xs-12 visible-md-block visible-lg-block hidden-print">
-            <div class="row terms-head">
-                <h5 class="h2 col-md-5">Plain English</h5>
-                <h5 class="h2 col-md-7">Legalese</h5>
-            </div>
+          <div class="row terms-head">
+            <h5 class="h2 col-md-5">Plain English</h5>
+            <h5 class="h2 col-md-7">Legalese</h5>
+          </div>
         </div>
         <div class="col-xs-12 tos-table">
-          {% for category in site.data.terms-of-service %}
-            {% if category.category_name != nil %}
-                <h2 id="{{ category.category_id }}">{{ category.category_name }}</h2>
+          {% for category in site.data.terms-of-service %} {% if
+          category.category_name != nil %}
+          <h2 id="{{ category.category_id }}">{{ category.category_name }}</h2>
+          {% endif %} {% if category.category_description != nil %}
+          <p>{{ category.category_description }}</p>
+          {% endif %} {% for step in category.items %}
+          <div class="row terms-row">
+            {% if step.title != nil %}
+            <h3 class="col-md-7 col-md-offset-5 col-print-12">
+              {{ step.title }}
+            </h3>
             {% endif %}
-            {% if category.category_description != nil %}
-                <p>{{ category.category_description }}</p>
-            {% endif %}
-            {% for step in category.items %}
-              <div class="row terms-row">
-                {% if step.title != nil %}
-                  <h3 class="col-md-7 col-md-offset-5 col-print-12">{{ step.title }}</h3>
-                {% endif %}
-                <div class="tos-table__plain col-md-5">
-                {% if step.plain != nil %}
-                  <div class="tos-table__plain-block hidden-print">
-                    <p>{{ step.plain }}</p>
-                  </div>
-                {% endif %}
-                </div>
-                <div class="col-md-7 tos-table__legal col-print-12">
-                  {{ step.legalese }}
-                </div>
+            <div class="tos-table__plain col-md-5">
+              {% if step.plain != nil %}
+              <div class="tos-table__plain-block hidden-print">
+                <p>{{ step.plain }}</p>
               </div>
-            {% endfor %}
-            {% if forloop.last == false %}<hr />{% endif %}
-          {% endfor %}
+              {% endif %}
+            </div>
+            <div class="col-md-7 tos-table__legal col-print-12">
+              {{ step.legalese }}
+            </div>
+          </div>
+          {% endfor %} {% if forloop.last == false %}
+          <hr />
+          {% endif %} {% endfor %}
         </div>
       </div>
     </div>

@@ -1,55 +1,61 @@
 ---
 layout: null
 title: Gruntwork Terms of Service
-modified_date: July 18, 2018
+modified_date: February 10, 2020
 permalink: /static/terms/word
 slug: terms
 ---
 
 <html>
-<head>
-<style>
-    body, h1, h2, h3, h4, h5, p{
+  <head>
+    <style>
+      body,
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      p {
         text-align: justify;
         line-height: 1.5em;
-        font-family: Calibri, Helvetica, Arial,sans-serif;
-    }
-    p{
+        font-family: Calibri, Helvetica, Arial, sans-serif;
+      }
+      p {
         text-align: justify;
         line-height: 1.5em;
-    }
-</style>
-</head>
-<body>
-<div class="main">
-  <div class="section">
-    <div class="container">
-      <div class="row">
-        <div class="col-xs-12 tos-table">
-          <h1>Gruntwork Terms of Service</h1>
-          {% for category in site.data.terms-of-service %}
-          {% if category.category_name != nil %}
-          <h2 id="{{ category.category_id }}">{{ category.category_name }}</h2>
-          {% endif %}
-          {% if category.category_description != nil %}
-          <p>{{ category.category_description }}</p>
-          {% endif %}
-          {% for step in category.items %}
-          <div class="row terms-row">
-            {% if step.title != nil %}
-            <h3 class="col-md-12 col-md-offset-5 col-print-12">{{ step.title }}</h3>
-            {% endif %}
-            <div class="col-md-12 tos-table__legal col-print-12">
-              {{ step.legalese }}
+      }
+    </style>
+  </head>
+  <body>
+    <div class="main">
+      <div class="section">
+        <div class="container">
+          <div class="row">
+            <div class="col-xs-12 tos-table">
+              <h1>Gruntwork Terms of Service</h1>
+              {% for category in site.data.terms-of-service %} {% if
+              category.category_name != nil %}
+              <h2 id="{{ category.category_id }}">
+                {{ category.category_name }}
+              </h2>
+              {% endif %} {% if category.category_description != nil %}
+              <p>{{ category.category_description }}</p>
+              {% endif %} {% for step in category.items %}
+              <div class="row terms-row">
+                {% if step.title != nil %}
+                <h3 class="col-md-12 col-md-offset-5 col-print-12">
+                  {{ step.title }}
+                </h3>
+                {% endif %}
+                <div class="col-md-12 tos-table__legal col-print-12">
+                  {{ step.legalese }}
+                </div>
+              </div>
+              {% endfor %} {% endfor %}
             </div>
           </div>
-          {% endfor %}
-          {% endfor %}
         </div>
       </div>
     </div>
-  </div>
-</div>
-
-</body>
+  </body>
 </html>
