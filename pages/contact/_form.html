@@ -2,7 +2,7 @@
 <form id="contact-form" method="post" target="_blank" action="https://api.formbucket.com/f/buk_7iB8j7vEJPW9ad2ClJwFfm5M" >
   <input type="hidden" name="_subject" id="_subject" value="New inquiry from {{ site.url }}" />
   <input type="hidden" name="_viewing" id="_viewing" value="v1-static" />
-  <input type="hidden" name="_next" value="{{ site.url }}/thanks/" />
+  <input type="hidden" name="_next" value="{{ site.url }}/static/thanks/" />
   <input type="text" name="_gotcha" style="display:none" />
   {% include_relative _input-text.html id="contact-name" label="Name" required=true placeholder="Jon Doe" %}
   {% include_relative _input-text.html id="contact-email" label="Email" required=true placeholder="jon@acme.com" type="email" %}
