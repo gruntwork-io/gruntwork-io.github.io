@@ -155,7 +155,7 @@ $(function () {
 
     $.ajax(postParams).done(function() {
       inCall = false;
-      window.location.replace('/thanks');
+      window.location.replace('/static/thanks');
     }).fail(function(error) {
       showFormError('Oops, something went wrong! Please try again. If the issue persists please email us directly at info@gruntwork.io');
       inCall = false;
