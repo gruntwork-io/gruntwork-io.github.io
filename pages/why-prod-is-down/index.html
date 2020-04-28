@@ -4,234 +4,112 @@ permalink: /static/why-prod-is-down/
 ---
 
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <title>Why Prod is Down</title>
-    <meta name="description" content="Here are the reasons why prod is down" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link
-      href="https://unpkg.com/basscss@7.1.1/css/basscss.min.css"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css?family=Nunito+Sans:400,600|Lato:300,400"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="{{ site.assets_base_url }}css/why-prod-is-down.css"
-    />
-    {% include favicon.html %}
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Why Prod is Down</title>
+  <meta name="description" content="Here are the reasons why prod is down">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://unpkg.com/basscss@7.1.1/css/basscss.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:400,600|Lato:300,400" rel="stylesheet">
+  <link rel="stylesheet" href="{{ site.assets_base_url }}css/why-prod-is-down.css" />
+  {% include favicon.html %}
 
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:site" content="gruntwork_io" />
-    <meta name="twitter:title" content="Why Prod is Down" />
-    <meta name="twitter:url" content="{% include canonical-url.html %}" />
-    <meta
-      name="twitter:description"
-      content="Here are the reasons why prod is down"
-    />
-    <meta
-      name="twitter:image"
-      content="{{ site.url }}/assets/img/grunty-grid.png"
-    />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="gruntwork_io" />
+  <meta name="twitter:title" content="Why Prod is Down" />
+  <meta name="twitter:url" content="{% include canonical-url.html %}" />
+  <meta name="twitter:description" content="Here are the reasons why prod is down" />
+  <meta name="twitter:image" content="{{ site.url }}/assets/img/grunty-grid.png" />
 
-    <meta property="og:title" content="Why Prod is Down" />
-    <meta property="og:url" content="{% include canonical-url.html %}" />
-    <meta property="og:site_name" content="Why Prod is Down" />
-    <meta
-      property="article:author"
-      content="https://www.facebook.com/gruntworkio"
-    />
-    <meta
-      property="og:description"
-      content="Here are the reasons why prod is down"
-    />
-    <meta
-      property="og:image"
-      content="{{ site.url }}/assets/img/grunty-grid.png"
-    />
-  </head>
-  <body>
-    <div class="container mx-auto m4 border border-black">
-      <div class="clearfix">
-        <h1
-          class="center mt0 mb1 py2 bg-purple white border-bottom border-black pt25 pl25 pr25"
-        >
-          WHY PROD IS DOWN
-        </h1>
-        <div class="pl25 pr25">
-          <form class="bg-white px2 pt2">
-            <h4 class="mt0 mb2">
-              DEAR <span class="fixed-underline"> </span> ,
-            </h4>
-            <p>
-              <span class="mr05">I regret to inform you that</span>
-              <label
-                ><input type="checkbox" id="website-down" />the website is
-                down</label
-              >
-              <label class="mr05"
-                ><input type="checkbox" id="prod-down" />prod is down</label
-              >
-              <label
-                ><input type="checkbox" id="fire" />everything is on
-                fire.</label
-              >
-            </p>
-            <p>
-              <span class="mr05"
-                >This is our ____ incident this month. Our code is
-                unmaintainable because it's</span
-              >
-              <label class="nowrap"
-                ><input type="checkbox" id="monolith" />a giant monolith</label
-              >
-              <label class="nowrap mr05"
-                ><input type="checkbox" id="microservices" />587
-                microservices</label
-              >
-              <label class="nowrap"
-                ><input type="checkbox" id="php" />PHP</label
-              >
-              <span class="mr05">and it runs on one</span>
-              <label class="nowrap mr05"
-                ><input type="checkbox" id="server" />server</label
-              >
-              <label class="nowrap mr05"
-                ><input type="checkbox" id="az" />data center</label
-              >
-              <label
-                ><input type="checkbox" id="raspberry" />Raspberry Pi.</label
-              >
-            </p>
-            <p>
-              <span class="mr05">Worst of all, our database is</span>
-              <label class="mr05"
-                ><input type="checkbox" id="backup" />not backed up, so we lost
-                our data</label
-              >
-              <label class="mr05"
-                ><input type="checkbox" id="maybe-backup" />backed up, but the
-                backups don't work, so we lost our data</label
-              >
-              <label class="mr05"
-                ><input type="checkbox" id="sharding" />sharded, so we lost our
-                data twice</label
-              >
-              <label
-                ><input type="checkbox" id="mongo" />NoSQL, so we're webscale,
-                and we've been losing data for years.</label
-              >
-            </p>
-          </form>
-          <form class="bg-white px2 mt2">
-            <h4 class="mt0">WHY THIS HAPPENED</h4>
-            <p>
-              <span class="mr05">We only deploy once every few</span>
-              <label class="mr05"
-                ><input type="checkbox" id="deploy-weekly" />weeks</label
-              >
-              <label class="nowrap mr05"
-                ><input type="checkbox" id="deploy-monthly" />months</label
-              >
-              <label class="nowrap"
-                ><input type="checkbox" id="funding-rounds" />fundraising
-                rounds</label
-              >
-              <span class="mr05"
-                >and it's always a disaster because we have no</span
-              >
-              <label class="mr05"
-                ><input type="checkbox" id="automated-tests" />automated
-                tests</label
-              >
-              <label class="nowrap mr05"
-                ><input type="checkbox" id="automated-deployment" />automated
-                deployment</label
-              >
-              <label
-                ><input type="checkbox" id="monitoring" />monitoring.</label
-              >
-            </p>
-            <p>
-              <span class="mr05">Also, our servers</span>
-              <label class="mr05"
-                ><input type="checkbox" id="dmz" />are exposed publicly</label
-              >
-              <label class="mr05"
-                ><input type="checkbox" id="patches" />not up to date on
-                security patches</label
-              >
-              <label class="mr05"
-                ><input type="checkbox" id="ssh-key" />all use a single SSH
-                key</label
-              >
-              <label
-                ><input type="checkbox" id="secrets" />store passwords in
-                plaintext,</label
-              >
-              <span class="mr05"
-                >so it's just a matter of time until ___________________.</span
-              >
-            </p>
-          </form>
-          <form class="bg-white px2 mt2">
-            <h4 class="mt0">WHAT WE NEED TO DO</h4>
-            <p>
-              <span class="mr05">We need to</span>
-              <label class="mr05"
-                ><input type="checkbox" id="iac" />manage infrastructure as
-                code</label
-              >
-              <label class="mr05"
-                ><input type="checkbox" id="automate" />automate all the
-                things</label
-              >
-              <label
-                ><input type="checkbox" id="secure" />secure all the
-                things,</label
-              >
-              <span class="mr05"
-                >but we never seem to have time for this grunt work because
-                _______________________.</span
-              >
-            </p>
-            <h4 class="mt3 mb3">
-              YOURS TRULY, <span class="fixed-underline"> </span>.
-            </h4>
-          </form>
-        </div>
-        <footer
-          class="white h6 bg-purple clearfix mt2 border-top border-black pb25 pl25 pr25"
-        >
-          <div class="col col-10 light-gray pt2 pl1">
-            <div class="small-text">
-              <a
-                href="https://www.gruntwork.io/?ref=why-prod-is-down"
-                class="white"
-                >Your entire infrastructure. Defined as code. In one day.</a
-              >
-            </div>
-            <strong
-              ><a
-                href="https://www.gruntwork.io/?ref=why-prod-is-down"
-                class="light-gray h4"
-                >gruntwork.io</a
-              ></strong
-            >
-          </div>
-          <div class="col col-2 pt1">
-            <a href="https://www.gruntwork.io/?ref=why-prod-is-down"
-              ><img src="/assets/img/grunty-grid.png" alt="Gruntwork"
-            /></a>
-          </div>
-        </footer>
+  <meta property="og:title" content="Why Prod is Down"/>
+  <meta property="og:url" content="{% include canonical-url.html %}"/>
+  <meta property="og:site_name" content="Why Prod is Down"/>
+  <meta property="article:author" content="https://www.facebook.com/gruntworkio"/>
+  <meta property="og:description" content="Here are the reasons why prod is down"/>
+  <meta property="og:image" content="{{ site.url }}/assets/img/grunty-grid.png"/>
+</head>
+<body>
+<div class="container mx-auto m4 border border-black">
+  <div class="clearfix">
+    <h1 class="center mt0 mb1 py2 bg-purple white border-bottom border-black pt25 pl25 pr25">WHY PROD IS DOWN</h1>
+    <div class="pl25 pr25">
+      <form class="bg-white px2 pt2">
+        <h4 class="mt0 mb2">
+          DEAR <span class="fixed-underline">                                                  </span> ,
+        </h4>
+        <p>
+          <span class="mr05">I regret to inform you that</span>
+          <label><input type="checkbox" id="website-down">the website is down</label>
+          <label class="mr05"><input type="checkbox" id="prod-down">prod is down</label>
+          <label><input type="checkbox" id="fire">everything is on fire.</label>
+        </p>
+        <p>
+          <span class="mr05">This is our ____ incident this month. Our code is unmaintainable because it's</span>
+          <label class="nowrap"><input type="checkbox" id="monolith">a giant monolith</label>
+          <label class="nowrap mr05"><input type="checkbox" id="microservices">587 microservices</label>
+          <label class="nowrap"><input type="checkbox" id="php">PHP</label>
+          <span class="mr05">and it runs on one</span>
+          <label class="nowrap mr05"><input type="checkbox" id="server">server</label>
+          <label class="nowrap mr05"><input type="checkbox" id="az">data center</label>
+          <label><input type="checkbox" id="raspberry">Raspberry Pi.</label>
+        </p>
+        <p>
+          <span class="mr05">Worst of all, our database is</span>
+          <label class="mr05"><input type="checkbox" id="backup">not backed up, so we lost our data</label>
+          <label class="mr05"><input type="checkbox" id="maybe-backup">backed up, but the backups don't work, so we lost our data</label>
+          <label class="mr05"><input type="checkbox" id="sharding">sharded, so we lost our data twice</label>
+          <label><input type="checkbox" id="mongo">NoSQL, so we're webscale, and we've been losing data for years.</label>
+        </p>
+      </form>
+      <form class="bg-white px2 mt2">
+        <h4 class="mt0">WHY THIS HAPPENED</h4>
+        <p>
+          <span class="mr05">We only deploy once every few</span>
+          <label class="mr05"><input type="checkbox" id="deploy-weekly">weeks</label>
+          <label class="nowrap mr05"><input type="checkbox" id="deploy-monthly">months</label>
+          <label class="nowrap"><input type="checkbox" id="funding-rounds">fundraising rounds</label>
+          <span class="mr05">and it's always a disaster because we have no</span>
+          <label class="mr05"><input type="checkbox" id="automated-tests">automated tests</label>
+          <label class="nowrap mr05"><input type="checkbox" id="automated-deployment">automated deployment</label>
+          <label><input type="checkbox" id="monitoring">monitoring.</label>
+        </p>
+        <p>
+          <span class="mr05">Also, our servers</span>
+          <label class="mr05"><input type="checkbox" id="dmz">are exposed publicly</label>
+          <label class="mr05"><input type="checkbox" id="patches">not up to date on security patches</label>
+          <label class="mr05"><input type="checkbox" id="ssh-key">all use a single SSH key</label>
+          <label><input type="checkbox" id="secrets">store passwords in plaintext,</label>
+          <span class="mr05">so it's just a matter of time until ___________________.</span>
+        </p>
+      </form>
+      <form class="bg-white px2 mt2">
+        <h4 class="mt0">WHAT WE NEED TO DO</h4>
+        <p>
+          <span class="mr05">We need to</span>
+          <label class="mr05"><input type="checkbox" id="iac">manage infrastructure as code</label>
+          <label class="mr05"><input type="checkbox" id="automate">automate all the things</label>
+          <label><input type="checkbox" id="secure">secure all the things,</label>
+          <span class="mr05">but we never seem to have time for this grunt work because _______________________.</span>
+        </p>
+        <h4 class="mt3 mb3">
+          YOURS TRULY, <span class="fixed-underline">                                            </span>.
+        </h4>
+      </form>
+    </div>
+    <footer class="white h6 bg-purple clearfix mt2 border-top border-black pb25 pl25 pr25">
+      <div class="col col-10 light-gray pt2 pl1">
+        <div class="small-text"><a href="https://www.gruntwork.io/?ref=why-prod-is-down" class="white">Your entire infrastructure. Defined as code. In one day.</a></div>
+        <strong><a href="https://www.gruntwork.io/?ref=why-prod-is-down" class="light-gray h4">gruntwork.io</a></strong>
       </div>
-    </div>
-    <div class="no-print center h5">
-      <a href="/assets/pdf/why-prod-is-down.pdf">PDF version</a>
-    </div>
-  </body>
+      <div class="col col-2 pt1">
+        <a href="https://www.gruntwork.io/?ref=why-prod-is-down"><img src="/assets/img/grunty-grid.png" alt="Gruntwork"/></a>
+      </div>
+    </footer>
+  </div>
+</div>
+<div class="no-print center h5">
+  <a href="/assets/pdf/why-prod-is-down.pdf">PDF version</a>
+</div>
+</body>
 </html>
