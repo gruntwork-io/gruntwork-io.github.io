@@ -2,48 +2,84 @@
   <div class="col-xs-12">
     <h2>A new standard for architecture</h2>
     <p>
-      The Reference Architecture is an opinionated, battle-tested, best-practices way to assemble the code from the
-      <a href="/static/infrastructure-as-code-library/">Infrastructure as Code Library</a> into an end-to-end tech stack that
-      includes just about everything you need: server cluster, load balancer, database, cache, network topology,
-      monitoring, alerting, CI/CD, secrets management, VPN, and more (check out the
-      <a href="/static/devops-checklist/">Production Readiness Checklist</a> to see what it takes to go to prod).
+      The Reference Architecture is an opinionated, battle-tested,
+      best-practices way to assemble the code from the
+      <a href="/static/infrastructure-as-code-library/"
+        >Infrastructure as Code Library</a
+      >
+      into an end-to-end tech stack that includes just about everything you
+      need: server cluster, load balancer, database, cache, network topology,
+      monitoring, alerting, CI/CD, secrets management, VPN, and more (check out
+      the
+      <a href="/static/devops-checklist/">Production Readiness Checklist</a> to
+      see what it takes to go to prod).
     </p>
     <p>
-      We customize the Reference Architecture to your needs, deploy into your AWS or GCP accounts, and give you 100% of
-      the code. The whole process takes about one day for AWS! If you're interested in a Reference Architecture for
-      GCP, <a href="/static/contact">Contact Us</a>!
+      We customize the Reference Architecture to your needs, deploy into your
+      AWS or GCP accounts, and give you 100% of the code. The whole process
+      takes about one day for AWS! If you're interested in a Reference
+      Architecture for GCP, <a href="/static/contact">Contact Us</a>!
     </p>
     <p>
       We also offer a
-      <a href="https://www.cisecurity.org/benchmark/amazon_web_services/">CIS AWS Foundations Benchmark</a> compliant
-      version of the Reference Architecture. See our <a href="/static/achieve-compliance">Compliance offering</a> to learn
+      <a href="https://www.cisecurity.org/benchmark/amazon_web_services/"
+        >CIS AWS Foundations Benchmark</a
+      >
+      compliant version of the Reference Architecture. See our
+      <a href="/static/achieve-compliance">Compliance offering</a> to learn
       more.
     </p>
-    <p class="alert" style="border: 1px solid #194c5f; background-color: #242e3b;">
-      <strong>Get a Detailed Walkthrough of the Reference Architecture</strong><br>
+    <p
+      class="alert"
+      style="border: 1px solid #194c5f; background-color: #242e3b;"
+    >
+      <strong>Get a Detailed Walkthrough of the Reference Architecture</strong
+      ><br />
       See our blog post
-      <a href="https://blog.gruntwork.io/how-to-build-an-end-to-end-production-grade-architecture-on-aws-part-1-eae8eeb41fec">How to Build an End to End Production-Grade Architecture on AWS</a>.
+      <a
+        href="https://blog.gruntwork.io/how-to-build-an-end-to-end-production-grade-architecture-on-aws-part-1-eae8eeb41fec"
+        >How to Build an End to End Production-Grade Architecture on AWS</a
+      >.
     </p>
-    <div class="text-center ref-arch" style="margin-top: 30px">
-      <a href="/static/assets/img/ref-arch/ref-arch-full.png" title="Click to see the full size image" target="_blank">
-        <img src="/assets/img/ref-arch/ref-arch-full-medium.png" alt="Gruntwork Reference Architecture">
+    <div class="text-center ref-arch" style="margin-top: 30px;">
+      <a
+        href="/assets/img/ref-arch/ref-arch-full.png"
+        title="Click to see the full size image"
+        target="_blank"
+      >
+        <img
+          src="/assets/img/ref-arch/ref-arch-full-medium.png"
+          alt="Gruntwork Reference Architecture"
+        />
         <div class="ref-arch-overlay">
           <i class="fa fa-search fa-3x" aria-hidden="true"></i>
         </div>
       </a>
-      <small class="text-muted">An example AWS Reference Architecture. GCP Reference Architecture also available.</small>
+      <small class="text-muted"
+        >An example AWS Reference Architecture. GCP Reference Architecture also
+        available.</small
+      >
     </div>
     {% include_relative _how-it-works.html %}
     <h2>Reference Architecture Features</h2>
     <div class="row" style="margin-top: 50px; display: flex; flex-wrap: wrap;">
       {% for feature in site.data.reference-architecture-features %}
-      <div class="col-xs-6 col-md-4" style="margin-bottom:20px;">
+      <div class="col-xs-6 col-md-4" style="margin-bottom: 20px;">
         <div class="row" style="display: flex; flex-wrap: wrap;">
-          <div class="col-xs-12 col-sm-4 hidden-print" style="padding-right: 0; padding-left: 0;">
-            <img src="/assets/img/reference-architecture-icons/reference-architecture-feature-{{ forloop.index }}.png" alt="{{ feature.title }}" style="max-width: 105px;" />
+          <div
+            class="col-xs-12 col-sm-4 hidden-print"
+            style="padding-right: 0; padding-left: 0;"
+          >
+            <img
+              src="/assets/img/reference-architecture-icons/reference-architecture-feature-{{ forloop.index }}.png"
+              alt="{{ feature.title }}"
+              style="max-width: 105px;"
+            />
           </div>
           <div class="col-xs-12 col-sm-8" style="line-height: 1.4;">
-            <h4 class="h6 text-bold" style="margin: 5px 0 5px 0">{{ feature.title }}</h4>
+            <h4 class="h6 text-bold" style="margin: 5px 0 5px 0;">
+              {{ feature.title }}
+            </h4>
             <p>{{ feature.description }}</p>
           </div>
         </div>
