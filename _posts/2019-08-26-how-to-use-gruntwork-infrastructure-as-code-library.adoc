@@ -1425,7 +1425,7 @@ Use TFC without Terragrunt::
 Use TFC with Terragrunt::
   Alternatively, you can use both `infrastructure-modules` and `infrastructure-live` repositories as described above,
   storing the wrapper modules in `infrastructure-modules`, and using `infastructure-live` and Terragrunt for
-  deployments. In this approach, TFC is used a https://www.terraform.io/docs/backends/types/remote.html:[remote backend]
+  deployments. In this approach, TFC is used as a https://www.terraform.io/docs/backends/types/remote.html:[remote backend]
   for Terraform. You use Terragrunt to run deployments from the CLI, which in turn invokes Terraform on the TFC backend.
   The TFC UI is used for audit and tracking capabilities, but not for executing Terraform runs.
 
