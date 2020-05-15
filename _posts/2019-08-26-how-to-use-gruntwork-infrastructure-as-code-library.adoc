@@ -1781,8 +1781,6 @@ has changed. Terraform will now check for existing state in the backends.
 
 Successfully configured the backend "remote"! Terraform will automatically
 use this backend unless the backend configuration changes.
-
-... [snip] ...
 ----
 
 Next, we run `terragrunt apply`:
@@ -1808,7 +1806,6 @@ Initializing Terraform configuration...
 Refreshing Terraform state in-memory prior to plan...
 The refreshed state will be used to calculate this plan, but will not be
 persisted to local or remote state storage.
-
 
 ------------------------------------------------------------------------
 
@@ -1838,7 +1835,7 @@ Do you want to perform these actions in workspace "sqs-dev-us-east-1"?
   Enter a value: <enter yes>
 
 aws_sqs_queue.queue: Creating...
-aws_sqs_queue.queue: Creation complete after 0s [id=https://sqs.us-east-1.amazonaws.com/318677964956/example-name]
+aws_sqs_queue.queue: Creation complete after 0s [id=https://sqs.us-east-1.amazonaws.com/0123456789012/example-name]
 data.aws_iam_policy_document.limit_queue_access_by_ip_address: Refreshing state...
 
 Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
