@@ -1420,13 +1420,13 @@ Use TFC without Terragrunt::
   Each module has a dedicated https://www.terraform.io/docs/state/workspaces.html[TFC workspace]. You create the
   workspace in advance, and then you can run the Terraform modules either from the `terraform` CLI or from the TFC UI.
   In essence, TFC replaces Terragrunt and `infrastructure-live`. You'll be able to use the full TFC feature set, but you
-  won't be able to take advantage of the benefits provided by Terragrunt, such as keeping your code and variables, CLI 
+  won't be able to take advantage of the benefits provided by Terragrunt, such as keeping your code and variables, CLI
   args, etc DRY, and adding support for applying changes across multiple modules / environments.
 
 Use TFC with Terragrunt::
   Alternatively, you can use both `infrastructure-modules` and `infrastructure-live` repositories as described above,
   storing the wrapper modules in `infrastructure-modules`, and using `infastructure-live` and Terragrunt for
-  deployments. In this approach, TFC is used as a https://www.terraform.io/docs/backends/types/remote.html:[remote backend]
+  deployments. In this approach, TFC is used as a https://www.terraform.io/docs/backends/types/remote.html[remote backend]
   for Terraform. You use Terragrunt to run deployments from the CLI, which in turn invokes Terraform on the TFC backend.
   The TFC UI is used for audit and tracking capabilities, but not for executing Terraform runs.
 
@@ -1556,7 +1556,7 @@ commit to a file in the working directory that you set up when configuring works
 `/modules/networking/sqs`), or by manually triggering the run using the _Queue plan_ button in the TFC UI. The run will:
 
 * Clone your `infrastructure-modules` repository using the VCS connection
-* Download the AWS provider and set credentials using the environment variables 
+* Download the AWS provider and set credentials using the environment variables
 * Download the Gruntwork SQS module using the SSH key
 * Run a `terraform plan`
 * Wait for confirmation
@@ -1758,7 +1758,7 @@ The configuration has a few sections:
 Any of the inputs needed by the module must be included in the generated tfvars file. In the configuration above, only
 the `name` variable is specified. Most modules will need more configuration.
 
-===== Running Terragrunt 
+===== Running Terragrunt
 
 With all the pieces in place, you can run `terragrunt init` to initialize the workspace, if it isn't already there, and then `terragrunt apply`, and watch as Terragrunt invokes Terraform, which executes the `plan` and `apply` stages on TFC, pausing in between to allow confirmation. Note that when running a `terragrunt apply-all`, Terragrunt adds the `-auto-approve` flag to Terraform to skip interactive approval. This means that with `apply-all`, there will be no confirmation step.
 
@@ -1853,7 +1853,7 @@ TFC runs a plan first, waits for confirmation, and then runs apply. The confirma
 image::/assets/img/guides/infrastructure-as-code-library/tfc-terragrunt-results.png[]
 {empty} +
 
-Other commands, such as `destroy`, work in the same way. 
+Other commands, such as `destroy`, work in the same way.
 
 ===== Summarizing Terragrunt and TFC/TFE compatibility
 
