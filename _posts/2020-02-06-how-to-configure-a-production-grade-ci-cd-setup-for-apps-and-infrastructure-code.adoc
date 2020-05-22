@@ -1565,7 +1565,7 @@ include {
 
 # Set the source to an immutable released version of the infrastructure module being deployed:
 terraform {
-  source = "git@github.com/<YOUR_ORG>/infrastructure-modules.git//cicd/ecr-repo?ref=v0.5.0"
+  source = "git@github.com/<YOUR_ORG>/infrastructure-modules.git//cicd/ecs-deploy-runner?ref=v0.5.0"
 }
 
 # Look up the VPC and ECR repository information using dependency blocks:
