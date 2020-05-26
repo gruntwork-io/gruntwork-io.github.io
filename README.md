@@ -5,8 +5,6 @@ This is the code for the [Gruntwork website](https://www.gruntwork.io).
 Gruntwork can help you get your entire infrastructure, defined as code, in about one day. You focus on your product.
 We'll take care of the Gruntwork.
 
-
-
 ## Docker quick start
 
 The fastest way to launch this site is to use [Docker](https://www.docker.com/).
@@ -15,7 +13,6 @@ The fastest way to launch this site is to use [Docker](https://www.docker.com/).
 1. `docker-compose up`
 1. Go to `http://localhost:4000` to test
 
-
 ## Manual quick start
 
 1. `git clone` this repo
@@ -23,7 +20,6 @@ The fastest way to launch this site is to use [Docker](https://www.docker.com/).
 1. Just the first time: `bundle install`
 1. Start Jekyll server: `bundle exec jekyll serve --livereload`
 1. Go to `http://localhost:4000`
-
 
 ## Updating /assets/msword/gruntwork-terms.docx
 
@@ -39,19 +35,13 @@ Hopefully, in the future, Jekyll will support the ability to indicate which file
 If you want to edit the styles used to generate `/assets/msword/gruntwork-terms.docx`, update the styles saved in
 `/assets/msword/styles.docx` and re-run `docker-compose up`.
 
-
 ## Deploying
 
 To deploy the site to S3/CloudFront:
 
 1. Configure your AWS credentials as environment variables.
-1. `docker-compose run web ./push-to-s3.sh`
-
-To Deploy via Houston
-1. Authenticate via [houston](https://app.houston.gruntwork.io/login)
-1. Follow the steps given in the CLI Login
-1. Run `houston exec web -- docker-compose run web ./push-to-s3.sh`
-
+1. `docker-compose run web ./push-to-s3-stage.sh` -or-
+1. `docker-compose run web ./push-to-s3-prod.sh`
 
 ## Technologies
 
@@ -63,7 +53,6 @@ To Deploy via Houston
 1. We use [Bootstrap](http://www.getbootstrap.com/) and [Less](http://lesscss.org/).
 1. We're using [UptimeRobot](http://uptimerobot.com/) and [Google Analytics](http://www.google.com/analytics/) for
    monitoring and metrics.
-
 
 ## License
 
