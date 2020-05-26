@@ -2,7 +2,7 @@
 layout: default
 title: Production deployment guides
 excerpt: Step-by-step guides that show you how to go to production on top of AWS and GCP
-permalink: /static/guides/
+permalink: /guides/
 slug: guides
 custom_js:
   - search
@@ -16,15 +16,10 @@ custom_js:
 
   <div class="guides-section-white">
     <div class="container-fluid">
-      {% include search.html posts=site.posts %}
-      {% include_relative _no-search-results.html %}
-      {% include_relative _guides.html %}
-      {% include newsletter.html %}
+      {% include search.html posts=site.posts %} {% include_relative
+      _no-search-results.html %} {% include_relative _guides.html %} {% include
+      newsletter.html %}
     </div>
   </div>
   {% include grunty-sub-footer.html %}
 </div>
-
-
-
-

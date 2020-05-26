@@ -1,49 +1,72 @@
 ---
 layout: default
 custom_js:
-- prism
-- guides
+  - prism
+  - guides
 ---
 
-<div  class="post-bg">
+<div class="post-bg">
   <div class="container-fluid">
-      <div class="post-detail row equal">
-        <div class="col-md-2-5">
-          <div id="toc" class="js-scroll-with-user" data-scroll-after-selector=".navbar-default" data-scroll-until-selector=".guides-section-white">
-              {% toc %} {{page.document | tocify_asciidoc}}
-          </div>
-        </div>
-        <div class="col-md-7 col-xs-12 guides-section-white">
-          <ol class="breadcrumb text-center">
-            {% assign crumbs = page.url | split: '/' %}
-            <a href="/static/guides" ga-on="click" ga-event-category="guide-{{ page.title | slugify }}" ga-event-action="deployment-guides-home">Production Deployment Guides</a>
-            {% for crumb in crumbs offset: 2 %}
-              {% if forloop.last %}
-                <a href="#"> / <span> {{ page.title | replace:'-',' ' }}</span></a>
-              {% else %}
-                <a href="/static/guides#{{ crumb }}" ga-on="click" ga-event-category="guide-{{ page.title | slugify }}" ga-event-action="breadcrumb-{{ crumb }}">/ <span>{{ crumb | replace:'-',' ' | capitalize }}</span></a>
-              {% endif %}
-            {% endfor %}
-          </ol>
-          <div class="post-title text-center">
-            <img class="img-center post-title-image" src="{{ page.image }}" alt="post logo">
-            <h1>{{ page.title }}</h1>
-            {% if page.tags %}
-              {% for tag in page.tags %}
-                <span class="badge badge-pill badge-default">
-                  {% capture tag-name %}{{tag | upcase }}{% endcapture %}
-                  {% if tag-name=="AWS" or tag-name=="GCP"  or tag-name=="GKE" or tag-name=="EKS" %} {{ tag-name }} {% else %} {{tag-name | capitalize}}{% endif %}</span>
-              {% endfor %}
-            {% endif %}
-          </div>
-          <div class="post-content js-scroll-spy" data-scroll-spy-nav-selector="#toc">
-              {{ content }}
-          </div>
+    <div class="post-detail row equal">
+      <div class="col-md-2-5">
+        <div
+          id="toc"
+          class="js-scroll-with-user"
+          data-scroll-after-selector=".navbar-default"
+          data-scroll-until-selector=".guides-section-white"
+        >
+          {% toc %} {{page.document | tocify_asciidoc}}
         </div>
       </div>
+      <div class="col-md-7 col-xs-12 guides-section-white">
+        <ol class="breadcrumb text-center">
+          {% assign crumbs = page.url | split: '/' %}
+          <a
+            href="/guides"
+            ga-on="click"
+            ga-event-category="guide-{{ page.title | slugify }}"
+            ga-event-action="deployment-guides-home"
+            >Production Deployment Guides</a
+          >
+          {% for crumb in crumbs offset: 2 %} {% if forloop.last %}
+          <a href="#"> / <span> {{ page.title | replace:'-',' ' }}</span></a>
+          {% else %}
+          <a
+            href="/guides#{{ crumb }}"
+            ga-on="click"
+            ga-event-category="guide-{{ page.title | slugify }}"
+            ga-event-action="breadcrumb-{{ crumb }}"
+            >/ <span>{{ crumb | replace:'-',' ' | capitalize }}</span></a
+          >
+          {% endif %} {% endfor %}
+        </ol>
+        <div class="post-title text-center">
+          <img
+            class="img-center post-title-image"
+            src="{{ page.image }}"
+            alt="post logo"
+          />
+          <h1>{{ page.title }}</h1>
+          {% if page.tags %} {% for tag in page.tags %}
+          <span class="badge badge-pill badge-default">
+            {% capture tag-name %}{{tag | upcase }}{% endcapture %} {% if
+            tag-name=="AWS" or tag-name=="GCP" or tag-name=="GKE" or
+            tag-name=="EKS" %} {{ tag-name }} {% else %} {{tag-name |
+            capitalize}}{% endif %}</span
+          >
+          {% endfor %} {% endif %}
+        </div>
+        <div
+          class="post-content js-scroll-spy"
+          data-scroll-spy-nav-selector="#toc"
+        >
+          {{ content }}
+        </div>
+      </div>
+    </div>
   </div>
   <div id="comments" class="comments center">
-     {% include comments.html %}
+    {% include comments.html %}
   </div>
 </div>
 <div class="white-section center">

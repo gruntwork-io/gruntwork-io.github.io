@@ -7,23 +7,19 @@
         <p style="margin-top: 20px">
           Select a cloud provider to calculate your monthly price for Gruntwork.
         </p>
-        {% comment %} Pull FAQs from Licensing category and offset by 1 {% endcomment %}
-        {% assign category = site.data.faq[1] %}
-        {% for item in category.items offset:1 %}
+        {% comment %} Pull FAQs from Licensing category and offset by 1 {%
+        endcomment %} {% assign category = site.data.faq[1] %} {% for item in
+        category.items offset:1 %}
         <h4 id="{{ item.question | slugify }}">{{ item.question }}</h4>
-        {{ item.answer }}
-        {% endfor %}
+        {{ item.answer }} {% endfor %}
         <h4>Still have questions?</h4>
-        <p>Check out our <a href="/static/faq/">Full FAQ's</a>.</p>
+        <p>Check out our <a href="/faq/">Full FAQ's</a>.</p>
       </div>
       <div class="col-md-6">
-        {% comment %} Pull all FAQs from Pricing category {% endcomment %}
-        {% assign category = site.data.faq[2] %}
-        {% for item in category.items %}
+        {% comment %} Pull all FAQs from Pricing category {% endcomment %} {%
+        assign category = site.data.faq[2] %} {% for item in category.items %}
         <h4 id="{{ item.question | slugify }}">{{ item.question }}</h4>
-        {{ item.answer }}
-        {% endfor %}
-
+        {{ item.answer }} {% endfor %}
       </div>
     </div>
   </div>
