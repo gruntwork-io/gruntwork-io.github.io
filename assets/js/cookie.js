@@ -7,35 +7,35 @@
  * that our cookie notice renders ABOVE the Intercom bubble to avoid conflicts with z-index.
  */
 
-(function ($) { "use strict";
-  var cookieInnerHtml = '<div><p>By using this website you agree to our <a href="/static/cookie-policy/">cookie policy</a></p><button id="cookieModalClose" class="btn btn-primary">OK</button></div>';
+(function($) {
+  "use strict";
+  var cookieInnerHtml =
+    '<div><p>By using this website you agree to our <a href="/cookie-policy/">cookie policy</a></p><button id="cookieModalClose" class="btn btn-primary">OK</button></div>';
 
-  var initCookie = function () {
-
+  var initCookie = function() {
     // Don't create cookie notice if already acknowledged
-    if (getCookiebyName('GruntyCookie')) {
+    if (getCookiebyName("GruntyCookie")) {
       return;
     }
 
     // Create the cookie modal
-    var $cookieModal = $('<div />');
-    $cookieModal.attr('id', 'gruntyCookie');
-    $cookieModal.css('z-index', '2147483647');
+    var $cookieModal = $("<div />");
+    $cookieModal.attr("id", "gruntyCookie");
+    $cookieModal.css("z-index", "2147483647");
     $cookieModal.html(cookieInnerHtml);
 
-    $(document).on('click', '#cookieModalClose', function () {
-      setCookie('GruntyCookie', '1', 365);
+    $(document).on("click", "#cookieModalClose", function() {
+      setCookie("GruntyCookie", "1", 365);
       $cookieModal.hide();
     });
 
-    $('body').append($cookieModal);
+    $("body").append($cookieModal);
   };
 
   // Checks for the global Intercom object is set from the Intercom script.
   if (!!window.Intercom) {
     var cookieInterval;
-    cookieInterval = setInterval(function () {
-
+    cookieInterval = setInterval(function() {
       // Perform multiple checks on Intercom.booted property.
       // https://gist.github.com/FokkeZB/033d4a9089fff392f7990a452e1d323d#gistcomment-2653218
       if (!window.Intercom.booted) {
@@ -43,7 +43,7 @@
       }
 
       // Try to find the Intercom container element.
-      if (document.getElementById('intercom-container') === null) {
+      if (document.getElementById("intercom-container") === null) {
         return;
       }
 
@@ -55,5 +55,4 @@
     // Intercom wasn't detected on this page, render cookie as usual.
     initCookie();
   }
-
 })(window.jQuery);

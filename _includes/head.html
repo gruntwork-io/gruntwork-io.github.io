@@ -26,18 +26,6 @@
     if (match) return match[2];
   }
 
-  var prodAccount = "GTM-W5PZQHS";
-  var devAccount = "GTM-WK4FP9N";
-
-  var cookieName = "gruntwork-experiment-id";
-  var experimentId = "dif5NbchTSKE1PRupAceFw";
-  var gaExpVar = getCookie(cookieName) === "old-site" ? 0 : 1;
-
-  dataLayer.push({
-    gaExpId: experimentId,
-    gaExpVar: gaExpVar
-  });
-
   (function(w, d, s, l, i) {
     w[l] = w[l] || [];
     w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
@@ -47,7 +35,7 @@
     j.async = true;
     j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
     f.parentNode.insertBefore(j, f);
-  })(window, document, "script", "dataLayer", prodAccount);
+  })(window, document, "script", "dataLayer", "{{ site.gtm_id }}");
 </script>
 <!-- End Google Tag Manager -->
 

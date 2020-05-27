@@ -1,80 +1,150 @@
-{% for package in site.data.library %}
-  {% capture id %}{{ package.name | replace: " ", "_" | replace: ")", "_" |  replace: "(", "_" }}{% endcapture %}
-  <div class="modal fade" id="modal-{{ id }}" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header text-center margin-bottom-none">
-          <h4 class="h2 modal-title margin-top-none" style="float: left">{{ package.name }}</h4>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="fa fa-fw fa-close"></i></button>
-        </div>
-        <div class="modal-body" style="padding-top: 0">
-          <table class="table table-striped">
-            <tbody>
-              <tr>
-                <th width="25%">Description</th>
-                <td>
-                  {{ package.description }}
-                </td>
-              </tr>
-              <tr>
-                <th>Supported clouds</th>
-                <td>
-                  {% for cloud in package.clouds %}
-                    {% include_relative _cloud-label.html cloud=cloud %}
-                  {% endfor %}
-                </td>
-              </tr>
-              <tr>
-                <th>Type</th>
-                <td>
-                  {% include_relative _package-label.html type=package.type %}
-                </td>
-              </tr>
-              <tr>
-                <th>Technologies</th>
-                <td>
-                  {% for icon in package.icons %}
-                  <span style="margin-right: 10px">
-                      <img src="/assets/img/logos-technologies/{{ icon.image }}" height="24px" alt="{{ icon.title }}" style="margin-right: 5px;" /> {{ icon.title }}
-                    </span>
-                  {% endfor %}
-                </td>
-              </tr>
-              <tr>
-                <th>Links</th>
-                <td>
-                  {% if package.docs_url %}<div><a href="{{ package.docs_url }}" target="_blank" rel="noopener">Public Docs</a></div>{% endif %}
-                  {% if package.subscriber_url %}<div><a href="{{ package.subscriber_url }}" target="_blank" rel="noopener">Full Repo</a> (<strong>ONLY</strong> accessible to <a href="/static/pricing">Gruntwork subscribers</a>!)</div>{% endif %}
-                  {% if package.aws_url %}<div><a href="{{ package.aws_url }}" target="_blank" rel="noopener">AWS Version</a></div>{% endif %}
-                  {% if package.gcp_url %}<div><a href="{{ package.gcp_url }}" target="_blank" rel="noopener">GCP Version</a></div>{% endif %}
-                  {% if package.azure_url %}<div><a href="{{ package.azure_url }}" target="_blank" rel="noopener">Azure Version</a></div>{% endif %}
-                  {% if package.public_url %}<div><a href="{{ package.public_url }}" target="_blank" rel="noopener">Full Repo</a></div>{% endif %}
-                </td>
-              </tr>
-              {% if package.submodules %}
-                <tr>
-                  <th>Key modules</th>
-                  <td>
-                    <div class="accordion" id="accordion-{{ id }}">
-                      {% for submodule in package.submodules %}
-                        <div>
-                          <a href="#" class="btn-link" data-toggle="collapse" data-target="#collapse-{{ id }}-{{ forloop.index0 }}">
-                            {{ submodule.name }}{% if submodule.blurb %}:{% endif %}
-                          </a>
-                          {% if submodule.blurb %}<span>{{ submodule.blurb }}</span>{% endif %}
-                          <div id="collapse-{{ id }}-{{ forloop.index0 }}" class="collapse" data-parent="#accordion-{{ id }}" style="margin-bottom: 20px;">
-                            {{ submodule.description }}
-                          </div>
-                        </div>
-                      {% endfor %}
+{% for package in site.data.library %} {% capture id %}{{ package.name |
+replace: " ", "_" | replace: ")", "_" | replace: "(", "_" }}{% endcapture %}
+<div class="modal fade" id="modal-{{ id }}" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center margin-bottom-none">
+        <h4 class="h2 modal-title margin-top-none" style="float: left">
+          {{ package.name }}
+        </h4>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <i class="fa fa-fw fa-close"></i>
+        </button>
+      </div>
+      <div class="modal-body" style="padding-top: 0">
+        <table class="table table-striped">
+          <tbody>
+            <tr>
+              <th width="25%">Description</th>
+              <td>
+                {{ package.description }}
+              </td>
+            </tr>
+            <tr>
+              <th>Supported clouds</th>
+              <td>
+                {% for cloud in package.clouds %} {% include_relative
+                _cloud-label.html cloud=cloud %} {% endfor %}
+              </td>
+            </tr>
+            <tr>
+              <th>Type</th>
+              <td>
+                {% include_relative _package-label.html type=package.type %}
+              </td>
+            </tr>
+            <tr>
+              <th>Technologies</th>
+              <td>
+                {% for icon in package.icons %}
+                <span style="margin-right: 10px">
+                  <img
+                    src="/assets/img/logos-technologies/{{ icon.image }}"
+                    height="24px"
+                    alt="{{ icon.title }}"
+                    style="margin-right: 5px;"
+                  />
+                  {{ icon.title }}
+                </span>
+                {% endfor %}
+              </td>
+            </tr>
+            <tr>
+              <th>Links</th>
+              <td>
+                {% if package.docs_url %}
+                <div>
+                  <a
+                    href="{{ package.docs_url }}"
+                    target="_blank"
+                    rel="noopener"
+                    >Public Docs</a
+                  >
+                </div>
+                {% endif %} {% if package.subscriber_url %}
+                <div>
+                  <a
+                    href="{{ package.subscriber_url }}"
+                    target="_blank"
+                    rel="noopener"
+                    >Full Repo</a
+                  >
+                  (<strong>ONLY</strong> accessible to
+                  <a href="/pricing">Gruntwork subscribers</a>!)
+                </div>
+                {% endif %} {% if package.aws_url %}
+                <div>
+                  <a href="{{ package.aws_url }}" target="_blank" rel="noopener"
+                    >AWS Version</a
+                  >
+                </div>
+                {% endif %} {% if package.gcp_url %}
+                <div>
+                  <a href="{{ package.gcp_url }}" target="_blank" rel="noopener"
+                    >GCP Version</a
+                  >
+                </div>
+                {% endif %} {% if package.azure_url %}
+                <div>
+                  <a
+                    href="{{ package.azure_url }}"
+                    target="_blank"
+                    rel="noopener"
+                    >Azure Version</a
+                  >
+                </div>
+                {% endif %} {% if package.public_url %}
+                <div>
+                  <a
+                    href="{{ package.public_url }}"
+                    target="_blank"
+                    rel="noopener"
+                    >Full Repo</a
+                  >
+                </div>
+                {% endif %}
+              </td>
+            </tr>
+            {% if package.submodules %}
+            <tr>
+              <th>Key modules</th>
+              <td>
+                <div class="accordion" id="accordion-{{ id }}">
+                  {% for submodule in package.submodules %}
+                  <div>
+                    <a
+                      href="#"
+                      class="btn-link"
+                      data-toggle="collapse"
+                      data-target="#collapse-{{ id }}-{{ forloop.index0 }}"
+                    >
+                      {{ submodule.name }}{% if submodule.blurb %}:{% endif %}
+                    </a>
+                    {% if submodule.blurb %}<span>{{ submodule.blurb }}</span>{%
+                    endif %}
+                    <div
+                      id="collapse-{{ id }}-{{ forloop.index0 }}"
+                      class="collapse"
+                      data-parent="#accordion-{{ id }}"
+                      style="margin-bottom: 20px;"
+                    >
+                      {{ submodule.description }}
                     </div>
-                  </td>
-                </tr>
-              {% endif %}
-            </tbody>
-          </table>
-        </div>
+                  </div>
+                  {% endfor %}
+                </div>
+              </td>
+            </tr>
+            {% endif %}
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
+</div>
 {% endfor %}

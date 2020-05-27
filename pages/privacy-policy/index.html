@@ -2,7 +2,7 @@
 layout: default
 title: Privacy Policy
 modified_date: September 20, 2018
-permalink: /static/privacy-policy/
+permalink: /privacy-policy/
 slug: privacy-policy
 ---
 
@@ -17,19 +17,16 @@ slug: privacy-policy
       </div>
       <div class="row">
         <div class="col-xs-12">
-          {% for answer in site.data.privacy-policy %}
-            {% if answer.question != nil %}
-                <h2>{{ answer.question }}</h2>
-            {% endif %}
-            {% for step in answer.items %}
-              {% if step.title != nil %}
-                <h3>{{ step.title }}</h3>
-              {% endif %}
-              <div>
-                {{ step.ans }}
-              </div>
-            {% endfor %}
-          {% endfor %}
+          {% for answer in site.data.privacy-policy %} {% if answer.question !=
+          nil %}
+          <h2>{{ answer.question }}</h2>
+          {% endif %} {% for step in answer.items %} {% if step.title != nil %}
+          <h3>{{ step.title }}</h3>
+          {% endif %}
+          <div>
+            {{ step.ans }}
+          </div>
+          {% endfor %} {% endfor %}
         </div>
       </div>
     </div>
