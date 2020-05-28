@@ -47,7 +47,7 @@
         </div>
         <div class="col-sm-12 panel panel-default sub-panel">
           <div class="panel-body text-center">
-            <h3 class="addon-type">Reference Architecture</h3>
+            <h3 class="addon-type" id="addon-text-refarch">Reference Architecture</h3>
             <h1 class="addon-amount" id="addon-amount-refarch">$4,950</h1>
             <p class="addon-duration">one-time, flat fee</p>
             <hr
@@ -77,6 +77,8 @@
         <div class="col-sm-12 panel panel-default sub-panel">
           <div class="panel-body text-center">
             <h3 class="addon-type">CIS Benchmark Compliance</h3>
+            <h1 class="addon-amount" id="addon-amount-cis">$1,245</h1>
+            <p class="addon-duration">billed monthly</p>
             <hr
               class="hr-sm hr-reset visible-sm-block visible-md-block visible-lg-block"
             />
@@ -87,9 +89,17 @@
               end-to-end, production-grade architecture in your own AWS
               environment, fully managed as code - all in about 1 day!
             </p>
-            <p id="cis-button-aws">
+            <p id="cis-button-default" hidden>
+              <a class="btn btn-primary addon-button"
+              name="setup_compliance"
+              data-addon-action-type="Add"
+              >Add to Subscription
+              <i class="fa fa-angle-double-right fa-lg" aria-hidden="true"></i>
+              </a>
+            </p>
+            <p id="cis-button-gcp" hidden>
               <a class="btn btn-primary addon-button" href="/contact/"
-                >Contact us for pricing</a
+                >Contact Us</a
               >
             </p>
           </div>
