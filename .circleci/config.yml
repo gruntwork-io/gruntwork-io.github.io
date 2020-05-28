@@ -1,0 +1,100 @@
+version: 2.1
+
+######################################################################################################################
+# Define the ORBS we'll use in the rest of the workflow
+######################################################################################################################
+orbs:
+  docker: circleci/docker@0.5.13
+  awscli: circleci/aws-cli@0.1.13
+  slack: circleci/slack@3.4.1
+
+######################################################################################################################
+# We define all the actual build steps here in named, reusable references. This allows us to define jobs below as a
+# readable, composable list of references
+######################################################################################################################
+references:
+  base_container: &base_container
+    docker:
+      - image: circleci/node:12.12
+
+  ######################################################################################################################
+  # Build steps
+  ######################################################################################################################
+  build_gruntwork-website: &build_gruntwork-website
+    run:
+      name: build
+      command: yarn build:gruntwork-website:docker:prod
+
+  deploy_to_staging: &deploy-to-staging
+    run:
+      name: deploy to staging
+      command: |
+        set +o pipefail
+        if [[ "$CIRCLE_BRANCH" == "master" ]]; then
+          AWS_PROFILE=dogfood-stage docker-compose run web ./push-to-s3-stage.sh
+        else
+          echo "not on master, skipping deploy"
+        fi
+
+  deploy_to_prod: &deploy-to-prod
+    run:
+      name: deploy to prod
+      command: |
+        set +o pipefail
+        if [[ "$CIRCLE_BRANCH" == "master" ]]; then
+          AWS_PROFILE=dogfood-prod docker-compose run web ./push-to-s3-prod.sh
+        else
+          echo "not on master, skipping deploy"
+        fi
+
+  notify_slack: &notify_slack_on_failure
+    slack/status:
+      fail_only: true
+      failure_message: ":red_circle: $CIRCLE_JOB has failed on master! Build triggered by: $CIRCLE_USERNAME. You have one hour to fix or revert!!"
+      only_for_branches: "master"
+
+#######################################################################################################################
+# The build jobs available, all consisting of lists of references to the references section above
+#######################################################################################################################
+jobs:
+  deploy-to-stage:
+    <<: *base_container
+    description: Deploy to Staging
+    steps:
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - awscli/install
+      - checkout
+      - *deploy-to-staging
+      - *notify_slack_on_failure
+
+  deploy-to-prod:
+    <<: *base_container
+    description: Deploy to Prod
+    steps:
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - awscli/install
+      - checkout
+      - *deploy-to-staging
+      - *notify_slack_on_failure
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Here we combine the jobs defined above into various workflows that can run in parallel or sequentially, define
+# dependencies on each other, and only run on certain branches/tags.
+# ---------------------------------------------------------------------------------------------------------------------
+
+workflows:
+  version: 2
+  each_commit:
+    jobs:
+      - deploy-to-stage:
+          filters:
+            branches:
+              only: master
+      - deploy-to-prod:
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
