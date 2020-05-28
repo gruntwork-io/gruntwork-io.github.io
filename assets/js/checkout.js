@@ -27,7 +27,7 @@ $(function () {
   function _setGcpUIDefaults() {
     $('#subscription-type-img').attr('data-subscription-type', 'gcp');
 
-    // Show Coming Soon text for refarch
+    // Show Coming Soon text & contact us cta for refarch & cis compliance
     $('#addon-amount-refarch').text('Coming Soon.');
     $('#addon-amount-cis').text('Coming Soon.');
     $('#refarch-button-gcp').show();
@@ -172,10 +172,14 @@ $(function () {
 
     if (setup_compliance) {
       $('#subscription-addon-3').removeClass('check-list-disabled');
+
+      // Update Refarch texts to reflect CIS selection
       $('#subscription-addon-3-text').text('CIS Reference Architecture');
       $('#addon-text-refarch').text('CIS Reference Architecture');
     } else {
       $('#subscription-addon-3').addClass('check-list-disabled');
+
+      // Update Refarch texts to reflect CIS selection removal
       $('#subscription-addon-3-text').text('Reference Architecture');
       $('#addon-text-refarch').text('Reference Architecture');
     }
@@ -218,7 +222,7 @@ $(function () {
       //subtotal += 4950;
     }
 
-    // Only AWS supports the CIS Compliance
+    // CIS Compliance is only on AWS for now
     if (checkoutOptions.setup_compliance) {
       total += subtotal = pricing.subscriptions.aws.cis_compliance_price.value;
     }
