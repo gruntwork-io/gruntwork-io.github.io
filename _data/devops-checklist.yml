@@ -139,8 +139,10 @@
       description: |
         Use <a href="https://aws.amazon.com/elasticache/" target="_blank">Elasticache</a> if you want to use Redis or
         Memcached for key-value storage. Use <a href="https://aws.amazon.com/dynamodb/" target="_blank">DynamoDB</a> if
-        you need a managed, eventually consistent document store. If you need other NoSQL databases, such as MongoDB
-        or Couchbase, you'll need to run it yourself (see the
+        you need a managed, eventually consistent key-value store. Use
+        <a href="https://aws.amazon.com/documentdb/" target="_blank">DocumentDB</a> if you need a mmanaged, scalable document store.
+        If you need other NoSQL databases, such as MongoDB or Couchbase, you'll need to look to other managed services
+        (e.g., <a href="https://mlab.com/" target="_blank">mLab</a>) or you can run it yourself (see the
         <a href="https://gruntwork.io/infrastructure-as-code-library/" target="_blank">Gruntwork Library</a>).
 
     - title: Deploy queues
@@ -150,18 +152,22 @@
 
     - title: Deploy search tools
       description: |
-        Use <a href="https://aws.amazon.com/elasticsearch-service/" target="_blank">Amazon Elasticsearch</a> for log
-        analysis and full text search. Note that Amazon Elasticsearch has some
+        Use <a href="https://aws.amazon.com/elasticsearch-service/" target="_blank">Amazon Elasticsearch</a> or
+        <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/AnalyzingLogData.html" target="_blank">CloudWatch Logs Insights</a>
+        for log analysis and full text search. Note that Amazon Elasticsearch has some
         <a href="https://code972.com/blog/2017/12/111-why-you-shouldnt-use-aws-elasticsearch-service" target="_blank">significant limitations</a>,
         so if you need to work around those, you'll need to run the ELK stack yourself (see the
         <a href="https://gruntwork.io/infrastructure-as-code-library/" target="_blank">Gruntwork Library</a>).
 
     - title: Deploy stream processing tools
       description: |
-        Use <a href="https://aws.amazon.com/kinesis/" target="_blank">Amazon Kinesis</a> to process streaming data.
+        Use <a href="https://aws.amazon.com/msk/" target="_blank">Amazon Managed Streaming for Apache Kafka (MSK)</a>
+        or <a href="https://aws.amazon.com/kinesis/" target="_blank">Amazon Kinesis</a> to process streaming data.
         Note that Kinesis has some
         <a href="https://docs.aws.amazon.com/streams/latest/dev/service-sizes-and-limits.html" target="_blank">significant limitations</a>,
-        so if you need to work around those, you'll need to instead run
+        and <a href="https://docs.aws.amazon.com/msk/latest/developerguide/limits.html" target="_blank">MSK has some smaller limitations</a>,
+        so if you need to work around those, you can look to other managed services
+        (e.g., <a href="https://www.confluent.io/confluent-cloud/" target="_blank">Confluent Cloud</a>) or you can run
         <a href="https://kafka.apache.org/" target="_blank">Kafka</a> yourself (see the
         <a href="https://gruntwork.io/infrastructure-as-code-library/" target="_blank">Gruntwork Library</a>).
 
@@ -247,9 +253,9 @@
     - title: Use multiple Availability Zones
       description: |
         Configure your <a href="https://docs.aws.amazon.com/autoscaling/ec2/userguide/AutoScalingGroup.html" target="_blank">Auto Scaling Groups</a>
-        and <a href="https://aws.amazon.com/elasticloadbalancing/" target="_blank">Load Balancers</a> to make use of all
+        and <a href="https://aws.amazon.com/elasticloadbalancing/" target="_blank">Load Balancers</a> to make use of multiple
         <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html" target="_blank">Availability Zones (AZs)</a>
-        in your AWS account so you can tolerate the failure of an entire AZ.
+        (3 is recommended) in your AWS account so you can tolerate the failure of an entire AZ.
 
     - title: Set up load balancing
       description: |
@@ -540,10 +546,13 @@
 
     - title: Deploy a Bastion Host
       description: |
-        All EC2 Instances should be in a private subnet and NOT accessible directly from the public Internet. Only a
-        single, locked-down EC2 Instance, known as the Bastion Host, should run in the public subnets. You must first
-        connect to the Bastion Host, which gets you "in" to the network, and then you can use it as a "jump host" to
-        connect to the other EC2 Instances.
+        Just about all your EC2 Instances should be in private subnets and NOT accessible directly from the public
+        Internet. Only a single, locked-down EC2 Instance, known as the Bastion Host, should run in the public subnets.
+        You must first connect to the Bastion Host, which gets you "in" to the network, and then you can use it as a
+        "jump host" to connect to the other EC2 Instances. The only other EC2 instances you might want to run in public
+        subnets are those that must be accessible directly from the public Internet, such as load balancers (though in
+        most cases, we recommend using Amazon-managed
+        <a href="https://aws.amazon.com/elasticloadbalancing/" target="_blank">Load Balancers</a>).
 
     - title: Deploy a VPN Server
       description: |
@@ -558,7 +567,9 @@
         <a href="https://www.lastpass.com/" target="_blank">LastPass</a>. Applications should store all their secrets
         (such as DB passwords and API keys) either in files encrypted with
         <a href="https://aws.amazon.com/kms/" target="_blank">KMS</a> or in a secret store such as
-        <a href="https://www.vaultproject.io/" target="_blank">Vault</a>.
+        <a href="https://aws.amazon.com/secrets-manager/" target="_blank">AWS Secrets Manager</a>,
+        <a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html" target="_blank">SSM Parameter Store</a>, or
+        <a href="https://www.vaultproject.io/" target="_blank">HashiCorp Vault</a>.
 
     - title: Use server hardening practices
       description: |
@@ -746,7 +757,7 @@
 
     - title: Use Lambda when possible
       description: |
-        For all short (5 min or less) background jobs, cron jobs, ETL jobs, event processing jobs, and other glue code,
+        For all short (15 min or less) background jobs, cron jobs, ETL jobs, event processing jobs, and other glue code,
         use <a href="https://aws.amazon.com/lambda/" target="_blank">AWS Lambda</a>. You not only have no servers to
         manage, but AWS Lambda pricing is incredibly cheap, with the first 1 million requests and 400,000 GB-seconds
         per month being completely free! After that, it's just $0.0000002 per request and $0.00001667 for every
