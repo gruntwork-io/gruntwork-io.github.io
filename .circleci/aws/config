@@ -1,0 +1,23 @@
+[default]
+region=us-east-1
+output=json
+
+[profile dogfood-dev]
+region=us-east-1
+credential_source=Environment
+role_arn=arn:aws:iam::090304172891:role/allow-gruntwork-website-ci-cd-access-from-other-accounts
+
+[profile dogfood-stage]
+region=us-east-1
+credential_source=Environment
+role_arn=arn:aws:iam::151025255439:role/allow-gruntwork-website-ci-cd-access-from-other-accounts
+
+[profile dogfood-prod]
+region=us-east-1
+credential_source=Environment
+role_arn=arn:aws:iam::996502968539:role/allow-gruntwork-website-ci-cd-access-from-other-accounts
+
+[profile dogfood-shared]
+region=us-east-1
+credential_source=Environment
+role_arn=arn:aws:iam::706132791050:role/allow-gruntwork-website-ci-cd-access-from-other-accounts
