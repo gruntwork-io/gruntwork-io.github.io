@@ -33,7 +33,8 @@ references:
   install_jdk: &install-jdk
     run:
       name: install jdk
-      command: sudo apt-get install --assume-yes openjdk-7-jre
+      command: |
+        sudo apt-get update && apt-get install -y default-jre texlive texlive-xetex texlive-latex-recommended texlive-latex-extra texlive-lang-cjk
 
   deploy_to_staging: &deploy-to-staging
     run:
