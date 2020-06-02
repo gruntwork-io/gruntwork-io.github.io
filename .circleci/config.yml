@@ -8,6 +8,7 @@ orbs:
   awscli: circleci/aws-cli@0.1.13
   slack: circleci/slack@3.4.1
   python: circleci/python@0.3.0
+  ruby: circleci/ruby@1.0.0
 
 ######################################################################################################################
 # We define all the actual build steps here in named, reusable references. This allows us to define jobs below as a
@@ -35,7 +36,7 @@ references:
       command: |
         set +o pipefail
         if [[ "$CIRCLE_BRANCH" == "master" ]]; then
-          AWS_PROFILE=dogfood-stage docker-compose run web ./push-to-s3-stage.sh
+          AWS_PROFILE=dogfood-stage ./push-to-s3-stage.sh
         else
           echo "not on master, skipping staging deploy"
         fi
@@ -46,7 +47,7 @@ references:
       command: |
         set +o pipefail
         if [[ "$CIRCLE_BRANCH" == "master" ]]; then
-          AWS_PROFILE=dogfood-prod docker-compose run web ./push-to-s3-prod.sh
+          AWS_PROFILE=dogfood-prod ./push-to-s3-prod.sh
         else
           echo "not on master, skipping prod deploy"
         fi
@@ -65,11 +66,13 @@ jobs:
     <<: *base_container
     description: Deploy to Staging
     steps:
-      - checkout
       - setup_remote_docker:
           docker_layer_caching: true
+      - checkout
       - *install-pip
       - awscli/install
+      - ruby/install-deps:
+          key: gemfile-{{ checksum "Gemfile.lock" }}
       - *deploy-to-staging
       - *notify_slack_on_failure
 
