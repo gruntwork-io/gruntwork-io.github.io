@@ -83,9 +83,9 @@ jobs:
     <<: *base_container
     description: Deploy to Staging
     steps:
+      - checkout
       - setup_remote_docker:
           docker_layer_caching: true
-      - checkout
       - *install-pip
       - *install-jdk
       - awscli/install
@@ -99,11 +99,11 @@ jobs:
     <<: *base_container
     description: Deploy to Prod
     steps:
+      - checkout
       - setup_remote_docker:
           docker_layer_caching: true
       - *install-pip
       - awscli/install
-      - checkout
       - *deploy-to-prod
       - *notify_slack_on_failure
 
