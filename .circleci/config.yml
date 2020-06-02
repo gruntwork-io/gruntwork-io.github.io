@@ -72,6 +72,7 @@ jobs:
       - *install-pip
       - awscli/install
       - ruby/install-deps:
+          bundler-version: 1.17.2
           key: gemfile-{{ checksum "Gemfile.lock" }}
       - *deploy-to-staging
       - *notify_slack_on_failure
