@@ -7,6 +7,7 @@ orbs:
   docker: circleci/docker@0.5.13
   awscli: circleci/aws-cli@0.1.13
   slack: circleci/slack@3.4.1
+  python: circleci/python@0.3.0
 
 ######################################################################################################################
 # We define all the actual build steps here in named, reusable references. This allows us to define jobs below as a
@@ -20,6 +21,14 @@ references:
   ######################################################################################################################
   # Build steps
   ######################################################################################################################
+  install_pip: &install-pip
+    run:
+      name: install pip
+      command: |
+        set +o pipefail
+        curl -O https://bootstrap.pypa.io/get-pip.py
+        python3 get-pip.py --user
+
   deploy_to_staging: &deploy-to-staging
     run:
       name: deploy to staging
@@ -59,6 +68,7 @@ jobs:
       - checkout
       - setup_remote_docker:
           docker_layer_caching: true
+      - *install-pip
       - awscli/install
       - *deploy-to-staging
       - *notify_slack_on_failure
@@ -69,9 +79,10 @@ jobs:
     steps:
       - setup_remote_docker:
           docker_layer_caching: true
+      - *install-pip
       - awscli/install
       - checkout
-      - *deploy-to-staging
+      - *deploy-to-prod
       - *notify_slack_on_failure
 
 # ---------------------------------------------------------------------------------------------------------------------
