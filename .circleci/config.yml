@@ -30,6 +30,11 @@ references:
         curl -O https://bootstrap.pypa.io/get-pip.py
         sudo python3 get-pip.py
 
+  install_jdk: &install-jdk
+    run:
+      name: install jdk
+      command: sudo apt-get install --assume-yes openjdk-7-jre
+
   deploy_to_staging: &deploy-to-staging
     run:
       name: deploy to staging
@@ -70,6 +75,7 @@ jobs:
           docker_layer_caching: true
       - checkout
       - *install-pip
+      - *install-jdk
       - awscli/install
       - ruby/install-deps:
           bundler-version: 1.17.2
