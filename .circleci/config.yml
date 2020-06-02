@@ -15,16 +15,11 @@ orbs:
 references:
   base_container: &base_container
     docker:
-      - image: circleci/node:12.12
+      - image: circleci/ruby:buster
 
   ######################################################################################################################
   # Build steps
   ######################################################################################################################
-  build_gruntwork-website: &build_gruntwork-website
-    run:
-      name: build
-      command: yarn build:gruntwork-website:docker:prod
-
   deploy_to_staging: &deploy-to-staging
     run:
       name: deploy to staging
@@ -33,7 +28,7 @@ references:
         if [[ "$CIRCLE_BRANCH" == "master" ]]; then
           AWS_PROFILE=dogfood-stage docker-compose run web ./push-to-s3-stage.sh
         else
-          echo "not on master, skipping deploy"
+          echo "not on master, skipping staging deploy"
         fi
 
   deploy_to_prod: &deploy-to-prod
@@ -44,7 +39,7 @@ references:
         if [[ "$CIRCLE_BRANCH" == "master" ]]; then
           AWS_PROFILE=dogfood-prod docker-compose run web ./push-to-s3-prod.sh
         else
-          echo "not on master, skipping deploy"
+          echo "not on master, skipping prod deploy"
         fi
 
   notify_slack: &notify_slack_on_failure
@@ -61,10 +56,10 @@ jobs:
     <<: *base_container
     description: Deploy to Staging
     steps:
+      - checkout
       - setup_remote_docker:
           docker_layer_caching: true
       - awscli/install
-      - checkout
       - *deploy-to-staging
       - *notify_slack_on_failure
 
