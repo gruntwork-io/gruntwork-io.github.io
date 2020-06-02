@@ -27,7 +27,7 @@ references:
       command: |
         set +o pipefail
         curl -O https://bootstrap.pypa.io/get-pip.py
-        python3 get-pip.py --user
+        sudo python3 get-pip.py
 
   deploy_to_staging: &deploy-to-staging
     run:
