@@ -2,15 +2,14 @@
  * Cookie notice
  * @author AKOS
  *
- * This cookie script must load AFTER the Intercom code above to detect the global "Intercom" variable
- * and render the cookie notice right after Intercom's script is injected into the <body>. This will ensure
+ * This cookie script must load AFTER the Intercom code. This will ensure
  * that our cookie notice renders ABOVE the Intercom bubble to avoid conflicts with z-index.
  */
 
 (function ($) {
   "use strict";
   var cookieInnerHtml =
-    '<div><p>By using this website you agree to our <a href="/cookie-policy/">cookie policy</a></p><button id="cookieModalClose" class="btn btn-primary">OK</button></div>';
+    '<div class="cookie-notification"><p>By using this website you agree to our <a href="/cookie-policy/">cookie policy</a></p><button id="cookieModalClose" class="btn btn-primary">OK</button></div>';
 
   var displayCookiePopUp = function () {
     // Don't create cookie notice if already acknowledged
