@@ -58,16 +58,12 @@ references:
       name: deploy to prod
       command: |
         set +o pipefail
-        if [[ "$CIRCLE_BRANCH" == "master" ]]; then
-          export CREDENTIALS=`aws sts assume-role --role-arn arn:aws:iam::996502968539:role/allow-gruntwork-website-ci-cd-access-from-other-accounts --role-session-name CircleCI --duration-seconds 900 --output=json`
-          export AWS_ACCESS_KEY_ID=`echo ${CREDENTIALS} | jq -r '.Credentials.AccessKeyId'`
-          export AWS_SECRET_ACCESS_KEY=`echo ${CREDENTIALS} | jq -r '.Credentials.SecretAccessKey'`
-          export AWS_SESSION_TOKEN=`echo ${CREDENTIALS} | jq -r '.Credentials.SessionToken'`
-          export AWS_EXPIRATION=`echo ${CREDENTIALS} | jq -r '.Credentials.Expiration'`
-          ./push-to-s3-prod.sh
-        else
-          echo "not on master, skipping prod deploy"
-        fi
+        export CREDENTIALS=`aws sts assume-role --role-arn arn:aws:iam::996502968539:role/allow-gruntwork-website-ci-cd-access-from-other-accounts --role-session-name CircleCI --duration-seconds 900 --output=json`
+        export AWS_ACCESS_KEY_ID=`echo ${CREDENTIALS} | jq -r '.Credentials.AccessKeyId'`
+        export AWS_SECRET_ACCESS_KEY=`echo ${CREDENTIALS} | jq -r '.Credentials.SecretAccessKey'`
+        export AWS_SESSION_TOKEN=`echo ${CREDENTIALS} | jq -r '.Credentials.SessionToken'`
+        export AWS_EXPIRATION=`echo ${CREDENTIALS} | jq -r '.Credentials.Expiration'`
+        ./push-to-s3-prod.sh
 
   notify_slack: &notify_slack_on_failure
     slack/status:
