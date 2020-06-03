@@ -104,7 +104,7 @@ jobs:
       - ruby/install-deps:
           bundler-version: 1.17.2
           with-cache: false
-      - *deploy-to-staging
+      - *deploy-to-prod
       - *notify_slack_on_failure
 
 # ---------------------------------------------------------------------------------------------------------------------
