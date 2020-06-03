@@ -99,8 +99,12 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: true
       - *install-pip
+      - *install-jdk
       - awscli/install
-      - *deploy-to-prod
+      - ruby/install-deps:
+          bundler-version: 1.17.2
+          with-cache: false
+      - *deploy-to-staging
       - *notify_slack_on_failure
 
 # ---------------------------------------------------------------------------------------------------------------------
