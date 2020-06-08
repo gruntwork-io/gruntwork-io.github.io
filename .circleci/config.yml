@@ -65,11 +65,16 @@ references:
         export AWS_EXPIRATION=`echo ${CREDENTIALS} | jq -r '.Credentials.Expiration'`
         ./push-to-s3-prod.sh
 
-  notify_slack: &notify_slack_on_failure
+  notify_slack_staging: &notify_slack_staging
     slack/status:
-      fail_only: true
       failure_message: ":red_circle: $CIRCLE_JOB has failed on master! Build triggered by: $CIRCLE_USERNAME. You have one hour to fix or revert!!"
+      success_message: ":tada: stage (static) has been successfully deployed at version $CIRCLE_SHA1 to https://www.dogfood-stage.com"
       only_for_branches: "master"
+
+  notify_slack_prod: &notify_slack_prod
+    slack/status:
+      failure_message: ":red_circle: $CIRCLE_JOB has failed on master! Build triggered by: $CIRCLE_USERNAME. You have one hour to fix or revert!!"
+      success_message: ":tada: prod (static) has been successfully deployed at version $CIRCLE_TAG to https://gruntwork.io"
 
 #######################################################################################################################
 # The build jobs available, all consisting of lists of references to the references section above
@@ -89,7 +94,7 @@ jobs:
           bundler-version: 1.17.2
           with-cache: false
       - *deploy-to-staging
-      - *notify_slack_on_failure
+      - *notify_slack_staging
 
   deploy-to-prod:
     <<: *base_container
@@ -105,7 +110,7 @@ jobs:
           bundler-version: 1.17.2
           with-cache: false
       - *deploy-to-prod
-      - *notify_slack_on_failure
+      - *notify_slack_prod
 
 # ---------------------------------------------------------------------------------------------------------------------
 # Here we combine the jobs defined above into various workflows that can run in parallel or sequentially, define
