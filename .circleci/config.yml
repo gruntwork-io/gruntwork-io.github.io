@@ -17,7 +17,7 @@ orbs:
 references:
   base_container: &base_container
     docker:
-      - image: circleci/ruby:2.6.2-stretch
+      - image: circleci/ruby:2.7.1-buster
 
   ######################################################################################################################
   # Build steps
@@ -91,7 +91,7 @@ jobs:
       - *install-jdk
       - awscli/install
       - ruby/install-deps:
-          bundler-version: 1.17.2
+          bundler-version: 2.1.4
           with-cache: false
       - *deploy-to-staging
       - *notify_slack_staging
@@ -107,7 +107,7 @@ jobs:
       - *install-jdk
       - awscli/install
       - ruby/install-deps:
-          bundler-version: 1.17.2
+          bundler-version: 2.1.4
           with-cache: false
       - *deploy-to-prod
       - *notify_slack_prod
@@ -124,7 +124,7 @@ workflows:
       - deploy-to-stage:
           filters:
             branches:
-              only: master
+              only: upgrade-jekyll
       - deploy-to-prod:
           filters:
             tags:
