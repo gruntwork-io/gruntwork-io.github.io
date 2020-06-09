@@ -45,7 +45,7 @@ references:
       name: deploy to staging
       command: |
         set +o pipefail
-        if [[ "$CIRCLE_BRANCH" == "fix-ci-cd" ]]; then
+        if [[ "$CIRCLE_BRANCH" == "master" ]]; then
           export CREDENTIALS=`aws sts assume-role --role-arn arn:aws:iam::151025255439:role/allow-gruntwork-website-ci-cd-access-from-other-accounts --role-session-name CircleCI --duration-seconds 900 --output=json`
           export AWS_ACCESS_KEY_ID=`echo ${CREDENTIALS} | jq -r '.Credentials.AccessKeyId'`
           export AWS_SECRET_ACCESS_KEY=`echo ${CREDENTIALS} | jq -r '.Credentials.SecretAccessKey'`
@@ -127,7 +127,7 @@ workflows:
       - deploy-to-stage:
           filters:
             branches:
-              only: fix-ci-cd
+              only: master
       - deploy-to-prod:
           filters:
             tags:
