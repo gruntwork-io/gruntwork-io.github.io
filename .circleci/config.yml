@@ -124,7 +124,7 @@ workflows:
       - deploy-to-stage:
           filters:
             branches:
-              only: upgrade-jekyll
+              only: master
       - deploy-to-prod:
           filters:
             tags:
