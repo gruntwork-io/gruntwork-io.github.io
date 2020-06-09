@@ -9,7 +9,7 @@
 (function ($) {
   "use strict";
   var cookieInnerHtml =
-    '<div class="cookie-notification"><p>By using this website you agree to our <a href="/cookie-policy/">cookie policy</a></p><button id="cookieModalClose" class="btn btn-primary">OK</button></div>';
+    '<div class="cookie-notification"><p>By using this website you agree to our <a href="/legal/cookie-policy/">cookie policy</a></p><button id="cookieModalClose" class="btn btn-primary">OK</button></div>';
 
   var displayCookiePopUp = function () {
     // Don't create cookie notice if already acknowledged
