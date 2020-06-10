@@ -1,4 +1,4 @@
-# gruntwork.io website
+# Gruntwork.io website
 
 This is the code for the [Gruntwork website](https://www.gruntwork.io).
 
