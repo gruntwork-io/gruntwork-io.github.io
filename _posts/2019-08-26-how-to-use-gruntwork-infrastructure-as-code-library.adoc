@@ -1475,13 +1475,11 @@ The `git::git@github.com:gruntwork-io` portion of the `source` attribute indicat
 
 To set up this access, take the following steps:
 
-1. First, if you don't have one already, you'll need a machine user that has access to Gruntwork. A machine user is an
+. First, if you don't have one already, you'll need a machine user that has access to Gruntwork. A machine user is an
 account that is only used for automation, and is not used by humans. In this case, the "machine" in question is the TFC
 executor. Create a new Github user, and send the machine user's username and email address to link:mailto:support@gruntwork.io[support@gruntwork.io]. We'll make sure the user has access to our repositories.
-
-1. Next, generate an SSH key pair, and add the public key to the new GitHub machine user. GitHub has https://help.github.com/en/enterprise/2.19/user/github/authenticating-to-github/connecting-to-github-with-ssh[easy-to-follow instructions].
-
-1. Now, add the private SSH key to TFC. You'll find the option under SSH Keys in the TFC organization settings. We called ours _Gruntwork access_. TFC will use this key to clone Gruntwork code repositories.
+. Next, generate an SSH key pair, and add the public key to the new GitHub machine user. GitHub has https://help.github.com/en/enterprise/2.19/user/github/authenticating-to-github/connecting-to-github-with-ssh[easy-to-follow instructions].
+. Now, add the private SSH key to TFC. You'll find the option under SSH Keys in the TFC organization settings. We called ours _Gruntwork access_. TFC will use this key to clone Gruntwork code repositories.
 
 .Configuring an SSH key for the TFC organization
 image::/assets/img/guides/infrastructure-as-code-library/tfc_ssh_key.png[]
@@ -1708,11 +1706,9 @@ By default, if you configure the remote backend for a workspace that doesn't yet
 
 There are a few ways to set these credentials:
 
-1. Create all the workspaces manually in advance, and set the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` in each workspace, as described in  <<configure_credentials_and_variables>>.
-
-1. Create all the workspaces manually by running `terragrunt init`, and still set up the environment variables as previously mentioned.
-
-1. To set this up programatically, you can use the https://www.terraform.io/docs/providers/tfe/r/workspace.html[`tfe_workspace`] and https://www.terraform.io/docs/providers/tfe/r/variable.html[`tfe_variable`] resources to configure the workspaces with Terraform.
+. Create all the workspaces manually in advance, and set the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` in each workspace, as described in  <<configure_credentials_and_variables>>.
+. Create all the workspaces manually by running `terragrunt init`, and still set up the environment variables as previously mentioned.
+. To set this up programatically, you can use the https://www.terraform.io/docs/providers/tfe/r/workspace.html[`tfe_workspace`] and https://www.terraform.io/docs/providers/tfe/r/variable.html[`tfe_variable`] resources to configure the workspaces with Terraform.
 
 In all cases, you'll need to ensure that your workspaces stay in sync with your Terragrunt configuration. Each time you add a new module in Terragrunt, you'll need a corresponding workpace. Furthermore, if you rotate your AWS API keys, you'll need to update them within each workspace. For that reason, the final option above is recommended.
 
@@ -1751,10 +1747,10 @@ EOF
 
 The configuration has a few sections:
 
-1. The `terraform` block at the top uses the Gruntwork `sqs` module from https://github.com/gruntwork-io/package-messaging/[`package-messaging`].
-1. The `include` block includes the configuration from the parent directories. This is how the remote `backend` block from the root `terragrunt.hcl` is included.
-1. The `locals` block reads the values from `common.hcl` in the root of the hierarchy, making them available for local reference.
-1. Finally, the `generate` block creates a file called `terragrunt.auto.tfvars`. Like the `backend.tf` file, this file will be generated alongside the rest of the `*.tf` files that Terragrunt downloads from the `sqs` module, making those inputs available for TFC to read when running `terraform` commands in the remote executor.
+. The `terraform` block at the top uses the Gruntwork `sqs` module from https://github.com/gruntwork-io/package-messaging/[`package-messaging`].
+. The `include` block includes the configuration from the parent directories. This is how the remote `backend` block from the root `terragrunt.hcl` is included.
+. The `locals` block reads the values from `common.hcl` in the root of the hierarchy, making them available for local reference.
+. Finally, the `generate` block creates a file called `terragrunt.auto.tfvars`. Like the `backend.tf` file, this file will be generated alongside the rest of the `*.tf` files that Terragrunt downloads from the `sqs` module, making those inputs available for TFC to read when running `terraform` commands in the remote executor.
 
 Any of the inputs needed by the module must be included in the generated tfvars file. In the configuration above, only
 the `name` variable is specified. Most modules will need more configuration.
