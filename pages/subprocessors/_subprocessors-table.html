@@ -1,0 +1,32 @@
+<div class="table-responsive">
+  <div>
+    <table class="table table-striped" style="min-width: 700px">
+      <thead>
+        <tr>
+          <th>Third-Party Service</th>
+          <th>Purpose</th>
+          <th>Entity Country</th>
+          <th>Website</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for subprocessor in site.data.subprocessors %}
+          <tr id="{{ id }}">
+            <th>
+              {{ subprocessor.name }}
+            </th>
+            <td>
+              {{ subprocessor.purpose }}
+            </td>
+            <td>
+              {{ subprocessor.country }}
+            </td>
+            <td>
+              <a href="{{ subprocessor .website }}" target="_blank">{{ subprocessor .website }}</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
