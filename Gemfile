@@ -9,6 +9,7 @@ group :jekyll_plugins do
   gem 'less', '2.6.0'
   gem 'jekyll-asciidoc'
   gem 'jekyll-toc'
+  gem 'jekyll-feed'
 end
 
 # https://github.com/jekyll/jekyll-redirect-from/issues/150

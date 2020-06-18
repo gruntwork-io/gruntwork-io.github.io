@@ -1,0 +1,33 @@
+---
+layout: null
+---
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+<channel>
+ <title>Gruntwork Legal and Privacy Updates</title>
+ <description>Read all the latest news on the Gruntwork terms of service, privacy policy, open source policy, and other policies relating to data processing.</description>
+ <id>{{ site.url }}/legal.rss</id>
+ <link>{{ site.url }}/legal.rss</link>
+ <lastBuildDate>{{ site.time | date_to_rfc822 }}</lastBuildDate>
+ <pubDate>{{ site.time | date_to_rfc822 }}</pubDate>
+ <language>en</language>
+ <copyright>{{ 'now' | date: "%Y" }} Gruntwork, Inc. All rights reserved</copyright>
+ <generator>gruntwork.io</generator>
+ <author>
+  <name>Gruntwork Legal</name>
+  <email>legal@gruntwork.io</email>
+  <link>{{ site.url }}</link>
+ </author>
+
+ {% for entry in site.data.legal reversed %}
+ <item>
+  <title>{{ entry.title }}</title>
+  <description>{{ entry.description }}</description>
+  <link>{{ entry.link }}</link>
+  <pubDate>{{ entry.date }}</pubDate>
+  <category>{{ entry.category }}</category>
+  <id>{{ entry.id }}</id>
+ </item>
+ {% endfor %}
+</channel>
+</rss>
