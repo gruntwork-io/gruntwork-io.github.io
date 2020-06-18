@@ -131,7 +131,7 @@ workflows:
       - deploy-to-stage:
           filters:
             branches:
-              only: fix-jdk-install
+              only: master
       - deploy-to-prod:
           filters:
             tags:
