@@ -163,7 +163,7 @@ scale of billions of lines of code with 10s of thousands of commits per day?
 There are three factors that make this possible:
 
 Small, frequent commits reduce the scope of each integration::
-  It turns out that if you integrating small amounts of code on a regular basis, the number of conflicts that arise is
+  It turns out that if you're integrating small amounts of code on a regular basis, the number of conflicts that arise is
   also fairly small. Instead of having big, monolithic merge conflicts, each conflict that arises will be in a tiny
   portion of the work being integrated. In fact, these conflicts can be viewed as helpful as it is a sign that there is
   a design flaw. These integration challenges are part and parcel to distributed software development projects. You'll
@@ -220,7 +220,7 @@ the module code, promote immutable versions across environments, and keep it DRY
 
 There are distinct differences in the way the code is tested, used, and deployed between the two flavors of
 infrastructure code. These differences are important to consider when designing CI/CD workflows, as they lead to many
-differences in the implementation of the pipeline. In the next seciton, we will walk through a typical CI/CD workflow
+differences in the implementation of the pipeline. In the next section, we will walk through a typical CI/CD workflow
 and compare and contrast the pipeline between the three flavors of code we've talked about so far: application code,
 infrastructure modules, and live infrastructure configuration.
 
@@ -239,7 +239,7 @@ In this section, we will compare each step of the workflow for application code,
 infrastructure config side by side. Application code refers to code to run an application written in a general purpose
 programming language (e.g., Ruby, Java, Python, etc), while infrastructure modules and live infrastructure config refer to
 infrastructure code (e.g., Terraform, CloudFormation, Ansible, etc) organized as described in the previous section. CI/CD
-for application code is well understood in the industry, so we show it side by side with infrastructure code here to
+for application code is well understood in the industry, so we show it side by side with infrastructure code here
 as a reference point to make it easier to understand the workflow for infrastructure code.
 
 For the purposes of illustrating this workflow, we will assume the following:
