@@ -683,7 +683,7 @@ and automated users in your child accounts. The exact set of IAM roles you need 
 requirements, but here are some common ones:
 
 allow-auto-deploy-access-from-other-accounts::
-  This is an IAM role that grants permissions for automatically deploying (e.g., as part of a CI / CD pipline)
+  This is an IAM role that grants permissions for automatically deploying (e.g., as part of a CI / CD pipeline)
   some specific service. For example, this role may have a trust policy that allows it to be assumed by a Jenkins
   server in the shared-services account, and gives that server permissions to deploy EC2 Instances and Auto Scaling
   Groups. Note that anyone who has to your CI server (e.g., anyone who can create/modify/execute Jenkins jobs) can
@@ -886,7 +886,7 @@ the central place where you manage billing. You create this initial account manu
 === Apply the security baseline to the root account
 
 Next, we'll apply a security baseline to the root account that is responsible for configuring AWS Organizations, IAM Roles, IAM Users,
-IAM Groups, IAM Password Policies, Amazon GuardyDuty, AWS CloudTrail and AWS Config including setting up the child accounts.
+IAM Groups, IAM Password Policies, Amazon GuardDuty, AWS CloudTrail and AWS Config including setting up the child accounts.
 
 Let's first apply the security baseline by using the `account-baseline-root` module from https://github.com/gruntwork-io/module-security[module-security].
 
@@ -1000,7 +1000,7 @@ variable "child_accounts" {
   #   Defaults to the Organization default Root ID.
   #
   # - role_name:
-  #   The name of an IAM role that Organizations automatically preconfigures in the new member account. This role trusts
+  #   The name of an IAM role that Organizations automatically pre-configures in the new member account. This role trusts
   #   the master account, allowing users in the master account to assume the role, as permitted by the master account
   #   administrator. The role has administrator permissions in the new member account. Note that the Organizations API
   #   provides no method for reading this information after account creation.
