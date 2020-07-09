@@ -612,7 +612,7 @@ Infrastructure as Code modules from Gruntwork.
 [[pre_requisites]]
 === Pre-requisites
 
-This walkthrough has the following pre-requistes:
+This walkthrough has the following pre-requisites:
 
 Gruntwork Infrastructure as Code Library::
   This guide uses code from the link:https://gruntwork.io/infrastructure-as-code-library/[Gruntwork Infrastructure as Code Library], as it
@@ -642,10 +642,10 @@ Terraform::
 === The Gruntwork solution
 Gruntwork offers battle-tested infrastructure as code modules to help you create production grade infrastructure in a
 fraction of the time it would take to develop from scratch. Each of the code modules are "compliance-ready"; they are
-mostly unopionated by default, but they can be configured for compliance with the right settings.
+mostly unopinionated by default, but they can be configured for compliance with the right settings.
 
 To further simplify and expedite compliance, the Gruntwork Compliance modules are "wrappers" around the core,
-unopionated modules in the Infrastructure as Code Library. The wrappers call the core modules with configuration values
+unopinionated modules in the Infrastructure as Code Library. The wrappers call the core modules with configuration values
 that are compliant with the AWS Foundations Benchmark. You can use the wrapper modules by creating a module of your own
 (this can be considered a second wrapper) and using the compliance module as the `source`. Optionally, you can also use
 `terragrunt` to call your module, thus creating a chain of IaC modules.
@@ -680,7 +680,7 @@ The `infrastructure-modules` are your organization's "blueprint" for how to depl
 use `infrastructure-modules` to customize the settings according to the needs of your environment. Subscribers
 can refer to the
 canonical link:https://github.com/gruntwork-io/infrastructure-modules-multi-account-acme[ACME infrastructure-modules
-reposistory] for an example of how you might use `infrastructure-modules`.
+repository] for an example of how you might use `infrastructure-modules`.
 
 If you're using Terragrunt, the `infrastructure-modules` are optional; you can call the compliance
 wrapper modules directly as the `source` from a Terragrunt configuration. The benefit of this is that you have less code to maintain by depending directly on Gruntwork's upstream compliance modules.
@@ -917,7 +917,7 @@ compliance.
 If you are using multiple AWS accounts, create users in a central AWS account that you wish to use for
 authentication. For example, you might use a "security" account for authentication, and use the previously
 created cross-account roles and associated IAM groups to enable users to use AssumeRole to access other
-accounts (e.g. dev, stage, and prdouction) where your applications run.
+accounts (e.g. dev, stage, and production) where your applications run.
 
 (Optional) Create custom IAM groups or roles::
 If you need to create customized IAM groups and/or roles, use the

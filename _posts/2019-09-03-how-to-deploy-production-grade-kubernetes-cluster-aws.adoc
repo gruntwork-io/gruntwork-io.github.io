@@ -473,7 +473,7 @@ files—with the main difference being that:
 * Kubernetes stores Secrets in an encrypted form in etcd.
 +
 NOTE: https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/[etcd encryption] is only available as of
-Kubernetes 1.13 and not available out of the box on all Kuberentes platforms (older versions of Kubernetes stored
+Kubernetes 1.13 and not available out of the box on all Kubernetes platforms (older versions of Kubernetes stored
 secrets unencrypted!).
 
 === Options for running Kubernetes in AWS
@@ -830,7 +830,7 @@ using the Gruntwork Infrastructure as Code Library.
 [[pre_requisites]]
 === Pre-requisites
 
-This walkthrough has the following pre-requistes:
+This walkthrough has the following pre-requisites:
 
 Gruntwork Infrastructure as Code Library::
   This guide uses code from the https://gruntwork.io/infrastructure-as-code-library/[Gruntwork Infrastructure as Code Library], as it
@@ -899,7 +899,7 @@ module "vpc" {
   num_nat_gateways = var.num_nat_gateways
 }
 
-# ... (the rest of the code is ommitted) ...
+# ... (the rest of the code is omitted) ...
 ----
 
 Update this module to use the
@@ -933,7 +933,7 @@ module "vpc_tags" {
   eks_cluster_name = var.eks_cluster_name
 }
 
-# ... (the rest of the code is ommitted) ...
+# ... (the rest of the code is omitted) ...
 ----
 
 Add a new input variable that you can use to specify the name of the EKS cluster:
@@ -1197,7 +1197,7 @@ variable "cluster_min_size" {
 }
 
 variable "cluster_max_size" {
-  description = "The maxiumum number of instances to run in the EKS cluster"
+  description = "The maximum number of instances to run in the EKS cluster"
   type        = number
 }
 
@@ -1732,7 +1732,7 @@ module "iam_policies" {
   iam_policy_should_require_mfa   = false
   trust_policy_should_require_mfa = false
 
-  # If your IAM users are defined in a separate AWS accounth (e.g., a security account), you can pass in the ARN of
+  # If your IAM users are defined in a separate AWS account (e.g., a security account), you can pass in the ARN of
   # of that account via an input variable, and the IAM policy will give the worker nodes permission to assume that
   # IAM role
   allow_access_to_other_account_arns = [var.external_account_ssh_grunt_role_arn]

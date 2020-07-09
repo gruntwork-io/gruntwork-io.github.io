@@ -278,7 +278,7 @@ _The Production-Grade Infrastructure Checklist_:
 | Bash, Chef, Ansible, Puppet
 
 | Provision
-|  Provision the infrastructure. Includes EC2 instances, load balancers, network topology, security gr oups, IAM permissions, etc.
+|  Provision the infrastructure. Includes EC2 instances, load balancers, network topology, security groups, IAM permissions, etc.
 | Terraform, CloudFormation
 
 | Deploy
@@ -1049,7 +1049,7 @@ Configure variables::
   This is similar to the `testing/terraform.tfvars` used in manual testing.
 
 Configure the backend::
-  This is similar to tthe `testing-backend.hcl` used in manual testing.
+  This is similar to the `testing-backend.hcl` used in manual testing.
 
 Namespace resources::
   The code uses `random.UniqueId()` to generate unique identifiers for all the resources in this test. This allows
@@ -1426,7 +1426,7 @@ Use TFC without Terragrunt::
 
 Use TFC with Terragrunt::
   Alternatively, you can use both `infrastructure-modules` and `infrastructure-live` repositories as described above,
-  storing the wrapper modules in `infrastructure-modules`, and using `infastructure-live` and Terragrunt for
+  storing the wrapper modules in `infrastructure-modules`, and using `infrastructure-live` and Terragrunt for
   deployments. In this approach, TFC is used as a https://www.terraform.io/docs/backends/types/remote.html[remote backend]
   for Terraform. You use Terragrunt to run deployments from the CLI, which in turn invokes Terraform on the TFC backend.
   The TFC UI is used for audit and tracking capabilities, but not for executing Terraform runs.
@@ -1708,9 +1708,9 @@ There are a few ways to set these credentials:
 
 . Create all the workspaces manually in advance, and set the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` in each workspace, as described in  <<configure_credentials_and_variables>>.
 . Create all the workspaces manually by running `terragrunt init`, and still set up the environment variables as previously mentioned.
-. To set this up programatically, you can use the https://www.terraform.io/docs/providers/tfe/r/workspace.html[`tfe_workspace`] and https://www.terraform.io/docs/providers/tfe/r/variable.html[`tfe_variable`] resources to configure the workspaces with Terraform.
+. To set this up programmatically, you can use the https://www.terraform.io/docs/providers/tfe/r/workspace.html[`tfe_workspace`] and https://www.terraform.io/docs/providers/tfe/r/variable.html[`tfe_variable`] resources to configure the workspaces with Terraform.
 
-In all cases, you'll need to ensure that your workspaces stay in sync with your Terragrunt configuration. Each time you add a new module in Terragrunt, you'll need a corresponding workpace. Furthermore, if you rotate your AWS API keys, you'll need to update them within each workspace. For that reason, the final option above is recommended.
+In all cases, you'll need to ensure that your workspaces stay in sync with your Terragrunt configuration. Each time you add a new module in Terragrunt, you'll need a corresponding workspace. Furthermore, if you rotate your AWS API keys, you'll need to update them within each workspace. For that reason, the final option above is recommended.
 
 ===== Setting variables
 

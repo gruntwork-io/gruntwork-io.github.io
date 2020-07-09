@@ -21,7 +21,7 @@
 
 - We cannot have different styles applied for different webpages. . It stays uniform
 
-- The same teammates show on all pages. It cannot be edited based on different webpages but if we want to change the routes of where conversations go based on cusomers starting a conversation, we could setup Assignment Rules from the Start a conversation button. There we would be able to route customers to different inboxes or teammates based on their keywords, attributes and or the webpage they are visiting from. We will need to upgrade to Inbox Pro to use this feature. More on this [here](<https://www.intercom.com/help/en/articles/199-assign-conversations-to-teammates-and-teams>)
+- The same teammates show on all pages. It cannot be edited based on different webpages but if we want to change the routes of where conversations go based on customers starting a conversation, we could setup Assignment Rules from the Start a conversation button. There we would be able to route customers to different inboxes or teammates based on their keywords, attributes and or the webpage they are visiting from. We will need to upgrade to Inbox Pro to use this feature. More on this [here](<https://www.intercom.com/help/en/articles/199-assign-conversations-to-teammates-and-teams>)
 
 - We cannot use GA tracking to track the buttons clicked
 
@@ -39,5 +39,5 @@
 
 - All we are trying to implement has already been implemented by intercom and even better.
 
-#### Conclusion 
+#### Conclusion
 We should go with the existing intercom and make some changes so it can go live.

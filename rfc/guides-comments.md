@@ -1,15 +1,15 @@
 
-  
+
 
 ## RFC for Adding Comments to our Deployment Guides
 
-  
+
 
  Options available for adding comments to the deployment guides are as follows:
 ### Disqus: <https://disqus.com/>
- 
+
 Really good third party service and the most popular. It has 3 options:
-- Basic: This has ad's (not recommendxed)
+- Basic: This has ad's (not recommended)
 - Plus $9 per month (Suitable for under 50k visitors daily)
 - Pro $89 per month (Suitable for 150k visitors daily)
 
@@ -65,7 +65,7 @@ Also a third party service and very similar to Disqus
 #### Cons:
 1. Staticman must access to our Jekyll repository
 2. Spamming- There is no form of authentication.
-   
+
 > N/B We have to be careful of XSS attacks..
 
 ### Gitment [https://github.com/imsun/gitment](https://github.com/imsun/gitment)

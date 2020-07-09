@@ -1,5 +1,5 @@
 ---
-title: How to configure a production-grade CICD workflow for infrastructure code
+title: How to configure a production-grade CI/CD workflow for infrastructure code
 categories: Automations
 image: /assets/img/guides/infrastructure-cicd-pipeline/terraform-icon.png
 excerpt: Learn about CI/CD workflows for Terraform and Terragrunt, including the differences between application code, different CI servers, threat models, and more.
@@ -646,7 +646,7 @@ mitigation tactics for those threats. This is where threat modeling helps.
 
 A threat model explicitly covers what attacks are taken into consideration in the design, as well as what attacks are
 __not__ considered. The goal of the threat model is to be realistic about the threats that are addressable with the
-tools available. By explicitly focusing attention on more likely and realistic threats, we can avoid overengineering and
+tools available. By explicitly focusing attention on more likely and realistic threats, we can avoid over-engineering and
 compromising the usability of the solution against threats that are unlikely to exist (e.g., a 5 person startup with 100
 end users is unlikely to be the subject of a targeted attack by a government agency).
 
@@ -1133,7 +1133,7 @@ infrastructure-live
 
 === Deploy the ECS Deploy Runner
 
-// TODO: update link to use service catalog so it is publicly visiable
+// TODO: update link to use service catalog so it is publicly visible
 For this guide, we will use
 https://github.com/gruntwork-io/module-ci/blob/master/README-Terraform-Terragrunt-Pipeline.adoc[Gruntwork's ECS Deploy
 Runner stack] as our infrastructure deployment CD platform. We will deploy the stack into the private subnet of our
@@ -1621,7 +1621,7 @@ Repeat for each environment that you want to support the ECS Deploy Runner stack
 At this point, you can see if the ECS Deploy Runner can be used to deploy your infrastructure. To test, use the
 https://github.com/gruntwork-io/module-ci/tree/master/modules/infrastructure-deployer[infrastructure-deployer CLI].
 
-To use the `infrastructure-deployer` CLI, use `gruntwork-install` to install a precompiled version for your system:
+To use the `infrastructure-deployer` CLI, use `gruntwork-install` to install a pre-compiled version for your system:
 
 [source,bash]
 ----

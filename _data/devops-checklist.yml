@@ -28,7 +28,7 @@
         You have several options for running Docker containers in AWS. One is to use the
         <a href="https://aws.amazon.com/ecs/" target="_blank">Elastic Container Service (ECS)</a>, where you run a
         cluster of EC2 Instances, and Amazon takes care of scheduling containers across them. Another is
-        <a href="https://aws.amazon.com/eks/" target="_blank">Elasic Kubernetes Service (EKS)</a>, which is a Amazon's
+        <a href="https://aws.amazon.com/eks/" target="_blank">Elastic Kubernetes Service (EKS)</a>, which is a Amazon's
         managed <a href="https://kubernetes.io/" target="_blank">Kubernetes</a> (note, EKS is still in preview mode
         as of May, 2018). A third option is <a href="https://aws.amazon.com/fargate/" target="_blank">AWS Fargate</a>,
         a service where AWS manages and scales the underlying EC2 Instances for you and you just hand it Docker
@@ -112,7 +112,7 @@
       description: |
         Use <a href="https://aws.amazon.com/cloudfront/" target="_blank">CloudFront</a> as a
         <a href="https://en.wikipedia.org/wiki/Content_delivery_network" target="_blank">Content Distribution Network (CDN)</a>
-        to cache and distribute your content across servers all over the world. This signicantly reduces latency for
+        to cache and distribute your content across servers all over the world. This significantly reduces latency for
         users and is especially effective for static content.
 
     - title: Configure caching
@@ -540,7 +540,7 @@
     - title: Set up SSH access
       description: |
         Do NOT share <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html" target="_blank">EC2 KeyPairs</a>
-        with your team! Otherwise, everyone will be using the same username and key for server acesss (so there's no
+        with your team! Otherwise, everyone will be using the same username and key for server access (so there's no
         audit trail), the key may easily be compromised, and if it is, or someone leaves the company, you'll have to
         redeploy ALL your EC2 Instances to change the KeyPair. Instead, configure your EC2 Instances so that each
         developer can use their own username and SSH key, and if that developer leaves the company, the key can be
@@ -560,7 +560,7 @@
 
     - title: Deploy a VPN Server
       description: |
-        We typically recommend running a VPN Server as the entrypoint to your network (as the Bastion Host).
+        We typically recommend running a VPN Server as the entry point to your network (as the Bastion Host).
         <a href="https://openvpn.net/" target="_blank">OpenVPN</a> is the most popular option for running a VPN server.
 
     - title: Set up a secrets management solution
@@ -723,7 +723,7 @@
       description: |
         <a href="https://aws.amazon.com/ec2/spot/" target="_blank">EC2 Spot Instances</a> allow you to "bid" a much
         lower price for EC2 Instances than what you'd pay on-demand (as much as 90% lower!), and when there is capacity
-        to fulfill your request, AWS will give you the EC2 Instances at that price. Note that if AWS needs to relcaim
+        to fulfill your request, AWS will give you the EC2 Instances at that price. Note that if AWS needs to reclaim
         that capacity, it may terminate the EC2 Instance at any time with a 2-minute notice. This makes Spot Instances
         a great way to save money on any workload that is non-urgent (e.g., all background jobs, machine learning, image
         processing) and pre-production environments (e.g., run an ECS cluster on spot instances by just setting a
