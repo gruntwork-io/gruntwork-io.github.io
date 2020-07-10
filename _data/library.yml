@@ -396,8 +396,8 @@
   subscriber_url: "https://github.com/gruntwork-io/module-data-storage"
   type: Subscriber-Only
   description: |
-    Run MySQL, Postgres, MariaDB, or Amazon Aurora on Amazon’s Relational Database Service (RDS). Creates the database,
-    sets up replicas, configures multi-zone automatic failover and automatic backup.
+    Run MySQL, Postgres, MariaDB, or Amazon Aurora on Amazon’s Relational Database Service (RDS) or Amazon Redshift. 
+    Creates the database, sets up replicas, configures multi-zone automatic failover and automatic backup.
   submodules:
     - name: rds
       blurb: deploy RDS for MySQL, PostgreSQL, Oracle, etc
@@ -405,6 +405,9 @@
     - name: aurora
       blurb: deploy RDS for Aurora
       description: Deploy Amazon Aurora on top of RDS. This is a MySQL-compatible database that supports automatic failover, read replicas, backups, patching, and encryption.
+    - name: redshift
+      blurb: deploy a Redshift cluster
+      description: Deploy Amazon Redshift. This is a managed data warehouse that supports automatic failover, backups, patching, and encryption.
     - name: lambda-create-snapshot
       blurb: snapshot an RDS database on a schedule
       description: Create an AWS Lambda function that runs on a scheduled basis and takes snapshots of an RDS database for backup purposes. Includes an AWS alarm that goes off if backup fails.
