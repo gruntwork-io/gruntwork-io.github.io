@@ -807,27 +807,56 @@ a.caret-right{
 // Specific rows
 .row-partners {
   @media (max-width: @screen-xs-max) {
-    .col-partner-hashicorp {
-      text-align: center;
+    text-align: center;
+    div[class*="col-"] {
+      margin-bottom: 20px;
+
       img {
-        margin-bottom: 30px;
+        height: unset;
+        width: 225px;
       }
     }
-    .col-partner-experts {
-      text-align: center;
-      div[class*="col-"] {
-        margin-bottom: 20px;
+
+    div.col-partner-hashicorp {
+      margin-bottom: 40px;
+    }
+
+    div.col-partner-aws {
+      img {
+        width: 200px;
+      }
+    }
+
+    div.col-partner-gcp {
+      img {
+        height: 190px;
       }
     }
   }
+
   @media (min-width: @screen-sm-min) {
-    .col-partner-experts .row + p {
-      margin-top: 15px;
+    .col-partner-aws {
+      img {
+        height: 58px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 15px;
+      }
     }
-  }
-  @media (min-width: @screen-sm-min) {
-    margin-top: 40px;
-    margin-bottom: 40px;
+    .col-partner-gcp {
+      img {
+        height: 114px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+    .col-partner-cis {
+      img {
+        height: 27px;
+      }
+    }
   }
 }
 
@@ -1015,28 +1044,43 @@ a.caret-right{
 }
 
 // Hero styles on the front page
-.index-page .section-hero {
-  color: #fff;
-  &:extend(.gradient-primary.gradient-vertical);
-  background: url('../img/bg-header-squares.png') center bottom no-repeat, linear-gradient(@brand-primary, #06A2FF); // This is what we need to do in order to stack a background image on top of a background gradient
-  @media (min-width: @screen-sm-min) {
-    padding-top: 30px;
-    .floating-img-infrastructure-in-a-day {
-      position: absolute;
-      width: 220px;
-      top: 30px;
-      left: -60px;
+.index-page {
+  .section-hero {
+    color: #fff;
+    &:extend(.gradient-primary.gradient-vertical);
+    background: url('../img/bg-header-squares.png') center bottom no-repeat, linear-gradient(@brand-primary, #06A2FF); // This is what we need to do in order to stack a background image on top of a background gradient
+    @media (min-width: @screen-sm-min) {
+      padding-top: 30px;
+      .floating-img-infrastructure-in-a-day {
+        position: absolute;
+        width: 220px;
+        top: 30px;
+        left: -60px;
+      }
+    }
+    @media (min-width: @screen-md-min) {
+      margin-top: -(@navbar-height + 4);
+      padding-top: (@navbar-height + 4) + 90px;
+      padding-bottom: 135px;
+      .floating-img-infrastructure-in-a-day {
+        position: absolute;
+        width: auto;
+        top: -60px;
+        left: 15px;
+      }
     }
   }
-  @media (min-width: @screen-md-min) {
-    margin-top: -(@navbar-height + 4);
-    padding-top: (@navbar-height + 4) + 90px;
-    padding-bottom: 135px;
-    .floating-img-infrastructure-in-a-day {
-      position: absolute;
-      width: auto;
-      top: -60px;
-      left: 15px;
+
+  #strategic_partners {
+    padding-top: 0px;
+
+    p {
+      margin-bottom: 0px;
+      margin-top: 5px;
+    }
+
+    @media (max-width: @screen-xs-max) {
+      padding: 20px;
     }
   }
 }
