@@ -812,49 +812,32 @@ a.caret-right{
       margin-bottom: 20px;
 
       img {
-        height: unset;
+        max-height: 140px;
         width: 225px;
-      }
-    }
-
-    div.col-partner-hashicorp {
-      margin-bottom: 40px;
-    }
-
-    div.col-partner-aws {
-      img {
-        width: 200px;
-      }
-    }
-
-    div.col-partner-gcp {
-      img {
-        height: 190px;
       }
     }
   }
 
   @media (min-width: @screen-sm-min) {
-    .col-partner-aws {
+    div[class*="col-"] {
       img {
-        height: 58px;
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-        margin-top: 15px;
+        width: 80px;
+        height: 66px;
       }
     }
-    .col-partner-gcp {
+
+    div.col-partner-kubernetes,
+    div.col-partner-cis {
       img {
-        height: 114px;
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
+        max-width: unset;
+        width: 130px;
+        height: unset;
       }
     }
-    .col-partner-cis {
+
+    div.col-partner-cis {
       img {
-        height: 27px;
+        height: 23px;
       }
     }
   }
@@ -1072,10 +1055,10 @@ a.caret-right{
   }
 
   #strategic_partners {
-    padding-top: 0px;
+    padding-top: 10px;
+    padding-bottom: 30px;
 
     p {
-      margin-bottom: 0px;
       margin-top: 5px;
     }
 
