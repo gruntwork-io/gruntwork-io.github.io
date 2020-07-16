@@ -809,31 +809,51 @@ a.caret-right{
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin: 25px 0;
 
   img {
     height: 48px;
   }
 
-  #partners-section-2 {
+  // GCP Logo
+  :nth-child(2){
+    height: 50px;
+  }
+
+  #cis-badge {
     display: flex;
     flex-direction: column;
+    border: 2px solid white;
+    padding: 0px 17px 5px 5px;
+    box-shadow: 1px 1px 7px -2px;
 
-    img:last-of-type {
-      height: 30px;
-      margin-top: 10px;
+    p {
+      margin-bottom: -4px;
+      margin-left: 3px;
+    }
+
+    img {
+      height: 25px;
+    }
+  }
+
+  @media (min-width: @screen-md-min) {
+    :first-child {
+      margin-left: -28px;
     }
   }
 
   @media (max-width: @screen-xs-max) {
+    margin: unset;
     flex-direction: column;
 
     img {
       margin-bottom: 20px;
     }
 
-    #partners-section-2 {
-      img:last-of-type {
-        margin-top: 0px;
+    #cis-badge {
+      img {
+        margin-bottom: 0px;
       }
     }
   }
