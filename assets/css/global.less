@@ -852,11 +852,16 @@ a.caret-right{
   }
 
   @media (min-width: @screen-md-min) {
-    margin: 25px 0 25px -28px;
+    margin: 25px 0;
+  }
+
+  @media (max-width: @screen-sm-max) {
+    width: 107%;
   }
 
   @media (max-width: @screen-xs-max) {
     margin: unset;
+    width: unset;
     flex-wrap: wrap;
     justify-content: center;
 
