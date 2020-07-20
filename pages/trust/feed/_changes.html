@@ -1,0 +1,25 @@
+<div class="row">
+    <div class="col-xs-12">
+      <ul class="gw-list-group list-group">
+        {% assign sorted = (site.data.legal | sort: 'date') | reverse %}
+        {% for update in sorted %}
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col-xs-12 col-sm-4">
+              <p class="margin-bottom-none">{{ update.date }}</p>
+              <p class="smaller text-muted margin-bottom-none">{{update.category}}</p>
+            </div>
+            <div class="col-xs-12 col-sm-8" style="line-height: 1.4;">
+              <p class="text-lg link-white">
+                {{ update.title }}
+              </p>
+              <p class="small">{{ update.description }}</p>
+              
+              <a href={{update.link}} class="smaller margin-bottom-none break-link">{{update.link}}</a>
+            </div>
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
