@@ -806,28 +806,96 @@ a.caret-right{
 
 // Specific rows
 .row-partners {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  img {
+    width: auto;
+    height: 48px;
+  }
+
+  // GCP, Kubernetes & Terraform Logo
+  :nth-child(2),
+  :nth-child(4),
+  :nth-child(5){
+    img {
+      height: 52px;
+    }
+  }
+
+  :nth-child(2) {
+    img {
+      margin-bottom: -2px;
+    }
+  }
+
+  #cis-badge {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid white;
+    border-radius: 4px;
+    padding: 0px 17px 5px 5px;
+
+    p {
+      margin-bottom: -4px;
+      margin-left: 3px;
+    }
+
+    img {
+      height: 25px;
+    }
+  }
+
+  .break {
+    display: none;
+  }
+
+  @media (min-width: @screen-md-min) {
+    margin: 25px 0;
+  }
+
+  @media (max-width: @screen-sm-max) {
+    width: 107%;
+  }
+
   @media (max-width: @screen-xs-max) {
-    .col-partner-hashicorp {
-      text-align: center;
+    margin: unset;
+    width: unset;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    div {
+      width: 120px;
+      margin-bottom: 30px;
+
       img {
-        margin-bottom: 30px;
+        display: block;
+        margin: 0 auto;
       }
     }
-    .col-partner-experts {
-      text-align: center;
-      div[class*="col-"] {
-        margin-bottom: 20px;
+
+    // Terraform & Kubernetes Logo
+    :nth-child(4),
+    :nth-child(5) {
+      img {
+        height: 58px;
       }
     }
-  }
-  @media (min-width: @screen-sm-min) {
-    .col-partner-experts .row + p {
-      margin-top: 15px;
+
+    .break {
+      margin: 0;
+      display: initial;
+      flex-basis: 100%;
+      height: 0;
     }
-  }
-  @media (min-width: @screen-sm-min) {
-    margin-top: 40px;
-    margin-bottom: 40px;
+
+    #cis-badge {
+      width: auto;
+      margin-bottom: 0px;
+      margin-left: -10px;
+      padding-right: 14px;
+    }
   }
 }
 
@@ -1015,30 +1083,33 @@ a.caret-right{
 }
 
 // Hero styles on the front page
-.index-page .section-hero {
-  color: #fff;
-  &:extend(.gradient-primary.gradient-vertical);
-  background: url('../img/bg-header-squares.png') center bottom no-repeat, linear-gradient(@brand-primary, #06A2FF); // This is what we need to do in order to stack a background image on top of a background gradient
-  @media (min-width: @screen-sm-min) {
-    padding-top: 30px;
-    .floating-img-infrastructure-in-a-day {
-      position: absolute;
-      width: 220px;
-      top: 30px;
-      left: -60px;
+.index-page {
+  .section-hero {
+    color: #fff;
+    &:extend(.gradient-primary.gradient-vertical);
+    background: url('../img/bg-header-squares.png') center bottom no-repeat, linear-gradient(@brand-primary, #06A2FF); // This is what we need to do in order to stack a background image on top of a background gradient
+    @media (min-width: @screen-sm-min) {
+      padding-top: 30px;
+      .floating-img-infrastructure-in-a-day {
+        position: absolute;
+        width: 220px;
+        top: 30px;
+        left: -60px;
+      }
+    }
+    @media (min-width: @screen-md-min) {
+      margin-top: -(@navbar-height + 4);
+      padding-top: (@navbar-height + 4) + 90px;
+      padding-bottom: 135px;
+      .floating-img-infrastructure-in-a-day {
+        position: absolute;
+        width: auto;
+        top: -60px;
+        left: 15px;
+      }
     }
   }
-  @media (min-width: @screen-md-min) {
-    margin-top: -(@navbar-height + 4);
-    padding-top: (@navbar-height + 4) + 90px;
-    padding-bottom: 135px;
-    .floating-img-infrastructure-in-a-day {
-      position: absolute;
-      width: auto;
-      top: -60px;
-      left: 15px;
-    }
-  }
+
 }
 
 .how-it-works h1 {
