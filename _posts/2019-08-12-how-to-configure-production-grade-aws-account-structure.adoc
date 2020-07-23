@@ -1355,12 +1355,12 @@ The example code above does the following:
 . **Create IAM groups**. We create a `full-access` IAM group (for admins) and a `billing` IAM group (for the finance
   team).
 
-. **Create IAM users**. For this example, we create `alice`, `bob`, and `carol`. We add `alice` and `bob` to the
-  `full-access` IAM group and `carol` to the `billing` IAM group.
+. **Create IAM users**. For this example, we create `alice`, `bob`, and `carol`, adding `alice` and `bob` to the
+  `full-access` IAM group and `carol` to the `billing` IAM group. You should create an IAM user for yourself in the
+  `full-access` group, plus IAM users for the rest of your team in the appropriate groups.
 
 . **Generate a password for each user**. We encrypt this password with that user's PGP key from Keybase (we'll come
-  back to how to handle the passwords shortly). You should follow this pattern to create an IAM user for yourself, as
-  well as the small number of other trusted admins at your company who should have access to the root account.
+  back to how to handle the passwords shortly).
 
 Pull in the https://www.terraform.io/docs/backends/[backend] settings from a root `terragrunt.hcl` file that you
 `include` in each child `terragrunt.hcl`:
@@ -1481,7 +1481,7 @@ next couple sections.
 === Apply the security baseline to the logs account
 
 The next step is to configure the logs account. All the other accounts will send their AWS Config and CloudTrail data
-to the logs account, so we need to create the S3 buckets and KMS CMKs early on! To do this, create a new module called
+to the logs account, so we need to create the S3 buckets and KMS CMKs early on. To do this, create a new module called
 `account-baseline-app`  in your `infrastructure-modules` repo:
 
 ----
@@ -1563,6 +1563,11 @@ Create all the corresponding input variables for `account-baseline-app` in `vari
 .infrastructure-modules/landingzone/account-baseline-app/variables.tf
 [source,hcl]
 ----
+# ---------------------------------------------------------------------------------------------------------------------
+# MODULE PARAMETERS
+# These variables are expected to be passed in by the operator
+# ---------------------------------------------------------------------------------------------------------------------
+
 variable "name_prefix" {
   description = "The name used to prefix AWS Config and Cloudtrail resources, including the S3 bucket names and SNS topics used for each."
   type        = string
@@ -1738,7 +1743,7 @@ When you're done testing, commit and release your changes:
 
 [source,bash]
 ----
-git add landingzone/account-baseline-security
+git add landingzone/account-baseline-app
 git commit -m "Add app account baseline wrapper module"
 git tag -a "v0.3.1" -m "Created app account baseline module"
 git push --follow-tags
@@ -1822,7 +1827,7 @@ inputs = {
 The example above configures the logs account of an AWS Organization as follows:
 
 . **Aggregate CloudTrail Logs**: We create an S3 bucket and a KMS CMK and grant all accounts permissions to encrypt
-  their CloudTrail llogs with the CMK and store those logs in the S3 bucket.
+  their CloudTrail logs with the CMK and store those logs in the S3 bucket.
 
 . **Aggregate AWS Config**: We create another S3 bucket and grant all accounts permissions to use this bucket to store
   AWS Config data.
@@ -1832,7 +1837,7 @@ The example above configures the logs account of an AWS Organization as follows:
 
 Configure your Terraform backend:
 
-.infrastructure-live/security/_global/account-baseline/terragrunt.hcl
+.infrastructure-live/logs/_global/account-baseline/terragrunt.hcl
 [source,hcl]
 ----
 include {
@@ -1852,8 +1857,7 @@ terragrunt apply
 
 === Apply the security baseline to the security account
 
-Now that your root and logs accounts are fully configured, you need to apply the security baseline to the security
-account.
+Now that your logs accounts is fully configured, you need to apply the security baseline to the security account.
 
 Create a new module called `account-baseline-security` in your `infrastructure-modules` repo:
 
@@ -2372,7 +2376,7 @@ inputs = {
     # ... Repeat the same set of groups for each of stage, prod, logs, and shared services account IDs too!
   ]
 
-  # Create IAM users in the security account
+  # Create IAM users
   users = {
     alice = {
       groups               = ["user-self-mgmt", "ssh-sudo-users", "_account.dev-full-access"]
@@ -2486,7 +2490,7 @@ terraform {
 
 Set the variables for the `account-baseline-app` module in this environment in the `inputs = { ... }` block of `terragrunt.hcl`:
 
-.infrastructure-live/security/_global/account-baseline/terragrunt.hcl
+.infrastructure-live/stage/_global/account-baseline/terragrunt.hcl
 [source,hcl]
 ----
 inputs = {
@@ -2538,6 +2542,10 @@ The code above does the following:
   in the shared-services account to do deployments. This role will have the permissions specified in
   `auto_deploy_permissions`.
 
+. **Configure cross-account IAM roles**. We then specify which other accounts are allowed to assume the IAM roles in
+  this account. For the most part, we grant all permissions to the security account, so that by assigning users to IAM
+  groups in that account, you'll be able to access IAM roles in all the other child accounts.
+
 Configure your Terraform backend:
 
 .infrastructure-live/stage/_global/account-baseline/terragrunt.hcl
@@ -2558,7 +2566,7 @@ cd infrastructure-live/stage/_global/account-baseline
 terragrunt apply
 ----
 
-Remember to repeat this process in the other child accounts too!
+Remember to repeat this process in the other child accounts too (i.e., dev, prod, shared-services, etc)!
 
 === Re-apply the security baseline to the root account
 
@@ -2595,26 +2603,38 @@ inputs = {
   child_accounts = {
     security = {
       email               = "root-accounts+security@acme.com",
+      # Only set this to true AFTER the child account has been created AND configured with a security baseline that
+      # creates an AWS Config Recorder. If you set this to true when initially creating the account, you'll get errors!
       enable_config_rules = true
     },
     logs = {
       email               = "root-accounts+logs@acme.com",
+      # Only set this to true AFTER the child account has been created AND configured with a security baseline that
+      # creates an AWS Config Recorder. If you set this to true when initially creating the account, you'll get errors!
       enable_config_rules = true
     },
     shared-services = {
       email               = "root-accounts+shared-services@acme.com"
+      # Only set this to true AFTER the child account has been created AND configured with a security baseline that
+      # creates an AWS Config Recorder. If you set this to true when initially creating the account, you'll get errors!
       enable_config_rules = true
     },
     dev = {
       email               = "root-accounts+dev@acme.com"
+      # Only set this to true AFTER the child account has been created AND configured with a security baseline that
+      # creates an AWS Config Recorder. If you set this to true when initially creating the account, you'll get errors!
       enable_config_rules = true
     },
     stage = {
       email               = "root-accounts+stage@acme.com"
+      # Only set this to true AFTER the child account has been created AND configured with a security baseline that
+      # creates an AWS Config Recorder. If you set this to true when initially creating the account, you'll get errors!
       enable_config_rules = true
     },
     prod = {
       email               = "root-accounts+prod@acme.com"
+      # Only set this to true AFTER the child account has been created AND configured with a security baseline that
+      # creates an AWS Config Recorder. If you set this to true when initially creating the account, you'll get errors!
       enable_config_rules = true
     }
   }
