@@ -1380,8 +1380,10 @@ Finally, deploy the `account-baseline` module by running `terragrunt apply`:
 [source,bash]
 ----
 cd infrastructure-live/root/_global/account-baseline
-terragrunt apply
+terragrunt apply -parallelism=4
 ----
+
+IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=4`) with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors.
 
 After `apply` completes, the module will output the encrypted passwords for `alice`, `bob`, and `carol`:
 
@@ -1852,8 +1854,10 @@ Finally, deploy the `account-baseline` module by running `terragrunt apply`:
 [source,bash]
 ----
 cd infrastructure-live/logs/_global/account-baseline
-terragrunt apply
+terragrunt apply -parallelism=4
 ----
+
+IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=4`) with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors.
 
 === Apply the security baseline to the security account
 
@@ -2441,8 +2445,10 @@ Finally, deploy the `account-baseline` module by running `terragrunt apply`:
 [source,bash]
 ----
 cd infrastructure-live/security/_global/account-baseline
-terragrunt apply
+terragrunt apply -parallelism=4
 ----
+
+IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=4`) with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors.
 
 When `apply` finishes, the module will output the encrypted passwords for the users defined above. Send the encrypted password to each user, along with their user
 name, and the IAM user sign-in URL for the account. Each user can then decrypt the password on their own computer (which should have their PGP key) as follows:
@@ -2563,8 +2569,10 @@ Finally, deploy the `account-baseline` module by running `terragrunt apply`:
 [source,bash]
 ----
 cd infrastructure-live/stage/_global/account-baseline
-terragrunt apply
+terragrunt apply -parallelism=4
 ----
+
+IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=4`) with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors.
 
 Remember to repeat this process in the other child accounts too (i.e., dev, prod, shared-services, etc)!
 
@@ -2678,13 +2686,15 @@ The changes we've made are:
   to enable AWS Config Rules in that account. Note that we can only do this now, after creating each child account and
   applying a security baseline to it.
 
-Authenticate once more to the root account and run `terragrunt apply`:
+Authenticate once more to the root account and run `terragrunt apply -parallelism=4`:
 
 [source,bash]
 ----
 cd infrastructure-live/root/_global/account-baseline
-terragrunt apply
+terragrunt apply -parallelism=4
 ----
+
+IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=4`) with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors.
 
 === Try authenticating as an IAM user to the child accounts
 
