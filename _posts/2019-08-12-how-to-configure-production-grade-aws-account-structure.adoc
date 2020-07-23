@@ -961,12 +961,21 @@ module "root_baseline" {
   aws_region     = var.aws_region
   name_prefix    = var.name_prefix
 
+  child_accounts = var.child_accounts
+
   create_organization = var.create_organization
 
-  enable_config     = var.enable_config
-  enable_cloudtrail = var.enable_cloudtrail
+  enable_config                  = var.enable_config
+  config_should_create_s3_bucket = var.config_should_create_s3_bucket
+  config_s3_bucket_name          = var.config_s3_bucket_name
+  config_central_account_id      = var.config_central_account_id
 
-  child_accounts = var.child_accounts
+  enable_cloudtrail                  = var.enable_cloudtrail
+  cloudtrail_s3_bucket_name          = var.cloudtrail_s3_bucket_name
+  cloudtrail_should_create_s3_bucket = var.cloudtrail_should_create_s3_bucket
+  cloudtrail_kms_key_arn             = var.cloudtrail_kms_key_arn
+
+  users = var.users
 }
 ----
 
