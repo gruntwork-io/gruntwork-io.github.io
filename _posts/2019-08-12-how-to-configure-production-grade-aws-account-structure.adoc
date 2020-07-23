@@ -986,7 +986,7 @@ variable "name_prefix" {
 }
 
 variable "aws_region" {
-  description = "The AWS Region to use as the global config recorder and seed region for AWS GuardDuty."
+  description = "The AWS Region to use as the global config recorder and seed region for GuardDuty."
   type        = string
 }
 
@@ -995,10 +995,10 @@ variable "aws_account_id" {
   type        = string
 }
 
-variable "create_organization" {
-  description = "Flag indicating whether the organization should be created."
-  type        = bool
-}
+# ---------------------------------------------------------------------------------------------------------------------
+# REQUIRED ORGANIZATIONS PARAMETERS
+# These variables must be passed in by the operator.
+# ---------------------------------------------------------------------------------------------------------------------
 
 variable "child_accounts" {
   description = "Map of child accounts to create. The map key is the name of the account and the value is an object containing account configuration variables."
@@ -1020,7 +1020,7 @@ variable "child_accounts" {
   #   Defaults to the Organization default Root ID.
   #
   # - role_name:
-  #   The name of an IAM role that Organizations automatically pre-configures in the new member account. This role trusts
+  #   The name of an IAM role that Organizations automatically preconfigures in the new member account. This role trusts
   #   the master account, allowing users in the master account to assume the role, as permitted by the master account
   #   administrator. The role has administrator permissions in the new member account. Note that the Organizations API
   #   provides no method for reading this information after account creation.
@@ -1039,10 +1039,11 @@ variable "child_accounts" {
   #
   # child_accounts = {
   #   security = {
-  #     email                       = "security-master@acme.com",
-  #     parent_id                   = "my-org-unit-id",
-  #     role_name                   = "OrganizationAccountAccessRole",
-  #     iam_user_access_to_billing  = "DENY",
+  #     email                       = "security-master@acme.com"
+  #     parent_id                   = "my-org-unit-id"
+  #     role_name                   = "OrganizationAccountAccessRole"
+  #     iam_user_access_to_billing  = "DENY"
+  #     enable_config_rules         = true
   #     tags = {
   #       Tag-Key = "tag-value"
   #     }
@@ -1053,16 +1054,113 @@ variable "child_accounts" {
   # }
 }
 
-variable "enable_cloudtrail" {
-  description = "Set to true to enable CloudTrail in the root account. Set to false to disable CloudTrail. Note that if you want to aggregate CloudTrail logs in an S3 bucket in a child account (e.g., a logs account), you MUST: (1) set this variable to false initially, as that S3 bucket doesn't exist yet in the child account, (2) run 'apply' to create the child account, (3) go to the child account and create the S3 bucket, e.g., by deploying a security baseline in that account, (4) come back to this root account and set this variable to true, and (5) run 'apply' again to enable CloudTrail."
+# ---------------------------------------------------------------------------------------------------------------------
+# OPTIONAL ORGANIZATIONS PARAMETERS
+# These variables have defaults, but may be overridden by the operator.
+# ---------------------------------------------------------------------------------------------------------------------
+
+variable "create_organization" {
+  description = "Set to true to create/configure AWS Organizations for the first time in this account. If you already configured AWS Organizations in your account, set this to false; alternatively, you could set it to true and run 'terraform import' to import you existing Organization."
   type        = bool
   default     = true
 }
 
+# ---------------------------------------------------------------------------------------------------------------------
+# OPTIONAL CONFIG RULES PARAMETERS
+# These variables have reasonable defaults that can be overridden for further customizations.
+# ---------------------------------------------------------------------------------------------------------------------
+
 variable "enable_config" {
-  description = "Set to true to enable AWS Config in the root account. Set to false to disable AWS Config. Note that if you want to aggregate AWS Config data in an S3 bucket in a child account (e.g., a logs account), you MUST: (1) set this variable to false initially, as that S3 bucket doesn't exist yet in the child account, (2) run 'apply' to create the child account, (3) go to the child account and create the S3 bucket, e.g., by deploying a security baseline in that account, (4) come back to this root account and set this variable to true, and (5) run 'apply' again to enable AWS Config."
+  description = "Set to true to enable AWS Config in the root account. Set to false to disable AWS Config (note: all other AWS config variables will be ignored). Note that if you want to aggregate AWS Config data in an S3 bucket in a child account (e.g., a logs account), you MUST: (1) set this variable to false initially, as that S3 bucket doesn't exist yet in the child account, (2) run 'apply' to create the child account, (3) go to the child account and create the S3 bucket, e.g., by deploying a security baseline in that account, (4) come back to this root account and set this variable to true, and (5) run 'apply' again to enable AWS Config."
   type        = bool
   default     = true
+}
+
+variable "config_should_create_s3_bucket" {
+  description = "If true, create an S3 bucket of name var.config_s3_bucket_name for AWS Config data in this account. If false, assume var.config_s3_bucket_name is an S3 bucket in another AWS account. We recommend setting this to false and using an S3 bucket in a separate logs account. However, see the description of var.enable_config for the steps you have to take to make this work."
+  type        = bool
+  default     = false
+}
+
+variable "config_s3_bucket_name" {
+  description = "The name of the S3 Bucket where Config items will be stored. This could be a bucket in this AWS account or the name of a bucket in another AWS account where Config items should be sent. We recommend the latter, setting this to the name of an S3 bucket in a separate logs account. However, see the description of var.enable_config for the steps you have to take to make this work."
+  type        = string
+  default     = null
+}
+
+variable "config_central_account_id" {
+  description = "If the S3 bucket and SNS topics used for AWS Config live in a different AWS account, set this variable to the ID of that account. If the S3 bucket and SNS topics live in this account, set this variable to null. We recommend storing AWS config data in a separate logs account and setting this variable to the ID of that account. However, see the description of var.enable_config for the steps you have to take to make this work."
+  type        = string
+  default     = null
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
+# OPTIONAL USERS MODULE PARAMETERS
+# These variables have defaults, but may be overridden by the operator.
+# ---------------------------------------------------------------------------------------------------------------------
+
+variable "users" {
+  description = "A map of users to create. The keys are the user names and the values are an object with the optional keys 'groups' (a list of IAM groups to add the user to), 'tags' (a map of tags to apply to the user), 'pgp_key' (either a base-64 encoded PGP public key, or a keybase username in the form keybase:username, used to encrypt the user's credentials; required if create_login_profile or create_access_keys is true), 'create_login_profile' (if set to true, create a password to login to the AWS Web Console), 'create_access_keys' (if set to true, create access keys for the user), 'path' (the path), and 'permissions_boundary' (the ARN of the policy that is used to set the permissions boundary for the user)."
+
+  # Ideally, this would be a map of (string, object), but object does not support optional properties, and we want
+  # users to be able to specify, say, tags for some users, but not for others. We can't use a map(any) either, as that
+  # would require the values to all have the same type, and due to optional parameters, that wouldn't work either. So,
+  # we have to lamely fall back to any.
+  type = any
+
+  # Example:
+  # default = {
+  #   alice = {
+  #     groups = ["user-self-mgmt", "developers", "ssh-sudo-users"]
+  #   }
+  #
+  #   bob = {
+  #     path   = "/"
+  #     groups = ["user-self-mgmt", "ops", "admins"]
+  #     tags   = {
+  #       foo = "bar"
+  #     }
+  #   }
+  #
+  #   carol = {
+  #     groups               = ["user-self-mgmt", "developers", "ssh-users"]
+  #     pgp_key              = "keybase:carol_on_keybase"
+  #     create_login_profile = true
+  #     create_access_keys   = true
+  #   }
+  # }
+
+  default = {}
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
+# OPTIONAL CLOUDTRAIL PARAMETERS
+# These variables must be passed in by the operator. In a real-world usage, some of these variables might not be needed
+# and you can instead inline the values directly in main.tf.
+# ---------------------------------------------------------------------------------------------------------------------
+
+variable "enable_cloudtrail" {
+  description = "Set to true to enable CloudTrail in the root account. Set to false to disable CloudTrail (note: all other CloudTrail variables will be ignored). Note that if you want to aggregate CloudTrail logs in an S3 bucket in a child account (e.g., a logs account), you MUST: (1) set this variable to false initially, as that S3 bucket doesn't exist yet in the child account, (2) run 'apply' to create the child account, (3) go to the child account and create the S3 bucket, e.g., by deploying a security baseline in that account, (4) come back to this root account and set this variable to true, and (5) run 'apply' again to enable CloudTrail."
+  type        = bool
+  default     = true
+}
+
+variable "cloudtrail_s3_bucket_name" {
+  description = "The name of the S3 Bucket where CloudTrail logs will be stored. This could be a bucket in this AWS account or the name of a bucket in another AWS account where CloudTrail logs should be sent. We recommend the latter, setting this to the name of an S3 bucket in a separate logs account. However, see the description of var.enable_cloudtrail for the steps you have to take to make this work."
+  type        = string
+  default     = null
+}
+
+variable "cloudtrail_should_create_s3_bucket" {
+  description = "If true, create an S3 bucket of name var.cloudtrail_s3_bucket_name for CloudTrail logs in this account. If false, assume var.cloudtrail_s3_bucket_name is an S3 bucket in another AWS account. We recommend setting this to false and using an S3 bucket in a separate logs account. However, see the description of var.enable_cloudtrail for the steps you have to take to make this work."
+  type        = bool
+  default     = false
+}
+
+variable "cloudtrail_kms_key_arn" {
+  description = "All CloudTrail Logs will be encrypted with a KMS CMK (Customer Master Key) that governs access to write API calls older than 7 days and all read API calls. If that CMK already exists, set this to the ARN of that CMK. Otherwise, set this to null, and a new CMK will be created. We recommend setting this to the ARN of a CMK that already exists in a separate logs account. However, see the description of var.enable_cloudtrail for the steps you have to take to make this work."
+  type        = string
+  default     = null
 }
 ----
 
