@@ -1279,7 +1279,7 @@ inputs = {
   # Prefix all resources with this name
   name_prefix = "<COMPANY_NAME>-root"
 
-  # If you're running the example against an account that doesn't have AWS Organization created, change the following value to true
+  # If you've already created an AWS Organization in your root account, either run 'import' or set this variable to false
   create_organization = true
 
   # On the first deploy, we must disable AWS Config and CloudTrail, as we want to send AWS Config and CloudTrail data
@@ -2577,7 +2577,7 @@ inputs = {
   # Prefix all resources with this name
   name_prefix = "<COMPANY_NAME>-root"
 
-  # If you're running the example against an account that doesn't have AWS Organization created, change the following value to true
+  # If you've already created an AWS Organization in your root account, either run 'import' or set this variable to false
   create_organization = true
 
   # Enable AWS Config and configure it to send data to the S3 bucket in the logs account
