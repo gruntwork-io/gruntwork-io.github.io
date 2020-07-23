@@ -1349,9 +1349,8 @@ The example code above does the following:
   address, `root-accounts@your-company.com`.
 
 . **Disable AWS Config and CloudTrail for the first deployment**. We want to send all AWS Config and CloudTrail data to
-  the logs account, but that child account doesn't exist yet, so we need to initially disable AWS Config and CloudTrail,
-  create the logs account and apply a security baseline to it, and then we'll come back to the root account and
-  re-enable AWS Config and CloudTrail.
+  the logs account, but that child account doesn't exist yet, so we need to initially disable AWS Config and
+  CloudTrail. We'll re-enable it later, after we've created and configured the logs account.
 
 . **Create IAM groups**. We create a `full-access` IAM group (for admins) and a `billing` IAM group (for the finance
   team).
