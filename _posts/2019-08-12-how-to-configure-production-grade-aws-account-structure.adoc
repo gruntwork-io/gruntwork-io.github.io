@@ -788,8 +788,8 @@ sensitive machine user access keys.
 You'll want to enable CloudTrail in every single AWS account so that you have an audit log of the major activity
 happening in the account. We typically recommend that you aggregate these logs in the logs account. To do this, you:
 
-. Create an S3 bucket in the logs account and grant the CloudTrail service in all accounts write access to this
-  bucket.
+. Create an S3 bucket in the logs account, and grant the CloudTrail service in all accounts permissions to write
+ to this bucket.
 . Create a KMS Customer Master Key (CMK) in the logs account and grant the CloudTrail service in all accounts
   permissions to encrypt data with this CMK.
 . Enable CloudTrail in all accounts, configuring it to encrypt data with the CMK in the logs account and write data
@@ -806,11 +806,12 @@ should enable AWS Config in every AWS region, and not just the region(s) you're 
 That way, if an employee (perhaps accidentally), or even worse, an attacker, runs something in a region you don't typically
 use, it'll still be recorded in AWS Config, and your rules will still be enforced.
 
-We typically recommend that you aggregate AWS Config data in the logs account. To do this you:
+We typically recommend that you aggregate AWS Config data in the logs account. To do this, you:
 
 . Create an S3 bucket in the logs account and grant the AWS Config service in all accounts write access to this
   bucket.
 . Enable AWS Config in all accounts, configuring them to send data to the S3 bucket in the logs account.
+. Create an SNS topic in each region of the logs account, and set up AWS Config in each region of each account to send SNS notifications to the topic in the corresponding region of the logs account. This is because Config cannot send notifications to topics in other regions.
 
 === GuardDuty
 
