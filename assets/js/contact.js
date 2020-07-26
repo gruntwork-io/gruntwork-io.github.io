@@ -18,4 +18,16 @@
 
   $('input#user-utc-timezone-offset').val(offsetHrs);
 
+  // Add the Google reCAPTCHA library to this page per https://developers.google.com/recaptcha/docs/v3
+  // Because we don't have a clean way to selectively include <script> tags per page, we'll edit the DOM in Javascript
+  // too add the equivalent of:
+  // <script src="https://www.google.com/recaptcha/api.js"></script>
+  var scriptTag = document.createElement("script");
+  scriptTag.src = "https://www.google.com/recaptcha/api.js";
+  document.head.appendChild(scriptTag);
 }());
+
+// Add a callback function to handle the token that the reCAPTCHA script gives us
+function onContactFormSubmit(token) {
+  document.getElementById("contact-form").submit();
+}
