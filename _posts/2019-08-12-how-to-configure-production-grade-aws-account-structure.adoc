@@ -1284,8 +1284,8 @@ inputs = {
   # If you've already created an AWS Organization in your root account, either run 'import' or set this variable to false
   create_organization = true
 
-  # On the first deploy, we must disable AWS Config and CloudTrail, as we want to send AWS Config and CloudTrail data
-  # to the logs account, but before we can do that, we have to create and configure the logs account!
+  # We want to send AWS Config and CloudTrail data to the logs account, but on the first deploy, that account does not
+  # yet exist, so we have to temporarily disable AWS Config and CloudTrail.
   enable_cloudtrail = false
   enable_config     = false
 
