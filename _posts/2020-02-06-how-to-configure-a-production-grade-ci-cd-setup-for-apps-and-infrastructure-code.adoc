@@ -1133,6 +1133,8 @@ infrastructure-live
 
 === Deploy the ECS Deploy Runner
 
+IMPORTANT: This guide is currently only compatible with ECS deploy runner version v0.23.x
+
 // TODO: update link to use service catalog so it is publicly visible
 For this guide, we will use
 https://github.com/gruntwork-io/module-ci/blob/master/README-Terraform-Terragrunt-Pipeline.adoc[Gruntwork's ECS Deploy
@@ -1376,16 +1378,25 @@ Inside of `main.tf`, configure the ECS Deploy Runner:
 [source,hcl]
 ----
 module "ecs_deploy_runner" {
-  # Make sure to replace <VERSION> in this URL with the latest module-ci release
-  source = "git::git@github.com:gruntwork-io/module-ci.git//modules/ecs-deploy-runner?ref=<VERSION>"
+  source = "git::git@github.com:gruntwork-io/module-ci.git//modules/ecs-deploy-runner?ref=v0.23.4"
 
-  name            = var.name
-  container_image = var.container_image
-  vpc_id          = var.vpc_id
-  vpc_subnet_ids  = var.private_subnet_ids
+  name           = var.name
+  vpc_id         = var.vpc_id
+  vpc_subnet_ids = var.private_subnet_ids
+
+  container_images = {
+    deploy-runner = {
+      default      = true
+      docker_image = var.container_image.repo
+      docker_tag   = var.container_image.tag
+
+      secrets_manager_arns = {
+        DEPLOY_SCRIPT_SSH_PRIVATE_KEY = var.ssh_private_key_secrets_manager_arn
+      }
+    }
+  }
 
   repository                          = var.repository
-  ssh_private_key_secrets_manager_arn = var.ssh_private_key_secrets_manager_arn
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -1393,8 +1404,7 @@ module "ecs_deploy_runner" {
 # ---------------------------------------------------------------------------------------------------------------------
 
 module "invoke_policy" {
-  # Make sure to replace <VERSION> in this URL with the latest module-ci release
-  source = "git::git@github.com:gruntwork-io/module-ci.git//modules/ecs-deploy-runner-invoke-iam-policy?ref=<VERSION>"
+  source = "git::git@github.com:gruntwork-io/module-ci.git//modules/ecs-deploy-runner-invoke-iam-policy?ref=v0.23.4"
 
   name                                      = "invoke-${var.name}"
   deploy_runner_invoker_lambda_function_arn = module.ecs_deploy_runner.invoker_function_arn
@@ -1625,8 +1635,7 @@ To use the `infrastructure-deployer` CLI, use `gruntwork-install` to install a p
 
 [source,bash]
 ----
-# Update <VERSION> to the latest version of module-ci
-gruntwork-install --binary-name "infrastructure-deployer" --repo "https://github.com/gruntwork-io/module-ci" --tag "<VERSION>"
+gruntwork-install --binary-name "infrastructure-deployer" --repo "https://github.com/gruntwork-io/module-ci" --tag "v0.23.4"
 ----
 
 Then, invoke the `infrastructure-deployer` against the `master` branch of your live infrastructure to run a `plan` on
@@ -1862,7 +1871,7 @@ defaults: &defaults
     image: "ubuntu-1604:201903-01"
   environment:
     GRUNTWORK_INSTALLER_VERSION: v0.0.22
-    MODULE_CI_VERSION: v0.17.0
+    MODULE_CI_VERSION: v0.23.4
     MODULE_SECURITY_VERSION: v0.24.1
     REGION: us-east-2
 ----
@@ -2049,7 +2058,7 @@ defaults: &defaults
     image: "ubuntu-1604:201903-01"
   environment:
     GRUNTWORK_INSTALLER_VERSION: v0.0.22
-    MODULE_CI_VERSION: v0.17.0
+    MODULE_CI_VERSION: v0.23.4
     MODULE_SECURITY_VERSION: v0.24.1
     REGION: us-east-2
 
