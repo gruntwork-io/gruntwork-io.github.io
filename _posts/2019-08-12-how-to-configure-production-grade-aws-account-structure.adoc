@@ -1385,7 +1385,7 @@ cd infrastructure-live/root/_global/account-baseline
 terragrunt apply -parallelism=4
 ----
 
-IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=4`) with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors.
+IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=4`) with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors. On some operating systems, such as MacOS, you may also need to increase your open files limit to avoid `Error: pipe: too many open files` errors by running: `ulimit -n 1024`.
 
 After `apply` completes, the module will output the encrypted passwords for `alice`, `bob`, and `carol`:
 
@@ -1860,7 +1860,7 @@ cd infrastructure-live/logs/_global/account-baseline
 terragrunt apply -parallelism=4
 ----
 
-IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=4`) with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors.
+IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=4`) with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors. On some operating systems, such as MacOS, you may also need to increase your open files limit to avoid `Error: pipe: too many open files` errors by running: `ulimit -n 1024`.
 
 === Apply the security baseline to the security account
 
@@ -2452,7 +2452,7 @@ cd infrastructure-live/security/_global/account-baseline
 terragrunt apply -parallelism=4
 ----
 
-IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=4`) with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors.
+IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=4`) with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors. On some operating systems, such as MacOS, you may also need to increase your open files limit to avoid `Error: pipe: too many open files` errors by running: `ulimit -n 1024`.
 
 When `apply` finishes, the module will output the encrypted passwords for the users defined above. Send the encrypted password to each user, along with their user
 name, and the IAM user sign-in URL for the account. Each user can then decrypt the password on their own computer (which should have their PGP key) as follows:
@@ -2576,7 +2576,7 @@ cd infrastructure-live/stage/_global/account-baseline
 terragrunt apply -parallelism=4
 ----
 
-IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=4`) with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors.
+IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=4`) with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors. On some operating systems, such as MacOS, you may also need to increase your open files limit to avoid `Error: pipe: too many open files` errors by running: `ulimit -n 1024`.
 
 Remember to repeat this process in the other child accounts too (i.e., dev, prod, shared-services, etc)!
 
@@ -2698,7 +2698,7 @@ cd infrastructure-live/root/_global/account-baseline
 terragrunt apply -parallelism=4
 ----
 
-IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=4`) with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors.
+IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=4`) with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors. On some operating systems, such as MacOS, you may also need to increase your open files limit to avoid `Error: pipe: too many open files` errors by running: `ulimit -n 1024`.
 
 === Try authenticating as an IAM user to the child accounts
 
