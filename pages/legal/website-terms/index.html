@@ -1,0 +1,35 @@
+---
+layout: default
+title: Website Terms
+modified_date: August 10, 2020
+permalink: /legal/website-terms/
+redirect_from: /website-terms/
+slug: website-terms
+---
+
+<div class="main page-website-terms">
+    <div class="section">
+        <div class="container">
+            <div class="row">
+            <div class="col-xs-12">
+                <h1>{{ page.title }}</h1>
+                <p><em>Last Updated: {{ page.modified_date }}</em></p>
+            </div>
+            </div>
+            <div class="row">
+            <div class="col-xs-12">
+                {% for answer in site.data.website-terms %} {% if answer.question !=
+                nil %}
+                <h2>{{ answer.question }}</h2>
+                {% endif %} {% for step in answer.items %} {% if step.title != nil %}
+                <h3>{{ step.title }}</h3>
+                {% endif %}
+                <div>
+                {{ step.ans }}
+                </div>
+                {% endfor %} {% endfor %}
+            </div>
+            </div>
+        </div>
+        </div>
+</div>
