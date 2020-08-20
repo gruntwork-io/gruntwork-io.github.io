@@ -1506,7 +1506,8 @@ aws-vault exec root-iam-user -- terragrunt apply -parallelism=2
 ----
 
 IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=2`) with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors.
-IMPORTANT: On some operating systems, such as MacOS, you may also need to increase your open files limit to avoid `pipe: too many open files` errors by running: `ulimit -n 1024`.
+
+IMPORTANT: On some operating systems, such as MacOS, you may also need to increase your open files limit to avoid "pipe: too many open files" errors by running: `ulimit -n 1024`.
 
 Once `apply` completes, you should see output variables with all of your account IDs, the name of the AWS Config S3
 bucket, the name of the CloudTrail S3 bucket, and the ARN of the CloudTrail KMS key:
@@ -1935,7 +1936,8 @@ aws-vault exec logs-from-root -- terragrunt apply -parallelism=2
 ----
 
 IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=2`) with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors.
-IMPORTANT: On some operating systems, such as MacOS, you may also need to increase your open files limit to avoid `pipe: too many open files` errors by running: `ulimit -n 1024`.
+
+IMPORTANT: On some operating systems, such as MacOS, you may also need to increase your open files limit to avoid "pipe: too many open files" errors by running: `ulimit -n 1024`.
 
 === Apply the security baseline to the security account
 
@@ -2533,7 +2535,8 @@ aws-vault exec security-from-root -- terragrunt apply -parallelism=2
 ----
 
 IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=2`) with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors.
-IMPORTANT: On some operating systems, such as MacOS, you may also need to increase your open files limit to avoid `pipe: too many open files` errors by running: `ulimit -n 1024`.
+
+IMPORTANT: On some operating systems, such as MacOS, you may also need to increase your open files limit to avoid "pipe: too many open files" errors by running: `ulimit -n 1024`.
 
 When `apply` finishes, the module will output the encrypted passwords for the users defined above. Send the encrypted
 password to each user, along with their user name, and the IAM user sign-in URL for the account. Each user can then
@@ -2689,7 +2692,8 @@ aws-vault exec stage-from-root -- terragrunt apply -parallelism=2
 ----
 
 IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=2`) with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors.
-IMPORTANT: On some operating systems, such as MacOS, you may also need to increase your open files limit to avoid `pipe: too many open files` errors by running: `ulimit -n 1024`.
+
+IMPORTANT: On some operating systems, such as MacOS, you may also need to increase your open files limit to avoid "pipe: too many open files" errors by running: `ulimit -n 1024`.
 
 Remember to repeat this process in the other child accounts too (i.e., dev, prod, shared-services, etc)!
 
