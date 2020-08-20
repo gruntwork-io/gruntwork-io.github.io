@@ -903,7 +903,7 @@ the central place where you manage billing. You create this initial account manu
   account.
 
 [[lock_down_root_user]]
-=== Lock down the root account root user
+=== Lock down the root user
 
 After signing up for an AWS account, you'll be logged in as the root user. The root user has unrestricted access to
 just about everything in your AWS account (and any child accounts), so if an attacker compromises your root user, the
@@ -950,8 +950,7 @@ https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html#id_users_c
 . Select both "programmatic access" and "AWS Management Console access."
 . On the next page, click "Attach existing policies to user directly" and attach the `AdministratorAccess` policy.
 . Click next a few more times to create the IAM user.
-. In a secrets manager, save the IAM sign-in URL (it'll look something like
-  `https://<ACCOUNT_ID>.signin.aws.amazon.com/console`), your IAM user's username, the password, and your Access Keys.
+. In a secrets manager, save the IAM sign-in URL, your IAM user's username, the password, and your Access Keys.
 
 [[lock_down_iam_users]]
 === Lock down the root account IAM users
@@ -1373,7 +1372,7 @@ inputs = {
   # Prefix all resources with this name
   name_prefix = "<COMPANY_NAME>-root"
 
-  # If you've already created an AWS Organization in your root account, either run 'import' or set this variable to false
+  # If you've already created an AWS Organization in your root account, set this variable to false
   create_organization = true
 
   # The child AWS accounts to create in this AWS organization
@@ -1401,7 +1400,7 @@ inputs = {
     }
   }
 
-  # The IAM users to create in this account. Since this is the root account, we should only create IAM users for a
+  # The IAM users to create in this account. Since this is the root account, you should only create IAM users for a
   # small handful of trusted admins.
   users = {
     alice = {
@@ -1449,7 +1448,7 @@ The example code above does the following:
   a https://github.com/hashicorp/terraform/issues/13018[Terraform bug], running `import` with `account-baseline-root`
   is not currently possible. So after this whole deployment process is done, you may wish to add a separate IAM user in
   `users` for yourself, add that user to the `full-access` group, run `apply` to create the user, login as that user,
-  and delete the first IAM user that you created manually. It's a bit of an uglyl workaround, but it ensures all your
+  and delete the first IAM user that you created manually. It's a bit of an ugly workaround, but it ensures all your
   IAM users are managed as code.
 
 . **Generate a password for each user**. We encrypt this password with that user’s PGP key from Keybase (we’ll come
@@ -1469,7 +1468,8 @@ include {
 Next, you need to authenticate as your IAM user in the root account. There are
 https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[multiple ways to authenticate to AWS on the CLI];
 in this guide, we'll use the open source tool https://github.com/99designs/aws-vault[aws-vault].
-https://github.com/99designs/aws-vault#installing[Install aws-vault] and add the Access Keys you saved earlier to it:
+https://github.com/99designs/aws-vault#installing[Install aws-vault] and add to it the Access Keys you saved earlier
+from your IAM user:
 
 [source,bash]
 ----
@@ -1526,7 +1526,7 @@ child_accounts = {
   }
   "prod" = {
     "email" = "root-accounts+prod@acme.com"
-    "id" = "<LOGS_ACCOUNT_ID>"
+    "id" = "<PROD_ACCOUNT_ID>"
     # (...)
   }
   "security" = {
@@ -1577,10 +1577,7 @@ confusingly, not a password. So how do you login as the root user then? It's not
 https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys_retrieve.html#reset-root-password[reset the root user password],
 using the "Forgot your password?" prompt on the https://console.aws.amazon.com/[root user login page]. AWS will email
 you a reset link, which you can click to go to a page that will allow you to configure a password for the root user.
-
-Use this process to reset the password for the root user of each child account you created. With access to the root
-user in each account, you can configure IAM users, IAM groups, and IAM roles in those accounts, as described in the
-next couple sections.
+Use this process to reset the password for the root user of each child account you created.
 
 === Lock down the root user in the child accounts
 
@@ -1651,9 +1648,9 @@ module "security_baseline" {
   config_aggregate_config_data_in_external_account = var.config_aggregate_config_data_in_external_account
 
   # We assume the S3 bucket and KMS key for CloudTrail have already been created by account-baseline-root
-  cloudtrail_s3_bucket_already_exists   = true
-  cloudtrail_kms_key_arn                = var.cloudtrail_kms_key_arn
-  cloudtrail_s3_bucket_name             = var.cloudtrail_s3_bucket_name
+  cloudtrail_s3_bucket_already_exists = true
+  cloudtrail_s3_bucket_name           = var.cloudtrail_s3_bucket_name
+  cloudtrail_kms_key_arn              = var.cloudtrail_kms_key_arn
 
   dev_permitted_services  = var.dev_permitted_services
   auto_deploy_permissions = var.auto_deploy_permissions
@@ -1851,8 +1848,8 @@ inputs = {
   name_prefix    = "<COMPANY_NAME>-logs"
 
   # Use the S3 bucket and KMS key that were already created in this logs account by account-baseline-root
-  cloudtrail_kms_key_arn    = "<CLOUDTRAIL_KMS_KEY_ARN>"
   cloudtrail_s3_bucket_name = "<CLOUDTRAIL_BUCKET_NAME>"
+  cloudtrail_kms_key_arn    = "<CLOUDTRAIL_KMS_KEY_ARN>"
 
   # Use the S3 bucket that was already created in this logs account by account-baseline-root
   config_s3_bucket_name                            = "<CONFIG_BUCKET_NAME>"
@@ -1895,7 +1892,7 @@ for this guide, we're going to keep using `aws-vault`.
 Open up `~/.aws/config` and you should see a `profile` that was created automatically when you ran
 `aws-vault add root-iam-user`  earlier:
 
-[source]
+[source,text]
 ----
 [profile root-iam-user]
 ----
@@ -1903,7 +1900,7 @@ Open up `~/.aws/config` and you should see a `profile` that was created automati
 Add a new `profile` entry in `~/.aws/config` for your logs account that uses the `root-iam-user` as the
 `source_profile`:
 
-[source]
+[source,text]
 ----
 [profile logs-from-root]
 role_arn=arn:aws:iam::<LOGS_ACCOUNT_ID>:role/OrganizationAccountAccessRole
@@ -2005,8 +2002,8 @@ module "security_baseline" {
 
   # We assume the S3 bucket and KMS key for CloudTrail have already been created by account-baseline-root
   cloudtrail_s3_bucket_already_exists = true
-  cloudtrail_kms_key_arn              = var.cloudtrail_kms_key_arn
   cloudtrail_s3_bucket_name           = var.cloudtrail_s3_bucket_name
+  cloudtrail_kms_key_arn              = var.cloudtrail_kms_key_arn
 
   iam_groups_for_cross_account_access            = var.iam_groups_for_cross_account_access
   cross_account_access_all_group_name            = var.cross_account_access_all_group_name
@@ -2389,8 +2386,8 @@ inputs = {
   name_prefix = "<COMPANY_NAME>-security"
 
   # Use the S3 bucket and KMS key that were already created in this logs account by account-baseline-root
-  cloudtrail_kms_key_arn    = "<CLOUDTRAIL_KMS_KEY_ARN>"
   cloudtrail_s3_bucket_name = "<CLOUDTRAIL_BUCKET_NAME>"
+  cloudtrail_kms_key_arn    = "<CLOUDTRAIL_KMS_KEY_ARN>"
 
   # Use the S3 bucket that was already created in this logs account by account-baseline-root
   config_s3_bucket_name     = "<CONFIG_BUCKET_NAME>"
@@ -2434,7 +2431,7 @@ inputs = {
     # ... Repeat the same set of groups for each of stage, prod, logs, and shared services account IDs too!
   ]
 
-  # Create IAM users
+  # Create all the IAM users for your company and assign them to IAM groups
   users = {
     alice = {
       groups               = ["user-self-mgmt", "ssh-sudo-users", "_account.dev-full-access"]
@@ -2500,7 +2497,7 @@ for this guide, we're going to keep using `aws-vault`.
 Add a new `profile` entry in `~/.aws/config` for your security account that uses the `root-iam-user` as the
 `source_profile`:
 
-[source]
+[source,text]
 ----
 [profile security-from-root]
 role_arn=arn:aws:iam::<SECURITY_ACCOUNT_ID>:role/OrganizationAccountAccessRole
@@ -2595,8 +2592,8 @@ inputs = {
   name_prefix = "<COMPANY_NAME>-stage"
 
   # Use the S3 bucket and KMS key that were already created in this logs account by account-baseline-root
-  cloudtrail_kms_key_arn    = "<CLOUDTRAIL_KMS_KEY_ARN>"
   cloudtrail_s3_bucket_name = "<CLOUDTRAIL_BUCKET_NAME>"
+  cloudtrail_kms_key_arn    = "<CLOUDTRAIL_KMS_KEY_ARN>"
 
   # Use the S3 bucket that was already created in this logs account by account-baseline-root
   config_s3_bucket_name                            = "<CONFIG_BUCKET_NAME>"
@@ -2647,7 +2644,7 @@ include {
 }
 ----
 
-Just as with the logs and security account, you're going to use the `OrganizationAccountAccessRole` IAM role created by
+Just as with the logs and security accounts, you're going to use the `OrganizationAccountAccessRole` IAM role created by
 `account-baseline-root` to authenticate to the stage account and all other child accounts. There are many ways to
 https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[assume an IAM role on the CLI];
 for this guide, we're going to keep using `aws-vault`.
@@ -2655,7 +2652,7 @@ for this guide, we're going to keep using `aws-vault`.
 Add a new `profile` entry in `~/.aws/config` for your stage account that uses the `root-iam-user` as the
 `source_profile`:
 
-[source]
+[source,text]
 ----
 [profile stage-from-root]
 role_arn=arn:aws:iam::<STAGE_ACCOUNT_ID>:role/OrganizationAccountAccessRole
@@ -2705,8 +2702,13 @@ authenticating:
   MFA token. If you don't do this, attempting to assume IAM roles in other accounts won't work, as those roles require
   an MFA token to be present.
 . Try to https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-console.html[switch to a role] in
-  one of the other child accounts using the AWS Web Console. Alternatively, you can use the `aws-vault login xxx` to
-  login to the AWS Web Console for any profile `xxx`.
+  one of the other child accounts using the AWS Web Console. For example, authenticate as one of the IAM users in the
+  security account, and then assume the `allow-full-access-from-other-accounts` role in the dev account (you can find
+  the default list of IAM roles created in each account
+  https://github.com/gruntwork-io/module-security/tree/master/modules/cross-account-iam-roles#resources-created[here]).
+. Alternatively, you can use the `aws-vault login xxx` command to login to the AWS Web Console for any profile `xxx`
+  that you've configured in `aws-vault`. For example, `aws-vault login logs-from-root` will open up your web browser
+  and log you into the logs account using the `OrganizationAccountAccessRole` IAM Role.
 
 [[next_steps]]
 == Next steps
