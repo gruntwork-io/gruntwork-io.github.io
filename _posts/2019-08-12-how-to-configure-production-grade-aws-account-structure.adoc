@@ -1015,22 +1015,6 @@ provider "aws" {
   allowed_account_ids = [var.aws_account_id]
 }
 
-# If you mark one of the child accounts in child_accounts as a logs account (by setting is_logs_account = true on it),
-# the account-baseline-root module will use that account to aggregate AWS Config and CloudTrail data. To do that, the
-# module will need to authenticate to the logs account and create S3 buckets and KMS keys in it. In order to
-# authenticate to that account, we create this provider block, which assumes an IAM role that gets automatically
-# created in that account. Ideally, this provider block would be created in the module itself, but due to Terraform
-# limitations (example: https://github.com/hashicorp/terraform/issues/13018), we can only declare such a provider block
-# in the root module and pass it through using the providers map below.
-provider "aws" {
-  alias  = "logs"
-  region = var.aws_region
-
-  assume_role {
-    role_arn = module.root_baseline.logs_account_iam_role_arn
-  }
-}
-
 terraform {
   # The configuration for this backend will be filled in by Terragrunt or via a backend.hcl file. See
   # https://www.terraform.io/docs/backends/config.html#partial-configuration
@@ -1049,12 +1033,6 @@ Next, use the `account-baseline-root` module from the Gruntwork Infrastructure a
 ----
 module "root_baseline" {
   source = "git::git@github.com:gruntwork-io/module-security.git//modules/account-baseline-root?ref=v0.36.0"
-
-  # Pass our custom providers block to the module so it can use it to authenticate to the logs account. See the comments
-  # on the aws.logs provider above for more details.
-  providers = {
-    aws.logs = aws.logs
-  }
 
   aws_account_id = var.aws_account_id
   aws_region     = var.aws_region
