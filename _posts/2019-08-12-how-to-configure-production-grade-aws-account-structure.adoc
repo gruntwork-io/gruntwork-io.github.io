@@ -1026,15 +1026,13 @@ terraform {
 }
 ----
 
-Next, use the `account-baseline-root` module from the Gruntwork Infrastructure as Code Library, making sure to replace the `<VERSION>` placeholder
-with the latest version from the https://github.com/gruntwork-io/module-security/releases[releases page] (minimum
-version for this guide is `v0.36.0`):
+Next, use the `account-baseline-root` module from the Gruntwork Infrastructure as Code Library:
 
 .infrastructure-modules/landingzone/account-baseline-root/main.tf
 [source,hcl]
 ----
 module "root_baseline" {
-  source = "git::git@github.com:gruntwork-io/module-security.git//modules/account-baseline-root?ref=<VERSION>"
+  source = "git::git@github.com:gruntwork-io/module-security.git//modules/account-baseline-root?ref=v0.36.0"
 
   aws_account_id = var.aws_account_id
   aws_region     = var.aws_region
@@ -1629,15 +1627,13 @@ terraform {
 }
 ----
 
-Next, use the `account-baseline-app` module from the Gruntwork Infrastructure as Code Library, making sure to replace the `<VERSION>` placeholder
-with the latest version from the https://github.com/gruntwork-io/module-security/releases[releases page] (minimum
-version for this guide is `v0.36.0`):
+Next, use the `account-baseline-app` module from the Gruntwork Infrastructure as Code Library:
 
 .infrastructure-modules/landingzone/account-baseline-app/main.tf
 [source,hcl]
 ----
 module "security_baseline" {
-  source = "git::git@github.com:gruntwork-io/module-security.git//modules/account-baseline-app?ref=<VERSION>"
+  source = "git::git@github.com:gruntwork-io/module-security.git//modules/account-baseline-app?ref=v0.36.0"
 
   name_prefix    = var.name_prefix
   aws_region     = var.aws_region
@@ -1984,15 +1980,13 @@ terraform {
 }
 ----
 
-Next, use the `account-baseline-security` module from the Gruntwork Infrastructure as Code Library, making sure to replace the `<VERSION>` placeholder
-with the latest version from the https://github.com/gruntwork-io/module-security/releases[releases page] (minimum
-version for this guide is `v0.36.0`):
+Next, use the `account-baseline-security` module from the Gruntwork Infrastructure as Code Library:
 
 .infrastructure-modules/landingzone/account-baseline-security/main.tf
 [source,hcl]
 ----
 module "security_baseline" {
-  source = "git::git@github.com:gruntwork-io/module-security.git//modules/account-baseline-security?ref=<VERSION>"
+  source = "git::git@github.com:gruntwork-io/module-security.git//modules/account-baseline-security?ref=v0.36.0"
 
   name_prefix    = var.name_prefix
   aws_region     = var.aws_region
