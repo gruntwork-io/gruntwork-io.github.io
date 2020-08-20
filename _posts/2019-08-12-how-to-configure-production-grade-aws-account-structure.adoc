@@ -902,10 +902,88 @@ the central place where you manage billing. You create this initial account manu
 . You will be asked to enter an email address and password to use as the credentials for the root user of this root
   account.
 
+[[lock_down_root_user]]
+=== Lock down the root account root user
+
+After signing up for an AWS account, you'll be logged in as the root user. The root user has unrestricted access to
+just about everything in your AWS account (and any child accounts), so if an attacker compromises your root user, the
+results can be catastrophic for your company. Therefore, you should lock down the root user as much as possible:
+
+Use a secrets manager::
+  Do NOT store the root user's password, or secrets of any kind, in plain text. Instead, always use a secrets manager
+  such as https://1password.com[1Password], https://www.lastpass.com[LastPass], or https://www.passwordstore.org[pass]
+  to store the credentials in an encrypted format.
+
+Use a strong, generated password::
+  Do NOT re-use passwords from other websites, or any password that you can remember at all. Instead, generate a random,
+  cryptographically secure, long password (20+ characters) for the root user. All the password managers mentioned above
+  can generate and store passwords for you in one step, so use them!
+
+Enable MFA::
+  Make sure to
+  https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html#id_root-user_manage_mfa[enable MFA for your root user].
+  Feel free to use a virtual or hardware MFA device—whichever is easier or required by your company—as either one
+  dramatically improves the security of your root user.
+
+Disable access keys::
+  Make sure to
+  https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html#id_root-user_manage_delete-key[delete the root user's access keys],
+  so that the only way to login as the root user is via the web console, where MFA is required.
+
+Don't use the root user again::
+  In the next section, you will create an IAM user in the root account with admin permissions. Once you've created that
+  IAM user, you should do everything as that IAM user, and more or less never touch the root user account again.
+  The only time you'll need it is for account recovery situations (e.g., you accidentally deleted the IAM user or lost
+  your credentials) or for the
+  https://docs.aws.amazon.com/general/latest/gr/aws_tasks-that-require-root.html[small number of tasks that require root user credentials].
+
+[[create_iam_user_in_root]]
+=== Create an IAM user in the root account
+
+As the last action you do as the root user, you MUST create an IAM user. This is not only a better practice from a
+security standpoint, but also, the `account-baseline-xxx` modules we will use below assume IAM roles, which does not
+work with a root user. Later on, we'll create and manage all IAM users as code, but you should create this very first
+IAM user manually by
+https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html#id_users_create_console[following these instructions]:
+
+. Enter a username for your IAM user.
+. Select both "programmatic access" and "AWS Management Console access."
+. On the next page, click "Attach existing policies to user directly" and attach the `AdministratorAccess` policy.
+. Click next a few more times to create the IAM user.
+. In a secrets manager, save the IAM sign-in URL (it'll look something like
+  `https://<ACCOUNT_ID>.signin.aws.amazon.com/console`), your IAM user's username, the password, and your Access Keys.
+
+[[lock_down_iam_users]]
+=== Lock down the root account IAM users
+
+Although IAM users don't have the same powers as a root user, having an IAM user account compromised can still be a
+huge problem for your company (especially if that IAM user had admin permissions), so it's still critical to lock down
+IAM user accounts as much as possible:
+
+Use a secrets manager::
+  Do NOT store the credentials or any kind of secret in plain text. Instead, always use a secrets manager such as
+  https://1password.com[1Password], https://www.lastpass.com[LastPass], or https://www.passwordstore.org[pass] to store
+  the credentials in an encrypted format.
+
+Use a strong, generated password::
+  Do NOT re-use passwords from other websites, or any password that you can remember at all. Instead, generate a random,
+  cryptographically secure, long password (20+ characters). All the password managers mentioned above can generate and
+  store passwords for you in one step, so use them!
+
+Enable MFA::
+  Always make sure to
+  https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_mfa_enable.html[enable MFA for your IAM user].
+  Feel free to use a virtual or hardware MFA device—whichever is easier or required by your company—as either one
+  dramatically improves the security of your IAM user. Note that using SMS (text messages) for MFA is
+  https://www.schneier.com/blog/archives/2016/08/nist_is_no_long.html[no longer recommended by NIST] due to known
+  https://www.theverge.com/2017/9/18/16328172/sms-two-factor-authentication-hack-password-bitcoin[vulnerabilities with the cellular system],
+  so using a virtual or hardware MFA device is preferable; that said, MFA with SMS is still better than no MFA at all.
+
 === Apply the security baseline to the root account
 
-Next, we'll apply a security baseline to the root account that is responsible for configuring AWS Organizations, IAM Roles, IAM Users,
-IAM Groups, IAM Password Policies, Amazon GuardDuty, AWS CloudTrail and AWS Config including setting up the child accounts.
+Next, we'll apply a security baseline to the root account that is responsible for creating all the child accounts.
+It will also configure AWS Organizations, IAM Roles, IAM Users, IAM Groups, IAM Password Policies, Amazon GuardDuty,
+AWS CloudTrail and AWS Config.
 
 Let's first apply the security baseline by using the `account-baseline-root` module from https://github.com/gruntwork-io/module-security[module-security].
 
@@ -951,7 +1029,7 @@ terraform {
 
 Next, use the `account-baseline-root` module from the Gruntwork Infrastructure as Code Library, making sure to replace the `<VERSION>` placeholder
 with the latest version from the https://github.com/gruntwork-io/module-security/releases[releases page] (minimum
-version for this guide is `v0.34.1`):
+version for this guide is `v0.36.0`):
 
 .infrastructure-modules/landingzone/account-baseline-root/main.tf
 [source,hcl]
@@ -963,20 +1041,13 @@ module "root_baseline" {
   aws_region     = var.aws_region
   name_prefix    = var.name_prefix
 
-  child_accounts = var.child_accounts
-
+  # If you're running the example against an account that doesn't have AWS Organization created, change the following value to true
   create_organization = var.create_organization
 
-  enable_config                  = var.enable_config
-  config_should_create_s3_bucket = var.config_should_create_s3_bucket
-  config_s3_bucket_name          = var.config_s3_bucket_name
-  config_central_account_id      = var.config_central_account_id
+  # The child accounts to create
+  child_accounts = var.child_accounts
 
-  enable_cloudtrail                  = var.enable_cloudtrail
-  cloudtrail_s3_bucket_name          = var.cloudtrail_s3_bucket_name
-  cloudtrail_should_create_s3_bucket = var.cloudtrail_should_create_s3_bucket
-  cloudtrail_kms_key_arn             = var.cloudtrail_kms_key_arn
-
+  # IAM users to create in this account
   users = var.users
 }
 ----
@@ -992,12 +1063,12 @@ Create all the corresponding input variables for `account-baseline-root` in `var
 # ---------------------------------------------------------------------------------------------------------------------
 
 variable "name_prefix" {
-  description = "The name used to prefix AWS Config and CloudTrail resources, including the S3 bucket names and SNS topics used for each."
+  description = "The name used to prefix AWS Config and Cloudtrail resources, including the S3 bucket names and SNS topics used for each."
   type        = string
 }
 
 variable "aws_region" {
-  description = "The AWS Region to use as the global config recorder and seed region for GuardDuty."
+  description = "The AWS Region to use as the global config recorder and seed region for AWS GuardDuty."
   type        = string
 }
 
@@ -1006,13 +1077,8 @@ variable "aws_account_id" {
   type        = string
 }
 
-# ---------------------------------------------------------------------------------------------------------------------
-# REQUIRED ORGANIZATIONS PARAMETERS
-# These variables must be passed in by the operator.
-# ---------------------------------------------------------------------------------------------------------------------
-
 variable "child_accounts" {
-  description = "Map of child accounts to create. The map key is the name of the account and the value is an object containing account configuration variables."
+  description = "Map of child accounts to create. The map key is the name of the account and the value is an object containing account configuration variables. See the comments below for what keys and values this object should contain."
 
   # Ideally, this would be a map of (string, object), but object does not support optional properties, and we want
   # users to be able to specify, say, tags for some accounts, but not for others. We can't use a map(any) either, as that
@@ -1025,6 +1091,17 @@ variable "child_accounts" {
   #
   # - email (required):
   #   Email address for the account.
+  #
+  # - is_logs_account:
+  #   Set to `true` to mark this account as the "logs" account, which is the one to use to aggregate AWS Config and
+  #   CloudTrail data. This module will create an S3 bucket for AWS Config and an S3 bucket and KMS CMK for CloudTrail
+  #   in this child account, configure the root account to send all its AWS Config and CloudTrail data there, and return
+  #   the names of the buckets and ARN of the KMS CMK as output variables. When you apply account baselines to the
+  #   other child accounts (e.g., using the account-baseline-app or account-baseline-security modules), you'll want to
+  #   configure those accounts to send AWS Config and CloudTrail data to the same S3 buckets and use the same KMS CMK.
+  #   If is_logs_account is not set on any child account (not recommended!), then either you must disable AWS Config
+  #   and CloudTrail (via the enable_config and enable_cloudtrail variables) or configure this module to use S3 buckets
+  #   and a KMS CMK that ALREADY exist!
   #
   # - parent_id:
   #   Parent Organizational Unit ID or Root ID for the account
@@ -1042,6 +1119,17 @@ variable "child_accounts" {
   #   permissions. If set to ´DENY´, then only the root user of the new account can access account billing information.
   #   Defaults to ´default_iam_user_access_to_billing´.
   #
+  #
+  # - enable_config_rules:
+  #   Set to `true` to enable org-level AWS Config Rules for this child account. This is only used if
+  #   var.config_create_account_rules is false (which is NOT recommened) to force org-level rules. If you do go with
+  #   org-level rules, you can only set enable_config_rules to true after deploying a Config Recorder in the child
+  #   account. That means you have to: (1) initially set enable_config_rules to false, (2) run 'apply' in this root
+  #   module to create the child account, (3) go to the child account and create a config recorder in it, e.g., by
+  #   running 'apply' on a security baseline in that account, (4) come back to this root module and set
+  #   enable_config_rules to true, (5) run 'apply' again. This is a brittle, error-prone, multi-step process, which is
+  #   why we recommend using account-level rules (the default) and avoiding it entirely!
+  #
   # - tags:
   #   Key-value mapping of resource tags.
   #
@@ -1049,66 +1137,43 @@ variable "child_accounts" {
   # Example:
   #
   # child_accounts = {
+  #   logs = {
+  #     email                       = "root-accounts+logs@acme.com"
+  #     is_logs_account             = true
+  #   }
   #   security = {
-  #     email                       = "security-master@acme.com"
-  #     parent_id                   = "my-org-unit-id"
+  #     email                       = "root-accounts+security@acme.com"
   #     role_name                   = "OrganizationAccountAccessRole"
   #     iam_user_access_to_billing  = "DENY"
-  #     enable_config_rules         = true
   #     tags = {
   #       Tag-Key = "tag-value"
   #     }
-  #   },
-  #   sandbox = {
-  #     email                       = "sandbox@acme.com"
+  #   }
+  #   shared-services = {
+  #     email                       = "root-accounts+shared-services@acme.com"
+  #   }
+  #   dev = {
+  #     email                       = "root-accounts+dev@acme.com"
+  #   }
+  #   stage = {
+  #     email                       = "root-accounts+stage@acme.com"
+  #   }
+  #   prod = {
+  #     email                       = "root-accounts+prod@acme.com"
   #   }
   # }
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
-# OPTIONAL ORGANIZATIONS PARAMETERS
+# OPTIONAL MODULE PARAMETERS
 # These variables have defaults, but may be overridden by the operator.
 # ---------------------------------------------------------------------------------------------------------------------
 
 variable "create_organization" {
   description = "Set to true to create/configure AWS Organizations for the first time in this account. If you already configured AWS Organizations in your account, set this to false; alternatively, you could set it to true and run 'terraform import' to import you existing Organization."
   type        = bool
-  default     = true
-}
-
-# ---------------------------------------------------------------------------------------------------------------------
-# OPTIONAL CONFIG RULES PARAMETERS
-# These variables have reasonable defaults that can be overridden for further customizations.
-# ---------------------------------------------------------------------------------------------------------------------
-
-variable "enable_config" {
-  description = "Set to true to enable AWS Config in the root account. Set to false to disable AWS Config (note: all other AWS config variables will be ignored). Note that if you want to aggregate AWS Config data in an S3 bucket in a child account (e.g., a logs account), you MUST: (1) set this variable to false initially, as that S3 bucket doesn't exist yet in the child account, (2) run 'apply' to create the child account, (3) go to the child account and create the S3 bucket, e.g., by deploying a security baseline in that account, (4) come back to this root account and set this variable to true, and (5) run 'apply' again to enable AWS Config."
-  type        = bool
-  default     = true
-}
-
-variable "config_should_create_s3_bucket" {
-  description = "If true, create an S3 bucket of name var.config_s3_bucket_name for AWS Config data in this account. If false, assume var.config_s3_bucket_name is an S3 bucket in another AWS account. We recommend setting this to false and using an S3 bucket in a separate logs account. However, see the description of var.enable_config for the steps you have to take to make this work."
-  type        = bool
   default     = false
 }
-
-variable "config_s3_bucket_name" {
-  description = "The name of the S3 Bucket where Config items will be stored. This could be a bucket in this AWS account or the name of a bucket in another AWS account where Config items should be sent. We recommend the latter, setting this to the name of an S3 bucket in a separate logs account. However, see the description of var.enable_config for the steps you have to take to make this work."
-  type        = string
-  default     = null
-}
-
-variable "config_central_account_id" {
-  description = "If the S3 bucket and SNS topics used for AWS Config live in a different AWS account, set this variable to the ID of that account. If the S3 bucket and SNS topics live in this account, set this variable to null. We recommend storing AWS config data in a separate logs account and setting this variable to the ID of that account. However, see the description of var.enable_config for the steps you have to take to make this work."
-  type        = string
-  default     = null
-}
-
-# ---------------------------------------------------------------------------------------------------------------------
-# OPTIONAL USERS MODULE PARAMETERS
-# These variables have defaults, but may be overridden by the operator.
-# ---------------------------------------------------------------------------------------------------------------------
 
 variable "users" {
   description = "A map of users to create. The keys are the user names and the values are an object with the optional keys 'groups' (a list of IAM groups to add the user to), 'tags' (a map of tags to apply to the user), 'pgp_key' (either a base-64 encoded PGP public key, or a keybase username in the form keybase:username, used to encrypt the user's credentials; required if create_login_profile or create_access_keys is true), 'create_login_profile' (if set to true, create a password to login to the AWS Web Console), 'create_access_keys' (if set to true, create access keys for the user), 'path' (the path), and 'permissions_boundary' (the ARN of the policy that is used to set the permissions boundary for the user)."
@@ -1143,36 +1208,6 @@ variable "users" {
 
   default = {}
 }
-
-# ---------------------------------------------------------------------------------------------------------------------
-# OPTIONAL CLOUDTRAIL PARAMETERS
-# These variables must be passed in by the operator. In a real-world usage, some of these variables might not be needed
-# and you can instead inline the values directly in main.tf.
-# ---------------------------------------------------------------------------------------------------------------------
-
-variable "enable_cloudtrail" {
-  description = "Set to true to enable CloudTrail in the root account. Set to false to disable CloudTrail (note: all other CloudTrail variables will be ignored). Note that if you want to aggregate CloudTrail logs in an S3 bucket in a child account (e.g., a logs account), you MUST: (1) set this variable to false initially, as that S3 bucket doesn't exist yet in the child account, (2) run 'apply' to create the child account, (3) go to the child account and create the S3 bucket, e.g., by deploying a security baseline in that account, (4) come back to this root account and set this variable to true, and (5) run 'apply' again to enable CloudTrail."
-  type        = bool
-  default     = true
-}
-
-variable "cloudtrail_s3_bucket_name" {
-  description = "The name of the S3 Bucket where CloudTrail logs will be stored. This could be a bucket in this AWS account or the name of a bucket in another AWS account where CloudTrail logs should be sent. We recommend the latter, setting this to the name of an S3 bucket in a separate logs account. However, see the description of var.enable_cloudtrail for the steps you have to take to make this work."
-  type        = string
-  default     = null
-}
-
-variable "cloudtrail_should_create_s3_bucket" {
-  description = "If true, create an S3 bucket of name var.cloudtrail_s3_bucket_name for CloudTrail logs in this account. If false, assume var.cloudtrail_s3_bucket_name is an S3 bucket in another AWS account. We recommend setting this to false and using an S3 bucket in a separate logs account. However, see the description of var.enable_cloudtrail for the steps you have to take to make this work."
-  type        = bool
-  default     = false
-}
-
-variable "cloudtrail_kms_key_arn" {
-  description = "All CloudTrail Logs will be encrypted with a KMS CMK (Customer Master Key) that governs access to write API calls older than 7 days and all read API calls. If that CMK already exists, set this to the ARN of that CMK. Otherwise, set this to null, and a new CMK will be created. We recommend setting this to the ARN of a CMK that already exists in a separate logs account. However, see the description of var.enable_cloudtrail for the steps you have to take to make this work."
-  type        = string
-  default     = null
-}
 ----
 
 Finally, add some useful outputs in `outputs.tf`:
@@ -1180,6 +1215,39 @@ Finally, add some useful outputs in `outputs.tf`:
 .infrastructure-modules/landingzone/account-baseline-root/outputs.tf
 [source,hcl]
 ----
+# ---------------------------------------------------------------------------------------------------------------------
+# CONFIG OUTPUTS
+# ---------------------------------------------------------------------------------------------------------------------
+
+output "config_s3_bucket_name" {
+  description = "The name of the S3 bucket used by AWS Config to store configuration items."
+  value       = module.root_baseline.config_s3_bucket_name
+}
+
+output "config_s3_bucket_arn" {
+  description = "The ARN of the S3 bucket used by AWS Config to store configuration items."
+  value       = module.root_baseline.config_s3_bucket_arn
+}
+
+output "config_iam_role_arns" {
+  description = "The ARNs of the IAM role used by the config recorder."
+  value       = module.root_baseline.config_iam_role_arns
+}
+
+output "config_sns_topic_arns" {
+  description = "The ARNs of the SNS Topic used by the config notifications."
+  value       = module.root_baseline.config_sns_topic_arns
+}
+
+output "config_recorder_names" {
+  description = "The names of the configuration recorder."
+  value       = module.root_baseline.config_recorder_names
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
+# ORGANIZATIONS OUTPUTS
+# ---------------------------------------------------------------------------------------------------------------------
+
 output "organization_arn" {
   description = "ARN of the organization."
   value       = module.root_baseline.organization_arn
@@ -1205,25 +1273,49 @@ output "master_account_email" {
   value       = module.root_baseline.master_account_email
 }
 
-# See https://www.terraform.io/docs/providers/aws/r/organizations_organization.html#accounts for available attributes
-output "accounts" {
-  description = "List of organization accounts including the master account."
-  value       = module.root_baseline.accounts
+output "child_accounts" {
+  description = "A map of all accounts created by this module (NOT including the root account). The keys are the names of the accounts and the values are the attributes for the account as defined in the aws_organizations_account resource."
+  value       = module.root_baseline.child_accounts
 }
 
-# See https://www.terraform.io/docs/providers/aws/r/organizations_organization.html#non_master_accounts for available attributes
-output "non_master_accounts" {
-  description = "List of organization accounts excluding the master account."
-  value       = module.root_baseline.non_master_accounts
+# ---------------------------------------------------------------------------------------------------------------------
+# CLOUDTRAIL OUTPUTS
+# ---------------------------------------------------------------------------------------------------------------------
+
+output "cloudtrail_trail_arn" {
+  description = "The ARN of the cloudtrail trail."
+  value       = module.root_baseline.cloudtrail_trail_arn
 }
 
-# See https://www.terraform.io/docs/providers/aws/r/organizations_organization.html#roots for available attributes
-output "root_accounts" {
-  description = "List of organization roots."
-  value       = module.root_baseline.root_accounts
+output "cloudtrail_s3_bucket_name" {
+  description = "The name of the S3 bucket where cloudtrail logs are delivered."
+  value       = module.root_baseline.cloudtrail_s3_bucket_name
 }
 
-// Majority of the module outputs omitted in the example
+output "cloudtrail_s3_bucket_arn" {
+  description = "The ARN of the S3 bucket where cloudtrail logs are delivered."
+  value       = module.root_baseline.cloudtrail_s3_bucket_arn
+}
+
+output "cloudtrail_kms_key_arn" {
+  description = "The ARN of the KMS key used by the S3 bucket to encrypt cloudtrail logs."
+  value       = module.root_baseline.cloudtrail_kms_key_arn
+}
+
+output "cloudtrail_kms_key_alias_name" {
+  description = "The alias of the KMS key used by the S3 bucket to encrypt cloudtrail logs."
+  value       = module.root_baseline.cloudtrail_kms_key_alias_name
+}
+
+output "cloudtrail_iam_role_name" {
+  description = "The name of the IAM role used by the cloudwatch log group."
+  value       = module.root_baseline.cloudtrail_iam_role_name
+}
+
+output "cloudtrail_iam_role_arn" {
+  description = "The ARN of the IAM role used by the cloudwatch log group."
+  value       = module.root_baseline.cloudtrail_iam_role_arn
+}
 ----
 
 At this point, you'll want to test your code. See
@@ -1284,18 +1376,16 @@ inputs = {
   # If you've already created an AWS Organization in your root account, either run 'import' or set this variable to false
   create_organization = true
 
-  # We want to send AWS Config and CloudTrail data to the logs account, but on the first deploy, that account does not
-  # yet exist, so we have to temporarily disable AWS Config and CloudTrail.
-  enable_cloudtrail = false
-  enable_config     = false
-
   # The child AWS accounts to create in this AWS organization
   child_accounts = {
-    security = {
-      email = "root-accounts+security@acme.com",
-    },
     logs = {
-      email = "root-accounts+logs@acme.com",
+      email = "root-accounts+logs@acme.com"
+
+      # Mark this account as the logs account, used to aggregate all AWS Config and CloudTrail data.
+      is_logs_account = true
+    },
+    security = {
+      email = "root-accounts+security@acme.com"
     },
     shared-services = {
       email = "root-accounts+shared-services@acme.com"
@@ -1321,14 +1411,8 @@ inputs = {
       create_access_keys   = false
     },
     bob = {
-      groups               = ["full-access"]
-      pgp_key              = "keybase:bob"
-      create_login_profile = true
-      create_access_keys   = false
-    }
-    alice = {
       groups               = ["billing"]
-      pgp_key              = "keybase:carol"
+      pgp_key              = "keybase:bob"
       create_login_profile = true
       create_access_keys   = false
     }
@@ -1350,18 +1434,25 @@ The example code above does the following:
   `root-accounts+dev@your-company.com` as three unique email addresses, Gmail will see them all as the same email
   address, `root-accounts@your-company.com`.
 
-. **Disable AWS Config and CloudTrail for the first deployment**. We want to send all AWS Config and CloudTrail data to
-  the logs account, but that child account doesn't exist yet, so we need to initially disable AWS Config and
-  CloudTrail. We'll re-enable it later, after we've created and configured the logs account.
+. **Mark one of the child accounts as a logs account**. We set `is_logs_account = true` on one of the child accounts
+  to indicate it is the logs account where we will aggregate AWS Config and CloudTrail data from all the other accounts.
+  The `account-baseline-root` module will automatically create an S3 bucket for AWS Config and an S3 bucket and KMS CMK
+  for CloudTrail in this account and configure the root account to send all the AWS Config and CloudTrail data to these
+  S3 buckets. Later on, you'll configure all the other accounts to send their data to these S3 buckets too.
 
-. **Create IAM groups**. We create a `full-access` IAM group (for admins) and a `billing` IAM group (for the finance
-  team).
+. **Create IAM groups**. By default, `account-baseline-root` will create a `full-access` IAM group (for admins) and a
+  `billing` IAM group (for the finance team).
 
-. **Create IAM users**. For this example, we create `alice`, `bob`, and `carol`, adding `alice` and `bob` to the
-  `full-access` IAM group and `carol` to the `billing` IAM group. You should create an IAM user for yourself in the
-  `full-access` group, plus IAM users for the rest of your team in the appropriate groups.
+. **Create IAM users**. For this example, we create `alice` and `bob`, and carol, adding `alice` to the `full-access`
+  IAM group and `carol` to the `billing` IAM group. _Note_: your own IAM user (the one you created manually) should be
+  in the `users` list, and you should be able to manage it with Terraform by running the `import` command, but due to
+  a https://github.com/hashicorp/terraform/issues/13018[Terraform bug], running `import` with `account-baseline-root`
+  is not currently possible. So after this whole deployment process is done, you may wish to add a separate IAM user in
+  `users` for yourself, add that user to the `full-access` group, run `apply` to create the user, login as that user,
+  and delete the first IAM user that you created manually. It's a bit of an uglyl workaround, but it ensures all your
+  IAM users are managed as code.
 
-. **Generate a password for each user**. We encrypt this password with that user's PGP key from Keybase (we'll come
+. **Generate a password for each user**. We encrypt this password with that user’s PGP key from Keybase (we’ll come
   back to how to handle the passwords shortly).
 
 Pull in the https://www.terraform.io/docs/backends/[backend] settings from a root `terragrunt.hcl` file that you
@@ -1375,100 +1466,109 @@ include {
 }
 ----
 
-https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html#id_root-user_manage_add-key[Create a set of access keys for your root user]
-and https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[use those access keys to authenticate on the CLI].
-Finally, deploy the `account-baseline` module by running `terragrunt apply`:
+Next, you need to authenticate as your IAM user in the root account. There are
+https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[multiple ways to authenticate to AWS on the CLI];
+in this guide, we'll use the open source tool https://github.com/99designs/aws-vault[aws-vault].
+https://github.com/99designs/aws-vault#installing[Install aws-vault] and add the Access Keys you saved earlier to it:
+
+[source,bash]
+----
+$ aws-vault add root-iam-user
+Enter Access Key Id: XXXXXXXXXXXX
+Enter Secret Key: YYYYYYYYYYYY
+----
+
+Next, https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html[install the AWS CLI], and check that
+authentication is working:
+
+[source,bash]
+----
+aws-vault exec root-iam-user -- aws sts get-caller-identity
+----
+
+You should get JSON output with information about your IAM user:
+
+[source,json]
+----
+{
+  "UserId": "AIDAXXXXXXXXXXXX",
+  "Account": "<ROOT_ACCOUNT_ID>",
+  "Arn": "arn:aws:iam::<ROOT_ACCOUNT_ID>:user/<YOUR_IAM_USER>"
+}
+----
+
+You're now ready to deploy the `account-baseline` module in the root account by running `terragrunt apply`:
 
 [source,bash]
 ----
 cd infrastructure-live/root/_global/account-baseline
-terragrunt apply -parallelism=4
+aws-vault exec root-iam-user -- terragrunt apply -parallelism=2
 ----
 
-IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=4`) with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors. On some operating systems, such as MacOS, you may also need to increase your open files limit to avoid `Error: pipe: too many open files` errors by running: `ulimit -n 1024`.
+IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=2`) with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors. On some operating systems, such as MacOS, you may also need to increase your open files limit to avoid `Error: pipe: too many open files` errors by running: `ulimit -n 1024`.
 
-After `apply` completes, the module will output the encrypted passwords for `alice`, `bob`, and `carol`:
+Once `apply` completes, you should see output variables with all of your account IDs, the name of the AWS Config S3
+bucket, the name of the CloudTrail S3 bucket, and the ARN of the CloudTrail KMS key:
+
+[source,hcl]
+----
+# (this output has been edited to be easier to read)
+child_accounts = {
+  "dev" = {
+    "email" = "root-accounts+dev@acme.com"
+    "id" = "<DEV_ACCOUNT_ID>"
+    # (...)
+  }
+  "logs" = {
+    "email" = "root-accounts+logs@acme.com"
+    "id" = "<LOGS_ACCOUNT_ID>"
+    # (...)
+  }
+  "prod" = {
+    "email" = "root-accounts+prod@acme.com"
+    "id" = "<LOGS_ACCOUNT_ID>"
+    # (...)
+  }
+  "security" = {
+    "email" = "root-accounts+security@acme.com"
+    "id" = "<SECURITY_ACCOUNT_ID>"
+    # (...)
+  }
+  "shared-services" = {
+    "email" = "root-accounts+shared-services@acme.com"
+    "id" = "<SHARED_SERVICES_ACCOUNT_ID>"
+    # (...)
+  }
+  "stage" = {
+    "email" = "root-accounts+stage@acme.com"
+    "id" = "<STAGE_ACCOUNT_ID>"
+    # (...)
+  }
+}
+cloudtrail_kms_key_arn    = "<CLOUDTRAIL_KMS_KEY_ARN>"
+cloudtrail_s3_bucket_name = "<CLOUDTRAIL_BUCKET_NAME>"
+config_s3_bucket_name     = "<CONFIG_BUCKET_NAME>"
+----
+
+Take note of all of this data, as you'll need it again shortly!
+
+One other useful output will be the encrypted passwords for any IAM users you created:
 
 [source,hcl]
 ----
 user_passwords = {
   "alice" = "wcBMA7E6Kn/t1YPfAQgAVSXlUzumcs4UyO8E5q099YnnU="
   "bob" = "wcBMA7E6Kn/t1YPfAQgACgbdb1mYtQx7EL4hnVWtYAi="
-  "carol" = "wcBMA7E6Kn/t1YPfAQgACgbdb1mYtQx7EL4hnVWtYAi="
 }
 ----
 
-Send the encrypted password to each user, along with their user name, and the IAM user sign-in URL for the account. Each
-user can then decrypt the password on their own computer (which should have their PGP key) as follows:
+Send the encrypted password to each user, along with their user name, and the IAM user sign-in URL for the root account.
+Each user can then decrypt the password on their own computer (which should have their PGP key) as follows:
 
 [source,bash]
 ----
 echo "<PASSWORD>" | base64 --decode | keybase pgp decrypt
 ----
-
-One of the other useful piece of information you'll find once `apply` completes is the `accounts` output variable,
-which will list the account IDs for each of the child accounts that were created. Take note of these account IDs, as
-you'll need them shortly!
-
-[[lock_down_root_user]]
-=== Lock down the root account root user
-
-The root user has unrestricted access to just about everything in your AWS account (and any child accounts), so if an attacker compromises
-your root user, the results can be catastrophic for your company. Now that you have IAM users in the root account, it's time to lock down
-the root user as much as possible:
-
-Use a secrets manager::
-  Do NOT store the root user's password, or secrets of any kind, in plain text. Instead, always use a secrets manager
-  such as https://1password.com[1Password], https://www.lastpass.com[LastPass], or https://www.passwordstore.org[pass]
-  to store the credentials in an encrypted format.
-
-Use a strong, generated password::
-  Do NOT re-use passwords from other websites, or any password that you can remember at all. Instead, generate a random,
-  cryptographically secure, long password (20+ characters) for the root user. All the password managers mentioned above
-  can generate and store passwords for you in one step, so use them!
-
-Enable MFA::
-  Make sure to
-  https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html#id_root-user_manage_mfa[enable MFA for your root user].
-  Feel free to use a virtual or hardware MFA device—whichever is easier or required by your company—as either one
-  dramatically improves the security of your root user.
-
-Disable access keys::
-  Make sure to
-  https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html#id_root-user_manage_delete-key[delete the root user's access keys],
-  so that the only way to login as the root user is via the web console, where MFA is required.
-
-Don't use the root user again::
-  From here on out, you should only use the IAM user account, and more or less never touch the root user account again.
-  The only time you'll need it is for account recovery situations (e.g., you accidentally deleted the IAM user or lost
-  your credentials) or for the
-  https://docs.aws.amazon.com/general/latest/gr/aws_tasks-that-require-root.html[small number of tasks that require root user credentials].
-
-[[lock_down_iam_users]]
-=== Lock down the root account IAM users
-
-Although IAM users don't have the same powers as a root user, having an IAM user account compromised can still be a
-huge problem for your company (especially if that IAM user had admin permissions), so it's still critical to lock down
-IAM user accounts as much as possible:
-
-Use a secrets manager::
-  Do NOT store the credentials or any kind of secret in plain text. Instead, always use a secrets manager such as
-  https://1password.com[1Password], https://www.lastpass.com[LastPass], or https://www.passwordstore.org[pass] to store
-  the credentials in an encrypted format.
-
-Use a strong, generated password::
-  Do NOT re-use passwords from other websites, or any password that you can remember at all. Instead, generate a random,
-  cryptographically secure, long password (20+ characters). All the password managers mentioned above can generate and
-  store passwords for you in one step, so use them!
-
-Enable MFA::
-  Always make sure to
-  https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_mfa_enable.html[enable MFA for your IAM user].
-  Feel free to use a virtual or hardware MFA device—whichever is easier or required by your company—as either one
-  dramatically improves the security of your IAM user. Note that using SMS (text messages) for MFA is
-  https://www.schneier.com/blog/archives/2016/08/nist_is_no_long.html[no longer recommended by NIST] due to known
-  https://www.theverge.com/2017/9/18/16328172/sms-two-factor-authentication-hack-password-bitcoin[vulnerabilities with the cellular system],
-  so using a virtual or hardware MFA device is preferable; that said, MFA with SMS is still better than no MFA at all.
 
 === Reset the root user password in each child account
 
@@ -1482,11 +1582,16 @@ Use this process to reset the password for the root user of each child account y
 user in each account, you can configure IAM users, IAM groups, and IAM roles in those accounts, as described in the
 next couple sections.
 
+=== Lock down the root user in the child accounts
+
+Once you're able to access the root user of each child account, you should follow the steps in <<lock_down_root_user>>
+for each of those child accounts—including enabling MFA and deleting the root user's access keys—and (almost) never use
+those root users again.
+
 === Apply the security baseline to the logs account
 
-The next step is to configure the logs account. All the other accounts will send their AWS Config and CloudTrail data
-to the logs account, so we need to create the S3 buckets and KMS CMKs early on. To do this, create a new module called
-`account-baseline-app`  in your `infrastructure-modules` repo:
+The next step is to configure the logs account, which is used to aggregate AWS Config and CloudTrail data from all the
+other accountss. To do this, create a new module called `account-baseline-app`  in your `infrastructure-modules` repo:
 
 ----
 infrastructure-modules
@@ -1527,7 +1632,7 @@ terraform {
 
 Next, use the `account-baseline-app` module from the Gruntwork Infrastructure as Code Library, making sure to replace the `<VERSION>` placeholder
 with the latest version from the https://github.com/gruntwork-io/module-security/releases[releases page] (minimum
-version for this guide is `v0.34.1`):
+version for this guide is `v0.36.0`):
 
 .infrastructure-modules/landingzone/account-baseline-app/main.tf
 [source,hcl]
@@ -1539,17 +1644,16 @@ module "security_baseline" {
   aws_region     = var.aws_region
   aws_account_id = var.aws_account_id
 
-  config_s3_bucket_name          = var.config_s3_bucket_name
-  config_should_create_s3_bucket = var.config_should_create_s3_bucket
-  config_linked_accounts         = var.config_linked_accounts
-  config_central_account_id      = var.config_central_account_id
+  # We assume the S3 bucket for AWS Config has already been created by account-baseline-root
+  config_should_create_s3_bucket                   = false
+  config_s3_bucket_name                            = var.config_s3_bucket_name
+  config_central_account_id                        = var.config_central_account_id
+  config_aggregate_config_data_in_external_account = var.config_aggregate_config_data_in_external_account
 
-  cloudtrail_s3_bucket_name                             = var.cloudtrail_s3_bucket_name
-  cloudtrail_s3_bucket_already_exists                   = var.cloudtrail_s3_bucket_already_exists
-  cloudtrail_kms_key_arn                                = var.cloudtrail_kms_key_arn
-  cloudtrail_kms_key_administrator_iam_arns             = var.cloudtrail_kms_key_administrator_iam_arns
-  cloudtrail_kms_key_user_iam_arns                      = var.cloudtrail_kms_key_user_iam_arns
-  cloudtrail_external_aws_account_ids_with_write_access = var.cloudtrail_external_aws_account_ids_with_write_access
+  # We assume the S3 bucket and KMS key for CloudTrail have already been created by account-baseline-root
+  cloudtrail_s3_bucket_already_exists   = true
+  cloudtrail_kms_key_arn                = var.cloudtrail_kms_key_arn
+  cloudtrail_s3_bucket_name             = var.cloudtrail_s3_bucket_name
 
   dev_permitted_services  = var.dev_permitted_services
   auto_deploy_permissions = var.auto_deploy_permissions
@@ -1589,32 +1693,33 @@ variable "aws_account_id" {
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
-# OPTIONAL CONFIG PARAMETERS
+# OPTIONAL PARAMETERS
 # These variables have reasonable defaults that can be overridden for further customizations.
 # ---------------------------------------------------------------------------------------------------------------------
 
-variable "config_should_create_s3_bucket" {
-  description = "Set to true to create an S3 bucket of name var.config_s3_bucket_name in this account for storing AWS Config data (e.g., if this is the logs account). Set to false to assume the bucket specified in var.config_s3_bucket_name already exists in another AWS account (e.g., if this is the stage or prod account and var.config_s3_bucket_name is the name of a bucket in the logs account)."
-  type        = bool
-  default     = false
+variable "cloudtrail_s3_bucket_name" {
+  description = "The name of the S3 Bucket where CloudTrail logs will be stored. This could be a bucket in this AWS account (e.g., if this is the logs account) or the name of a bucket in another AWS account where logs should be sent (e.g., if this is the stage or prod account and you're specifying the name of a bucket in the logs account)."
+  type        = string
 }
 
 variable "config_s3_bucket_name" {
-  description = "The name of the S3 Bucket where Config items will be stored. Can be in the same account or in another account."
+  description = "The name of the S3 Bucket where Config items will be stored. This could be a bucket in this AWS account (e.g., if this is the logs account) or the name of a bucket in another AWS account where Config items should be sent (e.g., if this is the stage or prod account and you're specifying the name of a bucket in the logs account)."
   type        = string
-  default     = null
 }
 
-variable "config_linked_accounts" {
-  description = "Provide a list of AWS account IDs that will be allowed to send AWS Config data to this account. This is only required if you are aggregating config data in this account (e.g., this is the logs account) from other accounts."
-  type        = list(string)
-  default     = []
+variable "config_aggregate_config_data_in_external_account" {
+  description = "Set to true to send the AWS Config data to another account (e.g., a logs account) for aggregation purposes. You must set the ID of that other account via the config_central_account_id variable. This redundant variable has to exist because Terraform does not allow computed data in count and for_each parameters and var.config_central_account_id may be computed if its the ID of a newly-created AWS account."
+  type        = bool
 }
 
 variable "config_central_account_id" {
-  description = "If the S3 bucket and SNS topics used for AWS Config live in a different AWS account, set this variable to the ID of that account (e.g., if this is the stage or prod account, set this to the ID of the logs account). If the S3 bucket and SNS topics live in this account (e.g., this is the logs account), set this variable to null."
+  description = "If the S3 bucket and SNS topics used for AWS Config live in a different AWS account, set this variable to the ID of that account (e.g., if this is the stage or prod account, set this to the ID of the logs account). If the S3 bucket and SNS topics live in this account (e.g., this is the logs account), set this variable to null. Only used if config_aggregate_config_data_in_external_account is true."
   type        = string
-  default     = null
+}
+
+variable "cloudtrail_kms_key_arn" {
+  description = "All CloudTrail Logs will be encrypted with a KMS CMK (Customer Master Key) that governs access to write API calls older than 7 days and all read API calls. If that CMK already exists (e.g., if this is the stage or prod account and you want to use a CMK that already exists in the logs account), set this to the ARN of that CMK. Otherwise (e.g., if this is the logs account), set this to null, and a new CMK will be created."
+  type        = string
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -1693,50 +1798,6 @@ variable "auto_deploy_permissions" {
   type        = list(string)
   default     = []
 }
-
-# ---------------------------------------------------------------------------------------------------------------------
-# OPTIONAL CLOUDTRAIL PARAMETERS
-# These variables must be passed in by the operator. In a real-world usage, some of these variables might not be needed
-# and you can instead inline the values directly in main.tf.
-# ---------------------------------------------------------------------------------------------------------------------
-
-variable "cloudtrail_kms_key_arn" {
-  description = "All CloudTrail Logs will be encrypted with a KMS CMK (Customer Master Key) that governs access to write API calls older than 7 days and all read API calls. If that CMK already exists (e.g., if this is the stage or prod account and you want to use a CMK that already exists in the logs account), set this to the ARN of that CMK. Otherwise (e.g., if this is the logs account), set this to null, and a new CMK will be created."
-  type        = string
-  default     = null
-}
-
-variable "cloudtrail_s3_bucket_name" {
-  description = "The name of the S3 Bucket where CloudTrail logs will be stored. This could be a bucket in this AWS account (e.g., if this is the logs account) or the name of a bucket in another AWS account where logs should be sent (e.g., if this is the stage or prod account and you're specifying the name of a bucket in the logs account)."
-  type        = string
-  default     = null
-}
-
-variable "cloudtrail_kms_key_administrator_iam_arns" {
-  description = "All CloudTrail Logs will be encrypted with a KMS CMK (Customer Master Key) that governs access to write API calls older than 7 days and all read API calls. If you are aggregating CloudTrail logs and creating the CMK in this account (e.g., if this is the logs account), you MUST specify at least one IAM user (or other IAM ARN) that will be given administrator permissions for CMK, including the ability to change who can access this CMK and the extended log data it protects. If you are aggregating CloudTrail logs in another AWS account and the CMK already exists (e.g., if this is the stage or prod account), set this parameter to an empty list."
-  type        = list(string)
-  # example = ["arn:aws:iam::<aws-account-id>:user/<iam-user-name>"]
-  default = []
-}
-
-variable "cloudtrail_kms_key_user_iam_arns" {
-  description = "All CloudTrail Logs will be encrypted with a KMS CMK (Customer Master Key) that governs access to write API calls older than 7 days and all read API calls. If you are aggregating CloudTrail logs and creating the CMK in this account (e.g., this is the logs account), you MUST specify at least one IAM user (or other IAM ARN) that will be given user access to this CMK, which will allow this user to read CloudTrail Logs. If you are aggregating CloudTrail logs in another AWS account and the CMK already exists, set this parameter to an empty list (e.g., if this is the stage or prod account)."
-  type        = list(string)
-  # example = ["arn:aws:iam::<aws-account-id>:user/<iam-user-name>"]
-  default = []
-}
-
-variable "cloudtrail_s3_bucket_already_exists" {
-  description = "Set to false to create an S3 bucket of name var.cloudtrail_s3_bucket_name in this account for storing CloudTrail logs (e.g., if this is the logs account). Set to true to assume the bucket specified in var.cloudtrail_s3_bucket_name already exists in another AWS account (e.g., if this is the stage or prod account and var.cloudtrail_s3_bucket_name is the name of a bucket in the logs account)."
-  type        = bool
-  default     = true
-}
-
-variable "cloudtrail_external_aws_account_ids_with_write_access" {
-  description = "Provide a list of AWS account IDs that will be allowed to send CloudTrail logs to this account. This is only required if you are aggregating CloudTrail logs in this account (e.g., this is the logs account) from other accounts."
-  type        = list(string)
-  default     = []
-}
 ----
 
 At this point, you'll want to test your code. See
@@ -1789,38 +1850,14 @@ inputs = {
   # Prefix all resources with this name
   name_prefix    = "<COMPANY_NAME>-logs"
 
-  # Create an S3 bucket that can be used to aggregate CloudTrail logs from all your AWS accounts
-  cloudtrail_s3_bucket_name             = "<COMPANY_NAME>-logs-cloudtrail-bucket"
-  cloudtrail_s3_bucket_already_exists   = false
+  # Use the S3 bucket and KMS key that were already created in this logs account by account-baseline-root
+  cloudtrail_kms_key_arn    = "<CLOUDTRAIL_KMS_KEY_ARN>"
+  cloudtrail_s3_bucket_name = "<CLOUDTRAIL_BUCKET_NAME>"
 
-  # Create a KMS master key that can be used to encrypt CloudTrail data. Make the logs account the admin/user of this key.
-  # In practice, this means you can use IAM policies in the logs account to specify who has access to this key.
-  cloudtrail_kms_key_administrator_iam_arns = ["arn:aws:iam::<LOGS_ACCOUNT_ID>:root"]
-  cloudtrail_kms_key_user_iam_arns          = ["arn:aws:iam::<LOGS_ACCOUNT_ID>:root"]
-
-  # Specify all the IDs of all AWS accounts that should be allowed to write CloudTrail logs to the S3 bucket in this account
-  cloudtrail_external_aws_account_ids_with_write_access = [
-    "<ROOT_ACCOUNT_ID>",
-    "<SECURITY_ACCOUNT_ID>",
-    "<DEV_ACCOUNT_ID>",
-    "<STAGE_ACCOUNT_ID>",
-    "<PROD_ACCOUNT_ID>",
-    "<SHARED_SERVICES_ACCOUNT_ID>",
-  ]
-
-  # Create an S3 bucket that can be used to aggregate AWS Config data from all your AWS accounts
-  config_s3_bucket_name          = "<COMPANY_NAME>-logs-config-bucket"
-  config_should_create_s3_bucket = true
-
-  # Specify all the IDs of all AWS accounts that should be allowed to write AWS Config data to the S3 bucket in this account
-  config_linked_accounts = [
-    "<ROOT_ACCOUNT_ID>",
-    "<SECURITY_ACCOUNT_ID>",
-    "<DEV_ACCOUNT_ID>",
-    "<STAGE_ACCOUNT_ID>",
-    "<PROD_ACCOUNT_ID>",
-    "<SHARED_SERVICES_ACCOUNT_ID>",
-  ]
+  # Use the S3 bucket that was already created in this logs account by account-baseline-root
+  config_s3_bucket_name                            = "<CONFIG_BUCKET_NAME>"
+  config_aggregate_config_data_in_external_account = false
+  config_central_account_id                        = null
 
   # Allow users in the security account to assume IAM roles in this account
   allow_full_access_from_other_account_arns      = ["arn:aws:iam::<SECURITY_ACCOUNT_ID>:root"]
@@ -1831,11 +1868,11 @@ inputs = {
 
 The example above configures the logs account of an AWS Organization as follows:
 
-. **Aggregate CloudTrail Logs**: We create an S3 bucket and a KMS CMK and grant all accounts permissions to encrypt
-  their CloudTrail logs with the CMK and store those logs in the S3 bucket.
+. **Aggregate CloudTrail Logs**: We configure the logs account to use the S3 bucket and KMS CMK for CloudTrail that
+  were already created by `account-baseline-root`.
 
-. **Aggregate AWS Config**: We create another S3 bucket and grant all accounts permissions to use this bucket to store
-  AWS Config data.
+. **Aggregate AWS Config**: We configure the logs account to use the S3 bucket for AWS Config that was already
+  created by `account-baseline-root`.
 
 . **Allow access from the security account**: We configure IAM roles that IAM users in the security account will be
   able to assume to get access to the logs account.
@@ -1850,21 +1887,61 @@ include {
 }
 ----
 
-https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html#id_root-user_manage_add-key[Create a set of access keys for the root user in the logs account]
-and https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[use those access keys to authenticate on the CLI].
-Finally, deploy the `account-baseline` module by running `terragrunt apply`:
+You're now going to use an IAM role to authenticate to the logs account. This IAM role is created automatically in each
+child account by `account-baseline-root` and has a default name of `OrganizationAccountAccessRole`. There are many ways
+to https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[assume an IAM role on the CLI];
+for this guide, we're going to keep using `aws-vault`.
+
+Open up `~/.aws/config` and you should see a `profile` that was created automatically when you ran
+`aws-vault add root-iam-user`  earlier:
+
+[source]
+----
+[profile root-iam-user]
+----
+
+Add a new `profile` entry in `~/.aws/config` for your logs account that uses the `root-iam-user` as the
+`source_profile`:
+
+[source]
+----
+[profile logs-from-root]
+role_arn=arn:aws:iam::<LOGS_ACCOUNT_ID>:role/OrganizationAccountAccessRole
+source_profile=root-iam-user
+----
+
+Check that you're able to authenticate to the logs account:
+
+[source,bash]
+----
+aws-vault exec logs-from-root -- aws sts get-caller-identity
+----
+
+You should see JSON output indicating that you've successfully assumed an IAM role:
+
+[source,json]
+----
+{
+  "UserId": "AIDAXXXXXXXXXXXX:1597932316055520000",
+  "Account": "<LOGS_ACCOUNT_ID>",
+  "Arn": "arn:aws:sts::<LOGS_ACCOUNT_ID>:assumed-role/OrganizationAccountAccessRole/1597932316055520000"
+}
+----
+
+You're now ready to deploy the `account-baseline` module in the logs account by running `terragrunt apply`:
 
 [source,bash]
 ----
 cd infrastructure-live/logs/_global/account-baseline
-terragrunt apply -parallelism=4
+aws-vault exec logs-from-root -- terragrunt apply -parallelism=2
 ----
 
-IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=4`) with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors. On some operating systems, such as MacOS, you may also need to increase your open files limit to avoid `Error: pipe: too many open files` errors by running: `ulimit -n 1024`.
+IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=2`) with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors. On some operating systems, such as MacOS, you may also need to increase your open files limit to avoid `Error: pipe: too many open files` errors by running: `ulimit -n 1024`.
 
 === Apply the security baseline to the security account
 
-Now that your logs accounts is fully configured, you need to apply the security baseline to the security account.
+Now that your logs accounts is fully configured, you need to apply the security baseline to the security account, which
+is where all your IAM users and groups will be defined and managed.
 
 Create a new module called `account-baseline-security` in your `infrastructure-modules` repo:
 
@@ -1908,7 +1985,7 @@ terraform {
 
 Next, use the `account-baseline-security` module from the Gruntwork Infrastructure as Code Library, making sure to replace the `<VERSION>` placeholder
 with the latest version from the https://github.com/gruntwork-io/module-security/releases[releases page] (minimum
-version for this guide is `v0.34.1`):
+version for this guide is `v0.36.0`):
 
 .infrastructure-modules/landingzone/account-baseline-security/main.tf
 [source,hcl]
@@ -1920,13 +1997,16 @@ module "security_baseline" {
   aws_region     = var.aws_region
   aws_account_id = var.aws_account_id
 
-  config_should_create_s3_bucket = var.config_should_create_s3_bucket
-  config_s3_bucket_name          = var.config_s3_bucket_name
-  config_central_account_id      = var.config_central_account_id
+  # We assume the S3 bucket for AWS Config has already been created by account-baseline-root
+  config_should_create_s3_bucket                   = false
+  config_s3_bucket_name                            = var.config_s3_bucket_name
+  config_central_account_id                        = var.config_central_account_id
+  config_aggregate_config_data_in_external_account = true
 
-  cloudtrail_s3_bucket_name           = var.cloudtrail_s3_bucket_name
-  cloudtrail_s3_bucket_already_exists = var.cloudtrail_s3_bucket_already_exists
+  # We assume the S3 bucket and KMS key for CloudTrail have already been created by account-baseline-root
+  cloudtrail_s3_bucket_already_exists = true
   cloudtrail_kms_key_arn              = var.cloudtrail_kms_key_arn
+  cloudtrail_s3_bucket_name           = var.cloudtrail_s3_bucket_name
 
   iam_groups_for_cross_account_access            = var.iam_groups_for_cross_account_access
   cross_account_access_all_group_name            = var.cross_account_access_all_group_name
@@ -1986,27 +2066,24 @@ variable "aws_account_id" {
   type        = string
 }
 
-# ---------------------------------------------------------------------------------------------------------------------
-# OPTIONAL CONFIG PARAMETERS
-# These variables have reasonable defaults that can be overridden for further customizations.
-# ---------------------------------------------------------------------------------------------------------------------
-
-variable "config_should_create_s3_bucket" {
-  description = "Set to true to create an S3 bucket of name var.config_s3_bucket_name in this account for storing AWS Config data. Set to false to assume the bucket specified in var.config_s3_bucket_name already exists in another AWS account. We recommend setting this to false and setting var.config_s3_bucket_name to the name off an S3 bucket that already exists in a separate logs account."
-  type        = bool
-  default     = false
-}
-
 variable "config_s3_bucket_name" {
-  description = "The name of the S3 Bucket where CloudTrail logs will be stored. This could be a bucket in this AWS account or the name of a bucket in another AWS account where logs should be sent. We recommend setting this to the name of a bucket in a separate logs account."
+  description = "The name of the S3 Bucket where Config items will be stored. This could be a bucket in this AWS account or the name of a bucket in another AWS account where Config items should be sent. We recommend setting this to the name of an S3 bucket in a separate logs account."
   type        = string
-  default     = null
 }
 
 variable "config_central_account_id" {
   description = "If the S3 bucket and SNS topics used for AWS Config live in a different AWS account, set this variable to the ID of that account. If the S3 bucket and SNS topics live in this account, set this variable to null. We recommend setting this to the ID of a separate logs account."
   type        = string
-  default     = null
+}
+
+variable "cloudtrail_s3_bucket_name" {
+  description = "The name of the S3 Bucket where CloudTrail logs will be stored. This could be a bucket in this AWS account or the name of a bucket in another AWS account where logs should be sent. We recommend setting this to the name of a bucket in a separate logs account."
+  type        = string
+}
+
+variable "cloudtrail_kms_key_arn" {
+  description = "All CloudTrail Logs will be encrypted with a KMS CMK (Customer Master Key) that governs access to write API calls older than 7 days and all read API calls. If that CMK already exists, set this to the ARN of that CMK. Otherwise, set this to null, and a new CMK will be created. We recommend setting this to the ARN of a CMK that already exists in a separate logs account."
+  type        = string
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -2237,30 +2314,6 @@ variable "allow_ssh_grunt_access_from_other_account_arns" {
   #   "arn:aws:iam::123445678910:root"
   # ]
 }
-
-# ---------------------------------------------------------------------------------------------------------------------
-# OPTIONAL CLOUDTRAIL PARAMETERS
-# These variables must be passed in by the operator. In a real-world usage, some of these variables might not be needed
-# and you can instead inline the values directly in main.tf.
-# ---------------------------------------------------------------------------------------------------------------------
-
-variable "cloudtrail_s3_bucket_name" {
-  description = "The name of the S3 Bucket where CloudTrail logs will be stored. If value is `null`, defaults to `var.name_prefix`-cloudtrail"
-  type        = string
-  default     = null
-}
-
-variable "cloudtrail_s3_bucket_already_exists" {
-  description = "Set to false to create an S3 bucket of name var.cloudtrail_s3_bucket_name in this account for storing CloudTrail logs. Set to true to assume the bucket specified in var.cloudtrail_s3_bucket_name already exists in another AWS account. We recommend setting this to true and setting var.cloudtrail_s3_bucket_name to the name of a bucket that already exists in a separate logs account."
-  type        = bool
-  default     = false
-}
-
-variable "cloudtrail_kms_key_arn" {
-  description = "All CloudTrail Logs will be encrypted with a KMS CMK (Customer Master Key) that governs access to write API calls older than 7 days and all read API calls. If that CMK already exists, set this to the ARN of that CMK. Otherwise, set this to null, and a new CMK will be created. We recommend setting this to the ARN of a CMK that already exists in a separate logs account."
-  type        = string
-  default     = null
-}
 ----
 
 Finally, add some useful outputs in `outputs.tf`:
@@ -2335,16 +2388,13 @@ inputs = {
   # Prefix all resources with this name
   name_prefix = "<COMPANY_NAME>-security"
 
-  # Enable AWS Config and configure it to send data to the S3 bucket in the logs account
-  config_s3_bucket_name          = "<COMPANY_NAME>-logs-config-bucket"
-  config_should_create_s3_bucket = false
-  config_central_account_id      = "<LOGS_ACCOUNT_ID>"
+  # Use the S3 bucket and KMS key that were already created in this logs account by account-baseline-root
+  cloudtrail_kms_key_arn    = "<CLOUDTRAIL_KMS_KEY_ARN>"
+  cloudtrail_s3_bucket_name = "<CLOUDTRAIL_BUCKET_NAME>"
 
-  # Enable CloudTrail and configure it to send logs to the S3 bucket in the logs account
-  cloudtrail_s3_bucket_name             = "<COMPANY_NAME>-logs-cloudtrail-bucket"
-  cloudtrail_s3_bucket_already_exists   = true
-  cloudtrail_kms_key_arn                = "arn:aws:kms:us-east-2:<LOGS_ACCOUNT_ID>:key/<ID_OF_KMS_CMK_IN_LOGS_ACCOUNT>"
-  cloudtrail_cloudwatch_logs_group_name = "<COMPANY_NAME>-cloudtrail-logs"
+  # Use the S3 bucket that was already created in this logs account by account-baseline-root
+  config_s3_bucket_name     = "<CONFIG_BUCKET_NAME>"
+  config_central_account_id = "<LOGS_ACCOUNT_ID>"
 
   # Enable the IAM groups you want
   should_create_iam_group_full_access    = true
@@ -2442,20 +2492,52 @@ include {
 }
 ----
 
-https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html#id_root-user_manage_add-key[Create a set of access keys for the root user in the security account]
-and https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[use those access keys to authenticate on the CLI].
-Finally, deploy the `account-baseline` module by running `terragrunt apply`:
+Just as with the logs account, you're going to use the `OrganizationAccountAccessRole` IAM role created by
+`account-baseline-root` to authenticate to the security account. There are many ways to
+https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[assume an IAM role on the CLI];
+for this guide, we're going to keep using `aws-vault`.
+
+Add a new `profile` entry in `~/.aws/config` for your security account that uses the `root-iam-user` as the
+`source_profile`:
+
+[source]
+----
+[profile security-from-root]
+role_arn=arn:aws:iam::<SECURITY_ACCOUNT_ID>:role/OrganizationAccountAccessRole
+source_profile=root-iam-user
+----
+
+Check that you're able to authenticate to the security account:
+
+[source,bash]
+----
+aws-vault exec security-from-root -- aws sts get-caller-identity
+----
+
+You should see JSON output indicating that you've successfully assumed an IAM role:
+
+[source,json]
+----
+{
+  "UserId": "AIDAXXXXXXXXXXXX:1597932316055520000",
+  "Account": "<SECURITY_ACCOUNT_ID>",
+  "Arn": "arn:aws:sts::<SECURITY_ACCOUNT_ID>:assumed-role/OrganizationAccountAccessRole/1597932316055520000"
+}
+----
+
+You're now ready to deploy the `account-baseline` module in the security account by running `terragrunt apply`:
 
 [source,bash]
 ----
 cd infrastructure-live/security/_global/account-baseline
-terragrunt apply -parallelism=4
+aws-vault exec security-from-root -- terragrunt apply -parallelism=2
 ----
 
-IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=4`) with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors. On some operating systems, such as MacOS, you may also need to increase your open files limit to avoid `Error: pipe: too many open files` errors by running: `ulimit -n 1024`.
+IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=2`) with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors. On some operating systems, such as MacOS, you may also need to increase your open files limit to avoid `Error: pipe: too many open files` errors by running: `ulimit -n 1024`.
 
-When `apply` finishes, the module will output the encrypted passwords for the users defined above. Send the encrypted password to each user, along with their user
-name, and the IAM user sign-in URL for the account. Each user can then decrypt the password on their own computer (which should have their PGP key) as follows:
+When `apply` finishes, the module will output the encrypted passwords for the users defined above. Send the encrypted
+password to each user, along with their user name, and the IAM user sign-in URL for the account. Each user can then
+decrypt the password on their own computer (which should have their PGP key) as follows:
 
 [source,bash]
 ----
@@ -2465,16 +2547,17 @@ echo "<PASSWORD>" | base64 --decode | keybase pgp decrypt
 === Apply the security baseline to the other child accounts
 
 Now that your security account is fully configured, you need to apply the security baseline to the remaining child
-accounts as detailed in the <<child_accounts>> section. Feel free to adjust this as necessary based on
-the accounts your company needs.
+accounts (e.g., dev, stage, prod, shared-services) as detailed in the <<child_accounts>> section. Feel free to adjust
+this as necessary based on the accounts your company needs.
 
 You can re-use the `account-baseline-app` module you created earlier in your `infrastructure-modules` repo for all of
 these child accounts; this module can be used interchangeably between app accounts and log accounts as they deploy most
 of the same resources.
 
-Create `terragrunt.hcl` files in `infrastructure-live` under the file paths `<ACCOUNT>/_global/account-baseline`, where `<ACCOUNT>` is one
-of these other child accounts, such as dev, stage, prod, and shared-services. In the rest of this example, we’ll look solely at the stage
-account, but make sure you follow the analogous steps for EACH of your child accounts.
+Create `terragrunt.hcl` files in `infrastructure-live` under the file paths `<ACCOUNT>/_global/account-baseline`,
+where `<ACCOUNT>` is one of these other child accounts, such as dev, stage, prod, and shared-services. In the rest of
+this example, we’ll look solely at the stage account, but make sure you follow the analogous steps for EACH of your
+child accounts.
 
 ----
 infrastructure-live
@@ -2511,16 +2594,14 @@ inputs = {
   # Prefix all resources with this name
   name_prefix = "<COMPANY_NAME>-stage"
 
-  # Enable AWS Config and configure it to send data to the S3 bucket in the logs account
-  config_s3_bucket_name          = "<COMPANY_NAME>-logs-config-bucket"
-  config_should_create_s3_bucket = false
-  config_central_account_id      = "<LOGS_ACCOUNT_ID>"
+  # Use the S3 bucket and KMS key that were already created in this logs account by account-baseline-root
+  cloudtrail_kms_key_arn    = "<CLOUDTRAIL_KMS_KEY_ARN>"
+  cloudtrail_s3_bucket_name = "<CLOUDTRAIL_BUCKET_NAME>"
 
-  # Enable CloudTrail and configure it to send logs to the S3 bucket in the logs account
-  cloudtrail_s3_bucket_name             = "<COMPANY_NAME>-logs-cloudtrail-bucket"
-  cloudtrail_s3_bucket_already_exists   = true
-  cloudtrail_kms_key_arn                = "arn:aws:kms:us-east-2:<LOGS_ACCOUNT_ID>:key/<ID_OF_KMS_CMK_IN_LOGS_ACCOUNT>"
-  cloudtrail_cloudwatch_logs_group_name = "<COMPANY_NAME>-cloudtrail-logs"
+  # Use the S3 bucket that was already created in this logs account by account-baseline-root
+  config_s3_bucket_name                            = "<CONFIG_BUCKET_NAME>"
+  config_aggregate_config_data_in_external_account = true
+  config_central_account_id                        = "<LOGS_ACCOUNT_ID>"
 
   # Specify the services the dev IAM role will have access to
   dev_permitted_services = ["ec2", "s3", "rds", "dynamodb", "elasticache", "eks", "ecs"]
@@ -2566,139 +2647,50 @@ include {
 }
 ----
 
-https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html#id_root-user_manage_add-key[Create a set of access keys for the root user in the stage account]
-and https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[use those access keys to authenticate on the CLI].
-Finally, deploy the `account-baseline` module by running `terragrunt apply`:
+Just as with the logs and security account, you're going to use the `OrganizationAccountAccessRole` IAM role created by
+`account-baseline-root` to authenticate to the stage account and all other child accounts. There are many ways to
+https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[assume an IAM role on the CLI];
+for this guide, we're going to keep using `aws-vault`.
+
+Add a new `profile` entry in `~/.aws/config` for your stage account that uses the `root-iam-user` as the
+`source_profile`:
+
+[source]
+----
+[profile stage-from-root]
+role_arn=arn:aws:iam::<STAGE_ACCOUNT_ID>:role/OrganizationAccountAccessRole
+source_profile=root-iam-user
+----
+
+Check that you're able to authenticate to the stage account:
+
+[source,bash]
+----
+aws-vault exec stage-from-root -- aws sts get-caller-identity
+----
+
+You should see JSON output indicating that you've successfully assumed an IAM role:
+
+[source,json]
+----
+{
+  "UserId": "AIDAXXXXXXXXXXXX:1597932316055520000",
+  "Account": "<STAGE_ACCOUNT_ID>",
+  "Arn": "arn:aws:sts::<STAGE_ACCOUNT_ID>:assumed-role/OrganizationAccountAccessRole/1597932316055520000"
+}
+----
+
+You're now ready to deploy the `account-baseline` module in the stage account by running `terragrunt apply`:
 
 [source,bash]
 ----
 cd infrastructure-live/stage/_global/account-baseline
-terragrunt apply -parallelism=4
+aws-vault exec stage-from-root -- terragrunt apply -parallelism=2
 ----
 
-IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=4`) with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors. On some operating systems, such as MacOS, you may also need to increase your open files limit to avoid `Error: pipe: too many open files` errors by running: `ulimit -n 1024`.
+IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=2`) with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors. On some operating systems, such as MacOS, you may also need to increase your open files limit to avoid `Error: pipe: too many open files` errors by running: `ulimit -n 1024`.
 
 Remember to repeat this process in the other child accounts too (i.e., dev, prod, shared-services, etc)!
-
-=== Re-apply the security baseline to the root account
-
-Now that all the other child accounts are configured with AWS Config and CloudTrail (especially the logs account!), we
-need to go back to the root account and re-enable those services in that account too:
-
-.infrastructure-live/root/_global/account-baseline/terragrunt.hcl
-[source,hcl]
-----
-inputs = {
-  # Fill in your region you want to use (only used for API calls) and the ID of your root AWS account
-  aws_region     = "us-east-2"
-  aws_account_id = "<ROOT_ACCOUNT_ID>"
-
-  # Prefix all resources with this name
-  name_prefix = "<COMPANY_NAME>-root"
-
-  # If you've already created an AWS Organization in your root account, either run 'import' or set this variable to false
-  create_organization = true
-
-  # Enable AWS Config and configure it to send data to the S3 bucket in the logs account
-  enable_config                  = true
-  config_s3_bucket_name          = "<COMPANY_NAME>-logs-config-bucket"
-  config_should_create_s3_bucket = false
-  config_central_account_id      = "<LOGS_ACCOUNT_ID>"
-
-  # Enable CloudTrail and configure it to send logs to the S3 bucket in the logs account
-  enable_cloudtrail                     = true
-  cloudtrail_s3_bucket_name             = "<COMPANY_NAME>-logs-cloudtrail-bucket"
-  cloudtrail_s3_bucket_already_exists   = true
-  cloudtrail_kms_key_arn                = "arn:aws:kms:us-east-2:<LOGS_ACCOUNT_ID>:key/<ID_OF_KMS_CMK_IN_LOGS_ACCOUNT>"
-
-  # The child AWS accounts to create in this AWS organization
-  child_accounts = {
-    security = {
-      email               = "root-accounts+security@acme.com",
-      # Only set this to true AFTER the child account has been created AND configured with a security baseline that
-      # creates an AWS Config Recorder. If you set this to true when initially creating the account, you'll get errors!
-      enable_config_rules = true
-    },
-    logs = {
-      email               = "root-accounts+logs@acme.com",
-      # Only set this to true AFTER the child account has been created AND configured with a security baseline that
-      # creates an AWS Config Recorder. If you set this to true when initially creating the account, you'll get errors!
-      enable_config_rules = true
-    },
-    shared-services = {
-      email               = "root-accounts+shared-services@acme.com"
-      # Only set this to true AFTER the child account has been created AND configured with a security baseline that
-      # creates an AWS Config Recorder. If you set this to true when initially creating the account, you'll get errors!
-      enable_config_rules = true
-    },
-    dev = {
-      email               = "root-accounts+dev@acme.com"
-      # Only set this to true AFTER the child account has been created AND configured with a security baseline that
-      # creates an AWS Config Recorder. If you set this to true when initially creating the account, you'll get errors!
-      enable_config_rules = true
-    },
-    stage = {
-      email               = "root-accounts+stage@acme.com"
-      # Only set this to true AFTER the child account has been created AND configured with a security baseline that
-      # creates an AWS Config Recorder. If you set this to true when initially creating the account, you'll get errors!
-      enable_config_rules = true
-    },
-    prod = {
-      email               = "root-accounts+prod@acme.com"
-      # Only set this to true AFTER the child account has been created AND configured with a security baseline that
-      # creates an AWS Config Recorder. If you set this to true when initially creating the account, you'll get errors!
-      enable_config_rules = true
-    }
-  }
-
-  # The IAM users to create in this account. Since this is the root account, we should only create IAM users for a
-  # small handful of trusted admins.
-  users = {
-    alice = {
-      groups               = ["full-access"]
-      pgp_key              = "keybase:alice"
-      create_login_profile = true
-      create_access_keys   = false
-    },
-    bob = {
-      groups               = ["full-access"]
-      pgp_key              = "keybase:bob"
-      create_login_profile = true
-      create_access_keys   = false
-    }
-    alice = {
-      groups               = ["billing"]
-      pgp_key              = "keybase:carol"
-      create_login_profile = true
-      create_access_keys   = false
-    }
-  }
-}
-----
-
-The changes we've made are:
-
-. **Enable CloudTrail**. We've set `enable_cloudtrail = true` and configured CloudTrail to use the S3 bucket and KMS
-  CMK in the logs account. Note that we can only do this now, after creating the logs account and applying a security
-  baseline to it.
-
-. **Enable AWS Config**. We've set `enable_config = true` and configured AWS Config to use the S3 bucket in the logs
-  account. Note that we can only do this now, after creating the logs account and applying a security
-  baseline to it.
-
-. **Enable AWS Config Rules**. On each of the child accounts in `child_accounts`, we've set `enable_config_rules = true`
-  to enable AWS Config Rules in that account. Note that we can only do this now, after creating each child account and
-  applying a security baseline to it.
-
-Authenticate once more to the root account and run `terragrunt apply -parallelism=4`:
-
-[source,bash]
-----
-cd infrastructure-live/root/_global/account-baseline
-terragrunt apply -parallelism=4
-----
-
-IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=4`) with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors. On some operating systems, such as MacOS, you may also need to increase your open files limit to avoid `Error: pipe: too many open files` errors by running: `ulimit -n 1024`.
 
 === Try authenticating as an IAM user to the child accounts
 
@@ -2713,17 +2705,8 @@ authenticating:
   MFA token. If you don't do this, attempting to assume IAM roles in other accounts won't work, as those roles require
   an MFA token to be present.
 . Try to https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-console.html[switch to a role] in
-  one of the other child accounts using the AWS Web Console. For example, try to switch to the
-  `allow-full-access-from-other-accounts` role in the dev account.
-. Try to switch to a role in one of the other child accounts using the AWS CLI. There are several ways to do this, so
-  check out https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[A Comprehensive Guide to Authenticating to AWS on the Command Line]
-  and pick your preferred approach.
-
-=== Lock down the root user in the child accounts
-
-Once you're able to access all the child accounts using your IAM user and IAM roles, you should follow the steps in
-<<lock_down_root_user>> for the root user of each of those child accounts—including enabling MFA and deleting the root
-user's access keys—and (almost) never use those root users again.
+  one of the other child accounts using the AWS Web Console. Alternatively, you can use the `aws-vault login xxx` to
+  login to the AWS Web Console for any profile `xxx`.
 
 [[next_steps]]
 == Next steps
