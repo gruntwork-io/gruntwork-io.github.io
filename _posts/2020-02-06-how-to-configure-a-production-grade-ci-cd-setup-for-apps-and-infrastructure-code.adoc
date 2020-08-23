@@ -901,7 +901,6 @@ you should have two versions of the infrastructure deployment system: one for de
 only has the minimal permissions necessary for deploying that application; and one for deploying infrastructure code,
 which has more access to the environments.
 
-
 [[use_approval_flows]]
 === Use approval flows
 
@@ -1135,7 +1134,7 @@ infrastructure-live
 === Deploy the ECS Deploy Runner
 
 [.exceptional]
-IMPORTANT: *This guide is currently only compatible with ECS deploy runner version v0.23.x* +
+IMPORTANT: *This guide is currently only compatible with ECS deploy runner version v0.27.x* +
 We are currently working on a series of updates to the CI/CD pipeline. Once complete, we will update this guide to the latest version. In the meantime, we recommend deploying v0.23.x.
 
 // TODO: update link to use service catalog so it is publicly visible
@@ -1147,9 +1146,53 @@ module] in `module-ci`.
 
 To deploy the ECS Deploy Runner, we will follow three steps:
 
+- <<create_secrets_manager_entries>>
 - <<create_ecr_repo>>
 - <<create_docker_image>>
 - <<deploy_ecs_deploy_runner_stack>>
+
+[[create_secrets_manager_entries]]
+==== Create Secrets Manager Entries
+
+The ECS deploy runner needs access to your git repositories that contain the infrastructure code in order to be able to
+deploy them. The deploy runner uses Git over SSH to accomplish its tasks. You will need to provide it with an SSH key
+for a machine user that has access to the infrastructure repos. We will use https://aws.amazon.com/secrets-manager/[AWS
+Secrets Manager] to securely share the secrets with the deploy runner.
+
+. Create a machine user on your version control platform.
+
+. Create a new SSH key pair on the command line using
+`ssh-keygen`:
+[source,bash]
+----
+ssh-keygen -t rsa -b 4096 -C "MACHINE_USER_EMAIL"
+----
+Make sure to set a different path to store the key (to avoid overwriting any existing key). Also avoid setting a
+passphrase on the key.
+
+. Upload the SSH key pair to the machine user. See the following docs for the major VCS platforms:
+* https://help.github.com/en/github/authenticating-to-github/adding-a-new-ssh-key-to-your-github-account[GitHub]
+* https://docs.gitlab.com/ee/ssh/README.html#adding-an-ssh-key-to-your-gitlab-account[GitLab]
+* https://confluence.atlassian.com/bitbucket/set-up-an-ssh-key-728138079.html#SetupanSSHkey-#installpublickeyStep3.AddthepublickeytoyourBitbucketsettings[BitBucket] (Note: you will need to expand one of the instructions to see the full instructions for adding an SSH key to the machine user account)
+
+. Create an AWS Secrets Manager entry with the contents of the private key. In the following example, we use the aws
+CLI to create the entry in `us-east-2`, sourcing the contents from the SSH private key file `~/.ssh/machine_user`:
+[source,bash]
+----
+cat ~/.ssh/machine_user \
+    | xargs -0 aws secretsmanager create-secret --region us-east-2 --name "SSHPrivateKeyForECSDeployRunner" --secret-string
+----
+When you run this command, you should see a JSON output with metadata about the created secret:
+[source,json]
+----
+{
+    "ARN": "arn:aws:secretsmanager:us-east-2:000000000000:secret:SSHPrivateKeyForECSDeployRunner-SOME_RANDOM_STRING",
+    "Name": "SSHPrivateKeyForECSDeployRunner",
+    "VersionId": "21cda90e-84e0-4976-8914-7954cb6151bd"
+}
+----
+Record the ARN. You will need this later when setting up the terraform module.
+
 
 [[create_ecr_repo]]
 ==== Create ECR repo
@@ -1288,7 +1331,7 @@ export ECR_REPO_URL=$(terragrunt output url)
 ==== Create Docker Image
 
 Once we have the ECR repository to house Docker images, we need to create the Docker image for the infrastructure
-deployer. This Docker image should contain everything you need to deploy your infrastructure, such as `terraform` and
+deploy script. This Docker image should contain everything you need to deploy your infrastructure, such as `terraform` and
 `terragrunt`. In addition, the Docker image should include the
 https://github.com/gruntwork-io/module-ci/tree/master/modules/infrastructure-deploy-script[infrastructure-deploy-script].
 This is a python script that does the following:
@@ -1299,37 +1342,39 @@ This is a python script that does the following:
   `stdout` and `stderr`.
 - Exit with the appropriate exit code depending on if the underlying command succeeded or failed.
 
-Create a placeholder module called `ecs-deploy-runner` in `infrastructure-modules`, with a folder `docker` with the
-`Dockerfile` for creating the Docker image and the `known_hosts` file. Copy over the `Dockerfile` and `known_hosts` file
-from https://github.com/gruntwork-io/module-ci/tree/master/modules/ecs-deploy-runner/docker[module-ci]:
+You can use any Docker image with the ECS Deploy Runner, but it must meet the following requirements:
 
-----
-infrastructure-modules
-  └ cicd
-    └ ecs-deploy-runner
-      └ docker
-        └ Dockerfile
-        └ known_hosts
-    └ ecr-repo
-      └ main.tf
-      └ outputs.tf
-      └ variables.tf
-  └ networking
-    └ vpc-mgmt
-      └ main.tf
-      └ outputs.tf
-      └ variables.tf
-----
+- Define a trigger directory where scripts that can be invoked by the ECS Deploy Runner Lambda function are contained.
+  You want to limit the actions that can be performed within the ECS tasks with powerful IAM permissions. The ECS Deploy
+  Runner will be configured using an entrypoint script to ensure that only scripts defined in the trigger directory can
+  be invoked.
 
-This `Dockerfile` includes various tools and utilities that are necessary for deploying anything from the Gruntwork
-Infrastructure as Code Library. You should modify this `Dockerfile` to include additional tools that are necessary for
-your environment.
+- The entrypoint must be set to the `deploy-runner` entrypoint command provided in the
+  https://github.com/gruntwork-io/module-ci/tree/master/modules/ecs-deploy-runner/entrypoint[module-ci repository].
+  This is a small go binary that enforces the configured trigger directory of the Docker container by making sure that
+  the script requested to invoke actually resides in the trigger directory.  See the
+  https://github.com/gruntwork-io/module-ci/blob/master/modules/ecs-deploy-runner/docker/deploy-runner/Dockerfile[Dockerfile
+  for the deploy-runner container] for an example of how to install the entrypoint script.
 
-Next, build the Docker image locally:
+For this guide, we will deploy the standard deploy runner provided by Gruntwork. If you need to customize the docker
+containers provided in the standard deploy runner, you can define your own `Dockerfile` in your `infrastructure-modules`
+directory to build custom containers.
+
+The standard deploy runner container includes various utilities that are necessary for deploying anything from the
+Gruntwork Infrastructure as Code Library. You can read more about what is included in the standard container
+https://github.com/gruntwork-io/module-ci/blob/master/modules/ecs-deploy-runner/core-concepts.md#deploy-runner[in the
+documentation].
+
+To build the standard deploy runner containers, clone the `module-ci` repository to a temporary directory and build the
+`Dockerfile` in the
+https://github.com/gruntwork-io/module-ci/tree/master/modules/ecs-deploy-runner/docker/deploy-runner[modules/ecs-deploy-runner/docker/deploy-runner]
+folder:
 
 [source,bash]
 ----
-cd infrastructure-modules/cicd/ecs-deploy-runner/docker
+git clone git@github.com:gruntwork-io/module-ci.git
+git checkout v0.27.2
+cd module-ci/modules/ecs-deploy-runner/docker/deploy-runner
 # Make sure you have set the environment variable GITHUB_OAUTH_TOKEN with a GitHub personal access token that has access
 # to the Gruntwork repositories
 docker build --build-arg GITHUB_OAUTH_TOKEN --tag "$ECR_REPO_URL:v1" .
@@ -1353,15 +1398,12 @@ invoker. We will deploy both using the
 https://github.com/gruntwork-io/module-ci/tree/master/modules/ecs-deploy-runner[ecs-deploy-runner module] in
 `module-ci`.
 
-Add the Terraform files for the `ecs-deploy-runner` in `infrastructure-modules`:
+Create a new module called `ecs-deploy-runner` in `infrastructure-modules`:
 
 ----
 infrastructure-modules
   └ cicd
     └ ecs-deploy-runner
-      └ docker
-        └ Dockerfile
-        └ known_hosts
       └ main.tf
       └ variables.tf
     └ ecr-repo
@@ -1381,25 +1423,107 @@ Inside of `main.tf`, configure the ECS Deploy Runner:
 [source,hcl]
 ----
 module "ecs_deploy_runner" {
-  source = "git::git@github.com:gruntwork-io/module-ci.git//modules/ecs-deploy-runner?ref=v0.23.4"
+  source = "git::git@github.com:gruntwork-io/module-ci.git//modules/ecs-deploy-runner?ref=v0.27.2"
 
-  name           = var.name
+  name                          = var.name
+  container_images              = module.standard_config.container_images
+
   vpc_id         = var.vpc_id
   vpc_subnet_ids = var.private_subnet_ids
+}
 
-  container_images = {
-    deploy-runner = {
-      default      = true
-      docker_image = var.container_image.repo
-      docker_tag   = var.container_image.tag
+module "standard_config" {
+  source = "git::git@github.com:gruntwork-io/module-ci.git//modules/ecs-deploy-runner-standard-configuration?ref=v0.27.2"
 
-      secrets_manager_arns = {
-        DEPLOY_SCRIPT_SSH_PRIVATE_KEY = var.ssh_private_key_secrets_manager_arn
-      }
+  terraform_planner = {
+    container_image                  = var.terraform_planner_config.container_image
+    infrastructure_live_repositories = var.terraform_planner_config.infrastructure_live_repositories
+    secrets_manager_env_vars = merge(
+      {
+        DEPLOY_SCRIPT_SSH_PRIVATE_KEY = var.terraform_planner_config.repo_access_ssh_key_secrets_manager_arn
+      },
+      var.terraform_planner_config.secrets_manager_env_vars,
+    )
+    environment_vars = var.terraform_planner_config.env_vars
+  }
+
+  terraform_applier = {
+    container_image                         = var.terraform_applier_config.container_image
+    infrastructure_live_repositories        = var.terraform_applier_config.infrastructure_live_repositories
+    allowed_apply_git_refs                  = var.terraform_applier_config.allowed_apply_git_refs
+    repo_access_ssh_key_secrets_manager_arn = var.terraform_applier_config.repo_access_ssh_key_secrets_manager_arn
+    secrets_manager_env_vars = merge(
+      {
+        DEPLOY_SCRIPT_SSH_PRIVATE_KEY = var.terraform_applier_config.repo_access_ssh_key_secrets_manager_arn
+      },
+      var.terraform_applier_config.secrets_manager_env_vars,
+    )
+    environment_vars = var.terraform_applier_config.env_vars
+
+    # This guide is focused on infrastructure CI/CD and this feature is not used as part of infrastructure CI/CD
+    # pipelines. We will cover this in our guide on how to configure application CI/CD workflows using Gruntwork
+    # Pipelines.
+    allowed_update_variable_names = []
+    machine_user_git_info = {
+      name  = ""
+      email = ""
     }
   }
 
-  repository                          = var.repository
+  # This guide is focused on infrastructure CI/CD, and so we will shut off the capabilities to build docker images and
+  # AMIs in the ECS deploy runner. We will cover the docker_image_builder and ami_builder configurations in our guide on
+  # how to configure application CI/CD workflows using Gruntwork Pipelines.
+  docker_image_builder = null
+  ami_builder          = null
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
+# ATTACH AWS PERMISSIONS TO ECS TASKS
+# ---------------------------------------------------------------------------------------------------------------------
+
+locals {
+  configure_terraform_planner_iam_policy    = length(var.terraform_planner_config.iam_policy) > 0
+  configure_terraform_applier_iam_policy    = length(var.terraform_applier_config.iam_policy) > 0
+}
+
+resource "aws_iam_role_policy" "terraform_planner" {
+  count  = local.configure_terraform_planner_iam_policy ? 1 : 0
+  name   = "access-to-services"
+  role   = module.ecs_deploy_runner.ecs_task_iam_roles["terraform-planner"].name
+  policy = data.aws_iam_policy_document.terraform_planner[0].json
+}
+
+data "aws_iam_policy_document" "terraform_planner" {
+  count = local.configure_terraform_planner_iam_policy ? 1 : 0
+  dynamic "statement" {
+    for_each = var.terraform_planner_config.iam_policy
+    content {
+      sid       = statement.key
+      effect    = statement.value.effect
+      actions   = statement.value.actions
+      resources = statement.value.resources
+    }
+  }
+}
+
+resource "aws_iam_role_policy" "terraform_applier" {
+  count  = local.configure_terraform_applier_iam_policy ? 1 : 0
+  name   = "access-to-services"
+  role   = module.ecs_deploy_runner.ecs_task_iam_roles["terraform-applier"].name
+  policy = data.aws_iam_policy_document.terraform_applier[0].json
+}
+
+data "aws_iam_policy_document" "terraform_applier" {
+  count = local.configure_terraform_applier_iam_policy ? 1 : 0
+  dynamic "statement" {
+    for_each = var.terraform_applier_config.iam_policy
+    content {
+      sid       = statement.key
+      effect    = statement.value.effect
+      actions   = statement.value.actions
+      resources = statement.value.resources
+    }
+  }
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -1421,39 +1545,24 @@ resource "aws_iam_role_policy_attachment" "attach_invoke_to_roles" {
   policy_arn = module.invoke_policy.arn
 }
 
-
-# ---------------------------------------------------------------------------------------------------------------------
-# ATTACH FULL ACCESS PERMISSIONS TO REQUESTED SERVICES TO ECS TASK
-# ---------------------------------------------------------------------------------------------------------------------
-
-resource "aws_iam_role_policy" "full_access_to_services" {
-  count  = length(var.permitted_services) > 0 ? 1 : 0
-  name   = "full-access-to-services"
-  role   = module.ecs_deploy_runner.ecs_task_iam_role_name
-  policy = data.aws_iam_policy_document.full_access_to_services.json
-}
-
-data "aws_iam_policy_document" "full_access_to_services" {
-  statement {
-    actions   = formatlist("%s:*", var.permitted_services)
-    resources = ["*"]
-    effect    = "Allow"
-  }
-}
 ----
 
 This module call does the following:
 
 - Create an ECS cluster that can be used to run ECS Fargate tasks
-- Deploy an ECS Task Definition for the provided container image with support for Fargate (`var.container_image`).
-- Configure the ECS Task to expose the secrets in the Secrets Manager entry with the ARN
-  `var.ssh_private_key_secrets_manager_arn` as environment variables.
+- Configure two separate ECS Task Definition: one for running plan, and one for running apply
+  (`var.terraform_planner_config` and `var.terraform_applier_config`).
+- Configure the ECS Task to expose the secrets in the Secrets Manager entry with the ARN as environment variables (the
+  attribute `repo_access_ssh_key_secrets_manager_arn`).
 - Deploy a Lambda function that is configured to invoke the ECS task to run on Fargate in the provided VPC and subnet
   (`var.vpc_id` and `var.private_subnet_ids`).
-  Restrict the interface so that it can only be triggered to deploy code from the configured git repository
-  (`var.repository`).
+  The information provided in `terraform_planner_config` and `terraform_applier_config` is used to restrict the
+  interface so that it can only be triggered to deploy code from allowed sources (e.g., the
+  `infrastructure_live_repositories` attribute is used to only allow `plan` and `apply` to run from code in those
+  repositories).
 - Grant permissions to invoke the Invoker Lambda function to the given list of IAM users.
-- Grant permissions to access the provided AWS services to the ECS Task.
+- Grant permissions to access the provided AWS services to the ECS Task. Note that each task has their own set of
+  permissions.
 
 Add the corresponding input variables to `variables.tf`:
 
@@ -1470,22 +1579,127 @@ variable "private_subnet_ids" {
   type        = list(string)
 }
 
-variable "container_image" {
-  description = "Docker image (repo and tag) to use for the ECS task. Should contain the infrastructure-deploy-script for the pipeline to work. Refer to the Dockerfile in /modules/ecs-deploy-runner/docker/Dockerfile for a sample container you can use."
+variable "terraform_planner_config" {
+  description = "Configuration options for the terraform-planner container of the ECS deploy runner stack. This container will be used for running infrastructure plan (including validate) actions in the CI/CD pipeline with Terraform / Terragrunt. Set to `null` to disable this container."
   type = object({
-    repo = string
-    tag  = string
+    # Docker repo and image tag to use as the container image for the ami builder. This should be based on the
+    # Dockerfile in module-ci/modules/ecs-deploy-runner/docker/deploy-runner.
+    container_image = object({
+      docker_image = string
+      docker_tag   = string
+    })
+
+    # An object defining the IAM policy statements to attach to the IAM role associated with the ECS task for the
+    # terraform planner. Accepts a map of objects, where the map keys are sids for IAM policy statements, and the object
+    # fields are the resources, actions, and the effect (\"Allow\" or \"Deny\") of the statement.
+    # Note that you do not need to explicitly grant read access to the secrets manager entries set on the other
+    # variables (repo_access_ssh_key_secrets_manager_arn and secrets_manager_env_vars).
+    # iam_policy = {
+    #   S3Access = {
+    #     actions = ["s3:*"]
+    #     resources = ["arn:aws:s3:::mybucket"]
+    #     effect = "Allow"
+    #   },
+    #   EC2Access = {
+    #     actions = ["ec2:*"],
+    #     resources = ["*"]
+    #     effect = "Allow"
+    #   }
+    # }
+    iam_policy = map(object({
+      resources = list(string)
+      actions   = list(string)
+      effect    = string
+    }))
+
+    # List of git repositories containing infrastructure live configuration (top level terraform or terragrunt
+    # configuration to deploy infrastructure) that the deploy runner is allowed to run plan on. These should be the SSH
+    # git URL of the repository (e.g., git@github.com:gruntwork-io/module-ci.git).
+    # NOTE: when only a single repository is provided, this will automatically be included as a hardcoded option.
+    infrastructure_live_repositories = list(string)
+
+    # The ARN of a secrets manager entry containing the raw contents of a SSH private key to use when accessing the
+    # infrastructure live repository.
+    repo_access_ssh_key_secrets_manager_arn = string
+
+    # ARNs of AWS Secrets Manager entries that you would like to expose to the terraform/terragrunt process as
+    # environment variables. For example,
+    # secrets_manager_env_vars = {
+    #   GITHUB_OAUTH_TOKEN = "ARN_OF_PAT"
+    # }
+    # Will inject the secret value stored in the secrets manager entry ARN_OF_PAT as the env var `GITHUB_OAUTH_TOKEN`
+    # in the container that can then be accessed through terraform/terragrunt.
+    secrets_manager_env_vars = map(string)
+
+    # Map of environment variable names to values share with the container during runtime.
+    # Do NOT use this for sensitive variables! Use secrets_manager_env_vars for secrets.
+    env_vars = map(string)
   })
 }
 
-variable "repository" {
-  description = "Git repository where source code is located."
-  type        = string
-}
+variable "terraform_applier_config" {
+  description = "Configuration options for the terraform-applier container of the ECS deploy runner stack. This container will be used for running infrastructure deployment actions (including automated variable updates) in the CI/CD pipeline with Terraform / Terragrunt. Set to `null` to disable this container."
+  type = object({
+    # Docker repo and image tag to use as the container image for the ami builder. This should be based on the
+    # Dockerfile in module-ci/modules/ecs-deploy-runner/docker/deploy-runner.
+    container_image = object({
+      docker_image = string
+      docker_tag   = string
+    })
 
-variable "ssh_private_key_secrets_manager_arn" {
-  description = "ARN of the AWS Secrets Manager entry to use for sourcing the SSH private key for cloning repositories. Set to null if you are only using public repos."
-  type        = string
+    # An object defining the IAM policy statements to attach to the IAM role associated with the ECS task for the
+    # terraform applier. Accepts a map of objects, where the map keys are sids for IAM policy statements, and the object
+    # fields are the resources, actions, and the effect (\"Allow\" or \"Deny\") of the statement.
+    # Note that you do not need to explicitly grant read access to the secrets manager entries set on the other
+    # variables (repo_access_ssh_key_secrets_manager_arn and secrets_manager_env_vars).
+    # iam_policy = {
+    #   S3Access = {
+    #     actions = ["s3:*"]
+    #     resources = ["arn:aws:s3:::mybucket"]
+    #     effect = "Allow"
+    #   },
+    #   EC2Access = {
+    #     actions = ["ec2:*"],
+    #     resources = ["*"]
+    #     effect = "Allow"
+    #   }
+    # }
+    iam_policy = map(object({
+      resources = list(string)
+      actions   = list(string)
+      effect    = string
+    }))
+
+    # List of Git repository containing infrastructure live configuration (top level terraform or terragrunt
+    # configuration to deploy infrastructure) that the deploy runner is allowed to deploy. These should be the SSH git
+    # URL of the repository (e.g., git@github.com:gruntwork-io/module-ci.git).
+    # NOTE: when only a single repository is provided, this will automatically be included as a hardcoded option.
+    infrastructure_live_repositories = list(string)
+
+    # A list of Git Refs (branch or tag) that are approved for running apply on. Any git ref that does not match this
+    # list will not be allowed to run `apply` or `apply-all`. This is useful for protecting against internal threats
+    # where users have access to the CI script and bypass the approval flow by commiting a new CI flow on their branch.
+    # Set to null to allow all refs to apply.
+    allowed_apply_git_refs = list(string)
+
+    # The ARN of a secrets manager entry containing the raw contents of a SSH private key to use when accessing remote
+    # repository containing the live infrastructure configuration. This SSH key should be for a machine user that has write
+    # access to the code when using with terraform-update-variable.
+    repo_access_ssh_key_secrets_manager_arn = string
+
+    # ARNs of AWS Secrets Manager entries that you would like to expose to the terraform/terragrunt process as
+    # environment variables. For example,
+    # secrets_manager_env_vars = {
+    #   GITHUB_OAUTH_TOKEN = "ARN_OF_PAT"
+    # }
+    # Will inject the secret value stored in the secrets manager entry ARN_OF_PAT as the env var `GITHUB_OAUTH_TOKEN`
+    # in the container that can then be accessed through terraform/terragrunt.
+    secrets_manager_env_vars = map(string)
+
+    # Map of environment variable names to values share with the container during runtime.
+    # Do NOT use this for sensitive variables! Use secrets_manager_env_vars for secrets.
+    env_vars = map(string)
+  })
 }
 
 variable "name" {
@@ -1499,12 +1713,6 @@ variable "iam_roles" {
   type        = list(string)
   default     = []
 }
-
-variable "permitted_services" {
-  description = "A list of AWS services for which the Deploy Runner ECS Task will receive full permissions. For example, to grant the deploy runner access only to EC2 and Amazon Machine Learning, use the value [\"ec2\",\"machinelearning\"]."
-  type        = list(string)
-  default     = []
-}
 ----
 
 Since all the lookups for the ECS Deploy Runner can be done by name, it is not necessary for this module to expose any
@@ -1513,45 +1721,9 @@ outputs.
 Once you test your code and the `ecs-deploy-runner` module is working the way you want, submit a
 pull request, get your changes merged into the `master` branch, and create a new versioned release by using a Git tag.
 
-Next, we will want to deploy the stack to the environments. Before deploying, we need to make sure we have a SSH key
-pair we can use to access our private repositories:
-
-. Create a machine user on your version control platform.
-
-. Create a new SSH key pair on the command line using
-`ssh-keygen`:
-[source,bash]
-----
-ssh-keygen -t rsa -b 4096 -C "MACHINE_USER_EMAIL"
-----
-Make sure to set a different path to store the key (to avoid overwriting any existing key). Also avoid setting a
-passphrase on the key.
-
-. Upload the SSH key pair to the machine user. See the following docs for the major VCS platforms:
-* https://help.github.com/en/github/authenticating-to-github/adding-a-new-ssh-key-to-your-github-account[GitHub]
-* https://docs.gitlab.com/ee/ssh/README.html#adding-an-ssh-key-to-your-gitlab-account[GitLab]
-* https://confluence.atlassian.com/bitbucket/set-up-an-ssh-key-728138079.html#SetupanSSHkey-#installpublickeyStep3.AddthepublickeytoyourBitbucketsettings[BitBucket] (Note: you will need to expand one of the instructions to see the full instructions for adding an SSH key to the machine user account)
-
-. Create an AWS Secrets Manager entry with the contents of the private key. In the following example, we use the aws
-CLI to create the entry in `us-east-2`, sourcing the contents from the SSH private key file `~/.ssh/machine_user`:
-[source,bash]
-----
-cat ~/.ssh/machine_user \
-    | xargs -0 aws secretsmanager create-secret --region us-east-2 --name "SSHPrivateKeyForECSDeployRunner" --secret-string
-----
-When you run this command, you should see a JSON output with metadata about the created secret:
-[source,json]
-----
-{
-    "ARN": "arn:aws:secretsmanager:us-east-2:000000000000:secret:SSHPrivateKeyForECSDeployRunner-SOME_RANDOM_STRING",
-    "Name": "SSHPrivateKeyForECSDeployRunner",
-    "VersionId": "21cda90e-84e0-4976-8914-7954cb6151bd"
-}
-----
-
-Finally, head over to your `infrastructure-live` repo to deploy the stack to your environments. Add a new
-`terragrunt.hcl` file that calls the module. We will use Terragrunt `dependency` blocks to get the outputs of our
-dependencies to pass them to the module:
+Next, we will want to deploy the stack to the environments. Head over to your `infrastructure-live` repo to deploy the
+stack to your environments. Add a new `terragrunt.hcl` file that calls the module. We will use Terragrunt `dependency`
+blocks to get the outputs of our dependencies to pass them to the module:
 
 ----
 infrastructure-live
@@ -1596,28 +1768,131 @@ inputs = {
   vpc_id             = dependency.vpc.outputs.vpc_id
   private_subnet_ids = dependency.vpc.outputs.vpc_id
 
-  container_image = {
-    repo = dependency.ecr.outputs.url
-    tag  = "v1"
+  terraform_planner_config = {
+    container_image = {
+      docker_image = dependency.ecr.outputs.url
+      docker_tag   = "v1"
+    }
+
+    infrastructure_live_repositories = ["git@github.com:<YOUR_ORG>/refarch-demo-infrastructure-live.git"]
+    secrets_manager_env_vars         = {}
+    env_vars                         = {}
+
+    # Set this to the Secrets Manager ARN that was outputted when you created the Secrets Manager entry.
+    repo_access_ssh_key_secrets_manager_arn = "ARN_TO_SECRETS_MANAGER_ENTRY_WITH_SSH_PRIVATE_KEY"
+
+    # Include read only access for the services that you use. Here we include typical read only permissions needed for
+    # deploying EC2 clusters.
+    iam_policy = {
+      AutoScalingReadOnlyAccess = {
+        effect = "Allow"
+        actions = [
+          "autoscaling:Describe*",
+        ]
+        resources = ["*"]
+      }
+      EC2ReadOnlyAccess = {
+        effect = "Allow"
+        actions = [
+          "ec2:Describe*",
+        ]
+        resources = ["*"]
+      }
+      IAMReadOnlyAccess = {
+        effect = "Allow"
+        actions = [
+          "iam:Get*",
+          "iam:List*",
+          "iam:PassRole",
+        ]
+        resources = ["*"]
+      }
+      S3ReadOnlyAccess = {
+        effect = "Allow"
+        actions = [
+          "s3:Get*",
+          "s3:List*",
+        ]
+        resources = ["*"]
+      }
+
+      # The following permissions are needed to read the remote state resources
+      S3StateBucketAccess = {
+        effect  = "Allow"
+        actions = ["s3:*"]
+        resources = [
+          "arn:aws:s3:::${local.state_bucket}",
+          "arn:aws:s3:::${local.state_bucket}/*",
+        ]
+      }
+      DynamoDBStateBucketAccess = {
+        effect  = "Allow"
+        actions = ["dynamodb:*"]
+        resources = [
+          "arn:aws:dynamodb:*:*:table/terraform-locks"
+        ]
+      }
+    }
   }
 
-  repository = "git@github.com:<YOUR_ORG>/infrastructure-live.git"
+  terraform_applier_config = {
+    container_image = {
+      docker_image = local.deploy_runner_ecr_uri
+      docker_tag   = local.deploy_runner_container_image_tag
+    }
 
-  # Set this to the Secrets Manager ARN that was outputted when you created the Secrets Manager entry.
-  ssh_private_key_secrets_manager_arn = "ARN_TO_SECRETS_MANAGER_WITH_SSH_PRIVATE_KEY"
+    infrastructure_live_repositories        = ["git@github.com:<YOUR_ORG>/refarch-demo-infrastructure-live.git"]
+    allowed_apply_git_refs                  = ["master"]
+    secrets_manager_env_vars                = {}
+    env_vars                                = {}
+
+    # Set this to the Secrets Manager ARN that was outputted when you created the Secrets Manager entry.
+    repo_access_ssh_key_secrets_manager_arn = "ARN_TO_SECRETS_MANAGER_ENTRY_WITH_SSH_PRIVATE_KEY"
+
+    # Include access for the services that you use. Here we include typical permissions needed for deploying EC2
+    # clusters.
+    iam_policy = {
+      AutoScalingDeployAccess = {
+        effect    = "Allow"
+        actions   = ["autoscaling:*"]
+        resources = ["*"]
+      }
+      EC2ServiceDeployAccess = {
+        effect    = "Allow"
+        actions   = ["ec2:*"]
+        resources = ["*"]
+      }
+      IAMAccess = {
+        effect    = "Allow"
+        actions   = ["iam:*"]
+        resources = ["*"]
+      }
+      S3DeployAccess = {
+        effect    = "Allow"
+        actions   = ["s3:*"]
+        resources = ["*"]
+      }
+      DynamoDBStateBucketAccess = {
+        effect  = "Allow"
+        actions = ["dynamodb:*"]
+        resources = [
+          "arn:aws:dynamodb:*:*:table/terraform-locks"
+        ]
+      }
+    }
+  }
 
   # Set this to the AWS IAM role that your machine user will assume.
   iam_roles = ["allow-auto-deploy-from-other-accounts"]
-  # This list should include all the services that you want this ECS deploy runner to manage.
-  permitted_services = [
-    "iam",
-    "s3",
-    "lambda",
-    "apigateway",
-    "dynamodb",
-  ]
 }
 ----
+
+IMPORTANT: It is tempting to grant admin permissions to both the planner and applier ECS tasks. In production it is
+**strongly** recommended to take the effort to identify the least privileges the Deploy Runner needs to accomplish plan
+and apply separately. Terraform has many escape hatches that allow you to run arbitrary code even during plan, so
+having the plan container have arbitrary permissions to touch your infrastructure could allow a malicious user to deploy
+unwanted content without detection.
+
 
 And run `terragrunt apply` to deploy the changes:
 
@@ -1638,7 +1913,7 @@ To use the `infrastructure-deployer` CLI, use `gruntwork-install` to install a p
 
 [source,bash]
 ----
-gruntwork-install --binary-name "infrastructure-deployer" --repo "https://github.com/gruntwork-io/module-ci" --tag "v0.23.4"
+gruntwork-install --binary-name "infrastructure-deployer" --repo "https://github.com/gruntwork-io/module-ci" --tag "v0.27.2"
 ----
 
 Then, invoke the `infrastructure-deployer` against the `master` branch of your live infrastructure to run a `plan` on
@@ -1647,8 +1922,8 @@ the `vpc-mgmt` module (don't forget to assume the role):
 [source,bash]
 ----
 # NOTE: you should assume the IAM role allow-auto-deploy-from-other-accounts before running this step
-infrastructure-deployer \
-  --aws-region "us-east-2" \
+infrastructure-deployer --aws-region "us-east-2" -- \
+  terraform-planner infrastructure-deploy-script \
   --ref "master" \
   --binary "terragrunt" \
   --command "plan" \
@@ -1657,6 +1932,29 @@ infrastructure-deployer \
 
 If everything is set up correctly, you should see a stream of logs that indicate a `terragrunt plan` running on the
 `vpc-mgmt` module.
+
+Note that we don't specify the infrastructure-live repository in the command. The ECS Deploy Runner will automatically
+select the provided `infrastructure-live` repository when
+`var.terraform_planner_config.infrastructure_live_repositories` and
+`var.terraform_applier_config.infrastructure_live_repositories` is a list with a single item.
+
+You can see all the containers and scripts that you can invoke using the `infrastructure-deployer` by running the
+`--descripe-containers` command:
+
+----
+infrastructure-deployer --describe-containers --aws-region us-west-2
+----
+
+Running this command will provide output similar to below:
+
+----
+INFO[2020-08-17T10:00:44-05:00] The Lambda function arn:aws:lambda:ca-central-1:738755648600:function:7kr4n5-ecs-deploy-runner-gmvitx-invoker supports the following containers (container is in bold):  name=infrastructure-deployer
+INFO[2020-08-17T10:00:44-05:00]   terraform-applier
+INFO[2020-08-17T10:00:44-05:00]         infrastructure-deploy-script
+INFO[2020-08-17T10:00:44-05:00]         terraform-update-variable
+INFO[2020-08-17T10:00:44-05:00]   terraform-planner
+INFO[2020-08-17T10:00:44-05:00]         infrastructure-deploy-script
+----
 
 
 [[define_pipeline_as_code]]
@@ -1782,8 +2080,15 @@ function invoke_infrastructure_deployer {
     exit 1
   fi
 
+  local container
+  if [[ "$command" == "plan" ]] || [[ "$command" == "plan-all" ]] || [[ "$command" == "validate" ]] || [[ "$command" == "validate-all" ]]; then
+    container="terraform-planner"
+  else
+    container="terraform-applier"
+  fi
+
   (eval "$assume_role_exports" && \
-    infrastructure-deployer --aws-region "$region" --ref "$ref" --binary "terragrunt" --command "$command" --deploy-path "$deploy_path")
+    infrastructure-deployer --aws-region "$region" -- "$container" infrastructure-deploy-script --ref "$ref" --binary "terragrunt" --command "$command" --deploy-path "$deploy_path")
 }
 
 function run {
@@ -1874,7 +2179,7 @@ defaults: &defaults
     image: "ubuntu-1604:201903-01"
   environment:
     GRUNTWORK_INSTALLER_VERSION: v0.0.22
-    MODULE_CI_VERSION: v0.23.4
+    MODULE_CI_VERSION: v0.27.2
     MODULE_SECURITY_VERSION: v0.24.1
     REGION: us-east-2
 ----
@@ -2061,7 +2366,7 @@ defaults: &defaults
     image: "ubuntu-1604:201903-01"
   environment:
     GRUNTWORK_INSTALLER_VERSION: v0.0.22
-    MODULE_CI_VERSION: v0.23.4
+    MODULE_CI_VERSION: v0.27.2
     MODULE_SECURITY_VERSION: v0.24.1
     REGION: us-east-2
 
