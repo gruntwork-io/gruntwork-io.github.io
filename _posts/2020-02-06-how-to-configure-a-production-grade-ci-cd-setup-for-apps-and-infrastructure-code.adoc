@@ -1144,7 +1144,7 @@ Runner stack] as our infrastructure deployment CD platform. We will deploy the s
 mgmt VPC using the https://github.com/gruntwork-io/module-ci/tree/master/modules/ecs-deploy-runner[ecs-deploy-runner
 module] in `module-ci`.
 
-To deploy the ECS Deploy Runner, we will follow three steps:
+To deploy the ECS Deploy Runner, we will follow four steps:
 
 - <<create_secrets_manager_entries>>
 - <<create_ecr_repo>>
@@ -1155,14 +1155,14 @@ To deploy the ECS Deploy Runner, we will follow three steps:
 ==== Create Secrets Manager Entries
 
 The ECS deploy runner needs access to your git repositories that contain the infrastructure code in order to be able to
-deploy them. The deploy runner uses Git over SSH to accomplish its tasks. You will need to provide it with an SSH key
-for a machine user that has access to the infrastructure repos. We will use https://aws.amazon.com/secrets-manager/[AWS
-Secrets Manager] to securely share the secrets with the deploy runner.
+deploy them. To allow access to the infrastructure code, you will need to provide it with an SSH key for a machine user
+that has access to the infrastructure repos. We will use https://aws.amazon.com/secrets-manager/[AWS Secrets Manager] to
+securely share the secrets with the deploy runner.
 
 . Create a machine user on your version control platform.
 
-. Create a new SSH key pair on the command line using
-`ssh-keygen`:
+. Create a new SSH key pair on the command line using `ssh-keygen`:
++
 [source,bash]
 ----
 ssh-keygen -t rsa -b 4096 -C "MACHINE_USER_EMAIL"
@@ -1176,13 +1176,15 @@ passphrase on the key.
 * https://confluence.atlassian.com/bitbucket/set-up-an-ssh-key-728138079.html#SetupanSSHkey-#installpublickeyStep3.AddthepublickeytoyourBitbucketsettings[BitBucket] (Note: you will need to expand one of the instructions to see the full instructions for adding an SSH key to the machine user account)
 
 . Create an AWS Secrets Manager entry with the contents of the private key. In the following example, we use the aws
-CLI to create the entry in `us-east-2`, sourcing the contents from the SSH private key file `~/.ssh/machine_user`:
+  CLI to create the entry in `us-east-2`, sourcing the contents from the SSH private key file `~/.ssh/machine_user`:
++
 [source,bash]
 ----
 cat ~/.ssh/machine_user \
     | xargs -0 aws secretsmanager create-secret --region us-east-2 --name "SSHPrivateKeyForECSDeployRunner" --secret-string
 ----
 When you run this command, you should see a JSON output with metadata about the created secret:
++
 [source,json]
 ----
 {
@@ -1356,12 +1358,9 @@ You can use any Docker image with the ECS Deploy Runner, but it must meet the fo
   https://github.com/gruntwork-io/module-ci/blob/master/modules/ecs-deploy-runner/docker/deploy-runner/Dockerfile[Dockerfile
   for the deploy-runner container] for an example of how to install the entrypoint script.
 
-For this guide, we will deploy the standard deploy runner provided by Gruntwork. If you need to customize the docker
-containers provided in the standard deploy runner, you can define your own `Dockerfile` in your `infrastructure-modules`
-directory to build custom containers.
-
-The standard deploy runner container includes various utilities that are necessary for deploying anything from the
-Gruntwork Infrastructure as Code Library. You can read more about what is included in the standard container
+For this guide, we will deploy the standard deploy runner provided by Gruntwork. The standard deploy runner container
+includes various utilities that are necessary for deploying anything from the Gruntwork Infrastructure as Code Library.
+You can read more about what is included in the standard container
 https://github.com/gruntwork-io/module-ci/blob/master/modules/ecs-deploy-runner/core-concepts.md#deploy-runner[in the
 documentation].
 
@@ -1425,8 +1424,8 @@ Inside of `main.tf`, configure the ECS Deploy Runner:
 module "ecs_deploy_runner" {
   source = "git::git@github.com:gruntwork-io/module-ci.git//modules/ecs-deploy-runner?ref=v0.27.2"
 
-  name                          = var.name
-  container_images              = module.standard_config.container_images
+  name             = var.name
+  container_images = module.standard_config.container_images
 
   vpc_id         = var.vpc_id
   vpc_subnet_ids = var.private_subnet_ids
