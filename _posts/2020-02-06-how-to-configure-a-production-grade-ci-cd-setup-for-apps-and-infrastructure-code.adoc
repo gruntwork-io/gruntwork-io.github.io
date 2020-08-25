@@ -1347,9 +1347,9 @@ This is a python script that does the following:
 You can use any Docker image with the ECS Deploy Runner, but it must meet the following requirements:
 
 - Define a trigger directory where scripts that can be invoked by the ECS Deploy Runner Lambda function are contained.
-  You should limit the actions that can be performed within the ECS tasks due to its powerful IAM permissions. The ECS Deploy
-  Runner will be configured using an entrypoint script to ensure that only scripts defined in the trigger directory can
-  be invoked.
+  You should limit the scripts that can be run within the ECS tasks to avoid escape hatches to run arbitrary code due to
+  its powerful IAM permissions. The ECS Deploy Runner will be configured using an entrypoint script to ensure that only
+  scripts defined in the trigger directory can be invoked.
 
 - The entrypoint must be set to the `deploy-runner` entrypoint command provided in the
   https://github.com/gruntwork-io/module-ci/tree/master/modules/ecs-deploy-runner/entrypoint[module-ci repository].
