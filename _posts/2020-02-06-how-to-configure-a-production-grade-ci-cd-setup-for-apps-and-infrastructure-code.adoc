@@ -1301,7 +1301,7 @@ include {
 
 # Set the source to an immutable released version of the infrastructure module being deployed:
 terraform {
-  source = "git@github.com/<YOUR_ORG>/infrastructure-modules.git//cicd/ecr-repo?ref=v0.5.0"
+  source = "git@github.com:<YOUR_ORG>/infrastructure-modules.git//cicd/ecr-repo?ref=v0.5.0"
 }
 
 # Configure input values for the specific environment being deployed:
@@ -1372,8 +1372,9 @@ folder:
 [source,bash]
 ----
 git clone git@github.com:gruntwork-io/module-ci.git
+cd module-ci
 git checkout v0.27.2
-cd module-ci/modules/ecs-deploy-runner/docker/deploy-runner
+cd modules/ecs-deploy-runner/docker/deploy-runner
 # Make sure you have set the environment variable GITHUB_OAUTH_TOKEN with a GitHub personal access token that has access
 # to the Gruntwork repositories
 docker build --build-arg GITHUB_OAUTH_TOKEN --tag "$ECR_REPO_URL:v1" .
@@ -1750,7 +1751,7 @@ include {
 
 # Set the source to an immutable released version of the infrastructure module being deployed:
 terraform {
-  source = "git@github.com/<YOUR_ORG>/infrastructure-modules.git//cicd/ecs-deploy-runner?ref=v0.5.0"
+  source = "git@github.com:<YOUR_ORG>/infrastructure-modules.git//cicd/ecs-deploy-runner?ref=v0.5.0"
 }
 
 # Look up the VPC and ECR repository information using dependency blocks:
@@ -1762,10 +1763,23 @@ dependency "ecr" {
   config_path = "${get_terragrunt_dir()}/../ecr-repo"
 }
 
+# Extract common references.
+# TODO: Fill these in.
+locals {
+  # Name of the S3 bucket where the terraform state is stored.
+  state_bucket = ""
+  # Name of the dynamodb table used to store lock records for accessing terraform state.
+  state_lock_table = ""
+  # SSH Git URL of the infrastructure-live repository.
+  infrastructure_live_git_url = "git@github.com:<YOUR_ORG>/infrastructure-live.git"
+  # ARN of the AWS Secrets Manager entry that contains the SSH private key.
+  repo_access_ssh_key_secrets_manager_arn = ""
+}
+
 # Configure input values for the specific environment being deployed:
 inputs = {
   vpc_id             = dependency.vpc.outputs.vpc_id
-  private_subnet_ids = dependency.vpc.outputs.vpc_id
+  private_subnet_ids = dependency.vpc.outputs.private_subnet_ids
 
   terraform_planner_config = {
     container_image = {
@@ -1773,12 +1787,10 @@ inputs = {
       docker_tag   = "v1"
     }
 
-    infrastructure_live_repositories = ["git@github.com:<YOUR_ORG>/refarch-demo-infrastructure-live.git"]
-    secrets_manager_env_vars         = {}
-    env_vars                         = {}
-
-    # Set this to the Secrets Manager ARN that was outputted when you created the Secrets Manager entry.
-    repo_access_ssh_key_secrets_manager_arn = "ARN_TO_SECRETS_MANAGER_ENTRY_WITH_SSH_PRIVATE_KEY"
+    infrastructure_live_repositories        = [local.infrastructure_live_git_url]
+    secrets_manager_env_vars                = {}
+    env_vars                                = {}
+    repo_access_ssh_key_secrets_manager_arn = local.repo_access_ssh_key_secrets_manager_arn
 
     # Include read only access for the services that you use. Here we include typical read only permissions needed for
     # deploying EC2 clusters.
@@ -1828,7 +1840,7 @@ inputs = {
         effect  = "Allow"
         actions = ["dynamodb:*"]
         resources = [
-          "arn:aws:dynamodb:*:*:table/terraform-locks"
+          "arn:aws:dynamodb:*:*:table/${local.state_lock_table}"
         ]
       }
     }
@@ -1836,17 +1848,15 @@ inputs = {
 
   terraform_applier_config = {
     container_image = {
-      docker_image = local.deploy_runner_ecr_uri
-      docker_tag   = local.deploy_runner_container_image_tag
+      docker_image = dependency.ecr.outputs.url
+      docker_tag   = "v1"
     }
 
-    infrastructure_live_repositories        = ["git@github.com:<YOUR_ORG>/infrastructure-live.git"]
+    infrastructure_live_repositories        = [local.infrastructure_live_git_url]
     allowed_apply_git_refs                  = ["master"]
     secrets_manager_env_vars                = {}
     env_vars                                = {}
-
-    # Set this to the Secrets Manager ARN that was outputted when you created the Secrets Manager entry.
-    repo_access_ssh_key_secrets_manager_arn = "ARN_TO_SECRETS_MANAGER_ENTRY_WITH_SSH_PRIVATE_KEY"
+    repo_access_ssh_key_secrets_manager_arn = local.repo_access_ssh_key_secrets_manager_arn
 
     # Include access for the services that you use. Here we include typical permissions needed for deploying EC2
     # clusters.
@@ -1875,7 +1885,7 @@ inputs = {
         effect  = "Allow"
         actions = ["dynamodb:*"]
         resources = [
-          "arn:aws:dynamodb:*:*:table/terraform-locks"
+          "arn:aws:dynamodb:*:*:table/${local.state_lock_table}"
         ]
       }
     }
