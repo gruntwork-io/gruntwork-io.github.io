@@ -607,6 +607,7 @@ allow-dev-access-from-other-accounts::
 
 openvpn-allow-certificate-xxx-for-external-accounts::
 +
+[.exceptional]
 IMPORTANT: This role only applies to [js-subscribe-cta]#Gruntwork subscribers# who have access to
 https://github.com/gruntwork-io/package-openvpn/[package-openvpn].
 +
@@ -646,6 +647,7 @@ ssh-grunt-users and ssh-grunt-sudo-users::
   that group, that user will be able to SSH to the corresponding EC2 instances using their own IAM user name and the
   https://docs.aws.amazon.com/codecommit/latest/userguide/setting-up-ssh-unixes.html#setting-up-ssh-unixes-keys[SSH key associated with their IAM user account].
 +
+[.exceptional]
 IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork subscriber# to access `ssh-grunt` in
 https://github.com/gruntwork-io/module-security/[module-security].
 
@@ -702,6 +704,7 @@ allow-ssh-grunt-access-from-other-accounts::
   authenticate SSH attempts using
   https://github.com/gruntwork-io/module-security/tree/master/modules/ssh-grunt[ssh-grunt].
 +
+[.exceptional]
 IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork subscriber# to access `ssh-grunt` in
 https://github.com/gruntwork-io/module-security/[module-security].
 
@@ -764,6 +767,7 @@ Protecting IAM roles::
 ip-lockdown "169.254.169.254" "root"
 ----
 +
+[.exceptional]
 IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork subscriber# to access `ip-lockdown` in
 https://github.com/gruntwork-io/module-security[module-security].
 
@@ -876,6 +880,7 @@ Gruntwork Infrastructure as Code Library::
   implements most of the production-grade design for you out of the box. Make sure to read
   link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library[How to use the Gruntwork Infrastructure as Code Library].
 +
+[.exceptional]
 IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork subscriber# to access the Gruntwork Infrastructure as Code Library.
 
 Terraform::
@@ -986,6 +991,7 @@ AWS CloudTrail and AWS Config.
 
 Let's first apply the security baseline by using the `account-baseline-root` module from https://github.com/gruntwork-io/module-security[module-security].
 
+[.exceptional]
 IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork subscriber# to access `module-security`.
 
 First, create a _wrapper module_ called `account-baseline-root` in your `infrastructure-modules` repo under the `landingzone` subdirectory:
@@ -1503,8 +1509,10 @@ cd infrastructure-live/root/_global/account-baseline
 aws-vault exec root-iam-user -- terragrunt apply -parallelism=2
 ----
 
+[.exceptional]
 IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=2`) with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors.
 
+[.exceptional]
 IMPORTANT: On some operating systems, such as MacOS, you may also need to increase your open files limit to avoid "pipe: too many open files" errors by running: `ulimit -n 1024`.
 
 Once `apply` completes, you should see output variables with all of your account IDs, the name of the AWS Config S3
@@ -1931,6 +1939,7 @@ cd infrastructure-live/logs/_global/account-baseline
 aws-vault exec logs-from-root -- terragrunt apply -parallelism=2
 ----
 
+[.exceptional]
 IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=2`) with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors.
 
 IMPORTANT: On some operating systems, such as MacOS, you may also need to increase your open files limit to avoid "pipe: too many open files" errors by running: `ulimit -n 1024`.
@@ -2528,8 +2537,10 @@ cd infrastructure-live/security/_global/account-baseline
 aws-vault exec security-from-root -- terragrunt apply -parallelism=2
 ----
 
+[.exceptional]
 IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=2`) with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors.
 
+[.exceptional]
 IMPORTANT: On some operating systems, such as MacOS, you may also need to increase your open files limit to avoid "pipe: too many open files" errors by running: `ulimit -n 1024`.
 
 When `apply` finishes, the module will output the encrypted passwords for the users defined above. Send the encrypted
@@ -2685,8 +2696,10 @@ cd infrastructure-live/stage/_global/account-baseline
 aws-vault exec stage-from-root -- terragrunt apply -parallelism=2
 ----
 
+[.exceptional]
 IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=2`) with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors.
 
+[.exceptional]
 IMPORTANT: On some operating systems, such as MacOS, you may also need to increase your open files limit to avoid "pipe: too many open files" errors by running: `ulimit -n 1024`.
 
 Remember to repeat this process in the other child accounts too (i.e., dev, prod, shared-services, etc)!
