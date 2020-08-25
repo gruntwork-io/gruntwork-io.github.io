@@ -1347,7 +1347,7 @@ This is a python script that does the following:
 You can use any Docker image with the ECS Deploy Runner, but it must meet the following requirements:
 
 - Define a trigger directory where scripts that can be invoked by the ECS Deploy Runner Lambda function are contained.
-  You want to limit the actions that can be performed within the ECS tasks with powerful IAM permissions. The ECS Deploy
+  You should limit the actions that can be performed within the ECS tasks due to its powerful IAM permissions. The ECS Deploy
   Runner will be configured using an entrypoint script to ensure that only scripts defined in the trigger directory can
   be invoked.
 
