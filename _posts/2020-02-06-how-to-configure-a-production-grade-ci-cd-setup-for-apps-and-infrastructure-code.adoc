@@ -1824,7 +1824,7 @@ inputs = {
           "arn:aws:s3:::${local.state_bucket}/*",
         ]
       }
-      DynamoDBStateBucketAccess = {
+      DynamoDBLocksTableAccess = {
         effect  = "Allow"
         actions = ["dynamodb:*"]
         resources = [
