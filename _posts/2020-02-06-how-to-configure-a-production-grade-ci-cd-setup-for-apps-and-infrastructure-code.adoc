@@ -1840,7 +1840,7 @@ inputs = {
       docker_tag   = local.deploy_runner_container_image_tag
     }
 
-    infrastructure_live_repositories        = ["git@github.com:<YOUR_ORG>/refarch-demo-infrastructure-live.git"]
+    infrastructure_live_repositories        = ["git@github.com:<YOUR_ORG>/infrastructure-live.git"]
     allowed_apply_git_refs                  = ["master"]
     secrets_manager_env_vars                = {}
     env_vars                                = {}
