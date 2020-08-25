@@ -1871,7 +1871,7 @@ inputs = {
         actions   = ["s3:*"]
         resources = ["*"]
       }
-      DynamoDBStateBucketAccess = {
+      DynamoDBLocksTableAccess = {
         effect  = "Allow"
         actions = ["dynamodb:*"]
         resources = [
