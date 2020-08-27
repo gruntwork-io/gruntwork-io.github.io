@@ -1736,9 +1736,9 @@ infrastructure.
 
 IMPORTANT: It is tempting to grant admin permissions to both the planner and applier ECS tasks. In production it is
 **strongly** recommended to take the effort to identify the least privileges the Deploy Runner needs to accomplish plan
-and apply separately. Terraform has many escape hatches that allow you to run arbitrary code even during plan, so
-having the plan container have arbitrary permissions to touch your infrastructure could allow a malicious user to deploy
-unwanted content without detection.
+and apply separately. `plan` runs on _every branch_, so you don't have the typical "protected branches" permissions
+during the plan action. Given that Terraform has many escape hatches that allow you to run arbitrary code even during
+plan, it is important to ensure that you don't give powerful permissions to the `terraform-planner` task.
 
 ----
 infrastructure-live
