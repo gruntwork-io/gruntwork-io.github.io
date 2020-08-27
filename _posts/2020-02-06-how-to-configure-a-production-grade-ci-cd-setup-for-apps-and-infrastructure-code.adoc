@@ -1726,7 +1726,7 @@ outputs.
 Once you test your code and the `ecs-deploy-runner` module is working the way you want, submit a
 pull request, get your changes merged into the `master` branch, and create a new versioned release by using a Git tag.
 
-Next, we will want to deploy the stack to the environments. Head over to your `infrastructure-live` repo to deploy the
+Next, head over to your `infrastructure-live` repo to deploy the
 stack to your environments. Add a new `terragrunt.hcl` file that calls the module. We will use Terragrunt `dependency`
 blocks to get the outputs of our dependencies to pass them to the module:
 
