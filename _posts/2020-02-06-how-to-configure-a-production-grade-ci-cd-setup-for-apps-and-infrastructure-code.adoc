@@ -1345,7 +1345,9 @@ This is a python script that does the following:
   `stdout` and `stderr`.
 - Exit with the appropriate exit code depending on if the underlying command succeeded or failed.
 
-You can use any Docker image with the ECS Deploy Runner, but it must meet the following requirements:
+You can run any Docker image with any script in the ECS Deploy Runner. That is, you can setup a custom Docker and expose
+custom scripts that can be invoked remotely on the stack. To integrate the container with the ECS deploy runner, it must
+meet the following requirements:
 
 - Define a trigger directory where scripts that can be invoked by the ECS Deploy Runner Lambda function are contained.
   You should limit the scripts that can be run within the ECS tasks to avoid escape hatches to run arbitrary code due to
@@ -1359,11 +1361,13 @@ You can use any Docker image with the ECS Deploy Runner, but it must meet the fo
   https://github.com/gruntwork-io/module-ci/blob/master/modules/ecs-deploy-runner/docker/deploy-runner/Dockerfile[Dockerfile
   for the deploy-runner container] for an example of how to install the entrypoint script.
 
-For this guide, we will deploy the standard deploy runner provided by Gruntwork. The standard deploy runner container
-includes various utilities that are necessary for deploying anything from the Gruntwork Infrastructure as Code Library.
-You can read more about what is included in the standard container
+For convenience, Gruntwork provides a standard deploy runner container and configuration that includes everything you
+need for a typical Infrastructure as Code pipeline: Terraform, Terragrunt, Packer, Docker, etc. You can read more about
+what is included in the standard container
 https://github.com/gruntwork-io/module-ci/blob/master/modules/ecs-deploy-runner/core-concepts.md#deploy-runner[in the
 documentation].
+
+For this guide, we will deploy the standard deploy runner provided by Gruntwork.
 
 To build the standard deploy runner containers, clone the `module-ci` repository to a temporary directory and build the
 `Dockerfile` in the
