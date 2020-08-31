@@ -90,9 +90,10 @@
   });
 </script>
 
+{% if page.use_recaptcha %}
 <!-- recaptcha v3 by Google -->
-<script src="https://www.google.com/recaptcha/api.js?render={{ site.recaptchaApiKey }}"></script>
-
+<script src="https://www.google.com/recaptcha/api.js?render={{ site.recaptchaApiKey }}&style='bottomleft'"></script>
+{% endif %}
 <!-- Cookie Policy Notification -->
 <script src="{{ site.assets_base_url }}js/cookie.js" async></script>
 {% endif %}
