@@ -128,29 +128,24 @@
       blurb: use Route53 for ingress hostnames
       description: Deploys Helm chart that installs the external-dns application into your cluster to map Ingress hostnames to Route 53 Domain records.
 
-- name: "Kubernetes Helm Server"
+- name: "Kubernetes Services"
   clouds:
     - AWS
     - GCP
     - Azure
   icons:
-    - title: Terraform
-      image: icon-terraform.png
-  public_url: "https://github.com/gruntwork-io/terraform-kubernetes-helm"
+    - title: Go
+      image: icon-go.png
+  public_url: "https://github.com/gruntwork-io/helm-kubernetes-services"
   type: Open Source
   description: |
-    Deploy a best-practices Tiller (Helm Server) to your Kubernetes cluster. Supports namespaces, service accounts,
-    least privilege RBAC roles, and automated TLS management.
+    Package services into a best-practices deployment for Kubernetes. Supports zero-downtime, rolling deployment, RBAC
+    roles and groups, auto scaling, secrets management, and centralized logging. Includes support for web services,
+    daemon sets, and tasks / jobs.
   submodules:
-    - name: k8s-namespace
-      blurb: create a Kubernetes namespace
-      description: Create a namespace in Kubernetes with a set of predefined RBAC roles.
-    - name: k8s-namespace-roles
-      blurb: create RBAC roles for a namespace
-      description: Create a set of predefined RBAC roles for use with an existing namespace.
-    - name: k8s-service-account
-      blurb: create a Kubernetes service account
-      description: Create a Kubernetes service account with options to bind the account to a set of RBAC roles.
+    - name: k8s-service
+      blurb: deploy a Kubernetes service using Helm
+      description: Package your application service as a docker container and deploy to Kubernetes as a Deployment. Supports replication, rolling deployment, logging, configuration values, and secrets management.
 
 - name: "Auto Scaling Group"
   clouds:
@@ -782,25 +777,6 @@
     kubergrunt is a standalone go binary with a collection of commands that attempts to fill in the gaps between
     Terraform, Helm, and Kubectl for managing a Kubernetes Cluster. It includes support for authenticating to EKS
     clusters, managing Helm, and generating and securely storing TLS certificates.
-
-- name: "Kubernetes Services"
-  clouds:
-    - AWS
-    - GCP
-    - Azure
-  icons:
-    - title: Go
-      image: icon-go.png
-  public_url: "https://github.com/gruntwork-io/helm-kubernetes-services"
-  type: Open Source
-  description: |
-    Package services into a best-practices deployment for Kubernetes. Supports zero-downtime, rolling deployment, RBAC
-    roles and groups, auto scaling, secrets management, and centralized logging. Includes support for web services,
-    daemon sets, and tasks / jobs.
-  submodules:
-    - name: k8s-service
-      blurb: deploy a Kubernetes service using Helm
-      description: Package your application service as a docker container and deploy to Kubernetes as a Deployment. Supports replication, rolling deployment, logging, configuration values, and secrets management.
 
 - name: "Consul"
   clouds:
