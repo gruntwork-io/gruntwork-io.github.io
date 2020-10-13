@@ -983,13 +983,13 @@ Enable MFA::
   https://www.theverge.com/2017/9/18/16328172/sms-two-factor-authentication-hack-password-bitcoin[vulnerabilities with the cellular system],
   so using a virtual or hardware MFA device is preferable; that said, MFA with SMS is still better than no MFA at all.
 
-=== Apply the security baseline to the root account
+=== Configure the security baseline for the root account
 
-Next, we'll apply a security baseline to the root account that is responsible for creating all the child accounts.
+Next, we'll configure a security baseline for the root account that is responsible for creating all the child accounts.
 It will also configure AWS Organizations, IAM Roles, IAM Users, IAM Groups, IAM Password Policies, Amazon GuardDuty,
 AWS CloudTrail and AWS Config.
 
-Let's first apply the security baseline by using the `account-baseline-root` module from https://github.com/gruntwork-io/module-security[module-security].
+We'll be using the `account-baseline-root` module from https://github.com/gruntwork-io/module-security[module-security].
 
 [.exceptional]
 IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork subscriber# to access `module-security`.
@@ -1387,7 +1387,7 @@ inputs = {
   # Prefix all resources with this name
   name_prefix = "<COMPANY_NAME>-root"
 
-  # If you've already created an AWS Organization in your root account, set this variable to false
+  # If you've already created an AWS Organization in your root account, you'll be able to import it later in this guide
   create_organization = true
 
   # The child AWS accounts to create in this AWS organization
@@ -1417,6 +1417,9 @@ inputs = {
 
   # The IAM users to create in this account. Since this is the root account, you should only create IAM users for a
   # small handful of trusted admins.
+  #
+  # NOTE: Make sure to include the IAM user you created manually here! We'll import the user into Terraform state in
+  # the next step of this guide, allowing you to manage this user as code going forward.
   users = {
     alice = {
       groups               = ["full-access"]
@@ -1512,7 +1515,161 @@ You should get JSON output with information about your IAM user:
 }
 ----
 
-You're now ready to deploy the `account-baseline` module in the root account by running `terragrunt apply`:
+You're now almost ready to deploy the `account-baseline` module in the root account. But first, you may need to import
+some existing resources.
+
+
+=== Import existing resources from the root account
+
+Before applying the security baseline to the root account, we need to import any existing resources—including the IAM
+user you created manually earlier—into Terraform state. You can do this using the
+https://www.terraform.io/docs/import/index.html[`import` command], which uses the format:
+
+[source,bash]
+----
+terraform import <ADDRESS> <ID>
+----
+
+Where `<ADDRESS>` is the https://www.terraform.io/docs/internals/resource-addressing.html[address] of the Terraform
+resource you're importing and `<ID>` is a resource-specific identifier (e.g., for `aws_instance`, it's the instance ID,
+whereas for `aws_lb`, it's the load balancer's name—check the docs for the resource to find out what to use).
+
+As an example, let's import the IAM user you created manually in the root account. IAM users are managed using the
+`aws_iam_user` resource, and the
+https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_user#import[documentation for that
+resource] tells us to use the user's `name` as the `<ID>`; we'll assume for this example that your IAM user's name was
+`alice`, who is already one of the entries in the `users` variable in `terragrunt.hcl`. So now we need the `<ADDRESS>`.
+An easy way to get it is to authenticate to the root account using `aws-vault` and to run `plan`:
+
+[source,bash]
+----
+cd infrastructure-live/root/_global/account-baseline
+aws-vault exec root-iam-user -- terragrunt plan
+----
+
+You should get a whole bunch of log output, including something that looks like this:
+
+----
+------------------------------------------------------------------------
+
+An execution plan has been generated and is shown below.
+Resource actions are indicated with the following symbols:
+  + create
+ <= read (data resources)
+
+Terraform will perform the following actions:
+
+# ... (ommitting lots of log output for simplicity) ...
+
+# module.root_baseline.module.iam_users.aws_iam_user.user["alice"] will be created
+  + resource "aws_iam_user" "user" {
+      + arn           = (known after apply)
+      + force_destroy = true
+      + id            = (known after apply)
+      + name          = "alice"
+      + path          = "/"
+      + unique_id     = (known after apply)
+    }
+
+# ... (ommitting lots of log output for simplicity) ...
+
+Plan: 160 to add, 0 to change, 0 to destroy.
+
+------------------------------------------------------------------------
+
+Note: You didn't specify an "-out" parameter to save this plan, so Terraform
+can't guarantee that exactly these actions will be performed if
+"terraform apply" is subsequently run.
+----
+
+This `plan` output is telling you that Terraform will create a bunch of resources, including the `aws_iam_user` named
+`alice`. The text next to the `#` gives you the `<ADDRESS>` to use:
+
+----
+# module.root_baseline.module.iam_users.aws_iam_user.user["alice"] will be created
+----
+
+So the `<ADDRESS>` you want is `module.root_baseline.module.iam_users.aws_iam_user.user["alice"]`. Now, normally, you'd
+run `import` right away, but due to a https://github.com/hashicorp/terraform/issues/13018[Terraform bug], `import`
+doesn't work on certain types of modules—namely, those with nested `provider` blocks that use dynamic data—and will
+produce an error like `unknown variable accessed: var.region in:`. This issue has been open for over 3 years, so we
+built a workaround for it in Terragrunt: the
+https://terragrunt.gruntwork.io/docs/reference/cli-options/#aws-provider-patch[`aws-provider-patch` command].
+
+The idea behind the workaround is to temporarily hard-code the dynamic data in nested `provider` blocks. In particular,
+we need to temporarily hard-code some of the `region` parameters of the nested `provider` blocks used by
+`account-baseline-root` as follows:
+
+[source,bash]
+----
+terragrunt aws-provider-patch --terragrunt-override-attr region=eu-west-1
+----
+
+_Note: You can use any region you want for the region parameter. It's just temporary._
+
+After running this command, you can finally import your IAM user:
+
+[source,bash]
+----
+terragrunt import 'module.root_baseline.module.iam_users.aws_iam_user.user["alice"]' 'alice'
+----
+
+You should see log output that looks something like this:
+
+----
+[terragrunt] 2020/10/13 14:19:16 Running command: terraform import module.root_baseline.module.iam_users.aws_iam_user.user["alice"] alice
+module.root_baseline.module.iam_users.aws_iam_user.user["alice"]: Importing from ID "alice"...
+module.root_baseline.module.iam_users.aws_iam_user.user["alice"]: Import prepared!
+  Prepared aws_iam_user for import
+module.root_baseline.module.iam_users.aws_iam_user.user["alice"]: Refreshing state... [id=alice]
+
+Import successful!
+
+The resources that were imported are shown above. These resources are now in
+your Terraform state and will henceforth be managed by Terraform.
+----
+
+You'll now be able to manage that IAM user as code going forward!
+
+If you created other resources manually in the root account, you may want to `import` them too, so you can manage
+everything as code. For example, if you already manually created an AWS Organization in your root account, you'll need
+to import it using a command that looks like this:
+
+[source,bash]
+----
+terragrunt import 'module.root_baseline.module.organization.aws_organizations_organization.root[0]' '<ORG_ID>'
+----
+
+Where `<ORG_ID>` is the ID of your AWS Organization. Note that this is NOT the same as the AWS account ID, but a
+separate ID you can find by going to the https://console.aws.amazon.com/organizations/home[AWS Organizations] page in
+the AWS console, clicking on your root account (the one with a star to the left of it), and looking at the root
+account's ARN, which will look something like, `arn:aws:organizations::<ACCOUNT_ID>:account/<ORG_ID>/<ACCOUNT_ID>`. The
+`<ORG_ID>` is the part between slashes, and it'll look something like `o-a2lce3bbqq`.
+
+You may also want to import child accounts you created manually. You'll need to add each of these to the
+`child_accounts` variable in `terragrunt.hcl`, and you can then import each one as follows:
+
+[source,bash]
+----
+terragrunt import 'module.root_baseline.module.organization.aws_organizations_account.child_accounts["<ACCOUNT_NAME>"]' '<ACCOUNT_ID>'
+----
+
+Where `<ACCOUNT_NAME>` is the name you used for the account in the `child_accounts` variable and `<ACCOUNT_ID>` is the
+12-digit ID of that AWS account.
+
+Once you're done importing, you'll want to undo the `aws-provider-patch` workaround. The easiest way to do that is to
+delete the `.terraform` or `.terragrunt-cache` folders to remove any locally cached modules, as they would've been
+modified by the `aws-provider-patch` command.
+
+[source,bash]
+----
+rm -rf .terragrunt-cache
+----
+
+=== Apply the security baseline to the root account
+
+You're now ready to apply the security baseline to the root account. You should be authenticated as the same IAM user
+in the root account as in the previous two sections. To apply the security baseline, you run `terragrunt apply`:
 
 [source,bash]
 ----
