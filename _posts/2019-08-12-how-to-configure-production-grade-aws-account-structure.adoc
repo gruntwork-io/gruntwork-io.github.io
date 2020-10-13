@@ -1522,7 +1522,8 @@ some existing resources.
 === Import existing resources from the root account
 
 Before applying the security baseline to the root account, we need to import any existing resources—including the IAM
-user you created manually earlier—into Terraform state. You can do this using the
+user you created manually earlier—into Terraform state, so that Terraform manages those existing resources instead of
+trying to create totally new ones. You can do this using the
 https://www.terraform.io/docs/import/index.html[`import` command], which uses the format:
 
 [source,bash]
