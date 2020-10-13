@@ -1360,8 +1360,19 @@ repo, setting the `ref` param to the version you released earlier:
 ----
 terraform {
   source = "git@github.com/<YOUR_ORG>/infrastructure-modules.git//landingzone/account-baseline-root?ref=v0.3.0"
+
+  # This module deploys some resources (e.g., AWS Config) across all AWS regions, each of which needs its own provider,
+  # which in Terraform means a separate process. To avoid all these processes thrashing the CPU, which leads to network
+  # connectivity issues, we limit the parallelism here.
+  extra_arguments "parallelism" {
+    commands  = get_terraform_commands_that_need_parallelism()
+    arguments = ["-parallelism=2"]
+  }
 }
 ----
+
+[.exceptional]
+IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=2`), as shown above, with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors.
 
 Set the variables for the `account-baseline-root` module in this environment in the `inputs = { ... }` block of `terragrunt.hcl`:
 
@@ -1506,11 +1517,8 @@ You're now ready to deploy the `account-baseline` module in the root account by 
 [source,bash]
 ----
 cd infrastructure-live/root/_global/account-baseline
-aws-vault exec root-iam-user -- terragrunt apply -parallelism=2
+aws-vault exec root-iam-user -- terragrunt apply
 ----
-
-[.exceptional]
-IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=2`) with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors.
 
 [.exceptional]
 IMPORTANT: On some operating systems, such as MacOS, you may also need to increase your open files limit to avoid "pipe: too many open files" errors by running: `ulimit -n 1024`.
@@ -1837,8 +1845,19 @@ repo, setting the `ref` param to the version you released earlier:
 ----
 terraform {
   source = "git@github.com/<YOUR_ORG>/infrastructure-modules.git//landingzone/account-baseline-app?ref=v0.3.1"
+
+  # This module deploys some resources (e.g., AWS Config) across all AWS regions, each of which needs its own provider,
+  # which in Terraform means a separate process. To avoid all these processes thrashing the CPU, which leads to network
+  # connectivity issues, we limit the parallelism here.
+  extra_arguments "parallelism" {
+    commands  = get_terraform_commands_that_need_parallelism()
+    arguments = ["-parallelism=2"]
+  }
 }
 ----
+
+[.exceptional]
+IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=2`), as shown above, with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors.
 
 Set the variables for the `account-baseline-app` module in this environment in the `inputs = { ... }` block of `terragrunt.hcl`:
 
@@ -1936,12 +1955,10 @@ You're now ready to deploy the `account-baseline` module in the logs account by 
 [source,bash]
 ----
 cd infrastructure-live/logs/_global/account-baseline
-aws-vault exec logs-from-root -- terragrunt apply -parallelism=2
+aws-vault exec logs-from-root -- terragrunt apply
 ----
 
 [.exceptional]
-IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=2`) with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors.
-
 IMPORTANT: On some operating systems, such as MacOS, you may also need to increase your open files limit to avoid "pipe: too many open files" errors by running: `ulimit -n 1024`.
 
 === Apply the security baseline to the security account
@@ -2376,8 +2393,19 @@ repo, setting the `ref` param to the version you released earlier:
 ----
 terraform {
   source = "git@github.com/<YOUR_ORG>/infrastructure-modules.git//landingzone/account-baseline-security?ref=v0.3.2"
+
+  # This module deploys some resources (e.g., AWS Config) across all AWS regions, each of which needs its own provider,
+  # which in Terraform means a separate process. To avoid all these processes thrashing the CPU, which leads to network
+  # connectivity issues, we limit the parallelism here.
+  extra_arguments "parallelism" {
+    commands  = get_terraform_commands_that_need_parallelism()
+    arguments = ["-parallelism=2"]
+  }
 }
 ----
+
+[.exceptional]
+IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=2`), as shown above, with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors.
 
 Set the variables for the `account-baseline-security` module in this environment in the `inputs = { ... }` block of `terragrunt.hcl`:
 
@@ -2534,11 +2562,8 @@ You're now ready to deploy the `account-baseline` module in the security account
 [source,bash]
 ----
 cd infrastructure-live/security/_global/account-baseline
-aws-vault exec security-from-root -- terragrunt apply -parallelism=2
+aws-vault exec security-from-root -- terragrunt apply
 ----
-
-[.exceptional]
-IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=2`) with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors.
 
 [.exceptional]
 IMPORTANT: On some operating systems, such as MacOS, you may also need to increase your open files limit to avoid "pipe: too many open files" errors by running: `ulimit -n 1024`.
@@ -2586,8 +2611,19 @@ repo, setting the `ref` param to the latest version:
 ----
 terraform {
   source = "git@github.com/<YOUR_ORG>/infrastructure-modules.git//landingzone/account-baseline-app?ref=v0.3.2"
+
+  # This module deploys some resources (e.g., AWS Config) across all AWS regions, each of which needs its own provider,
+  # which in Terraform means a separate process. To avoid all these processes thrashing the CPU, which leads to network
+  # connectivity issues, we limit the parallelism here.
+  extra_arguments "parallelism" {
+    commands  = get_terraform_commands_that_need_parallelism()
+    arguments = ["-parallelism=2"]
+  }
 }
 ----
+
+[.exceptional]
+IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=2`), as shown above, with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors.
 
 Set the variables for the `account-baseline-app` module in this environment in the `inputs = { ... }` block of `terragrunt.hcl`:
 
@@ -2693,11 +2729,8 @@ You're now ready to deploy the `account-baseline` module in the stage account by
 [source,bash]
 ----
 cd infrastructure-live/stage/_global/account-baseline
-aws-vault exec stage-from-root -- terragrunt apply -parallelism=2
+aws-vault exec stage-from-root -- terragrunt apply
 ----
-
-[.exceptional]
-IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=2`) with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors.
 
 [.exceptional]
 IMPORTANT: On some operating systems, such as MacOS, you may also need to increase your open files limit to avoid "pipe: too many open files" errors by running: `ulimit -n 1024`.
