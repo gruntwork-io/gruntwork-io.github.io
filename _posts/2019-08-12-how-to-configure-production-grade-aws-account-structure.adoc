@@ -1611,7 +1611,7 @@ After running this command, you can finally import your IAM user:
 
 [source,bash]
 ----
-terragrunt import 'module.root_baseline.module.iam_users.aws_iam_user.user["alice"]' 'alice'
+aws-vault exec root-iam-user -- terragrunt import 'module.root_baseline.module.iam_users.aws_iam_user.user["alice"]' 'alice'
 ----
 
 You should see log output that looks something like this:
@@ -1637,7 +1637,7 @@ to import it using a command that looks like this:
 
 [source,bash]
 ----
-terragrunt import 'module.root_baseline.module.organization.aws_organizations_organization.root[0]' '<ORG_ID>'
+aws-vault exec root-iam-user -- terragrunt import 'module.root_baseline.module.organization.aws_organizations_organization.root[0]' '<ORG_ID>'
 ----
 
 Where `<ORG_ID>` is the ID of your AWS Organization. Note that this is NOT the same as the AWS account ID, but a
@@ -1651,7 +1651,7 @@ You may also want to import child accounts you created manually. You'll need to 
 
 [source,bash]
 ----
-terragrunt import 'module.root_baseline.module.organization.aws_organizations_account.child_accounts["<ACCOUNT_NAME>"]' '<ACCOUNT_ID>'
+aws-vault exec root-iam-user -- terragrunt import 'module.root_baseline.module.organization.aws_organizations_account.child_accounts["<ACCOUNT_NAME>"]' '<ACCOUNT_ID>'
 ----
 
 Where `<ACCOUNT_NAME>` is the name you used for the account in the `child_accounts` variable and `<ACCOUNT_ID>` is the
