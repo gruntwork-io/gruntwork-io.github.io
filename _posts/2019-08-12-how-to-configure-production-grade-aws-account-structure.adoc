@@ -1535,12 +1535,12 @@ Where `<ADDRESS>` is the https://www.terraform.io/docs/internals/resource-addres
 resource you're importing and `<ID>` is a resource-specific identifier (e.g., for `aws_instance`, it's the instance ID,
 whereas for `aws_lb`, it's the load balancer's name—check the docs for the resource to find out what to use).
 
-As an example, let's import the IAM user you created manually in the root account. IAM users are managed using the
+As a first example, let's import the IAM user you created manually in the root account. IAM users are managed using the
 `aws_iam_user` resource, and the
 https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_user#import[documentation for that
 resource] tells us to use the user's `name` as the `<ID>`; we'll assume for this example that your IAM user's name was
 `alice`, who is already one of the entries in the `users` variable in `terragrunt.hcl`. So now we need the `<ADDRESS>`.
-An easy way to get it is to authenticate to the root account using `aws-vault` and to run `plan`:
+An easy way to get it is to run `plan`:
 
 [source,bash]
 ----
@@ -1584,7 +1584,8 @@ can't guarantee that exactly these actions will be performed if
 ----
 
 This `plan` output is telling you that Terraform will create a bunch of resources, including the `aws_iam_user` named
-`alice`. The text next to the `#` gives you the `<ADDRESS>` to use:
+`alice`. Of course, this user already exists, so we want to `import` the user rather than create it again. The text
+next to the `#` gives you the `<ADDRESS>` to use:
 
 ----
 # module.root_baseline.module.iam_users.aws_iam_user.user["alice"] will be created
@@ -1612,7 +1613,9 @@ After running this command, you can finally import your IAM user:
 
 [source,bash]
 ----
-aws-vault exec root-iam-user -- terragrunt import 'module.root_baseline.module.iam_users.aws_iam_user.user["alice"]' 'alice'
+aws-vault exec root-iam-user -- terragrunt import \
+  'module.root_baseline.module.iam_users.aws_iam_user.user["alice"]' \
+  'alice'
 ----
 
 You should see log output that looks something like this:
@@ -1633,12 +1636,15 @@ your Terraform state and will henceforth be managed by Terraform.
 You'll now be able to manage that IAM user as code going forward!
 
 If you created other resources manually in the root account, you may want to `import` them too, so you can manage
-everything as code. For example, if you already manually created an AWS Organization in your root account, you'll need
-to import it using a command that looks like this:
+everything as code, and so that Terraform doesn't try to create any duplicate resources. For example, if you already
+manually created an AWS Organization in your root account, you'll need to import it using a command that looks like
+this:
 
 [source,bash]
 ----
-aws-vault exec root-iam-user -- terragrunt import 'module.root_baseline.module.organization.aws_organizations_organization.root[0]' '<ORG_ID>'
+aws-vault exec root-iam-user -- terragrunt import \
+  'module.root_baseline.module.organization.aws_organizations_organization.root[0]' \
+  '<ORG_ID>'
 ----
 
 Where `<ORG_ID>` is the ID of your AWS Organization. Note that this is NOT the same as the AWS account ID, but a
@@ -1652,7 +1658,9 @@ You may also want to import child accounts you created manually. You'll need to 
 
 [source,bash]
 ----
-aws-vault exec root-iam-user -- terragrunt import 'module.root_baseline.module.organization.aws_organizations_account.child_accounts["<ACCOUNT_NAME>"]' '<ACCOUNT_ID>'
+aws-vault exec root-iam-user -- terragrunt import \
+  'module.root_baseline.module.organization.aws_organizations_account.child_accounts["<ACCOUNT_NAME>"]' \
+  '<ACCOUNT_ID>'
 ----
 
 Where `<ACCOUNT_NAME>` is the name you used for the account in the `child_accounts` variable and `<ACCOUNT_ID>` is the
