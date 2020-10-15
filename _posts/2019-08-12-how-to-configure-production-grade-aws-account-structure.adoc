@@ -1462,12 +1462,7 @@ The example code above does the following:
 
 . **Create IAM users**. For this example, we create `alice` and `bob`, and carol, adding `alice` to the `full-access`
   IAM group and `carol` to the `billing` IAM group. _Note_: your own IAM user (the one you created manually) should be
-  in the `users` list, and you should be able to manage it with Terraform by running the `import` command, but due to
-  a https://github.com/hashicorp/terraform/issues/13018[Terraform bug], running `import` with `account-baseline-root`
-  is not currently possible. So after this whole deployment process is done, you may wish to add a separate IAM user in
-  `users` for yourself, add that user to the `full-access` group, run `apply` to create the user, login as that user,
-  and delete the first IAM user that you created manually. It's a bit of an ugly workaround, but it ensures all your
-  IAM users are managed as code.
+  in the `users` list; we'll use the `import` command to put this user under Terraform management shortly.
 
 . **Generate a password for each user**. We encrypt this password with that user’s PGP key from Keybase (we’ll come
   back to how to handle the passwords shortly).
@@ -1592,22 +1587,25 @@ next to the `#` gives you the `<ADDRESS>` to use:
 ----
 
 So the `<ADDRESS>` you want is `module.root_baseline.module.iam_users.aws_iam_user.user["alice"]`. Now, normally, you'd
-run `import` right away, but due to a https://github.com/hashicorp/terraform/issues/13018[Terraform bug], `import`
-doesn't work on certain types of modules—namely, those with nested `provider` blocks that use dynamic data—and will
-produce an error like `unknown variable accessed: var.region in:`. This issue has been open for over 3 years, so we
-built a workaround for it in Terragrunt: the
+run `import` right away, but due two Terraform bugs, https://github.com/hashicorp/terraform/issues/13018[#13018] and
+https://github.com/hashicorp/terraform/issues/26211[#26211], `import` doesn't work on certain types of modules—namely,
+those with nested `provider` blocks that use dynamic data—and will produce an error like `unknown variable accessed:
+var.region in:`. One of these bugs has been open for over 3 years, so we built a workaround for it in Terragrunt: the
 https://terragrunt.gruntwork.io/docs/reference/cli-options/#aws-provider-patch[`aws-provider-patch` command].
 
 The idea behind the workaround is to temporarily hard-code the dynamic data in nested `provider` blocks. In particular,
-we need to temporarily hard-code some of the `region` parameters of the nested `provider` blocks used by
+we need to temporarily hard-code some of the `region` and `role_arn` parameters of the nested `provider` blocks used by
 `account-baseline-root` as follows:
 
 [source,bash]
 ----
-terragrunt aws-provider-patch --terragrunt-override-attr region=eu-west-1
+terragrunt aws-provider-patch \
+  --terragrunt-override-attr region="eu-west-1" \
+  --terragrunt-override-attr assume_role.role_arn=""
 ----
 
-_Note: You can use any region you want for the region parameter. It's just temporary._
+_Note: You can use any region you want for the `region` parameter. It's just temporary. However, `role_arn` must be set
+to an empty string or Terraform will complain._
 
 After running this command, you can finally import your IAM user:
 
