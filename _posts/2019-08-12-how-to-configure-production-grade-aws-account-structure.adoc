@@ -1462,12 +1462,7 @@ The example code above does the following:
 
 . **Create IAM users**. For this example, we create `alice` and `bob`, and carol, adding `alice` to the `full-access`
   IAM group and `carol` to the `billing` IAM group. _Note_: your own IAM user (the one you created manually) should be
-  in the `users` list, and you should be able to manage it with Terraform by running the `import` command, but due to
-  a https://github.com/hashicorp/terraform/issues/13018[Terraform bug], running `import` with `account-baseline-root`
-  is not currently possible. So after this whole deployment process is done, you may wish to add a separate IAM user in
-  `users` for yourself, add that user to the `full-access` group, run `apply` to create the user, login as that user,
-  and delete the first IAM user that you created manually. It's a bit of an ugly workaround, but it ensures all your
-  IAM users are managed as code.
+  in the `users` list; we'll use the `import` command to put this user under Terraform management shortly.
 
 . **Generate a password for each user**. We encrypt this password with that user’s PGP key from Keybase (we’ll come
   back to how to handle the passwords shortly).
