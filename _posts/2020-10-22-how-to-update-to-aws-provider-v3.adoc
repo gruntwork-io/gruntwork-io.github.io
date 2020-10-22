@@ -34,20 +34,16 @@ https://gruntwork.io/infrastructure-as-code-library/[Gruntwork Infrastructure as
 
 This guide consists of three main sections:
 
-<<background>>::
+<<core_concepts>>::
   An overview of version 3 of the AWS provider and why it is important to update your code for compatibility.
 
-<<infrastructure_as_code_library>>::
-  The steps you need to take to update your code relying on the Gruntwork Infrastructure as Code library to update to
-  version 3 of the AWS provider.
-
-<<reference_architecture>>::
-  The steps you need to take to update your version of the Gruntwork Reference Architecture with compatibility with AWS
-  provider v3.
+<<deployment_walkthrough>>::
+  The steps you need to take to update your code relying on the Gruntwork Infrastructure as Code library and your
+  version of the Gruntwork Reference Architecture with compatibility with AWS provider v3.
 
 
-[[background]]
-== Background
+[[core_concepts]]
+== Core Concepts
 
 Version https://github.com/terraform-providers/terraform-provider-aws/releases/tag/v3.0.0[v3.0.0] of the Terraform AWS
 provider was released on July 30th 2020 with backwards incompatible updates. Following the provider release cycle,
@@ -55,11 +51,9 @@ future releases from this point onward would only be compatible with 3.X. This m
 resources or data sources that are released from this point onwards, you will need to be compatible with version 3 of
 the AWS provider to be able to pull those changes in.
 
-
 Since this is a major version change, there are a number of backwards incompatible changes that were introduced. In
 order to be able to use version 3, you need to update the resources and data sources with backwards incompatible
 changes.
-
 
 For your own code, you can follow
 https://registry.terraform.io/providers/hashicorp/aws/latest/docs/guides/version-3-upgrade[the official guide] on
@@ -67,8 +61,10 @@ updating to AWS provider version 3. The rest of this guide will focus on updatin
 the Gruntwork Reference Architecture to be compatible with AWS provider version 3.
 
 
-[[infrastructure_as_code_library]]
-== Updating references to Gruntwork Infrastructure as Code Library
+[[deployment_walkthrough]]
+== Deployment walkthrough
+
+=== Updating references to Gruntwork Infrastructure as Code Library
 
 In order to take advantage of the Terraform AWS provider version 3, you need to update your references to the Gruntwork
 Infrastructure as Code Library to use a compatible version. The following table provides a summary of all the relevant
@@ -163,8 +159,7 @@ notes for the relevant modules any time you are updating minor versions!
 |===
 
 
-[[reference_architecture]]
-== Updating the Gruntwork Reference Architecture to AWS Provider v3
+=== Updating the Gruntwork Reference Architecture to AWS Provider v3
 
 If you purchased the Gruntwork Reference Architecture, you will have a copy of the `infrastructure-live` and
 `infrastructure-modules` repositories that contain the infrastructure code for deploying the Reference Architecture. You
