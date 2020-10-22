@@ -55,9 +55,11 @@ future releases from this point onward would only be compatible with 3.X. This m
 resources or data sources that are released from this point onwards, you will need to be compatible with version 3 of
 the AWS provider to be able to pull those changes in.
 
+
 Since this is a major version change, there are a number of backwards incompatible changes that were introduced. In
 order to be able to use version 3, you need to update the resources and data sources with backwards incompatible
 changes.
+
 
 For your own code, you can follow
 https://registry.terraform.io/providers/hashicorp/aws/latest/docs/guides/version-3-upgrade[the official guide] on
@@ -73,13 +75,12 @@ Infrastructure as Code Library to use a compatible version. The following table 
 Gruntwork AWS modules and the respective versions that are compatible with AWS provider version 3.
 
 [.exceptional]
-IMPORTANT: Gruntwork follows semantic versioning. Version updates to the minor version are considered backwards
-incompatible releases for any version updates prior to 1.0.0 release. Make sure to read the release notes for the
-relevant modules any time you are updating minor versions!
+IMPORTANT: Gruntwork follows semantic versioning. In practice this means that version updates to the minor version are
+considered backwards incompatible releases for any version updates prior to 1.0.0 release. Make sure to read the release
+notes for the relevant modules any time you are updating minor versions!
 
 |===
-|IaC Package
-|Minimum version with AWS Provider v3 support
+|IaC Package |Minimum version with AWS Provider v3 support
 
 |module-vpc
 |v0.9.0
@@ -170,9 +171,11 @@ If you purchased the Gruntwork Reference Architecture, you will have a copy of t
 will need to follow the steps to update the relevant code in `infrastructure-modules` to use a compatible version of the
 Gruntwork Infrastructure as Code Library, following the steps described above.
 
+
 To help guide through the upgrade process, we have updated the Acme Reference Architecture examples to support AWS
 provider v3. You can refer to the following release notes for detailed information and code patches that you can apply
 to update your snapshot of the Gruntwork Reference Architecture:
+
 
 CIS flavor Reference Architecture::
   Refer to the release notes for
@@ -181,6 +184,7 @@ CIS flavor Reference Architecture::
   Architecture to be compatible with AWS provider v3. For all other components, refer to the release notes for
   https://github.com/gruntwork-io/infrastructure-modules-multi-account-acme/releases/tag/v0.0.1-20201021[v0.0.1-20201021]
   of the `infrastructure-modules-multi-account-acme` repository.
+
 
 Standard flavor Reference Architecture::
   Refer to the release notes for
