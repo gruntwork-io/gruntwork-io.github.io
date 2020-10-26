@@ -1,8 +1,8 @@
 ---
-title: How to update Gruntwork references to Version 3 of the Terraform AWS provider
+title: How to update to version 3.x of the Terraform AWS Provider
 categories: Foundations
 image: /assets/img/guides/infrastructure-as-code-library/grunty-grid.png
-excerpt: Learn how to update the Gruntwork Reference Architecture and your infrastructure code that depends on the Gruntwork Infrastructure as Code Library to use the latest version of the Terraform AWS provider.
+excerpt: Learn how to update the Gruntwork Reference Architecture and your infrastructure code that depends on the Gruntwork Infrastructure as Code Library to use version 3.x of the Terraform AWS provider.
 tags: ["aws", "terraform", "terragrunt"]
 cloud: ["aws"]
 redirect_from: /static/guides/foundations/how-to-update-to-aws-provider-v3/
@@ -27,8 +27,7 @@ endif::[]
 
 This guide will walk you through how to update the https://gruntwork.io/reference-architecture/[Gruntwork Reference
 Architecture] and any code that depends on the
-https://gruntwork.io/infrastructure-as-code-library/[Gruntwork Infrastructure as Code Library] to the latest version
-(v3) of the Terraform AWS provider.
+https://gruntwork.io/infrastructure-as-code-library/[Gruntwork Infrastructure as Code Library] to the version 3.x of the Terraform AWS provider.
 
 === What you'll learn in this guide
 
@@ -79,9 +78,9 @@ notes for the relevant modules any time you are updating minor versions!
 
 [cols="1,1h"]
 |===
-|IaC Package |Minimum version with AWS Provider v3 support
+|Gruntwork Repo |Minimum version with AWS Provider v3 support
 
-|module-vpc
+|terraform-aws-vpc
 |v0.9.0
 
 |module-asg
@@ -108,7 +107,7 @@ notes for the relevant modules any time you are updating minor versions!
 |package-static-assets
 |v0.6.5
 
-|module-aws-monitoring
+|terraform-aws-monitoring
 |v0.22.1
 
 |package-openvpn
@@ -166,16 +165,16 @@ notes for the relevant modules any time you are updating minor versions!
 
 If you purchased the Gruntwork Reference Architecture, you will have a copy of the `infrastructure-live` and
 `infrastructure-modules` repositories that contain the infrastructure code for deploying the Reference Architecture. You
-will need to follow the steps to update the relevant code in `infrastructure-modules` to use a compatible version of the
-Gruntwork Infrastructure as Code Library, following the steps described above.
+will need to update the relevant code in `infrastructure-modules` to use a compatible version of the
+Gruntwork Infrastructure as Code Library, as per the compatibility table above.
 
 
-To help guide through the upgrade process, we have updated the Acme Reference Architecture examples to support AWS
+To help guide you through the upgrade process, we have updated the Acme Reference Architecture examples to support AWS
 provider v3. You can refer to the following release notes for detailed information and code patches that you can apply
 to update your snapshot of the Gruntwork Reference Architecture:
 
 
-CIS flavor Reference Architecture::
+CIS Reference Architecture::
   Refer to the release notes for
   https://github.com/gruntwork-io/cis-infrastructure-live-acme/releases/tag/v0.0.1-20201021[v0.0.1-20201021] of the
   `cis-infrastructure-live-acme` repository for instructions on how to update the CIS components of the Reference
@@ -184,7 +183,7 @@ CIS flavor Reference Architecture::
   of the `infrastructure-modules-multi-account-acme` repository.
 
 
-Standard flavor Reference Architecture::
+Standard Reference Architecture::
   Refer to the release notes for
   https://github.com/gruntwork-io/infrastructure-modules-multi-account-acme/releases/tag/v0.0.1-20201021[v0.0.1-20201021]
   of the `infrastructure-modules-multi-account-acme` repository for instructions on how to update your components to be
