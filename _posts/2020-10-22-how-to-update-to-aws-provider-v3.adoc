@@ -40,9 +40,9 @@ This guide consists of three main sections:
 
 <<deployment_walkthrough>>::
   The steps you need to take to update your code relying on the Gruntwork Infrastructure as Code library and your
-  version of the Gruntwork Reference Architecture with compatibility with AWS provider v3. Includes a version
-  compatibility table you can use as a reference to know which Gruntwork Repo version tag is compatible with AWS
-  provider v3.
+  version of the Gruntwork Reference Architecture with compatibility with AWS provider v3. Includes a
+  <<compatibility_table,version compatibility table>> you can use as a reference to know which Gruntwork Repo version
+  tag is compatible with AWS provider v3.
 
 
 [[core_concepts]]
@@ -94,6 +94,7 @@ relevant modules any time you are updating minor versions! Note that you will wa
 minor version that is updated (e.g., if you are going from v0.5.x to v0.9.x, you will want to read the notes for v0.6.0,
 v0.7.0, v0.8.0, and v0.9.0 to get the full list of backwards incompatible updates).
 
+[[compatibility_table]]
 [cols="1,1h"]
 |===
 |Gruntwork Repo |Minimum version with AWS Provider v3 support
@@ -184,7 +185,7 @@ v0.7.0, v0.8.0, and v0.9.0 to get the full list of backwards incompatible update
 If you purchased the Gruntwork Reference Architecture, you will have a copy of the `infrastructure-live` and
 `infrastructure-modules` repositories that contain the infrastructure code for deploying the Reference Architecture. You
 will need to update the relevant code in `infrastructure-modules` to use a compatible version of the
-Gruntwork Infrastructure as Code Library, as per the compatibility table above.
+Gruntwork Infrastructure as Code Library, as per <<compatibility_table,the compatibility table>> above.
 
 
 To help guide you through the upgrade process, we have updated the Acme Reference Architecture examples to support AWS
