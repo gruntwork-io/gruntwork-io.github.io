@@ -57,8 +57,8 @@ resources or data sources that are released from this point onwards, you will ne
 the AWS provider to be able to pull those changes in.
 
 Since this is a major version change, there are a number of backwards incompatible changes that were introduced. In
-order to be able to use version 3, you need to update the resources and data sources with backwards incompatible
-changes.
+order to be able to use version 3, you need to update your code to be compatible when upgrading (specifically, the
+resource and data source blocks that have backwards incompatible changes).
 
 For your own code, you can follow
 https://registry.terraform.io/providers/hashicorp/aws/latest/docs/guides/version-3-upgrade[the official guide] on
