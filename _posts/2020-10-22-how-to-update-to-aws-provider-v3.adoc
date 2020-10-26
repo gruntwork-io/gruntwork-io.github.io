@@ -72,13 +72,23 @@ the Gruntwork Reference Architecture to be compatible with AWS provider version 
 === Updating references to Gruntwork Infrastructure as Code Library
 
 In order to take advantage of the Terraform AWS provider version 3, you need to update your references to the Gruntwork
-Infrastructure as Code Library to use a compatible version. The following table provides a summary of all the relevant
-Gruntwork AWS modules and the respective versions that are compatible with AWS provider version 3.
+Infrastructure as Code Library to use a compatible version. We (Gruntwork) have gone through all our modules in the
+library to test and update the code to be compatible with AWS provider version 3. As a customer, you need to update to
+the proper versions of the Gruntwork library to pick up the fixes/changes that were made to be compatible. Be sure to
+read the release notes to know what changes need to be made to update to that version.
+
+The following table provides a summary of all the relevant Gruntwork AWS modules and the respective versions that are
+compatible with AWS provider version 3.
+
 
 [.exceptional]
-IMPORTANT: Gruntwork follows semantic versioning. In practice this means that version updates to the minor version are
-considered backwards incompatible releases for any version updates prior to 1.0.0 release. Make sure to read the release
-notes for the relevant modules any time you are updating minor versions!
+IMPORTANT: Gruntwork follows
+https://gruntwork.io/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library/#versioning[semantic
+versioning]. For any pre-1.0 modules, this means that version updates to the minor version are considered backwards
+incompatible releases for any version updates prior to 1.0.0 release. Make sure to read the release notes for the
+relevant modules any time you are updating minor versions! Note that you will want to read the release notes for each
+minor version that is updated (e.g., if you are going from v0.5.x to v0.9.x, you will want to read the notes for v0.6.0,
+v0.7.0, v0.8.0, and v0.9.0 to get the full list of backwards incompatible updates).
 
 [cols="1,1h"]
 |===
