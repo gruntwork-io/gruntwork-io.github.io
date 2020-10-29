@@ -1,0 +1,46 @@
+- title: Quickly create new AWS accounts
+  description: Gruntwork Landing Zone includes an opinionated way to create a new AWS account as part of your AWS Organization using just three lines of code, plusa Terraform apply.
+  url: "/assets/img/landing-zone-features/icon-1.svg"
+  precode: |
+    <figure><figcaption>Variables.tf</figcaption>
+    <pre>
+      <code class="language-js">
+        // Create a new AWS account with just three lines of code and a Terraform apply 
+        child_accounts = {     
+          dev = {      
+            email = "dev@acme.com"    
+          },    
+          stage = {      
+            email = "stage@acme.com"    
+          },    
+          prod = {      
+            email = "prod@acme.com"    
+          }
+        }
+      </code>
+    </pre>
+    <figure>
+
+- title: Apply a best-practices security baseline to each AWS account
+  description: We define security baselines for the "root", "security", and "app" AWS accounts that include best-practices configurations for AWS CloudTrail, AWS Config, AWS Config rules, AWS IAM user password policies, cross-account access, and Amazon GuardDuty.
+  url: "/assets/img/landing-zone-features/icon-2.svg"
+
+- title: Manage your accounts and security baselines as code
+  description: Use Terraform to update to the latest Gruntwork Landing Zone baselines and to make AWS Organization changes such as setting AWS Config Rules and Service Control Policies (SCPs).
+  url: "/assets/img/landing-zone-features/icon-3.svg"
+
+- title: 100% Terraform-native
+  description: Both creating and configuring AWS accounts is done 100% using Terraform, so that all your infrastructure is reflected in Terraform code.
+  url: "/assets/img/landing-zone-features/icon-4.svg"
+
+- title: Customize your AWS account baseline
+  description: Extend or customize your AWS account baselines by adding or removing any set of services you want directly in the Terraform code.
+  url: "/assets/img/landing-zone-features/icon-5.svg"
+
+- title: Automate account creation
+  description: Because Gruntwork Landing Zone is 100% Terraform-native, you can create new accounts as part of any pipeline that runs Terraform code. For a production-ready example, see Gruntwork Pipelines.
+  url: "/assets/img/landing-zone-features/icon-6.svg"
+
+- title: Available off the shelf
+  description: Gruntwork Landing Zone is pre-written, commercially supported, production-grade code that is available right now. No consulting engagement needed.
+  url: "/assets/img/landing-zone-features/icon-7.svg"

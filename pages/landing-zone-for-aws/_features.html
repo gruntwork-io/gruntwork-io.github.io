@@ -1,0 +1,19 @@
+<div class="row row-page-header">
+  <div class="col-xs-12">
+    <h2>Features</h2>
+    {% for feature in site.data.landing-zone-features %}
+      <div class="row row-features-group">
+        <div class="col-xs-12 col-sm-2 col-md-2">
+          <img class="feature-image" src="{{ feature.url }}" alt="feature-icon" />
+        </div>
+        <div class="col-xs-12 col-sm-10 col-md-10">
+          <h3>{{ feature.title }}</h3>
+          <p>{{ feature.description }}</p>
+          {% if feature.precode %}
+            <div class="feature-precode">{{ feature.precode }}</div>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>

@@ -1,0 +1,38 @@
+.gruntwork-landing-zone {
+  .row-features-group {
+    display: flex;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    .feature-precode {
+      position: relative;
+      margin-top: 50px;
+      figcaption {
+        position: absolute;
+        top: -15px;
+        left: 15px;
+        background-color: #ee4f5d;
+        border-radius: 4px;
+        color: white;
+        text-transform: uppercase;
+        font-size: 18px;
+        font-weight: bold;
+        line-height: 1.7;
+        letter-spacing: 1px;
+        padding: 0 10px; 
+      }
+    }
+    .feature-image {
+      width: 100%;
+      max-width: 120px;
+      margin-top: 30px;
+    }
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .gruntwork-landing-zone {
+    .row-features-group {
+      flex-direction: column;
+    }
+  }
+}
