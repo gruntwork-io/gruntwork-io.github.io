@@ -1,7 +1,7 @@
 /**
  * Javascript specially for the search bad and filters used in the
  * IaC Library page and the deployment guides page.
- * Please note that since we will be moving to a Saas app, we will need to 
+ * Please note that since we will be moving to a Saas app, we will need to
  * make this code reuasble
  */
 (function () {
@@ -146,8 +146,11 @@
     if (searchValue && searchValue.length > 0) {
       const searchQueries = searchValue.toLowerCase().split(" ");
 
+      // First hide all items. We will go through each entry, passing through the search filter and selectively show the
+      // items that match the search query in the next routine.
       $('.table-clickable-row').length === 0 ? hideItems() : $('.table-clickable-row').hide();
 
+      // Go through each entry, pass through search filter and if it matches, display the entry by selecting with ID.
       searchEntry.forEach(entry => {
         let matchesAll = true;
 
@@ -156,6 +159,7 @@
 
           if (searchContent.indexOf(searchQuery) < 0) {
             matchesAll = false;
+            // TODO: there is a bug here if the id contains a `.`, as that would be interpretted as a class filter.
             $(`#${entry.id}`).hide();
           }
         });

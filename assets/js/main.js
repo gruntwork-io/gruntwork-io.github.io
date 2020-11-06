@@ -8553,10 +8553,9 @@ $(function() {
     $("#error-message").html("");
     form.find("*").removeClass("has-error");
   };
-
+  
   var submitForm = function(e) {
     e.preventDefault();
-
     if (inCall) {
       return;
     }
@@ -8564,7 +8563,12 @@ $(function() {
 
     var data = serialize(form.get(0), { hash: true });
     if (validateForm()) {
-      submitToFormSpree(data);
+      grecaptcha.ready(function() {
+        grecaptcha.execute('6LcXFLoZAAAAAHVaImPgU3xGnBmyY-lwQ6sHllGN', {action: 'submit'}).then(function(token) {
+          data['g-recaptcha-response']=token;
+          submitToFormSpree(data);
+        });
+      });
     } else {
       inCall = false;
     }

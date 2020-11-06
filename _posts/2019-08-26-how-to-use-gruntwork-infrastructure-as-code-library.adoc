@@ -230,6 +230,7 @@ Opinionated code::
 [[example_ref_arch]]See an example Reference Architecture::
   You can find the code for an example Reference Architecture for a fictional Acme corporation in the following repos:
 +
+[.exceptional]
 IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork subscriber# to access these example repos.
 +
 * https://github.com/gruntwork-io/infrastructure-live-multi-account-acme/tree/master/_docs[Walkthrough documentation]
@@ -641,6 +642,7 @@ next two sections of the guide will walk you through how to use each of these.
 This section will show you how to use Terraform modules from the Gruntwork Infrastructure as Code Library. As an illustrative example,
 we'll deploy the `vpc-app`  Terraform module from https://github.com/gruntwork-io/module-vpc[module-vpc].
 
+[.exceptional]
 IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork subscriber# to access `module-vpc`.
 
 You can use this module to deploy a production-grade VPC on AWS. For full background information on VPCs, check
@@ -1435,6 +1437,7 @@ We cover each approach below, but first, you'll need to complete a few one time 
 
 ==== One time set up
 
+[.exceptional]
 IMPORTANT: If you're using TFE, you'll need to follow https://www.terraform.io/docs/enterprise/before-installing/index.html[HashiCorp's Enterprise installation instructions] first. Most of the details below still apply to TFE, but you should adjust any URLs, such as `app.terraform.io`, to use your TFE installation instead.
 
 ===== Create an account
@@ -1716,6 +1719,7 @@ In all cases, you'll need to ensure that your workspaces stay in sync with your 
 
 In typical Terragrunt usage, variables are passed to Terraform using the https://terragrunt.gruntwork.io/docs/reference/config-blocks-and-attributes/#inputs[`inputs`] attribute. Anything defined in the inputs will be passed to Terraform using https://www.terraform.io/docs/configuration/variables.html#environment-variables:[the environment variable mechanism]. However, this mechanism is not supported by TFC. Instead, you can generate a `*.auto.tfvars` file containing the inputs.
 
+[.exceptional]
 IMPORTANT: The generated `terragrunt.auto.tfvars` file will be present on local disk. Depending upon your configuration, this file may contain sensitive data. Do not commit this file to version control. We recommend adding the `*.auto.tfvars` to `.gitignore`.
 
 The following code shows how to generate a `terragrunt.auto.tfvars` file.
@@ -1868,6 +1872,7 @@ This section will show you how to use scripts and binaries from the Gruntwork In
 we'll deploy the `ip-lockdown` script and `ssh-grunt` binary from
 https://github.com/gruntwork-io/module-security[module-security].
 
+[.exceptional]
 IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork subscriber# to access `module-security`.
 
 ip-lockdown::
@@ -2070,11 +2075,13 @@ the machine image (i.e., AMI) to deploy via an input variable (e.g., `ami_id`):
   that need auto healing, zero-downtime rolling deployment, and persistent EBS volumes and ENIs. Both of these modules
   are part of `module-asg`.
 +
+[.exceptional]
 IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork subscriber# to access `module-asg`.
 * *Single EC2 Instance:* use the
   https://github.com/gruntwork-io/module-server/tree/master/modules/single-server[single-server module] to run a single
   EC2 instance that can attach persistent EBS volumes and ENIs. This module is part of `module-server`.
 +
+[.exceptional]
 IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork subscriber# to access `module-server`.
 +
 Note that a single server is a single point of failure, so we generally recommend using one of the Auto Scaling Group
@@ -2261,6 +2268,7 @@ Kubernetes::
   using https://github.com/gruntwork-io/terraform-aws-eks[terraform-aws-eks] to deploy an EKS cluster; for GCP, we
   recommend using https://github.com/gruntwork-io/terraform-google-gke[terraform-google-gke] to deploy a GKE cluster.
 +
+[.exceptional]
 IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork subscriber# to access `terraform-aws-eks`.
 +
 Once you have a working cluster, there are a number of ways to deploy Docker images. The basic version is to run
@@ -2273,6 +2281,7 @@ ECS::
   To deploy your Docker image to ECS, you'll first need to set up an ECS cluster, which you can do using
   the https://github.com/gruntwork-io/module-ecs/tree/master/modules/ecs-cluster[ecs-cluster] module in `module-ecs`.
 +
+[.exceptional]
 IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork subscriber# to access `module-ecs`.
 +
 Once you have a working cluster, you can deploy your Docker image using one of the `ecs-service-xxx` modules in
@@ -2284,6 +2293,7 @@ Fargate::
   Fargate will manage all the worker nodes for you. Once you've created the cluster, you can deploy your image using
   the https://github.com/gruntwork-io/module-ecs/tree/master/modules/ecs-fargate[ecs-fargate] module in `module-ecs`.
 +
+[.exceptional]
 IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork subscriber# to access `module-ecs`.
 
 ===== Updating Docker images
@@ -2437,6 +2447,7 @@ helm install -n nginx -f values.yaml gruntwork/k8s-service
 This will render the yaml files in the chart using the input values as parameters and apply it onto the Kubernetes
 cluster.
 
+[.exceptional]
 IMPORTANT: In the previous example, we passed in the parameter `-n nginx` to the `install` command. This allows us to
 force a release name for the deployment. When you install a chart using Helm, Helm tracks that deployment as a
 _release_ and binds all the related resources under a unique name. If you don't provide a release name, Helm will
@@ -2524,6 +2535,7 @@ have a company policy that requires all source code to be pulled from an interna
 server) or if you need to make modifications to the Infrastructure as Code Library that you do not wish to contribute back to
 Gruntwork. This section will walk you through what you need to do to fork the code.
 
+[.exceptional]
 IMPORTANT: The definition of an _Authorized User_ from the Gruntwork Terms of Service does NOT change if you fork the
 code. That is, if you create internal forks and give 50 users access to those internal forks, then the Gruntwork
 License requires that you pay for 50 Authorized Users.
