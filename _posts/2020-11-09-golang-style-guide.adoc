@@ -1,0 +1,105 @@
+---
+title: Go Style Guide
+categories: Styleguides
+image: /assets/img/guides/go-logo-blue.png
+excerpt: The style guide for the Go programming language that is used by all Gruntwork-owned code repositories that contain Go code.
+tags: ["go", "golang", "code", "style"]
+cloud: ["styleguides"]
+redirect_from: /static/guides/styleguides/golang-style-guide/
+---
+:page-type: guide
+:page-layout: post
+
+:toc:
+:toc-placement!:
+
+// GitHub specific settings. See https://gist.github.com/dcode/0cfbf2699a1fe9b46ff04c41721dda74 for details.
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+toc::[]
+endif::[]
+
+== Intro
+This is the style guide for the Go programming language. It aims to help us ensure that the code we write is
+clear, readable, idiomatic Go code. The conventions detailed in this guide are our preferences and should be thought of
+as guidelines rather than hard rules.
+
+== Starting point
+We use the excellent https://golang.org/doc/effective_go.html[Effective Go] guide as the starting point for our style
+guide. Unless explicitly mentioned otherwise, we default to following the conventions outlined in it.
+
+Another helpful resource is the https://github.com/golang/go/wiki/CodeReviewComments[CodeReviewComments] section of the
+Go GitHub wiki page.
+
+Below you will find the list of conventions that differ from the above mentioned documents, either because they are
+specific to Gruntwork, or because we consciously chose to go against what Effective Go and CodeReviewComments recommend.
+
+== Additional conventions
+=== General
+Before committing any Go code, run `go fmt` and `goimports`. We run these as part of the CI build, so this will prevent
+your build from failing.
+
+=== Control structures
+When possible, avoid `else` and nested `if` statements. Prefer multiple `return` statements over nested code.
+This makes the code more readable and avoids complexity.
+
+E.g:
+[source,go]
+----
+// Do this
+if something {
+	doThis()
+	return this
+}
+if orOther {
+	return that
+}
+return theOther
+----
+
+[source,go]
+----
+// Don't do this
+if something {
+	doThis()
+} else {
+	if orOther {
+		return that
+	}
+}
+----
+
+=== Error handling
+Prefer using the `errors` standard library package for handling single errors and `hashicorp/go-multierror` for
+handling multiple errors.
+
+=== Pointer usage
+Prefer using value type over pointers, unless necessary.
+
+=== Testing
+All files containing business logic must have a corresponding unit test file, and we aim to have 100% test coverage.
+
+Unless there's a reason not to, tests should run in parallel. This is done by including a call to `t.Parallel` in the test function.
+
+=== Naming things
+Prefer descriptive names over short ones. In particular, avoid one-letter variable names.
+
+If a name contains an acronym, only capitalize the first letter of the acronym. E.g. use `someEksCluster` rather than
+`someEKSCluster`. We go against the https://github.com/golang/go/wiki/CodeReviewComments#initialisms[recommendation]
+here in order to follow the convention already in use by some third party packages we heavily rely on (e.g. `aws-sdk-go`).
+
+==== Constants
+Since many languages use `ALL_CAPS` for constants, it is worth calling out explicitly that
+https://golang.org/doc/effective_go.html#mixed-caps[Effective Go] recommends using `MixedCaps` for all names, including constants.
+Therefore, `region` or `testRegion` for private constants and `Region` or `TestRegion` for public ones is preferred over
+`REGION` or `TEST_REGION`.
+
+=== Repo-specific conventions
+==== terratest
+Note the existence of methods in terratest which are suffixed with the letter `E`, e.g.
+https://github.com/gruntwork-io/terratest/blob/master/modules/aws/account.go#L23[GetAccountIdE]. The suffix `E`
+signifies that the method returns an error as the last return value.
