@@ -78,41 +78,10 @@ if something {
 ----
 
 === Error handling
-Prefer using the `errors` standard library package for handling single errors and `hashicorp/go-multierror` for
-handling multiple errors.
-
-[source,go]
-----
-// Do this
-func (params Params) Validate() error {
-    var merr = multierror.NewPrefixed("some prefix")
-    if params.ID == "" {
-        merr = merr.Append(errors.New("ID cannot be empty"))
-    }
-
-    if params.AnotherRequiredArg == nil {
-        merr = merr.Append(errors.New("this arg is required"))
-    }
-
-    return merr.ErrorOrNil()
-}
-----
-
-[source,go]
-----
-// Don't do this
-func (params Params) Validate() error {
-    if params.ID == "" {
-        return errors.New("ID cannot be empty")
-    }
-
-    if params.AnotherRequiredArg == nil {
-        return errors.New("this arg is required")
-    }
-
-   return nil
-}
-----
+Prefer using the `errors` standard library package for handling single errors. For operations that can produce multiple
+errors, leverage the https://github.com/gruntwork-io/terragrunt/blob/master/errors/multierror.go[`MultiError`]
+package by https://github.com/gruntwork-io/terragrunt/blob/cb369119bf5c6f3031e914e8554ffe056dcf9e22/cli/hclfmt.go#L62[accumulating
+all the errors into a single `MultiError` and returning that], rather than returning every error individually as it comes up.
 
 https://github.com/golang/go/wiki/CodeReviewComments#dont-panic[Don't panic] (_hat tip, Douglas Adams_). Any method that
 can have an error should return that error as its final value. This should be passed up through each layer, which can
