@@ -99,13 +99,24 @@
   }
 
   /**
+   * A naive function to slugify a string input and return a URL friendly output
+   * of that string. This implementation was sourced from:
+   * https://stackoverflow.com/a/1054862
+   * @param {*} stringValue 
+   */
+  function naiveSlugify(stringValue) {
+    return stringValue.replace(/ /g,'-').replace(/[^\w-]+/g,'')
+  }
+
+  /**
    * A function to display or hide the category of search
    * @type {Function}
    */
   function displayCategory(entry) {
     const categoryArr = $.merge($('.category-head'), $('.categories ul li'));
     categoryArr.each(function () {
-      const category = $(this).text().toLowerCase();
+      const category = naiveSlugify($(this).text().toLowerCase());
+
       if (entry.category === category) {
         $(`.categories ul .${category}`).show();
         $(`#${category}.category-head`).show();
