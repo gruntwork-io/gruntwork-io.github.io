@@ -1,0 +1,209 @@
+---
+title: How to update to version 3 of the Terraform AWS Provider
+categories: Upgrades
+image: /assets/img/guides/refresh_icon.png
+excerpt: Learn how to update the Gruntwork Reference Architecture and your infrastructure code that depends on the Gruntwork Infrastructure as Code Library to use version 3.x of the Terraform AWS provider.
+tags: ["aws", "terraform", "terragrunt"]
+cloud: ["aws"]
+redirect_from: /static/guides/upgrades/how-to-update-to-aws-provider-v3/
+---
+:page-type: guide
+:page-layout: post
+
+:toc:
+:toc-placement!:
+
+// GitHub specific settings. See https://gist.github.com/dcode/0cfbf2699a1fe9b46ff04c41721dda74 for details.
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+toc::[]
+endif::[]
+
+== Intro
+
+This guide will walk you through how to update the https://gruntwork.io/reference-architecture/[Gruntwork Reference
+Architecture] and any code that depends on the
+https://gruntwork.io/infrastructure-as-code-library/[Gruntwork Infrastructure as Code Library] to version 3.x of the
+Terraform AWS provider. Following the release of v3.0.0, new features and bug fixes will only be available on version
+3.x, but it also has a number of backwards incompatibilities that have to be incorporated into your codebase.
+
+=== What you'll learn in this guide
+
+This guide consists of three main sections:
+
+<<core_concepts>>::
+  An overview of version 3 of the AWS provider and why it is important to update your code for compatibility.
+
+<<deployment_walkthrough>>::
+  The steps you need to take to update your code relying on the Gruntwork Infrastructure as Code library and your
+  version of the Gruntwork Reference Architecture with compatibility with AWS provider v3. Includes a
+  <<compatibility_table,version compatibility table>> you can use as a reference to know which Gruntwork Repo version
+  tag is compatible with AWS provider v3.
+
+
+[[core_concepts]]
+== Core Concepts
+
+=== Background
+
+Version https://github.com/terraform-providers/terraform-provider-aws/releases/tag/v3.0.0[v3.0.0] of the Terraform AWS
+provider was released on July 30th 2020 with backwards incompatible updates. Following the provider release cycle,
+future releases from this point onward would only be compatible with 3.X. This means that if you wish to use any new
+resources or data sources that are released from this point onwards, you will need to be compatible with version 3 of
+the AWS provider to be able to pull those changes in.
+
+Since this is a major version change, there are a number of backwards incompatible changes that were introduced. In
+order to be able to use version 3, you need to update your code to be compatible when upgrading (specifically, the
+resource and data source blocks that have backwards incompatible changes).
+
+For your own code, you can follow
+https://registry.terraform.io/providers/hashicorp/aws/latest/docs/guides/version-3-upgrade[the official guide] on
+updating to AWS provider version 3. The rest of this guide will focus on updating references to Gruntwork modules and
+the Gruntwork Reference Architecture to be compatible with AWS provider version 3.
+
+
+[[deployment_walkthrough]]
+== Deployment walkthrough
+
+=== Updating references to Gruntwork Infrastructure as Code Library
+
+In order to take advantage of the Terraform AWS provider version 3, you need to update your references to the Gruntwork
+Infrastructure as Code Library to use a compatible version. We (Gruntwork) have gone through all our modules in the
+library to test and update the code to be compatible with AWS provider version 3. As a customer, you need to update to
+the proper versions of the Gruntwork library to pick up the fixes/changes that were made to be compatible. Be sure to
+read the release notes to know what changes need to be made to update to that version.
+
+Refer to https://gruntwork.io/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library/#updating[the
+"Updating" section of "How to use the Gruntwork Infrastructure as Code Library"]
+for instructions on how to update the versions in your code.
+
+The following table provides a summary of all the relevant Gruntwork AWS modules and the respective versions that are
+compatible with AWS provider version 3.
+
+
+[.exceptional]
+IMPORTANT: Gruntwork follows
+https://gruntwork.io/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library/#versioning[semantic
+versioning]. For any pre-1.0 modules, this means that version updates to the minor version are considered backwards
+incompatible releases for any version updates prior to 1.0.0 release. Make sure to read the release notes for the
+relevant modules any time you are updating minor versions! Note that you will want to read the release notes for each
+minor version that is updated (e.g., if you are going from v0.5.x to v0.9.x, you will want to read the notes for v0.6.0,
+v0.7.0, v0.8.0, and v0.9.0 to get the full list of backwards incompatible updates).
+
+[[compatibility_table]]
+[cols="1,1h"]
+|===
+|Gruntwork Repo |Minimum version with AWS Provider v3 support
+
+|terraform-aws-vpc
+|https://github.com/gruntwork-io/terraform-aws-vpc/releases/tag/v0.9.0[v0.9.0]
+
+|module-asg
+|https://github.com/gruntwork-io/module-asg/releases/tag/v0.10.0[v0.10.0]
+
+|module-data-storage
+|https://github.com/gruntwork-io/module-data-storage/releases/tag/v0.15.0[v0.15.0]
+
+|module-server
+|https://github.com/gruntwork-io/module-server/releases/tag/v0.8.5[v0.8.5]
+
+|package-lambda
+|https://github.com/gruntwork-io/package-lambda/releases/tag/v0.8.1[v0.8.1]
+
+|package-sam
+|https://github.com/gruntwork-io/package-sam/releases/tag/v0.2.1[v0.2.1]
+
+|module-cache
+|https://github.com/gruntwork-io/module-cache/releases/tag/v0.9.4[v0.9.4]
+
+|package-messaging
+|https://github.com/gruntwork-io/package-messaging/releases/tag/v0.3.4[v0.3.4]
+
+|package-static-assets
+|https://github.com/gruntwork-io/package-static-assets/releases/tag/v0.6.5[v0.6.5]
+
+|terraform-aws-monitoring
+|https://github.com/gruntwork-io/terraform-aws-monitoring/releases/tag/v0.22.1[v0.22.1]
+
+|package-openvpn
+|https://github.com/gruntwork-io/package-openvpn/releases/tag/v0.11.0[v0.11.0]
+
+|module-security
+|https://github.com/gruntwork-io/module-security/releases/tag/v0.35.0[v0.35.0]
+
+|module-ecs
+|https://github.com/gruntwork-io/module-ecs/releases/tag/v0.22.0[v0.22.0]
+
+|module-ci
+|https://github.com/gruntwork-io/module-ci/releases/tag/v0.27.3[v0.27.3]
+
+|terraform-aws-eks
+|https://github.com/gruntwork-io/terraform-aws-eks/releases/tag/v0.22.1[v0.22.1]
+
+|module-load-balancer
+|https://github.com/gruntwork-io/module-load-balancer/releases/tag/v0.20.4[v0.20.4]
+
+|terraform-aws-couchbase
+|https://github.com/gruntwork-io/terraform-aws-couchbase/releases/tag/v0.3.0[v0.3.0]
+
+|package-zookeeper
+|https://github.com/gruntwork-io/package-zookeeper/releases/tag/v0.6.7[v0.6.7]
+
+|package-kafka
+|https://github.com/gruntwork-io/package-kafka/releases/tag/v0.6.3[v0.6.3]
+
+|package-elk
+|https://github.com/gruntwork-io/package-elk/releases/tag/v0.6.0[v0.6.0]
+
+|terraform-aws-influx
+|https://github.com/gruntwork-io/terraform-aws-influx/releases/tag/v0.1.3[v0.1.3]
+
+|terraform-aws-vault
+|https://github.com/hashicorp/terraform-aws-vault/releases/tag/v0.13.11[v0.13.11]
+
+|terraform-aws-consul
+|https://github.com/hashicorp/terraform-aws-consul/releases/tag/v0.7.10[v0.7.10]
+
+|terraform-aws-nomad
+|https://github.com/hashicorp/terraform-aws-nomad/releases/tag/v0.6.6[v0.6.6]
+
+|package-terraform-utilities
+|https://github.com/gruntwork-io/package-terraform-utilities/releases/tag/v0.2.1[v0.2.1]
+
+|cis-compliance-aws
+|https://github.com/gruntwork-io/cis-compliance-aws/releases/tag/v0.6.0[v0.6.0]
+
+|===
+
+
+=== Updating the Gruntwork Reference Architecture to AWS Provider v3
+
+If you purchased the Gruntwork Reference Architecture, you will have a copy of the `infrastructure-live` and
+`infrastructure-modules` repositories that contain the infrastructure code for deploying the Reference Architecture. You
+will need to update the relevant code in `infrastructure-modules` to use a compatible version of the
+Gruntwork Infrastructure as Code Library, as per <<compatibility_table,the compatibility table>> above.
+
+
+To help guide you through the upgrade process, we have updated the Acme Reference Architecture examples to support AWS
+provider v3. You can refer to the following release notes for detailed information and code patches that you can apply
+to update your snapshot of the Gruntwork Reference Architecture:
+
+
+CIS Reference Architecture::
+  Refer to the release notes for
+  https://github.com/gruntwork-io/cis-infrastructure-live-acme/releases/tag/v0.0.1-20201021[v0.0.1-20201021] of the
+  `cis-infrastructure-live-acme` repository for instructions on how to update the CIS components of the Reference
+  Architecture to be compatible with AWS provider v3. For all other components, refer to the release notes for
+  https://github.com/gruntwork-io/infrastructure-modules-multi-account-acme/releases/tag/v0.0.1-20201021[v0.0.1-20201021]
+  of the `infrastructure-modules-multi-account-acme` repository.
+
+
+Standard Reference Architecture::
+  Refer to the release notes for
+  https://github.com/gruntwork-io/infrastructure-modules-multi-account-acme/releases/tag/v0.0.1-20201021[v0.0.1-20201021]
+  of the `infrastructure-modules-multi-account-acme` repository for instructions on how to update your components to be
+  compatible with AWS provider v3.
