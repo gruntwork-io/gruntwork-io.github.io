@@ -32,11 +32,11 @@ custom_js:
           <a href="#"> / <span> {{ page.title | replace:'-',' ' }}</span></a>
           {% else %}
           <a
-            href="/guides#{{ crumb }}"
+            href="/guides#{{ crumb | url_decode | slugify}}"
             ga-on="click"
             ga-event-category="guide-{{ page.title | slugify }}"
             ga-event-action="breadcrumb-{{ crumb }}"
-            >/ <span>{{ crumb | replace:'-',' ' | capitalize }}</span></a
+            >/ <span>{{ crumb | url_decode | replace:'-',' ' | capitalize }}</span></a
           >
           {% endif %} {% endfor %}
         </ol>
