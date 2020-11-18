@@ -1,9 +1,10 @@
 - title: Setup a Terraform pipeline based on best practices
-  description: Gruntwork engineers carefully designed a Terraform pipeline code framework and approach based on best practices for workflow, long-term infrastructure code maintainability, and security. Adopt those best practices for your own Terraform team.
+  description: |
+    Gruntwork engineers carefully designed a Terraform pipeline code framework and approach based on best practices for workflow, long-term infrastructure code maintainability, and security. Adopt those best practices for your own Terraform team.
   icon: "/assets/img/gruntwork-pipelines/features-1@3x.png"
 
 - title: Adopt a security-first approach
-  description: Gruntwork Pipelines locks down your CI system's AWS permissions to allow invoking a single Lambda function, and moves all Terraform executions to an EC2 Instance or ECS Fargate cluster where you have full control over the assigned AWS IAM Roles. 
+  description: It's all too common to give your CI server admin-level permissions needed to launch arbitrary infrastructure, a dangerous security posture. Gruntwork Pipelines enables a secure infrastructure pipeline by granting a customizable set of permissions to a Fargate Task that exposes a limited, locked down interface and only allows running pre-defined commands such as <code>terraform apply</code> in pre-defined git repos/branches/folders that require peer review to change.
   icon: "/assets/img/gruntwork-pipelines/features-2@3x.png"
 
 - title: Run your pipeline on any CI tool
@@ -22,6 +23,6 @@
   description: Gruntwork Pipelines also has first-class support for application deployments, allowing you to use the same pipeline configuration for both infrastructure and application code. 
   icon: "/assets/img/gruntwork-pipelines/features-6@3x.png"
 
-- title: Add your own features. Or benefits from our new ones.
+- title: Add your own features. Or benefit from our new ones.
   description: Gruntwork Pipelines is a code framework and approach. Like all Gruntwork products, we take primary responsibility for updates and new features, and you get access to 100% of the code, leaving you free to add any customizations you want or contribute them back to our mainline branch.
   icon: "/assets/img/gruntwork-pipelines/features-7@3x.png"
