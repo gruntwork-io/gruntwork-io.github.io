@@ -1,14 +1,14 @@
-- title: Setup a Terraform pipeline based on best practices
+- title: Set up a Terraform pipeline based on best practices
   description: |
     Gruntwork engineers carefully designed a Terraform pipeline code framework and approach based on best practices for workflow, long-term infrastructure code maintainability, and security. Adopt those best practices for your own Terraform team.
   icon: "/assets/img/gruntwork-pipelines/features-1@3x.png"
 
 - title: Adopt a security-first approach
-  description: It's all too common to give your CI server admin-level permissions needed to launch arbitrary infrastructure, a dangerous security posture. Gruntwork Pipelines enables a secure infrastructure pipeline by granting the key permissions to a Fargate Task that exposes a limited, locked down interface and only allows running pre-defined commands such as <code>terraform apply</code> in pre-defined git repos/branches/folders that require peer review to change.
+  description: It's all too common to give your CI server admin-level permissions needed to launch arbitrary infrastructure, a dangerous security posture. Gruntwork Pipelines enables a secure infrastructure pipeline by granting the sensitive permissions solely to a Fargate Task that exposes a limited, locked down interface and only allows running pre-defined commands such as <code>terraform apply</code> in pre-defined git repos/branches/folders that require peer review to change.
   icon: "/assets/img/gruntwork-pipelines/features-2@3x.png"
 
 - title: Run your pipeline on any CI tool
-  description: Run Gruntwork pipelines on any CI tool you want, including both managed and self-hosted varieties. There's no need to setup a new tool, or share sensitive cloud credentials with another third party.
+  description: Run Gruntwork pipelines on any CI tool you want, including both managed and self-hosted varieties. There's no need to set up a new tool, or share sensitive cloud credentials with another third party.
   icon: "/assets/img/gruntwork-pipelines/features-3@3x.png"
 
 - title: Run an infrastructure code pipeline for Terragrunt or Terraform
