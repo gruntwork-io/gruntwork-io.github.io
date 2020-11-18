@@ -11,10 +11,21 @@
   rel="stylesheet"
   type="text/css"
 />
+<!-- The prism CSS may be different depending on which page we're looking at-->
+{% if page.prism_css %}
+<link
+  rel="stylesheet"
+  href="{{ page.prism_css | prepend: site.baseurl }}"
+/>
+<!-- The page overrides the default prism style. Use the overrde -->
+{% else %}
+<!-- The page doesn't override the prism theme so just load the default prism
+css styling -->
 <link
   rel="stylesheet"
   href="{{ '/assets/css/prism.css' | prepend: site.baseurl }}"
 />
+{% endif %}
 <!-- Google Tag Manager -->
 <script>
   var dataLayer = [];
