@@ -5,7 +5,7 @@
           <ul class="sectlevel1">
             {% for category in site.categories %}
               {% capture category_name %}{{ category | first }}{% endcapture %}
-                <li class="{{ category_name | downcase }}">
+                <li class="{{ category_name | slugify }}">
                     <a href="#{{category_name | slugify}}" ga-on="click" ga-event-category="guides-listings-{{ page.path | slugify}}" ga-event-action="category-{{ category_name | slugify }}">{{category_name}}</a>
                 </li>
             {% endfor %}
@@ -47,7 +47,7 @@
             {
                 "id"       : "{{ post.title | strip_html | downcase | split: ' ' | join: '-' | append: '-card' }}",
                 "title"    : "{{ post.title | strip_html | escape | downcase}}",
-                "category" : "{{post.categories | join: ', ' | downcase}}",
+                "category" : "{{post.category | downcase | slugify}}",
                 "excerpt" : "{{post.excerpt | strip_html | strip_newlines | escape | downcase}}",
                 "content"  : {{ post.content | strip_html | strip_newlines | jsonify | downcase }},
                 "tags"     : "{{ post.tags | join: ', ' | downcase}}",
