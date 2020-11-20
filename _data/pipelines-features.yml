@@ -1,0 +1,28 @@
+- title: Set up a Terraform pipeline based on best practices
+  description: |
+    Gruntwork engineers carefully designed a Terraform pipeline code framework and approach based on best practices for workflow, long-term infrastructure code maintainability, and security. Adopt those best practices for your own Terraform team.
+  icon: "/assets/img/gruntwork-pipelines/features-1@3x.png"
+
+- title: Adopt a security-first approach
+  description: It's all too common to give your CI server admin-level permissions needed to launch arbitrary infrastructure, a dangerous security posture. Gruntwork Pipelines enables a secure infrastructure pipeline by granting the sensitive permissions solely to a Fargate Task that exposes a limited, locked down interface and only allows running pre-defined commands such as <code>terraform apply</code> in pre-defined git repos/branches/folders that require peer review to change.
+  icon: "/assets/img/gruntwork-pipelines/features-2@3x.png"
+
+- title: Run your pipeline on any CI tool
+  description: Run Gruntwork pipelines on any CI tool you want, including both managed and self-hosted varieties. There's no need to set up a new tool, or share sensitive cloud credentials with another third party.
+  icon: "/assets/img/gruntwork-pipelines/features-3@3x.png"
+
+- title: Run an infrastructure code pipeline for Terragrunt or Terraform
+  description: Gruntwork Pipelines is designed to give a first-class experience with either Terragrunt or Terraform. In addition, you have full control over the build environment by selecting any Docker image of your choice. 
+  icon: "/assets/img/gruntwork-pipelines/features-4@3x.png"
+
+- title: Notify Slack when key events occur
+  description: Slack users can receive notifications when a <code>terraform plan</code> is ready for review, when a human needs to approve a <code>terraform apply</code>, or in other scenarios you configure.
+  icon: "/assets/img/gruntwork-pipelines/features-5@3x.png"
+
+- title: Use the same pipeline for infra and app code
+  description: Gruntwork Pipelines has first-class support for application deployments, allowing you to use the same pipeline configuration for both infrastructure and application code. 
+  icon: "/assets/img/gruntwork-pipelines/features-6@3x.png"
+
+- title: Add your own features. Or benefit from our new ones.
+  description: Gruntwork Pipelines is a code framework and approach. Like all Gruntwork products, we take primary responsibility for updates and new features, and you get access to 100% of the code, leaving you free to add any customizations you want or contribute them back to our mainline branch.
+  icon: "/assets/img/gruntwork-pipelines/features-7@3x.png"
