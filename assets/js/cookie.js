@@ -1,11 +1,3 @@
-/**
- * Cookie notice
- * @author AKOS
- *
- * This cookie script must load AFTER the Intercom code. This will ensure
- * that our cookie notice renders ABOVE the Intercom bubble to avoid conflicts with z-index.
- */
-
 (function ($) {
   "use strict";
   var cookieInnerHtml =
