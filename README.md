@@ -21,20 +21,6 @@ The fastest way to launch this site is to use [Docker](https://www.docker.com/).
 1. Start Jekyll server: `bundle exec jekyll serve --livereload`
 1. Go to `http://localhost:4000`
 
-## Updating /assets/msword/gruntwork-terms.docx
-
-Jekyll will automatically generate an MS Word version of our terms of service at `/assets/msword/gruntwork-terms.docx`
-using [Pandoc](https://pandoc.org/) when `docker-compose up` is first run. Unfortunately, when changes are made to
-`/_data/terms-of-service.yml`, these changes do not automatically re-generate a new `gruntwork-terms.docx` file. The
-current solution is to re-run `docker-compose up`.
-
-Hopefully, in the future, Jekyll will support the ability to indicate which files should trigger which regeneration pages.
-
-### /assets/msword/styles.docx
-
-If you want to edit the styles used to generate `/assets/msword/gruntwork-terms.docx`, update the styles saved in
-`/assets/msword/styles.docx` and re-run `docker-compose up`.
-
 ## Deploying
 
 To deploy the site to S3/CloudFront:
@@ -47,7 +33,7 @@ To deploy the site to S3/CloudFront:
 
 1. Built with [Jekyll](http://jekyllrb.com/). This website is completely static and we use basic HTML or Markdown for
    everything.
-1. Gruntwork Terms Of Service Word Document is generated using [Pandoc](http://pandoc.org/index.html) right after `jekyll build` when running `docker-compose up`.
+1. Preview environments are built with [Netlify](https://netlify.com).
 1. Hosted on Amazon S3, with CloudFront as a CDN. Using [s3_website](https://github.com/laurilehmijoki/s3_website) to
    automatically upload static content to S3.
 1. We use [Bootstrap](http://www.getbootstrap.com/) and [Less](http://lesscss.org/).
