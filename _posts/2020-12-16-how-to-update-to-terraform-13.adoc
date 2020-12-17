@@ -80,13 +80,16 @@ Upgrade Guide].
 In order to take advantage of the Terraform 0.13, you need to update your references to the Gruntwork
 Infrastructure as Code Library to use a compatible version. We (Gruntwork) have gone through all our modules in the
 library to test and update the code to be compatible with Terraform 0.13. As a customer, you need to update to
-the proper versions of the Gruntwork library to pick up the fixes/changes that were made to be compatible. **You MUST
-follow the migration instructions (if any) in the release notes in each repo to know what changes need to be made to
-update to the new version.**
+the proper versions of the Gruntwork library to pick up the fixes/changes that were made to be compatible. Refer to
+https://gruntwork.io/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library/#updating[the
+"Updating" section of "How to use the Gruntwork Infrastructure as Code Library"] for instructions on how to update the
+versions in your code.
 
-Refer to https://gruntwork.io/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library/#updating[the
-"Updating" section of "How to use the Gruntwork Infrastructure as Code Library"]
-for instructions on how to update the versions in your code.
+For the vast majority of the repos, the only change that will be necessary is a version number bump, but several repos
+require more extensive code changes and state migrations. To upgrade without downtime and data loss, **you MUST follow
+the migration instructions in the release notes in each repo to know what changes need to be made to update to the new
+version.** The repo most affected by the 0.13 backward incompatibilities was `terraform-aws-eks`, so if you are an EKS
+user, pay special attention to the release notes!
 
 [.exceptional]
 IMPORTANT: Gruntwork follows
