@@ -1,0 +1,107 @@
+---
+title: How to update to CIS AWS Foundations Benchmark 1.3
+categories: Upgrades
+image: /assets/img/guides/refresh_icon.png
+excerpt: Learn how to update to the 1.3.0 version of the CIS AWS Foundations Benchmark
+tags: ["aws", "security", "compliance"]
+cloud: ["aws"]
+redirect_from: /static/guides/upgrades/how-to-update-to-cis-13/
+---
+:page-type: guide
+:page-layout: post
+
+:toc:
+:toc-placement!:
+
+// GitHub specific settings. See https://gist.github.com/dcode/0cfbf2699a1fe9b46ff04c41721dda74 for details.
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+toc::[]
+endif::[]
+
+== Intro
+
+This guide will walk you through the upgrade process from the 1.2.0 to the 1.3.0 version of the CIS AWS Foundations Benchmark.
+If your infrastructure is already compliant with the 1.2.0 version of the Benchmark, and you are looking to upgrade to 1.3,
+this guide is for you.
+
+=== What you'll learn in this guide
+
+This guide consists of two main sections:
+
+<<core_concepts>>::
+  An overview of the CIS AWS Foundations Benchmark 1.3.0 and why it is important to update your code for compatibility.
+
+<<deployment_walkthrough>>::
+  The steps you need to take to update your code to be compliant with CIS AWS 1.3.0. It includes a
+  <<compatibility_table,version compatibility table>> you can use as a reference to know which Gruntwork Repo version
+  tag is compatible with CIS AWS 1.3.0, as well as the manuals step you need to perform to achieve said compliance.
+
+
+[[core_concepts]]
+== Core Concepts
+
+=== Background
+
+The 1.3.0 version of the CIS AWS Foundations Benchmark was release in July of 2020. You can refer to the
+https://www.cisecurity.org/benchmark/amazon_web_services/[CIS website] where you can download the latest version of the
+Benchmark (as well as all the previous version). The latest version introduces several new reccomendations, and this guide
+will walk you through implementing these new recommendations by utilizing Gruntwork's Infrastructure as Code Library,
+so that your code becomes fully compliant with the 1.3.0 version of the framework.
+
+
+[[deployment_walkthrough]]
+== Deployment walkthrough
+
+=== Step 1: Update references to the Gruntwork Infrastructure as Code Library
+
+In order to take advantage of the CIS AWS 1.3.0, you need to update your references to the Gruntwork
+Infrastructure as Code Library to use a compatible version. We (Gruntwork) have gone through all our modules in the
+library to test and update the code to be compatible with CIS AWS 1.3.0. As a customer, you need to update to
+the proper versions of the Gruntwork library to pick up the fixes/changes that were made to be compatible. Refer to
+https://gruntwork.io/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library/#updating[the
+"Updating" section of "How to use the Gruntwork Infrastructure as Code Library"] for instructions on how to update the
+versions in your code.
+
+For the vast majority of the repos, the only change that will be necessary is a version number bump, but several repos
+require more extensive code changes and state migrations. To upgrade without downtime and data loss, **you MUST follow
+the migration instructions in the release notes in each repo to know what changes need to be made to update to the new
+version.**
+
+[.exceptional]
+IMPORTANT: Gruntwork follows
+https://gruntwork.io/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library/#versioning[semantic
+versioning]. For any pre-1.0 modules, this means that version updates to the minor version are considered backwards
+incompatible releases for any version updates prior to 1.0.0 release. Make sure to read the release notes for the
+relevant modules any time you are updating minor versions! Note that you will want to read the release notes for each
+minor version that is updated (e.g., if you are going from v0.5.x to v0.9.x, you will want to read the notes for v0.6.0,
+v0.7.0, v0.8.0, and v0.9.0 to get the full list of backwards incompatible updates).
+
+The following table provides a summary of all the relevant Gruntwork AWS modules and the respective versions that are
+compatible with CIS AWS 1.3.0:
+
+TODO: Add all the relevant repos with version numbers
+
+[[compatibility_table]]
+[cols="1,1h,1"]
+|===
+|Gruntwork Repo |Minimum version with CIS AWS 1.3.0 support |Corresponding CIS AWS 1.3.0 recommendation
+
+|module-security
+|https://github.com/gruntwork-io/module-security/releases/tag/v0.44.0[v0.44.0]
+|1.20
+
+|terraform-aws-monitoring
+|https://github.com/gruntwork-io/terraform-aws-monitoring/releases/tag/v0.24.0[v0.24.0]
+|1.20
+
+|===
+
+
+=== Step 2: Manual steps
+
+TODO: Add all the relevant manual steps needed
