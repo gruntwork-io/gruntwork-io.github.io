@@ -142,3 +142,21 @@ Recommendation 4.15 requires an active subscriber for the SNS topic created by t
 and 7 for 4.15). As it's impossible to automate creation of this subscriber, you'll have to do so manually. See
 https://docs.aws.amazon.com/sns/latest/dg/sns-create-subscribe-endpoint-to-topic.html[Subscribing to an Amazon SNS topic]
 on the AWS website for detailed instructions.
+
+
+=== Step 3: Deploy new modules
+==== 1. Deploy IAM Access Analyzer module 
+
+As part of CIS 1.3 compliance, the AWS IAM Access Analyzer service is required to be enabled across all active regions in a given AWS account or organization. 
+
+Once enabled and active, this service will examine the trust policies and access to the following resources: 
+
+- Amazon Simple Storage Service buckets;
+- AWS Identity and Access Management roles;
+- AWS Key Management Service keys;
+- AWS Lambda functions and layers;
+- Amazon Simple Queue Service queues.
+
+The IAM Access Analyzer will scan only within the boundaries of the AWS Account or Organization it has been enabled for. The results from this scan will be visible and accessible through the AWS CLI and the AWS Web console. For more information and details on what the AWS IAM Access Analyzer can achieve for your AWS Account and Organization, please refer to the official https://docs.aws.amazon.com/IAM/latest/UserGuide/what-is-access-analyzer.html[AWS docs].
+
+To help you achieve CIS 1.3 compliance, you can find examples of how to use the ready-made module as part of the `landingzone` module in the `aws-service-catalog` repository https://github.com/gruntwork-io/aws-service-catalog/releases/tag/v0.15.4[v0.15.4], and specifically the `account-baseline-root` and `account-baseline-security` https://github.com/gruntwork-io/aws-service-catalog/tree/v0.15.4/examples/for-learning-and-testing/landingzone[examples].
