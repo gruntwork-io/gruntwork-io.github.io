@@ -873,6 +873,9 @@ Gruntwork AWS Landing Zone solution.
 [[pre_requisites]]
 === Pre-requisites
 
+# TODO: one of the pre-requisites should DEFINITELY be, to create infra-live and infra-modules repos, and to pay careful attention
+to which repo we're modifying as we walk through the process.
+
 This walkthrough has the following pre-requisites:
 
 Gruntwork Infrastructure as Code Library::
@@ -1024,10 +1027,12 @@ provider "aws" {
 terraform {
   # The configuration for this backend will be filled in by Terragrunt or via a backend.hcl file. See
   # https://www.terraform.io/docs/backends/config.html#partial-configuration
+  # TODO: should mention that they need to create the bucket first!
   backend "s3" {}
 
   # Only allow this Terraform version. Note that if you upgrade to a newer version, Terraform won't allow you to use an
   # older version, so when you upgrade, you should upgrade everyone on your team and your CI servers all at once.
+  # TODO: do we have support for terraform 13 or 14 now?
   required_version = "= 0.12.29"
 }
 ----
@@ -1188,6 +1193,8 @@ variable "users" {
   type = any
 
   # Example:
+  # TODO: shouldn't this be called `users = { ... }`? The implication is that they won't modify this variables.tf, but rather set the users in their testing/terraform.tfvars file.
+  # So in that file, it should be named `users`, not `default`.
   # default = {
   #   alice = {
   #     groups = ["user-self-mgmt", "developers", "ssh-sudo-users"]
@@ -1325,7 +1332,48 @@ At this point, you'll want to test your code. See
 link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#manual_tests_terraform[Manual tests for Terraform code] and
 link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#automated_tests_terraform[Automated tests for Terraform code]
 for instructions.
+# TODO: These links specify creating a testing/backend.hcl and testing/terraform.tfvars containing their variables. I think we need to mention
+that they'll have to insert variables into their terraform.tfvars, beyond what's mentioned in the links above. Might be worth stating what they need to
+set here, directly, like:
 
+[source,hcl]
+----
+aws_region     = "us-west-1"
+aws_account_id = "453687634329"
+name_prefix    = "rho-testing-refarchdeepdive"
+child_accounts = {
+  logs = {
+    email           = "rho+logs-account-1@gruntwork.io"
+      is_logs_account = true
+  }
+  security = {
+    email                      = "rho+security-account-1@gruntwork.io"
+      role_name                  = "OrganizationAccountAccessRole"
+      iam_user_access_to_billing = "DENY"
+      tags = {
+        Tag-Key = "tag-value"
+      }
+  }
+  shared-services = {
+    email = "rho+shared-services-account-1@gruntwork.io"
+  }
+  dev = {
+    email = "rho+dev-account-1@gruntwork.io"
+  }
+  stage = {
+    email = "rho+stage-account-1@gruntwork.io"
+  }
+  prod = {
+    email = "rho+prod-account-1@gruntwork.io"
+  }
+}
+----
+
+# TODO: Actually, in order to test, you'd have to be able to run `terraform destroy`, which isn't possible on accounts. So this advice is actually really bad.
+We should remove the advice to test your module that wraps account-baseline-root!
+
+
+# TODO: We shouldn't encourage testing here, so remove this block, or move it to after you run the terragrunt command.
 Once your code is tested and working, commit and release your changes:
 
 [source,bash]
@@ -1463,10 +1511,17 @@ The example code above does the following:
 . **Create IAM users**. For this example, we create `alice` and `bob`, and carol, adding `alice` to the `full-access`
   IAM group and `carol` to the `billing` IAM group. _Note_: your own IAM user (the one you created manually) should be
   in the `users` list; we'll use the `import` command to put this user under Terraform management shortly.
+# TODO: maybe the above works, to use `import` to put the user under Terraform management, but it was such a long frickin' section that I decided to skip the import. Instead, I used aws-vault to run the first terraform apply using the root account user, and then changed it to use the root IAM user once they were created by Terraform.
 
 . **Generate a password for each user**. We encrypt this password with that user’s PGP key from Keybase (we’ll come
   back to how to handle the passwords shortly).
 
+# TODO: Wow. This makes no sense at all. How the heck do I do this? Can't you just give me the code I'm supposed to add and where it goes?
+Luckily I read through the "testing" links that mentioned a backend.hcl... But we really shouldn't be giving that as advice here because
+attempting to test really screwed me up. Who knows how many accounts I'm going to end up with in this organization. I kinda want to start over
+with a whole new organization.
+
+# TODO: The only way I could figure out how to do this was not to include the `include` block here, because I had nothing in parent folders. And this tutorial doesn't say to have anything there either.
 Pull in the https://www.terraform.io/docs/backends/[backend] settings from a root `terragrunt.hcl` file that you
 `include` in each child `terragrunt.hcl`:
 
@@ -1478,6 +1533,8 @@ include {
 }
 ----
 
+# TODO: this is fine to mention here, but in my flow, because I followed the advice to test the code first, I had to do this
+well ahead of time. If we remove that directive to test, we should be fine here.
 Next, you need to authenticate as your IAM user in the root account. There are
 https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[multiple ways to authenticate to AWS on the CLI];
 in this guide, we'll use the open source tool https://github.com/99designs/aws-vault[aws-vault].
@@ -1843,6 +1900,7 @@ module "security_baseline" {
 ----
 
 Create all the corresponding input variables for `account-baseline-app` in `variables.tf`:
+# TODO: We need to wordwrap here, I think, because on my screen, the code box this ends up in has a horizontal scrollbar which makes it frustrating to read all the text. We definitely want people to read! In fact, if I had, I might have realized some things I didn't do correctly. On my screen the window is 85 columns wide.
 
 .infrastructure-modules/landingzone/account-baseline-app/variables.tf
 [source,hcl]
@@ -1853,17 +1911,20 @@ Create all the corresponding input variables for `account-baseline-app` in `vari
 # ---------------------------------------------------------------------------------------------------------------------
 
 variable "name_prefix" {
-  description = "The name used to prefix AWS Config and CloudTrail resources, including the S3 bucket names and SNS topics used for each."
+  description = "The name used to prefix AWS Config and CloudTrail resources,
+    including the S3 bucket names and SNS topics used for each."
   type        = string
 }
 
 variable "aws_region" {
-  description = "The AWS Region to use as the global config recorder and seed region for GuardDuty."
+  description = "The AWS Region to use as the global config recorder and seed region
+    for GuardDuty."
   type        = string
 }
 
 variable "aws_account_id" {
-  description = "The AWS Account ID the template should be operated on. This avoids misconfiguration errors caused by environment variables."
+  description = "The AWS Account ID the template should be operated on. This avoids
+    misconfiguration errors caused by environment variables."
   type        = string
 }
 
