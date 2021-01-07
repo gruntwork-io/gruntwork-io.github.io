@@ -49,14 +49,26 @@ This guide consists of two main sections:
 
 === Background
 
-TODO: Add a bullet list of new recommendations.
-
 The 1.3.0 version of the CIS AWS Foundations Benchmark was released in September of 2020. You can refer to the
 https://www.cisecurity.org/benchmark/amazon_web_services/[CIS website] where you can download the latest version of the
 Benchmark (as well as all the previous versions). The latest version introduces several new recommendations, and this guide
 will walk you through implementing these with help from the Gruntwork's Infrastructure as Code Library,
 so that your code becomes fully compliant with the 1.3.0 version of the framework.
 
+==== New recommendations
+These are the new recommendations introduced in the version 1.3.0 of the Benchmark. You can think of these as a "diff"
+between versions 1.2.0 and 1.3.0:
+
+- 1.19: Ensure that all the expired SSL/TLS certificates stored in AWS IAM are removed
+- 1.20: Ensure that S3 Buckets are configured with ‘Block public access (bucket settings)’
+- 1.21: Ensure that IAM Access analyzer is enabled
+- 2.1.1: Ensure all S3 buckets employ encryption-at-rest
+- 2.1.2: Ensure S3 Bucket Policy allows HTTPS requests
+- 2.2.1: Ensure EBS volume encryption is enabled
+- 3.10: Ensure that object-level logging for write events is enabled for (CloudTrail) S3 bucket
+- 3.11: Ensure that object-level logging for read events is enabled for (CloudTrail) S3 bucket
+- 4.15: Ensure a log metric filter and alarm exists for AWS Organizations changes
+- 5.1: Ensure no network ACLs allow ingress from 0.0.0.0/0 to remote server administration ports
 
 [[deployment_walkthrough]]
 == Deployment walkthrough
