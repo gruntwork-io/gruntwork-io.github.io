@@ -1027,7 +1027,7 @@ provider "aws" {
 terraform {
   # The configuration for this backend will be filled in by Terragrunt or via a backend.hcl file. See
   # https://www.terraform.io/docs/backends/config.html#partial-configuration
-  # TODO: should mention that they need to create the bucket first!
+  # TODO: Totally remove this! Just have them create the root terragrunt.hcl to define the bucket stuff.
   backend "s3" {}
 
   # Only allow this Terraform version. Note that if you upgrade to a newer version, Terraform won't allow you to use an
@@ -1197,19 +1197,19 @@ variable "users" {
   # So in that file, it should be named `users`, not `default`.
   # default = {
   #   alice = {
-  #     groups = ["user-self-mgmt", "developers", "ssh-sudo-users"]
+  #     groups = ["iam-user-self-mgmt", "developers", "ssh-sudo-users"]
   #   }
   #
   #   bob = {
   #     path   = "/"
-  #     groups = ["user-self-mgmt", "ops", "admins"]
+  #     groups = ["iam-user-self-mgmt", "ops", "admins"]
   #     tags   = {
   #       foo = "bar"
   #     }
   #   }
   #
   #   carol = {
-  #     groups               = ["user-self-mgmt", "developers", "ssh-users"]
+  #     groups               = ["iam-user-self-mgmt", "developers", "ssh-users"]
   #     pgp_key              = "keybase:carol_on_keybase"
   #     create_login_profile = true
   #     create_access_keys   = true
@@ -1328,52 +1328,77 @@ output "cloudtrail_iam_role_arn" {
 }
 ----
 
+# TODO: remove this directive! Don't test this. If you do, just do a plan test. Also we should provide all the necessary information for this.
+# TODO: We should also detail exactly how to set up your backend configuration, including:
+ - terragrunt.hcl at the root:
+    [source,hcl]
+    ----
+    locals {
+      # Automatically load common variables shared across all accounts
+      common_vars = read_terragrunt_config(find_in_parent_folders("common.hcl"))
+
+      # Automatically load account-level variables
+      account_vars = read_terragrunt_config(find_in_parent_folders("account.hcl"))
+
+      # Automatically load region-level variables
+      region_vars = read_terragrunt_config(find_in_parent_folders("region.hcl"))
+
+      # Extract the variables we need for easy access
+      account_name = local.account_vars.locals.account_name
+      account_id   = local.common_vars.locals.account_ids[local.account_name]
+      aws_region   = local.region_vars.locals.aws_region
+    }
+
+    # Generate the Terraform backend config to store state in S3
+    remote_state {
+      backend = "s3"
+      config = {
+        encrypt        = true
+        bucket         = "rho-refarchdeeppdive-state=${local.account_name}-${local.aws_region}"
+        key            = "${path_relative_to_include()}/terraform.tfstate"
+        region         = "us-west-1"
+        dynamodb_table = "terraform-locks"
+      }
+      generate = {
+        path      = "backend.tf"
+        if_exists = "overwrite_terragrunt"
+      }
+    }
+    ----
+ - common.hcl also at the root:
+    [source,hcl]
+    ----
+    locals {
+      # Default AWS region for API calls
+      default_region = "us-west-1"
+
+      # Centrally define all our AWS account IDs
+      account_ids = {
+        root     = "<YOUR_ROOT_ACCOUNT_ID>"
+        security = "<YOUR_SECURITY_ACCOUNT_ID>"
+        shared   = "<YOUR_SHARED_SERVICES_ACCOUNT_ID>"
+        dev      = "<YOUR_DEV_ACCOUNT_ID>"
+        stage    = "<YOUR_STAGE_ACCOUNT_ID>"
+        prod     = "<YOUR_PROD_ACCOUNT_ID>"
+        logs     = "<YOUR_LOGS_ACCOUNT_ID>"
+      }
+    }
+    ----
+ - in each <account_name>/_global/ folder, a region.hcl:
+    [source,hcl]
+    ----
+    # Modules in the account _global folder don't live in any specific AWS region, but you still have to send the API calls
+    # to _some_ AWS region, so here we use the default region for those API calls.
+    locals {
+      aws_region = read_terragrunt_config(find_in_parent_folders("common.hcl")).locals.default_region
+    }
+    ----
+
 At this point, you'll want to test your code. See
 link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#manual_tests_terraform[Manual tests for Terraform code] and
 link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#automated_tests_terraform[Automated tests for Terraform code]
 for instructions.
-# TODO: These links specify creating a testing/backend.hcl and testing/terraform.tfvars containing their variables. I think we need to mention
-that they'll have to insert variables into their terraform.tfvars, beyond what's mentioned in the links above. Might be worth stating what they need to
-set here, directly, like:
 
-[source,hcl]
-----
-aws_region     = "us-west-1"
-aws_account_id = "453687634329"
-name_prefix    = "rho-testing-refarchdeepdive"
-child_accounts = {
-  logs = {
-    email           = "rho+logs-account-1@gruntwork.io"
-      is_logs_account = true
-  }
-  security = {
-    email                      = "rho+security-account-1@gruntwork.io"
-      role_name                  = "OrganizationAccountAccessRole"
-      iam_user_access_to_billing = "DENY"
-      tags = {
-        Tag-Key = "tag-value"
-      }
-  }
-  shared-services = {
-    email = "rho+shared-services-account-1@gruntwork.io"
-  }
-  dev = {
-    email = "rho+dev-account-1@gruntwork.io"
-  }
-  stage = {
-    email = "rho+stage-account-1@gruntwork.io"
-  }
-  prod = {
-    email = "rho+prod-account-1@gruntwork.io"
-  }
-}
-----
-
-# TODO: Actually, in order to test, you'd have to be able to run `terraform destroy`, which isn't possible on accounts. So this advice is actually really bad.
-We should remove the advice to test your module that wraps account-baseline-root!
-
-
-# TODO: We shouldn't encourage testing here, so remove this block, or move it to after you run the terragrunt command.
 Once your code is tested and working, commit and release your changes:
 
 [source,bash]
@@ -1521,9 +1546,8 @@ Luckily I read through the "testing" links that mentioned a backend.hcl... But w
 attempting to test really screwed me up. Who knows how many accounts I'm going to end up with in this organization. I kinda want to start over
 with a whole new organization.
 
-# TODO: The only way I could figure out how to do this was not to include the `include` block here, because I had nothing in parent folders. And this tutorial doesn't say to have anything there either.
 Pull in the https://www.terraform.io/docs/backends/[backend] settings from a root `terragrunt.hcl` file that you
-`include` in each child `terragrunt.hcl`:
+`include` in each child `terragrunt.hcl`. The file you created earlier in `infrastructure-live/terragrunt.hcl` will be pulled.
 
 .infrastructure-live/root/_global/account-baseline/terragrunt.hcl
 [source,hcl]
@@ -1788,6 +1812,7 @@ config_s3_bucket_name     = "<CONFIG_BUCKET_NAME>"
 ----
 
 Take note of all of this data, as you'll need it again shortly!
+# TODO: Instead, talk here about how to write your infrastructure-live/common.hcl, and create variables for these outputs that you can use as locals in your other hcl files.
 
 One other useful output will be the encrypted passwords for any IAM users you created:
 
@@ -1847,6 +1872,7 @@ provider "aws" {
   region = var.aws_region
 
   # Require a 2.x version of the AWS provider
+# TODO: use "~> 3.22"
   version = "~> 2.6"
 
   # Only these AWS Account IDs may be operated on by this template
@@ -2036,6 +2062,8 @@ variable "auto_deploy_permissions" {
 }
 ----
 
+# TODO: remove this directive! Don't test this. If you do, just do a plan test. Also we should provide all the necessary information for this.
+# TODO: We should also detail exactly how to set up your backend.hcl, or a configuration for the state s3 bucket.
 At this point, you'll want to test your code. See
 link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#manual_tests_terraform[Manual tests for Terraform code] and
 link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#automated_tests_terraform[Automated tests for Terraform code]
@@ -2097,11 +2125,11 @@ inputs = {
   # Prefix all resources with this name
   name_prefix    = "<COMPANY_NAME>-logs"
 
-  # Use the S3 bucket and KMS key that were already created in this logs account by account-baseline-root
+  # Use the S3 bucket and KMS key that were already created in the logs account by account-baseline-root
   cloudtrail_s3_bucket_name = "<CLOUDTRAIL_BUCKET_NAME>"
   cloudtrail_kms_key_arn    = "<CLOUDTRAIL_KMS_KEY_ARN>"
 
-  # Use the S3 bucket that was already created in this logs account by account-baseline-root
+  # Use the S3 bucket that was already created in the logs account by account-baseline-root
   config_s3_bucket_name                            = "<CONFIG_BUCKET_NAME>"
   config_aggregate_config_data_in_external_account = false
   config_central_account_id                        = null
@@ -2524,19 +2552,19 @@ variable "users" {
   # Example:
   # users = {
   #   alice = {
-  #     groups = ["user-self-mgmt", "developers", "ssh-sudo-users"]
+  #     groups = ["iam-user-self-mgmt", "developers", "ssh-sudo-users"]
   #   }
   #
   #   bob = {
   #     path   = "/"
-  #     groups = ["user-self-mgmt", "ops", "admins"]
+  #     groups = ["iam-user-self-mgmt", "ops", "admins"]
   #     tags   = {
   #       foo = "bar"
   #     }
   #   }
   #
   #   carol = {
-  #     groups               = ["user-self-mgmt", "developers", "ssh-users"]
+  #     groups               = ["iam-user-self-mgmt", "developers", "ssh-users"]
   #     pgp_key              = "keybase:carol_on_keybase"
   #     create_login_profile = true
   #     create_access_keys   = true
@@ -2583,6 +2611,7 @@ output "user_access_keys" {
 }
 ----
 
+# TODO: remove this, or explain in detail exactly how to test, don't just link to this page, it will confuse folks.
 At this point, you'll want to test your code. See
 link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#manual_tests_terraform[Manual tests for Terraform code] and
 link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#automated_tests_terraform[Automated tests for Terraform code]
@@ -2645,11 +2674,11 @@ inputs = {
   # Prefix all resources with this name
   name_prefix = "<COMPANY_NAME>-security"
 
-  # Use the S3 bucket and KMS key that were already created in this logs account by account-baseline-root
+  # Use the S3 bucket and KMS key that were already created in the logs account by account-baseline-root
   cloudtrail_s3_bucket_name = "<CLOUDTRAIL_BUCKET_NAME>"
   cloudtrail_kms_key_arn    = "<CLOUDTRAIL_KMS_KEY_ARN>"
 
-  # Use the S3 bucket that was already created in this logs account by account-baseline-root
+  # Use the S3 bucket that was already created in the logs account by account-baseline-root
   config_s3_bucket_name     = "<CONFIG_BUCKET_NAME>"
   config_central_account_id = "<LOGS_ACCOUNT_ID>"
 
@@ -2689,25 +2718,26 @@ inputs = {
     },
 
     # ... Repeat the same set of groups for each of stage, prod, logs, and shared services account IDs too!
+    # TODO: need to be explicit about exactly how to duplicate these. it's not clear if every instance of `dev` should be replaced or just the account ids, or what.
   ]
 
   # Create all the IAM users for your company and assign them to IAM groups
   users = {
     alice = {
-      groups               = ["user-self-mgmt", "ssh-sudo-users", "_account.dev-full-access"]
+      groups               = ["iam-user-self-mgmt", "ssh-sudo-users", "_account.dev-full-access"]
       pgp_key              = "keybase:alice_on_keybase"
       create_login_profile = true
       create_access_keys   = false
     }
 
     bob = {
-      groups               = ["user-self-mgmt", "_account.dev-full-access", "_account.prod-read-only"]
+      groups               = ["iam-user-self-mgmt", "_account.dev-full-access", "_account.prod-read-only"]
       pgp_key              = "keybase:bob_on_keybase"
       create_login_profile = true
       create_access_keys   = false
     }
     carol = {
-      groups               = ["user-self-mgmt", "full-access"]
+      groups               = ["iam-user-self-mgmt", "full-access"]
       pgp_key              = "keybase:carol_on_keybase"
       create_login_profile = true
       create_access_keys   = true
@@ -2805,8 +2835,9 @@ echo "<PASSWORD>" | base64 --decode | keybase pgp decrypt
 === Apply the security baseline to the other child accounts
 
 Now that your security account is fully configured, you need to apply the security baseline to the remaining child
-accounts (e.g., dev, stage, prod, shared-services) as detailed in the <<child_accounts>> section. Feel free to adjust
-this as necessary based on the accounts your company needs.
+accounts (i.e., dev, stage, prod, and shared-services, plus sandbox and testing accounts you might have) as
+detailed in the <<child_accounts>> section. Feel free to adjust this as necessary based on the accounts your company
+needs.
 
 You can re-use the `account-baseline-app` module you created earlier in your `infrastructure-modules` repo for all of
 these child accounts; this module can be used interchangeably between app accounts and log accounts as they deploy most
@@ -2863,11 +2894,11 @@ inputs = {
   # Prefix all resources with this name
   name_prefix = "<COMPANY_NAME>-stage"
 
-  # Use the S3 bucket and KMS key that were already created in this logs account by account-baseline-root
+  # Use the S3 bucket and KMS key that were already created in the logs account by account-baseline-root
   cloudtrail_s3_bucket_name = "<CLOUDTRAIL_BUCKET_NAME>"
   cloudtrail_kms_key_arn    = "<CLOUDTRAIL_KMS_KEY_ARN>"
 
-  # Use the S3 bucket that was already created in this logs account by account-baseline-root
+  # Use the S3 bucket that was already created in the logs account by account-baseline-root
   config_s3_bucket_name                            = "<CONFIG_BUCKET_NAME>"
   config_aggregate_config_data_in_external_account = true
   config_central_account_id                        = "<LOGS_ACCOUNT_ID>"
