@@ -1197,7 +1197,7 @@ variable "users" {
   # So in that file, it should be named `users`, not `default`.
   # default = {
   #   alice = {
-  #     groups = ["iam-user-self-mgmt", "developers", "ssh-sudo-users"]
+  #     groups = ["iam-user-self-mgmt", "developers", "ssh-grunt-sudo-users"]
   #   }
   #
   #   bob = {
@@ -1432,7 +1432,7 @@ repo, setting the `ref` param to the version you released earlier:
 [source,hcl]
 ----
 terraform {
-  source = "git::git@github.com/<YOUR_ORG>/infrastructure-modules.git//landingzone/account-baseline-root?ref=v0.3.0"
+  source = "git::git@github.com:<YOUR_ORG>/infrastructure-modules.git//landingzone/account-baseline-root?ref=v0.3.0"
 
   # This module deploys some resources (e.g., AWS Config) across all AWS regions, each of which needs its own provider,
   # which in Terraform means a separate process. To avoid all these processes thrashing the CPU, which leads to network
@@ -2097,7 +2097,7 @@ repo, setting the `ref` param to the version you released earlier:
 [source,hcl]
 ----
 terraform {
-  source = "git::git@github.com/<YOUR_ORG>/infrastructure-modules.git//landingzone/account-baseline-app?ref=v0.3.1"
+  source = "git::git@github.com:<YOUR_ORG>/infrastructure-modules.git//landingzone/account-baseline-app?ref=v0.3.1"
 
   # This module deploys some resources (e.g., AWS Config) across all AWS regions, each of which needs its own provider,
   # which in Terraform means a separate process. To avoid all these processes thrashing the CPU, which leads to network
@@ -2552,7 +2552,7 @@ variable "users" {
   # Example:
   # users = {
   #   alice = {
-  #     groups = ["iam-user-self-mgmt", "developers", "ssh-sudo-users"]
+  #     groups = ["iam-user-self-mgmt", "developers", "ssh-grunt-sudo-users"]
   #   }
   #
   #   bob = {
@@ -2646,7 +2646,7 @@ repo, setting the `ref` param to the version you released earlier:
 [source,hcl]
 ----
 terraform {
-  source = "git::git@github.com/<YOUR_ORG>/infrastructure-modules.git//landingzone/account-baseline-security?ref=v0.3.2"
+  source = "git::git@github.com:<YOUR_ORG>/infrastructure-modules.git//landingzone/account-baseline-security?ref=v0.3.2"
 
   # This module deploys some resources (e.g., AWS Config) across all AWS regions, each of which needs its own provider,
   # which in Terraform means a separate process. To avoid all these processes thrashing the CPU, which leads to network
@@ -2724,7 +2724,7 @@ inputs = {
   # Create all the IAM users for your company and assign them to IAM groups
   users = {
     alice = {
-      groups               = ["iam-user-self-mgmt", "ssh-sudo-users", "_account.dev-full-access"]
+      groups               = ["iam-user-self-mgmt", "ssh-grunt-sudo-users", "_account.dev-full-access"]
       pgp_key              = "keybase:alice_on_keybase"
       create_login_profile = true
       create_access_keys   = false
@@ -2866,7 +2866,7 @@ repo, setting the `ref` param to the latest version:
 [source,hcl]
 ----
 terraform {
-  source = "git::git@github.com/<YOUR_ORG>/infrastructure-modules.git//landingzone/account-baseline-app?ref=v0.3.2"
+  source = "git::git@github.com:<YOUR_ORG>/infrastructure-modules.git//landingzone/account-baseline-app?ref=v0.3.2"
 
   # This module deploys some resources (e.g., AWS Config) across all AWS regions, each of which needs its own provider,
   # which in Terraform means a separate process. To avoid all these processes thrashing the CPU, which leads to network
