@@ -2915,6 +2915,7 @@ inputs = {
   allow_dev_access_from_other_account_arns       = ["arn:aws:iam::<SECURITY_ACCOUNT_ID>:root"]
   allow_full_access_from_other_account_arns      = ["arn:aws:iam::<SECURITY_ACCOUNT_ID>:root"]
 
+  # TODO: Is this correct/needed for the shared-services account?
   # Allow a CI server in the shared-services account to assume the auto-deploy IAM role in this account
   allow_auto_deploy_from_other_account_arns      = ["arn:aws:iam::<SHARED_SERVICES_ACCOUNT_ID>:root"]
 }
@@ -2937,6 +2938,8 @@ The code above does the following:
   this account. For the most part, we grant all permissions to the security account, so that by assigning users to IAM
   groups in that account, you'll be able to access IAM roles in all the other child accounts.
 
+# TODO: Everywhere we give this advice to configure the backend, probably it's better to tell people organize this
+differently in their hcl files. First terraform block, then include, locals, and finally inputs.
 Configure your Terraform backend:
 
 .infrastructure-live/stage/_global/account-baseline/terragrunt.hcl

@@ -638,18 +638,18 @@ AWS accounts::
 
 // TODO: we should be embedding code snippets from real, working code intended for production (i.e., not the stuff
 // under the examples folder of each repo). Perhaps this guide should live with one of the Acme repos for now so we can
-// embed examples from our Ref Arch code?
+// embed examples from our Ref Arch code? (Rho:) Yes.
 
 The first step is to deploy a management VPC for DevOps tooling, such as a CI server or a bastion host. To do this, you
-can use the https://github.com/gruntwork-io/module-vpc/tree/master/modules/vpc-mgmt[vpc-mgmt] module from the
+can use the https://github.com/gruntwork-io/terraform-aws-vpc/tree/master/modules/vpc-mgmt[vpc-mgmt] module from the
 Gruntwork Infrastructure as Code Library.
 
 [.exceptional]
-IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork subscriber# to access `module-vpc`.
+IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork subscriber# to access `terraform-aws-vpc`.
 
 This module assumes you do not run any data stores in the management VPC, so it solely contains two tiers of subnets,
 public and private-app. If you will be deploying data stores in the management VPC (e.g., a relational database for
-SonarQube), then use https://github.com/gruntwork-io/module-vpc/tree/master/modules/vpc-app[vpc-app] instead, which has
+SonarQube), then use https://github.com/gruntwork-io/terraform-aws-vpc/tree/master/modules/vpc-app[vpc-app] instead, which has
 a third private-persistence subnet tier.
 
 [[create_wrapper_module]]
@@ -675,6 +675,7 @@ provider "aws" {
   # The AWS region in which all resources will be created
   region = var.aws_region
 
+  # TODO: Require 3.x
   # Require a 2.x version of the AWS provider
   version = "~> 2.6"
 
@@ -683,25 +684,29 @@ provider "aws" {
 }
 
 terraform {
+  # TODO: this didn't work for me. after creating the region/account/common/terragrunt hcl files, it complained that
+  # backend was defined more than once.
   # The configuration for this backend will be filled in by Terragrunt or via a backend.hcl file. See
   # https://www.terraform.io/docs/backends/config.html#partial-configuration
   backend "s3" {}
 
+  # TODO: bump this to a higher version
   # Only allow this Terraform version. Note that if you upgrade to a newer version, Terraform won't allow you to use an
   # older version, so when you upgrade, you should upgrade everyone on your team and your CI servers all at once.
   required_version = "= 0.12.6"
 }
 ----
 
+# TODO: We say to replace version here, but we didn't give that advice in the Landing Zone guides. Should add it there.
 Next, use the `vpc-mgmt` module from the Gruntwork Infrastructure as Code Library, making sure to replace the `<VERSION>` placeholder
-with the latest version from the https://github.com/gruntwork-io/module-vpc/releases[releases page]:
+with the latest version from the https://github.com/gruntwork-io/terraform-aws-vpc/releases[releases page]:
 
 .infrastructure-modules/networking/vpc-mgmt/main.tf
 [source,hcl]
 ----
 module "vpc" {
-  # Make sure to replace <VERSION> in this URL with the latest module-vpc release
-  source = "git@github.com:gruntwork-io/module-vpc.git//modules/vpc-mgmt?ref=<VERSION>"
+  # Make sure to replace <VERSION> in this URL with the latest terraform-aws-vpc release
+  source = "git::git@github.com:gruntwork-io/terraform-aws-vpc.git//modules/vpc-mgmt?ref=<VERSION>"
 
   vpc_name         = var.vpc_name
   aws_region       = var.aws_region
@@ -710,6 +715,8 @@ module "vpc" {
 }
 ----
 
+# TODO: This pattern of linking to the actual code in a repo for the larger files, we should adopt this in the
+# landing zone guide!
 Note that all of the parameters should be exposed as input variables in `variables.tf`; see this
 https://github.com/gruntwork-io/infrastructure-modules-multi-account-acme/blob/master/networking/vpc-mgmt/variables.tf[variables.tf]
 file for reference. This will allow you to set those variables to different values in different environments or AWS
@@ -722,8 +729,9 @@ Infrastructure as Code Library:
 [source,hcl]
 ----
 module "vpc_network_acls" {
-  # Make sure to replace <VERSION> in this URL with the latest module-vpc release
-  source = "git@github.com:gruntwork-io/module-vpc.git//modules/vpc-mgmt-network-acls?ref=<VERSION>"
+  # Make sure to replace <VERSION> in this URL with the latest terraform-aws-vpc release
+  # TODO: this is wrong!
+  source = "git::git@github.com:gruntwork-io/terraform-aws-vpc.git//modules/vpc-mgmt-network-acls?ref=<VERSION>"
 
   vpc_id      = module.vpc.vpc_id
   vpc_name    = module.vpc.vpc_name
@@ -738,6 +746,8 @@ module "vpc_network_acls" {
 }
 ----
 
+# TODO: This pattern of linking to the actual code in a repo for the larger files, we should adopt this in the
+# landing zone guide!
 Finally, expose all of the `vpc-mgmt` module outputs as outputs of your `vpc-mgmt` wrapper module. There are a large
 number of outputs, so see this
 https://github.com/gruntwork-io/infrastructure-modules-multi-account-acme/blob/master/networking/vpc-mgmt/outputs.tf[outputs.tf]
@@ -746,6 +756,9 @@ file for reference.
 [[test_wrapper_module]]
 ==== Test your wrapper module
 
+# TODO: again, this is not good advice. we need to mention they should only use `plan`, not `apply` for testing, and give them a much better
+# idea of exactly what they need to set. I think they should just create the terragrunt.hcl and run plan against that, which is explained further on,
+# So we should have them create the terragrunt.hcl, then run plan, git tag/push, and then run apply.
 At this point, you'll want to test your code. See link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#manual_tests_terraform[Manual tests for Terraform code]
 and link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#automated_tests_terraform[Automated tests for Terraform code]
 for instructions.
@@ -816,7 +829,7 @@ repo, setting the `ref` param to the version you released earlier:
 [source,hcl]
 ----
 terraform {
-  source = "git@github.com/<YOUR_ORG>/infrastructure-modules.git//networking/vpc-mgmt?ref=v0.3.0"
+  source = "git::git@github.com:<YOUR_ORG>/infrastructure-modules.git//networking/vpc-mgmt?ref=v0.3.0"
 }
 ----
 +
@@ -825,17 +838,22 @@ terraform {
   pre-production environments and 2-3 NAT Gateways for production environments). You can set these values in the
   `inputs = { ... }` block of `terragrunt.hcl`. Example:
 +
+
+# TODO: kms_key_user_iam_arns is missing here
 .infrastructure-live/production/us-east-2/prod/networking/vpc-mgmt/terragrunt.hcl
 [source,hcl]
 ----
 inputs = {
-  aws_region       = "us-east-2"
-  aws_account_id   = "111122223333"
+  aws_region       = "<YOUR_AWS_REGION>"
+  aws_account_id   = "<YOUR_ACCOUNT_ID>"
   vpc_name         = "mgmt-prod"
   cidr_block       = "10.0.0.0/16"
   num_nat_gateways = 3
+  kms_key_user_iam_arns = [<YOUR_USER_ARNS>]
 }
 ----
+
+# TODO: I think this should be placed above inputs, so that locals can also be used.
 +
 . *Configure the Terraform backend.* Pull in the https://www.terraform.io/docs/backends/[backend] configuration from a
   root `terragrunt.hcl` file that you `include` in each child `terragrunt.hcl`:
@@ -851,7 +869,7 @@ include {
 [[deploy_wrapper_module]]
 ==== Deploy the wrapper module for each environment
 
-Deploy the VPC by running `terragrunt apply`:
+Deploy the VPC by running `terragrunt apply`. Make sure to authenticate into the AWS account.
 
 [source,bash]
 ----
@@ -859,16 +877,18 @@ cd infrastructure-live/production/us-east-2/prod/networking/vpc-mgmt
 terragrunt apply
 ----
 
+# TODO: Should mention that you need to save all the outputs somewhere for use later!
+
 [[deploy_application_vpcs]]
 === Deploy application VPCs
 
 Now that you have your management VPC(s) deployed, the next step is to deploy application VPCs to run all of your
 services, data stores, and production infrastructure. The process is very similar to deploying the management VPC,
-except this time, you'll be using the https://github.com/gruntwork-io/module-vpc/tree/master/modules/vpc-app[vpc-app]
+except this time, you'll be using the https://github.com/gruntwork-io/terraform-aws-vpc/tree/master/modules/vpc-app[vpc-app]
 module from the Gruntwork Infrastructure as Code Library.
 
 [.exceptional]
-IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork subscriber# to access `module-vpc`.
+IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork subscriber# to access `terraform-aws-vpc`.
 
 [[create_wrapper_module_app]]
 ==== Create a wrapper module
@@ -913,14 +933,14 @@ terraform {
 ----
 
 Next, use the `vpc-app` module from the Gruntwork Infrastructure as Code Library, making sure to replace the `<VERSION>` placeholder
-with the latest version from the https://github.com/gruntwork-io/module-vpc/releases[releases page]:
+with the latest version from the https://github.com/gruntwork-io/terraform-aws-vpc/releases[releases page]:
 
 .infrastructure-modules/networking/vpc-app/main.tf
 [source,hcl]
 ----
 module "vpc" {
-  # Make sure to replace <VERSION> in this URL with the latest module-vpc release
-  source = "git@github.com:gruntwork-io/module-vpc.git//modules/vpc-app?ref=<VERSION>"
+  # Make sure to replace <VERSION> in this URL with the latest terraform-aws-vpc release
+  source = "git::git@github.com:gruntwork-io/terraform-aws-vpc.git//modules/vpc-app?ref=<VERSION>"
 
   vpc_name         = var.vpc_name
   aws_region       = var.aws_region
@@ -941,7 +961,7 @@ Infrastructure as Code Library:
 [source,hcl]
 ----
 module "vpc_network_acls" {
-  source = "git@github.com:gruntwork-io/module-vpc.git//modules/vpc-app-network-acls?ref=<VERSION>"
+  source = "git::git@github.com:gruntwork-io/terraform-aws-vpc.git//modules/vpc-app-network-acls?ref=<VERSION>"
 
   vpc_id      = module.vpc.vpc_id
   vpc_name    = module.vpc.vpc_name
@@ -970,22 +990,25 @@ https://www.terraform.io/docs/providers/terraform/d/remote_state.html[terraform_
 data "terraform_remote_state" "mgmt_vpc" {
   backend = "s3"
 
-  config {
+  config = {
     region = var.terraform_state_aws_region
     bucket = var.terraform_state_s3_bucket
-    key    = "${var.aws_region}/mgmt/vpc/terraform.tfstate"
+    # TODO: the key didn't work for me. this is what I had to use.
+    # Based on the folder structure we recommend in [configure_wrapper_module] (management)
+    key = "prod/us-west-1/prod/networking/vpc-mgmt/terraform.tfstate"
+
   }
 }
 ----
 
-You can then use the https://github.com/gruntwork-io/module-vpc/tree/master/modules/vpc-peering[vpc-peering] module to
+You can then use the https://github.com/gruntwork-io/terraform-aws-vpc/tree/master/modules/vpc-peering[vpc-peering] module to
 create a VPC peering connection and all the necessary route table entries between the application and management VPCs:
 
 .infrastructure-modules/networking/vpc-app/main.tf
 [source,hcl]
 ----
 module "mgmt_vpc_peering_connection" {
-  source = "git@github.com:gruntwork-io/module-vpc.git//modules/vpc-peering?ref=v0.6.0"
+  source = "git::git@github.com:gruntwork-io/terraform-aws-vpc.git//modules/vpc-peering?ref=<VERSION>"
 
   # Assume the first listed AWS Account Id is the one that should own the peering connection
   aws_account_id = var.aws_account_id
@@ -1025,14 +1048,42 @@ You'll also need to update the NACLs to allow access from the management VPC:
 [source,hcl]
 ----
 module "vpc_network_acls" {
-  source = "git@github.com:gruntwork-io/module-vpc.git//modules/vpc-app-network-acls?ref=<VERSION>"
+  source = "git::git@github.com:gruntwork-io/terraform-aws-vpc.git//modules/vpc-app-network-acls?ref=<VERSION>"
 
   # ... (other params omitted) ...
 
   allow_access_from_mgmt_vpc = true
-  mgmt_vpc_cidr_block        = data.terraform_remote_state.mgmt_vpc.vpc_cidr_block
+  mgmt_vpc_cidr_block        = data.terraform_remote_state.mgmt_vpc.outputs.vpc_cidr_block
 }
 ----
+
+# TODO: The outputs include `dns_mgmt_to_app` but that module is not defined for the main.tf above. Since the outputs are linked to main
+branch, and main.tf is hardcoded, there's a mismatch in versions.
+# it's here: https://github.com/gruntwork-io/infrastructure-modules-multi-account-acme/blob/master/networking/vpc-app/main.tf#L183-L218
+
+You'll also need to create a DNS forwarder between the management VPC and the app VPC:
+
+.infrastructure-modules/networking/vpc-app/main.tf
+[source,hcl]
+----
+module "dns_mgmt_to_app" {
+  source           = "git::git@github.com:gruntwork-io/terraform-aws-vpc.git//modules/vpc-dns-forwarder?ref=<VERSION>"
+  create_resources = var.create_dns_forwarder
+
+  origin_vpc_id                                   = data.terraform_remote_state.mgmt_vpc.outputs.vpc_id
+  origin_vpc_name                                 = data.terraform_remote_state.mgmt_vpc.outputs.vpc_name
+  origin_vpc_route53_resolver_primary_subnet_id   = element(data.terraform_remote_state.mgmt_vpc.outputs.public_subnet_ids, 0)
+  origin_vpc_route53_resolver_secondary_subnet_id = element(data.terraform_remote_state.mgmt_vpc.outputs.public_subnet_ids, 1)
+
+  destination_vpc_id                                   = module.vpc.vpc_id
+  destination_vpc_name                                 = module.vpc.vpc_name
+  destination_vpc_route53_resolver_primary_subnet_id   = element(module.vpc.public_subnet_ids, 0)
+  destination_vpc_route53_resolver_secondary_subnet_id = element(module.vpc.public_subnet_ids, 1)
+}
+----
+
+By default, `var.create_dns_forwarder` is `false`, so you won't actually create a DNS forwarder. We include it here because the
+outputs, which follow, depend on this module being defined.
 
 Finally, expose all of the `vpc-app` module outputs as outputs of your `vpc-app` wrapper module. There are a large
 number of outputs, so see this
@@ -1085,7 +1136,7 @@ repo, setting the `ref` param to the version you released earlier:
 [source,hcl]
 ----
 terraform {
-  source = "git@github.com/<YOUR_ORG>/infrastructure-modules.git//networking/vpc-app?ref=v0.4.0"
+  source = "git::git@github.com:<YOUR_ORG>/infrastructure-modules.git//networking/vpc-app?ref=v0.4.0"
 }
 ----
 +
@@ -1094,6 +1145,7 @@ terraform {
   pre-production environments and 2-3 NAT Gateways for production environments). You can set these values in the
   `inputs = { ... }` block of `terragrunt.hcl`. Example:
 +
+# TODO: kms_key_user_iam_arns is missing here
 .infrastructure-live/production/us-east-2/prod/networking/vpc-app/terragrunt.hcl
 [source,hcl]
 ----
@@ -1103,6 +1155,8 @@ inputs = {
   vpc_name         = "app-prod"
   cidr_block       = "10.10.0.0/16"
   num_nat_gateways = 3
+  kms_key_user_iam_arns = [<YOUR_USER_ARNS>]
+# TODO: we also need to add terraform_state_s3_bucket and terraform_state_aws_region
 }
 ----
 +
@@ -1119,13 +1173,15 @@ include {
 [[deploy_wrapper_module_app]]
 ==== Deploy the wrapper module for each environment
 
-Deploy the VPC by running `terragrunt apply`:
+Deploy the VPC by running `terragrunt apply`, authenticating to your AWS account.
 
 [source,bash]
 ----
 cd infrastructure-live/production/us-east-2/prod/networking/vpc-app
 terragrunt apply
 ----
+
+# TODO: we should tell people to keep a note of the outputs from this!
 
 [[deploy_bastion_host]]
 === Deploy a bastion host
