@@ -932,20 +932,22 @@ module "vpc_tags" {
   # Make sure to replace <VERSION> in this URL with the latest terraform-aws-eks release
   source = "git::git@github.com:gruntwork-io/terraform-aws-eks.git//modules/eks-vpc-tags?ref=<VERSION>"
 
-  eks_cluster_name = var.eks_cluster_name
+  eks_cluster_names = var.eks_cluster_names
 }
 
 # ... (the rest of the code is omitted) ...
 ----
 
+#TODO: this has been updated to be a list of strings, for multiple eks cluster names.
 Add a new input variable that you can use to specify the name of the EKS cluster:
 
 .infrastructure-modules/networking/vpc-app/variables.tf
 [source,hcl]
 ----
-variable "eks_cluster_name" {
-  description = "The EKS cluster that will be deployed into the VPC."
-  type        = string
+variable "eks_cluster_names" {
+  description = "The names of EKS clusters that will be deployed into the VPC, if var.tag_for_use_with_eks is true."
+    type        = list(string)
+    default     = []
 }
 ----
 
@@ -1008,6 +1010,8 @@ terraform {
 }
 ----
 
+# TODO: you also need to set `tags_for_use_with_eks` to `true` and put in a value for `eks_cluster_name`.
+# Then, you also have to run `terragrunt init` because you haven't yet pulled the vpc-tags module. Then you can run apply.
 And run `terragrunt apply` to deploy the changes:
 
 [source,bash]
