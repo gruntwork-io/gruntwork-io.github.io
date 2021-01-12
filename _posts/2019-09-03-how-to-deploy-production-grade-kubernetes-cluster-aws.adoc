@@ -26,6 +26,8 @@ endif::[]
 == Intro
 
 This guide will walk you through the process of configuring a production-grade Kubernetes cluster on AWS.
+# TODO: I think we should maybe change this guide to walk users through how to deploy one of our Fargate examples in
+# https://github.com/gruntwork-io/terraform-aws-eks/tree/master/examples/eks-fargate-cluster
 
 === What is Kubernetes?
 
@@ -1048,6 +1050,7 @@ provider "aws" {
   # The AWS region in which all resources will be created
   region = var.aws_region
 
+  # TODO: update this to 3.23!
   # Require a 2.x version of the AWS provider
   version = "~> 2.6"
 
@@ -1056,17 +1059,22 @@ provider "aws" {
 }
 
 terraform {
+  # TODO: update this--for me, it doesn't work to have anything here for backend.
   # The configuration for this backend will be filled in by Terragrunt or via a backend.hcl file. See
   # https://www.terraform.io/docs/backends/config.html#partial-configuration
   backend "s3" {}
 
   # Only allow this Terraform version. Note that if you upgrade to a newer version, Terraform won't allow you to use an
   # older version, so when you upgrade, you should upgrade everyone on your team and your CI servers all at once.
-  required_version = "= 0.12.6"
+  # TODO: decide what version we want to gear this guide for. I haven't tested with 13, so I'm using 12.29, though we should allow 12.26, too
+  required_version = "= 0.12.29"
 }
 ----
 
 Next, use the `eks-cluster-control-plane` module to configure the EKS control plane:
+#TODO: I am cross-referencing with the code https://github.com/gruntwork-io/terraform-aws-eks/blob/master/examples/eks-cluster-managed-workers/main.tf#L110-L138[here].
+# Because I've been burned before when using these guides as they are written, without conferring with the latest code.
+# But these code snippets need to be combined!
 
 .infrastructure-modules/services/eks-cluster/main.tf
 [source,hcl]
@@ -1081,8 +1089,21 @@ module "eks_cluster" {
   vpc_master_subnet_ids = data.terraform_remote_state.vpc.outputs.private_app_subnet_ids
 
   enabled_cluster_log_types = ["api", "audit", "authenticator"]
-  kubernetes_version        = 1.13
-  endpoint_public_access    = false
+  kubernetes_version        = var.kubernetes_version
+
+  configure_kubectl   = var.configure_kubectl
+  kubectl_config_path = var.kubectl_config_path
+
+  endpoint_public_access       = var.endpoint_public_access
+  endpoint_public_access_cidrs = var.endpoint_public_access_cidrs
+
+  use_kubergrunt_verification = var.endpoint_public_access
+  use_upgrade_cluster_script  = var.endpoint_public_access
+
+  # Disable waiting for rollout, since the dependency ordering of worker pools causes terraform to deploy the script
+  # before the workers. As such, rollout will always fail. Set this to true after the first deploy so that terraform
+  # will waits until rollout of the upgraded components to complete before completing the apply.
+  upgrade_cluster_script_wait_for_rollout = false
 }
 ----
 
@@ -1093,8 +1114,11 @@ The code above does the following:
   the code for this shortly.
 * Configure the control plane to run in the private app subnets of that VPC.
 * Configure the API server logs, audit logs, and authenticator logs for the control plane to be sent to CloudWatch.
-* Set the Kubernetes version to 1.13.
-* Disable public access so that the Kubernetes API server is only accessible from within the VPC.
+* Set the Kubernetes version.
+* Set a variable for public access. We'll disable public access in variables.tf, so that the Kubernetes API server is only accessible from within the VPC.
+  Because we disable public access, kubergrunt based verification and the plugin upgrade script will be disabled.
+* Set whether to configure `kubectl` so that it can be used to access the deployed EKS cluster; and set its path with `kubectl_config_path`.
+* Temporarily disable waiting for the workers to be deployed, since on the first deploy we will not be deploying the workers.
 +
 NOTE: This means you MUST be in the VPC network—e.g., connected via a VPN—to access your EKS cluster.
 
@@ -1108,7 +1132,10 @@ data "terraform_remote_state" "vpc" {
   config = {
     region = var.terraform_state_aws_region
     bucket = var.terraform_state_s3_bucket
-    key    = "${var.aws_region}/${var.vpc_name}/vpc/terraform.tfstate"
+    # key    = "${var.aws_region}/${var.vpc_name}/vpc/terraform.tfstate
+    # TODO: this is the key that worked for me...
+    key    = "${var.env_name}/${var.aws_region}/${var.account_name}/networking/vpc/terraform.tfstate"
+
   }
 }
 ----
@@ -1167,7 +1194,10 @@ module "eks_workers" {
   cluster_name = var.cluster_name
 
   vpc_id                = data.terraform_remote_state.vpc.outputs.vpc_id
-  vpc_worker_subnet_ids = data.terraform_remote_state.vpc.outputs.private_app_subnet_ids
+  # TODO: This isn't expected here
+  # vpc_worker_subnet_ids = data.terraform_remote_state.vpc.outputs.private_app_subnet_ids
+  # TODO: but this is...
+
 
   eks_master_security_group_id = module.eks_cluster.eks_master_security_group_id
 
@@ -1293,8 +1323,8 @@ Here's what `eks-node.json` should look like:
     "inline": [
       "gruntwork-install --module-name 'bash-commons' --repo 'https://github.com/gruntwork-io/bash-commons' --tag 'v0.1.2'",
       "gruntwork-install --module-name 'eks-scripts' --repo 'https://github.com/gruntwork-io/terraform-aws-eks' --tag 'v0.6.0'",
-      "gruntwork-install --module-name 'metrics/cloudwatch-memory-disk-metrics-scripts' --repo https://github.com/gruntwork-io/module-aws-monitoring --tag 'v0.13.2'",
-      "gruntwork-install --module-name 'logs/syslog' --repo https://github.com/gruntwork-io/module-aws-monitoring --tag 'v0.13.2'",
+      "gruntwork-install --module-name 'metrics/cloudwatch-memory-disk-metrics-scripts' --repo https://github.com/gruntwork-io/terraform-aws-monitoring --tag 'v0.13.2'",
+      "gruntwork-install --module-name 'logs/syslog' --repo https://github.com/gruntwork-io/terraform-aws-monitoring --tag 'v0.13.2'",
       "gruntwork-install --module-name 'auto-update' --repo https://github.com/gruntwork-io/module-security --tag 'v0.18.1'",
       "gruntwork-install --module-name 'fail2ban' --repo https://github.com/gruntwork-io/module-security --tag 'v0.18.1'",
       "gruntwork-install --module-name 'ntp' --repo https://github.com/gruntwork-io/module-security --tag 'v0.18.1'",
@@ -1311,7 +1341,7 @@ Here's what `eks-node.json` should look like:
 
 [.exceptional]
 IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork subscriber# to access the `terraform-aws-eks`,
-`module-aws-monitoring`, and `module-security` repos used in the Packer template above.
+`terraform-aws-monitoring`, and `module-security` repos used in the Packer template above.
 
 This Packer template installs the following on top of the EKS-optimized AMI base image:
 
@@ -1322,11 +1352,11 @@ This Packer template installs the following on top of the EKS-optimized AMI base
   the labels on a worker node EC2 instance and converts them to a format that can be passed to the EKS bootstrap script
   so that those tags show up as labels in Kubernetes.
 
-* https://github.com/gruntwork-io/module-aws-monitoring/tree/master/modules/metrics/cloudwatch-memory-disk-metrics-scripts[cloudwatch-memory-disk-metrics-scripts]:
+* https://github.com/gruntwork-io/terraform-aws-monitoring/tree/master/modules/metrics/cloudwatch-memory-disk-metrics-scripts[cloudwatch-memory-disk-metrics-scripts]:
   Send memory and disk usage metrics for your EC2 Instances to CloudWatch. These metrics are not available by default
   as they are only visible from inside a VM.
 
-* https://github.com/gruntwork-io/module-aws-monitoring/tree/master/modules/logs/syslog[syslog]: Configure log rotation
+* https://github.com/gruntwork-io/terraform-aws-monitoring/tree/master/modules/logs/syslog[syslog]: Configure log rotation
   and rate limiting for syslog.
 
 * https://github.com/gruntwork-io/module-security/tree/master/modules/auto-update[auto-update]: Configure a Linux
@@ -1348,6 +1378,8 @@ This Packer template installs the following on top of the EKS-optimized AMI base
   their own username and SSH key.
 
 To build an AMI from this Packer template, you run:
+# TODO: Should mention that you need to be authenticated to AWS to run this command.
+# TODO: should mention to set GITHUB_OAUTH_TOKEN
 
 [source,bash]
 ----
@@ -1463,19 +1495,21 @@ data "template_file" "user_data" {
 }
 ----
 
+# TODO: Shouldn't we mention to make the user-data.sh executable with chmod?
+
 === Configure logging, metrics, and alarms for the worker nodes
 
 In order for the CloudWatch Logs Agent to be able to write to CloudWatch Logs, you need to give it the worker nodes the
 proper IAM permissions. You can do that by using the
-https://github.com/gruntwork-io/module-aws-monitoring/tree/master/modules/logs/cloudwatch-log-aggregation-iam-policy[cloudwatch-log-aggregation-iam-policy module]
-from `module-aws-monitoring`:
+https://github.com/gruntwork-io/terraform-aws-monitoring/tree/master/modules/logs/cloudwatch-log-aggregation-iam-policy[cloudwatch-log-aggregation-iam-policy module]
+from `terraform-aws-monitoring`:
 
 .infrastructure-modules/services/eks-cluster/main.tf
 [source,hcl]
 ----
 module "cloudwatch_log_aggregation" {
-  # Make sure to replace <VERSION> in this URL with the latest module-aws-monitoring release
-  source = "git::git@github.com:gruntwork-io/module-aws-monitoring.git//modules/logs/cloudwatch-log-aggregation-iam-policy?ref=<VERSION>"
+  # Make sure to replace <VERSION> in this URL with the latest terraform-aws-monitoring release
+  source = "git::git@github.com:gruntwork-io/terraform-aws-monitoring.git//modules/logs/cloudwatch-log-aggregation-iam-policy?ref=<VERSION>"
 
   name_prefix = var.cluster_name
 }
@@ -1489,14 +1523,14 @@ resource "aws_iam_policy_attachment" "attach_cloudwatch_log_aggregation_policy" 
 
 Similarly, to be able to send disk and memory metrics to CloudWatch, you need to add more IAM permissions, this time
 using the
-https://github.com/gruntwork-io/module-aws-monitoring/tree/master/modules/metrics/cloudwatch-custom-metrics-iam-policy[cloudwatch-custom-metrics-iam-policy module]:
+https://github.com/gruntwork-io/terraform-aws-monitoring/tree/master/modules/metrics/cloudwatch-custom-metrics-iam-policy[cloudwatch-custom-metrics-iam-policy module]:
 
 .infrastructure-modules/services/eks-cluster/main.tf
 [source,hcl]
 ----
 module "cloudwatch_metrics" {
-  # Make sure to replace <VERSION> in this URL with the latest module-aws-monitoring release
-  source = "git::git@github.com:gruntwork-io/module-aws-monitoring.git//modules/metrics/cloudwatch-custom-metrics-iam-policy?ref=<VERSION>"
+  # Make sure to replace <VERSION> in this URL with the latest terraform-aws-monitoring release
+  source = "git::git@github.com:gruntwork-io/terraforterraform-aws-monitoring.git//modules/metrics/cloudwatch-custom-metrics-iam-policy?ref=<VERSION>"
 
   name_prefix = var.cluster_name
 }
@@ -1510,15 +1544,18 @@ resource "aws_iam_policy_attachment" "attach_cloudwatch_metrics_policy" {
 
 Finally, you may want to configure some CloudWatch alerts to go off if the CPU usage, memory usage, or disk space
 utilization gets too high on the worker nodes. You can do this using several of the
-https://github.com/gruntwork-io/module-aws-monitoring/tree/master/modules/alarms[alarms modules] from
-`module-aws-monitoring`:
+https://github.com/gruntwork-io/terraform-aws-monitoring/tree/master/modules/alarms[alarms modules] from
+`terraform-aws-monitoring`:
+
+# TODO: These didn't work for me. I don't have an output from module.eks_workers called eks_worker_asg_id, and I wasn't able to find it
+in our aws service catalog examples.
 
 .infrastructure-modules/services/eks-cluster/main.tf
 [source,hcl]
 ----
 module "high_cpu_usage_alarms" {
-  # Make sure to replace <VERSION> in this URL with the latest module-aws-monitoring release
-  source = "git::git@github.com:gruntwork-io/module-aws-monitoring.git//modules/alarms/asg-cpu-alarms?ref=<VERSION>"
+  # Make sure to replace <VERSION> in this URL with the latest terraform-aws-monitoring release
+  source = "git::git@github.com:gruntwork-io/terraform-aws-monitoring.git//modules/alarms/asg-cpu-alarms?ref=<VERSION>"
 
   asg_names            = [module.eks_workers.eks_worker_asg_id]
   num_asg_names        = 1
@@ -1526,8 +1563,8 @@ module "high_cpu_usage_alarms" {
 }
 
 module "high_memory_usage_alarms" {
-  # Make sure to replace <VERSION> in this URL with the latest module-aws-monitoring release
-  source = "git::git@github.com:gruntwork-io/module-aws-monitoring.git//modules/alarms/asg-memory-alarms?ref=<VERSION>"
+  # Make sure to replace <VERSION> in this URL with the latest terraform-aws-monitoring release
+  source = "git::git@github.com:gruntwork-io/terraform-aws-monitoring.git//modules/alarms/asg-memory-alarms?ref=<VERSION>"
 
   asg_names            = [module.eks_workers.eks_worker_asg_id]
   num_asg_names        = 1
@@ -1535,8 +1572,8 @@ module "high_memory_usage_alarms" {
 }
 
 module "high_disk_usage_alarms" {
-  # Make sure to replace <VERSION> in this URL with the latest module-aws-monitoring release
-  source = "git::git@github.com:gruntwork-io/module-aws-monitoring.git//modules/alarms/asg-disk-alarms?ref=<VERSION>"
+  # Make sure to replace <VERSION> in this URL with the latest terraform-aws-monitoring release
+  source = "git::git@github.com:gruntwork-io/terraform-aws-monitoring.git//modules/alarms/asg-disk-alarms?ref=<VERSION>"
 
   asg_names            = [module.eks_workers.eks_worker_asg_id]
   num_asg_names        = 1
@@ -1548,6 +1585,8 @@ module "high_disk_usage_alarms" {
 
 Note that the code above assumes you've created an SNS topic to notify about these alerts in another module and pulls
 in the ARN of that SNS topic using a `terraform_remote_state` data source:
+
+# TODO: I think this guide is for people who are starting with nothing, so it would help to mention how to set up sns-topics.
 
 .infrastructure-modules/services/eks-cluster/dependencies.tf
 [source,hcl]
@@ -1773,8 +1812,8 @@ output "eks_cluster_name" {
   value = module.eks_cluster.eks_cluster_name
 }
 
-output "eks_cluster_asg_name" {
-  value = module.eks_workers.eks_worker_asg_name
+output "eks_worker_asg_names" {
+  value = module.eks_workers.eks_worker_asg_names
 }
 
 output "eks_worker_security_group_id" {
@@ -1787,10 +1826,6 @@ output "eks_worker_iam_role_arn" {
 
 output "eks_worker_iam_role_name" {
   value = module.eks_workers.eks_worker_iam_role_name
-}
-
-output "asg_name" {
-  value = module.eks_workers.eks_worker_asg_name
 }
 ----
 
@@ -1834,11 +1869,21 @@ terraform {
 ----
 
 Set the variables for the `cloudtrail` module in this environment in the `inputs = { ... }` block of `terragrunt.hcl`:
+# TODO: What? Why does this say CloudTrail module?
 
 .infrastructure-live/stage/us-east-2/stage/services/eks-cluster/terragrunt.hcl
 [source,hcl]
 ----
 inputs = {
+  # TODO: Aren't these missing? (I'm using locals for these...)
+  aws_region            = local.aws_region
+  aws_account_id        = local.account_id
+  vpc_name              = "app-prod"
+
+  terraform_state_aws_region = local.aws_region
+  terraform_state_s3_bucket  = "${local.terraform_state_s3_bucket_prefix}-${local.account_name}-${local.aws_region}"
+  # -------------
+
   cluster_name                  = "eks-stage"
   cluster_instance_keypair_name = "stage-services-us-east-1-v1"
 
@@ -1855,15 +1900,21 @@ inputs = {
   # If your IAM users are defined in a separate AWS account (e.g., in a security account), pass in the ARN of an IAM
   # role in that account that ssh-grunt on the worker nodes can assume to look up IAM group membership and public SSH
   # keys
+  # TODO: It's not clear which account this is meant to be. I assume from the above that it's the security account.
+  # This is one of those places where we can assume they followed our other guides and just tell them what they should use here.
   external_account_ssh_grunt_role_arn = "arn:aws:iam::1111222233333:role/allow-ssh-grunt-access-from-other-accounts"
 
   # Configure your role mappings
   iam_role_to_rbac_group_mappings = {
     # Give anyone using the full-access IAM role admin permissions
+    # TODO: Same here, not clear which account this should be. Is it the staging account, because it's different from the account
+    # number used above?
     "arn:aws:iam::444444444444:role/allow-full-access-from-other-accounts" = ["system:masters"]
 
     # Give anyone using the developers IAM role developer permissions. Kubernetes will automatically create this group
     # if it doesn't exist already, but you're still responsible for binding permissions to it!
+    # TODO: Same here, not clear which account this should be. Is it the staging account, because it's different from the account
+    # number used above?
     "arn:aws:iam::444444444444:role/allow-dev-access-from-other-accounts" = ["developers"]
   }
 }
