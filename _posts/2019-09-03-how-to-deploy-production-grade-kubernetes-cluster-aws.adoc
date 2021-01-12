@@ -1119,6 +1119,12 @@ The code above does the following:
   Because we disable public access, kubergrunt based verification and the plugin upgrade script will be disabled.
 * Set whether to configure `kubectl` so that it can be used to access the deployed EKS cluster; and set its path with `kubectl_config_path`.
 * Temporarily disable waiting for the workers to be deployed, since on the first deploy we will not be deploying the workers.
+
+# TODO: Okay, found out that we want to first make it public (set `endpoint_public_access = true`), deploy it, and then
+# set that to false. This is so that it's possible to access the kubernetes API when deploying the `eks_to_k8s_role_mapping` module.
+# So rather than the edits above, it's better to have them start out with a publicly accessible EKS cluster, and explain how to
+# restrict access after deployment.
+
 +
 NOTE: This means you MUST be in the VPC network—e.g., connected via a VPN—to access your EKS cluster.
 
@@ -1870,6 +1876,7 @@ terraform {
 
 Set the variables for the `cloudtrail` module in this environment in the `inputs = { ... }` block of `terragrunt.hcl`:
 # TODO: What? Why does this say CloudTrail module?
+# TODO: also, why does this say the keypair name is stage-services-us-east-1-v1? We never created that earlier.
 
 .infrastructure-live/stage/us-east-2/stage/services/eks-cluster/terragrunt.hcl
 [source,hcl]
