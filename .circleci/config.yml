@@ -17,7 +17,7 @@ orbs:
 references:
   base_container: &base_container
     docker:
-      - image: circleci/openjdk:8u265-jdk-buster
+      - image: circleci/ruby:2.7.1-buster
 
   ######################################################################################################################
   # Build steps
@@ -32,35 +32,33 @@ references:
 
   install_jdk: &install-jdk
     run:
-      name: install Ruby
+      name: install jdk 8
       command: |
-        sudo apt-get install -y wget gnupg software-properties-common
+        sudo apt-get install -y wget
         # wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | sudo apt-key add -
         # sudo add-apt-repository --yes https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/
-        # sudo apt-get update -y
+        sudo apt-get update -y
         # sudo apt-get install -y adoptopenjdk-8-hotspot texlive texlive-xetex texlive-latex-recommended texlive-latex-extra texlive-lang-cjk
         #
         # Steps above are commented out due to: https://github.com/AdoptOpenJDK/openjdk-infrastructure/issues/1399. Workaround below.
-        # wget https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/pool/main/a/adoptopenjdk-8-hotspot/adoptopenjdk-8-hotspot_8u222-b10-2_amd64.deb
-        # sudo apt install ./adoptopenjdk-8-hotspot_8u222-b10-2_amd64.deb
-        sudo apt-get update -y
-        sudo apt-get install -y ruby-full
+        wget https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/pool/main/a/adoptopenjdk-8-hotspot/adoptopenjdk-8-hotspot_8u222-b10-2_amd64.deb
+        sudo apt install ./adoptopenjdk-8-hotspot_8u222-b10-2_amd64.deb
 
   deploy_to_staging: &deploy-to-staging
     run:
       name: deploy to staging
       command: |
         set +o pipefail
-        if [[ "$CIRCLE_BRANCH" == "master" ]]; then
+        # if [[ "$CIRCLE_BRANCH" == "master" ]]; then
           export CREDENTIALS=`aws sts assume-role --role-arn arn:aws:iam::151025255439:role/allow-gruntwork-website-ci-cd-access-from-other-accounts --role-session-name CircleCI --duration-seconds 900 --output=json`
           export AWS_ACCESS_KEY_ID=`echo ${CREDENTIALS} | jq -r '.Credentials.AccessKeyId'`
           export AWS_SECRET_ACCESS_KEY=`echo ${CREDENTIALS} | jq -r '.Credentials.SecretAccessKey'`
           export AWS_SESSION_TOKEN=`echo ${CREDENTIALS} | jq -r '.Credentials.SessionToken'`
           export AWS_EXPIRATION=`echo ${CREDENTIALS} | jq -r '.Credentials.Expiration'`
           ./push-to-s3-stage.sh
-        else
-          echo "not on master, skipping staging deploy"
-        fi
+        # else
+        #   echo "not on master, skipping staging deploy"
+        # fi
 
   deploy_to_prod: &deploy-to-prod
     run:
@@ -130,10 +128,10 @@ workflows:
   version: 2
   each_commit:
     jobs:
-      - deploy-to-stage:
-          filters:
-            branches:
-              only: master
+      - deploy-to-stage
+        # filters:
+        #   branches:
+        #     only: master
       - deploy-to-prod:
           filters:
             tags:
