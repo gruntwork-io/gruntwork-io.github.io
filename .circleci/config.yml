@@ -122,7 +122,7 @@ workflows:
   version: 2
   each_commit:
     jobs:
-      - deploy-to-stage
+      - deploy-to-stage:
           filters:
             branches:
               only: master
