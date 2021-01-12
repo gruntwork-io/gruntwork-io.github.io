@@ -34,13 +34,7 @@ references:
     run:
       name: install jdk 8
       command: |
-        sudo apt-get install -y wget gnupg software-properties-common
-        # wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | sudo apt-key add -
-        # sudo add-apt-repository --yes https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/
-        # sudo apt-get update -y
-        # sudo apt-get install -y adoptopenjdk-8-hotspot texlive texlive-xetex texlive-latex-recommended texlive-latex-extra texlive-lang-cjk
-        #
-        # Steps above are commented out due to: https://github.com/AdoptOpenJDK/openjdk-infrastructure/issues/1399. Workaround below.
+        sudo apt-get install -y wget
         wget https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/pool/main/a/adoptopenjdk-8-hotspot/adoptopenjdk-8-hotspot_8u222-b10-2_amd64.deb
         sudo apt install ./adoptopenjdk-8-hotspot_8u222-b10-2_amd64.deb
 
