@@ -2601,8 +2601,8 @@ inputs = {
   iam_group_name_full_access            = "full-access"
   iam_group_name_read_only              = "read-only"
   iam_group_name_iam_user_self_mgmt     = "self-mgmt"
-  iam_group_names_ssh_grunt_sudo_users  = "ssh-grunt-sudo-users"
-  iam_group_names_ssh_grunt_users       = "ssh-grunt-users"
+  iam_group_names_ssh_grunt_sudo_users  = ["ssh-grunt-sudo-users"]
+  iam_group_names_ssh_grunt_users       = ["ssh-grunt-users"]
 
   # Create IAM groups that grant access to the other AWS accounts
   iam_groups_for_cross_account_access = [
