@@ -121,8 +121,8 @@ of various groups and roles, and the configuration of multi-factor authenticatio
 _Number of recommendations: 3_
 
 This section was added in the version 1.3.0 and involves the use of storage capabilities of AWS. The relevant
-services for this section are link:https://aws.amazon.com/s3/[S3] and link:https://aws.amazon.com/ec2/[EC2].
-
+services for this section are link:https://aws.amazon.com/s3/[S3] and link:https://aws.amazon.com/ec2/[EC2]. The
+recommendations in this section pertain to in-transit and at-rest encryption.
 
 ==== Logging
 _Number of recommendations: 11_
@@ -1054,7 +1054,12 @@ link:https://docs.aws.amazon.com/general/latest/gr/aws_tasks-that-require-root.h
 the use of root].  Fortunately, most of these activities are rare, so usage of the root account can be kept to
 a minimum.
 
-Next, continue with the <<configure_logging>> section.
+[[configure_storage]]
+=== Configure storage
+To make sure your S3 buckets are compliant with the benchmark, all you have to do is use the
+link:https://github.com/gruntwork-io/module-security/tree/master/modules/private-s3-bucket[`private-s3-bucket` module].
+
+TODO(Rob): Add instructions for 2.2.1.
 
 [[configure_logging]]
 === Configure logging
@@ -1227,7 +1232,9 @@ sections above.
 1.20,TODO(Ana),TODO
 1.21,<<iam_access_analyzer>>,Use Gruntwork modules to enable IAM Access Analyzer across regions
 1.22,TODO,Use the security AWS account
-Section 2 TODO,TODO,TODO
+2.1.1,<<configure_storage>>,TODO(Ana)
+2.1.2,<<configure_storage>>,TODO(Ana)
+2.2.1,<<configure_storage>>,TODO(Rob)
 3.1-3.4,<<cloudtrail>>,Use the Gruntwork CloudTrail wrapper module
 3.5,<<aws_config>>,Enable AWS Config for all regions
 3.6-3.7,<<cloudtrail>>,Use the Gruntwork CloudTrail wrapper module
