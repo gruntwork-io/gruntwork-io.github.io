@@ -417,8 +417,22 @@ resource "aws_iam_account_password_policy" "aws_foundations_benchmark_policy" {
 ==== Expired SSL/TLS certificates
 TODO(Rob)
 
+[[iam_access_analyzer_intro]]
 ==== IAM Access Analyzer
-TODO(Ina)
+The latest CIS guide requires that the AWS IAM Access Analyzer service is enabled across all active regions in a given
+AWS Account or Organization.
+
+To achieve this compliance requirement, enable the IAM Access Analyzer service for every AWS region you have enabled in
+your account. Alternatively, you could make use of the
+link:https://github.com/gruntwork-io/module-security/blob/master/modules/iam-access-analyzer-multi-region[module]
+provided in the Gruntwork Service Catalog.
+
+Once enabled, it will scan only within the boundaries of the AWS Account or Organization it has access to. Only specific
+resources are analyzed and included in the results - e.g. S3 buckets, SQS, etc. (For the full list of resources supported,
+please visit link:https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-resources.html[the relevant AWS docs]).
+
+The findings from the IAM Access Analyzer can be found in the AWS web console, and can be archived or resolved.
+Please visit the link:https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-findings.html[AWS guidance on how to do so].
 
 [[manual_steps]]
 ==== Manual steps
@@ -1010,7 +1024,20 @@ Use these modules whenever possible. You should always use IAM roles in your own
 
 TODO(Rob): Add instructions for 1.19.
 
-TODO(Ina): Add instructions for 1.21.
+[[iam_access_analyzer_deployment]]
+=== Steps to enable IAM Access Analyzer for all enabled AWS regions
+To enable IAM Access Analyzer in your AWS Account or Organization, you need to do it separately for every region.
+
+To enable this for your AWS account:
+* you can do so manually using the AWS CLI or the AWS web console. For more guidance on how to do so, please refer to
+link:https://docs.aws.amazon.com/IAM/latest/UserGuide/what-is-access-analyzer.html[the official AWS docs];
+* you can also use the examples provided as part of `learning-and-testing/landingzone`:
+link:https://github.com/gruntwork-io/aws-service-catalog/tree/master/examples/for-learning-and-testing/landingzone/account-baseline-root[account-baseline-root]
+and link:https://github.com/gruntwork-io/aws-service-catalog/tree/master/examples/for-learning-and-testing/landingzone/account-baseline-security[account-baseline-security].
+
+For the standalone module available as pat of the Gruntwork module library and Service Catalog, have a read here:
+link:https://github.com/gruntwork-io/module-security/blob/master/modules/iam-access-analyzer-multi-region/README.adoc[README.adoc].
+
 
 [[maintain_compliance]]
 === Maintaining compliance by following IAM best practices
@@ -1198,7 +1225,7 @@ sections above.
 1.18,<<iam_roles_for_instances>>,Use Gruntwork modules to ensure EC2 instances use roles for access
 1.19,TODO(Rob),TODO
 1.20,TODO(Ana),TODO
-1.21,TODO(Ina),TODO
+1.21,<<iam_access_analyzer>>,Use Gruntwork modules to enable IAM Access Analyzer across regions
 1.22,TODO,Use the security AWS account
 Section 2 TODO,TODO,TODO
 3.1-3.4,<<cloudtrail>>,Use the Gruntwork CloudTrail wrapper module
