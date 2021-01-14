@@ -417,7 +417,7 @@ resource "aws_iam_account_password_policy" "aws_foundations_benchmark_policy" {
 ==== Expired SSL/TLS certificates
 TODO(Rob)
 
-[[iam_access_analyzer_intro]]
+[[iam_access_analyzer]]
 ==== IAM Access Analyzer
 The latest CIS guide requires that the AWS IAM Access Analyzer service is enabled across all active regions in a given
 AWS Account or Organization.
@@ -430,6 +430,7 @@ provided in the Gruntwork Service Catalog.
 Once enabled, it will scan only within the boundaries of the AWS Account or Organization it has access to. Only specific
 resources are analyzed and included in the results - e.g. S3 buckets, SQS, etc. (For the full list of resources supported,
 please visit link:https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-resources.html[the relevant AWS docs]).
+This lets you identify unintended access to these resources and data by external entities.
 
 The findings from the IAM Access Analyzer can be found in the AWS web console, and can be archived or resolved.
 Please visit the link:https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-findings.html[AWS guidance on how to do so].
@@ -1029,15 +1030,12 @@ TODO(Rob): Add instructions for 1.19.
 To enable IAM Access Analyzer in your AWS Account or Organization, you need to do it separately for every region.
 
 To enable this for your AWS account:
-* you can do so manually using the AWS CLI or the AWS web console. For more guidance on how to do so, please refer to
-link:https://docs.aws.amazon.com/IAM/latest/UserGuide/what-is-access-analyzer.html[the official AWS docs];
-* you can also use the examples provided as part of `learning-and-testing/landingzone`:
+* use the examples provided as part of `learning-and-testing/landingzone`:
 link:https://github.com/gruntwork-io/aws-service-catalog/tree/master/examples/for-learning-and-testing/landingzone/account-baseline-root[account-baseline-root]
 and link:https://github.com/gruntwork-io/aws-service-catalog/tree/master/examples/for-learning-and-testing/landingzone/account-baseline-security[account-baseline-security].
 
 For the standalone module available as pat of the Gruntwork module library and Service Catalog, have a read here:
 link:https://github.com/gruntwork-io/module-security/blob/master/modules/iam-access-analyzer-multi-region/README.adoc[README.adoc].
-
 
 [[maintain_compliance]]
 === Maintaining compliance by following IAM best practices
