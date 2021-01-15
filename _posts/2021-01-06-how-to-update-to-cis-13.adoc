@@ -158,13 +158,13 @@ on the AWS website for detailed instructions.
 
 ==== 1. Deploy the Cleanup Expired Certs module (recommendation 1.19)
 
-The updated recommendations also require that all expired SSL/TLS certificates stored in AWS IAM are automatically removed. Removing expired SSL/TLS certificates eliminates the risk that an invalid certificate will be deployed
+The new CIS v1.3 recommendations require that all expired SSL/TLS certificates stored in AWS IAM are automatically removed. Removing expired SSL/TLS certificates eliminates the risk that an invalid certificate will be deployed
 accidentally to a resource such as AWS Elastic Load Balancer (ELB), which can damage the credibility of the application/website behind the ELB. As a best practice, it is recommended to delete expired certificates. To help you
 achieve this recommendation check out the https://github.com/gruntwork-io/cis-compliance-aws/tree/master/examples/cleanup-expired-certs/terraform[example] of the ready-made `cleanup-expired-certs` module.
 
 ==== 2. Deploy IAM Access Analyzer module (recommendation 1.21)
 
-As part of CIS 1.3 compliance, the AWS IAM Access Analyzer service is required to be enabled across all active regions in a given AWS account or organization.
+The updated recommendations also require that the AWS IAM Access Analyzer service is enabled across all active regions in a given AWS account or organization.
 
 Once enabled and active, this service will examine the trust policies and access to the following resources:
 
