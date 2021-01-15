@@ -30,7 +30,7 @@ you can launch infrastructure that is compliant with the Benchmark recommendatio
 compliant state over time because all of the infrastructure is defined as code. This guide targets version 1.3.0 of the Benchmark.
 
 Note: Previously, we supported the 1.2.0 version of the Benchmark. If you are looking to upgrade from 1.2.0 to 1.3.0,
-please follow link:https://gruntwork.io/guides/upgrades/how-to-update-to-cis-13/[the upgrade guide] instead.
+please follow link:/guides/upgrades/how-to-update-to-cis-13/[the upgrade guide] instead.
 
 image:/assets/img/guides/cis-compliance/cis-account-architecture.png[CIS Benchmark Architecture]
 
@@ -68,7 +68,7 @@ Feel free to read the guide from start to finish or skip around to whatever part
 [[core_concepts]]
 == Core concepts
 
-The CIS AWS Foundations Benchmark is organized into four sections:
+The CIS AWS Foundations Benchmark is organized into five sections:
  +
  +
 
@@ -668,12 +668,11 @@ production-grade VPC on AWS] guide, which includes recommendations for segmentat
 security groups, and remote access. Moreover, our link:https://gruntwork.io/reference-architecture/[Reference
 Architecture] can get you up and running with a secure network configuration immediately.
 
-TODO(Marina): 5.1
-
-Recommendation 5.2 forbids allowing ports 22 (SSH) and 3389 (Remote Desktop) from the public Internet
-(`0.0.0.0/0`). This seems entirely reasonable, no? Avoid creating any security groups with these rules. Instead, if you
-require SSH or Remote Desktop to your cloud resources, provide a more restricted CIDR range, such as the IP address of
-your offices.
+Recommendation 5.1 forbits allowing access to the remote server administration ports, such as SSH to port 22 and Remote
+Desktop to port 3389, from the public Internet (`0.0.0.0/0`) on the level of Network ACL rules. Recommendation 5.2 does
+the same for Security Groups.  This seems entirely reasonable, no? Avoid creating any Security Groups and NACL with
+these rules. Instead, if you require SSH or Remote Desktop to your cloud resources, provide a more restricted CIDR
+range, such as the IP address of your offices.
 
 To meet recommendation 5.3, run the link:https://github.com/gruntwork-io/cloud-nuke[`cloud-nuke defaults-aws`] command
 to remove the rules from all default security groups. Note that it isn't possible to actually delete the default
@@ -1173,14 +1172,20 @@ setup a subscriber to the SNS topics that are created.
 
 [[configure_networking]]
 === Configure networking
-TODO(Marina): Add instructions for 5.1.
 
-If you're using Gruntwork's link:https://github.com/gruntwork-io/module-vpc[VPC module] for your VPCs, three
+If you're using Gruntwork's link:https://github.com/gruntwork-io/terraform-aws-vpc[VPC module] for your VPCs, two
 of the four recommendations in this section are already taken care of! By default, none of our modules allow
-access to ports 22 or 3389 from the world, and our architecture has a least-privileges-based routing
+security groups to access to ports 22 or 3389 from the world, and our architecture has a least-privileges-based routing
 configuration by default.
 
-The only necessary step here is to run the link:https://github.com/gruntwork-io/cloud-nuke[`cloud-nuke
+To meet the 5.1 recommendation, you need to create your Network ACL Rules for the VPC-App using the 
+link:https://github.com/gruntwork-io/cis-compliance-aws/tree/master/modules/vpc-app-network-acls[`vpc-app-network-acls`
+module] and your NACL Rules for the VPC-Mgmt (which is being deprecated) using the 
+link:https://github.com/gruntwork-io/cis-compliance-aws/tree/master/modules/vpc-mgmt-network-acls[`vpc-mgmt-network-acls`
+module].
+
+
+Finally, run the link:https://github.com/gruntwork-io/cloud-nuke[`cloud-nuke
 defaults-aws`] command to remove all default security groups from all VPCs in all regions.
 
 [[next_steps]]
@@ -1241,7 +1246,7 @@ sections above.
 3.10,TODO(Ana),TODO
 3.11,TODO(Ana),TODO
 4.1-4.15,<<configure_monitoring>>,The CloudWatch Logs metrics filters wrapper module will satisfy each recommendation
-5.1,TODO(Marina),TODO
+5.1,<<configure_networking>>,Use the `vpc-app-network-acls` and `vpc-mgmt-network-acls` to ensure there is no public remote access
 5.2,<<configure_networking>>,Use the Gruntwork VPC modules for a secure network configuration
 5.3,<<configure_networking>>,The cloud-nuke tool can remove all default security groups
 5.4,<<configure_networking>>,Gruntwork's VPC module creates least-privilege routing by default
