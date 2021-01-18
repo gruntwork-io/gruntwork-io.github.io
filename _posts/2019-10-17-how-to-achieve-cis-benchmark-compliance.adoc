@@ -668,7 +668,7 @@ production-grade VPC on AWS] guide, which includes recommendations for segmentat
 security groups, and remote access. Moreover, our link:https://gruntwork.io/reference-architecture/[Reference
 Architecture] can get you up and running with a secure network configuration immediately.
 
-Recommendation 5.1 forbits allowing access to the remote server administration ports, such as SSH to port 22 and Remote
+Recommendation 5.1 forbids allowing access to the remote server administration ports, such as SSH to port 22 and Remote
 Desktop to port 3389, from the public Internet (`0.0.0.0/0`) on the level of Network ACL rules. Recommendation 5.2 does
 the same for Security Groups.  This seems entirely reasonable, no? Avoid creating any Security Groups and NACL with
 these rules. Instead, if you require SSH or Remote Desktop to your cloud resources, provide a more restricted CIDR
