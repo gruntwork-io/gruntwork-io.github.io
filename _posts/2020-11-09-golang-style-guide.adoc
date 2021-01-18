@@ -89,7 +89,7 @@ decide what to do with it, all the way up to the very entrypoint of the app (or 
 You should almost NEVER use `panic`.
 
 Use custom error types. Create your own types that implement the `error` interface so that error messages are clear
-and have well-defined types you can check against. For some examples of this, see e.g. the custom erros in the
+and have well-defined types you can check against. For some examples of this, see e.g. the custom errors in the
 https://github.com/gruntwork-io/terratest/blob/master/modules/aws/errors.go[aws] package of `terratest`.
 
 Include stack traces. In most of our code, we have to wrap errors with
