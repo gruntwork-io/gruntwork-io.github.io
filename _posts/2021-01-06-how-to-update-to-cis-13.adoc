@@ -185,5 +185,29 @@ unintentionally exposed and can nullify the impact of disclosure if the encrypti
 a module that configures volume encryption by default in all enabled regions. Check out the https://github.com/gruntwork-io/module-security/tree/master/modules/ebs-encryption-multi-region[ebs-encryption-multi-region] to
 configure AWS EBS encryption in all enabled regions for an AWS Account.
 
-==== 4. Deploy ... module (recommendation 5.1)
-#TODO(Marina) IAC-1613
+==== 4. Deploy the vpc-app-network-acl and vpc-mgmt-network-acl modules (recommendation 5.1)
+
+If you are already using the `vpc-app-network-acl` and/or `vpc-mgmt-network-acl` modules, you need to update the
+source URL from the https://github.com/gruntwork-io/terraform-aws-vpc[`terraform-aws-vpc` module] (previously known
+as `module-vpc`). There is one new required argument, `allow_administrative_remote_access_cidrs`. You will add the
+CIDRs from your office!
+
+```
+module "vpc_app_network_acls" {
+  source = "git::git@github.com:gruntwork-io/cis-compliance-aws.git//modules/vpc-app-network-acls?ref=v0.9.3"
+
+  # ... the existing variables weren't affected!
+
+  allow_administrative_remote_access_cidrs = {
+    berlin_office = "1.2.3.4/32"
+    ny_office     = "6.7.8.9/32"
+  }
+
+```
+
+Note that these new Network ACL Rules exceed the default AWS Quota for NACL Rules. We created a Terraform module
+(https://github.com/gruntwork-io/package-terraform-utilities/tree/master/modules/request-quota-increase[`request-quota-increase`])
+where you can request a quota increase. If you use two remote administration ports (the defaults for both modules
+are 22 (SSH) and 3389 (Remote Desktop)), you can add up to 10 CIDRs. Check out
+https://github.com/gruntwork-io/cis-compliance-aws/tree/v0.9.3/modules/vpc-app-network-acls#calculating-nacl-rules-limits[our
+docs] to see how to calculate the maximum number of CIDRs that you can add.
