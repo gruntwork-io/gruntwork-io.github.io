@@ -1,5 +1,5 @@
 ---
-title: How to update to CIS AWS Foundations Benchmark 1.3
+title: How to update to CIS AWS Foundations Benchmark 1.3.0
 categories: Upgrades
 image: /assets/img/guides/refresh_icon.png
 excerpt: Learn how to update to the 1.3.0 version of the CIS AWS Foundations Benchmark
@@ -136,8 +136,8 @@ compatible with CIS AWS 1.3.0:
 |1.20, 2.1.1, 2.1.2
 
 |cis-compliance-aws
-|https://github.com/gruntwork-io/cis-compliance-aws/releases/tag/v0.9.2[v0.9.2]
-|4.15, 3.10, 3.11
+|https://github.com/gruntwork-io/cis-compliance-aws/releases/tag/v0.9.3[v0.9.3]
+|3.10, 3.11, 4.15, 5.1
 
 |aws-service-catalog
 |https://github.com/gruntwork-io/aws-service-catalog/releases/tag/v0.15.4[v0.15.4]
@@ -192,7 +192,8 @@ source URL from the https://github.com/gruntwork-io/terraform-aws-vpc[`terraform
 as `module-vpc`). There is one new required argument, `allow_administrative_remote_access_cidrs`. You will add the
 CIDRs from your office!
 
-```
+[source,hcl]
+----
 module "vpc_app_network_acls" {
   source = "git::git@github.com:gruntwork-io/cis-compliance-aws.git//modules/vpc-app-network-acls?ref=v0.9.3"
 
@@ -202,8 +203,8 @@ module "vpc_app_network_acls" {
     berlin_office = "1.2.3.4/32"
     ny_office     = "6.7.8.9/32"
   }
-
-```
+}
+----
 
 Note that these new Network ACL Rules exceed the default AWS Quota for NACL Rules. We created a Terraform module
 (https://github.com/gruntwork-io/package-terraform-utilities/tree/master/modules/request-quota-increase[`request-quota-increase`])
