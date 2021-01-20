@@ -414,8 +414,52 @@ resource "aws_iam_account_password_policy" "aws_foundations_benchmark_policy" {
 }
 ----
 
+[[cleanup_expired_certs]]
 ==== Expired SSL/TLS certificates
-TODO(Rob)
+The CIS v1.3 recommendations require that all expired SSL/TLS certificates stored in AWS IAM are automatically removed
+(see 1.19). Removing expired SSL/TLS certificates eliminates the risk that an invalid certificate will be deployed
+accidentally to a resource such as AWS Elastic Load Balancer (ELB), which can damage the credibility of the
+application/website behind the ELB. As a best practice, it is recommended to delete expired certificates.
+
+Unfortunately removing expired certificates via AWS Management Console is not currently supported so we must remove
+then using the AWS API. To view the current certificates stored in IAM, use the AWS CLI and execute the `list-server-certificates`
+command:
+
+[source,bash]
+----
+aws iam list-server-certificates
+----
+
+The command output should return an array that contains all of the SSL/TLS certificates currently stored in IAM and their metadata:
+
+[source,json]
+----
+{
+	"ServerCertificateMetadataList": [{
+		"ServerCertificateId": "EHDGFRW7EJFYTE88D",
+		"ServerCertificateName": "MyServerCertificate",
+		"Expiration": "2020-07-10T23:59:59Z",
+		"Path": "/",
+		"Arn": "arn:aws:iam::012345678910:server-
+		certificate / MySSLCertificate ",
+		"UploadDate": "2018-06-10T11:56:08Z"
+	}]
+}
+----
+
+The `Expiration` attribute contains the expiration date for each SSL/TLS certificate which you can use to determine
+if it should be removed. To remove the certificate use the `delete-server-certificate` command, making sure to
+substitute `<CERTIFICATE_NAME>` with the `ServerCertificateId` attribute from the previous command:
+
+[source,bash]
+----
+aws iam delete-server-certificate --server-certificate-name <CERTIFICATE_NAME>
+----
+
+To help you achieve this recommendation, we've create a Lambda function that runs on a regular schedule and
+automatically removes all expired SSL/TLS certificates. Check out the link:https://github.com/gruntwork-io/cis-compliance-aws/tree/master/examples/cleanup-expired-certs/terraform[example]
+provided in the Gruntwork Service Catalog to see how to deploy a ready-made module that can be
+deployed in each of your AWS accounts.
 
 [[iam_access_analyzer]]
 ==== IAM Access Analyzer
