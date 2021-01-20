@@ -1101,10 +1101,17 @@ a minimum.
 
 [[configure_storage]]
 === Configure storage
+
+[[s3_buckets_deployment]]
+==== S3 Buckets
 To make sure your S3 buckets are compliant with the benchmark, all you have to do is use the
 link:https://github.com/gruntwork-io/module-security/tree/master/modules/private-s3-bucket[`private-s3-bucket` module].
 
-TODO(Rob): Add instructions for 2.2.1.
+[[encrypt_ebs_volumes]]
+==== Encrypt EBS volumes
+
+Use the link:https://github.com/gruntwork-io/terraform-aws-security/tree/master/modules/ebs-encryption-multi-region[`ebs-encryption-multi-region` module]
+to configure AWS EBS encryption in all enabled regions of an AWS Account, as per the Benchmark recommendation.
 
 [[configure_logging]]
 === Configure logging
