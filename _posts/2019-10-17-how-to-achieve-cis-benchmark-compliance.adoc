@@ -415,7 +415,7 @@ resource "aws_iam_account_password_policy" "aws_foundations_benchmark_policy" {
 ----
 
 [[cleanup_expired_certs]]
-==== Expired SSL/TLS certificates
+==== Cleanup Expired SSL/TLS certificates
 The CIS v1.3 recommendations require that all expired SSL/TLS certificates stored in AWS IAM are automatically removed
 (see 1.19). Removing expired SSL/TLS certificates eliminates the risk that an invalid certificate will be deployed
 accidentally to a resource such as AWS Elastic Load Balancer (ELB), which can damage the credibility of the
@@ -456,7 +456,7 @@ substitute `<CERTIFICATE_NAME>` with the `ServerCertificateId` attribute from th
 aws iam delete-server-certificate --server-certificate-name <CERTIFICATE_NAME>
 ----
 
-To help you achieve this recommendation, we've create a Lambda function that runs on a regular schedule and
+To help you achieve this recommendation, we've created a Lambda function that runs on a regular schedule and
 automatically removes all expired SSL/TLS certificates. Check out the link:https://github.com/gruntwork-io/cis-compliance-aws/tree/master/examples/cleanup-expired-certs/terraform[example]
 provided in the Gruntwork Service Catalog to see how to deploy a ready-made module that can be
 deployed in each of your AWS accounts.
@@ -1066,7 +1066,11 @@ authentication. For example:
 
 Use these modules whenever possible. You should always use IAM roles in your own modules any time you need to provide access to the AWS API. Using static API credentials should be avoided whenever possible.
 
-TODO(Rob): Add instructions for 1.19.
+[[cleanup_expired_certs_deployment]]
+=== Automatically remove expired SSL/TLS certificates from IAM
+Next, use the link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/blob/master/modules/cleanup-expired-certs/README.adoc[`cleanup-expired-certs`]
+module to deploy a Lambda function to remove all expired SSL/TLS certificates from AWS IAM. This module will add all of the relevant IAM resources needed to
+periodically execute the Lambda function and optionally, report metrics to CloudWatch. Be sure to deploy this module into each of your AWS accounts.
 
 [[iam_access_analyzer_deployment]]
 === Steps to enable IAM Access Analyzer for all enabled AWS regions
@@ -1077,7 +1081,7 @@ To enable this for your AWS account:
 link:https://github.com/gruntwork-io/aws-service-catalog/tree/master/examples/for-learning-and-testing/landingzone/account-baseline-root[account-baseline-root]
 and link:https://github.com/gruntwork-io/aws-service-catalog/tree/master/examples/for-learning-and-testing/landingzone/account-baseline-security[account-baseline-security].
 
-For the standalone module available as pat of the Gruntwork module library and Service Catalog, have a read here:
+For the standalone module available as part of the Gruntwork module library and Service Catalog, have a read here:
 link:https://github.com/gruntwork-io/module-security/blob/master/modules/iam-access-analyzer-multi-region/README.adoc[README.adoc].
 
 [[maintain_compliance]]
