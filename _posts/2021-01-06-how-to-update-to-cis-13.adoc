@@ -183,7 +183,7 @@ To help you achieve CIS 1.3 compliance, you can find examples of how to use the 
 EC2 supports encryption at rest when using the Elastic Block Store (EBS) service. While disabled by default, forcing encryption when creating EBS volumes is supported. Encrypting data at rest reduces the likelihood that it is
 unintentionally exposed and can nullify the impact of disclosure if the encryption remains unbroken. Recommendation 2.2.1 specifies a manual process to encrypt EBS volumes using the AWS Console, however Gruntwork has developed
 a module that configures volume encryption by default in all enabled regions. Check out the https://github.com/gruntwork-io/module-security/tree/master/modules/ebs-encryption-multi-region[ebs-encryption-multi-region] to
-configure AWS EBS encryption in all enabled regions for an AWS Account.
+configure AWS EBS encryption in all enabled regions of an AWS Account.
 
 ==== 4. Deploy the vpc-app-network-acl and vpc-mgmt-network-acl modules (recommendation 5.1)
 
