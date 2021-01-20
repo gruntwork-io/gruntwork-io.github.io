@@ -517,10 +517,10 @@ link:https://aws.amazon.com/answers/security/aws-secure-account-setup/[AWS Secur
 The new (as of v1.3.0) Storage section has three recommendations pertaining to the S3 service as well as the EC2 service.
 These have to do with encryption at rest and in transit.
 
-To comply with the recommendation 2.1.1, make sure to enable server side encryption on your S3 buckets. In Terraform, this
+To comply with recommendation 2.1.1, make sure to enable server side encryption on your S3 buckets. In Terraform, this
 is achieved by configuring the `server_side_encryption_configuration` argument of the `aws_s3_bucket` resource.
 
-To comply with the recommendation 2.1.2, make sure that all access to your S3 buckets is over TLS. In Terraform, you will
+To comply with recommendation 2.1.2, make sure that all access to your S3 buckets is over TLS. In Terraform, you will
 want to attach a policy to your buckets that includes a statement similar to this:
 
 [source,hcl]
@@ -545,7 +545,18 @@ statement {
 }
 ----
 
-TODO(Rob): 2.2.1
+To comply with recommendation 2.2.1 be sure to configure link:https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSEncryption.html[EBS volume encryption]
+in all of the enabled AWS regions within your AWS Account(s). You can invoke the Terraform
+`aws_ebs_encryption_by_default` resource to implement the recommendation.
+
+For example:
+
+[source,hcl]
+----
+resource "aws_ebs_encryption_by_default" "ebs_encryption" {
+  enabled = true
+}
+----
 
 === Logging
 In the Logging section, the Benchmark recommendations target the following services:
