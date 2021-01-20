@@ -417,11 +417,7 @@ resource "aws_iam_account_password_policy" "aws_foundations_benchmark_policy" {
 [[cleanup_expired_certs]]
 ==== Cleanup Expired SSL/TLS certificates
 The CIS v1.3 recommendations require that all expired SSL/TLS certificates stored in AWS IAM are automatically removed
-(see 1.19). Removing expired SSL/TLS certificates eliminates the risk that an invalid certificate will be deployed
-accidentally to a resource such as AWS Elastic Load Balancer (ELB), which can damage the credibility of the
-application/website behind the ELB. As a best practice, it is recommended to delete expired certificates.
-
-Unfortunately removing expired certificates via AWS Management Console is not currently supported so we must remove
+(see 1.19). Unfortunately removing expired certificates via AWS Management Console is not currently supported so we must remove
 then using the AWS API. To view the current certificates stored in IAM, use the AWS CLI and execute the `list-server-certificates`
 command:
 
@@ -456,8 +452,8 @@ substitute `<CERTIFICATE_NAME>` with the `ServerCertificateId` attribute from th
 aws iam delete-server-certificate --server-certificate-name <CERTIFICATE_NAME>
 ----
 
-To help you achieve this recommendation, we've created a Lambda function that runs on a regular schedule and
-automatically removes all expired SSL/TLS certificates. Check out the link:https://github.com/gruntwork-io/cis-compliance-aws/tree/master/examples/cleanup-expired-certs/terraform[example]
+To automate this process you might decide to implement a Lambda function that runs on a regular schedule and removes
+all expired SSL/TLS certificates. Check out the link:https://github.com/gruntwork-io/cis-compliance-aws/tree/master/examples/cleanup-expired-certs/terraform[example]
 provided in the Gruntwork Service Catalog to see how to deploy a ready-made module that can be
 deployed in each of your AWS accounts.
 
