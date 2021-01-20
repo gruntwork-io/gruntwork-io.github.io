@@ -1033,7 +1033,6 @@ terraform {
 
   # Only allow this Terraform version. Note that if you upgrade to a newer version, Terraform won't allow you to use an
   # older version, so when you upgrade, you should upgrade everyone on your team and your CI servers all at once.
-  # TODO: do we have support for terraform 13 or 14 now?
   required_version = "= 0.12.29"
 }
 ----
@@ -1329,7 +1328,6 @@ output "cloudtrail_iam_role_arn" {
 }
 ----
 
-# TODO: remove this directive! Don't test this. If you do, just do a plan test. Also we should provide all the necessary information for this.
 # TODO: We should also detail exactly how to set up your backend configuration, including:
  - terragrunt.hcl at the root:
     [source,hcl]
@@ -1395,11 +1393,8 @@ output "cloudtrail_iam_role_arn" {
     }
     ----
 
-At this point, you'll want to test your code. See
-link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#manual_tests_terraform[Manual tests for Terraform code] and
-link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#automated_tests_terraform[Automated tests for Terraform code]
-for instructions.
-
+#TODO: need to flesh these instructions out...
+At this point you can test your changes by running `plan`.
 Once your code is tested and working, commit and release your changes:
 
 [source,bash]
@@ -1433,7 +1428,7 @@ repo, setting the `ref` param to the version you released earlier:
 [source,hcl]
 ----
 terraform {
-  source = "git::git@github.com:<YOUR_ORG>/infrastructure-modules.git//landingzone/account-baseline-root?ref=v0.3.0"
+  source = "git::git@github.com:<YOUR_ORG>/infrastructure-modules.git//modules/account-baseline-root?ref=v0.3.0"
 
   # This module deploys some resources (e.g., AWS Config) across all AWS regions, each of which needs its own provider,
   # which in Terraform means a separate process. To avoid all these processes thrashing the CPU, which leads to network
@@ -1872,9 +1867,8 @@ provider "aws" {
   # The AWS region in which all resources will be created
   region = var.aws_region
 
-  # Require a 2.x version of the AWS provider
-# TODO: use "~> 3.22"
-  version = "~> 2.6"
+  # Require a 3.x version of the AWS provider
+  version = "~> 3.23"
 
   # Only these AWS Account IDs may be operated on by this template
   allowed_account_ids = [var.aws_account_id]
@@ -1927,7 +1921,6 @@ module "security_baseline" {
 ----
 
 Create all the corresponding input variables for `account-baseline-app` in `variables.tf`:
-# TODO: We need to wordwrap here, I think, because on my screen, the code box this ends up in has a horizontal scrollbar which makes it frustrating to read all the text. We definitely want people to read! In fact, if I had, I might have realized some things I didn't do correctly. On my screen the window is 85 columns wide.
 
 .infrastructure-modules/landingzone/account-baseline-app/variables.tf
 [source,hcl]
@@ -2242,8 +2235,8 @@ provider "aws" {
   # The AWS region in which all resources will be created
   region = var.aws_region
 
-  # Require a 2.x version of the AWS provider
-  version = "~> 2.6"
+  # Require a 3.x version of the AWS provider
+  version = "~> 3.23"
 
   # Only these AWS Account IDs may be operated on by this template
   allowed_account_ids = [var.aws_account_id]
@@ -2698,28 +2691,27 @@ inputs = {
   # Create IAM groups that grant access to the other AWS accounts
   iam_groups_for_cross_account_access = [
     {
-      group_name    = "_account.dev-full-access",
-      iam_role_arns = ["arn:aws:iam::<DEV_ACCOUNT_ID>:role/allow-full-access-from-other-accounts"]
+      group_name    = "_account.stage-full-access",
+      iam_role_arns = ["arn:aws:iam::<STAGE_ACCOUNT_ID>:role/allow-full-access-from-other-accounts"]
     },
     {
-      group_name    = "_account.dev-read-only",
-      iam_role_arns = ["arn:aws:iam::<DEV_ACCOUNT_ID>:role/allow-read-only-access-from-other-accounts"]
+      group_name    = "_account.stage-read-only",
+      iam_role_arns = ["arn:aws:iam::<STAGE_ACCOUNT_ID>:role/allow-read-only-access-from-other-accounts"]
     },
     {
-      group_name    = "_account.dev-dev",
-      iam_role_arns = ["arn:aws:iam::<DEV_ACCOUNT_ID>:role/allow-dev-access-from-other-accounts"]
+      group_name    = "_account.stage-dev",
+      iam_role_arns = ["arn:aws:iam::<STAGE_ACCOUNT_ID>:role/allow-dev-access-from-other-accounts"]
     },
     {
-      group_name    = "_account.dev-openvpn-admins",
-      iam_role_arns = ["arn:aws:iam::<DEV_ACCOUNT_ID>:role/openvpn-allow-certificate-revocations-for-external-accounts"]
+      group_name    = "_account.stage-openvpn-admins",
+      iam_role_arns = ["arn:aws:iam::<STAGE_ACCOUNT_ID>:role/openvpn-allow-certificate-revocations-for-external-accounts"]
     },
     {
-      group_name    = "_account.dev-openvpn-users",
-      iam_role_arns = ["arn:aws:iam::<DEV_ACCOUNT_ID>:role/openvpn-allow-certificate-requests-for-external-accounts"]
+      group_name    = "_account.stage-openvpn-users",
+      iam_role_arns = ["arn:aws:iam::<STAGE_ACCOUNT_ID>:role/openvpn-allow-certificate-requests-for-external-accounts"]
     },
 
-    # ... Repeat the same set of groups for each of stage, prod, logs, and shared services account IDs too!
-    # TODO: need to be explicit about exactly how to duplicate these. it's not clear if every instance of `dev` should be replaced or just the account ids, or what.
+    # ... Repeat the same set of groups for each of dev, prod, logs, and shared services account IDs too!
   ]
 
   # Create all the IAM users for your company and assign them to IAM groups
@@ -2763,7 +2755,8 @@ The code above does the following:
 
 . **Create IAM groups**. We've created IAM groups, both for permissions within the security account (e.g.,
   `full-access` grants admin permissions in the security account) and for permissions in other accounts (e.g.,
-  `_account.dev-full-access` grants access to an IAM role with admin permissions in the dev account).
+  `_account.stage-full-access` grants access to an IAM role with admin permissions in the stage account). Be sure to
+  fill out the section for permissions in dev, prod, logs, and shared accounts.
 
 . **Create IAM users**. The example above creates IAM users for `alice`, `bob`, and `carol`, and assigns them to
   the various IAM groups. You should create an IAM user for yourself in the `full-access` group, plus IAM users for the
@@ -2939,8 +2932,8 @@ The code above does the following:
   this account. For the most part, we grant all permissions to the security account, so that by assigning users to IAM
   groups in that account, you'll be able to access IAM roles in all the other child accounts.
 
-# TODO: Everywhere we give this advice to configure the backend, probably it's better to tell people organize this
-differently in their hcl files. First terraform block, then include, locals, and finally inputs.
+# TODO: Does it matter what order things are in? Where we give this advice to configure the backend, probably it's better
+to tell people order the blocks like: terraform, include, locals, and finally inputs.
 Configure your Terraform backend:
 
 .infrastructure-live/stage/_global/account-baseline/terragrunt.hcl
