@@ -757,6 +757,7 @@ Gruntwork Compliance for CIS AWS Foundations Benchmark::
 IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork Compliance subscriber# to access the Gruntwork
 Infrastructure as Code Library and the CIS AWS Foundations Benchmark modules.
 
+[[account_structure]]
 How to configure a production-grade AWS account structure::
   Review the link:https://gruntwork.io/guides/foundations/how-to-configure-production-grade-aws-account-structure/[production-grade AWS account structure guide] to familiarize yourself with many of the concepts that this walkthrough depends on.
 
@@ -1240,9 +1241,9 @@ of the four recommendations in this section are already taken care of! By defaul
 security groups to access to ports 22 or 3389 from the world, and our architecture has a least-privileges-based routing
 configuration by default.
 
-To meet the 5.1 recommendation, you need to create your Network ACL Rules for the VPC-App using the 
+To meet the 5.1 recommendation, you need to create your Network ACL Rules for the VPC-App using the
 link:https://github.com/gruntwork-io/cis-compliance-aws/tree/master/modules/vpc-app-network-acls[`vpc-app-network-acls`
-module] and your NACL Rules for the VPC-Mgmt (which is being deprecated) using the 
+module] and your NACL Rules for the VPC-Mgmt (which is being deprecated) using the
 link:https://github.com/gruntwork-io/cis-compliance-aws/tree/master/modules/vpc-mgmt-network-acls[`vpc-mgmt-network-acls`
 module].
 
@@ -1287,26 +1288,24 @@ sections above.
 1.10,<<configure_authentication>>,Configure authentication using SAML or IAM
 1.11,<<iam_user_authentication>>,Create IAM users with the `iam-users` module
 1.12,<<next_steps>>,Use the Gruntwork Security Hub module to enable AWS Security Hub to ensure that there are no unused credentials
-1.13,TODO,Use SecurityHub
+1.13,<<next_steps>>,Use the Gruntwork Security Hub module to enable AWS Security Hub to ensure that there are no extra access keys
 1.14,<<next_steps>>,Use the Gruntwork Security Hub module to enable AWS Security Hub to ensure that there are no unused access keys
 1.15,<<iam_user_authentication>>,Use IAM groups
 1.16,<<iam_user_authentication>>,Use the Gruntwork modules to create best-practices groups and roles
 1.17,<<iam_user_authentication>>,Use the `iam-groups` module to create a support group
 1.18,<<iam_roles_for_instances>>,Use Gruntwork modules to ensure EC2 instances use roles for access
 1.19,<<cleanup_expired_certs>>,Use Gruntwork modules to automatically remove expired certificates from IAM
-1.20,TODO(Ana),TODO
+1.20,<<s3_buckets_deployment>>,Use the `private-s3-bucket` module
 1.21,<<iam_access_analyzer>>,Use Gruntwork modules to enable IAM Access Analyzer across regions
-1.22,TODO,Use the security AWS account
-2.1.1,<<configure_storage>>,TODO(Ana)
-2.1.2,<<configure_storage>>,TODO(Ana)
+1.22,<<account_structure>>,Use the security AWS account as described in the Gruntwork production-grade AWS account structure
+2.1.1-2.1.2,<<configure_storage>>,Use the `private-s3-bucket` module
 2.2.1,<<configure_storage>>,Use Gruntwork modules to configure AWS EBS encryption
 3.1-3.4,<<cloudtrail>>,Use the Gruntwork CloudTrail wrapper module
 3.5,<<aws_config>>,Enable AWS Config for all regions
 3.6-3.7,<<cloudtrail>>,Use the Gruntwork CloudTrail wrapper module
 3.8,<<kms>>,Use the KMS module
 3.9,<<vpc_flow_logs>>,Use the VPC flow logs core module
-3.10,TODO(Ana),TODO
-3.11,TODO(Ana),TODO
+3.10-3.11,<<cloudtrail>>,Use the Gruntwork CloudTrail wrapper module
 4.1-4.15,<<configure_monitoring>>,The CloudWatch Logs metrics filters wrapper module will satisfy each recommendation
 5.1,<<configure_networking>>,Use the `vpc-app-network-acls` and `vpc-mgmt-network-acls` to ensure there is no public remote access
 5.2,<<configure_networking>>,Use the Gruntwork VPC modules for a secure network configuration
