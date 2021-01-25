@@ -453,7 +453,7 @@ aws iam delete-server-certificate --server-certificate-name <CERTIFICATE_NAME>
 ----
 
 To automate this process you might decide to implement a Lambda function that runs on a regular schedule and removes
-all expired SSL/TLS certificates. Check out the link:https://github.com/gruntwork-io/cis-compliance-aws/tree/master/examples/cleanup-expired-certs/terraform[example]
+all expired SSL/TLS certificates. Check out the link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/examples/cleanup-expired-certs/terraform[example]
 provided in the Gruntwork Service Catalog to see how to deploy a ready-made module that can be
 deployed in each of your AWS accounts.
 
@@ -464,7 +464,7 @@ AWS Account or Organization.
 
 To achieve this compliance requirement, enable the IAM Access Analyzer service for every AWS region you have enabled in
 your account. Alternatively, you could make use of the
-link:https://github.com/gruntwork-io/module-security/blob/master/modules/iam-access-analyzer-multi-region[module]
+link:https://github.com/gruntwork-io/terraform-aws-security/blob/master/modules/iam-access-analyzer-multi-region[module]
 provided in the Gruntwork Service Catalog.
 
 Once enabled, it will scan only within the boundaries of the AWS Account or Organization it has access to. Only specific
@@ -792,7 +792,7 @@ Let's unpack this a bit.
 [[core_modules]]
 ==== Core modules
 Core modules are broadly applicable and can be used with or without compliance requirements. For example,
-the link:https://github.com/gruntwork-io/module-security/blob/master/modules/iam-groups/README.md[`iam-groups`
+the link:https://github.com/gruntwork-io/terraform-aws-security/blob/master/modules/iam-groups/README.md[`iam-groups`
 core module] creates a best practices set of IAM groups. The groups are configurable according to your needs.
 You could, for example, choose to create a group with read-only access, another group with full administrator
 access, and no other groups. All Gruntwork subscribers have access to the core modules, which reside in
@@ -803,7 +803,7 @@ Gruntwork's link:https://gruntwork.io/repos[infrastructure as code repositories]
 The compliance wrapper modules are an extension of the IaC Library. They use the
 link:https://www.terraform.io/docs/modules/sources.html[`source` argument in a Terraform module block] to invoke
 the core module with a configuration that is customized for compliance with the CIS AWS Foundations Benchmark.
-These modules are in the link:https://github.com/gruntwork-io/cis-compliance-aws[`cis-compliance-aws`
+These modules are in the link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog[`terraform-aws-cis-service-catalog`
 repository] (accessible to Gruntwork Compliance subscribers).
 
 [[infrastructure_modules]]
@@ -855,7 +855,7 @@ Start by completing the manual configurations describe above in <<manual_steps>>
 [[create_password_policy]]
 === Create an IAM user password policy
 After the manual steps are complete, the next step is to create an IAM user password policy using the
-link:https://github.com/gruntwork-io/cis-compliance-aws/blob/master/examples/iam-password-policy/README.adoc[`iam-password-policy`
+link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/blob/master/examples/iam-password-policy/README.adoc[`iam-password-policy`
 wrapper module]. Complete this step before creating any IAM users!
 
 [[wrapper_code]]
@@ -883,16 +883,16 @@ provider "aws" {
 }
 ----
 
-Now use the `iam-password-policy` compliance module from the Gruntwork `cis-compliance-aws` repository, making sure to
+Now use the `iam-password-policy` compliance module from the Gruntwork `terraform-aws-cis-service-catalog` repository, making sure to
 replace the `<VERSION>` placeholder with the latest version from the
-https://github.com/gruntwork-io/cis-compliance-aws/releases[releases page]:
+https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/releases[releases page]:
 
 .infrastructure-modules/security/iam-password-policy/main.tf
 [source,hcl]
 ----
 module "iam_password_policy" {
-  # Make sure to replace <VERSION> in this URL with the latest cis-compliance-aws release
-  source                  = "git@github.com:gruntwork-io/cis-compliance-aws.git//modules/iam-password-policy?ref=<VERSION>"
+  # Make sure to replace <VERSION> in this URL with the latest terraform-aws-cis-service-catalog release
+  source                  = "git@github.com:gruntwork-io/terraform-aws-cis-service-catalog.git//modules/iam-password-policy?ref=<VERSION>"
   minimum_password_length = var.minimum_password_length
   aws_region              = var.aws_region
 }
@@ -934,11 +934,11 @@ git push --follow-tags
 ----
 
 With the module released, you can use Terraform to create the password policy. Follow the instructions in the
-link:https://github.com/gruntwork-io/cis-compliance-aws/tree/master/examples/iam-password-policy/terraform[terraform usage example].
+link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/examples/iam-password-policy/terraform[terraform usage example].
 
 ===== Using the compliance wrapper module with Terragrunt
 
-If you're using Terragrunt, you can use the password policy Terraform module in the CIS compliance repository from a Terragrunt configuration directly, with no need to create a Terraform module of your own! In this case, `cis-compliance-aws` is the canonical Terraform module. To do so, configure a `terragrunt.hcl` to invoke the module. First, create a directory for the password policy in your `infrastructure-live` repository:
+If you're using Terragrunt, you can use the password policy Terraform module in the CIS compliance repository from a Terragrunt configuration directly, with no need to create a Terraform module of your own! In this case, `terraform-aws-cis-service-catalog` is the canonical Terraform module. To do so, configure a `terragrunt.hcl` to invoke the module. First, create a directory for the password policy in your `infrastructure-live` repository:
 
 ----
 infrastructure-live
@@ -956,8 +956,8 @@ Next, create `terragrunt.hcl` with the following contents:
 [source,hcl]
 ----
 terraform {
-  # Make sure to replace <VERSION> in this URL with the latest cis-compliance-aws release
-  source = "git::ssh://git@github.com/gruntwork-io/cis-compliance-aws.git//modules/iam-password-policy?ref=<VERSION>"
+  # Make sure to replace <VERSION> in this URL with the latest terraform-aws-cis-service-catalog release
+  source = "git::ssh://git@github.com/gruntwork-io/terraform-aws-cis-service-catalog.git//modules/iam-password-policy?ref=<VERSION>"
 }
 
 # Include all settings from the root terragrunt.hcl file
@@ -969,7 +969,7 @@ include {
 You can test this by simply running `terragrunt apply`. This will pull the `iam-password-policy` compliance module and apply it using the credentials you have defined in `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`. When you're satisfied with the configuration, follow the merge process described in <<merge_release_terragrunt_wrapper>>.
 
 See also the
-link:https://github.com/gruntwork-io/cis-compliance-aws/tree/master/examples/iam-password-policy/terragrunt[terragrunt
+link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/examples/iam-password-policy/terragrunt[terragrunt
 usage example].
 
 
@@ -986,7 +986,7 @@ account will immediately be compliant with several of the Benchmark recommendati
 Once the IdP is ready, proceed with the steps below.
 
 Set up IAM roles for SAML::
-Use the link:https://github.com/gruntwork-io/cis-compliance-aws/blob/master/modules/saml-iam-roles/README.adoc[`saml-iam-roles`
+Use the link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/blob/master/modules/saml-iam-roles/README.adoc[`saml-iam-roles`
 wrapper module] to configure a compliant-set of IAM roles and policies by following the pattern outlined in <<wrapper_code>>. The module creates a minimal, best
 practices set of of IAM roles that may be assumed from the SAML provider. Tweak the `vars.tf` according to
 your needs.
@@ -998,7 +998,7 @@ users should have MFA, and we strongly advise this practice.
 
 Create an IAM group for access to support::
 Use the
-link:https://github.com/gruntwork-io/cis-compliance-aws/blob/master/modules/iam-groups/README.adoc[`iam-groups`
+link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/blob/master/modules/iam-groups/README.adoc[`iam-groups`
 wrapper module] to create a standardized set of IAM groups by following the pattern outlined in <<wrapper_code>>. The module will create a group called `support`
 with the `AWSSupportAccess` managed policy attached. Customize the variables in the module to create only the
 groups you want.
@@ -1026,7 +1026,7 @@ roles that can be assumed from a central account using the
 link:https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html[AssumeRole] feature. This way you
 only need to create IAM users in the central account rather than in each account individually . You can create
 roles in your sub accounts using the
-link:https://github.com/gruntwork-io/cis-compliance-aws/blob/master/modules/cross-account-iam-roles/README.adoc[`cross-account-iam-roles`
+link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/blob/master/modules/cross-account-iam-roles/README.adoc[`cross-account-iam-roles`
 wrapper module] and the pattern outlined in <<wrapper_code>>.
 
 Refer to the
@@ -1035,13 +1035,13 @@ roles] section of the production-grade AWS account structure guide to learn more
 
 Create IAM groups::
 Next, create a compliant set of IAM groups with the
-link:https://github.com/gruntwork-io/cis-compliance-aws/blob/master/modules/iam-groups/README.adoc[`iam-groups`
+link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/blob/master/modules/iam-groups/README.adoc[`iam-groups`
 wrapper module] by following the pattern outlined in <<wrapper_code>>. If you're using multiple AWS accounts, add the roles created in the previous step to the
 `iam_groups_for_cross_account_access` list.
 
 Create IAM users::
 Now use the
-link:https://github.com/gruntwork-io/module-security/blob/master/modules/iam-users/README.md[`iam-users`
+link:https://github.com/gruntwork-io/terraform-aws-security/blob/master/modules/iam-users/README.md[`iam-users`
 core module] to create users and add them to the groups created in the previous step. Follow the pattern outlined in
 <<wrapper_code>> to use the `iam-users` module, even though there isn't a wrapper module for `iam-users` because there isn't anything particular needed to reach
 compliance.
@@ -1053,23 +1053,23 @@ accounts (e.g. dev, stage, and production) where your applications run.
 
 (Optional) Create custom IAM groups or roles::
 If you need to create customized IAM groups and/or roles, use the
-link:https://github.com/gruntwork-io/cis-compliance-aws/blob/master/modules/custom-iam-entity/README.adoc[`custom-iam-entity`
-wrapper module]. You can use this module to attach managed policies to roles and groups, and to require that MFA is in use. Refer to the link:https://github.com/gruntwork-io/module-security/blob/master/examples/custom-iam-entity/README.md[example usage].
+link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/blob/master/modules/custom-iam-entity/README.adoc[`custom-iam-entity`
+wrapper module]. You can use this module to attach managed policies to roles and groups, and to require that MFA is in use. Refer to the link:https://github.com/gruntwork-io/terraform-aws-security/blob/master/examples/custom-iam-entity/README.md[example usage].
 
 [[iam_roles_for_instances]]
 === Use IAM roles for EC2 instances
 All Gruntwork modules that require AWS API access use roles rather than an IAM user with static API credentials for
 authentication. For example:
 
-* link:https://github.com/gruntwork-io/module-server/blob/master/modules/single-server/main.tf[`module-server`]
+* link:https://github.com/gruntwork-io/terraform-aws-server/blob/master/modules/single-server/main.tf[`terraform-aws-server`]
  is used to manage a single EC2 instance with an IAM role attached.
-* link:https://github.com/gruntwork-io/module-asg[`module-asg`] applies IAM roles to instances in auto-scaling
+* link:https://github.com/gruntwork-io/terraform-aws-asg[`terraform-aws-asg`] applies IAM roles to instances in auto-scaling
  group.
 * link:https://github.com/gruntwork-io/terraform-aws-eks/blob/master/modules/eks-cluster-workers/main.tf[`terraform-aws-eks`]
  uses IAM roles for EKS cluster workers.
-* link:https://github.com/gruntwork-io/module-ecs/tree/master/modules/ecs-cluster[`ecs-cluster`] creates IAM
+* link:https://github.com/gruntwork-io/terraform-aws-ecs/tree/master/modules/ecs-cluster[`ecs-cluster`] creates IAM
  roles for ECS instances
-* link:https://github.com/gruntwork-io/package-lambda/tree/master/modules/lambda[`lambda`] creates IAM
+* link:https://github.com/gruntwork-io/terraform-aws-lambda/tree/master/modules/lambda[`lambda`] creates IAM
  roles for Lambda functions
 
 Use these modules whenever possible. You should always use IAM roles in your own modules any time you need to provide access to the AWS API. Using static API credentials should be avoided whenever possible.
@@ -1086,11 +1086,11 @@ To enable IAM Access Analyzer in your AWS Account or Organization, you need to d
 
 To enable this for your AWS account:
 * use the examples provided as part of `learning-and-testing/landingzone`:
-link:https://github.com/gruntwork-io/aws-service-catalog/tree/master/examples/for-learning-and-testing/landingzone/account-baseline-root[account-baseline-root]
-and link:https://github.com/gruntwork-io/aws-service-catalog/tree/master/examples/for-learning-and-testing/landingzone/account-baseline-security[account-baseline-security].
+link:https://github.com/gruntwork-io/terraform-aws-service-catalog/tree/master/examples/for-learning-and-testing/landingzone/account-baseline-root[account-baseline-root]
+and link:https://github.com/gruntwork-io/terraform-aws-service-catalog/tree/master/examples/for-learning-and-testing/landingzone/account-baseline-security[account-baseline-security].
 
 For the standalone module available as part of the Gruntwork module library and Service Catalog, have a read here:
-link:https://github.com/gruntwork-io/module-security/blob/master/modules/iam-access-analyzer-multi-region/README.adoc[README.adoc].
+link:https://github.com/gruntwork-io/terraform-aws-security/blob/master/modules/iam-access-analyzer-multi-region/README.adoc[README.adoc].
 
 [[maintain_compliance]]
 === Maintaining compliance by following IAM best practices
@@ -1113,7 +1113,7 @@ a minimum.
 [[s3_buckets_deployment]]
 ==== S3 Buckets
 To make sure your S3 buckets are compliant with the benchmark, all you have to do is use the
-link:https://github.com/gruntwork-io/module-security/tree/master/modules/private-s3-bucket[`private-s3-bucket` module].
+link:https://github.com/gruntwork-io/terraform-aws-security/tree/master/modules/private-s3-bucket[`private-s3-bucket` module].
 
 [[encrypt_ebs_volumes]]
 ==== Encrypt EBS volumes
@@ -1128,18 +1128,18 @@ flow logs.
 
 [[cloudtrail]]
 ==== CloudTrail
-Use the link:https://github.com/gruntwork-io/cis-compliance-aws/blob/master/modules/cloudtrail/README.adoc[`cloudtrail`
+Use the link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/blob/master/modules/cloudtrail/README.adoc[`cloudtrail`
 wrapper module] to establish a compliant CloudTrail configuration. The wrapper module will configure CloudTrail with all
 the characteristics required by the Benchmark. Refer to the
-link:https://github.com/gruntwork-io/cis-compliance-aws/blob/master/examples/cloudtrail/terraform/README.md[terraform]
+link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/blob/master/examples/cloudtrail/terraform/README.md[terraform]
 and
-link:https://github.com/gruntwork-io/cis-compliance-aws/blob/master/examples/cloudtrail/terragrunt/README.md[terragrunt]
+link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/blob/master/examples/cloudtrail/terragrunt/README.md[terragrunt]
 examples.
 
 [[aws_config]]
 ==== Enable AWS Config in all regions
 Use the
-link:https://github.com/gruntwork-io/module-security/blob/master/modules/aws-config-multi-region/README.adoc[`aws-config-multi-region`
+link:https://github.com/gruntwork-io/terraform-aws-security/blob/master/modules/aws-config-multi-region/README.adoc[`aws-config-multi-region`
 module]
 to enable AWS Config in every region of an AWS account, along with a global configuration recorder in one region, as per
 the Benchmark recommendation.
@@ -1148,15 +1148,15 @@ the Benchmark recommendation.
 [[kms]]
 ==== Enable key rotation for KMS keys
 Use the
-link:https://github.com/gruntwork-io/module-security/blob/master/modules/kms-master-key/README.md[`kms-master-key`
+link:https://github.com/gruntwork-io/terraform-aws-security/blob/master/modules/kms-master-key/README.md[`kms-master-key`
 module] to create KMS keys with key rotation enabled by default.
 
 [[vpc_flow_logs]]
 ==== Create VPC flow logs
 The Benchmark recommends enabling link:https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html[VPC Flow Logs]
 for all VPCs in all regions. You can use the
-link:https://github.com/gruntwork-io/module-vpc/blob/master/modules/vpc-flow-logs/README.md[`vpc-flow-logs` core module]
-to create a flow log for a given VPC. For example, you might first create a VPC using `module-vpc`:
+link:https://github.com/gruntwork-io/terraform-aws-vpc/blob/master/modules/vpc-flow-logs/README.md[`vpc-flow-logs` core module]
+to create a flow log for a given VPC. For example, you might first create a VPC using `terraform-aws-vpc`:
 
 .infrastructure-modules/networking/vpc/myvpc/main.tf
 [source,hcl]
@@ -1164,8 +1164,8 @@ to create a flow log for a given VPC. For example, you might first create a VPC 
 data "aws_availability_zones" "all" {}
 
 module "vpc" {
-  # Replace <VERSION> with the most recent release from the https://github.com/gruntwork-io/module-vpc/releases[releases page]:
-  source = "git::git@github.com:gruntwork-io/module-vpc.git//modules/vpc-flow-logs?ref=<VERSION>"
+  # Replace <VERSION> with the most recent release from the https://github.com/gruntwork-io/terraform-aws-vpc/releases[releases page]:
+  source = "git::git@github.com:gruntwork-io/terraform-aws-vpc.git//modules/vpc-flow-logs?ref=<VERSION>"
 
   vpc_name   = var.vpc_name
   aws_region = var.aws_region
@@ -1182,7 +1182,7 @@ Then create a Flow Log for the VPC:
 [source,hcl]
 ----
 module "flow_logs" {
-  source = "git::git@github.com:gruntwork-io/module-vpc.git//modules/vpc-flow-logs?ref=<VERSION>"
+  source = "git::git@github.com:gruntwork-io/terraform-aws-vpc.git//modules/vpc-flow-logs?ref=<VERSION>"
 
   # We refer to the VPC ID created by the module above
   vpc_id = module.vpc.vpc_id
@@ -1212,7 +1212,7 @@ variable "kms_key_users" {
 ----
 
 Refer to the flow logs
-link:https://github.com/gruntwork-io/module-vpc/blob/master/examples/vpc-flow-logs/main.tf[example code].
+link:https://github.com/gruntwork-io/terraform-aws-vpc/blob/master/examples/vpc-flow-logs/main.tf[example code].
 
 To limit the number of flow logs, you may want to use the
 link:https://github.com/gruntwork-io/cloud-nuke[`cloud-nuke defaults-aws`] command. It will remove the default VPC from
@@ -1223,10 +1223,10 @@ all regions in an account, saving you the hassle of creating flow logs in each d
 The Monitoring section of the Benchmark centers on a collection of
 link:https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/MonitoringLogData.html[CloudWatch Logs Metric
 Filters]. Gruntwork has simplified this section to a single module: the
-link:https://github.com/gruntwork-io/cis-compliance-aws/blob/master/modules/cloudwatch-logs-metric-filters/README.adoc[`cloudwatch-logs-metric
+link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/blob/master/modules/cloudwatch-logs-metric-filters/README.adoc[`cloudwatch-logs-metric
 -filters` wrapper module]. It will create and configure all the CloudWatch Logs metric filters necessary for
 compliance with the Benchmark. Note that when you use the
-link:https://github.com/gruntwork-io/cis-compliance-aws/blob/master/modules/cloudtrail/README.adoc[`cloudtrail`
+link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/blob/master/modules/cloudtrail/README.adoc[`cloudtrail`
 wrapper module] as recommended in <<cloudtrail>>, this module will automatically be invoked inline so that you don't
 have to do anything special to enable the metric filters on the deployed CloudTrail configuration.
 
@@ -1242,9 +1242,9 @@ security groups to access to ports 22 or 3389 from the world, and our architectu
 configuration by default.
 
 To meet the 5.1 recommendation, you need to create your Network ACL Rules for the VPC-App using the
-link:https://github.com/gruntwork-io/cis-compliance-aws/tree/master/modules/vpc-app-network-acls[`vpc-app-network-acls`
+link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/modules/vpc-app-network-acls[`vpc-app-network-acls`
 module] and your NACL Rules for the VPC-Mgmt (which is being deprecated) using the
-link:https://github.com/gruntwork-io/cis-compliance-aws/tree/master/modules/vpc-mgmt-network-acls[`vpc-mgmt-network-acls`
+link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/modules/vpc-mgmt-network-acls[`vpc-mgmt-network-acls`
 module].
 
 
@@ -1260,7 +1260,7 @@ Benchmark. Now it's time to confirm that your configurations are correct and you
  +
 
 Use the
-link:https://github.com/gruntwork-io/cis-compliance-aws/blob/master/modules/aws-securityhub/README.adoc[`aws-securityhub`
+link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/blob/master/modules/aws-securityhub/README.adoc[`aws-securityhub`
 module]
 to enable link:https://aws.amazon.com/security-hub/[AWS Security Hub] in every region of an AWS account to check your
 account link:https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-standards.html[for compliance with the
