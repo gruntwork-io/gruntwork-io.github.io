@@ -29,7 +29,7 @@ link:https://www.cisecurity.org/benchmark/amazon_web_services/[CIS AWS Foundatio
 you can launch infrastructure that is compliant with the Benchmark recommendations, and you'll be set to retain a
 compliant state over time because all of the infrastructure is defined as code. This guide targets version 1.3.0 of the Benchmark.
 
-*Note:* Previously, we supported version 1.2.0 of the Benchmark. If you are looking to upgrade from v1.2.0 to v1.3.0,
+NOTE: Previously, we supported version 1.2.0 of the Benchmark. If you are looking to upgrade from v1.2.0 to v1.3.0,
 please follow link:/guides/upgrades/how-to-update-to-cis-13/[the upgrade guide] instead.
 
 image:/assets/img/guides/cis-compliance/cis-account-architecture.png[CIS Benchmark Architecture]
@@ -453,9 +453,8 @@ aws iam delete-server-certificate --server-certificate-name <CERTIFICATE_NAME>
 ----
 
 To automate this process you might decide to implement a Lambda function that runs on a regular schedule and removes
-all expired SSL/TLS certificates. Check out the link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/examples/cleanup-expired-certs/terraform[example]
-provided in the Gruntwork Service Catalog to see how to deploy a ready-made module that can be
-deployed in each of your AWS accounts.
+all expired SSL/TLS certificates. Check out the <<cleanup_expired_certs_deployment>> section of the deployment walkthrough
+to see how to deploy a ready-made module that can be deployed in each of your AWS accounts.
 
 [[iam_access_analyzer]]
 ==== IAM Access Analyzer
@@ -463,9 +462,9 @@ As of version 1.3.0, the CIS recommendations stipulate that the AWS IAM Access A
 AWS Account or Organization.
 
 To achieve this compliance requirement, enable the IAM Access Analyzer service for every AWS region you have enabled in
-every one of your AWS accounts. Alternatively, you could make use of the
-link:https://github.com/gruntwork-io/terraform-aws-security/blob/master/modules/iam-access-analyzer-multi-region[module]
-provided in the Gruntwork Service Catalog.
+every one of your AWS accounts. Alternatively, you could make use of the `iam-access-analyzer-multi-region` module
+available in the Gruntwork Service Catalog, as described in the <<iam_access_analyzer_deployment>> section of the
+deployment walkthrough.
 
 Once enabled, it will scan only within the boundaries of the AWS Account or Organization it has access to. Only specific
 resources are analyzed and included in the results - e.g. S3 buckets, SQS, etc. (For the full list of resources supported,
@@ -1111,7 +1110,13 @@ a minimum.
 [[s3_buckets_deployment]]
 ==== S3 Buckets
 To make sure your S3 buckets are compliant with the benchmark, use the
-link:https://github.com/gruntwork-io/terraform-aws-security/tree/master/modules/private-s3-bucket[`private-s3-bucket` module] to create and manage all of your S3 buckets. This module blocks public access and enforces encryption by default. Note that all Gruntwork modules that create S3 buckets use this module under the hood.
+link:https://github.com/gruntwork-io/terraform-aws-security/tree/master/modules/private-s3-bucket[`private-s3-bucket` module]
+to create and manage all of your S3 buckets. This module blocks public access and enforces encryption by default. Note
+that all Gruntwork modules that create S3 buckets use this module under the hood.
+
+To see a usage example of the `private-s3-bucket` module, refer the
+link:the https://github.com/gruntwork-io/terraform-aws-service-catalog/blob/master/modules/data-stores/s3-bucket/[`s3-bucket` service]
+in the Gruntwork Service Catalog.
 
 [[encrypt_ebs_volumes]]
 ==== Encrypt EBS volumes
