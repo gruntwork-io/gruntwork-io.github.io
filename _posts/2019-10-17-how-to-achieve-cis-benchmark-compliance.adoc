@@ -459,11 +459,11 @@ deployed in each of your AWS accounts.
 
 [[iam_access_analyzer]]
 ==== IAM Access Analyzer
-The new version 1.3.0 recommendations stipulate that the AWS IAM Access Analyzer service is enabled across all active regions in a given
+As of version 1.3.0, the CIS recommendations stipulate that the AWS IAM Access Analyzer service is enabled across all active regions in a given
 AWS Account or Organization.
 
 To achieve this compliance requirement, enable the IAM Access Analyzer service for every AWS region you have enabled in
-your account. Alternatively, you could make use of the
+every one of your AWS accounts. Alternatively, you could make use of the
 link:https://github.com/gruntwork-io/terraform-aws-security/blob/master/modules/iam-access-analyzer-multi-region[module]
 provided in the Gruntwork Service Catalog.
 
@@ -514,7 +514,7 @@ For further detail, follow the manual steps outlined in the CIS Benchmark docume
 link:https://aws.amazon.com/answers/security/aws-secure-account-setup/[AWS Secure Account Setup steps].
 
 === Storage
-The new (as of v1.3.0) Storage section has three recommendations pertaining to the S3 service as well as the EC2 service.
+Version 1.3.0 of the Benchmark includes a new storage section that has three recommendations pertaining to the S3 service as well as the EC2 service.
 These have to do with encryption at rest and in transit.
 
 To comply with recommendation 2.1.1, make sure to enable server side encryption on your S3 buckets. In Terraform, this
@@ -719,11 +719,9 @@ production-grade VPC on AWS] guide, which includes recommendations for segmentat
 security groups, and remote access. Moreover, our link:https://gruntwork.io/reference-architecture/[Reference
 Architecture] can get you up and running with a secure network configuration immediately.
 
-Recommendation 5.1 forbids allowing access to the remote server administration ports, such as SSH to port 22 and Remote
-Desktop to port 3389, from the public Internet (`0.0.0.0/0`) on the level of Network ACL rules. Recommendation 5.2 does
-the same for Security Groups.  This seems entirely reasonable, no? Avoid creating any Security Groups and NACL with
-these rules. Instead, if you require SSH or Remote Desktop to your cloud resources, provide a more restricted CIDR
-range, such as the IP address of your offices.
+Recommendation 5.1 requires that you use Network ACL rules to block all access to the remote server administration ports, such as SSH to port 22 and Remote
+Desktop to port 3389, by default. You can then add additional NACL rules to allow remote admin access, but only from specific CIDR blocks. Recommendation 5.2 similarly allows you tallow remote admin access from specific CIDR blocks in your Security Groups. Note that allowing remote admin access from all IPs (`0.0.0.0/0`) is NOT allowed, so instead, if you require SSH or Remote Desktop to your cloud resources, provide a more restricted CIDR
+range, such as the IP addresses of your offices.
 
 To meet recommendation 5.3, run the link:https://github.com/gruntwork-io/cloud-nuke[`cloud-nuke defaults-aws`] command
 to remove the rules from all default security groups. Note that it isn't possible to actually delete the default
@@ -1112,8 +1110,8 @@ a minimum.
 
 [[s3_buckets_deployment]]
 ==== S3 Buckets
-To make sure your S3 buckets are compliant with the benchmark, all you have to do is use the
-link:https://github.com/gruntwork-io/terraform-aws-security/tree/master/modules/private-s3-bucket[`private-s3-bucket` module].
+To make sure your S3 buckets are compliant with the benchmark, use the
+link:https://github.com/gruntwork-io/terraform-aws-security/tree/master/modules/private-s3-bucket[`private-s3-bucket` module] to create and manage all of your S3 buckets. This module blocks public access and enforces encryption by default. Note that all Gruntwork modules that create S3 buckets use this module under the hood.
 
 [[encrypt_ebs_volumes]]
 ==== Encrypt EBS volumes
