@@ -1144,6 +1144,27 @@ in the Gruntwork Service Catalog.
 Use the link:https://github.com/gruntwork-io/terraform-aws-security/tree/master/modules/ebs-encryption-multi-region[`ebs-encryption-multi-region` module]
 to configure AWS EBS encryption in all enabled regions of an AWS Account, as per the Benchmark recommendation.
 
+[source,hcl]
+----
+# ----------------------------------------------------------------------------------------------------------------------
+# ELASTIC BLOCK STORAGE (EBS) ENCRYPTION DEFAULTS
+# ----------------------------------------------------------------------------------------------------------------------
+
+module "ebs_encryption" {
+  source         = "../ebs-encryption-multi-region"
+  aws_account_id = var.aws_account_id
+  seed_region    = var.aws_region
+  opt_in_regions = var.ebs_opt_in_regions
+
+  enable_encryption = var.ebs_enable_encryption
+
+  # For the root account we do not create keys by default. However, through these variables we expose
+  # the configuration to permit custom keys if desired.
+  use_existing_kms_keys = var.ebs_use_existing_kms_keys
+  kms_key_arns          = var.ebs_kms_key_arns
+}
+----
+
 [[configure_logging]]
 === Configure logging
 The logging section of the Benchmark includes configurations for CloudTrail, AWS Config, KMS keys, and VPC
