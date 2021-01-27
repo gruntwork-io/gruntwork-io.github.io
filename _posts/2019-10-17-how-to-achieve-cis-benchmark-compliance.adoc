@@ -1086,7 +1086,22 @@ To enable this for your AWS account:
 link:https://github.com/gruntwork-io/terraform-aws-service-catalog/tree/master/examples/for-learning-and-testing/landingzone/account-baseline-root[account-baseline-root]
 and link:https://github.com/gruntwork-io/terraform-aws-service-catalog/tree/master/examples/for-learning-and-testing/landingzone/account-baseline-security[account-baseline-security].
 
-For the standalone module available as part of the Gruntwork module library and Service Catalog, have a read here:
+For the standalone module available as part of the Gruntwork module library and Service Catalog:
+
+[source,hcl]
+----
+terraform {
+  source = "git::git@github.com:gruntwork-io/module-security.git//modules/iam-access-analyzer-multi-region?ref=v0.44.6"
+}
+
+inputs = {
+  iam_access_analyzer_type = "ACCOUNT"
+  iam_access_analyzer_name = "iam-access-analyzer"
+  seed_region              = "us-east-2"
+}
+----
+
+And have a read here:
 link:https://github.com/gruntwork-io/terraform-aws-security/blob/master/modules/iam-access-analyzer-multi-region/README.adoc[README.adoc].
 
 [[maintain_compliance]]
