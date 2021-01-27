@@ -1086,18 +1086,23 @@ To enable this for your AWS account:
 link:https://github.com/gruntwork-io/terraform-aws-service-catalog/tree/master/examples/for-learning-and-testing/landingzone/account-baseline-root[account-baseline-root]
 and link:https://github.com/gruntwork-io/terraform-aws-service-catalog/tree/master/examples/for-learning-and-testing/landingzone/account-baseline-security[account-baseline-security].
 
-For the standalone module available as part of the Gruntwork module library and Service Catalog:
+For the standalone module available as part of the Gruntwork module library and Service Catalog, you can include it in a `terragrunt.hcl` configuration as:
 
 [source,hcl]
 ----
-terraform {
-  source = "git::git@github.com:gruntwork-io/module-security.git//modules/iam-access-analyzer-multi-region?ref=v0.44.6"
-}
+# ----------------------------------------------------------------------------------------------------------------------
+# IAM ACCESS ANALYZER DEFAULTS
+# This module uses a feature flag so it can be easily disabled or enabled using `enable_iam_access_analyzer` variable.
+# ----------------------------------------------------------------------------------------------------------------------
+module "iam_access_analyzer" {
+  source = "../iam-access-analyzer-multi-region"
 
-inputs = {
-  iam_access_analyzer_type = "ACCOUNT"
-  iam_access_analyzer_name = "iam-access-analyzer"
-  seed_region              = "us-east-2"
+  aws_account_id           = var.aws_account_id
+  create_resources         = var.enable_iam_access_analyzer
+  iam_access_analyzer_name = var.iam_access_analyzer_name
+  iam_access_analyzer_type = var.iam_access_analyzer_type
+  seed_region              = var.aws_region
+  opt_in_regions           = var.iam_access_analyzer_opt_in_regions
 }
 ----
 
