@@ -1079,7 +1079,7 @@ module to deploy a Lambda function to remove all expired SSL/TLS certificates fr
 periodically execute the Lambda function and optionally, report metrics to CloudWatch. Be sure to deploy this module into each of your AWS accounts.
 
 If your using Terragrunt, then you can invoke the standalone module directly by following the pattern outlined in
-<<wrapper_code_terragrunt>> and using a `terragrunt.hcl` file with the following contents:
+<<wrapper_code_terragrunt>> and creating a `terragrunt.hcl` file with the following contents:
 
 .infrastructure-live/<your account>/_global/cleanup-expired-certs/terragrunt.hcl
 [source,hcl]
@@ -1168,6 +1168,28 @@ in the Gruntwork Service Catalog.
 
 Use the link:https://github.com/gruntwork-io/terraform-aws-security/tree/master/modules/ebs-encryption-multi-region[`ebs-encryption-multi-region` module]
 to configure AWS EBS encryption in all enabled regions of an AWS Account, as per the Benchmark recommendation.
+
+If your using Terragrunt, then you can invoke the standalone module directly by following the pattern outlined in
+<<wrapper_code_terragrunt>> and creating a `terragrunt.hcl` file with the following contents:
+
+.infrastructure-live/<your account>/_global/ebs-encryption/terragrunt.hcl
+[source,hcl]
+----
+terraform {
+  # Make sure to replace <VERSION> in this URL with the latest terraform-aws-security release
+  source = "git::ssh://git@github.com/gruntwork-io/terraform-aws-security.git//modules/ebs-encryption-multi-region?ref=<VERSION>"
+}
+
+# Include all settings from the root terragrunt.hcl file
+include {
+  path = find_in_parent_folders()
+}
+
+inputs = {
+  enable_encryption = true
+  seed_region       = "us-east-2"
+}
+----
 
 [source,hcl]
 ----
