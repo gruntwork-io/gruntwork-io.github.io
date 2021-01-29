@@ -933,6 +933,7 @@ git push --follow-tags
 With the module released, you can use Terraform to create the password policy. Follow the instructions in the
 link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/examples/iam-password-policy/terraform[terraform usage example].
 
+[[wrapper_code_terragrunt]]
 ===== Using the compliance wrapper module with Terragrunt
 
 If you're using Terragrunt, you can use the password policy Terraform module in the CIS compliance repository from a Terragrunt configuration directly, with no need to create a Terraform module of your own! In this case, `terraform-aws-cis-service-catalog` is the canonical Terraform module. To do so, configure a `terragrunt.hcl` to invoke the module. First, create a directory for the password policy in your `infrastructure-live` repository:
@@ -1076,6 +1077,30 @@ Use these modules whenever possible. You should always use IAM roles in your own
 Next, use the link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/blob/master/modules/cleanup-expired-certs/README.adoc[`cleanup-expired-certs`]
 module to deploy a Lambda function to remove all expired SSL/TLS certificates from AWS IAM. This module will add all of the relevant IAM resources needed to
 periodically execute the Lambda function and optionally, report metrics to CloudWatch. Be sure to deploy this module into each of your AWS accounts.
+
+If your using Terragrunt, then you can invoke the standalone module directly by following the pattern outlined in
+<<wrapper_code_terragrunt>> and using a `terragrunt.hcl` file with the following contents:
+
+.infrastructure-live/<your account>/_global/cleanup-expired-certs/terragrunt.hcl
+[source,hcl]
+----
+terraform {
+  # Make sure to replace <VERSION> in this URL with the latest terraform-aws-cis-service-catalog release
+  source = "git::ssh://git@github.com/gruntwork-io/terraform-aws-cis-service-catalog.git//modules/cleanup-expired-certs?ref=<VERSION>"
+}
+
+# Include all settings from the root terragrunt.hcl file
+include {
+  path = find_in_parent_folders()
+}
+
+inputs = {
+  schedule_expression                = "rate(1 hour)"
+  report_cloudwatch_metric           = true
+  report_cloudwatch_metric_namespace = "custom/cis"
+  report_cloudwatch_metric_name      = "cleanup-expired-iam-certs-count"
+}
+----
 
 [[iam_access_analyzer_deployment]]
 === Steps to enable IAM Access Analyzer for all enabled AWS regions
