@@ -1111,27 +1111,30 @@ To enable this for your AWS account:
 link:https://github.com/gruntwork-io/terraform-aws-service-catalog/tree/master/examples/for-learning-and-testing/landingzone/account-baseline-root[account-baseline-root]
 and link:https://github.com/gruntwork-io/terraform-aws-service-catalog/tree/master/examples/for-learning-and-testing/landingzone/account-baseline-security[account-baseline-security].
 
-For the standalone module available as part of the Gruntwork module library and Service Catalog, you can include it in a `terragrunt.hcl` configuration as:
+If your using Terragrunt, then you can invoke the standalone module directly by following the pattern outlined in
+<<wrapper_code_terragrunt>> and using a `terragrunt.hcl` file with the following contents:
 
+.infrastructure-live/<your account>/_global/iam-access-analyzer/terragrunt.hcl
 [source,hcl]
 ----
-# ----------------------------------------------------------------------------------------------------------------------
-# IAM ACCESS ANALYZER DEFAULTS
-# This module uses a feature flag so it can be easily disabled or enabled using `enable_iam_access_analyzer` variable.
-# ----------------------------------------------------------------------------------------------------------------------
-module "iam_access_analyzer" {
-  source = "../iam-access-analyzer-multi-region"
+terraform {
+# Make sure to replace <VERSION> in this URL with the latest terraform-aws-security release
+source = "git::ssh://git@github.com/gruntwork-io/terraform-aws-security.git//modules/iam-access-analyzer-multi-region?ref=<VERSION>"
+}
 
-  aws_account_id           = var.aws_account_id
-  create_resources         = var.enable_iam_access_analyzer
-  iam_access_analyzer_name = var.iam_access_analyzer_name
-  iam_access_analyzer_type = var.iam_access_analyzer_type
-  seed_region              = var.aws_region
-  opt_in_regions           = var.iam_access_analyzer_opt_in_regions
+# Include all settings from the root terragrunt.hcl file
+include {
+  path = find_in_parent_folders()
+}
+
+inputs = {
+iam_access_analyzer_type = "ACCOUNT"
+iam_access_analyzer_name = "iam-access-analyzer"
+seed_region              = "us-east-2"
 }
 ----
 
-And have a read here:
+And refer to the Readme document here:
 link:https://github.com/gruntwork-io/terraform-aws-security/blob/master/modules/iam-access-analyzer-multi-region/README.adoc[README.adoc].
 
 [[maintain_compliance]]
