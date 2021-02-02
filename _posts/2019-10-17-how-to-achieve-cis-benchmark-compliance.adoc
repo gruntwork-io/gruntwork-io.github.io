@@ -1339,7 +1339,64 @@ To meet the 5.1 recommendation, you need to create your Network ACL Rules for th
 link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/modules/vpc-app-network-acls[`vpc-app-network-acls`
 module] and your NACL Rules for the VPC-Mgmt (which is being deprecated) using the
 link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/modules/vpc-mgmt-network-acls[`vpc-mgmt-network-acls`
-module].
+module]. For example, you might first create a VPC using `terraform-aws-vpc`:
+
+----
+infrastructure-modules
+└── networking
+    └── vpc
+        └── myvpc
+            ├── main.tf
+            └── variables.tf
+----
+
+.infrastructure-modules/networking/vpc/myvpc/main.tf
+[source,hcl]
+----
+data "aws_availability_zones" "all" {}
+
+module "vpc" {
+  # Replace <VERSION> with the most recent release from the https://github.com/gruntwork-io/terraform-aws-vpc/releases[releases page]:
+  source = "git::git@github.com:gruntwork-io/terraform-aws-vpc.git//modules/vpc-app?ref=<VERSION>"
+
+  vpc_name   = var.vpc_name
+  aws_region = var.aws_region
+
+  cidr_block             = var.cidr_block
+  num_nat_gateways       = var.num_nat_gateways
+  num_availability_zones = length(data.aws_availability_zones.all.names)
+}
+----
+
+Then add the Network ACL rules for the VPC:
+
+.infrastructure-modules/networking/vpc/myvpc/main.tf
+[source,hcl]
+----
+module "vpc_network_acls" {
+  # Replace <VERSION> with the most recent release from the https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/releases[releases page]:
+  source = "git::git@github.com:gruntwork-io/.git/terraform-aws-cis-service-catalog/modules/vpc-app-network-acls?ref=<VERSION>"
+
+  vpc_id      = module.vpc.vpc_id
+  vpc_name    = module.vpc.vpc_name
+  vpc_ready   = module.vpc.vpc_ready
+  num_subnets = module.vpc.num_availability_zones
+
+  public_subnet_ids              = module.vpc.public_subnet_ids
+  private_app_subnet_ids         = module.vpc.private_app_subnet_ids
+  private_persistence_subnet_ids = module.vpc.private_persistence_subnet_ids
+
+  public_subnet_cidr_blocks                                            = module.vpc.public_subnet_cidr_blocks
+  private_app_subnet_cidr_blocks                                       = module.vpc.private_app_subnet_cidr_blocks
+  private_persistence_subnet_cidr_blocks                               = module.vpc.private_persistence_subnet_cidr_blocks
+
+  # These variables are not on the terraform-aws-vpc module, they refer to the CIS v1.3 recommendation 5.1.
+  allow_administrative_remote_access_cidrs_public_subnets              = var.allow_administrative_remote_access_cidrs
+  allow_administrative_remote_access_cidrs_private_app_subnets         = { all_app_vpc_cidrs  = module.vpc.vpc_cidr_block }
+  allow_administrative_remote_access_cidrs_private_persistence_subnets = { all_app_vpc_cidrs  = module.vpc.vpc_cidr_block }
+----
+
+Refer to the https://github.com/gruntwork-io/cis-infrastructure-modules-acme/blob/master/networking/vpc-app[cis-infrastructure-modules-acme] and https://github.com/gruntwork-io/cis-infrastructure-live-acme/tree/master/dev/us-east-2/dev/vpc[cis-infrastructure-live-acme], if you are using Terragrunt.
 
 
 Finally, run the link:https://github.com/gruntwork-io/cloud-nuke[`cloud-nuke
