@@ -1106,11 +1106,6 @@ inputs = {
 === Steps to enable IAM Access Analyzer for all enabled AWS regions
 To enable IAM Access Analyzer in your AWS Account or Organization, you need to do it separately for every region.
 
-To enable this for your AWS account:
-* use the examples provided as part of `learning-and-testing/landingzone`:
-link:https://github.com/gruntwork-io/terraform-aws-service-catalog/tree/master/examples/for-learning-and-testing/landingzone/account-baseline-root[account-baseline-root]
-and link:https://github.com/gruntwork-io/terraform-aws-service-catalog/tree/master/examples/for-learning-and-testing/landingzone/account-baseline-security[account-baseline-security].
-
 If you're using Terragrunt, then you can invoke the standalone module directly by following the pattern outlined in
 <<wrapper_code_terragrunt>> and using a `terragrunt.hcl` file with the following contents:
 
@@ -1190,27 +1185,6 @@ include {
 inputs = {
   enable_encryption = true
   seed_region       = "us-east-2"
-}
-----
-
-[source,hcl]
-----
-# ----------------------------------------------------------------------------------------------------------------------
-# ELASTIC BLOCK STORAGE (EBS) ENCRYPTION DEFAULTS
-# ----------------------------------------------------------------------------------------------------------------------
-
-module "ebs_encryption" {
-  source         = "../ebs-encryption-multi-region"
-  aws_account_id = var.aws_account_id
-  seed_region    = var.aws_region
-  opt_in_regions = var.ebs_opt_in_regions
-
-  enable_encryption = var.ebs_enable_encryption
-
-  # For the root account we do not create keys by default. However, through these variables we expose
-  # the configuration to permit custom keys if desired.
-  use_existing_kms_keys = var.ebs_use_existing_kms_keys
-  kms_key_arns          = var.ebs_kms_key_arns
 }
 ----
 
