@@ -169,6 +169,10 @@ The new CIS AWS v1.3 recommendations require that all expired SSL/TLS certificat
 accidentally to a resource such as AWS Elastic Load Balancer (ELB), which can damage the credibility of the application/website behind the ELB. As a best practice, it is recommended to delete expired certificates. To help you
 achieve this recommendation, check out the https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/examples/cleanup-expired-certs/terraform[example] of the ready-made `cleanup-expired-certs` module.
 
+For the code examples of deploying this module, see the
+link:https://gruntwork.io/guides/compliance/how-to-achieve-cis-benchmark-compliance/#cleanup_expired_certs_deployment[relevant section]
+of our "How to achieve compliance with the CIS AWS Foundations Benchmark" guide.
+
 ==== 2. Deploy IAM Access Analyzer module (recommendation 1.21)
 
 The updated recommendations also require that the AWS IAM Access Analyzer service is enabled across all active regions in a given AWS account or organization.
@@ -185,12 +189,20 @@ The IAM Access Analyzer will scan only within the AWS Account or Organization bo
 
 To help you achieve CIS AWS v1.3 compliance, you can find examples of how to use the ready-made module as part of the `landingzone` module in the `terraform-aws-service-catalog` repository https://github.com/gruntwork-io/terraform-aws-service-catalog/releases/tag/v0.15.4[v0.15.4], and specifically the `account-baseline-root` and `account-baseline-security` https://github.com/gruntwork-io/terraform-aws-service-catalog/tree/v0.15.4/examples/for-learning-and-testing/landingzone[examples].
 
+For the code examples of deploying this module, see the
+link:https://gruntwork.io/guides/compliance/how-to-achieve-cis-benchmark-compliance/#iam_access_analyzer_deployment[relevant section]
+of our "How to achieve compliance with the CIS AWS Foundations Benchmark" guide.
+
 ==== 3. Deploy the ebs-encryption-multi-region module (recommendation 2.2.1)
 
 EC2 supports encryption at rest when using the Elastic Block Store (EBS) service. While disabled by default, forcing encryption when creating EBS volumes is supported. Encrypting data at rest reduces the likelihood that it is
 unintentionally exposed and can nullify the impact of disclosure if the encryption remains unbroken. Recommendation 2.2.1 specifies a manual process to encrypt EBS volumes using the AWS Console; however, Gruntwork has developed
 a module that configures volume encryption by default in all enabled regions. Check out the https://github.com/gruntwork-io/terraform-aws-security/tree/master/modules/ebs-encryption-multi-region[ebs-encryption-multi-region] to
 configure AWS EBS encryption in all allowed regions of an AWS Account.
+
+For the code examples of deploying this module, see the
+link:https://gruntwork.io/guides/compliance/how-to-achieve-cis-benchmark-compliance/#encrypt_ebs_volumes[relevant section]
+of our "How to achieve compliance with the CIS AWS Foundations Benchmark" guide.
 
 ==== 4. Deploy the vpc-app-network-acl and vpc-mgmt-network-acl modules (recommendation 5.1)
 
@@ -218,6 +230,10 @@ module "vpc_app_network_acls" {
   allow_administrative_remote_access_cidrs_private_persistence_subnets = { app_vpc_cidrs = module.app_vpc.vpc_cidr_block }
 }
 ----
+
+For the code examples of deploying this module, see the
+link:https://gruntwork.io/guides/compliance/how-to-achieve-cis-benchmark-compliance/#configure_networking[relevant section]
+of our "How to achieve compliance with the CIS AWS Foundations Benchmark" guide.
 
 ===== 4.1 Network ACL Rules Quota limit
 
