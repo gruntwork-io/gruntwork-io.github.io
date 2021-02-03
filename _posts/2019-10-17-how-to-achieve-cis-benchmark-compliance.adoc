@@ -1078,7 +1078,7 @@ Next, use the link:https://github.com/gruntwork-io/terraform-aws-cis-service-cat
 module to deploy a Lambda function to remove all expired SSL/TLS certificates from AWS IAM. This module will add all of the relevant IAM resources needed to
 periodically execute the Lambda function and optionally, report metrics to CloudWatch. Be sure to deploy this module into each of your AWS accounts.
 
-If your using Terragrunt, then you can invoke the standalone module directly by following the pattern outlined in
+If you're using Terragrunt, then you can invoke the standalone module directly by following the pattern outlined in
 <<wrapper_code_terragrunt>> and creating a `terragrunt.hcl` file with the following contents:
 
 .infrastructure-live/<your account>/_global/cleanup-expired-certs/terragrunt.hcl
@@ -1111,7 +1111,7 @@ To enable this for your AWS account:
 link:https://github.com/gruntwork-io/terraform-aws-service-catalog/tree/master/examples/for-learning-and-testing/landingzone/account-baseline-root[account-baseline-root]
 and link:https://github.com/gruntwork-io/terraform-aws-service-catalog/tree/master/examples/for-learning-and-testing/landingzone/account-baseline-security[account-baseline-security].
 
-If your using Terragrunt, then you can invoke the standalone module directly by following the pattern outlined in
+If you're using Terragrunt, then you can invoke the standalone module directly by following the pattern outlined in
 <<wrapper_code_terragrunt>> and using a `terragrunt.hcl` file with the following contents:
 
 .infrastructure-live/<your account>/_global/iam-access-analyzer/terragrunt.hcl
@@ -1128,9 +1128,9 @@ include {
 }
 
 inputs = {
-iam_access_analyzer_type = "ACCOUNT"
-iam_access_analyzer_name = "iam-access-analyzer"
-seed_region              = "us-east-2"
+  iam_access_analyzer_type = "ACCOUNT"
+  iam_access_analyzer_name = "iam-access-analyzer"
+  seed_region              = "us-east-2"
 }
 ----
 
@@ -1162,9 +1162,8 @@ link:https://github.com/gruntwork-io/terraform-aws-security/tree/master/modules/
 to create and manage all of your S3 buckets. This module blocks public access and enforces encryption by default. Note
 that all Gruntwork modules that create S3 buckets use this module under the hood.
 
-To see a usage example of the `private-s3-bucket` module, refer the
-link:the https://github.com/gruntwork-io/terraform-aws-service-catalog/blob/master/modules/data-stores/s3-bucket/[`s3-bucket` service]
-in the Gruntwork Service Catalog.
+You can either use the `private-s3-bucket` module in your own modules, or, if you wish to deploy a standalone S3 bucket, use the https://github.com/gruntwork-io/terraform-aws-service-catalog/blob/master/modules/data-stores/s3-bucket/[`s3-bucket` service]
+from the Gruntwork Service Catalog.
 
 [[encrypt_ebs_volumes]]
 ==== Encrypt EBS volumes
@@ -1172,7 +1171,7 @@ in the Gruntwork Service Catalog.
 Use the link:https://github.com/gruntwork-io/terraform-aws-security/tree/master/modules/ebs-encryption-multi-region[`ebs-encryption-multi-region` module]
 to configure AWS EBS encryption in all enabled regions of an AWS Account, as per the Benchmark recommendation.
 
-If your using Terragrunt, then you can invoke the standalone module directly by following the pattern outlined in
+If you're using Terragrunt, then you can invoke the standalone module directly by following the pattern outlined in
 <<wrapper_code_terragrunt>> and creating a `terragrunt.hcl` file with the following contents:
 
 .infrastructure-live/<your account>/_global/ebs-encryption/terragrunt.hcl
