@@ -19,7 +19,7 @@
             {% capture category_name %}{{ category | first }}{% endcapture %}
             <h3 class="category-head">{{ category_name }}</h3>
             {% for post in site.categories[category_name] %}
-              <div class="guide-card card-shadow" id="{{ post.title | downcase | split: ' ' | join: '-' | append: '-card' }}">
+              <div class="guide-card card-shadow" id="{{ post.title | slugify | downcase | split: ' ' | join: '-' | append: '-card' }}">
                 <div class="card" ga-on="click" ga-event-category="guide-{{ post.title | slugify }}" ga-event-action="guide-click">
                   <div class="row no-padding">
                     <div class="col-xs-2 img-inner no-padding">
@@ -45,7 +45,7 @@
     window.guideEntries = [
         {% for post in site.posts %}
             {
-                "id"       : "{{ post.title | strip_html | downcase | split: ' ' | join: '-' | append: '-card' }}",
+                "id"       : "{{ post.title | slugify | strip_html | downcase | split: ' ' | join: '-' | append: '-card' }}",
                 "title"    : "{{ post.title | strip_html | escape | downcase}}",
                 "category" : "{{post.category | downcase | slugify}}",
                 "excerpt" : "{{post.excerpt | strip_html | strip_newlines | escape | downcase}}",
