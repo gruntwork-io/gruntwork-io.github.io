@@ -28,7 +28,7 @@ To deploy the site:
 1. Create a PR with your code changes
 1. After approved, merge it into `master`
 1. The releaser bot will create a Draft release
-1. Update it with the relevant information
+1. Go to the [releases page](/releases) and update the draft release with the relevant information
 1. Release it
 1. The CI/CD pipeline will deploy it automatically
 
