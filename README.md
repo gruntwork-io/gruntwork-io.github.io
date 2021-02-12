@@ -23,11 +23,14 @@ The fastest way to launch this site is to use [Docker](https://www.docker.com/).
 
 ## Deploying
 
-To deploy the site to S3/CloudFront:
+To deploy the site:
 
-1. Configure your AWS credentials as environment variables.
-1. `docker-compose run web ./push-to-s3-stage.sh` -or-
-1. `docker-compose run web ./push-to-s3-prod.sh`
+1. Create a PR with your code changes
+1. After the PR has been approved, merge it into `master`
+1. The releaser bot will create a Draft release
+1. Go to the [releases page](/releases) and update the draft release with the relevant information
+1. Release it
+1. The CI/CD pipeline will deploy it automatically
 
 ## Technologies
 
