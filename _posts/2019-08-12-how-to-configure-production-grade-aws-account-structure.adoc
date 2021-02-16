@@ -649,7 +649,7 @@ ssh-grunt-users and ssh-grunt-sudo-users::
 +
 [.exceptional]
 IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork subscriber# to access `ssh-grunt` in
-https://github.com/gruntwork-io/module-security/[module-security].
+https://github.com/gruntwork-io/terraform-aws-security/[terraform-aws-security].
 
 === MFA policy
 
@@ -702,11 +702,11 @@ allow-ssh-grunt-access-from-other-accounts::
   This is an IAM role that grants permission to look up IAM group membership and the public SSH keys of IAM user
   accounts. Typically, you'd have this role in your security account to allow the EC2 instances in other accounts to
   authenticate SSH attempts using
-  https://github.com/gruntwork-io/module-security/tree/master/modules/ssh-grunt[ssh-grunt].
+  https://github.com/gruntwork-io/terraform-aws-security/tree/master/modules/ssh-grunt[ssh-grunt].
 +
 [.exceptional]
 IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork subscriber# to access `ssh-grunt` in
-https://github.com/gruntwork-io/module-security/[module-security].
+https://github.com/gruntwork-io/terraform-aws-security/[terraform-aws-security].
 
 Service roles::
   Most EC2 instances, Lambda functions, and other AWS services you launch will have an IAM role that gives that service
@@ -759,7 +759,7 @@ Protecting IAM roles::
   any compromise of that EC2 instance instantly gives an attacker access to all the permissions in that IAM role. We
   *strongly* recommend mitigating this by limiting access to the endpoint solely to specific OS users (e.g., solely to
   the root user), e.g., by using `iptables`. You can do this automatically using
-  https://github.com/gruntwork-io/module-security/tree/master/modules/ip-lockdown[ip-lockdown]
+  https://github.com/gruntwork-io/terraform-aws-security/tree/master/modules/ip-lockdown[ip-lockdown]
 +
 [source,bash]
 ----
@@ -769,7 +769,7 @@ ip-lockdown "169.254.169.254" "root"
 +
 [.exceptional]
 IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork subscriber# to access `ip-lockdown` in
-https://github.com/gruntwork-io/module-security[module-security].
+https://github.com/gruntwork-io/terraform-aws-security[terraform-aws-security].
 
 Machine users::
   If you need to give something outside of your AWS account access to your AWS account—for example, if you're using
@@ -989,10 +989,10 @@ Next, we'll configure a security baseline for the root account that is responsib
 It will also configure AWS Organizations, IAM Roles, IAM Users, IAM Groups, IAM Password Policies, Amazon GuardDuty,
 AWS CloudTrail and AWS Config.
 
-We'll be using the `account-baseline-root` module from https://github.com/gruntwork-io/module-security[module-security].
+We'll be using the `account-baseline-root` module from https://github.com/gruntwork-io/terraform-aws-security[terraform-aws-security].
 
 [.exceptional]
-IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork subscriber# to access `module-security`.
+IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork subscriber# to access `terraform-aws-security`.
 
 First, create a _wrapper module_ called `account-baseline-root` in your `infrastructure-modules` repo under the `landingzone` subdirectory:
 
@@ -1014,9 +1014,9 @@ provider "aws" {
   # The AWS region in which all resources will be created
   region = var.aws_region
 
-  # Require a 2.x version of the AWS provider
-  version = "~> 2.6"
-
+  # Require a 3.x version of the AWS provider
+  version = "~> 3.23"
+ec
   # Only these AWS Account IDs may be operated on by this template
   allowed_account_ids = [var.aws_account_id]
 }
@@ -1038,7 +1038,7 @@ Next, use the `account-baseline-root` module from the Gruntwork Infrastructure a
 [source,hcl]
 ----
 module "root_baseline" {
-  source = "git::git@github.com:gruntwork-io/module-security.git//modules/account-baseline-root?ref=v0.36.0"
+  source = "git::ssh://git@github.com:gruntwork-io/terraform-aws-security.git//modules/account-baseline-root?ref=v0.44.10"
 
   aws_account_id = var.aws_account_id
   aws_region     = var.aws_region
@@ -1359,7 +1359,7 @@ repo, setting the `ref` param to the version you released earlier:
 [source,hcl]
 ----
 terraform {
-  source = "git@github.com/<YOUR_ORG>/infrastructure-modules.git//landingzone/account-baseline-root?ref=v0.3.0"
+  source = "git::ssh://git@github.com/<YOUR_ORG>/infrastructure-modules.git//landingzone/account-baseline-root?ref=v0.3.0"
 
   # This module deploys some resources (e.g., AWS Config) across all AWS regions, each of which needs its own provider,
   # which in Terraform means a separate process. To avoid all these processes thrashing the CPU, which leads to network
@@ -1813,7 +1813,7 @@ Next, use the `account-baseline-app` module from the Gruntwork Infrastructure as
 [source,hcl]
 ----
 module "security_baseline" {
-  source = "git::git@github.com:gruntwork-io/module-security.git//modules/account-baseline-app?ref=v0.36.0"
+  source = "git::ssh://git@github.com:gruntwork-io/terraform-aws-security.git//modules/account-baseline-app?ref=v0.44.10"
 
   name_prefix    = var.name_prefix
   aws_region     = var.aws_region
@@ -2008,7 +2008,7 @@ repo, setting the `ref` param to the version you released earlier:
 [source,hcl]
 ----
 terraform {
-  source = "git@github.com/<YOUR_ORG>/infrastructure-modules.git//landingzone/account-baseline-app?ref=v0.3.1"
+  source = "git::ssh://git@github.com/<YOUR_ORG>/infrastructure-modules.git//landingzone/account-baseline-app?ref=v0.3.1"
 
   # This module deploys some resources (e.g., AWS Config) across all AWS regions, each of which needs its own provider,
   # which in Terraform means a separate process. To avoid all these processes thrashing the CPU, which leads to network
@@ -2176,7 +2176,7 @@ Next, use the `account-baseline-security` module from the Gruntwork Infrastructu
 [source,hcl]
 ----
 module "security_baseline" {
-  source = "git::git@github.com:gruntwork-io/module-security.git//modules/account-baseline-security?ref=v0.36.0"
+  source = "git::ssh://git@github.com:gruntwork-io/terraform-aws-security.git//modules/account-baseline-security?ref=v0.44.10"
 
   name_prefix    = var.name_prefix
   aws_region     = var.aws_region
@@ -2556,7 +2556,7 @@ repo, setting the `ref` param to the version you released earlier:
 [source,hcl]
 ----
 terraform {
-  source = "git@github.com/<YOUR_ORG>/infrastructure-modules.git//landingzone/account-baseline-security?ref=v0.3.2"
+  source = "git::ssh://git@github.com/<YOUR_ORG>/infrastructure-modules.git//landingzone/account-baseline-security?ref=v0.3.2"
 
   # This module deploys some resources (e.g., AWS Config) across all AWS regions, each of which needs its own provider,
   # which in Terraform means a separate process. To avoid all these processes thrashing the CPU, which leads to network
@@ -2774,7 +2774,7 @@ repo, setting the `ref` param to the latest version:
 [source,hcl]
 ----
 terraform {
-  source = "git@github.com/<YOUR_ORG>/infrastructure-modules.git//landingzone/account-baseline-app?ref=v0.3.2"
+  source = "git:ssh://git@github.com/<YOUR_ORG>/infrastructure-modules.git//landingzone/account-baseline-app?ref=v0.3.2"
 
   # This module deploys some resources (e.g., AWS Config) across all AWS regions, each of which needs its own provider,
   # which in Terraform means a separate process. To avoid all these processes thrashing the CPU, which leads to network
