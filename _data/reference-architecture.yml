@@ -1,43 +1,39 @@
 infrastructure:
   - title: Account configuration
     description: |
-      Choose from a single or multi account/project setup where each account/project represents a distinct environment.
+      A best practices multi-account set up using <a href="/landing-zone-for-aws">Gruntwork Landing Zone for AWS</a>.
 
   - title: Network Topology
     description: |
-      For each environment, create a VPC with multiple subnet tiers, route tables, NAT Gateways, Network ACLs, etc.
+      For each environment, create a VPC with multiple subnet tiers, route tables, NAT Gateways, Network ACLs, Flow logs, etc.
 
   - title: Server cluster
     description: |
-      Choose from a Docker Cluster (backed by Amazon EC2 Container Service, Amazon EC2 Kubernetes Service, or Google Kubernetes Engine) or Auto Scaling Groups.
+      Choose from a Docker Cluster (backed by Amazon EC2 Container Service or  Amazon EC2 Kubernetes Service) or Auto Scaling Groups.
 
   - title: Load balancer
     description: |
-      Choose your load balancer for distributing traffic across your server cluster.
+      Public AWS Application Load Balancer for customer-facing services, and private ALBs for internal services.
 
   - title: Database
     description: |
-      Choose a supported relational database, such as MySQL, PostgreSQL, MariaDB, Oracle, or SQL Server.
+      Choose a supported RDS database, such as Aurora, MySQL, PostgreSQL, MariaDB, Oracle, or SQL Server.
 
   - title: Cache
     description: |
-      Choose a supported distributed cache, such as Redis or Memcached.
-
-  - title: Other data stores
-    description: |
-      We have support for Kafka, ZooKeeper, MongoDB, ELK (Elasticsearch, Logstash, Kibana), SQS, Kinesis, and more.
+      Choose a Redis or Memcached distributed Elasticache cache cluster.
 
   - title: Static content
     description: |
-      Deploy your images, CSS, and JS into an S3 or GCS bucket and configure a CDN in front of it.
+      Deploy your images, CSS, and JS into an S3 bucket and configure a CloudFront CDN in front of it.
 
   - title: Bastion host
     description: |
-      Choose from either a plain bastion host or an OpenVPN server as the sole entry point to your network.
+      Choose from either a plain Linux host or an OpenVPN server as a remote access network bastion.
 
   - title: CI server
     description: |
-      Choose from Jenkins, CircleCI, or TravisCI.
+      Choose from Jenkins, CircleCI, or GitLab.
 
   - title: Sample frontend app
     description: |
@@ -62,8 +58,12 @@ configuration:
 
   - title: Encryption
     description: |
-      Choose if you want to enable end-to-end encryption for all data at rest and in transit. Mandatory for compliance
-      use-cases (e.g., HIPAA, PCI, SOX, etc).
+      Encryption is enabled by default, including encrypted AMIs, EBS volumes, TLS certificates via AWS Certificate
+      Manager, and everywhere else.
+
+  - title: Infrastructure pipeline
+    description: |
+      Set up a workflow for infrastructure code using <a href="/pipelines">Gruntwork Pipelines</a>.
 
   - title: Automated build &amp; deployment (CI / CD)
     description: |
@@ -72,7 +72,7 @@ configuration:
 
   - title: Monitoring
     description: |
-      Configure metrics in CloudWatch or StackDriver.
+      Configure metrics in CloudWatch.
 
   - title: Alerting
     description: |
@@ -81,11 +81,11 @@ configuration:
 
   - title: Log aggregation
     description: |
-      Configure all servers to send logs to a central location for easier searching and filtering.
+      Centralize all server logs in CloudWatch Logs for easier searching and filtering.
 
   - title: DNS
     description: |
-      Configure your domain name(s).
+      Configure your domain name(s) using Amazon Route 53.
 
 security:
   - title: SSL/TLS
@@ -104,12 +104,20 @@ security:
 
   - title: Secrets management
     description: |
-      Use KMS to securely encrypt and decrypt application secrets, such as database passwords.
+      Use Secrets Manager to securely encrypt and decrypt application secrets, such as database passwords.
 
   - title: Account security
     description: |
-      Enable audit logging for all of your API calls. Create best practices IAM groups and policies for user and
+      Enable centralized audit logging for all of your API calls. Create best practices IAM groups and policies for user and
       permissions management.
+
+  - title: Threat detection
+    description: |
+      Use Amazon GuardDuty to monitor for malicious and unauthorized behavior in your environment.
+
+  - title: Resource configuration
+    description: |
+      Enable AWS Config with a best practices set of Config Rules to monitor for anomalous behavior.
 
 design:
   - title: High Availability
@@ -121,16 +129,20 @@ design:
 
   - title: Scalability
     description: |
-      All aspects of the architecture support easy vertical and horizontal scalability: e.g., you can use auto scaling
-      policies to resize the server cluster in response to load; the load balancers will automatically scale up and down
-      in response to load; you can configure read replicas for your database and cache.
+      All aspects of the architecture support easy vertical and horizontal scalability: auto scaling policies
+      resize the server cluster in response to load; the load balancers will automatically scale up and down
+      in response to load; you can configure read replicas for your database and cache clusters.
 
   - title: Infrastructure as code
     description: |
       You get 100% of the source code for everything in the Reference Architecture. It is written using a variety of
-      tools, including Terraform, Packer, Docker, Go, Python, and Bash.
+      tools, including Terragrunt, Terraform, Packer, Docker, Go, Python, and Bash.
+
+  - title: Built for teams
+    description: |
+      With Gruntwork Pipelines, every change is centralized, peer-reviewed, and audited, all using code. Use the pipeline
+      for your infrastructure <i>and</i> application deployments!
 
   - title: Documentation
     description: |
       Comprehensive written and video documentation of everything included in the Reference Architecture.
-
