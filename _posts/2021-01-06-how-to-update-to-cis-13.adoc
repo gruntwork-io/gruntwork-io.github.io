@@ -70,6 +70,14 @@ between versions 1.2.0 and 1.3.0:
 - 4.15: Ensure a log metric filter and alarm exists for AWS Organizations changes
 - 5.1: Ensure no network ACLs allow ingress from 0.0.0.0/0 to remote server administration ports
 
+==== Deleted recommendations
+Version 1.3.0 removed some recommendations, but they only affect the IAM password policy:
+
+- 1.5: Ensure IAM password policy requires at least one uppercase letter
+- 1.6: Ensure IAM password policy require at least one lowercase letter 
+- 1.7: Ensure IAM password policy require at least one symbol
+- 1.8: Ensure IAM password policy require at least one number
+
 ==== New Gruntwork modules vs. existing modules
 To achieve compliance with the newly added 10 recommendations listed above, we created four new modules in the
 Gruntwork's Infrastructure as Code Library, and updated a bunch of existing modules. Namely: recommendations 1.19, 1.21,
@@ -143,7 +151,7 @@ compatible with CIS AWS v1.3.0:
 |1.20, 2.1.1, 2.1.2
 
 |terraform-aws-cis-service-catalog
-|https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/releases/tag/v0.10.0[v0.10.0]
+|https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/releases/tag/v0.11.1[v0.11.1]
 |3.10, 3.11, 4.15, 5.1
 
 |terraform-aws-service-catalog
