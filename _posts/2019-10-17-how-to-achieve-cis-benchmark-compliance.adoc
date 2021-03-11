@@ -190,7 +190,7 @@ In the subsequent sections, we'll review the recommendations and discuss how to 
 [[configure_authentication]]
 ==== Configure authentication
 One of main areas of concern in the IAM section relates to authentication. The Benchmark has recommendations for IAM
-users and the root user account, password complexity, and multi-factor authentication. There is more than one way to
+users and the root user account, password policy, and multi-factor authentication. There is more than one way to
 authenticate to AWS, and the method you choose determines how to implement these recommendations in your code.
 
 ===== Federated authentication using SAML
@@ -393,7 +393,7 @@ them by other IAM policies.
 Attach a policy like this one to every group in your account.
 
 ==== Password policy
-The IAM password policy is perhaps the most straightforward and explicit set of recommendations (1.8-1.9) in the entire
+The IAM password policy is perhaps the most straightforward and explicit set of recommendations (1.8-1.9 and 1.12) in the entire
 Benchmark. You can invoke link:https://www.terraform.io/docs/providers/aws/r/iam_account_password_policy.html[the
 Terraform `aws_iam_account_password_policy` resource] to implement the recommended policy.
 
@@ -403,10 +403,6 @@ For example:
 ----
 resource "aws_iam_account_password_policy" "aws_foundations_benchmark_policy" {
   minimum_password_length        = 14
-  require_numbers                = true
-  require_symbols                = true
-  require_lowercase_characters   = true
-  require_uppercase_characters   = true
   allow_users_to_change_password = true
   hard_expiry                    = true
   max_password_age               = 90
@@ -908,7 +904,7 @@ variable "aws_region" {
 variable "minimum_password_length" {
   description = "Minimum length to require for user passwords."
   type        = number
-  default     = 20
+  default     = 14
 }
 ----
 
