@@ -1264,7 +1264,7 @@ variable "num_nat_gateways" {
 }
 
 variable "allow_administrative_remote_access_cidrs_public_subnets" {
-  description = "A map of CIDR blocks that will be allowed to access to administrative ports (e.g., SSH, RDP) in the public subnet tier."
+  description = "A map of CIDR blocks that will be allowed access to administrative ports (e.g., SSH, RDP) in the public subnet tier."
   type        = map(string)
 
   # Example:
@@ -1305,7 +1305,7 @@ To ensure all the networking recommendations are satisfied, use the
 link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/modules/networking/vpc[`vpc`] (and/or
 link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/modules/networking/vpc-mgmt[`vpc-mgmt`])
 service from Gruntwork's CIS Service Catalog to create all your VPCs. These services are specifically configured for
-CIS compliance, and as such they don't allow security groups to access to ports 22 or 3389 from the world. In addition,
+CIS compliance, and as such they don't allow security groups to access ports 22 or 3389 from the world. In addition,
 our architecture has a least-privileges-based routing configuration by default.
 
 To meet the 5.1 recommendation, you'll need to provide values for the `allow_administrative_remote_access_*` variables
