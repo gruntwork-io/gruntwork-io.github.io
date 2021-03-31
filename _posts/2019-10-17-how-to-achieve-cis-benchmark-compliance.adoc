@@ -1399,11 +1399,11 @@ sections above.
 3.5,<<aws_config>>,Enable AWS Config for all regions
 3.6-3.7,<<cloudtrail>>,Use the Gruntwork CloudTrail wrapper module
 3.8,<<kms>>,Use the KMS module
-3.9,<<vpc_flow_logs>>,Gruntwork's `vpc` service enables flow logs by default
+3.9,<<vpc_flow_logs>>,Use the Gruntwork CIS-compliant `vpc` service to provision VPCs with flow logs enabled
 3.10-3.11,<<cloudtrail>>,Use the Gruntwork CloudTrail wrapper module
 4.1-4.15,<<configure_monitoring>>,The CloudWatch Logs metrics filters wrapper module will satisfy each recommendation
-5.1,<<configure_networking>>,Use the Gruntwork `vpc` service to ensure there is no public remote access
-5.2,<<configure_networking>>,Use the Gruntwork `vpc` service for a secure network configuration
-5.3,<<configure_networking>>,The `cloud-nuke` tool can remove all default security groups
-5.4,<<configure_networking>>,Gruntwork's `vpc` service creates least-privilege routing by default
+5.1,<<configure_networking>>,Use the Gruntwork CIS-compliant `vpc` service to ensure there is no public remote access
+5.2,<<configure_networking>>,Use the Gruntwork CIS-compliant `vpc` service for a secure network configuration
+5.3,<<configure_networking>>,Use the `cloud-nuke` tool to remove all default security groups
+5.4,<<configure_networking>>,Use the Gruntwork CIS-compliant `vpc` service to configure least-privilege routing by default
 |===
