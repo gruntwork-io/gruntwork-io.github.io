@@ -715,7 +715,7 @@ security groups, and remote access. Moreover, our link:https://gruntwork.io/refe
 Architecture] can get you up and running with a secure network configuration immediately.
 
 Recommendation 5.1 requires that you use Network ACL rules to block all access to the remote server administration ports, such as SSH to port 22 and Remote
-Desktop to port 3389, by default. You can then add additional NACL rules to allow remote admin access, but only from specific CIDR blocks. Recommendation 5.2 similarly allows you tallow remote admin access from specific CIDR blocks in your Security Groups. Note that allowing remote admin access from all IPs (`0.0.0.0/0`) is NOT allowed, so instead, if you require SSH or Remote Desktop to your cloud resources, provide a more restricted CIDR
+Desktop to port 3389, by default. You can then add additional NACL rules to allow remote admin access, but only from specific CIDR blocks. Recommendation 5.2 similarly allows you to allow remote admin access from specific CIDR blocks in your Security Groups. Note that allowing remote admin access from all IPs (`0.0.0.0/0`) is NOT allowed, so instead, if you require SSH or Remote Desktop to your cloud resources, provide a more restricted CIDR
 range, such as the IP addresses of your offices.
 
 To meet recommendation 5.3, run the link:https://github.com/gruntwork-io/cloud-nuke[`cloud-nuke defaults-aws`] command
@@ -1218,42 +1218,27 @@ module] to create KMS keys with key rotation enabled by default.
 ==== Create VPC flow logs
 The Benchmark recommends enabling link:https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html[VPC Flow Logs]
 for all VPCs in all regions. You can use the
-link:https://github.com/gruntwork-io/terraform-aws-vpc/blob/master/modules/vpc-flow-logs/README.md[`vpc-flow-logs` core module]
-to create a flow log for a given VPC. For example, you might first create a VPC using `terraform-aws-vpc`:
+link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/blob/master/modules/networking/vpc[`vpc` service]
+in the CIS Service Catalog to create your VPCs. This service is configured for CIS compliance, and as such has VPC flow
+logs enabled. For example, you might create a VPC using the VPC service:
 
 .infrastructure-modules/networking/vpc/myvpc/main.tf
 [source,hcl]
 ----
-data "aws_availability_zones" "all" {}
 
 module "vpc" {
-  # Replace <VERSION> with the most recent release from the https://github.com/gruntwork-io/terraform-aws-vpc/releases[releases page]:
-  source = "git::git@github.com:gruntwork-io/terraform-aws-vpc.git//modules/vpc-flow-logs?ref=<VERSION>"
+  # Replace <VERSION> with the most recent release from https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/releases
+  source = "git::git@github.com:gruntwork-io/terraform-aws-cis-service-catalog.git//modules/networking/vpc?ref=<VERSION>"
 
-  vpc_name   = var.vpc_name
-  aws_region = var.aws_region
-
-  cidr_block             = var.cidr_block
-  num_nat_gateways       = var.num_nat_gateways
-  num_availability_zones = length(data.aws_availability_zones.all.names)
+  vpc_name                                                = var.vpc_name
+  aws_region                                              = var.aws_region
+  cidr_block                                              = var.cidr_block
+  num_nat_gateways                                        = var.num_nat_gateways
+  allow_administrative_remote_access_cidrs_public_subnets = var.allow_administrative_remote_access_cidrs_public_subnets
 }
 ----
 
-Then create a Flow Log for the VPC:
-
-.infrastructure-modules/networking/vpc/myvpc/main.tf
-[source,hcl]
-----
-module "flow_logs" {
-  source = "git::git@github.com:gruntwork-io/terraform-aws-vpc.git//modules/vpc-flow-logs?ref=<VERSION>"
-
-  # We refer to the VPC ID created by the module above
-  vpc_id = module.vpc.vpc_id
-  kms_key_users = var.kms_key_users
-}
-----
-
-All that's remaining is to define the parameters in a `variables.tf`:
+Under the hood, the service will enable VPC flow logs. All that's remaining is to define the parameters in a `variables.tf`:
 
 .infrastructure-modules/networking/vpc/myvpc/variables.tf
 [source,hcl]
@@ -1268,14 +1253,31 @@ variable "vpc_name" {
   type        = string
 }
 
-variable "kms_key_users" {
-  description = "A list of IAM user ARNs with access to the KMS key used with the VPC flow logs. Required if kms_key_arn is not defined."
-  type        = list(string)
+variable "cidr_block" {
+  description = "The IP address range of the app VPC in CIDR notation."
+  type        = string
+}
+
+variable "num_nat_gateways" {
+  description = "The number of NAT Gateways to launch for this VPC."
+  type        = number
+}
+
+variable "allow_administrative_remote_access_cidrs_public_subnets" {
+  description = "A map of CIDR blocks that will be allowed access to administrative ports (e.g., SSH, RDP) in the public subnet tier."
+  type        = map(string)
+
+  # Example:
+  #
+  #   default = {
+  #    UsOffice = "1.2.3.4/32"
+  #    EuOffice = "5.6.7.8/32"
+  # }
 }
 ----
 
-Refer to the flow logs
-link:https://github.com/gruntwork-io/terraform-aws-vpc/blob/master/examples/vpc-flow-logs/main.tf[example code].
+Refer to the VPC
+link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/examples/for-learning-and-testing/networking/vpc/terraform[example code].
 
 To limit the number of flow logs, you may want to use the
 link:https://github.com/gruntwork-io/cloud-nuke[`cloud-nuke defaults-aws`] command. It will remove the default VPC from
@@ -1299,16 +1301,16 @@ setup a subscriber to the SNS topics that are created.
 [[configure_networking]]
 === Configure networking
 
-If you're using Gruntwork's link:https://github.com/gruntwork-io/terraform-aws-vpc[VPC module] for your VPCs, two
-of the four recommendations in this section are already taken care of! By default, none of our modules allow
-security groups to access to ports 22 or 3389 from the world, and our architecture has a least-privileges-based routing
-configuration by default.
+To ensure all the networking recommendations are satisfied, use the
+link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/modules/networking/vpc[`vpc`] (and/or
+link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/modules/networking/vpc-mgmt[`vpc-mgmt`])
+service from Gruntwork's CIS Service Catalog to create all your VPCs. These services are specifically configured for
+CIS compliance, and as such they don't allow security groups to access ports 22 or 3389 from the world. In addition,
+our architecture has a least-privileges-based routing configuration by default.
 
-To meet the 5.1 recommendation, you need to create your Network ACL Rules for the VPC-App using the
-link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/modules/vpc-app-network-acls[`vpc-app-network-acls`
-module] and your NACL Rules for the VPC-Mgmt (which is being deprecated) using the
-link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/modules/vpc-mgmt-network-acls[`vpc-mgmt-network-acls`
-module]. For example, you might first create a VPC using `terraform-aws-vpc`:
+To meet the 5.1 recommendation, you'll need to provide values for the `allow_administrative_remote_access_*` variables
+when creating VPCs. These variables are used to create appropriate Network ACL Rules. For example, you might create a
+VPC using the `vpc` service from `terraform-aws-cis-service-catalog`:
 
 ----
 infrastructure-modules
@@ -1322,44 +1324,17 @@ infrastructure-modules
 .infrastructure-modules/networking/vpc/myvpc/main.tf
 [source,hcl]
 ----
-data "aws_availability_zones" "all" {}
-
 module "vpc" {
-  # Replace <VERSION> with the most recent release from the https://github.com/gruntwork-io/terraform-aws-vpc/releases[releases page]:
-  source = "git::git@github.com:gruntwork-io/terraform-aws-vpc.git//modules/vpc-app?ref=<VERSION>"
+  # Replace <VERSION> with the most recent release from the https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/releases:
+  source = "git::git@github.com:gruntwork-io/terraform-aws-cis-service-catalog.git//modules/networking/vpc?ref=<VERSION>"
 
-  vpc_name   = var.vpc_name
-  aws_region = var.aws_region
+  # Set the basic required variables first
+  vpc_name         = var.vpc_name
+  aws_region       = var.aws_region
+  cidr_block       = var.cidr_block
+  num_nat_gateways = var.num_nat_gateways
 
-  cidr_block             = var.cidr_block
-  num_nat_gateways       = var.num_nat_gateways
-  num_availability_zones = length(data.aws_availability_zones.all.names)
-}
-----
-
-Then add the Network ACL rules for the VPC:
-
-.infrastructure-modules/networking/vpc/myvpc/main.tf
-[source,hcl]
-----
-module "vpc_network_acls" {
-  # Replace <VERSION> with the most recent release from the https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/releases[releases page]:
-  source = "git::git@github.com:gruntwork-io/.git/terraform-aws-cis-service-catalog/modules/vpc-app-network-acls?ref=<VERSION>"
-
-  vpc_id      = module.vpc.vpc_id
-  vpc_name    = module.vpc.vpc_name
-  vpc_ready   = module.vpc.vpc_ready
-  num_subnets = module.vpc.num_availability_zones
-
-  public_subnet_ids              = module.vpc.public_subnet_ids
-  private_app_subnet_ids         = module.vpc.private_app_subnet_ids
-  private_persistence_subnet_ids = module.vpc.private_persistence_subnet_ids
-
-  public_subnet_cidr_blocks                                            = module.vpc.public_subnet_cidr_blocks
-  private_app_subnet_cidr_blocks                                       = module.vpc.private_app_subnet_cidr_blocks
-  private_persistence_subnet_cidr_blocks                               = module.vpc.private_persistence_subnet_cidr_blocks
-
-  # These variables are not on the terraform-aws-vpc module, they refer to the CIS v1.3 recommendation 5.1.
+  # Next, pass values for the allow_administrative_remote_access_* variables, thus creating the NACL rules under the hood
   allow_administrative_remote_access_cidrs_public_subnets              = var.allow_administrative_remote_access_cidrs
   allow_administrative_remote_access_cidrs_private_app_subnets         = { all_app_vpc_cidrs  = module.vpc.vpc_cidr_block }
   allow_administrative_remote_access_cidrs_private_persistence_subnets = { all_app_vpc_cidrs  = module.vpc.vpc_cidr_block }
@@ -1424,11 +1399,11 @@ sections above.
 3.5,<<aws_config>>,Enable AWS Config for all regions
 3.6-3.7,<<cloudtrail>>,Use the Gruntwork CloudTrail wrapper module
 3.8,<<kms>>,Use the KMS module
-3.9,<<vpc_flow_logs>>,Use the VPC flow logs core module
+3.9,<<vpc_flow_logs>>,Use the Gruntwork CIS-compliant `vpc` service to provision VPCs with flow logs enabled
 3.10-3.11,<<cloudtrail>>,Use the Gruntwork CloudTrail wrapper module
 4.1-4.15,<<configure_monitoring>>,The CloudWatch Logs metrics filters wrapper module will satisfy each recommendation
-5.1,<<configure_networking>>,Use the `vpc-app-network-acls` and `vpc-mgmt-network-acls` to ensure there is no public remote access
-5.2,<<configure_networking>>,Use the Gruntwork VPC modules for a secure network configuration
-5.3,<<configure_networking>>,The cloud-nuke tool can remove all default security groups
-5.4,<<configure_networking>>,Gruntwork's VPC module creates least-privilege routing by default
+5.1,<<configure_networking>>,Use the Gruntwork CIS-compliant `vpc` service to ensure there is no public remote access
+5.2,<<configure_networking>>,Use the Gruntwork CIS-compliant `vpc` service for a secure network configuration
+5.3,<<configure_networking>>,Use the `cloud-nuke` tool to remove all default security groups
+5.4,<<configure_networking>>,Use the Gruntwork CIS-compliant `vpc` service to configure least-privilege routing by default
 |===
