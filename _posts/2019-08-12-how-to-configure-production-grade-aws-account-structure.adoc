@@ -536,11 +536,11 @@ Application accounts (dev, stage, prod)::
   a separate account for backup and/or disaster recovery, or separate accounts to separate workloads with and without
   compliance requirements).
 
-Shared-services account::
-  The _shared-services account_ is used for infrastructure and data that is shared amongst all the application
-  accounts, such as CI servers and artifact repositories. For example, in your shared-services account, you might use
+Shared account::
+  The _shared account_ is used for infrastructure and data that is shared amongst all the application
+  accounts, such as CI servers and artifact repositories. For example, in your shared account, you might use
   https://aws.amazon.com/ecr/[ECR] to store Docker images and Jenkins to deploy those Docker images to dev, stage, and
-  prod. Since the shared-services account may provide resources to (e.g., application packages) and has access to
+  prod. Since the shared account may provide resources to (e.g., application packages) and has access to
   most of your other accounts (e.g., for deployments), including production, from a security perspective, you should
   treat it as a production account, and use at least the same level of precaution when locking everything down.
 
@@ -562,14 +562,14 @@ Testing accounts::
 
 Logs account::
   You will want a single _logs account_ for aggregating log data. All the other accounts—root, security, application
-  accounts, shared-services, etc.—will send their AWS Config and CloudTrail data to this account so that you have a
+  accounts, shared, etc.—will send their AWS Config and CloudTrail data to this account so that you have a
   single, central place where all logs are stored and can be viewed. This account will also contain a KMS customer
   master key (CMK) that is used to encrypt CloudTrail logs.
 
 Note that for larger organizations with multiple separate business units, you may need to repeat the structure above
 multiple times. That is, in the root account, you
 https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_ous.html#create_ou[create an Organization Unit]
-for each business unit, and within each Organization Unit, you create a set of application, shared-services, sandbox,
+for each business unit, and within each Organization Unit, you create a set of application, shared, sandbox,
 and testing accounts (security and logs accounts are usually shared across the entire organization). It's not unusual
 for large organizations to have dozens or even hundreds of AWS accounts.
 
@@ -694,7 +694,7 @@ requirements, but here are some common ones:
 allow-auto-deploy-access-from-other-accounts::
   This is an IAM role that grants permissions for automatically deploying (e.g., as part of a CI / CD pipeline)
   some specific service. For example, this role may have a trust policy that allows it to be assumed by a Jenkins
-  server in the shared-services account, and gives that server permissions to deploy EC2 Instances and Auto Scaling
+  server in the shared account, and gives that server permissions to deploy EC2 Instances and Auto Scaling
   Groups. Note that anyone who has to your CI server (e.g., anyone who can create/modify/execute Jenkins jobs) can
   effectively make use of all the permissions in this IAM role, so be very thoughtful about what this role can do.
 
@@ -1026,6 +1026,10 @@ provider "aws" {
 }
 
 terraform {
+  # Partially configure the backend. It will be filled in by Terragrunt if a root level terragrunt.hcl defines
+  # remote_state. See https://www.terraform.io/docs/backends/config.html#partial-configuration
+  backend "s3" {}
+
   # Only allow this Terraform version. Note that if you upgrade to a newer version, Terraform won't allow you to use an
   # older version, so when you upgrade, you should upgrade everyone on your team and your CI servers all at once.
   required_version = "= 0.12.29"
@@ -1152,8 +1156,8 @@ variable "child_accounts" {
   #       Tag-Key = "tag-value"
   #     }
   #   }
-  #   shared-services = {
-  #     email                       = "root-accounts+shared-services@acme.com"
+  #   shared = {
+  #     email                       = "root-accounts+shared@acme.com"
   #   }
   #   dev = {
   #     email                       = "root-accounts+dev@acme.com"
@@ -1367,18 +1371,18 @@ locals {
 # Generate the Terraform backend config to store state in S3
 remote_state {
   backend = "s3"
-  config = {
-    encrypt        = true
-    # TODO: Replace with your organization name!
-    bucket         = "${local.name_prefix}-${local.account_name}-${local.aws_region}"
-    key            = "${path_relative_to_include()}/terraform.tfstate"
-    # TODO: Replace with your region!
-    region         = "us-west-1"
-    dynamodb_table = "terraform-locks"
-  }
   generate = {
     path      = "backend.tf"
     if_exists = "overwrite_terragrunt"
+  }
+  config = {
+    encrypt        = true
+# TODO: Replace with your organization name!
+      bucket         = "${local.name_prefix}-${local.account_name}-${local.aws_region}"
+      key            = "${path_relative_to_include()}/terraform.tfstate"
+# TODO: Replace with your region!
+      region         = "us-west-1"
+      dynamodb_table = "terraform-locks"
   }
 }
 ----
@@ -1514,8 +1518,8 @@ inputs = {
     security = {
       email = "root-accounts+security@acme.com"
     },
-    shared-services = {
-      email = "root-accounts+shared-services@acme.com"
+    shared = {
+      email = "root-accounts+shared@acme.com"
     },
     dev = {
       email = "root-accounts+dev@acme.com"
@@ -1827,8 +1831,8 @@ child_accounts = {
     "id" = "<SECURITY_ACCOUNT_ID>"
     # (...)
   }
-  "shared-services" = {
-    "email" = "root-accounts+shared-services@acme.com"
+  "shared" = {
+    "email" = "root-accounts+shared@acme.com"
     "id" = "<SHARED_SERVICES_ACCOUNT_ID>"
     # (...)
   }
@@ -1911,8 +1915,8 @@ provider "aws" {
 }
 
 terraform {
-  # The configuration for this backend will be filled in by Terragrunt or via a backend.hcl file. See
-  # https://www.terraform.io/docs/backends/config.html#partial-configuration
+  # Partially configure the backend. It will be filled in by Terragrunt if a root level terragrunt.hcl defines
+  # remote_state. See https://www.terraform.io/docs/backends/config.html#partial-configuration
   backend "s3" {}
 
   # Only allow this Terraform version. Note that if you upgrade to a newer version, Terraform won't allow you to use an
@@ -2279,8 +2283,8 @@ provider "aws" {
 }
 
 terraform {
-  # The configuration for this backend will be filled in by Terragrunt or via a backend.hcl file. See
-  # https://www.terraform.io/docs/backends/config.html#partial-configuration
+  # Partially configure the backend. It will be filled in by Terragrunt if a root level terragrunt.hcl defines
+  # remote_state. See https://www.terraform.io/docs/backends/config.html#partial-configuration
   backend "s3" {}
 
   # Only allow this Terraform version. Note that if you upgrade to a newer version, Terraform won't allow you to use an
@@ -2866,7 +2870,7 @@ echo "<PASSWORD>" | base64 --decode | keybase pgp decrypt
 === Apply the security baseline to the other child accounts
 
 Now that your security account is fully configured, you need to apply the security baseline to the remaining child
-accounts (i.e., dev, stage, prod, and shared-services, plus sandbox and testing accounts you might have) as
+accounts (i.e., dev, stage, prod, and shared, plus sandbox and testing accounts you might have) as
 detailed in the <<child_accounts>> section. Feel free to adjust this as necessary based on the accounts your company
 needs.
 
@@ -2875,7 +2879,7 @@ these child accounts; this module can be used interchangeably between app accoun
 of the same resources.
 
 Create `terragrunt.hcl` files in `infrastructure-live` under the file paths `<ACCOUNT>/_global/account-baseline`,
-where `<ACCOUNT>` is one of these other child accounts, such as dev, stage, prod, and shared-services. In the rest of
+where `<ACCOUNT>` is one of these other child accounts, such as dev, stage, prod, and shared. In the rest of
 this example, we’ll look solely at the stage account, but make sure you follow the analogous steps for EACH of your
 child accounts.
 
@@ -2956,7 +2960,7 @@ inputs = {
   allow_dev_access_from_other_account_arns       = ["arn:aws:iam::<SECURITY_ACCOUNT_ID>:root"]
   allow_full_access_from_other_account_arns      = ["arn:aws:iam::<SECURITY_ACCOUNT_ID>:root"]
 
-  # Allow a CI server in the shared-services account to assume the auto-deploy IAM role in this account
+  # Allow a CI server in the shared account to assume the auto-deploy IAM role in this account
   allow_auto_deploy_from_other_account_arns      = ["arn:aws:iam::<SHARED_SERVICES_ACCOUNT_ID>:root"]
 }
 ----
@@ -2971,7 +2975,7 @@ The code above does the following:
   the services specified in `dev_permitted_services`.
 
 . **Configure the Auto Deploy IAM role**. We also create an `auto-deploy` IAM role that can be assumed by a CI server
-  in the shared-services account to do deployments. This role will have the permissions specified in
+  in the shared account to do deployments. This role will have the permissions specified in
   `auto_deploy_permissions`.
 
 . **Configure cross-account IAM roles**. We then specify which other accounts are allowed to assume the IAM roles in
@@ -3022,7 +3026,7 @@ aws-vault exec stage-from-root -- terragrunt apply
 [.exceptional]
 IMPORTANT: On some operating systems, such as MacOS, you may also need to increase your open files limit to avoid "pipe: too many open files" errors by running: `ulimit -n 1024`.
 
-Remember to repeat this process in the other child accounts too (i.e., dev, prod, shared-services, etc)!
+Remember to repeat this process in the other child accounts too (i.e., dev, prod, shared, etc)!
 
 === Try authenticating as an IAM user to the child accounts
 
