@@ -1026,11 +1026,6 @@ provider "aws" {
 }
 
 terraform {
-  # The configuration for this backend will be filled in by Terragrunt or via a backend.hcl file. See
-  # https://www.terraform.io/docs/backends/config.html#partial-configuration
-  # TODO: Totally remove this! Just have them create the root terragrunt.hcl to define the bucket stuff.
-  backend "s3" {}
-
   # Only allow this Terraform version. Note that if you upgrade to a newer version, Terraform won't allow you to use an
   # older version, so when you upgrade, you should upgrade everyone on your team and your CI servers all at once.
   required_version = "= 0.12.29"
@@ -1193,8 +1188,6 @@ variable "users" {
   type = any
 
   # Example:
-  # TODO: shouldn't this be called `users = { ... }`? The implication is that they won't modify this variables.tf, but rather set the users in their testing/terraform.tfvars file.
-  # So in that file, it should be named `users`, not `default`.
   # default = {
   #   alice = {
   #     groups = ["iam-user-self-mgmt", "developers", "ssh-grunt-sudo-users"]
@@ -1328,73 +1321,7 @@ output "cloudtrail_iam_role_arn" {
 }
 ----
 
-# TODO: We should also detail exactly how to set up your backend configuration, including:
- - terragrunt.hcl at the root:
-    [source,hcl]
-    ----
-    locals {
-      # Automatically load common variables shared across all accounts
-      common_vars = read_terragrunt_config(find_in_parent_folders("common.hcl"))
-
-      # Automatically load account-level variables
-      account_vars = read_terragrunt_config(find_in_parent_folders("account.hcl"))
-
-      # Automatically load region-level variables
-      region_vars = read_terragrunt_config(find_in_parent_folders("region.hcl"))
-
-      # Extract the variables we need for easy access
-      account_name = local.account_vars.locals.account_name
-      account_id   = local.common_vars.locals.account_ids[local.account_name]
-      aws_region   = local.region_vars.locals.aws_region
-    }
-
-    # Generate the Terraform backend config to store state in S3
-    remote_state {
-      backend = "s3"
-      config = {
-        encrypt        = true
-        bucket         = "rho-refarchdeeppdive-state=${local.account_name}-${local.aws_region}"
-        key            = "${path_relative_to_include()}/terraform.tfstate"
-        region         = "us-west-1"
-        dynamodb_table = "terraform-locks"
-      }
-      generate = {
-        path      = "backend.tf"
-        if_exists = "overwrite_terragrunt"
-      }
-    }
-    ----
- - common.hcl also at the root:
-    [source,hcl]
-    ----
-    locals {
-      # Default AWS region for API calls
-      default_region = "us-west-1"
-
-      # Centrally define all our AWS account IDs
-      account_ids = {
-        root     = "<YOUR_ROOT_ACCOUNT_ID>"
-        security = "<YOUR_SECURITY_ACCOUNT_ID>"
-        shared   = "<YOUR_SHARED_SERVICES_ACCOUNT_ID>"
-        dev      = "<YOUR_DEV_ACCOUNT_ID>"
-        stage    = "<YOUR_STAGE_ACCOUNT_ID>"
-        prod     = "<YOUR_PROD_ACCOUNT_ID>"
-        logs     = "<YOUR_LOGS_ACCOUNT_ID>"
-      }
-    }
-    ----
- - in each <account_name>/_global/ folder, a region.hcl:
-    [source,hcl]
-    ----
-    # Modules in the account _global folder don't live in any specific AWS region, but you still have to send the API calls
-    # to _some_ AWS region, so here we use the default region for those API calls.
-    locals {
-      aws_region = read_terragrunt_config(find_in_parent_folders("common.hcl")).locals.default_region
-    }
-    ----
-
-#TODO: need to flesh these instructions out...
-At this point you can test your changes by running `plan`.
+At this point you can test your changes by running `terragrunt plan`.
 Once your code is tested and working, commit and release your changes:
 
 [source,bash]
@@ -1405,11 +1332,127 @@ git tag -a "v0.3.0" -m "Created root account baseline module"
 git push --follow-tags
 ----
 
+==== Create reusable variables across modules and terragrunt files
+
 NOTE: This guide will use https://github.com/gruntwork-io/terragrunt[Terragrunt] and its associated file and folder
 structure to deploy Terraform modules. Please note that *Terragrunt is NOT required for using Terraform modules from
 the Gruntwork Infrastructure as Code Library.* Check out link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library[How to use the Gruntwork Infrastructure as Code Library]
 for instructions on alternative options, such as how to
 link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#deploy_using_plain_terraform[deploying how to use plain terraform].
+
+Now you're going to make some HCL files that store variables to be used across your modules. _You won't be able to fill everything out just yet._ Your AWS account IDs
+will be generated after applying the account-baseline-root to the root account. At that point you can update these files. Create them now to have them ready to use.
+
+Create a `terragrunt.hcl` at the root of your infrastruture-live repo. As you can see, it references `common`, `account`, and `region` hcl files which we'll create shortly.
+
+[source,hcl]
+----
+locals {
+  # Automatically load common variables shared across all accounts
+  common_vars = read_terragrunt_config(find_in_parent_folders("common.hcl"))
+
+  # Automatically load account-level variables
+  account_vars = read_terragrunt_config(find_in_parent_folders("account.hcl"))
+
+  # Automatically load region-level variables
+  region_vars = read_terragrunt_config(find_in_parent_folders("region.hcl"))
+
+  # Extract the variables we need for easy access
+  name_prefix  = local.common_vars.locals.name_prefix
+  account_name = local.account_vars.locals.account_name
+  account_id   = local.common_vars.locals.account_ids[local.account_name]
+  aws_region   = local.region_vars.locals.aws_region
+}
+
+# Generate the Terraform backend config to store state in S3
+remote_state {
+  backend = "s3"
+  config = {
+    encrypt        = true
+    # TODO: Replace with your organization name!
+    bucket         = "${local.name_prefix}-${local.account_name}-${local.aws_region}"
+    key            = "${path_relative_to_include()}/terraform.tfstate"
+    # TODO: Replace with your region!
+    region         = "us-west-1"
+    dynamodb_table = "terraform-locks"
+  }
+  generate = {
+    path      = "backend.tf"
+    if_exists = "overwrite_terragrunt"
+  }
+}
+----
+
+Also create a `common.hcl` file at the root of your infrastructure-live repo.
+
+[source,hcl]
+----
+locals {
+  # Default AWS region for API calls
+  # TODO: Replace with your default region!
+  default_region = "us-west-1"
+
+  # A prefix used for naming resources
+  # TODO: Replace with your organization name!
+  name_prefix = "<YOUR_ORGANIZATION_NAME>"
+
+  # Centrally define all our AWS account IDs
+  # TODO: Replace with your account IDs!
+  account_ids = {
+    root     = "<YOUR_ROOT_ACCOUNT_ID>"
+    security = "<YOUR_SECURITY_ACCOUNT_ID>"
+    shared   = "<YOUR_SHARED_SERVICES_ACCOUNT_ID>"
+    dev      = "<YOUR_DEV_ACCOUNT_ID>"
+    stage    = "<YOUR_STAGE_ACCOUNT_ID>"
+    prod     = "<YOUR_PROD_ACCOUNT_ID>"
+    logs     = "<YOUR_LOGS_ACCOUNT_ID>"
+  }
+}
+----
+
+Create a very simple `account.hcl` at the root of each `<account_name>/` folder. For example, in
+the `infrastructure-live/dev/account.hcl`, create:
+[source, hcl]
+----
+# Set account-wide variables
+locals {
+  account_name = "dev"
+}
+----
+
+Be sure to match the `account_name` with the actual account name (`dev`, `stage`, `prod`, `shared`, `logs`, `security`).
+
+
+Now in each `<account_name>/_global/` folder, a `region.hcl` file.
+
+[source,hcl]
+----
+# Modules in the account _global folder don't live in any specific AWS region, but you still have to send the API calls
+# to _some_ AWS region, so here we use the default region for those API calls.
+locals {
+  aws_region = read_terragrunt_config(find_in_parent_folders("common.hcl")).locals.default_region
+}
+----
+
+Do the same in each `<account_name>/<region>/` folder. This `region.hcl` file is a bit different.
+
+[source,hcl]
+----
+# Common variables for this region
+locals {
+    # Automatically load common variables shared across all accounts
+    common_vars = read_terragrunt_config(find_in_parent_folders("common.hcl"))
+
+    # Automatically load account-level variables
+    account_vars = read_terragrunt_config(find_in_parent_folders("account.hcl"))
+
+    # TODO: Update to use your default region here!
+    aws_region   = "us-west-1"
+    state_bucket = "${local.common_vars.locals.name_prefix}-${local.account_vars.locals.account_name}-${local.aws_region}-tf-state"
+}
+----
+
+==== Set up the inputs for account-baseline for the root account
 
 Next, create a `terragrunt.hcl` file in `infrastructure-live`. It should go under the file path `root/_global/account-baseline`:
 
@@ -1439,6 +1482,7 @@ terraform {
   }
 }
 ----
+
 
 [.exceptional]
 IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=2`), as shown above, with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors.
@@ -1529,18 +1573,12 @@ The example code above does the following:
 . **Create IAM groups**. By default, `account-baseline-root` will create a `full-access` IAM group (for admins) and a
   `billing` IAM group (for the finance team).
 
-. **Create IAM users**. For this example, we create `alice` and `bob`, and carol, adding `alice` to the `full-access`
+. **Create IAM users**. For this example, we create `alice` and `bob`, and `carol`, adding `alice` to the `full-access`
   IAM group and `carol` to the `billing` IAM group. _Note_: your own IAM user (the one you created manually) should be
   in the `users` list; we'll use the `import` command to put this user under Terraform management shortly.
-# TODO: maybe the above works, to use `import` to put the user under Terraform management, but it was such a long frickin' section that I decided to skip the import. Instead, I used aws-vault to run the first terraform apply using the root account user, and then changed it to use the root IAM user once they were created by Terraform.
 
 . **Generate a password for each user**. We encrypt this password with that user’s PGP key from Keybase (we’ll come
   back to how to handle the passwords shortly).
-
-# TODO: Wow. This makes no sense at all. How the heck do I do this? Can't you just give me the code I'm supposed to add and where it goes?
-Luckily I read through the "testing" links that mentioned a backend.hcl... But we really shouldn't be giving that as advice here because
-attempting to test really screwed me up. Who knows how many accounts I'm going to end up with in this organization. I kinda want to start over
-with a whole new organization.
 
 Pull in the https://www.terraform.io/docs/backends/[backend] settings from a root `terragrunt.hcl` file that you
 `include` in each child `terragrunt.hcl`. The file you created earlier in `infrastructure-live/terragrunt.hcl` will be pulled.
@@ -1553,8 +1591,6 @@ include {
 }
 ----
 
-# TODO: this is fine to mention here, but in my flow, because I followed the advice to test the code first, I had to do this
-well ahead of time. If we remove that directive to test, we should be fine here.
 Next, you need to authenticate as your IAM user in the root account. There are
 https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[multiple ways to authenticate to AWS on the CLI];
 in this guide, we'll use the open source tool https://github.com/99designs/aws-vault[aws-vault].
@@ -1807,8 +1843,8 @@ cloudtrail_s3_bucket_name = "<CLOUDTRAIL_BUCKET_NAME>"
 config_s3_bucket_name     = "<CONFIG_BUCKET_NAME>"
 ----
 
-Take note of all of this data, as you'll need it again shortly!
-# TODO: Instead, talk here about how to write your infrastructure-live/common.hcl, and create variables for these outputs that you can use as locals in your other hcl files.
+Take note of all of this data. In fact, it's a good time to update your root-level
+`common.hcl` to include these account IDs.
 
 One other useful output will be the encrypted passwords for any IAM users you created:
 
@@ -2056,9 +2092,9 @@ variable "auto_deploy_permissions" {
 }
 ----
 
-# TODO: remove this directive! Don't test this. If you do, just do a plan test. Also we should provide all the necessary information for this.
-# TODO: We should also detail exactly how to set up your backend.hcl, or a configuration for the state s3 bucket.
-At this point, you'll want to test your code. See
+At this point, you'll want to test your code. To do this without deploying resources, run `terragrunt plan`. Make sure the plan output looks sane before proceeding.
+
+If you have time to write more robust testing, also see
 link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#manual_tests_terraform[Manual tests for Terraform code] and
 link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#automated_tests_terraform[Automated tests for Terraform code]
 for instructions.
@@ -2106,6 +2142,16 @@ terraform {
 [.exceptional]
 IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=2`), as shown above, with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors.
 
+Configure your Terraform backend:
+
+.infrastructure-live/logs/_global/account-baseline/terragrunt.hcl
+[source,hcl]
+----
+include {
+  path = find_in_parent_folders()
+}
+----
+
 Set the variables for the `account-baseline-app` module in this environment in the `inputs = { ... }` block of `terragrunt.hcl`:
 
 .infrastructure-live/logs/_global/account-baseline/terragrunt.hcl
@@ -2145,16 +2191,6 @@ The example above configures the logs account of an AWS Organization as follows:
 
 . **Allow access from the security account**: We configure IAM roles that IAM users in the security account will be
   able to assume to get access to the logs account.
-
-Configure your Terraform backend:
-
-.infrastructure-live/logs/_global/account-baseline/terragrunt.hcl
-[source,hcl]
-----
-include {
-  path = find_in_parent_folders()
-}
-----
 
 You're now going to use an IAM role to authenticate to the logs account. This IAM role is created automatically in each
 child account by `account-baseline-root` and has a default name of `OrganizationAccountAccessRole`. There are many ways
@@ -2605,8 +2641,9 @@ output "user_access_keys" {
 }
 ----
 
-# TODO: remove this, or explain in detail exactly how to test, don't just link to this page, it will confuse folks.
-At this point, you'll want to test your code. See
+At this point, you'll want to test your code. Run `terraform plan` to do plan testing, make sure there are no errors and the output looks sane.
+
+For more robust testing, also see
 link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#manual_tests_terraform[Manual tests for Terraform code] and
 link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#automated_tests_terraform[Automated tests for Terraform code]
 for instructions.
@@ -2654,6 +2691,16 @@ terraform {
 
 [.exceptional]
 IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=2`), as shown above, with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors.
+
+Configure your Terraform backend:
+
+.infrastructure-live/security/_global/account-baseline/terragrunt.hcl
+[source,hcl]
+----
+include {
+  path = find_in_parent_folders()
+}
+----
 
 Set the variables for the `account-baseline-security` module in this environment in the `inputs = { ... }` block of `terragrunt.hcl`:
 
@@ -2763,16 +2810,6 @@ The code above does the following:
   rest of your team in the appropriate groups. Like the root account, the code will also generate a password for each
   user and encrypt it with that user’s PGP key from Keybase (see below for how to handle the passwords).
 
-Configure your Terraform backend:
-
-.infrastructure-live/security/_global/account-baseline/terragrunt.hcl
-[source,hcl]
-----
-include {
-  path = find_in_parent_folders()
-}
-----
-
 Just as with the logs account, you're going to use the `OrganizationAccountAccessRole` IAM role created by
 `account-baseline-root` to authenticate to the security account. There are many ways to
 https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[assume an IAM role on the CLI];
@@ -2875,6 +2912,16 @@ terraform {
 [.exceptional]
 IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=2`), as shown above, with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors.
 
+Configure your Terraform backend:
+
+.infrastructure-live/stage/_global/account-baseline/terragrunt.hcl
+[source,hcl]
+----
+include {
+  path = find_in_parent_folders()
+}
+----
+
 Set the variables for the `account-baseline-app` module in this environment in the `inputs = { ... }` block of `terragrunt.hcl`:
 
 .infrastructure-live/stage/_global/account-baseline/terragrunt.hcl
@@ -2909,7 +2956,6 @@ inputs = {
   allow_dev_access_from_other_account_arns       = ["arn:aws:iam::<SECURITY_ACCOUNT_ID>:root"]
   allow_full_access_from_other_account_arns      = ["arn:aws:iam::<SECURITY_ACCOUNT_ID>:root"]
 
-  # TODO: Is this correct/needed for the shared-services account?
   # Allow a CI server in the shared-services account to assume the auto-deploy IAM role in this account
   allow_auto_deploy_from_other_account_arns      = ["arn:aws:iam::<SHARED_SERVICES_ACCOUNT_ID>:root"]
 }
@@ -2931,18 +2977,6 @@ The code above does the following:
 . **Configure cross-account IAM roles**. We then specify which other accounts are allowed to assume the IAM roles in
   this account. For the most part, we grant all permissions to the security account, so that by assigning users to IAM
   groups in that account, you'll be able to access IAM roles in all the other child accounts.
-
-# TODO: Does it matter what order things are in? Where we give this advice to configure the backend, probably it's better
-to tell people order the blocks like: terraform, include, locals, and finally inputs.
-Configure your Terraform backend:
-
-.infrastructure-live/stage/_global/account-baseline/terragrunt.hcl
-[source,hcl]
-----
-include {
-  path = find_in_parent_folders()
-}
-----
 
 Just as with the logs and security accounts, you're going to use the `OrganizationAccountAccessRole` IAM role created by
 `account-baseline-root` to authenticate to the stage account and all other child accounts. There are many ways to
