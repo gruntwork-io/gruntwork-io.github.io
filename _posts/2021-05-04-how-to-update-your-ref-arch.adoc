@@ -53,13 +53,14 @@ This guide consists of two main sections:
 
 === Background
 
-On https://blog.gruntwork.io/introducing-the-gruntwork-module-service-and-architecture-catalogs-eb3a21b99f70[August
-26th, 2020, we announced the initial release] of the Service Catalog in a private, invite-only alpha program. Since then
-we have expanded the catalog to be generally available, with all Gruntwork subscribers getting access to the services of
-the catalog. A _service_ includes everything you need in production, including the Terraform code for provisioning,
-Packer templates or Dockerfiles for configuration management, built-in monitoring (metrics, logging, alerting), built-in
-security features (SSH access, secrets management, server hardening, encryption in transit and at rest), and so on. This
-allows you to deploy infrastructure without writing any code.
+On August 26th, 2020, we announced the initial release of
+https://blog.gruntwork.io/introducing-the-gruntwork-module-service-and-architecture-catalogs-eb3a21b99f70[the Service
+Catalog] in a private, invite-only alpha program. Since then we have expanded the catalog to be generally available,
+with all Gruntwork subscribers getting access to the services of the catalog. A _service_ includes everything you need
+in production, including the Terraform code for provisioning, Packer templates or Dockerfiles for configuration
+management, built-in monitoring (metrics, logging, alerting), built-in security features (SSH access, secrets
+management, server hardening, encryption in transit and at rest), and so on. This allows you to deploy infrastructure
+without writing any code.
 
 Prior to the release of the Service Catalog, the Gruntwork Reference Architecture included a customized set of services
 in the form of a private `infrastructure-modules` repository for each customer. These services required continuous
@@ -192,7 +193,7 @@ inputs = {
 [NOTE]
 .Explanation
 ====
-In the non-Service Catalog flavor of the Reference Architecture, we had a root configuration for each account to ensure
+In the Reference Architecture v1.0, we had a root configuration for each account to ensure
 that we can create a different state bucket for each account. While this isn't necessary for the Service Catalog, we
 switch to a single root `terragrunt.hcl` config here (which is possible due to the advanced functions that are available
 in newer Terragrunt versions) because there are more common blocks that are necessary, and we want to keep these
