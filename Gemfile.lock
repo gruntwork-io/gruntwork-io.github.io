@@ -27,6 +27,15 @@ GEM
       eventmachine (>= 0.12.9)
       http_parser.rb (~> 0.6.0)
     eventmachine (1.2.7)
+    faraday (1.4.1)
+      faraday-excon (~> 1.1)
+      faraday-net_http (~> 1.0)
+      faraday-net_http_persistent (~> 1.1)
+      multipart-post (>= 1.2, < 3)
+      ruby2_keywords (>= 0.0.4)
+    faraday-excon (1.1.0)
+    faraday-net_http (1.0.1)
+    faraday-net_http_persistent (1.1.0)
     ffi (1.12.2)
     forwardable-extended (2.6.0)
     http_parser.rb (0.6.0)
@@ -52,6 +61,9 @@ GEM
       jekyll (>= 3.0.0)
     jekyll-feed (0.13.0)
       jekyll (>= 3.7, < 5.0)
+    jekyll-github-metadata (2.13.0)
+      jekyll (>= 3.4, < 5.0)
+      octokit (~> 4.0, != 4.4.0)
     jekyll-paginate (1.1.0)
     jekyll-redirect-from (0.16.0)
       jekyll (>= 3.3, < 5.0)
@@ -78,9 +90,13 @@ GEM
       rb-inotify (~> 0.9, >= 0.9.10)
     mercenary (0.4.0)
     mini_portile2 (2.5.0)
+    multipart-post (2.1.1)
     nokogiri (1.11.0.rc4)
       mini_portile2 (~> 2.5.0)
       racc (~> 1.4)
+    octokit (4.21.0)
+      faraday (>= 0.9)
+      sawyer (~> 0.8.0, >= 0.5.3)
     pathutil (0.16.2)
       forwardable-extended (~> 2.6)
     public_suffix (4.0.5)
@@ -91,6 +107,7 @@ GEM
     ref (2.0.0)
     rexml (3.2.4)
     rouge (3.19.0)
+    ruby2_keywords (0.0.4)
     s3_website (3.3.0)
       colored (= 1.2)
       configure-s3-website (= 2.2.0)
@@ -99,6 +116,9 @@ GEM
     safe_yaml (1.0.5)
     sassc (2.3.0)
       ffi (~> 1.9)
+    sawyer (0.8.2)
+      addressable (>= 2.3.5)
+      faraday (> 0.8, < 2.0)
     terminal-table (1.8.0)
       unicode-display_width (~> 1.1, >= 1.1.1)
     therubyracer (0.12.3)
@@ -114,6 +134,7 @@ DEPENDENCIES
   jekyll (~> 4.1)
   jekyll-asciidoc
   jekyll-feed
+  jekyll-github-metadata
   jekyll-paginate (= 1.1.0)
   jekyll-redirect-from (= 0.16.0)
   jekyll-sitemap (= 1.4.0)
@@ -124,4 +145,4 @@ DEPENDENCIES
   therubyracer (= 0.12.3)
 
 BUNDLED WITH
-   2.1.4
+   2.2.17

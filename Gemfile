@@ -15,3 +15,5 @@ end
 
 # https://github.com/jekyll/jekyll-redirect-from/issues/150
 Encoding.default_external = Encoding::UTF_8
+
+gem "jekyll-github-metadata", "~> 2.13"
