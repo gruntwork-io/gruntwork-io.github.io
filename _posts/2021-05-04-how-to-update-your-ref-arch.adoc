@@ -27,13 +27,18 @@ endif::[]
 == Intro
 
 This guide walks you through how to update v1.0 of the https://gruntwork.io/reference-architecture/[Gruntwork Reference
-Architecture] to use the
+Architecture], which uses a private `infrastructure-modules` repo, to v2.0, which uses the
 https://blog.gruntwork.io/introducing-the-gruntwork-module-service-and-architecture-catalogs-eb3a21b99f70[Gruntwork
 Service Catalog]. The Gruntwork Service Catalog is a set of dozens of highly configurable, battle-tested,
 production-grade _services_ that you can deploy off-the-shelf without writing any code. Many modules offered in the
 `infrastructure-modules` repository of the Gruntwork Reference Architecture are fully replaced with the Service Catalog,
 eliminating the need to maintain snapshots of the Services in your own repository.
 
+[.exceptional]
+TIP: The Landing Zone migration guide will be published soon.
+
+[.exceptional]
+TIP: To add Gruntwork Pipelines, follow the https://gruntwork.io/guides/automations/how-to-configure-a-production-grade-ci-cd-setup-for-apps-and-infrastructure-code/[Gruntwork Pipelines deployment guide].
 
 === What you'll learn in this guide
 
@@ -64,24 +69,24 @@ without writing any code.
 
 Prior to the release of the Service Catalog, the Gruntwork Reference Architecture included a customized set of services
 in the form of a private `infrastructure-modules` repository for each customer. These services required continuous
-maintenace from the end users to keep up to date with each change, including updating module references when new
+maintenance from the end-users to keep up to date with each change, including updating module references when new
 versions were released.
 
-With the Service Catalog, there is no longer a need to maintain a separate service module for every component you use.
-Instead, you can rely on the battle tested, Gruntwork maintained service module in the Service Catalog!
+Now with the Service Catalog, there is no longer a need to maintain a separate service module for every component you use.
+Instead, you can rely on the battle-tested, Gruntwork-maintained service module in the Service Catalog!
 
 If you haven't made any modifications to a service since receiving the Reference Architecture, we recommend updating
 your `infrastructure-live` configuration to use the service modules from the Service Catalog instead of using and
 maintaining your copy in `infrastructure-modules`. Using the Service Catalog directly has several advantages:
 
-* Keep up to date with module releases with a single version bump in your terragrunt live configuration, as opposed to
+* Keep up to date with module releases with a single version bump in your Terragrunt live configuration, as opposed to
   updating each module block reference.
 * Update to a new, backward incompatible Terraform version with a single version bump as well. No need to track backward
   incompatible syntactical changes in Terraform!
 * Rely on Gruntwork to provide feature updates and bug fixes to the services.
 
 Though the Service Catalog fully replaces the services defined in your `infrastructure-modules` repository, there are
-some differences that require you to make some modifications to Terragrunt configurations in your `infrastructure-live`
+some differences that require you to make modifications to Terragrunt configurations in your `infrastructure-live`
 repository before you can start using the Service Catalog.
 
 
@@ -91,9 +96,8 @@ repository before you can start using the Service Catalog.
 Your goal in this walkthrough is to replace references to `infrastructure-modules` with `terraform-aws-service-catalog`,
 within your `infrastructure-live` repo. You will follow a two-step process:
 
-* Prep your `infrastructure-live` repo with new Terragrunt configuration.
-* From that point onward, follow the per-service guides here to update each service to the
-  `terraform-aws-service-catalog` at `v0.35.4`.
+* Step 1: Prepare your Terragrunt `infrastructure-live` configuration to support the Service Catalog
+* Step 2: Update each Terragrunt live configuration to use the Service Catalog
 
 IMPORTANT: This guide assumes a minimum terragrunt version of
 https://github.com/gruntwork-io/terragrunt/releases/tag/v0.28.18[0.28.18]. If you are using an older terragrunt version,
