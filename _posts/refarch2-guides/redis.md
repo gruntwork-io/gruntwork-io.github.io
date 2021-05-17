@@ -1,0 +1,31 @@
+# Redis service migration guide
+
+Follow this guide to update the `redis` service to the Service Catalog.
+
+## Estimated Time to Migrate: 10 minutes per environment
+
+## New Required Inputs
+
+Configure these new inputs to migrate to the Service Catalog version of the module. They are now required.
+
+- `vpc_id`: Set this to the ID of the VPC where the redis cluster should be deployed. This should be pulled in using a `dependency` block against the `vpc-app` service, using the `vpc_id` output.
+- `subnet_ids`: Set this to the list of IDs of the VPC subnet where the redis cluster should be deployed. This should be pulled in using a `dependency` block against the `vpc-app` service, using the `private_persistence_subnet_ids` output.
+- `enable_multi_az`: Set this to the same value as `enable_automatic_failover`. This indicates whether or not to enable Multi AZ redis clusters.
+
+## Inputs for Backward Compatibility
+
+Configure the following new inputs to ensure your service continues to function with minimal interruption. These are necessary to maintain backward compatibility. *If left unset, you will risk redeploying the service and causing downtime.*
+
+- `alarms_sns_topic_arns`: Set this to the ARN of the SNS topic where CloudWatch alarm alerts should be sent. This should be pulled in using a `dependency` block.
+- `sns_topic_for_notifications`: Set this to the ARN of the SNS topic where Elasticache should stream failure alerts to. This should be pulled in with a `dependency` block against the `sns-topic` service, using the `topic_arn` output.
+- `allow_connections_from_cidr_blocks`: Set this to the list of CIDR blocks that should have access to Redis. This should be the CIDR blocks of the private-app layer of the VPC. This should be pulled in using a `dependency` block against the `vpc-app` service, using the `private_app_subnet_cidr_blocks` output.
+
+## Output Changes
+
+Update downstream dependency references to use the new names of these outputs, which were renamed in the Service Catalog version of the module.
+
+- `read_endpoints` **⇒** `reader_endpoint`: Previously we were returning all the read endpoints, but in actuality there is only one that should be used. This now returns a single read endpoint that properly load balances across all the read replicas.
+
+## Breaking Changes
+
+- This change is fully backward compatible.

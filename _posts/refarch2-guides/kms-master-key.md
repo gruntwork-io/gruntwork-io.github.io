@@ -1,0 +1,81 @@
+# kms-master-key service migration guide
+
+Follow this guide to update the kms-master-key service to the Service Catalog.
+
+## Estimated Time to Migrate: 10 minutes per environment
+
+## customer_master_keys Input
+
+Configure the new `customer_master_keys` map input variable. This variable consolidates the individual inputs from the previous module, making it possible to configure many CMKs in a single call to the module. All of the previous input variables are available within a map entry in `customer_master_keys`.
+
+For example, if you previously had:
+
+```
+  cmk_name = "cmk-dev"
+
+  cmk_administrator_iam_arns = [
+    "arn:aws:iam::792414341005:user/team@gruntwork.io",
+  ]
+
+  cmk_user_iam_arns = [
+    {
+      name       = ["arn:aws:iam::792414341005:user/team@gruntwork.io"]
+      conditions = []
+    },
+  ]
+
+  allow_manage_key_permissions_with_iam = true
+```
+
+This can be updated to:
+
+```
+  customer_master_keys = {
+    cmk-dev = {
+      cmk_administrator_iam_arns = [
+        "arn:aws:iam::792414341005:user/team@gruntwork.io",
+      ]
+      cmk_user_iam_arns = [
+        {
+          name       = ["arn:aws:iam::792414341005:user/team@gruntwork.io"]
+          conditions = []
+        },
+      ]
+      cmk_external_user_iam_arns            = []
+      allow_manage_key_permissions_with_iam = true
+    }
+  }
+```
+
+
+## Output Changes
+
+The following outputs were previously scalar string values:
+
+- `key_arn`
+- `key_id`
+- `key_alias`
+
+These are now map values, where the map key is the CMK name. For example, if your key name is `cmk-dev`, the outputs will be:
+
+```
+key_alias = {
+  "cmk-dev" = "alias/cmk-dev"
+}
+key_arn = {
+  "cmk-dev" = "arn:aws:kms:us-west-2:584401362948:key/f714d200-dff7-4572-94d2-de99d55052da"
+}
+key_id = {
+  "cmk-dev" = "f714d200-dff7-4572-94d2-de99d55052da"
+}
+```
+
+## State Migration Script
+
+Run the provided migration script (contents pasted below for convenience) to migrate the state in a backward compatible way:
+
+TODO
+
+## Breaking Changes
+
+This update is fully backward compatible.

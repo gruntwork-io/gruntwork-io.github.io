@@ -1,0 +1,74 @@
+# k8s-applications-namespace migration guide
+
+Follow this guide to update k8s-applications-namespace to the Service Catalog.
+
+## Estimated Time to Migrate: 10 minutes per environment
+
+## New generate block
+Add the following [`generate` block](https://terragrunt.gruntwork.io/docs/reference/config-blocks-and-attributes/#generate) to your `terragrunt.hcl`.
+
+```python
+# Generate a Kubernetes provider configuration for authenticating against the EKS cluster.
+generate "k8s_helm" {
+  path      = "k8s_helm_provider.tf"
+  if_exists = "overwrite_terragrunt"
+  contents = templatefile(
+    find_in_parent_folders("provider_k8s_helm_for_eks.template.hcl"),
+    { eks_cluster_name = dependency.eks_cluster.outputs.eks_cluster_name },
+  )
+}
+```
+
+This block points to a file `provider_k8s_helm_for_eks.template.hcl`, which you'll have to create at the root of the repo. It should be a sibling of the `terragrunt_service_catalog.hcl` file you added as part of preparing the repo for the migration.
+
+Paste the following contents into the `provider_k8s_helm_for_eks.template.hcl` file:
+
+```python
+data "aws_eks_cluster" "cluster_for_provider" {
+  name = "${eks_cluster_name}"
+}
+
+provider "kubernetes" {
+  load_config_file       = false
+  host                   = data.aws_eks_cluster.cluster_for_provider.endpoint
+  cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster_for_provider.certificate_authority.0.data)
+
+  # EKS clusters use short-lived authentication tokens that can expire in the middle of an 'apply' or 'destroy'. To
+  # avoid this issue, we use an exec-based plugin here to fetch an up-to-date token. Note that this code requires the
+  # kubergrunt binary to be installed and on your PATH.
+  exec {
+    api_version = "client.authentication.k8s.io/v1alpha1"
+    command     = "kubergrunt"
+    args        = ["eks", "token", "--cluster-id", "${eks_cluster_name}"]
+  }
+}
+
+provider "helm" {
+  kubernetes {
+    host                   = data.aws_eks_cluster.cluster_for_provider.endpoint
+    cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster_for_provider.certificate_authority.0.data)
+
+    # EKS clusters use short-lived authentication tokens that can expire in the middle of an 'apply' or 'destroy'. To
+    # avoid this issue, we use an exec-based plugin here to fetch an up-to-date token. Note that this code requires the
+    # kubergrunt binary to be installed and on your PATH.
+    exec {
+      api_version = "client.authentication.k8s.io/v1alpha1"
+      command     = "kubergrunt"
+      args        = ["eks", "token", "--cluster-id", "${eks_cluster_name}"]
+    }
+  }
+}
+```
+
+## State Migration Script
+
+Run the provided migration script to migrate the state in a backward compatible way:
+
+TODO (insert)
+
+## Breaking Changes
+
+- Two resources must be replaced, and this is unavoidable. We switched from using Tiller to using Helm in the Service Catalog. The provided migration script will migrate most of your resources, but these two will still need to be replaced during the `apply`:
+    - `module.namespace.module.namespace_roles.kubernetes_role.rbac_helm_metadata_access[0]`
+    - `module.namespace.module.namespace_roles.kubernetes_role.rbac_helm_resource_access[0]`
+- Note that the RBAC roles for Tiller will be recreated under the new name. If you have any RBAC Role bindings that use the Tiller based names, you will want to update all the role bindings to remove references to the Tiller roles first, before updating this module. Then, you can add back in the new roles after deploying the update.

@@ -1,0 +1,87 @@
+# CloudTrail service migration guide
+
+**NOTE: There is no service catalog module for CloudTrail, but the library module (`[cloudtrail](https://github.com/gruntwork-io/terraform-aws-security/blob/v0.46.6/modules/cloudtrail/)`) is designed to be deployed directly, like a Service Catalog module.**
+
+## Estimated Time to Migrate: 15 minutes per environment
+
+## Output Changes
+
+New Outputs:
+- `s3_bucket_arn` - ARN of the S3 bucket where CloudTrail is sending logs.
+
+## State Migration Script
+
+Run the provided migration script (contents pasted below for convenience) to migrate the state in a backward compatible way:
+
+```python
+#!/bin/bash
+# This script contains the state migration instructions for migrating CloudTrail from the old
+# style Gruntwork Reference Architecture. Install this script and run it from the terragrunt live configuration
+# directory of the module to perform the state operations.
+#
+
+# Import the helper functions from the repo root.
+readonly infra_live_repo_root="$(git rev-parse --show-toplevel)"
+source "$infra_live_repo_root/_scripts/migration_helpers.sh"
+
+function run {
+  fuzzy_move_state \
+    'module.cloudtrail.aws_cloudtrail.cloudtrail\[0\]' \
+    'aws_cloudtrail.cloudtrail[0]' \
+    'CloudTrail trail'
+  fuzzy_move_state \
+    'module.cloudtrail.null_resource.dependency_getter' \
+    'null_resource.dependency_getter' \
+    'null_resource'
+  fuzzy_move_state \
+    'module.cloudtrail.null_resource.dependency_getter' \
+    'null_resource.dependency_getter' \
+    'cloudtrail null_resource'
+  fuzzy_move_state \
+    'module.cloudtrail.module.bucket.null_resource.dependency_getter' \
+    'module.bucket.null_resource.dependency_getter' \
+    'bucket null_resource'
+  fuzzy_move_state \
+    'module.cloudtrail.module.bucket.aws_s3_bucket.cloudtrail_with_logs_archived\[0\]' \
+    'module.bucket.module.private_bucket.aws_s3_bucket.bucket[0]' \
+    'CloudTrail bucket'
+  fuzzy_move_state \
+    'module.cloudtrail.module.bucket.aws_s3_bucket_public_access_block.public_access_trail\[0\]' \
+    'module.bucket.module.private_bucket.aws_s3_bucket_public_access_block.public_access[0]' \
+    'CloudTrail bucket public access'
+  fuzzy_move_state \
+    'module.cloudtrail.module.bucket.aws_s3_bucket_policy.cloudtrail_access_policy\[0\]' \
+    'module.bucket.module.private_bucket.aws_s3_bucket_policy.bucket_policy[0]' \
+    'CloudTrail bucket policy'
+
+  local -r original_key_addr="module.cloudtrail.module.bucket.module.cloudtrail_cmk.aws_kms_alias.master_key"
+  local key_name=$(terragrunt state list | grep "$original_key_addr" | grep -oE '\[".*"\]' | tr -d '"[]')
+  if [[ "$key_name" == "" ]]; then
+    log "Unable to find key in terraform state. Skipping cloudtrail key migration."
+  else
+    fuzzy_move_state \
+      "module.bucket.module.cloudtrail_cmk.aws_kms_alias.master_key\[\"$key_name\"\]" \
+      "module.bucket.module.cloudtrail_cmk.aws_kms_alias.master_key[\"$key_name\"]" \
+      'CloudTrail kms key alias'
+    fuzzy_move_state \
+      "module.bucket.module.cloudtrail_cmk.aws_kms_key.master_key\[\"$key_name\"\]" \
+      "module.bucket.module.cloudtrail_cmk.aws_kms_key.master_key[\"$key_name\"]" \
+      'CloudTrail kms key'
+    fuzzy_move_state \
+      "module.cloudtrail.module.bucket.module.cloudtrail_cmk.null_resource.dependency_getter\[\"$key_name\"\]" \
+      "module.bucket.module.cloudtrail_cmk.null_resource.dependency_getter[\"$key_name\"]" \
+      'CloudTrail kms null_resource'
+
+  fi
+}
+
+run "$@"
+```
+
+## Advisories
+
+This update is fully backward compatible. Note that you will see the bucket policy removed from the bucket, but an identical policy created as a policy document. This ends up being a no-op, and is merely due to code reorganization.
+
+Encryption will be enabled on the CloudTrail S3 bucket. This is not a breaking change, but note that this cannot be disabled.
+
+For non-security accounts, you may notice that the KMS key changes from a key ID to an alias. This is only an update to how the key is identified, and does not affect the encryption of CloudTrail logs.

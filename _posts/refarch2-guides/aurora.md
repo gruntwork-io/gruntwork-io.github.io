@@ -1,0 +1,30 @@
+# Aurora service migration guide
+
+Follow this guide to update the `aurora` service to the Service Catalog.
+
+## Estimated Time to Migrate: 10 minutes per environment
+
+## New Required Inputs
+
+Configure these new inputs to migrate to the Service Catalog version of the module. They are now required.
+
+- `vpc_id`: Set this to the ID of the VPC where the Aurora cluster is deployed. This should be pulled in with a `[dependency` block](https://terragrunt.gruntwork.io/docs/reference/config-blocks-and-attributes/#dependency) against the `vpc-app` service, using the `vpc_id` output.
+- `aurora_subnet_ids`: Set this to the list of VPC subnet IDs where the Aurora cluster is deployed. This should be pulled in with a `[dependency` block](https://terragrunt.gruntwork.io/docs/reference/config-blocks-and-attributes/#dependency) against the `vpc-app` service, using the `private_persistence_subnet_ids` output.
+
+## Inputs for Backward Compatibility
+
+Configure the following new inputs to ensure your service continues to function with minimal interruption. These are necessary to maintain backward compatibility. *If left unset, you will risk redeploying the service and causing downtime.*
+
+- `kms_key_arn`: Set this to the CMK of the account. This is used to encrypt the storage, and if you don't set this correctly, the ***entire Aurora database*** will be recreated. This should be pulled in with a `[dependency` block](https://terragrunt.gruntwork.io/docs/reference/config-blocks-and-attributes/#dependency) against the `kms-master-key` service, using the `key_arn` output.
+- `alarms_sns_topic_arns`: Set this to the ARN of the SNS topic where CloudWatch alarms should send alerts to. This should be pulled in with a `[dependency` block](https://terragrunt.gruntwork.io/docs/reference/config-blocks-and-attributes/#dependency) against the `sns-topic` service, using the `topic_arn` output.
+- `allow_connections_from_cidr_blocks`: Set this to the list of CIDR blocks that should have access to the Aurora database. This should be the CIDR blocks of the private-app layer of the VPC. This should be pulled in using a `[dependency` block](https://terragrunt.gruntwork.io/docs/reference/config-blocks-and-attributes/#dependency) against the `vpc-app` service, using the `private_app_subnet_cidr_blocks` output.
+
+## Renamed Inputs
+
+Rename the following inputs to use the Service Catalog version of the module:
+
+- `allow_connections_from_openvpn_server` **⇒ `allow_connections_from_security_groups` : Set this to the actual security group of the OpenVPN server. This should be pulled in with a `[dependency` block](https://terragrunt.gruntwork.io/docs/reference/config-blocks-and-attributes/#dependency) against the `openvpn-server` service, using the `security_group_id` output.
+
+## Breaking Changes
+
+- If you did not configure a replicated Database cluster, a couple of CloudWatch alarms related to replication will be destroyed. These alarms are not useful for single RDS database clusters, so the Service Catalog module only enables them on replicated clusters.

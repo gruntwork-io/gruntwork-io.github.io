@@ -1,0 +1,79 @@
+# Jenkins service migration guide
+
+Follow this guide to update the Jenkins service to the Service Catalog.
+
+## Estimated Time to Migrate: 1 hour per Jenkins server
+
+## AMI
+
+Create a new AMI using [the packer
+template](https://github.com/gruntwork-io/terraform-aws-service-catalog/blob/master/modules/mgmt/jenkins/jenkins-ubuntu.json)
+provided in the [`jenkins` service module in
+`terraform-aws-service-catalog`](https://github.com/gruntwork-io/terraform-aws-service-catalog/tree/master/modules/mgmt/jenkins).
+Follow the instructions [in this
+documentation](https://github.com/gruntwork-io/terraform-aws-service-catalog/blob/master/core-concepts.md#how-to-build-amis-for-the-service-catalog)
+to build the AMI using [packer](https://www.packer.io/).
+
+**You must build a new AMI using the packer template provided in the Service Catalog**. The `jenkins` module does a
+rolling deployment whenever any configuration changes. The old AMI provided in the Reference Architecture is
+incompatible with the user data instance boot script that the Service Catalog `jenkins `module uses. **The Jenkins server
+will fail to come up if you do not swap the AMI**.
+
+Once you build the new AMI, update the `ami` input variable with the new AMI ID.
+
+
+## New Required Inputs
+
+Configure these new inputs to migrate to the Service Catalog version of the module. They are now required.
+
+- `ami_filters`: Set this to `null` . This provides an alternative mechanism to lookup the AMI to use dynamically, but
+  since you are providing the AMI ID directly, this variable needs to be turned off.
+- `vpc_id`: Set this to the ID of the VPC where the Jenkins Server should be deployed. This should be pulled in using a
+  `dependency` block against the `vpc-mgmt` service, using the `vpc_id` output.
+- `alb_subnet_ids`: Set this to the list of IDs of the VPC subnet where the Jenkins Server ALB should be deployed. This should
+  be pulled in using a `dependency` block against the `vpc-mgmt` service, using the `private_subnet_ids` output.
+- `jenkins_subnet_id`: Set this to the ID of the VPC subnet where the Jenkins Server should be deployed. This should
+  be pulled in using a `dependency` block against the `vpc-mgmt` service, using the `private_subnet_ids` output and
+  indexing to the first element (e.g., `dependency.vpc_mgmt.outputs.private_subnet_ids[0]`).
+- `hosted_zone_id`: Set this to the ID of the Route 53 Hosted Zone of the domain used to map to the Jenkins server. This
+  should be pulled in using a `dependency` block against the `route53-public` service, using the
+  `primary_domain_hosted_zone_id` output.
+
+
+## Inputs for Backward Compatibility
+
+Configure the following new inputs to ensure your service continues to function with minimal interruption. These are necessary to maintain backward compatibility. *If left unset, you will risk redeploying the service and causing downtime.*
+
+- `alarms_sns_topic_arn`: Set this to the ARNs of SNS topics for receiving alerts from CloudWatch. This should be pulled in with a
+  `dependency` block against the `sns-topic` service, using the `topic_arn` output.
+- `allow_incoming_http_from_security_group_ids`: Set this to the list of security groups that should be able to access
+  the Jenkins endpoint. This should include the security group ID of the network bastion server (linux host or OpenVPN
+  server) in your environment (can be pulled in using a `dependency` block against the `bastion-host` or
+  `openvpn-server` service, using the `security_group_id` output).
+- `allow_incoming_ssh_from_security_group_ids`: Set this to the list of security groups that should be able to SSH into
+  the Jenkins server. This should include the security group ID of the network bastion server (linux host or OpenVPN
+  server) in your environment (can be pulled in using a `dependency` block against the `bastion-host` or
+  `openvpn-server` service, using the `security_group_id` output).
+- `ssh_grunt_iam_group`: Set this to the string `"ssh-grunt-users"` if you are using SSH grunt.
+- `ssh_grunt_iam_group_sudo`: Set this to the string `"ssh-grunt-sudo-users"` if you are using SSH grunt.
+
+
+## State Migration Script
+
+There are no state migration scripts for this service.
+
+
+## Breaking Changes
+
+- **Cluster outage**.
+    - **Unavoidable downtime (~15-30 minutes)**: Due to the way the `jenkins-server` module is designed, any change to
+      the cluster configuration (such as the user data script) will result in a rebuild of the Jenkins Server. Since the
+      Jenkins server uses a single EBS data volume attached to the server, there is no way to rotate the Jenkins server
+      without downtime. You can expect around 15-30 minutes of downtime to the Jenkins server during this process.
+    - A number of IAM policies were reorganized in the module. This translates to a few recreations of IAM policies
+      (`destroy` + `create`). Since they apply at the policy level, these should not cause any service disruptions.
+      However, you may experience a brief (<1 minute) outage in AWS access from your services while the IAM policies are
+      being recreated.
+    - The CloudWatch alarms for the Jenkins Server were reorganized in the module. This translates to a few recreations of the
+      CloudWatch Alarms (`destroy` + `create`), and you may experience a brief (<1 minute) outage in monitoring
+      alarms.

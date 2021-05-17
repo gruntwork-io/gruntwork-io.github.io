@@ -1,0 +1,156 @@
+# OpenVPN Server service migration guide
+
+Follow this guide to update the `openvpn-server` service to the Service Catalog.
+
+## Estimated Time to Migrate: 30 minutes per environment
+
+## New AMI
+
+Build a new AMI using the `packer` template in the Service Catalog (`[modules/mgmt/openvpn-server/openvpn-server.json](https://github.com/gruntwork-io/terraform-aws-service-catalog/blob/v0.28.0/modules/mgmt/openvpn-server/openvpn-server.json)`).
+
+Follow [the instructions in the Service Catalog repository](https://github.com/gruntwork-io/terraform-aws-service-catalog/blob/master/core-concepts.md#how-to-build-amis-for-the-service-catalog) to build a new AMI, and then set the `ami` input variable to the new AMI ID.
+
+Note that this by itself will not rotate your existing OpenVPN server, and is thus a backward compatible change.
+
+## ca_cert_fields Input
+
+Configure the new `ca_cert_fields` input.
+
+This input consolidates the `ca_locality`, `ca_org_unit`, `ca_country`, `ca_state`, `ca_email`, `ca_org` inputs from the old module into a single object. You can configure this new input to use the same values as what you had for the old variables.
+
+For example, if you had:
+
+```python
+inputs = {
+  ca_country  = "US"
+  ca_state    = "AZ"
+  ca_locality = "Phoenix"
+  ca_org      = "rasbox"
+  ca_org_unit = "IT"
+  ca_email    = "support@gruntwork.io"
+}
+```
+
+Convert these to use `ca_cert_fields`:
+
+```python
+inputs = {
+  ca_cert_fields = {
+    ca_country  = "US"
+    ca_state    = "AZ"
+    ca_locality = "Phoenix"
+    ca_org      = "rasbox"
+    ca_org_unit = "IT"
+    ca_email    = "support@gruntwork.io"
+  }
+}
+```
+
+## vpn_route_cidr_blocks Input
+
+Configure the new `vpn_route_cidr_blocks`. This should be the list of VPC CIDR blocks that the VPN has access to.
+
+This variable was previously handled by the `current_vpc_name` and `other_vpc_names` variables. To convert to the new `vpn_route_cidr_blocks` input, setup a new `dependency` block for each VPC name and use the `vpc_cidr_block` output. For example, if you had:
+
+```python
+inputs = {
+  current_vpc_name = "mgmt"
+  other_vpc_names = ["dev"]
+}
+```
+
+Convert to:
+
+```python
+dependency "mgmt_vpc" {
+  config_path = "../vpc"
+}
+
+dependency "dev_vpc" {
+  config_path = "../../dev/vpc"
+}
+
+inputs = {
+  vpn_route_cidr_blocks = [
+    dependency.mgmt_vpc.outputs.vpc_cidr_block,
+    dependency.dev_vpc.outputs.vpc_cidr_block,
+  ]
+}
+```
+
+## New Required Inputs
+
+Configure these new inputs to migrate to the Service Catalog version of the module. They are now required.
+
+- `vpc_id`: Set this to the ID of the VPC where the openvpn server should be deployed. This should be pulled in using a `dependency` block against the `vpc-mgmt` service, using the `vpc_id` output.
+- `subnet_ids`: Set this to the list of IDs of the VPC subnet where the openvpn server should be deployed. This should be pulled in using a `dependency` block against the `vpc-mgmt` service, using the `public_subnet_ids` output.
+- `ami_filters`: Set this to `null` . This provides an alternative mechanism to lookup the AMI to use dynamically, but since you are providing the AMI ID directly, this variable needs to be turned off.
+
+## Inputs for Backward Compatibility
+
+Configure the following new inputs to ensure your service continues to function with minimal interruption. These are necessary to maintain backward compatibility. *If left unset, you will risk redeploying the service and causing downtime.*
+
+- `kms_key_arn`: Set this to the CMK of the account. This is used to encrypt the backup files, and if you don't set this correctly, the OpenVPN server will not properly restore the existing configuration. This should be pulled in with a `[dependency` block](https://terragrunt.gruntwork.io/docs/reference/config-blocks-and-attributes/#dependency) against the `kms-master-key` service, using the `key_arn` output.
+- `alarms_sns_topic_arns`: Set this to the ARN of the SNS topic where CloudWatch alarms should send alerts to. This should be pulled in with a `[dependency` block](https://terragrunt.gruntwork.io/docs/reference/config-blocks-and-attributes/#dependency) against the `sns-topic` service, using the `topic_arn` output.
+
+## Updated Inputs
+
+Update the following input to the new format to use the Service Catalog version of the module:
+
+- `domain_name`: Set this to the base domain name. In the Service Catalog, this variable is no longer the full domain name and instead is the base domain name. The final domain name will be `<name>.<domain_name>`.
+
+## Output Changes
+
+The following outputs were removed due to redundancy with the input variables. Update downstream dependency references to statically compute these values in the same way as the input variables:
+
+- `dns_name`
+- `vpn_routes`
+
+## State Migration Script
+
+Run the provided migration script (contents pasted below for convenience) to migrate the state in a backward compatible way:
+
+```python
+#!/bin/bash
+# This script contains the state migration instructions for migrating openvpn-server to the Service Catalog from the old
+# style Gruntwork Reference Architecture. Install this script and run it from the terragrunt live configuration
+# directory of the module to perform the state operations.
+#
+
+# Import the helper functions from the repo root.
+readonly infra_live_repo_root="$(git rev-parse --show-toplevel)"
+source "$infra_live_repo_root/_scripts/migration_helpers.sh"
+
+function run {
+  fuzzy_move_state \
+    'aws_s3_bucket.openvpn$' \
+    'module.openvpn.module.backup_bucket.aws_s3_bucket.bucket[0]' \
+    'Backup S3 bucket'
+
+  fuzzy_move_state \
+    'aws_s3_bucket_public_access_block.public_access$' \
+    'module.openvpn.module.backup_bucket.aws_s3_bucket_public_access_block.public_access[0]' \
+    'Backup S3 Bucket Public Access policy'
+
+  fuzzy_move_state \
+    'aws_cloudwatch_metric_alarm.asg_high_cpu_utilization' \
+    'module.ec2_baseline.module.high_asg_cpu_usage_alarms.aws_cloudwatch_metric_alarm.asg_high_cpu_utilization[0]' \
+    'High CPU Utilization Alarm'
+
+  fuzzy_move_state \
+    'aws_cloudwatch_metric_alarm.asg_high_memory_utilization' \
+    'module.ec2_baseline.module.high_asg_memory_usage_alarms.aws_cloudwatch_metric_alarm.asg_high_memory_utilization[0]' \
+    'High Memory Utilization Alarm'
+
+  fuzzy_move_state \
+    'aws_cloudwatch_metric_alarm.asg_high_disk_utilization' \
+    'module.ec2_baseline.module.high_asg_disk_usage_root_volume_alarms.aws_cloudwatch_metric_alarm.asg_high_disk_utilization[0]' \
+    'High Disk Utilization Alarm'
+}
+
+run "$@"
+```
+
+## Breaking Changes
+
+- **Cluster outage:** The IAM policies attached to the IAM role of the OpenVPN server need to be recreated due to a reorganization of how the policies are attached. This means that there will be a brief outage (< 1 minute) in log aggregation and metric reporting while the IAM policies are being recreated. This is unavoidable.

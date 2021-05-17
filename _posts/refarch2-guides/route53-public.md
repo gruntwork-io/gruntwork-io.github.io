@@ -1,0 +1,89 @@
+# Route 53 (public) migration guide
+
+Follow this guide to update the route53-public service to the Service Catalog.
+
+## Estimated Time to Migrate: 5-10 minutes per environment
+
+## New Required Inputs
+
+Configure these new inputs to migrate to the Service Catalog version of the module. They are now required.
+
+- `public_zones`: You must define the domain in a `public_zones` map.
+
+For example, if you had
+
+```bash
+inputs = {
+  primary_domain_name         = "example.com."
+  primary_domain_name_comment = "HostedZone created by Route53 Registrar"
+}
+```
+
+Change it to:
+
+```
+public_zones = {
+    "example.com." = {
+      comment = "HostedZone created by Route53 Registrar"
+      base_domain_name_tags = {}
+      created_outside_terraform = false
+      force_destroy = false
+      tags = {}
+      provision_wildcard_certificate = false
+    }
+  }
+```
+
+## Removed Inputs
+
+Remove the following inputs as they are not present in the Service Catalog version of the module:
+
+- `primary_domain_name`: This input in route53-public has been removed and replaced with a new input, `public_zones`, described above. Use this value as the key of the `public_zone`.
+- `primary_domain_name_comment`: This input in route53-public has been removed and replaced with the `comment` field of the `public_zones` map.
+
+## Output Changes
+
+Update downstream dependency references to use the new names of these outputs, which were renamed in the Service Catalog version of the module.
+
+- `primary_domain_name`: This output in route53-public has been removed and replaced with a new output, `public_domain_names`, which is a list of domain names. If your `public_zones` map contains only one domain, this output will have only one element.
+- `primary_domain_hosted_zone_id`: This output in route53-public has been removed and replaced with a new output, `public_hosted_zones_ids`, which is a list of zone IDs. If your `public_zones` map contains only one domain, this output will have only one element.
+- `primary_domain_hosted_zone_name_servers`: This output in route53-public has been removed and replaced with a new output, `public_hosted_zones_name_servers`, which is a list of lists, where each element of the list is a list of name servers for a domain in the list of `public_domain_names`.  If your `public_zones` map contains only one domain, this output will have only one element.
+- New output `public_hosted_zone_map` contains a map of domain names to hosted zone IDs.
+
+## State Migration Script
+
+Run the provided migration script (contents pasted below for convenience) to migrate the state in a backward compatible way:
+
+```python
+#!/bin/bash
+# This script contains the state migration instructions for migrating route53-public to the Service Catalog from the old
+# style Gruntwork Reference Architecture. Install this script and run it from the terragrunt live configuration
+# directory of the module to perform the state operations.
+#
+
+set -e
+set -o pipefail
+
+# Import the helper functions from the repo root.
+readonly infra_live_repo_root="$(git rev-parse --show-toplevel)"
+source "$infra_live_repo_root/_scripts/migration_helpers.sh"
+
+function run {
+  local public_domain_name=$(grep -E '^\s*primary_domain_name\s*=\s*' terragrunt.hcl | grep -oE '".*"' | tr -d '"')
+  if [[ "$public_domain_name" == "" ]]; then
+    log "Unable to find domain in terragrunt.hcl. Skipping domain name migration."
+  else
+    # Move the dns record to the new map location
+    fuzzy_move_state \
+      'aws_route53_zone.primary_domain$' \
+      "aws_route53_zone.public_zones[\"$public_domain_name\"]" \
+      'Route53 Zone'
+  fi
+}
+
+run "$@"
+```
+
+## Breaking Changes
+
+- This change is fully backward compatible. You will notice the creation of a `null_resource` in the plan and apply. This can be safely ignored.

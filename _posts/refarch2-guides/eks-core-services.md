@@ -1,0 +1,73 @@
+# eks-core-services migration guide
+
+Follow this guide to update eks-core-services to the Service Catalog.
+
+## Estimated Time to Migrate: 30 minutes per environment
+
+## New Required Inputs
+
+Configure these new inputs to migrate to the Service Catalog version of the module. They are now required.
+
+- `vpc_id`: Set this to the ID of the VPC where the EKS cluster is deployed. This should be pulled in with a `[dependency` block](https://terragrunt.gruntwork.io/docs/reference/config-blocks-and-attributes/#dependency) against the `vpc-app` service, using the `vpc_id` output.
+- `eks_cluster_name`: Set this to the `eks_cluster_name` output of the EKS cluster. This should be pulled in with a `[dependency` block](https://terragrunt.gruntwork.io/docs/reference/config-blocks-and-attributes/#dependency) against the `eks-cluster` service.
+- `eks_iam_role_for_service_accounts_config`: For now, hard-code the values for the OpenID Connect provider ARN and URL by running this command:
+    ```
+    aws iam list-open-id-connect-providers | jq -r '.OpenIDConnectProviderList[].Arn
+    ```
+    The last part of the ARN is the URL:
+    ```
+    arn:aws:iam::<ACCOUNT_ID>:oidc-provider/<OpenID_Connect_Provider_URL>
+    ```
+    For now, you will have something like:
+    ```
+    eks_iam_role_for_service_accounts_config = {
+      openid_connect_provider_arn = "arn:aws:iam::<ACCOUNT_ID>:oidc-provider/oidc.eks.<REGION>.amazonaws.com/id/<HASH>"
+      openid_connect_provider_url = "oidc.eks.<REGION>.amazonaws.com/id/<HASH>"
+    }
+    ```
+    You can update this input from a hard-coded map to the `eks_iam_role_for_service_accounts_config` output of the `eks_cluster` dependency only *after migrating the `eks-cluster` service*.
+- `worker_vpc_subnet_ids`: Set this to the empty list `[]`. This is newly required for configuring EKS worker nodes if pods are to be scheduled on Fargate. For the migration, none of the pods are being scheduled on Fargate.
+- `pod_execution_iam_role_arn`: Set this to `null`. This is newly required for configuring EKS workers on Fargate. For the migration, none of the pods are being scheduled on Fargate.
+
+## New Optional Input
+
+- `enable_cluster_autoscaler`: *Note: You can set this to `false` to disable the new cluster autoscaler only if you are deploying with Terraform `0.13` or newer. On older versions, the migration process will start the cluster autoscaler and cannot be disabled.* Set to `false` to disable. Otherwise, it is not necessary to specify this input.
+
+## Migration Steps
+
+### State Migration Script
+
+Run the provided migration script (contents pasted below for convenience) to migrate the state in a backward compatible way:
+
+TODO (insert)
+
+
+### After running `apply`, do these steps
+
+1. You need to restart these deployments and daemonsets so that they pick up the new IAM Role for Service Accounts changes and have permissions to hit the AWS APIs.
+
+    ```
+    kubectl -n kube-system rollout restart deploy external-dns
+    kubectl -n kube-system rollout restart deploy cluster-autoscaler-aws-cluster-autoscaler-chart
+    kubectl -n kube-system rollout restart ds aws-for-fluent-bit
+    ```
+2. Update ALB Ingress Controller Tags
+    You may need to update the tags on the ALB ingress controller. Run the following command, replacing `REGION` with yours.
+    ```
+    aws ec2 describe-security-groups --filters 'Name=tag-key,Values=ingress.k8s.aws/cluster' --query 'SecurityGroups[*].GroupName' --region REGION
+    ```
+    If you get no results, you have nothing left to do.
+
+    If you get results, follow the instructions in *step 4* of the [migration guide](https://github.com/gruntwork-io/terraform-aws-eks/releases/tag/v0.28.0).
+
+## Breaking Changes
+
+- **Cluster outage.** The IAM policies attached to the roles of the worker instances of the EKS cluster need to be recreated due to a reorganization of how the policies are attached. This means that there will be a brief outage (< 1 minute) in log aggregation and metric reporting while the IAM policies are being recreated. This is unavoidable.
+- As part of the above point, the following resources will be destroyed (and then recreated). This will not cause data to be deleted.
+    - `aws_iam_role_policy_attachment.worker_alb_ingress_controller_policy_attachment`
+    - `aws_iam_role_policy_attachment.worker_k8s_external_dns_policy_attachment`
+    - `module.alb_ingress_controller_iam_policy.aws_iam_policy.alb_ingress_controller[0]`
+    - `module.k8s_external_dns_iam_policy.aws_iam_policy.k8s_external_dns[0]`
+- The `k8s_cluster_autoscaler` will be deployed unless you are using Terraform version `0.13` or newer _and_ you set `enable_cluster_autoscaler` to `false`. If it is deployed, the following resources will be created.
+    - `module.k8s_cluster_autoscaler.helm_release.k8s_autoscaler`
+    - `module.k8s_cluster_autoscaler.null_resource.dependency_getter`
