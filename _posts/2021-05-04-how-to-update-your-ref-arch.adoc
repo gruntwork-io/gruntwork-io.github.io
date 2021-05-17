@@ -428,14 +428,14 @@ Here are the steps you can take to update a single service's live configuration:
     * Change the `include` path to `find_in_parent_folders("terragrunt_service_catalog.hcl")`. This ensures that you use the
       Service Catalog compatible root config you created in the previous step.
     * Change the `terraform.source` attribute to point to the corresponding Terraform module in the
-      `terraform-aws-service-catalog` repo. When updating the source, make sure to set the ref to target `v0.35.4`.
+      `terraform-aws-service-catalog` repo. When updating the source, make sure to set the ref to target `v0.35.5`.
 
 +
 [NOTE]
 .Explanation
 ====
-This migration guide targets `v0.35.4` of the Service Catalog. Newer versions may require additional state migrations
-that are not covered by the automated scripts. If you wish to update further, first update to `v0.35.4` and then read
+This migration guide targets `v0.35.5` of the Service Catalog. Newer versions may require additional state migrations
+that are not covered by the automated scripts. If you wish to update further, first update to `v0.35.5` and then read
 the migration guides in the release notes of the Service Catalog to bump beyond that version.
 ====
 
