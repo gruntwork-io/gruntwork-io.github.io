@@ -456,8 +456,8 @@ the migration guides in the release notes of the Service Catalog to bump beyond 
 
 . Once you verify the state backend configuration is valid, you will want to perform the state migration operations:
 
-.. *Make a backup of the state file* using the following command: `terragrunt state pull > backup.tfstate
-   --terragrunt-source ...`. You can use this to rollback the state to before you attempted the migration with the
+.. *Make a backup of the state file* using the following command: `terragrunt state pull > backup.tfstate`
+   You can use this to rollback the state to before you attempted the migration with the
    following command: `terragrunt state push "$(pwd)/backup.tfstate"`.
 
 * NOTE: Make sure to use the Terraform version that is required for your module, as specified in the
