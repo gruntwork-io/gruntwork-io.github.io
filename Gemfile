@@ -9,7 +9,7 @@ group :jekyll_plugins do
   gem 'less', '2.6.0'
   gem 'jekyll-asciidoc'
   gem 'jekyll-toc'
-  gem 'nokogiri', '1.11.0.rc4' # Addresssing security issue in earlier versions of this library
+  gem 'nokogiri', '1.11.4' # Addresssing security issue in earlier versions of this library
   gem 'jekyll-feed'
 end
 
