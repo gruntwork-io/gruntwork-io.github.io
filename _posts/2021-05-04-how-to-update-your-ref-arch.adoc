@@ -439,10 +439,11 @@ that are not covered by the automated scripts. If you wish to update further, fi
 the migration guides in the release notes of the Service Catalog to bump beyond that version.
 ====
 
-    * Convert each service listed in `dependencies` to a `dependency` block. Use <<service_migration_guides,the dedicated
-      service migration guide>> as a reference for what dependency blocks are needed.
     * Update the inputs to adapt to the Service Catalog Terraform module, using the dedicated service migration guide listed
       below. You can also use `terragrunt validate-inputs` as a sanity check.
+        * As part of updating inputs, use `dependency` blocks. Use <<service_migration_guides,the dedicated
+          service migration guide>> as a reference for what dependency blocks are needed.
+        * Remove the `dependencies` block.
     * Add new required inputs, using `dependency` references as needed.
     * Remove or rename unused variables.
 
