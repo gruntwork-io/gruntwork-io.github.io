@@ -1,0 +1,115 @@
+---
+title: [title]
+categories: Upgrades
+image: /assets/img/guides/refresh_icon.png
+excerpt: Learn how to update your v1 Reference Architecture to use the Gruntwork Service Catalog.
+tags: ["aws", "terraform", "terragrunt"]
+cloud: ["aws"]
+redirect_from: /static/guides/upgrades/how-to-update-your-ref-arch/
+---
+:page-type: guide
+:page-layout: post
+
+:toc:
+:toc-placement!:
+
+// GitHub specific settings. See https://gist.github.com/dcode/0cfbf2699a1fe9b46ff04c41721dda74 for details.
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+toc::[]
+endif::[]
+
+== eks-cluster Migration Guide
+
+Follow this guide to update eks-cluster to the Service Catalog.
+
+=== Estimated Time to Migrate: 20 minutes per environment
+
+=== Upgrade kubergrunt
+
+You must upgrade `kubergrunt` to the https://github.com/gruntwork-io/kubergrunt/releases[latest version].
+
+=== New Required Inputs
+
+Configure these new inputs to migrate to the Service Catalog version of the module. They are now required.
+
+* `vpc_id`: Set this to the ID of the VPC where the EKS cluster is deployed. This should be pulled in with a
+`[dependency` block](https://terragrunt.gruntwork.io/docs/reference/config-blocks-and-attributes/#dependency) against
+the `vpc-app` service, using the `vpc_id` output.
+* `eks_cluster_name`: Set this to the `eks_cluster_name` output of the EKS cluster. This should be pulled in with a
+`[dependency` block](https://terragrunt.gruntwork.io/docs/reference/config-blocks-and-attributes/#dependency) against
+the `eks-cluster` service.
+* `worker_vpc_subnet_ids`: Set this to the empty list `[]`. This is newly required for configuring EKS worker nodes if
+pods are to be scheduled on Fargate. For the migration, none of the pods are being scheduled on Fargate.
+
+=== Inputs for Backward Compatibility
+
+* `kubernetes_version`: Set this to the kubernetes version of your cluster, e.g., `1.17`. If you were omitting this
+before, use the default value configured in your `infrastructure-modules` repository. The Service Catalog defaults to
+`1.19`, which will cause a backward incompatible change if your cluster is not currently on `1.19`.
+* `worker_name_prefix`: Set this to `"app-workers-"`.
+* `cluster_instance_ami_filters`: Set this to `null`. It is now required to set both `cluster_instance_ami` and
+`cluster_instance_ami_filters`, such that one of them is used and the other is set to `null`. Because we are using the
+AMI directly, we must set the filters to `null`.
+* `control_plane_vpc_subnet_ids`: Set this to the `private_app_subnet_ids` output of the VPC dependency module. This
+should be pulled in with a `[dependency`
+block](https://terragrunt.gruntwork.io/docs/reference/config-blocks-and-attributes/#dependency) against the `vpc-app`
+service.
+* `allow_inbound_api_access_from_cidr_blocks`: Set this to `["0.0.0.0/0"]` to allow access from all CIDR blocks, which
+is how the cluster was originally configured.
+* `custom_default_fargate_iam_role_name`: If you are using Fargate for _any_ downstream modules that depend on this
+`eks-cluster` module, or if you are using Fargate for any of your EKS pods, you should set this variable to avoid
+destroying and recreating IAM resources. Set this to `"<CLUSTER_NAME>-default-fargate-execution-role"`.
+* `allow_inbound_ssh_from_security_groups` and `allow_private_api_access_from_security_groups`: Set both of these to a
+list containing the Security Group ID fo the OpenVPN server in your Management VPC. This should be pulled in with a
+`[dependency` block](https://terragrunt.gruntwork.io/docs/reference/config-blocks-and-attributes/#dependency) against
+the `openvpn-server` service in the Management VPC, using the `security_group_id` output.
+* `iam_role_to_rbac_group_mapping`: Set this to a map of the IAM Role ARN to the RBAC group. You will need to pull in
+the IAM Role ARN from the `iam-cross-account` service at the global account level (e.g. `dev/_global/iam-cross-account`)
+with a `[dependency` block](https://terragrunt.gruntwork.io/docs/reference/config-blocks-and-attributes/#dependency),
+and use the `allow_full_access_from_other_accounts_iam_role_arn` output. The RBAC group to map to is the
+`["system:masters"]` group. For example, your input might look like this:
++
+....
+iam_role_to_rbac_group_mapping = map(
+  dependency.iam_cross_account.outputs.allow_full_access_from_other_accounts_iam_role_arn,
+  ["system:masters"],
+)
+....
+
+=== Renamed Inputs
+
+* `cluster_instance_type` => `asg_default_instance_type`.
+
+=== Migration Steps
+
+==== State Migration Script
+
+Run the provided migration script (contents pasted below for convenience) to migrate the state in a backward compatible
+way:
+
+TODO: insert
+
+=== Running apply
+
+*For the EKS cluster migration, you must run `apply` in this way!*
+
+....
+terragrunt apply -target 'module.eks_workers.aws_autoscaling_group.eks_worker["asg"]' && terragrunt apply
+....
+
+The first `apply` above updates the ASG and launch configuration. The second `apply` creates all the other resources
+that need to be created.
+
+=== Breaking Changes
+
+* *Outage in logs and reporting.* The IAM policies attached to the roles of the worker instances of the EKS cluster need
+to be recreated due to a reorganization of how the policies are attached. This means that there will be a brief outage
+(< 1 minute) in log aggregation and metric reporting while the IAM policies are being recreated. This is unavoidable.
+* Resources will be changed, created, and destroyed as part of this upgrade, making this a backward incompatible
+upgrade. This is unavoidable. The applications and services running on the cluster, however, should not encounter any
+downtime.

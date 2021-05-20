@@ -1,13 +1,41 @@
-# k8s-applications-namespace migration guide
+---
+title: [title]
+categories: Upgrades
+image: /assets/img/guides/refresh_icon.png
+excerpt: Learn how to update your v1 Reference Architecture to use the Gruntwork Service Catalog.
+tags: ["aws", "terraform", "terragrunt"]
+cloud: ["aws"]
+redirect_from: /static/guides/upgrades/how-to-update-your-ref-arch/
+---
+:page-type: guide
+:page-layout: post
+
+:toc:
+:toc-placement!:
+
+// GitHub specific settings. See https://gist.github.com/dcode/0cfbf2699a1fe9b46ff04c41721dda74 for details.
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+toc::[]
+endif::[]
+
+== k8s-applications-namespace migration guide
 
 Follow this guide to update k8s-applications-namespace to the Service Catalog.
 
-## Estimated Time to Migrate: 10 minutes per environment
+=== Estimated Time to Migrate: 10 minutes per environment
 
-## New generate block
-Add the following [`generate` block](https://terragrunt.gruntwork.io/docs/reference/config-blocks-and-attributes/#generate) to your `terragrunt.hcl`.
+=== New generate block
 
-```python
+Add the following https://terragrunt.gruntwork.io/docs/reference/config-blocks-and-attributes/#generate[`generate`
+block] to your `terragrunt.hcl`.
+
+[source,python]
+----
 # Generate a Kubernetes provider configuration for authenticating against the EKS cluster.
 generate "k8s_helm" {
   path      = "k8s_helm_provider.tf"
@@ -17,13 +45,16 @@ generate "k8s_helm" {
     { eks_cluster_name = dependency.eks_cluster.outputs.eks_cluster_name },
   )
 }
-```
+----
 
-This block points to a file `provider_k8s_helm_for_eks.template.hcl`, which you'll have to create at the root of the repo. It should be a sibling of the `terragrunt_service_catalog.hcl` file you added as part of preparing the repo for the migration.
+This block points to a file `provider_k8s_helm_for_eks.template.hcl`, which you’ll have to create at the root of the
+repo. It should be a sibling of the `terragrunt_service_catalog.hcl` file you added as part of preparing the repo for
+the migration.
 
 Paste the following contents into the `provider_k8s_helm_for_eks.template.hcl` file:
 
-```python
+[source,python]
+----
 data "aws_eks_cluster" "cluster_for_provider" {
   name = "${eks_cluster_name}"
 }
@@ -58,17 +89,21 @@ provider "helm" {
     }
   }
 }
-```
+----
 
-## State Migration Script
+=== State Migration Script
 
 Run the provided migration script to migrate the state in a backward compatible way:
 
 TODO (insert)
 
-## Breaking Changes
+=== Breaking Changes
 
-- Two resources must be replaced, and this is unavoidable. We switched from using Tiller to using Helm in the Service Catalog. The provided migration script will migrate most of your resources, but these two will still need to be replaced during the `apply`:
-    - `module.namespace.module.namespace_roles.kubernetes_role.rbac_helm_metadata_access[0]`
-    - `module.namespace.module.namespace_roles.kubernetes_role.rbac_helm_resource_access[0]`
-- Note that the RBAC roles for Tiller will be recreated under the new name. If you have any RBAC Role bindings that use the Tiller based names, you will want to update all the role bindings to remove references to the Tiller roles first, before updating this module. Then, you can add back in the new roles after deploying the update.
+* Two resources must be replaced, and this is unavoidable. We switched from using Tiller to using Helm in the Service
+Catalog. The provided migration script will migrate most of your resources, but these two will still need to be replaced
+during the `apply`:
+** `module.namespace.module.namespace_roles.kubernetes_role.rbac_helm_metadata_access[0]`
+** `module.namespace.module.namespace_roles.kubernetes_role.rbac_helm_resource_access[0]`
+* Note that the RBAC roles for Tiller will be recreated under the new name. If you have any RBAC Role bindings that use
+the Tiller based names, you will want to update all the role bindings to remove references to the Tiller roles first,
+before updating this module. Then, you can add back in the new roles after deploying the update.

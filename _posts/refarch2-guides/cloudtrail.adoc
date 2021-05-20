@@ -1,19 +1,47 @@
-# CloudTrail service migration guide
+---
+title: [title]
+categories: Upgrades
+image: /assets/img/guides/refresh_icon.png
+excerpt: Learn how to update your v1 Reference Architecture to use the Gruntwork Service Catalog.
+tags: ["aws", "terraform", "terragrunt"]
+cloud: ["aws"]
+redirect_from: /static/guides/upgrades/how-to-update-your-ref-arch/
+---
+:page-type: guide
+:page-layout: post
 
-**NOTE: There is no service catalog module for CloudTrail, but the library module (`[cloudtrail](https://github.com/gruntwork-io/terraform-aws-security/blob/v0.46.6/modules/cloudtrail/)`) is designed to be deployed directly, like a Service Catalog module.**
+:toc:
+:toc-placement!:
 
-## Estimated Time to Migrate: 15 minutes per environment
+// GitHub specific settings. See https://gist.github.com/dcode/0cfbf2699a1fe9b46ff04c41721dda74 for details.
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+toc::[]
+endif::[]
 
-## Output Changes
+== CloudTrail service migration guide
 
-New Outputs:
-- `s3_bucket_arn` - ARN of the S3 bucket where CloudTrail is sending logs.
+*NOTE: There is no service catalog module for CloudTrail, but the library module
+(`[cloudtrail](https://github.com/gruntwork-io/terraform-aws-security/blob/v0.46.6/modules/cloudtrail/)`) is designed to
+be deployed directly, like a Service Catalog module.*
 
-## State Migration Script
+=== Estimated Time to Migrate: 15 minutes per environment
 
-Run the provided migration script (contents pasted below for convenience) to migrate the state in a backward compatible way:
+=== Output Changes
 
-```python
+New Outputs: - `s3_bucket_arn` - ARN of the S3 bucket where CloudTrail is sending logs.
+
+=== State Migration Script
+
+Run the provided migration script (contents pasted below for convenience) to migrate the state in a backward compatible
+way:
+
+[source,python]
+----
 #!/bin/bash
 # This script contains the state migration instructions for migrating CloudTrail from the old
 # style Gruntwork Reference Architecture. Install this script and run it from the terragrunt live configuration
@@ -76,12 +104,15 @@ function run {
 }
 
 run "$@"
-```
+----
 
-## Advisories
+=== Advisories
 
-This update is fully backward compatible. Note that you will see the bucket policy removed from the bucket, but an identical policy created as a policy document. This ends up being a no-op, and is merely due to code reorganization.
+This update is fully backward compatible. Note that you will see the bucket policy removed from the bucket, but an
+identical policy created as a policy document. This ends up being a no-op, and is merely due to code reorganization.
 
-Encryption will be enabled on the CloudTrail S3 bucket. This is not a breaking change, but note that this cannot be disabled.
+Encryption will be enabled on the CloudTrail S3 bucket. This is not a breaking change, but note that this cannot be
+disabled.
 
-For non-security accounts, you may notice that the KMS key changes from a key ID to an alias. This is only an update to how the key is identified, and does not affect the encryption of CloudTrail logs.
+For non-security accounts, you may notice that the KMS key changes from a key ID to an alias. This is only an update to
+how the key is identified, and does not affect the encryption of CloudTrail logs.

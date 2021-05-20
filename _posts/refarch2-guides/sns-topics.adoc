@@ -1,0 +1,37 @@
+---
+title: [title]
+categories: Upgrades
+image: /assets/img/guides/refresh_icon.png
+excerpt: Learn how to update your v1 Reference Architecture to use the Gruntwork Service Catalog.
+tags: ["aws", "terraform", "terragrunt"]
+cloud: ["aws"]
+redirect_from: /static/guides/upgrades/how-to-update-your-ref-arch/
+---
+:page-type: guide
+:page-layout: post
+
+:toc:
+:toc-placement!:
+
+// GitHub specific settings. See https://gist.github.com/dcode/0cfbf2699a1fe9b46ff04c41721dda74 for details.
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+toc::[]
+endif::[]
+
+== sns-topics Service Catalog Migration Guide
+
+Follow this guide to update the `sns-topics` module to the Service Catalog.
+
+=== Estimated Time to Migrate: 10 minutes per environment
+
+=== Renamed Outputs
+
+Update downstream dependency references to use the new names of these outputs, which were renamed in the Service Catalog
+version of the module.
+
+* `arn` ⇒ `topic_arn`
