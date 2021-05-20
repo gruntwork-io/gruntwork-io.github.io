@@ -1,0 +1,490 @@
+---
+title: How to update your v1 Reference Architecture to Service Catalog
+categories: Upgrades
+image: /assets/img/guides/refresh_icon.png
+excerpt: Learn how to update your v1 Reference Architecture to use the Gruntwork Service Catalog.
+tags: ["aws", "terraform", "terragrunt"]
+cloud: ["aws"]
+redirect_from: /static/guides/upgrades/how-to-update-your-ref-arch/
+---
+:page-type: guide
+:page-layout: post
+
+:toc:
+:toc-placement!:
+
+// GitHub specific settings. See https://gist.github.com/dcode/0cfbf2699a1fe9b46ff04c41721dda74 for details.
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+toc::[]
+endif::[]
+
+
+== Intro
+
+This guide walks you through how to update v1.0 of the https://gruntwork.io/reference-architecture/[Gruntwork Reference
+Architecture], which uses a private `infrastructure-modules` repo, to v2.0, which uses the
+https://blog.gruntwork.io/introducing-the-gruntwork-module-service-and-architecture-catalogs-eb3a21b99f70[Gruntwork
+Service Catalog]. The Gruntwork Service Catalog is a set of dozens of highly configurable, battle-tested,
+production-grade _services_ that you can deploy off-the-shelf without writing any code. Many modules offered in the
+`infrastructure-modules` repository of the Gruntwork Reference Architecture are fully replaced with the Service Catalog,
+eliminating the need to maintain snapshots of the Services in your own repository.
+
+[.exceptional]
+TIP: The Landing Zone migration guide will be published soon.
+
+[.exceptional]
+TIP: To add Gruntwork Pipelines, follow the https://gruntwork.io/guides/automations/how-to-configure-a-production-grade-ci-cd-setup-for-apps-and-infrastructure-code/[Gruntwork Pipelines deployment guide].
+
+=== What you'll learn in this guide
+
+This guide consists of two main sections:
+
+<<core_concepts>>::
+  An overview of the differences between the Service Catalog and v1.0 of the Gruntwork Reference Architecture.
+
+<<deployment_walkthrough>>::
+  The steps you need to take to update your code from v1.0 of the Gruntwork Reference Architecture to work with the
+  Service Catalog. Includes dedicated <<service_migration_guides,service migration guides>> you can use to update on a
+  module by module basis.
+
+
+[[core_concepts]]
+== Core Concepts
+
+=== Background
+
+On August 26th, 2020, we announced the initial release of
+https://blog.gruntwork.io/introducing-the-gruntwork-module-service-and-architecture-catalogs-eb3a21b99f70[the Service
+Catalog] in a private, invite-only alpha program. Since then we have expanded the catalog to be generally available,
+with all Gruntwork subscribers getting access to the services of the catalog. A _service_ includes everything you need
+in production, including the Terraform code for provisioning, Packer templates or Dockerfiles for configuration
+management, built-in monitoring (metrics, logging, alerting), built-in security features (SSH access, secrets
+management, server hardening, encryption in transit and at rest), and so on. This allows you to deploy infrastructure
+without writing any code.
+
+Prior to the release of the Service Catalog, the Gruntwork Reference Architecture included a customized set of services
+in the form of a private `infrastructure-modules` repository for each customer. These services required continuous
+maintenance from the end-users to keep up to date with each change, including updating module references when new
+versions were released.
+
+Now with the Service Catalog, there is no longer a need to maintain a separate service module for every component you use.
+Instead, you can rely on the battle-tested, Gruntwork-maintained service module in the Service Catalog!
+
+If you haven't made any modifications to a service since receiving the Reference Architecture, we recommend updating
+your `infrastructure-live` configuration to use the service modules from the Service Catalog instead of using and
+maintaining your copy in `infrastructure-modules`. Using the Service Catalog directly has several advantages:
+
+* Keep up to date with module releases with a single version bump in your Terragrunt live configuration, as opposed to
+  updating each module block reference.
+* Update to a new, backward incompatible Terraform version with a single version bump as well. No need to track backward
+  incompatible syntactical changes in Terraform!
+* Rely on Gruntwork to provide feature updates and bug fixes to the services.
+
+Though the Service Catalog fully replaces the services defined in your `infrastructure-modules` repository, there are
+some differences that require you to make modifications to Terragrunt configurations in your `infrastructure-live`
+repository before you can start using the Service Catalog.
+
+
+[[deployment_walkthrough]]
+== Deployment Walkthrough
+
+Your goal in this walkthrough is to replace references to `infrastructure-modules` with `terraform-aws-service-catalog`,
+within your `infrastructure-live` repo. You will follow a two-step process:
+
+* Step 1: Prepare your Terragrunt `infrastructure-live` configuration to support the Service Catalog
+* Step 2: Update each Terragrunt live configuration to use the Service Catalog
+
+IMPORTANT: This guide assumes a minimum terragrunt version of
+https://github.com/gruntwork-io/terragrunt/releases/tag/v0.28.18[0.28.18]. If you are using an older terragrunt version,
+be sure to update to at least this version first.
+
+=== Step 1: Prepare your Terragrunt configuration to support the Service Catalog
+
+The Terraform modules in the Service Catalog are missing some required blocks for Terraform to operate (e.g., the
+`provider` and `terraform` state backend blocks). This is by design, to allow the modules to be flexibly used in
+different contexts (unlike the `infrastructure-modules` modules which are only intended to be used in the Terragrunt
+context). As such, you need to inject these required blocks to use advanced features of Terragrunt. Here we define a new
+root `terragrunt.hcl` configuration that includes these directives so that we can continue to use the original,
+non-Service Catalog based live configuration.
+
+For reference, you can download the link:assets/refarch-folder-structure.zip[refarch-folder-structure] zip file which
+contains all the following files in their respective locations in the folder structure. You'll have to copy these
+files into your own `infrastructure-live` repository.
+
+[arabic]
+. Create a new file `terragrunt_service_catalog.hcl` at the root of the `infrastructure-live` repository. We name this
+  differently from the existing `terragrunt.hcl` so that the modules that haven't migrated yet won't be affected.
+. Insert the following contents:
++
+....
+# ---------------------------------------------------------------------------------------------------------------------
+# TERRAGRUNT CONFIGURATION
+# ---------------------------------------------------------------------------------------------------------------------
+
+locals {
+  common_vars  = read_terragrunt_config("${get_terragrunt_dir()}/common.hcl")
+  account_vars = read_terragrunt_config(find_in_parent_folders("account.hcl"))
+
+  # Optional: Update to use HCL instead of YAML
+  region_vars  = yamldecode(file(find_in_parent_folders("region.yaml")))
+
+  name_prefix    = local.common_vars.locals.name_prefix
+  account_name   = local.account_vars.locals.account_name
+  account_id     = local.account_vars.locals.account_id
+  default_region = local.common_vars.locals.default_region
+  aws_region     = local.region_vars["aws_region"]
+}
+
+ # ----------------------------------------------------------------------------------------------------------------
+# GENERATED PROVIDER BLOCK
+# ----------------------------------------------------------------------------------------------------------------
+
+generate "provider" {
+  path      = "provider.tf"
+  if_exists = "overwrite_terragrunt"
+  contents  = <<EOF
+provider "aws" {
+  region = "${local.aws_region}"
+  version = ">= 3.13.0"
+  # Only these AWS Account IDs may be operated on by this template
+  allowed_account_ids = ["${local.account_id}"]
+}
+EOF
+}
+
+# ----------------------------------------------------------------------------------------------------------------
+# GENERATED REMOTE STATE BLOCK
+# ----------------------------------------------------------------------------------------------------------------
+
+# Configure Terragrunt to automatically store tfstate files in an S3 bucket
+remote_state {
+  backend = "s3"
+  config = {
+    encrypt        = true
+    bucket         = "${local.name_prefix}-${local.account_name}-terraform-state"
+    region         = local.default_region
+    dynamodb_table = "terraform-locks"
+    # To ensure that the state paths are the same as before, we drop the account folder (the first path element)
+    # which is now included in the relative path.
+    key            = trimprefix("${path_relative_to_include()}/terraform.tfstate", "${local.account_name}/")
+  }
+  generate = {
+    path      = "backend.tf"
+    if_exists = "overwrite_terragrunt"
+  }
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
+# GLOBAL PARAMETERS
+# These variables apply to all configurations in this subfolder. These are automatically merged into the child
+# `terragrunt.hcl` config via the include block.
+# ---------------------------------------------------------------------------------------------------------------------
+
+inputs = {
+  # Many modules require these two inputs, so we set them globally here to keep all the child terragrunt.hcl files more
+  # DRY
+  aws_account_id = local.account_id
+  aws_region     = local.aws_region
+}
+....
++
+[NOTE]
+.Explanation
+====
+In the Reference Architecture v1.0, we had a root configuration for each account to ensure
+that we can create a different state bucket for each account. While this isn't necessary for the Service Catalog, we
+switch to a single root `terragrunt.hcl` config here (which is possible due to the advanced functions that are available
+in newer Terragrunt versions) because there are more common blocks that are necessary, and we want to keep these
+blocks DRY.
+
+To support the new requirements of the Service Catalog, we also introduce two code generation configuration:
+
+* `generate "provider"`: Uses the terragrunt
+  https://terragrunt.gruntwork.io/docs/features/keep-your-terraform-code-dry/#dry-common-terraform-code-with-terragrunt-generate-blocks[code
+  generation] feature to inject the provider block into the module prior to invoking terraform.
+* `generate` attribute of the `remote_state` block: Similar to the provider block generation, this attribute injects the
+  `terraform.backend` configuration.
+
+Finally, we introduce a `locals` block to define references that can be reused throughout the configuration. Note that
+for new commonly used variables, we use `read_terragrunt_config` instead of `yamldecode(file())` to allow for use of
+terragrunt functions in the config.
+
+Note that the suggested config continues to use the `region.yaml` data file to simplify the migration process. You can
+optionally update this file to `hcl` for consistency.
+====
++
+. Create new data files for the root config (these are the files that are read in in the `locals` blocks):
+* In the root of the `infrastructure-live` repository, add a `common.hcl` file with the following contents:
++
+....
+locals {
+  # TODO: A unique name prefix to set for all infrastructure resources created in your accounts.
+  name_prefix = ""
+  # TODO: the default AWS region to use. This should be the same as where the terraform state S3 bucket is
+  # currently provisioned.
+  default_region = ""
+}
+....
+
+* In each account folder (e.g., `infrastructure-live/dev` or `infrastructure-live/shared`), add a file named
+  `account.hcl` with the following contents:
++
+....
+locals {
+  # TODO: Update with the actual information for each account
+  # The user friendly name of the AWS account. Usually matches the folder name.
+  account_name = ""
+  # The 12 digit ID number for your AWS account.
+  account_id = ""
+}
+....
+
+* (optional) If you wish to replace your yaml variable files with HCL, in each region folder (e.g.,
+  `infrastructure-live/dev/us-east-2`), add a file named `region.hcl` with the following contents:
++
+....
+locals {
+  # TODO: enter the region to use for all resources in this subfolder.
+  aws_region = ""
+}
+....
++
+Note that you will want to have a `region.hcl` file for the `_global` folder as well. In this case, set the `aws_region`
+to `us-east-1`.
+
+. Create migration helper scripts (these are used by the Gruntwork Service Catalog Terraform state migration bash
+  scripts):
+
+.. Create a new directory `_scripts` at the root of the `infrastructure-live` repository.
+.. Create a new file `migration_helpers.sh` in the newly created `_scripts` folder and paste in the following contents:
++
+[source,bash]
+----
+#!/bin/bash
+# Helper functions for implementing state migrations for updating terraform modules to newer versions.
+
+function log {
+  >&2 echo -e "$@"
+}
+
+# find_state_address uses the provided query string to identify the full resource address to use in the state file.
+function find_state_address {
+  local -r query="$1"
+
+  log "Identifying real state address of $query"
+  terragrunt state list \
+    | grep -E "$query" || true
+}
+
+# strip_bash_color will strip out bash color/bold escape sequences.
+function strip_bash_color {
+  local -r input="$1"
+  # Based on this stack overflow post: https://stackoverflow.com/questions/6534556/how-to-remove-and-all-of-the-escape-sequences-in-a-file-using-linux-shell-sc.
+  # None of the sed calls worked to completely strip of the escape sequences by itself, but the following combination worked.
+  echo "$input" | cat -v | sed 's/\^\[\[[10]m//g'
+}
+
+# Check that the given binary is available on the PATH. If it's not, exit with an error.
+function assert_is_installed {
+  local -r name="$1"
+  local -r help_url="$2"
+
+  if ! command -v "$name" > /dev/null; then
+    log "ERROR: The command '$name' is required by this script but is not installed or in the system's PATH. Visit $help_url for instructions on how to install."
+    exit 1
+  fi
+}
+
+# Make sure that the hcledit utility is installed and available on the system.
+function assert_hcledit_is_installed {
+  assert_is_installed 'hcledit' 'https://github.com/minamijoyo/hcledit#install'
+}
+
+# Make sure that the jq utility is installed and available on the system.
+function assert_jq_is_installed {
+  assert_is_installed 'jq' 'https://stedolan.github.io/jq/download/'
+}
+
+# Move resources in terraform state using fuzzy matches.
+function fuzzy_move_state {
+  local -r original_addr_query="$1"
+  local -r new_addr="$2"
+  local -r friendly_name="$3"
+
+  log "Checking if $friendly_name needs to be migrated"
+
+  local original_addr
+  original_addr="$(find_state_address "$original_addr_query")"
+
+  if [[ -z "$original_addr" ]]; then
+    echo "Nothing to change. Skipping state migration."
+  else
+    echo "Migrating state:"
+    echo
+    echo "    $original_addr =>"
+    echo "      $new_addr"
+    echo
+    terragrunt state mv "$original_addr" "$new_addr"
+  fi
+}
+
+# Move resources in terraform state using an import call instead of state mv. This is useful when moving resources
+# across aliased resources (e.g., aws_alb => aws_lb).
+function fuzzy_import_move_state {
+  local -r original_addr_query="$1"
+  local -r new_addr="$2"
+  local -r resource_basename="$3"
+  local -r friendly_name="$4"
+
+  log "Checking if $friendly_name needs to be migrated."
+  local original_addr
+  original_addr="$(find_state_address "$original_addr_query")"
+  if [[ -z "$original_addr" ]]; then
+    log "$friendly_name is already migrated. Skipping import."
+    return
+  fi
+
+  log "$friendly_name needs to be migrated"
+
+  # The following routine extracts the resource ID so that it can be used to import it into the new resource, since the
+  # underlying resource type changed.
+  log "Idenfitying $friendly_name ID to import into new resource."
+  local state
+  state="$(terragrunt state show "$original_addr")"
+  local state_nocolor
+  state_nocolor="$(strip_bash_color "$state")"
+
+  local resource_id
+  resource_id="$(
+    echo "$state_nocolor" \
+      | hcledit attribute get "$resource_basename".id \
+      | jq -r '.'
+  )"
+
+  if [[ -z "$resource_id" ]]; then
+    log "ERROR: could not identify $friendly_name ID to import."
+    exit 1
+  fi
+
+  log "Importing $friendly_name to new resource:"
+  log
+  log "    ID:           $resource_id"
+  log "    ResourceAddr: $new_addr"
+  terragrunt import "$new_addr" "$resource_id"
+
+  log "Removing old $friendly_name state."
+  terragrunt state rm "$original_addr"
+}
+----
+
+=== Step 2: Update each Terragrunt live configuration to use the Service Catalog
+
+At this point, you are ready to update each live configuration! We recommend taking a bottom-up approach for migrating
+the live configurations. That is, update live configurations that don't have any downstream dependencies first, then
+work your way up the dependency graph.
+
+This has the following advantages:
+
+* Each update is self contained. Changing the live configuration of leaf services will not affect other live
+  configurations, allowing you to continue to make changes to unmigrated live configurations.
+* The leaf nodes in the Terragrunt infrastructure graph tend to be lower risk services. That is, the higher you are in
+  the graph, there are more things that depend on that infrastructure, which by definition makes that service has a
+  larger surface area. E.g., VPC has many downstream dependencies, which means that messing it up can cause lots of
+  other services to fail.
+
+However, this does mean that you will need to go back and update previously migrated services if the upstream services
+has a change. For example, Service Catalog services sometimes have output name changes, which means that you will need
+to update the references in the downstream services when you update the service.
+
+To handle this, you can identify all the downstream services that are affected by running `terragrunt validate-all` to
+identify these broken links each time a service is updated, and fix them in the same PR.
+
+Here are the steps you can take to update a single service's live configuration:
+
+[arabic]
+. Check to make sure the service has no downstream dependencies. You can use the `graph-dependencies` command to create
+  a visual representation. In the graph, the arrow points in the direction of the dependency, with the top nodes being
+  leaf nodes and the bottom being root nodes.
+    * `terragrunt graph-dependencies | dot -Tpng > graph.png`
+    * If you get an error that `dot` is not available, install https://www.graphviz.org/download/[graphviz], which
+      installs the `dot` utility.
+
+. First, you need to ensure the module is updated to the same version used in Reference Architecture version
+  https://github.com/gruntwork-io/infrastructure-modules-multi-account-acme/releases/tag/v0.0.1-20201125[20201125], or
+  newer.
+    * If you are running an older version, follow the migration guides referenced in
+      https://github.com/gruntwork-io/infrastructure-modules-multi-account-acme/releases[the Reference Architecture
+      releases] to update to the latest version. This is necessary because the Service Catalog module references use newer
+      versions from the Module Catalog than what is shipped with v1.0 of the Reference Architecture. Once you've upgraded to
+      https://github.com/gruntwork-io/infrastructure-modules-multi-account-acme/releases/tag/v0.0.1-20201125[20201125],
+      you'll be at a known starting point and can automate any state manipulations that are required to update a service.
+
+. Make modifications to the `terragrunt.hcl` file to be compatible with the Service Catalog:
+    * Change the `include` path to `find_in_parent_folders("terragrunt_service_catalog.hcl")`. This ensures that you use the
+      Service Catalog compatible root config you created in the previous step.
+    * Change the `terraform.source` attribute to point to the corresponding Terraform module in the
+      `terraform-aws-service-catalog` repo. When updating the source, make sure to set the ref to target `v0.35.5`.
+
++
+[NOTE]
+.Explanation
+====
+This migration guide targets `v0.35.5` of the Service Catalog. Newer versions may require additional state migrations
+that are not covered by the automated scripts. If you wish to update further, first update to `v0.35.5` and then read
+the migration guides in the release notes of the Service Catalog to bump beyond that version.
+====
+
+    * Convert each service listed in `dependencies` to a `dependency` block. Use <<service_migration_guides,the dedicated
+      service migration guide>> as a reference for what dependency blocks are needed.
+    * Update the inputs to adapt to the Service Catalog Terraform module, using the dedicated service migration guide listed
+      below. You can also use `terragrunt validate-inputs` as a sanity check.
+    * Add new required inputs, using `dependency` references as needed.
+    * Remove or rename unused variables.
+
+. Run `terragrunt state list` to sanity check the state backend configuration. You are watching for the following:
+    * You should NOT get any prompts from Terragrunt to create a new S3 state bucket. If you get the prompt, this means that
+      either you are authenticating to the wrong account, or that the bucket name was misconfigured in the root
+      `terragrunt_service_catalog.hcl` file.
+    * You should see resources listed in the state. If the command returns nothing, that means you are not properly linked
+      to the old state file.  Double check the `key` attribute of the `remote_state` block in the root
+      `terragrunt_service_catalog.hcl` config.
+
+. Once you verify the state backend configuration is valid, you will want to perform the state migration operations:
+
+.. *Make a backup of the state file* using the following command: `terragrunt state pull > backup.tfstate`
+   You can use this to rollback the state to before you attempted the migration with the
+   following command: `terragrunt state push "$(pwd)/backup.tfstate"`.
+
+* NOTE: Make sure to use the Terraform version that is required for your module, as specified in the
+  https://www.terraform.io/docs/language/settings/index.html#specifying-a-required-terraform-version[required_version]
+  configuration of the module.
+
+.. *Run the provided migration script* for the service (refer to <<service_migration_guides,the dedicated
+    service migration guide>> for information on which script to run).
+.. *Sanity check the migration operation* by running `terragrunt plan`. You should only see backward compatible changes
+   (only `~` or `+` operations, never `-` operations), unless otherwise noted in the dedicated service migration guide.
+* NOTE: If you run into any errors related to code verification during provider plugin initialization, you will need to
+  update to the latest terraform patch version that contains the latest terraform GPG key to sign the providers. When
+  updating the terraform version, note that you will need to run `terragrunt init` to reinitialize the providers. The
+  following lists the minimum patch version that includes the latest GPG key:
+** https://github.com/hashicorp/terraform/releases/tag/v0.11.15[0.11.15]
+** https://github.com/hashicorp/terraform/releases/tag/v0.12.31[0.12.31]
+** https://github.com/hashicorp/terraform/releases/tag/v0.13.7[0.13.7]
+** https://github.com/hashicorp/terraform/releases/tag/v0.14.11[0.14.11]
+** https://github.com/hashicorp/terraform/releases/tag/v0.15.1[0.15.1]
+
+. Once the state migration operations are complete, and you've verified no destructive changes in `terragrunt plan`,
+  roll out the changes using `terragrunt apply`.
+. If the service has downstream dependencies, run `terragrunt validate-all` at the ACCOUNT folder to identify any
+  outputs that have changed. Fix the output references on the `dependency` block for each error.
+
+
+[[service_migration_guides]]
+=== Appendix: Dedicated service migration guides
+
+TODO
