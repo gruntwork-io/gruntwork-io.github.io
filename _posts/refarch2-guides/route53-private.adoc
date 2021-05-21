@@ -72,39 +72,7 @@ have only one element.
 
 === State Migration Script
 
-Run the provided migration script (contents pasted below for convenience) to migrate the state in a backward compatible
-way:
-
-[source,python]
-----
-#!/bin/bash
-# This script contains the state migration instructions for migrating albs to the Service Catalog from the old
-# style Gruntwork Reference Architecture. Install this script and run it from the terragrunt live configuration
-# directory of the module to perform the state operations.
-#
-
-set -e
-set -o pipefail
-
-# Import the helper functions from the repo root.
-readonly infra_live_repo_root="$(git rev-parse --show-toplevel)"
-source "$infra_live_repo_root/_scripts/migration_helpers.sh"
-
-function run {
-  local internal_domain_name=$(grep -E '^\s*internal_services_domain_name\s*=\s*' terragrunt.hcl | grep -oE '".*"' | tr -d '"')
-  if [[ "$internal_domain_name" == "" ]]; then
-    log "Unable to find domain in terragrunt.hcl. Skipping domain name migration."
-  else
-    # Move the dns record to the new map location
-    fuzzy_move_state \
-      'aws_route53_zone.internal_services$' \
-      "aws_route53_zone.private_zones[\"$internal_domain_name\"]" \
-      'Route53 Zone'
-  fi
-}
-
-run "$@"
-----
+Run the link:./scripts/migrate_route53_private.sh[provided migration script] to migrate the state in a backward compatible way.
 
 === Breaking Changes
 
