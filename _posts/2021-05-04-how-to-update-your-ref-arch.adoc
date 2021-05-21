@@ -1,5 +1,5 @@
 ---
-title: How to update your v1 Reference Architecture to Service Catalog
+title: How to update your Reference Architecture to use the Gruntwork Service Catalog
 categories: Upgrades
 image: /assets/img/guides/refresh_icon.png
 excerpt: Learn how to update your v1 Reference Architecture to use the Gruntwork Service Catalog.
@@ -35,7 +35,7 @@ production-grade _services_ that you can deploy off-the-shelf without writing an
 eliminating the need to maintain snapshots of the Services in your own repository.
 
 [.exceptional]
-TIP: The Landing Zone migration guide will be published soon.
+TIP: The migration guides covering Landing Zone specifically are still in the works. Until then, please consult link:https://gruntwork.io/guides/foundations/how-to-configure-production-grade-aws-account-structure/[this guide on adopting the Landing Zone].
 
 [.exceptional]
 TIP: To add Gruntwork Pipelines, follow the https://gruntwork.io/guides/automations/how-to-configure-a-production-grade-ci-cd-setup-for-apps-and-infrastructure-code/[Gruntwork Pipelines deployment guide].
@@ -69,11 +69,11 @@ without writing any code.
 
 Prior to the release of the Service Catalog, the Gruntwork Reference Architecture included a customized set of services
 in the form of a private `infrastructure-modules` repository for each customer. These services required continuous
-maintenance from the end-users to keep up to date with each change, including updating module references when new
+maintenance from the end users to keep up to date with each change, including updating module references when new
 versions were released.
 
 Now with the Service Catalog, there is no longer a need to maintain a separate service module for every component you use.
-Instead, you can rely on the battle-tested, Gruntwork-maintained service module in the Service Catalog!
+Instead, you can rely on the battle tested, Gruntwork maintained service module in the Service Catalog!
 
 If you haven't made any modifications to a service since receiving the Reference Architecture, we recommend updating
 your `infrastructure-live` configuration to use the service modules from the Service Catalog instead of using and
@@ -112,7 +112,7 @@ context). As such, you need to inject these required blocks to use advanced feat
 root `terragrunt.hcl` configuration that includes these directives so that we can continue to use the original,
 non-Service Catalog based live configuration.
 
-For reference, you can download the link:assets/refarch-folder-structure.zip[refarch-folder-structure] zip file which
+For reference, you can download the https://github.com/gruntwork-io/terraform-aws-service-catalog/releases/tag/tbd[refarch-folder-structure TODO] zip file which
 contains all the following files in their respective locations in the folder structure. You'll have to copy these
 files into your own `infrastructure-live` repository.
 
@@ -487,4 +487,29 @@ the migration guides in the release notes of the Service Catalog to bump beyond 
 [[service_migration_guides]]
 === Appendix: Dedicated service migration guides
 
-TODO
+* link:refarch2-guides/alb.md[ALB Service Migration Guide]
+* link:refarch2-guides/asg.md[ASG Service Migration Guide]
+* link:refarch2-guides/aurora.md[Aurora Service Migration Guide]
+* link:refarch2-guides/cloudtrail.md[CloudTrail Service Migration Guide]
+* link:refarch2-guides/cloudwatch-dashboard.md[cloudwatch-dashboard Service Migration
+Guide]
+* link:refarch2-guides/ecr-repos.md[ecr-repos Service Migration Guide]
+* link:refarch2-guides/ecs-cluster.md[ecs-cluster Service Migration Guide]
+* link:refarch2-guides/ecs-service-with-alb.md[ecs-service-with-alb Service Migration
+Guide]
+* link:refarch2-guides/eks-migration-guides/README.md[EKS Service Migration Guide]
+* link:refarch2-guides/iam-cross-account.md[iam-cross-account Service Migration Guide]
+* link:refarch2-guides/iam-groups.md[iam-groups Service Migration Guide]
+* link:refarch2-guides/iam-user-password-policy.md[iam-user-password-policy Service
+Migratirefarch2-guides/on Guide]
+* link:refarch2-guides/jenkins.md[Jenkins Service Migration Guide]
+* link:refarch2-guides/kms-master-key.md[kms-master-key Service Migration Guide]
+* link:refarch2-guides/memcached.md[Memcached Service Migration Guide]
+* link:refarch2-guides/openvpn-server.md[OpenVPN Server Service Migration Guide]
+* link:refarch2-guides/rds.md[RDS Service migration Guide]
+* link:refarch2-guides/redis.md[Redis Service Migration Guide]
+* link:refarch2-guides/route53-private.md[Route 53 (private) Migration Guide]
+* link:refarch2-guides/route53-public.md[Route 53 (public) Migration Guide]
+* link:refarch2-guides/sns-topics.md[sns-topics Service Migration Guide]
+* link:refarch2-guides/vpc.md[VPC (app) Migration Guide]
+* link:refarch2-guides/vpc-mgmt.md[VPC (mgmt) Migration Guide]
