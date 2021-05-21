@@ -417,6 +417,9 @@ Here are the steps you can take to update a single service's live configuration:
     * `terragrunt graph-dependencies | dot -Tpng > graph.png`
     * If you get an error that `dot` is not available, install https://www.graphviz.org/download/[graphviz], which
       installs the `dot` utility.
+    * Here is an example of a dependency tree for the `dev` account using Reference Architecture v1:
+
+    image::/assets/img/guides/ref-arch-v2-upgrade/ref-arch-v2-dep-tree.png[Dependency Graph]
 
 . First, you need to ensure the module is updated to the same version used in Reference Architecture version
   https://github.com/gruntwork-io/infrastructure-modules-multi-account-acme/releases/tag/v0.0.1-20201125[20201125], or
