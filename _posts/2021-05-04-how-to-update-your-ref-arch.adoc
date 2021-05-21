@@ -431,7 +431,7 @@ Now for the full-fledged instructions to upgrade a single service:
 
 image::/assets/img/guides/ref-arch-v2-upgrade/ref-arch-v2-dep-tree.png[Dependency Graph]
 
-. Now ensure the module is updated to the same version used in Reference Architecture version
+. Ensure the module is updated to the same version used in Reference Architecture version
   https://github.com/gruntwork-io/infrastructure-modules-multi-account-acme/releases/tag/v0.0.1-20201125[20201125].
     * If you're running a newer version, continue.
     * If you are running an older version, follow the migration guides referenced in
@@ -464,7 +464,7 @@ that are not covered by the automated scripts. If you wish to update further, fi
 the migration guides in the release notes of the Service Catalog to bump beyond that version.
 ====
 
-    * Find <<service_migration_guides,the dedicated service migration guide>> for the service.
+    * Find the <<service_migration_guides,dedicated service migration guide>> for the service.
     * Using that guide, update the inputs to adapt to the Service Catalog Terraform module.
         * You can use `terragrunt validate-inputs` as a sanity check.
         * Remove the `dependencies` block, if any.
@@ -511,17 +511,14 @@ the migration guides in the release notes of the Service Catalog to bump beyond 
 * link:./refarch2-guides/asg.adoc[ASG Service Migration Guide]
 * link:./refarch2-guides/aurora.adoc[Aurora Service Migration Guide]
 * link:./refarch2-guides/cloudtrail.adoc[CloudTrail Service Migration Guide]
-* link:./refarch2-guides/cloudwatch-dashboard.adoc[cloudwatch-dashboard Service Migration
-Guide]
+* link:./refarch2-guides/cloudwatch-dashboard.adoc[cloudwatch-dashboard Service Migration Guide]
 * link:./refarch2-guides/ecr-repos.adoc[ecr-repos Service Migration Guide]
 * link:./refarch2-guides/ecs-cluster.adoc[ecs-cluster Service Migration Guide]
-* link:./refarch2-guides/ecs-service-with-alb.adoc[ecs-service-with-alb Service Migration
-Guide]
+* link:./refarch2-guides/ecs-service-with-alb.adoc[ecs-service-with-alb Service Migration Guide]
 * link:./refarch2-guides/eks.adoc[EKS Service Migration Guide]
 * link:./refarch2-guides/iam-cross-account.adoc[iam-cross-account Service Migration Guide]
 * link:./refarch2-guides/iam-groups.adoc[iam-groups Service Migration Guide]
-* link:./refarch2-guides/iam-user-password-policy.adoc[iam-user-password-policy Service
-Migrati./refarch2-guides/on Guide]
+* link:./refarch2-guides/iam-user-password-policy.adoc[iam-user-password-policy Service Migration Guide]
 * link:./refarch2-guides/jenkins.adoc[Jenkins Service Migration Guide]
 * link:./refarch2-guides/kms-master-key.adoc[kms-master-key Service Migration Guide]
 * link:./refarch2-guides/memcached.adoc[Memcached Service Migration Guide]
