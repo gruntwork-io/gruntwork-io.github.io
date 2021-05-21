@@ -500,7 +500,7 @@ the migration guides in the release notes of the Service Catalog to bump beyond 
 ** https://github.com/hashicorp/terraform/releases/tag/v0.15.1[0.15.1]
 
 . Once you're satisfied with the plan, roll out the changes using `terragrunt apply`.
-. If the service has downstream dependencies, run `terragrunt validate-all` at the ACCOUNT folder level to identify any
+. If the service has downstream dependencies, run `terragrunt validate-all` from the ACCOUNT directory to identify any
   outputs that have changed. Fix the output references on the `dependency` block for each error.
 
 
