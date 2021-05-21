@@ -96,6 +96,10 @@ repository before you can start using the Service Catalog.
 Your goal in this walkthrough is to replace references to `infrastructure-modules` with `terraform-aws-service-catalog`,
 within your `infrastructure-live` repo. You will follow a two-step process:
 
+* First, follow the migration guides published in
+  https://github.com/gruntwork-io/infrastructure-modules-multi-account-acme/releases[infrastructure-modules-multi-account-acme],
+  from June 2020, to align your `infrastructure-modules` repo with `infrastructure-modules-multi-account-acme` at
+  `v0.0.1-20201125`.
 * Step 1: Prepare your Terragrunt `infrastructure-live` configuration to support the Service Catalog
 * Step 2: Update each Terragrunt live configuration to use the Service Catalog
 
@@ -196,7 +200,7 @@ inputs = {
 [NOTE]
 .Explanation
 ====
-In the Reference Architecture v1.0, we had a root configuration for each account to ensure
+In the non-Service Catalog flavor of the Reference Architecture, we had a root configuration for each account to ensure
 that we can create a different state bucket for each account. While this isn't necessary for the Service Catalog, we
 switch to a single root `terragrunt.hcl` config here (which is possible due to the advanced functions that are available
 in newer Terragrunt versions) because there are more common blocks that are necessary, and we want to keep these
