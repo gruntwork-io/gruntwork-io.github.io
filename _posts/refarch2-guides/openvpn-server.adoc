@@ -146,8 +146,10 @@ service, using the `topic_arn` output.
 
 Update the following input to the new format to use the Service Catalog version of the module:
 
-* `domain_name`: Set this to the base domain name. In the Service Catalog, this variable is no longer the full domain
-name and instead is the base domain name. The final domain name will be `<name>.<domain_name>`.
+* `domain_name` => `base_domain_name`: Replace `domain_name` with `base_domain_name` and set it to the base domain name.
+In the Service Catalog, this variable is no longer the full domain name and instead is the base domain name. So if you
+used to have `domain_name = "vpn.example.com"`, change it to `base_domain_name = "example.com"`. The final domain name
+will be `<name>.<base_domain_name>`.
 
 === Output Changes
 
