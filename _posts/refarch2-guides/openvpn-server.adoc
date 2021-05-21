@@ -1,5 +1,5 @@
 ---
-title: OpenVPN Server Service Migration Guide
+title: [title]
 categories: Upgrades
 image: /assets/img/guides/refresh_icon.png
 excerpt: Learn how to update your v1 Reference Architecture to use the Gruntwork Service Catalog.
@@ -23,7 +23,7 @@ ifdef::env-github[]
 toc::[]
 endif::[]
 
-== OpenVPN Server Service Migration Guide
+== OpenVPN Server service migration guide
 
 Follow this guide to update the `openvpn-server` service to the Service Catalog.
 
@@ -140,6 +140,7 @@ the `kms-master-key` service, using the `key_arn` output.
 should be pulled in with a `[dependency`
 block](https://terragrunt.gruntwork.io/docs/reference/config-blocks-and-attributes/#dependency) against the `sns-topic`
 service, using the `topic_arn` output.
+* `hosted_zone_id`: Set this to the Route 53 Hosted Zone ID for the domain name in `domain_name`.
 
 === Updated Inputs
 
@@ -198,6 +199,11 @@ function run {
     'aws_cloudwatch_metric_alarm.asg_high_disk_utilization' \
     'module.ec2_baseline.module.high_asg_disk_usage_root_volume_alarms.aws_cloudwatch_metric_alarm.asg_high_disk_utilization[0]' \
     'High Disk Utilization Alarm'
+
+  fuzzy_move_state \
+    'aws_iam_role_policy.ssh_grunt_permissions' \
+    'module.ec2_baseline.aws_iam_role_policy.ssh_grunt_permissions[0]' \
+    'SSH Grunt Permissions'
 }
 
 run "$@"
@@ -208,3 +214,7 @@ run "$@"
 * *Cluster outage:* The IAM policies attached to the IAM role of the OpenVPN server need to be recreated due to a
 reorganization of how the policies are attached. This means that there will be a brief outage (< 1 minute) in log
 aggregation and metric reporting while the IAM policies are being recreated. This is unavoidable.
+** Some resources may be destroyed:
+*** `aws_iam_policy_attachment.attach_cloudwatch_metrics_policy`
+*** `aws_iam_policy_attachment.attach_cloudwatch_log_aggregation_policy`
+*** `aws_iam_policy.cloudwatch_metrics_read_write[0]`
