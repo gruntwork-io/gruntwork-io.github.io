@@ -763,17 +763,25 @@ Terraform::
   link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library[How to Use the Gruntwork
   Infrastructure as Code Library].
 
+Keybase (optional)::
+  As part of this guide, you will create IAM users, including, optionally, credentials for those IAM users. If you
+  choose to create credentials, those credentials will be encrypted with a PGP key. You could provide the PGP keys
+  manually, but a more manageable option may be to have your team members to sign up for https://keybase.io[Keybase],
+  create PGP keys for themselves, and then you can provide their Keybase usernames, and the PGP keys will be retrieved
+  automatically.
+
 [[gruntwork_solution]]
 === The Gruntwork solution
 Gruntwork offers battle-tested infrastructure as code modules to help you create production grade infrastructure in a
 fraction of the time it would take to develop from scratch. Each of the code modules are "compliance-ready"; they are
 mostly unopinionated by default, but they can be configured for compliance with the right settings.
 
-To further simplify and expedite compliance, the Gruntwork Compliance modules are "wrappers" around the core,
-unopinionated modules in the Infrastructure as Code Library. The wrappers call the core modules with configuration values
-that are compliant with the AWS Foundations Benchmark. You can use the wrapper modules by creating a module of your own
-(this can be considered a second wrapper) and using the compliance module as the `source`. Optionally, you can also use
-`terragrunt` to call your module, thus creating a chain of IaC modules.
+To further simplify and expedite compliance, the Gruntwork AWS CIS Service Catalog uses both standalone compliance
+modules as well as "wrappers" around the core, unopinionated modules in the Infrastructure as Code Library. The wrappers
+call the core modules with configuration values that are compliant with the AWS Foundations Benchmark. You can use both
+types of modules by creating a module of your own (in the case of the wrapper modules, this can be considered a second
+wrapper) and using the compliance module as the `source`. Optionally, you can also use `terragrunt` to call your module,
+thus creating a chain of IaC modules.
  +
  +
 
@@ -1228,6 +1236,27 @@ inputs = {
 And refer to the Readme document here:
 link:https://github.com/gruntwork-io/terraform-aws-security/blob/master/modules/iam-access-analyzer-multi-region/README.adoc[README.adoc].
 
+=== Try authenticating as an IAM user to the child accounts
+
+Now that you have IAM users in the security account and IAM roles in the other accounts, it's time to practice
+authenticating:
+
+. Use your IAM user's user name and password (decrypted using keybase) to log into the web console of the security
+  account (remember to use the IAM user sign-in URL for the security account).
+. Follow the steps in <<lock_down_iam_users>> to lock down your IAM user in the security account. This includes
+  configuring an MFA device for your IAM user.
+. After configuring an MFA device, log out, and then log back into the security account again, this time providing your
+  MFA token. If you don't do this, attempting to assume IAM roles in other accounts won't work, as those roles require
+  an MFA token to be present.
+. Try to https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-console.html[switch to a role] in
+  one of the other child accounts using the AWS Web Console. For example, authenticate as one of the IAM users in the
+  security account, and then assume the `allow-full-access-from-other-accounts` role in the dev account (you can find
+  the default list of IAM roles created in each account
+  https://github.com/gruntwork-io/module-security/tree/master/modules/cross-account-iam-roles#resources-created[here]).
+. Alternatively, you can use the `aws-vault login xxx` command to login to the AWS Web Console for any profile `xxx`
+  that you've configured in `aws-vault`. For example, `aws-vault login logs-from-root` will open up your web browser
+  and log you into the logs account using the `OrganizationAccountAccessRole` IAM Role.
+
 [[maintain_compliance]]
 === Maintaining compliance by following IAM best practices
 We conclude the IAM section with a few parting words of wisdom for maintaining compliance over time:
@@ -1319,7 +1348,7 @@ module] to create KMS keys with key rotation enabled by default.
 The Benchmark recommends enabling link:https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html[VPC Flow Logs]
 for all VPCs in all regions. You can use the
 link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/blob/master/modules/networking/vpc[`vpc` service]
-in the CIS Service Catalog to create your VPCs. This service is configured for CIS compliance, and as such has VPC flow
+in the AWS CIS Service Catalog to create your VPCs. This service is configured for CIS compliance, and as such has VPC flow
 logs enabled. For example, you might create a VPC using the VPC service:
 
 .infrastructure-modules/networking/vpc/myvpc/main.tf
@@ -1404,7 +1433,7 @@ setup a subscriber to the SNS topics that are created.
 To ensure all the networking recommendations are satisfied, use the
 link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/modules/networking/vpc[`vpc`] (and/or
 link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/modules/networking/vpc-mgmt[`vpc-mgmt`])
-service from Gruntwork's CIS Service Catalog to create all your VPCs. These services are specifically configured for
+service from Gruntwork's AWS CIS Service Catalog to create all your VPCs. These services are specifically configured for
 CIS compliance, and as such they don't allow security groups to access ports 22 or 3389 from the world. In addition,
 our architecture has a least-privileges-based routing configuration by default.
 
