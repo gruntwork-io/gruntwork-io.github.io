@@ -776,17 +776,20 @@ Gruntwork offers battle-tested infrastructure as code modules to help you create
 fraction of the time it would take to develop from scratch. Each of the code modules are "compliance-ready"; they are
 mostly unopinionated by default, but they can be configured for compliance with the right settings.
 
-To further simplify and expedite compliance, the Gruntwork AWS CIS Service Catalog uses both standalone compliance
-modules as well as "wrappers" around the core, unopinionated modules in the Infrastructure as Code Library. The wrappers
+To further simplify and expedite compliance, the Gruntwork CIS Service Catalog uses both standalone compliance
+modules as well as "wrappers" around the core, unopinionated modules in the Infrastructure as Code Library. The
+standalone compliance modules are designed with the compliance requirements built-in, whereas the wrappers
 call the core modules with configuration values that are compliant with the AWS Foundations Benchmark. You can use both
 types of modules by creating a module of your own (in the case of the wrapper modules, this can be considered a second
 wrapper) and using the compliance module as the `source`. Optionally, you can also use `terragrunt` to call your module,
-thus creating a chain of IaC modules.
+thus creating a chain of IaC modules. For more information on creating your own service catalog of modules please refer
+to the link:https://github.com/gruntwork-io/terraform-aws-service-catalog/blob/master/core-concepts.md#create-your-own-service-catalog[Create your own service catalog section]
+in the Gruntwork Service Catalog documentation.
  +
  +
 
-.Nested wrapper modules help to avoid repetitive code and minimize the amount of extra work needed to achieve compliance.
-image::/assets/img/guides/cis-compliance/wrappers.png[]
+.Types of CIS module relationships to avoid repetitive code and minimize the amount of extra work needed to achieve compliance.
+image::/assets/img/guides/cis-compliance/cis-module-relationships.png[]
 
 Let's unpack this a bit.
 
@@ -798,6 +801,12 @@ core module] creates a best practices set of IAM groups. The groups are configur
 You could, for example, choose to create a group with read-only access, another group with full administrator
 access, and no other groups. All Gruntwork subscribers have access to the core modules, which reside in
 Gruntwork's link:https://gruntwork.io/repos[infrastructure as code repositories].
+
+[[standalone_modules]]
+==== Standalone Compliance modules
+The standalone compliance modules complement the modules available in the IaC Library. They have the CIS compliance requirements built right in and may combine multiple modules including Core modules for a
+specific use case. For example, the link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/modules/cleanup-expired-certs[`cleanup-expired-certs` standalone module] deploys a Lambda function that runs regularly and automatically removes all expired SSL/TLS certificates stored in AWS IAM in compliance with recommendation 1.19 of the CIS AWS Foundations Benchmark. These modules are in the link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog[`terraform-aws-cis-service-catalog`
+repository] (accessible to Gruntwork Compliance subscribers).
 
 [[wrapper_modules]]
 ==== Compliance wrapper modules
@@ -841,7 +850,7 @@ settings needed for compliance. When you call the compliance modules from your o
 times the default settings are good enough.
  +
  +
-You can use this approach on AWS account. In many cases, you'll only need compliance for production accounts, but the
+You can use this approach on each AWS account. In many cases, you'll only need compliance for production accounts, but the
 same methodology can be applied to pre-production accounts as well.
  +
  +
