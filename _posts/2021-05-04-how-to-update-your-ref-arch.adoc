@@ -112,9 +112,9 @@ context). As such, you need to inject these required blocks to use advanced feat
 root `terragrunt.hcl` configuration that includes these directives so that we can continue to use the original,
 non-Service Catalog based live configuration.
 
-For reference, you can download the https://github.com/gruntwork-io/terraform-aws-service-catalog/releases/tag/tbd[refarch-folder-structure TODO] zip file which
-contains all the following files in their respective locations in the folder structure. You'll have to copy these
-files into your own `infrastructure-live` repository.
+For reference, you can download the link:https://github.com/gruntwork-io/infrastructure-live-multi-account-acme/releases/tag/v0.0.0-alpha1[refarch-folder-structure]
+zip file which contains all the following files in their respective locations in the folder structure. You can copy
+these files into your own `infrastructure-live` repository.
 
 [arabic]
 . Create a new file `terragrunt_service_catalog.hcl` at the root of the `infrastructure-live` repository. We name this
@@ -411,7 +411,8 @@ Don't worry -- we're going to walk you through every step right now. At a high-l
 . Refer to the dedicated guide for that service.
 . Backup the state file.
 . Modify the `terragrunt.hcl` live configuration for it, following the guide.
-. Validate the configuration with `terragrunt validate-inputs`.
+. Validate the backend configuration with `terragrunt state list`.
+. Validate the inputs with `terragrunt validate-inputs`.
 . Run the state migration script, if any.
 . Sanity check the changes with `terragrunt plan`.
 . Roll out with `terragrunt apply`.
