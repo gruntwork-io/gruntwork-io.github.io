@@ -951,128 +951,589 @@ dramatically improves the security of your IAM user. Note that using SMS (text m
 https://www.schneier.com/blog/archives/2016/08/nist_is_no_long.html[no longer recommended by NIST] due to known
 https://www.theverge.com/2017/9/18/16328172/sms-two-factor-authentication-hack-password-bitcoin[vulnerabilities with the cellular system],
 so using a virtual or hardware MFA device is preferable; that said, MFA with SMS is still better than no MFA at all.
+##
 
-[[create_password_policy]]
-=== Create an IAM user password policy
-After the manual steps are complete, the next step is to create an IAM user password policy using the
-link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/blob/master/examples/iam-password-policy/README.adoc[`iam-password-policy`
 wrapper module]. Complete this step before creating any IAM users!
+=== Configure the security baseline for the root account
 
-[[wrapper_code]]
-==== Using the wrapper module
-This section demonstrates how to use the CIS compliance password policy wrapper module to create a password policy. Follow this pattern for each of the wrapper modules discussed throughout this walkthrough.
+Next, we'll configure a security baseline for the root account that is responsible for creating all the child accounts.
+It will also configure AWS Organizations, IAM Roles, IAM Users, IAM Groups, IAM Password Policies, Amazon GuardDuty, AWS CloudTrail, AWS Config and Security Hub.
 
-===== Using the wrapper module with Terraform
-If you're using Terraform without Terragrunt, use this section to create a module in your `infrastructure-modules` repository.
+We'll be using the `account-baseline-root` module from https://github.com/gruntwork-io/terraform-aws-service-catalog[terraform-aws-service-catalog].
+
+[.exceptional]
+IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork subscriber# to access `terraform-aws-service-catalog`.
+
+First, create a _wrapper module_ called `account-baseline-root` in your `infrastructure-modules` repo under the `landingzone` subdirectory:
 
 ----
 infrastructure-modules
-└── security
-    └── iam-password-policy
-        ├── main.tf
-        └── variables.tf
+  └ landingzone
+    └ account-baseline-root
+      └ main.tf
+      └ outputs.tf
+      └ variables.tf
 ----
 
-Inside of `main.tf`, configure your AWS provider settings:
+Inside of `main.tf`, configure your AWS provider and Terraform settings:
 
-.infrastructure-modules/security/iam-password-policy/main.tf
+.infrastructure-modules/landingzone/account-baseline-root/main.tf
 [source,hcl]
 ----
 provider "aws" {
+  # The AWS region in which all resources will be created
   region = var.aws_region
+
+  # Require a 3.x version of the AWS provider
+  version = "~> 3.40"
+
+  # Only these AWS Account IDs may be operated on by this template
+  allowed_account_ids = [var.aws_account_id]
+}
+
+terraform {
+  # The configuration for this backend will be filled in by Terragrunt or via a backend.hcl file. See
+  # https://www.terraform.io/docs/backends/config.html#partial-configuration
+  backend "s3" {}
+
+  # Only allow this Terraform version. Note that if you upgrade to a newer version, Terraform won't allow you to use an
+  # older version, so when you upgrade, you should upgrade everyone on your team and your CI servers all at once.
+  required_version = "= 0.14.8"
 }
 ----
 
-Now use the `iam-password-policy` compliance module from the Gruntwork `terraform-aws-cis-service-catalog` repository, making sure to
-replace the `<VERSION>` placeholder with the latest version from the
-https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/releases[releases page]:
+Next, use the `account-baseline-root` module from the Gruntwork Infrastructure as Code Library:
 
-.infrastructure-modules/security/iam-password-policy/main.tf
+.infrastructure-modules/landingzone/account-baseline-root/main.tf
 [source,hcl]
 ----
-module "iam_password_policy" {
-  # Make sure to replace <VERSION> in this URL with the latest terraform-aws-cis-service-catalog release
-  source                  = "git@github.com:gruntwork-io/terraform-aws-cis-service-catalog.git//modules/iam-password-policy?ref=<VERSION>"
-  minimum_password_length = var.minimum_password_length
-  aws_region              = var.aws_region
+module "root_baseline" {
+  source = "git::git@github.com:gruntwork-io/terraform-aws-cis-service-catalog.git//modules/landingzone/account-baseline-root?ref=v0.44.10"
+
+  aws_account_id = var.aws_account_id
+  aws_region     = var.aws_region
+  name_prefix    = var.name_prefix
+
+  # If you're running the example against an account that doesn't have AWS Organization created, change the following value to true
+  create_organization = var.create_organization
+
+  # The child accounts to create
+  child_accounts = var.child_accounts
+
+  # IAM users to create in this account
+  users = var.users
+
+  # These are variables you only need to set at test time so that everything can be deleted cleanly.
+  # You will likely NOT need to set this in any real environments.
+  force_destroy_users      = var.force_destroy
+  cloudtrail_force_destroy = var.force_destroy
+  config_force_destroy     = var.force_destroy
+
+  # Enable IAM Access Analyzer
+  iam_access_analyzer_type   = var.iam_access_analyzer_type
+  iam_access_analyzer_name   = var.iam_access_analyzer_name
+  enable_iam_access_analyzer = var.enable_iam_access_analyzer
 }
 ----
 
-The module parameters should be exposed as input variables in `variables.tf`:
+Create all the corresponding input variables for `account-baseline-root` in `variables.tf`:
 
-.infrastructure-modules/security/iam-password-policy/variables.tf
+.infrastructure-modules/landingzone/account-baseline-root/variables.tf
 [source,hcl]
 ----
-variable "aws_region" {
-  description = "The AWS region in which all resources will be created"
+# ---------------------------------------------------------------------------------------------------------------------
+# REQUIRED PARAMETERS
+# ---------------------------------------------------------------------------------------------------------------------
+
+variable "name_prefix" {
+  description = "The name used to prefix AWS Config and Cloudtrail resources, including the S3 bucket names and SNS topics used for each."
   type        = string
 }
 
-variable "minimum_password_length" {
-  description = "Minimum length to require for user passwords."
-  type        = number
-  default     = 14
+variable "aws_region" {
+  description = "The AWS Region to use as the global config recorder and seed region for AWS GuardDuty."
+  type        = string
+}
+
+variable "aws_account_id" {
+  description = "The AWS Account ID the template should be operated on. This avoids misconfiguration errors caused by environment variables."
+  type        = string
+}
+
+variable "child_accounts" {
+  description = "Map of child accounts to create. The map key is the name of the account and the value is an object containing account configuration variables. See the comments below for what keys and values this object should contain."
+
+  # Ideally, this would be a map of (string, object), but object does not support optional properties, and we want
+  # users to be able to specify, say, tags for some accounts, but not for others. We can't use a map(any) either, as that
+  # would require the values to all have the same type, and due to optional parameters, that wouldn't work either. So,
+  # we have to lamely fall back to any.
+  type = any
+
+  # Expected value for the `child_accounts` is a map of child accounts. The map key is the name of the account and
+  # the value is another map with one required key (email) and several optional keys:
+  #
+  # - email (required):
+  #   Email address for the account.
+  #
+  # - is_logs_account:
+  #   Set to `true` to mark this account as the "logs" account, which is the one to use to aggregate AWS Config and
+  #   CloudTrail data. This module will create an S3 bucket for AWS Config and an S3 bucket and KMS CMK for CloudTrail
+  #   in this child account, configure the root account to send all its AWS Config and CloudTrail data there, and return
+  #   the names of the buckets and ARN of the KMS CMK as output variables. When you apply account baselines to the
+  #   other child accounts (e.g., using the account-baseline-app or account-baseline-security modules), you'll want to
+  #   configure those accounts to send AWS Config and CloudTrail data to the same S3 buckets and use the same KMS CMK.
+  #   If is_logs_account is not set on any child account (not recommended!), then either you must disable AWS Config
+  #   and CloudTrail (via the enable_config and enable_cloudtrail variables) or configure this module to use S3 buckets
+  #   and a KMS CMK that ALREADY exist!
+  #
+  # - parent_id:
+  #   Parent Organizational Unit ID or Root ID for the account
+  #   Defaults to the Organization default Root ID.
+  #
+  # - role_name:
+  #   The name of an IAM role that Organizations automatically preconfigures in the new member account. This role trusts
+  #   the master account, allowing users in the master account to assume the role, as permitted by the master account
+  #   administrator. The role has administrator permissions in the new member account. Note that the Organizations API
+  #   provides no method for reading this information after account creation.
+  #   If no value is present and no ´default_role_name´ is provided, AWS automatically assigns a value.
+  #
+  # - iam_user_access_to_billing:
+  #   If set to ´ALLOW´, the new account enables IAM users to access account billing information if they have the required
+  #   permissions. If set to ´DENY´, then only the root user of the new account can access account billing information.
+  #   Defaults to ´default_iam_user_access_to_billing´.
+  #
+  #
+  # - enable_config_rules:
+  #   Set to `true` to enable org-level AWS Config Rules for this child account. This is only used if
+  #   var.config_create_account_rules is false (which is NOT recommened) to force org-level rules. If you do go with
+  #   org-level rules, you can only set enable_config_rules to true after deploying a Config Recorder in the child
+  #   account. That means you have to: (1) initially set enable_config_rules to false, (2) run 'apply' in this root
+  #   module to create the child account, (3) go to the child account and create a config recorder in it, e.g., by
+  #   running 'apply' on a security baseline in that account, (4) come back to this root module and set
+  #   enable_config_rules to true, (5) run 'apply' again. This is a brittle, error-prone, multi-step process, which is
+  #   why we recommend using account-level rules (the default) and avoiding it entirely!
+  #
+  # - tags:
+  #   Key-value mapping of resource tags.
+  #
+  #
+  # Example:
+  #
+  # child_accounts = {
+  #   logs = {
+  #     email                       = "root-accounts+logs@acme.com"
+  #     is_logs_account             = true
+  #   }
+  #   security = {
+  #     email                       = "root-accounts+security@acme.com"
+  #     role_name                   = "OrganizationAccountAccessRole"
+  #     iam_user_access_to_billing  = "DENY"
+  #     tags = {
+  #       Tag-Key = "tag-value"
+  #     }
+  #   }
+  #   shared-services = {
+  #     email                       = "root-accounts+shared-services@acme.com"
+  #   }
+  #   dev = {
+  #     email                       = "root-accounts+dev@acme.com"
+  #   }
+  #   stage = {
+  #     email                       = "root-accounts+stage@acme.com"
+  #   }
+  #   prod = {
+  #     email                       = "root-accounts+prod@acme.com"
+  #   }
+  # }
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
+# OPTIONAL PARAMETERS
+# ---------------------------------------------------------------------------------------------------------------------
+
+variable "create_organization" {
+  description = "Set to true to create/configure AWS Organizations for the first time in this account. If you already configured AWS Organizations in your account, set this to false; alternatively, you could set it to true and run 'terraform import' to import you existing Organization."
+  type        = bool
+  default     = false
+}
+
+variable "users" {
+  description = "A map of users to create. The keys are the user names and the values are an object with the optional keys 'groups' (a list of IAM groups to add the user to), 'tags' (a map of tags to apply to the user), 'pgp_key' (either a base-64 encoded PGP public key, or a keybase username in the form keybase:username, used to encrypt the user's credentials; required if create_login_profile or create_access_keys is true), 'create_login_profile' (if set to true, create a password to login to the AWS Web Console), 'create_access_keys' (if set to true, create access keys for the user), 'path' (the path), and 'permissions_boundary' (the ARN of the policy that is used to set the permissions boundary for the user)."
+
+  # Ideally, this would be a map of (string, object), but object does not support optional properties, and we want
+  # users to be able to specify, say, tags for some users, but not for others. We can't use a map(any) either, as that
+  # would require the values to all have the same type, and due to optional parameters, that wouldn't work either. So,
+  # we have to lamely fall back to any.
+  type = any
+
+  # Example:
+  # default = {
+  #   alice = {
+  #     groups = ["user-self-mgmt", "developers", "ssh-sudo-users"]
+  #   }
+  #
+  #   bob = {
+  #     path   = "/"
+  #     groups = ["user-self-mgmt", "ops", "admins"]
+  #     tags   = {
+  #       foo = "bar"
+  #     }
+  #   }
+  #
+  #   carol = {
+  #     groups               = ["user-self-mgmt", "developers", "ssh-users"]
+  #     pgp_key              = "keybase:carol_on_keybase"
+  #     create_login_profile = true
+  #     create_access_keys   = true
+  #   }
+  # }
+
+  default = {}
+}
+
+variable "force_destroy" {
+  description = "If set to true, when you run 'terraform destroy', delete all objects from all S3 buckets and any IAM users created by this module so that everything can be destroyed without error. Warning: these objects are not recoverable so only use this if you're absolutely sure you want to permanently delete everything! This is mostly useful when testing."
+  type        = bool
+  default     = false
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
+# IAM ACCESS ANALYZER MODULE EXAMPLE PARAMETERS
+# ---------------------------------------------------------------------------------------------------------------------
+
+variable "enable_iam_access_analyzer" {
+  description = "A feature flag to enable or disable this module."
+  type        = bool
+  default     = false
+// TODO -> this needs to be true, as IAM Access Analyzer needs to be enabled for CIS across all regions. Maybe we should even remove this variable from the example?
+}
+
+# This variable sets the type of the IAM Access Analyzer. Depending on the trust zone required for the analyzer to cover,
+# the possible values are:
+# - ACCOUNT;
+# - ORGANIZATION.
+# When set to ACCOUNT - the trust zone for the IAM Access Analyzer will be limited to just the account and resources
+# only within this account will be scanned, instead of the organizational boundaries and its policies.
+# When set to ORGANIZATION - the trust zone will be set to the whole organization, which allows the IAM Access Analyzer
+# to scan relevant resources shared and applicable within the bounds of the organization. The AWS account with type of
+# IAM Access Analyzer type set to ORGANIZATION, must
+# - an AWS organization master account;
+# - or be part of an AWS organization & set as a delegated admin for this feature.
+#
+# For more information, please read here: https://docs.aws.amazon.com/IAM/latest/UserGuide/what-is-access-analyzer.html
+variable "iam_access_analyzer_type" {
+  description = "If set to ORGANIZATION, the analyzer will be scanning the current organization and any policies that refer to linked resources and their policies within the organization's boundaries."
+  type        = string
+  default     = "ORGANIZATION"
+}
+
+variable "iam_access_analyzer_name" {
+  description = "The name of the IAM Access Analyzer module"
+  type        = string
+  default     = "baseline_root-iam_access_analyzer"
 }
 ----
 
-With the module in place, it's time to test your code. See
-link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#manual_tests_terraform[Manual tests for
-Terraform code] and
-link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#automated_tests_terraform[Automated tests
-for Terraform code] for instructions.
+Finally, add some useful outputs in `outputs.tf`:
 
-[[merge_release_password_policy_module]]
-===== Merge and release your password policy module
+.infrastructure-modules/landingzone/account-baseline-root/outputs.tf
+[source,hcl]
+----
+# ---------------------------------------------------------------------------------------------------------------------
+# CONFIG OUTPUTS
+# ---------------------------------------------------------------------------------------------------------------------
 
-Once the module is working the way you want, submit a pull request, get your changes merged into the `master` branch,
-and create a new versioned release by using a Git tag. For example, to create a `v0.3.0` release:
+//TODO -> this needs fixing in the example - currently not referencing a real output
+//output "config_s3_bucket_name" {
+//  description = "The name of the S3 bucket used by AWS Config to store configuration items."
+//  value       = module.root_baseline.config_s3_bucket_name
+//}
+//
+//output "config_s3_bucket_arn" {
+//  description = "The ARN of the S3 bucket used by AWS Config to store configuration items."
+//  value       = module.root_baseline.config_s3_bucket_arn
+//}
+
+output "config_iam_role_arns" {
+  description = "The ARNs of the IAM role used by the config recorder."
+  value       = module.root_baseline.config_iam_role_arns
+}
+
+output "config_sns_topic_arns" {
+  description = "The ARNs of the SNS Topic used by the config notifications."
+  value       = module.root_baseline.config_sns_topic_arns
+}
+
+output "config_recorder_names" {
+  description = "The names of the configuration recorder."
+  value       = module.root_baseline.config_recorder_names
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
+# ORGANIZATIONS OUTPUTS
+# ---------------------------------------------------------------------------------------------------------------------
+
+output "organization_arn" {
+  description = "ARN of the organization."
+  value       = module.root_baseline.organization_arn
+}
+
+output "organization_id" {
+  description = "Identifier of the organization."
+  value       = module.root_baseline.organization_id
+}
+
+output "master_account_arn" {
+  description = "ARN of the master account."
+  value       = module.root_baseline.master_account_arn
+}
+
+output "master_account_id" {
+  description = "Identifier of the master account."
+  value       = module.root_baseline.master_account_id
+}
+
+output "master_account_email" {
+  description = "Email address of the master account."
+  value       = module.root_baseline.master_account_email
+}
+
+output "child_accounts" {
+  description = "A map of all accounts created by this module (NOT including the root account). The keys are the names of the accounts and the values are the attributes for the account as defined in the aws_organizations_account resource."
+  value       = module.root_baseline.child_accounts
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
+# CLOUDTRAIL OUTPUTS
+# ---------------------------------------------------------------------------------------------------------------------
+
+output "cloudtrail_trail_arn" {
+  description = "The ARN of the cloudtrail trail."
+  value       = module.root_baseline.cloudtrail_trail_arn
+}
+
+output "cloudtrail_s3_bucket_name" {
+  description = "The name of the S3 bucket where cloudtrail logs are delivered."
+  value       = module.root_baseline.cloudtrail_s3_bucket_name
+}
+
+output "cloudtrail_s3_bucket_arn" {
+  description = "The ARN of the S3 bucket where cloudtrail logs are delivered."
+  value       = module.root_baseline.cloudtrail_s3_bucket_arn
+}
+//todo -> same as last
+//output "cloudtrail_kms_key_arn" {
+//  description = "The ARN of the KMS key used by the S3 bucket to encrypt cloudtrail logs."
+//  value       = module.root_baseline.cloudtrail_kms_key_arn
+//}
+//
+//output "cloudtrail_kms_key_alias_name" {
+//  description = "The alias of the KMS key used by the S3 bucket to encrypt cloudtrail logs."
+//  value       = module.root_baseline.cloudtrail_kms_key_alias_name
+//}
+
+output "cloudtrail_iam_role_name" {
+  description = "The name of the IAM role used by the cloudwatch log group."
+  value       = module.root_baseline.cloudtrail_iam_role_name
+}
+
+output "cloudtrail_iam_role_arn" {
+  description = "The ARN of the IAM role used by the cloudwatch log group."
+  value       = module.root_baseline.cloudtrail_iam_role_arn
+}
+----
+
+At this point, you'll want to test your code. See
+link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#manual_tests_terraform[Manual tests for Terraform code] and
+link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#automated_tests_terraform[Automated tests for Terraform code]
+for instructions.
+
+Once the module is working the way you want, submit a pull request, get your changes merged into the master branch, and create a new versioned release by using a Git tag. For example, to create a v0.3.0 release:
 
 [source,bash]
 ----
-git tag -a "v0.3.0" -m "Created iam-password-policy module"
+git add landingzone/account-baseline-root
+git commit -m "Add root account baseline wrapper module"
+git tag -a "v0.3.0" -m "Created root account baseline module"
 git push --follow-tags
 ----
 
-With the module released, you can use Terraform to create the password policy. Follow the instructions in the
-link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/examples/iam-password-policy/terraform[terraform usage example].
+NOTE: This guide will use https://github.com/gruntwork-io/terragrunt[Terragrunt] and its associated file and folder
+structure to deploy Terraform modules. Please note that *Terragrunt is NOT required for using Terraform modules from
+the Gruntwork Infrastructure as Code Library.* Check out link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library[How to use the Gruntwork Infrastructure as Code Library]
+for instructions on alternative options, such as how to
+link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#deploy_using_plain_terraform[deploying how to use plain terraform].
 
-[[wrapper_code_terragrunt]]
-===== Using the compliance wrapper module with Terragrunt
-
-If you're using Terragrunt, you can use the password policy Terraform module in the CIS compliance repository from a Terragrunt configuration directly, with no need to create a Terraform module of your own! In this case, `terraform-aws-cis-service-catalog` is the canonical Terraform module. To do so, configure a `terragrunt.hcl` to invoke the module. First, create a directory for the password policy in your `infrastructure-live` repository:
+Next, create a `terragrunt.hcl` file in `infrastructure-live`. It should go under the file path `root/_global/account-baseline`:
 
 ----
 infrastructure-live
-└── <your account>
-    └── _global
-        └── iam-password-policy
-            └── terragrunt.hcl
+  └ root
+    └ _global
+      └ account-baseline
+        └ terragrunt.hcl
 ----
 
-In the directory structure above, `<your account>` is a friendly name for the account you're configuring for compliance. For example, the `prod` account or the `security` account. If this doesn't make sense, see link:https://blog.gruntwork.io/terragrunt-how-to-keep-your-terraform-code-dry-and-maintainable-f61ae06959d8[this post] for more information on Terragrunt.
+Point the `source` URL in your `terragrunt.hcl` file to your `account-baseline` wrapper module in the `infrastructure-modules`
+repo, setting the `ref` param to the version you released earlier:
 
-Next, create `terragrunt.hcl` with the following contents:
-
-.infrastructure-live/<your account>/_global/iam-password-policy/terragrunt.hcl
+.infrastructure-live/root/_global/account-baseline/terragrunt.hcl
 [source,hcl]
 ----
 terraform {
-  # Make sure to replace <VERSION> in this URL with the latest terraform-aws-cis-service-catalog release
-  source = "git::ssh://git@github.com/gruntwork-io/terraform-aws-cis-service-catalog.git//modules/iam-password-policy?ref=<VERSION>"
-}
+  source = "git::git@github.com/<YOUR_ORG>/infrastructure-modules.git//landingzone/account-baseline-root?ref=v0.3.0"
 
-# Include all settings from the root terragrunt.hcl file
+  # This module deploys some resources (e.g., AWS Config) across all AWS regions, each of which needs its own provider,
+  # which in Terraform means a separate process. To avoid all these processes thrashing the CPU, which leads to network
+  # connectivity issues, we limit the parallelism here.
+  extra_arguments "parallelism" {
+    commands  = get_terraform_commands_that_need_parallelism()
+    arguments = ["-parallelism=2"]
+  }
+}
+----
+
+[.exceptional]
+IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=2`), as shown above, with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors.
+
+Set the variables for the `account-baseline-root` module in this environment in the `inputs = { ... }` block of `terragrunt.hcl`:
+
+.infrastructure-live/root/_global/account-baseline/terragrunt.hcl
+[source,hcl]
+----
+inputs = {
+  # Fill in your region you want to use (only used for API calls) and the ID of your root AWS account
+  aws_region     = "us-east-2"
+  aws_account_id = "<ROOT_ACCOUNT_ID>"
+
+  # Prefix all resources with this name
+  name_prefix = "<COMPANY_NAME>-root"
+
+  # If you've already created an AWS Organization in your root account, you'll be able to import it later in this guide
+  create_organization = true
+
+  # The child AWS accounts to create in this AWS organization
+  child_accounts = {
+    logs = {
+      email = "root-accounts+logs@acme.com"
+
+      # Mark this account as the logs account, used to aggregate all AWS Config and CloudTrail data.
+      is_logs_account = true
+    },
+    security = {
+      email = "root-accounts+security@acme.com"
+    },
+    shared-services = {
+      email = "root-accounts+shared-services@acme.com"
+    },
+    dev = {
+      email = "root-accounts+dev@acme.com"
+    },
+    stage = {
+      email = "root-accounts+stage@acme.com"
+    },
+    prod = {
+      email = "root-accounts+prod@acme.com"
+    }
+  }
+
+  # The IAM users to create in this account. Since this is the root account, you should only create IAM users for a
+  # small handful of trusted admins.
+  #
+  # NOTE: Make sure to include the IAM user you created manually here! We'll import the user into Terraform state in
+  # the next step of this guide, allowing you to manage this user as code going forward.
+  users = {
+    alice = {
+      groups               = ["full-access"]
+      pgp_key              = "keybase:alice"
+      create_login_profile = true
+      create_access_keys   = false
+    },
+    bob = {
+      groups               = ["billing"]
+      pgp_key              = "keybase:bob"
+      create_login_profile = true
+      create_access_keys   = false
+    }
+  }
+}
+----
+
+The example code above does the following:
+
+. **Create 6 child AWS accounts**. These are the accounts described in the <<child_accounts>> sections.
+
+. **Associate an email address with each of the child accounts**. This will be the email address for the root user of
+each account and AWS requires that the root user's email address is _globally_ unique, so it cannot be the email
+address you used for the root account or any of the other child accounts. You'll have to either create multiple email
+accounts in your company's email system, or, if your company uses Gmail (perhaps as part of G Suite), you can take
+advantage of the fact that https://gmail.googleblog.com/2008/03/2-hidden-ways-to-get-more-from-your.html[Gmail
+  ignores everything after a plus sign in an email address], so that while AWS will see
+`root-accounts+security@your-company.com`, `root-accounts+shared@your-company.com`, and
+`root-accounts+dev@your-company.com` as three unique email addresses, Gmail will see them all as the same email
+address, `root-accounts@your-company.com`.
+
+. **Mark one of the child accounts as a logs account**. We set `is_logs_account = true` on one of the child accounts
+to indicate it is the logs account where we will aggregate AWS Config and CloudTrail data from all the other accounts.
+The `account-baseline-root` module will automatically create an S3 bucket for AWS Config and an S3 bucket and KMS CMK
+for CloudTrail in this account and configure the root account to send all the AWS Config and CloudTrail data to these
+S3 buckets. Later on, you'll configure all the other accounts to send their data to these S3 buckets too.
+
+. **Create IAM groups**. By default, `account-baseline-root` will create a `full-access` IAM group (for admins) and a
+`billing` IAM group (for the finance team).
+
+. **Create IAM users**. For this example, we create `alice` and `bob`, and carol, adding `alice` to the `full-access`
+IAM group and `carol` to the `billing` IAM group. _Note_: your own IAM user (the one you created manually) should be
+in the `users` list; we'll use the `import` command to put this user under Terraform management shortly.
+
+. **Generate a password for each user**. We encrypt this password with that user’s PGP key from Keybase (we’ll come
+back to how to handle the passwords shortly).
+
+Pull in the https://www.terraform.io/docs/backends/[backend] settings from a root `terragrunt.hcl` file that you
+`include` in each child `terragrunt.hcl`:
+
+.infrastructure-live/root/_global/account-baseline/terragrunt.hcl
+[source,hcl]
+----
 include {
   path = find_in_parent_folders()
 }
 ----
 
-You can test this by simply running `terragrunt apply`. This will pull the `iam-password-policy` compliance module and apply it using the credentials you have defined in `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`. When you're satisfied with the configuration, follow the merge process described in <<merge_release_terragrunt_wrapper>>.
+Next, you need to authenticate as your IAM user in the root account. There are
+https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[multiple ways to authenticate to AWS on the CLI];
+in this guide, we'll use the open source tool https://github.com/99designs/aws-vault[aws-vault].
+https://github.com/99designs/aws-vault#installing[Install aws-vault] and add to it the Access Keys you saved earlier
+from your IAM user:
 
-See also the
-link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/examples/iam-password-policy/terragrunt[terragrunt
-usage example].
+[source,bash]
+----
+$ aws-vault add root-iam-user
+Enter Access Key Id: XXXXXXXXXXXX
+Enter Secret Key: YYYYYYYYYYYY
+----
 
+Next, https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html[install the AWS CLI], and check that
+authentication is working:
+
+[source,bash]
+----
+aws-vault exec root-iam-user -- aws sts get-caller-identity
+----
+
+You should get JSON output with information about your IAM user:
+
+[source,json]
+----
+{
+  "UserId": "AIDAXXXXXXXXXXXX",
+  "Account": "<ROOT_ACCOUNT_ID>",
+  "Arn": "arn:aws:iam::<ROOT_ACCOUNT_ID>:user/<YOUR_IAM_USER>"
+}
+----
+
+You're now almost ready to deploy the `account-baseline` module in the root account. But first, you may need to import
+some existing resources.
 
 [[saml_authentication]]
 === Steps for authentication via SAML
