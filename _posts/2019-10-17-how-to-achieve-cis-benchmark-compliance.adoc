@@ -886,29 +886,19 @@ cryptographically secure, long password (20+ characters) for the root user. All 
 can generate and store passwords for you in one step, so use them!
 
 Add security questions to your root account::
-It is recommended that security questions are registered in the AWS account, so that they are used to authenticate individuals calling AWS customer service for support. To add your security
-questions to the root account, navigate in the web console for AWS to `My Account` and then the `Personal Information` page.
+CIS recommendation 1.3 suggests that you register your AWS account with security questions. This is so that when someone contacts AWS customer service support from this account they will have to authenticate. To add your security questions to the root account, navigate in the web console for AWS to `My Account` and then the `Personal Information` page.
 There you should be able to click on `Configure Security Challenge Questions` and add your questions.
-
-_This fulfils requirement #1.3 from the CIS 1.3.0 benchmark._
 
 Enable MFA::
 Make sure to
 https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html#id_root-user_manage_mfa[enable MFA for your root user].
 Feel free to use a virtual or hardware MFA device—whichever is easier or required by your company—as either one
-dramatically improves the security of your root user. If you use a virtual or hardware MFA device, it is recommended by the CIS benchmark that it is non-personal device, but instead company-owned or specifically provided for the purposes.
-
-_Enabling virtual MFA fufils requirement #1.5 from the CIS 1.3.0 benchmark._
-_Enabling hardware MFA fulfils requirement #1.6 from the CIS 1.3.0 benchmark._
-
-It is up to your discretion which of the requirements you choose to comply with.
+dramatically improves the security of your root user. It is up to your discretion to decide which option yis suitable for your use case. CIS 1.3 bechmark recommends that any virtual or hardware device you use to fulfil MFA is not personal, but instead dedicated or company-owned.
 
 Disable access keys::
 Make sure to
 https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html#id_root-user_manage_delete-key[delete the root user's access keys],
 so that the only way to login as the root user is via the web console, where MFA is required.
-
-_This fulfils requirement #1.4 from the CIS 1.3.0 benchmark._
 
 Don't use the root user again::
 In the next section, you will create an IAM user in the root account with admin permissions. Once you've created that
@@ -942,14 +932,16 @@ huge problem for your company (especially if that IAM user had admin permissions
 IAM user accounts as much as possible:
 
 Use a secrets manager::
-Do NOT store the credentials or any kind of secret in plain text. Instead, always use a secrets manager such as
-https://1password.com[1Password], https://www.lastpass.com[LastPass], or https://www.passwordstore.org[pass] to store
-the credentials in an encrypted format.
+Do NOT store the root user's password, or secrets of any kind, in plain text. Instead, always use a secrets manager
+such as https://1password.com[1Password], https://www.lastpass.com[LastPass], or https://www.passwordstore.org[pass]
+to store the credentials in an encrypted format.
+
 
 Use a strong, generated password::
 Do NOT re-use passwords from other websites, or any password that you can remember at all. Instead, generate a random,
 cryptographically secure, long password (20+ characters). All the password managers mentioned above can generate and
 store passwords for you in one step, so use them!
+
 
 Enable MFA::
 Always make sure to
