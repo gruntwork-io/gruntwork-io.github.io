@@ -1359,8 +1359,7 @@ git push --follow-tags
 ----
 
 NOTE: This guide will use https://github.com/gruntwork-io/terragrunt[Terragrunt] and its associated file and folder
-structure to deploy Terraform modules. Please note that *Terragrunt is NOT required for using Terraform modules from
-the Gruntwork Infrastructure as Code Library.* Check out link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library[How to use the Gruntwork Infrastructure as Code Library]
+structure to deploy Terraform modules. Please note that *Terragrunt is NOT required for using Terraform modules from the Gruntwork Infrastructure as Code Library.* Check out `link`:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library[How to use the Gruntwork Infrastructure as Code Library]
 for instructions on alternative options, such as how to
 link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#deploy_using_plain_terraform[deploying how to use plain terraform].
 
@@ -1409,7 +1408,7 @@ inputs = {
   # Prefix all resources with this name
   name_prefix = "<COMPANY_NAME>-root"
 
-  # If you've already created an AWS Organization in your root account, you'll be able to import it later in this guide
+  # If you've already created an AWS Organization in your root account, set this to false and you'll be able to import it later in this guide
   create_organization = true
 
   # The child AWS accounts to create in this AWS organization
@@ -1444,7 +1443,7 @@ inputs = {
   # the next step of this guide, allowing you to manage this user as code going forward.
   users = {
     alice = {
-      groups               = ["full-access"]
+      groups               = ["support"]
       pgp_key              = "keybase:alice"
       create_login_profile = true
       create_access_keys   = false
@@ -1474,15 +1473,14 @@ advantage of the fact that https://gmail.googleblog.com/2008/03/2-hidden-ways-to
 address, `root-accounts@your-company.com`.
 
 . **Mark one of the child accounts as a logs account**. We set `is_logs_account = true` on one of the child accounts
-to indicate it is the logs account where we will aggregate AWS Config and CloudTrail data from all the other accounts.
+to indicate it is the logs account where we will aggregate AWS Config, CloudTrail, IAM Access Analyzer and Security Hub data from all the other accounts.
 The `account-baseline-root` module will automatically create an S3 bucket for AWS Config and an S3 bucket and KMS CMK
 for CloudTrail in this account and configure the root account to send all the AWS Config and CloudTrail data to these
 S3 buckets. Later on, you'll configure all the other accounts to send their data to these S3 buckets too.
 
-. **Create IAM groups**. By default, `account-baseline-root` will create a `full-access` IAM group (for admins) and a
-`billing` IAM group (for the finance team).
+. **Create IAM groups**. By default, `account-baseline-root` will **not** create a `full-access` IAM group as CIS requirement 1.16 guides. It will create a `support` and a `billing` IAM group (for the support and finance teams).
 
-. **Create IAM users**. For this example, we create `alice` and `bob`, and carol, adding `alice` to the `full-access`
+. **Create IAM users**. For this example, we create `alice` and `bob`, adding `alice` to the `full-access`
 IAM group and `carol` to the `billing` IAM group. _Note_: your own IAM user (the one you created manually) should be
 in the `users` list; we'll use the `import` command to put this user under Terraform management shortly.
 
@@ -1513,6 +1511,12 @@ Enter Access Key Id: XXXXXXXXXXXX
 Enter Secret Key: YYYYYYYYYYYY
 ----
 
+You should also enable MFA for the IAM user (https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_mfa_enable_virtual.html)[see the AWS docs on enabling a virtual MFA device]) and add the configuration to your profile as follows:
+[source,bash]
+----
+mfa_serial=arn:aws:iam::<YOUR_ROOT_ACCOUNT_ID>:mfa/<YOUR_IAM_USER>
+----
+
 Next, https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html[install the AWS CLI], and check that
 authentication is working:
 
@@ -1535,148 +1539,167 @@ You should get JSON output with information about your IAM user:
 You're now almost ready to deploy the `account-baseline` module in the root account. But first, you may need to import
 some existing resources.
 
-[[saml_authentication]]
-=== Steps for authentication via SAML
-If you're unfamiliar with SAML authentication and identity providers, start with the
-link:https://gruntwork.io/guides/foundations/how-to-configure-production-grade-aws-account-structure/#federated-authentication[federated
-authentication section] of the Gruntwork production-grade AWS account structure guide. You may also find the
-link:https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_saml.html#CreatingSAML-configuring-role[AWS
-SAML-based Federation documentation] to be helpful. Once you select an IdP, populate it with users and follow
-the provider's documentation to configure SAML with AWS. If you use SAML authentication alone, with no IAM users, the
-account will immediately be compliant with several of the Benchmark recommendations!
+=== Import existing resources from the root account
 
-Once the IdP is ready, proceed with the steps below.
+Before applying the security baseline to the root account, we need to import any existing resources—including the IAM
+user you created manually earlier—into Terraform state, so that Terraform manages those existing resources instead of
+trying to create totally new ones. You can do this using the
+https://www.terraform.io/docs/import/index.html[`import` command], which uses the format:
 
-Set up IAM roles for SAML::
-Use the link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/blob/master/modules/saml-iam-roles/README.adoc[`saml-iam-roles`
-wrapper module] to configure a compliant-set of IAM roles and policies by following the pattern outlined in <<wrapper_code>>. The module creates a minimal, best
-practices set of of IAM roles that may be assumed from the SAML provider. Tweak the `vars.tf` according to
-your needs.
-
-Enable MFA in the IdP::
-Ensure that MFA is configured for all AWS users in your IdP. Strictly speaking, MFA in the IdP is not
-required for compliance with the Benchmark. However, the intent of the Benchmark requirement is that all AWS
-users should have MFA, and we strongly advise this practice.
-
-Create an IAM group for access to support::
-Use the
-link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/blob/master/modules/iam-groups/README.adoc[`iam-groups`
-wrapper module] to create a standardized set of IAM groups by following the pattern outlined in <<wrapper_code>>. The module will create a group called `support`
-with the `AWSSupportAccess` managed policy attached. Customize the variables in the module to create only the
-groups you want.
-
-Use the IAM admin role for administration::
-To ensure compliance with recommendation 1.16, the `saml-iam-roles` wrapper module does not create any roles
-with explicit administrator (`+*:*+`) permissions. Instead, to grant "effective" administrator access to a
-SAML user, use the `allow-iam-admin-access-from-saml` role. Users that assume this role have the ability to
-grant, revoke, and update IAM permissions as needed. From a privileges standpoint, this is the same as full
-administrator access, so be judicious with this permission.
-
-If you need to provision IAM users in addition to SAML, proceed with <<iam_user_authentication>>. Otherwise,
-continue with <<iam_roles_for_instances>>.
-
-[[iam_user_authentication]]
-=== Steps for authentication via IAM users
-If you're new to IAM, refer to the
-link:https://gruntwork.io/guides/foundations/how-to-configure-production-grade-aws-account-structure/#aws-account[Core
-concepts section] of the production-grade AWS account structure guide. Once you're familiar with IAM, proceed
-with the following configuration steps:
-
-Create cross-account roles::
-If you're using multiple AWS accounts, the best way to set up access to each account is to create a set of
-roles that can be assumed from a central account using the
-link:https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html[AssumeRole] feature. This way you
-only need to create IAM users in the central account rather than in each account individually . You can create
-roles in your sub accounts using the
-link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/blob/master/modules/cross-account-iam-roles/README.adoc[`cross-account-iam-roles`
-wrapper module] and the pattern outlined in <<wrapper_code>>.
-
-Refer to the
-link:https://gruntwork.io/guides/foundations/how-to-configure-production-grade-aws-account-structure/#iam-roles[IAM
-roles] section of the production-grade AWS account structure guide to learn more about cross-account roles.
-
-Create IAM groups::
-Next, create a compliant set of IAM groups with the
-link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/blob/master/modules/iam-groups/README.adoc[`iam-groups`
-wrapper module] by following the pattern outlined in <<wrapper_code>>. If you're using multiple AWS accounts, add the roles created in the previous step to the
-`iam_groups_for_cross_account_access` list.
-
-Create IAM users::
-Now use the
-link:https://github.com/gruntwork-io/terraform-aws-security/blob/master/modules/iam-users/README.md[`iam-users`
-core module] to create users and add them to the groups created in the previous step. Follow the pattern outlined in
-<<wrapper_code>> to use the `iam-users` module, even though there isn't a wrapper module for `iam-users` because there isn't anything particular needed to reach
-compliance.
-
-If you are using multiple AWS accounts, create users in a central AWS account that you wish to use for
-authentication. For example, you might use a "security" account for authentication, and use the previously
-created cross-account roles and associated IAM groups to enable users to use AssumeRole to access other
-accounts (e.g. dev, stage, and production) where your applications run.
-
-(Optional) Create custom IAM groups or roles::
-If you need to create customized IAM groups and/or roles, use the
-link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/blob/master/modules/custom-iam-entity/README.adoc[`custom-iam-entity`
-wrapper module]. You can use this module to attach managed policies to roles and groups, and to require that MFA is in use. Refer to the link:https://github.com/gruntwork-io/terraform-aws-security/blob/master/examples/custom-iam-entity/README.md[example usage].
-
-[[cleanup_expired_certs_deployment]]
-=== Automatically remove expired SSL/TLS certificates from IAM
-Next, use the link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/blob/master/modules/cleanup-expired-certs/README.adoc[`cleanup-expired-certs`]
-module to deploy a Lambda function to remove all expired SSL/TLS certificates from AWS IAM. This module will add all of the relevant IAM resources needed to
-periodically execute the Lambda function and optionally, report metrics to CloudWatch. Be sure to deploy this module into each of your AWS accounts.
-
-If you're using Terragrunt, then you can invoke the standalone module directly by following the pattern outlined in
-<<wrapper_code_terragrunt>> and creating a `terragrunt.hcl` file with the following contents:
-
-.infrastructure-live/<your account>/_global/cleanup-expired-certs/terragrunt.hcl
-[source,hcl]
+[source,bash]
 ----
-terraform {
-  # Make sure to replace <VERSION> in this URL with the latest terraform-aws-cis-service-catalog release
-  source = "git::ssh://git@github.com/gruntwork-io/terraform-aws-cis-service-catalog.git//modules/cleanup-expired-certs?ref=<VERSION>"
-}
-
-# Include all settings from the root terragrunt.hcl file
-include {
-  path = find_in_parent_folders()
-}
-
-inputs = {
-  schedule_expression                = "rate(1 hour)"
-  report_cloudwatch_metric           = true
-  report_cloudwatch_metric_namespace = "custom/cis"
-  report_cloudwatch_metric_name      = "cleanup-expired-iam-certs-count"
-}
+terraform import <ADDRESS> <ID>
 ----
 
-[[iam_access_analyzer_deployment]]
-=== Steps to enable IAM Access Analyzer for all enabled AWS regions
-To enable IAM Access Analyzer in your AWS Account or Organization, you need to do it separately for every region.
+Where `<ADDRESS>` is the https://www.terraform.io/docs/internals/resource-addressing.html[address] of the Terraform
+resource you're importing and `<ID>` is a resource-specific identifier (e.g., for `aws_instance`, it's the instance ID,
+whereas for `aws_lb`, it's the load balancer's name—check the docs for the resource to find out what to use).
 
-If you're using Terragrunt, then you can invoke the standalone module directly by following the pattern outlined in
-<<wrapper_code_terragrunt>> and using a `terragrunt.hcl` file with the following contents:
+As a first example, let's import the IAM user you created manually in the root account. IAM users are managed using the
+`aws_iam_user` resource, and the
+https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_user#import[documentation for that
+resource] tells us to use the user's `name` as the `<ID>`; we'll assume for this example that your IAM user's name was
+`alice`, who is already one of the entries in the `users` variable in `terragrunt.hcl`. So now we need the `<ADDRESS>`.
+An easy way to get it is to run `plan`:
 
-.infrastructure-live/<your account>/_global/iam-access-analyzer/terragrunt.hcl
-[source,hcl]
+[source,bash]
 ----
-terraform {
-# Make sure to replace <VERSION> in this URL with the latest terraform-aws-security release
-source = "git::ssh://git@github.com/gruntwork-io/terraform-aws-security.git//modules/iam-access-analyzer-multi-region?ref=<VERSION>"
-}
-
-# Include all settings from the root terragrunt.hcl file
-include {
-  path = find_in_parent_folders()
-}
-
-inputs = {
-  iam_access_analyzer_type = "ACCOUNT"
-  iam_access_analyzer_name = "iam-access-analyzer"
-  seed_region              = "us-east-2"
-}
+cd infrastructure-live/root/_global/account-baseline
+aws-vault exec root-iam-user -- terragrunt plan
 ----
 
-And refer to the Readme document here:
-link:https://github.com/gruntwork-io/terraform-aws-security/blob/master/modules/iam-access-analyzer-multi-region/README.adoc[README.adoc].
+You should get a whole bunch of log output, including something that looks like this:
+
+----
+------------------------------------------------------------------------
+
+An execution plan has been generated and is shown below.
+Resource actions are indicated with the following symbols:
+  + create
+ <= read (data resources)
+
+Terraform will perform the following actions:
+
+# ... (ommitting lots of log output for simplicity) ...
+
+# module.root_baseline.module.iam_users.aws_iam_user.user["alice"] will be created
+  + resource "aws_iam_user" "user" {
+      + arn           = (known after apply)
+      + force_destroy = true
+      + id            = (known after apply)
+      + name          = "alice"
+      + path          = "/"
+      + unique_id     = (known after apply)
+    }
+
+# ... (ommitting lots of log output for simplicity) ...
+
+Plan: 160 to add, 0 to change, 0 to destroy.
+
+------------------------------------------------------------------------
+
+Note: You didn't specify an "-out" parameter to save this plan, so Terraform
+can't guarantee that exactly these actions will be performed if
+"terraform apply" is subsequently run.
+----
+
+This `plan` output is telling you that Terraform will create a bunch of resources, including the `aws_iam_user` named
+`alice`. Of course, this user already exists, so we want to `import` the user rather than create it again. The text
+next to the `#` gives you the `<ADDRESS>` to use:
+
+----
+# module.root_baseline.module.iam_users.aws_iam_user.user["alice"] will be created
+----
+
+So the `<ADDRESS>` you want is `module.root_baseline.module.iam_users.aws_iam_user.user["alice"]`. Now, normally, you'd
+run `import` right away, but due two Terraform bugs, https://github.com/hashicorp/terraform/issues/13018[#13018] and
+https://github.com/hashicorp/terraform/issues/26211[#26211], `import` doesn't work on certain types of modules—namely,
+those with nested `provider` blocks that use dynamic data—and will produce an error like `unknown variable accessed:
+var.region in:`. One of these bugs has been open for over 3 years, so we built a workaround for it in Terragrunt: the
+https://terragrunt.gruntwork.io/docs/reference/cli-options/#aws-provider-patch[`aws-provider-patch` command].
+
+The idea behind the workaround is to temporarily hard-code the dynamic data in nested `provider` blocks. In particular,
+we need to temporarily hard-code some of the `region` and `role_arn` parameters of the nested `provider` blocks used by
+`account-baseline-root` as follows:
+
+[source,bash]
+----
+terragrunt aws-provider-patch \
+  --terragrunt-override-attr region="eu-west-1" \
+  --terragrunt-override-attr assume_role.role_arn=""
+----
+
+_Note: You can use any region you want for the `region` parameter. It's just temporary. However, `role_arn` must be set
+to an empty string or Terraform will complain._
+
+After running this command, you can finally import your IAM user:
+
+[source,bash]
+----
+aws-vault exec root-iam-user -- terragrunt import \
+  'module.root_baseline.module.iam_users.aws_iam_user.user["alice"]' \
+  'alice'
+----
+
+You should see log output that looks something like this:
+
+----
+[terragrunt] 2020/10/13 14:19:16 Running command: terraform import module.root_baseline.module.iam_users.aws_iam_user.user["alice"] alice
+module.root_baseline.module.iam_users.aws_iam_user.user["alice"]: Importing from ID "alice"...
+module.root_baseline.module.iam_users.aws_iam_user.user["alice"]: Import prepared!
+  Prepared aws_iam_user for import
+module.root_baseline.module.iam_users.aws_iam_user.user["alice"]: Refreshing state... [id=alice]
+
+Import successful!
+
+The resources that were imported are shown above. These resources are now in
+your Terraform state and will henceforth be managed by Terraform.
+----
+
+You'll now be able to manage that IAM user as code going forward!
+
+If you created other resources manually in the root account, you may want to `import` them too, so you can manage
+everything as code, and so that Terraform doesn't try to create any duplicate resources. For example, if you already
+manually created an AWS Organization in your root account, you'll need to import it using a command that looks like
+this:
+
+[source,bash]
+----
+aws-vault exec root-iam-user -- terragrunt import \
+  'module.root_baseline.module.organization.aws_organizations_organization.root[0]' \
+  '<ORG_ID>'
+----
+
+Where `<ORG_ID>` is the ID of your AWS Organization. Note that this is NOT the same as the AWS account ID, but a
+separate ID you can find by going to the https://console.aws.amazon.com/organizations/home[AWS Organizations] page in
+the AWS console, clicking on your root account (the one with a star to the left of it), and looking at the root
+account's ARN, which will look something like, `arn:aws:organizations::<ACCOUNT_ID>:account/<ORG_ID>/<ACCOUNT_ID>`. The
+`<ORG_ID>` is the part between slashes, and it'll look something like `o-a2lce3bbqq`.
+
+You may also want to import child accounts you created manually. You'll need to add each of these to the
+`child_accounts` variable in `terragrunt.hcl`, and you can then import each one as follows:
+
+[source,bash]
+----
+aws-vault exec root-iam-user -- terragrunt import \
+  'module.root_baseline.module.organization.aws_organizations_account.child_accounts["<ACCOUNT_NAME>"]' \
+  '<ACCOUNT_ID>'
+----
+
+Where `<ACCOUNT_NAME>` is the name you used for the account in the `child_accounts` variable and `<ACCOUNT_ID>` is the
+12-digit ID of that AWS account.
+
+Once you're done importing, you'll want to undo the `aws-provider-patch` workaround. The easiest way to do that is to
+delete the `.terraform` or `.terragrunt-cache` folders to remove any locally cached modules, as they would've been
+modified by the `aws-provider-patch` command.
+
+[source,bash]
+----
+rm -rf .terragrunt-cache
+----
+
+
+//TODO: rest of account-baseline app, logs, security, etc
 
 === Try authenticating as an IAM user to the child accounts
 
