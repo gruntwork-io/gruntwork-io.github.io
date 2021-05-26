@@ -1698,8 +1698,104 @@ modified by the `aws-provider-patch` command.
 rm -rf .terragrunt-cache
 ----
 
+=== Apply the security baseline to the root account
+
+You're now ready to apply the security baseline to the root account. You should be authenticated as the same IAM user
+in the root account as in the previous two sections. To apply the security baseline, you run `terragrunt apply`:
+
+[source,bash]
+----
+cd infrastructure-live/root/_global/account-baseline
+aws-vault exec root-iam-user -- terragrunt apply
+----
+
+[.exceptional]
+IMPORTANT: On some operating systems, such as MacOS, you may also need to increase your open files limit to avoid "pipe: too many open files" errors by running: `ulimit -n 1024`.
+
+Once `apply` completes, you should see output variables with all of your account IDs, the name of the AWS Config S3
+bucket, the name of the CloudTrail S3 bucket, and the ARN of the CloudTrail KMS key:
+
+[source,hcl]
+----
+# (this output has been edited to be easier to read)
+child_accounts = {
+  "dev" = {
+    "email" = "root-accounts+dev@acme.com"
+    "id" = "<DEV_ACCOUNT_ID>"
+    # (...)
+  }
+  "logs" = {
+    "email" = "root-accounts+logs@acme.com"
+    "id" = "<LOGS_ACCOUNT_ID>"
+    # (...)
+  }
+  "prod" = {
+    "email" = "root-accounts+prod@acme.com"
+    "id" = "<PROD_ACCOUNT_ID>"
+    # (...)
+  }
+  "security" = {
+    "email" = "root-accounts+security@acme.com"
+    "id" = "<SECURITY_ACCOUNT_ID>"
+    # (...)
+  }
+  "shared-services" = {
+    "email" = "root-accounts+shared-services@acme.com"
+    "id" = "<SHARED_SERVICES_ACCOUNT_ID>"
+    # (...)
+  }
+  "stage" = {
+    "email" = "root-accounts+stage@acme.com"
+    "id" = "<STAGE_ACCOUNT_ID>"
+    # (...)
+  }
+}
+cloudtrail_kms_key_arn    = "<CLOUDTRAIL_KMS_KEY_ARN>"
+cloudtrail_s3_bucket_name = "<CLOUDTRAIL_BUCKET_NAME>"
+config_s3_bucket_name     = "<CONFIG_BUCKET_NAME>"
+----
+
+Take note of all of this data, as you'll need it again shortly!
+
+One other useful output will be the encrypted passwords for any IAM users you created:
+
+[source,hcl]
+----
+user_passwords = {
+  "alice" = "wcBMA7E6Kn/t1YPfAQgAVSXlUzumcs4UyO8E5q099YnnU="
+  "bob" = "wcBMA7E6Kn/t1YPfAQgACgbdb1mYtQx7EL4hnVWtYAi="
+}
+----
+
+Send the encrypted password to each user, along with their user name, and the IAM user sign-in URL for the root account.
+Each user can then decrypt the password on their own computer (which should have their PGP key) as follows:
+
+[source,bash]
+----
+echo "<PASSWORD>" | base64 --decode | keybase pgp decrypt
+----
+
+=== Reset the root user password in each child account
+
+When creating the child accounts, you may have noticed that you provided an email address for each root user, but
+confusingly, not a password. So how do you login as the root user then? It's not obvious, but the answer is that you
+https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys_retrieve.html#reset-root-password[reset the root user password],
+using the "Forgot your password?" prompt on the https://console.aws.amazon.com/[root user login page]. AWS will email
+you a reset link, which you can click to go to a page that will allow you to configure a password for the root user.
+Use this process to reset the password for the root user of each child account you created.
+
+=== Lock down the root user in the child accounts
+
+Once you're able to access the root user of each child account, you should follow the steps in <<lock_down_root_user>>
+for each of those child accounts—including enabling MFA and deleting the root user's access keys—and (almost) never use
+those root users again.
 
 //TODO: rest of account-baseline app, logs, security, etc
+
+
+
+
+
 
 === Try authenticating as an IAM user to the child accounts
 
