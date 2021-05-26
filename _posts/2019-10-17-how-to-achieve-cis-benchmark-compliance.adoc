@@ -822,7 +822,8 @@ The `infrastructure-modules` are your organization's "blueprint" for how to depl
 use `infrastructure-modules` to customize the settings according to the needs of your environment. Subscribers can refer to
 the link:https://github.com/gruntwork-io/terraform-aws-service-catalog/blob/master/core-concepts.md#create-your-own-service-catalog[Create your own service catalog section]
 in the Gruntwork Service Catalog documentation for more information on how you might use `infrastructure-modules`.
-
+ +
+ +
 If you're using Terragrunt, the `infrastructure-modules` are optional; you can call the compliance
 wrapper modules directly as the `source` from a Terragrunt configuration. The benefit of this is that you have less code to maintain by depending directly on Gruntwork's upstream compliance modules.
 
@@ -831,12 +832,12 @@ wrapper modules directly as the `source` from a Terragrunt configuration. The be
 `infrastructure-live` uses link:https://github.com/gruntwork-io/terragrunt[Terragrunt] to make it easier to
 work with Terraform modules in multiple environments. `infrastructure-live` is optional - you can use all of the modules
 with or without Terragrunt.
-
+ +
+ +
 If you're not using Terragrunt, you can use `infrastructure-modules` to call the compliance wrapper modules. Subscribers can refer to the
 link:https://github.com/gruntwork-io/terraform-aws-service-catalog/blob/master/core-concepts.md#create-your-own-service-catalog[Create your own service catalog section]
 in the Gruntwork Service Catalog documentation for more information on how you might use `infrastructure-live`.
 
- +
 [[benefits]]
 ==== Benefits
 This modular, decomposed approach allows for maximum code reuse. The core modules can be used with or without
