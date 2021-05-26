@@ -1158,24 +1158,6 @@ If you need to create customized IAM groups and/or roles, use the
 link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/blob/master/modules/custom-iam-entity/README.adoc[`custom-iam-entity`
 wrapper module]. You can use this module to attach managed policies to roles and groups, and to require that MFA is in use. Refer to the link:https://github.com/gruntwork-io/terraform-aws-security/blob/master/examples/custom-iam-entity/README.md[example usage].
 
-[[iam_roles_for_instances]]
-=== Use IAM roles for EC2 instances
-All Gruntwork modules that require AWS API access use roles rather than an IAM user with static API credentials for
-authentication. For example:
-
-* link:https://github.com/gruntwork-io/terraform-aws-server/blob/master/modules/single-server/main.tf[`terraform-aws-server`]
- is used to manage a single EC2 instance with an IAM role attached.
-* link:https://github.com/gruntwork-io/terraform-aws-asg[`terraform-aws-asg`] applies IAM roles to instances in auto-scaling
- group.
-* link:https://github.com/gruntwork-io/terraform-aws-eks/blob/master/modules/eks-cluster-workers/main.tf[`terraform-aws-eks`]
- uses IAM roles for EKS cluster workers.
-* link:https://github.com/gruntwork-io/terraform-aws-ecs/tree/master/modules/ecs-cluster[`ecs-cluster`] creates IAM
- roles for ECS instances
-* link:https://github.com/gruntwork-io/terraform-aws-lambda/tree/master/modules/lambda[`lambda`] creates IAM
- roles for Lambda functions
-
-Use these modules whenever possible. You should always use IAM roles in your own modules any time you need to provide access to the AWS API. Using static API credentials should be avoided whenever possible.
-
 [[cleanup_expired_certs_deployment]]
 === Automatically remove expired SSL/TLS certificates from IAM
 Next, use the link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/blob/master/modules/cleanup-expired-certs/README.adoc[`cleanup-expired-certs`]
@@ -1257,7 +1239,26 @@ authenticating:
   that you've configured in `aws-vault`. For example, `aws-vault login logs-from-root` will open up your web browser
   and log you into the logs account using the `OrganizationAccountAccessRole` IAM Role.
 
-[[maintain_compliance]]
+[[iam_roles_for_instances]]
+=== Use IAM roles for EC2 instances
+All Gruntwork modules that require AWS API access use roles rather than an IAM user with static API credentials for
+authentication. For example:
+
+* link:https://github.com/gruntwork-io/terraform-aws-server/blob/master/modules/single-server/main.tf[`terraform-aws-server`]
+ is used to manage a single EC2 instance with an IAM role attached.
+* link:https://github.com/gruntwork-io/terraform-aws-asg[`terraform-aws-asg`] applies IAM roles to instances in auto-scaling
+ group.
+* link:https://github.com/gruntwork-io/terraform-aws-eks/blob/master/modules/eks-cluster-workers/main.tf[`terraform-aws-eks`]
+ uses IAM roles for EKS cluster workers.
+* link:https://github.com/gruntwork-io/terraform-aws-ecs/tree/master/modules/ecs-cluster[`ecs-cluster`] creates IAM
+ roles for ECS instances
+* link:https://github.com/gruntwork-io/terraform-aws-lambda/tree/master/modules/lambda[`lambda`] creates IAM
+ roles for Lambda functions
+
+Use these modules whenever possible. You should always use IAM roles in your own modules any time you need to provide
+access to the AWS API. Using static API credentials should be avoided whenever possible.
+
+[[maintain_compliance_iam]]
 === Maintaining compliance by following IAM best practices
 We conclude the IAM section with a few parting words of wisdom for maintaining compliance over time:
 
@@ -1272,8 +1273,8 @@ link:https://docs.aws.amazon.com/general/latest/gr/aws_tasks-that-require-root.h
 the use of root].  Fortunately, most of these activities are rare, so usage of the root account can be kept to
 a minimum.
 
-[[configure_storage]]
-=== Configure storage
+[[maintain_compliance_storage]]
+=== Maintaining compliance by following Storage best practices
 
 [[s3_buckets_deployment]]
 ==== S3 Buckets
@@ -1285,63 +1286,17 @@ that all Gruntwork modules that create S3 buckets use this module under the hood
 You can either use the `private-s3-bucket` module in your own modules, or, if you wish to deploy a standalone S3 bucket, use the https://github.com/gruntwork-io/terraform-aws-service-catalog/blob/master/modules/data-stores/s3-bucket/[`s3-bucket` service]
 from the Gruntwork Service Catalog.
 
-[[encrypt_ebs_volumes]]
-==== Encrypt EBS volumes
+[[maintain_compliance_logging]]
+=== Maintaining compliance by following Logging best practices
 
-Use the link:https://github.com/gruntwork-io/terraform-aws-security/tree/master/modules/ebs-encryption-multi-region[`ebs-encryption-multi-region` module]
-to configure AWS EBS encryption in all enabled regions of an AWS Account, as per the Benchmark recommendation.
-
-If you're using Terragrunt, then you can invoke the standalone module directly by following the pattern outlined in
-<<wrapper_code_terragrunt>> and creating a `terragrunt.hcl` file with the following contents:
-
-.infrastructure-live/<your account>/_global/ebs-encryption/terragrunt.hcl
-[source,hcl]
-----
-terraform {
-  # Make sure to replace <VERSION> in this URL with the latest terraform-aws-security release
-  source = "git::ssh://git@github.com/gruntwork-io/terraform-aws-security.git//modules/ebs-encryption-multi-region?ref=<VERSION>"
-}
-
-# Include all settings from the root terragrunt.hcl file
-include {
-  path = find_in_parent_folders()
-}
-
-inputs = {
-  enable_encryption = true
-  seed_region       = "us-east-2"
-}
-----
-
-[[configure_logging]]
-=== Configure logging
 The logging section of the Benchmark includes configurations for CloudTrail, AWS Config, KMS keys, and VPC
 flow logs.
 
-[[cloudtrail]]
-==== CloudTrail
-Use the link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/blob/master/modules/cloudtrail/README.adoc[`cloudtrail`
-wrapper module] to establish a compliant CloudTrail configuration. The wrapper module will configure CloudTrail with all
-the characteristics required by the Benchmark. Refer to the
-link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/blob/master/examples/cloudtrail/terraform/README.md[terraform]
-and
-link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/blob/master/examples/cloudtrail/terragrunt/README.md[terragrunt]
-examples.
-
-[[aws_config]]
-==== Enable AWS Config in all regions
-Use the
-link:https://github.com/gruntwork-io/terraform-aws-security/blob/master/modules/aws-config-multi-region/README.adoc[`aws-config-multi-region`
-module]
-to enable AWS Config in every region of an AWS account, along with a global configuration recorder in one region, as per
-the Benchmark recommendation.
-
-
 [[kms]]
 ==== Enable key rotation for KMS keys
-Use the
-link:https://github.com/gruntwork-io/terraform-aws-security/blob/master/modules/kms-master-key/README.md[`kms-master-key`
-module] to create KMS keys with key rotation enabled by default.
+To make sure your KMS keys are compliant with the benchmark, use the
+link:https://github.com/gruntwork-io/terraform-aws-security/blob/master/modules/kms-master-key/README.md[`kms-master-key` module]
+to create KMS keys with key rotation enabled by default.
 
 [[vpc_flow_logs]]
 ==== Create VPC flow logs
@@ -1412,23 +1367,22 @@ To limit the number of flow logs, you may want to use the
 link:https://github.com/gruntwork-io/cloud-nuke[`cloud-nuke defaults-aws`] command. It will remove the default VPC from
 all regions in an account, saving you the hassle of creating flow logs in each default VPC.
 
-[[configure_monitoring]]
-=== Configure monitoring
+[[maintain_compliance_monitoring]]
+=== Maintaining compliance by following Monitoring best practices
 The Monitoring section of the Benchmark centers on a collection of
 link:https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/MonitoringLogData.html[CloudWatch Logs Metric
 Filters]. Gruntwork has simplified this section to a single module: the
 link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/blob/master/modules/cloudwatch-logs-metric-filters/README.adoc[`cloudwatch-logs-metric
 -filters` wrapper module]. It will create and configure all the CloudWatch Logs metric filters necessary for
-compliance with the Benchmark. Note that when you use the
-link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/blob/master/modules/cloudtrail/README.adoc[`cloudtrail`
-wrapper module] as recommended in <<cloudtrail>>, this module will automatically be invoked inline so that you don't
-have to do anything special to enable the metric filters on the deployed CloudTrail configuration.
+compliance with the Benchmark. Note that when you deploy the CIS account baseline modules, the CloudWatch Logs metric
+filters will be created and configured automatically.have to do anything special to enable the metric filters on the
+deployed CloudTrail configuration.
 
 Note that you must have a subscriber on the SNS topic to be compliant. Refer to <<subscribe_sns>> for details on how to
 setup a subscriber to the SNS topics that are created.
 
-[[configure_networking]]
-=== Configure networking
+[[maintain_compliance_networking]]
+=== Maintaining compliance by following Networking best practices
 
 To ensure all the networking recommendations are satisfied, use the
 link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/modules/networking/vpc[`vpc`] (and/or
@@ -1469,11 +1423,11 @@ module "vpc" {
   allow_administrative_remote_access_cidrs_private_persistence_subnets = { all_app_vpc_cidrs  = module.vpc.vpc_cidr_block }
 ----
 
-Refer to the https://github.com/gruntwork-io/cis-infrastructure-modules-acme/blob/master/networking/vpc-app[cis-infrastructure-modules-acme] and https://github.com/gruntwork-io/cis-infrastructure-live-acme/tree/master/dev/us-east-2/dev/vpc[cis-infrastructure-live-acme], if you are using Terragrunt.
+Refer to the https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/examples/for-learning-and-testing/networking/vpc/terraform[terraform-aws-cis-service-catalog]
+repo for a more comprehensive example.
 
-
-Finally, run the link:https://github.com/gruntwork-io/cloud-nuke[`cloud-nuke
-defaults-aws`] command to remove all default security groups from all VPCs in all regions.
+Finally, run the link:https://github.com/gruntwork-io/cloud-nuke[`cloud-nuke defaults-aws`] command to remove all
+default security groups from all VPCs in all regions.
 
 [[next_steps]]
 == Next steps
