@@ -112,9 +112,9 @@ context). As such, you need to inject these required blocks to use advanced feat
 root `terragrunt.hcl` configuration that includes these directives so that we can continue to use the original,
 non-Service Catalog based live configuration.
 
-For reference, you can download the https://github.com/gruntwork-io/terraform-aws-service-catalog/releases/tag/tbd[refarch-folder-structure TODO] zip file which
-contains all the following files in their respective locations in the folder structure. You'll have to copy these
-files into your own `infrastructure-live` repository.
+For reference, you can download the link:https://github.com/gruntwork-io/infrastructure-live-multi-account-acme/releases/tag/v0.0.0-alpha1[refarch-folder-structure]
+zip file which contains all the following files in their respective locations in the folder structure. You can copy
+these files into your own `infrastructure-live` repository.
 
 [arabic]
 . Create a new file `terragrunt_service_catalog.hcl` at the root of the `infrastructure-live` repository. We name this
@@ -196,7 +196,7 @@ inputs = {
 [NOTE]
 .Explanation
 ====
-In the Reference Architecture v1.0, we had a root configuration for each account to ensure
+In the non-Service Catalog flavor of the Reference Architecture, we had a root configuration for each account to ensure
 that we can create a different state bucket for each account. While this isn't necessary for the Service Catalog, we
 switch to a single root `terragrunt.hcl` config here (which is possible due to the advanced functions that are available
 in newer Terragrunt versions) because there are more common blocks that are necessary, and we want to keep these
@@ -265,7 +265,7 @@ to `us-east-1`.
 +
 [source,bash]
 ----
-#!/bin/bash
+#!/usr/bin/env bash
 # Helper functions for implementing state migrations for updating terraform modules to newer versions.
 
 function log {
@@ -384,47 +384,73 @@ function fuzzy_import_move_state {
 
 === Step 2: Update each Terragrunt live configuration to use the Service Catalog
 
-At this point, you are ready to update each live configuration! We recommend taking a bottom-up approach for migrating
+At this point, you are ready to update each live configuration! It's important to take a bottom-up approach for migrating
 the live configurations. That is, update live configurations that don't have any downstream dependencies first, then
 work your way up the dependency graph.
 
-This has the following advantages:
+This ensures that:
 
 * Each update is self contained. Changing the live configuration of leaf services will not affect other live
   configurations, allowing you to continue to make changes to unmigrated live configurations.
-* The leaf nodes in the Terragrunt infrastructure graph tend to be lower risk services. That is, the higher you are in
-  the graph, there are more things that depend on that infrastructure, which by definition makes that service has a
-  larger surface area. E.g., VPC has many downstream dependencies, which means that messing it up can cause lots of
-  other services to fail.
+* The migration is low risk. The leaf nodes in the Terragrunt infrastructure graph tend to be lower risk services.
+  That is, the closer you are to the root of the graph, the higher the number of things that depend on that infrastructure,
+  which gives that service a larger surface area. E.g., VPC has many downstream dependencies, which means that messing it
+  up can cause lots of other services to fail.
 
-However, this does mean that you will need to go back and update previously migrated services if the upstream services
+However, this does mean that you will need to update previously migrated services if the upstream services
 has a change. For example, Service Catalog services sometimes have output name changes, which means that you will need
 to update the references in the downstream services when you update the service.
 
 To handle this, you can identify all the downstream services that are affected by running `terragrunt validate-all` to
 identify these broken links each time a service is updated, and fix them in the same PR.
 
-Here are the steps you can take to update a single service's live configuration:
+Don't worry -- we're going to walk you through every step right now. At a high-level, here's what you'll do:
 
 [arabic]
-. Check to make sure the service has no downstream dependencies. You can use the `graph-dependencies` command to create
-  a visual representation. In the graph, the arrow points in the direction of the dependency, with the top nodes being
-  leaf nodes and the bottom being root nodes.
+. Choose a service.
+. Refer to the dedicated guide for that service.
+. Backup the state file.
+. Modify the `terragrunt.hcl` live configuration for it, following the guide.
+. Validate the backend configuration with `terragrunt state list`.
+. Validate the inputs with `terragrunt validate-inputs`.
+. Run the state migration script, if any.
+. Sanity check the changes with `terragrunt plan`.
+. Roll out with `terragrunt apply`.
+
+Some of the services, such as EKS and ASG, have slightly different steps to the above list, so please pay attention to that.
+
+Now for the full-fledged instructions to upgrade a single service:
+
+[arabic]
+. Check the service's downstream dependencies. Use the `graph-dependencies` command to create
+  a visual representation. The arrow points from the leaf to the root, toward the dependency. Thus in the graph,
+  the top nodes are leaf nodes and the bottom, root nodes.
     * `terragrunt graph-dependencies | dot -Tpng > graph.png`
     * If you get an error that `dot` is not available, install https://www.graphviz.org/download/[graphviz], which
       installs the `dot` utility.
+    * Here is an example of a dependency tree for the `dev` account using Reference Architecture v1:
 
-. First, you need to ensure the module is updated to the same version used in Reference Architecture version
-  https://github.com/gruntwork-io/infrastructure-modules-multi-account-acme/releases/tag/v0.0.1-20201125[20201125], or
-  newer.
+image::/assets/img/guides/ref-arch-v2-upgrade/ref-arch-v2-dep-tree.png[Dependency Graph]
+
+. Ensure the module is updated to the same version used in Reference Architecture version
+  https://github.com/gruntwork-io/infrastructure-modules-multi-account-acme/releases/tag/v0.0.1-20201125[20201125].
+    * If you're running a newer version, continue.
     * If you are running an older version, follow the migration guides referenced in
       https://github.com/gruntwork-io/infrastructure-modules-multi-account-acme/releases[the Reference Architecture
-      releases] to update to the latest version. This is necessary because the Service Catalog module references use newer
+      releases] to update to the latest version. This is important because the Service Catalog module references use newer
       versions from the Module Catalog than what is shipped with v1.0 of the Reference Architecture. Once you've upgraded to
       https://github.com/gruntwork-io/infrastructure-modules-multi-account-acme/releases/tag/v0.0.1-20201125[20201125],
-      you'll be at a known starting point and can automate any state manipulations that are required to update a service.
+      you can automate any state manipulations that are required to update a service using the provided guides and scripts.
 
-. Make modifications to the `terragrunt.hcl` file to be compatible with the Service Catalog:
+. *Make a backup of the state file* using the following command: `terragrunt state pull > backup.tfstate`
+   You can use this to rollback the state to before you attempted the migration with the
+   following command: `terragrunt state push "$(pwd)/backup.tfstate"`.
+
+* NOTE: Make sure to use the Terraform version that is required for your module, as specified in the
+  https://www.terraform.io/docs/language/settings/index.html#specifying-a-required-terraform-version[required_version]
+  configuration of the module.
+
+. Modify the `terragrunt.hcl` file to be compatible with the Service Catalog:
     * Change the `include` path to `find_in_parent_folders("terragrunt_service_catalog.hcl")`. This ensures that you use the
       Service Catalog compatible root config you created in the previous step.
     * Change the `terraform.source` attribute to point to the corresponding Terraform module in the
@@ -439,38 +465,34 @@ that are not covered by the automated scripts. If you wish to update further, fi
 the migration guides in the release notes of the Service Catalog to bump beyond that version.
 ====
 
-    * Convert each service listed in `dependencies` to a `dependency` block. Use <<service_migration_guides,the dedicated
-      service migration guide>> as a reference for what dependency blocks are needed.
-    * Update the inputs to adapt to the Service Catalog Terraform module, using the dedicated service migration guide listed
-      below. You can also use `terragrunt validate-inputs` as a sanity check.
+    * Find the <<service_migration_guides,dedicated service migration guide>> for the service.
+    * Using that guide, update the inputs to adapt to the Service Catalog Terraform module.
+        * You can use `terragrunt validate-inputs` as a sanity check.
+        * Remove the `dependencies` block, if any.
+        * Use `dependency` blocks. Use <<service_migration_guides,the dedicated
+          service migration guide>> as a reference for what dependency blocks are needed.
     * Add new required inputs, using `dependency` references as needed.
     * Remove or rename unused variables.
+    * Ensure you include inputs for backward compatibility mentioned in the dedicated guide!
 
-. Run `terragrunt state list` to sanity check the state backend configuration. You are watching for the following:
+. Run `terragrunt state list` to sanity check the state backend configuration. Watch for the following:
     * You should NOT get any prompts from Terragrunt to create a new S3 state bucket. If you get the prompt, this means that
       either you are authenticating to the wrong account, or that the bucket name was misconfigured in the root
       `terragrunt_service_catalog.hcl` file.
     * You should see resources listed in the state. If the command returns nothing, that means you are not properly linked
-      to the old state file.  Double check the `key` attribute of the `remote_state` block in the root
+      to the old state file. Double check the `key` attribute of the `remote_state` block in the root
       `terragrunt_service_catalog.hcl` config.
 
-. Once you verify the state backend configuration is valid, you will want to perform the state migration operations:
+. Once you verify the state backend configuration is valid, perform the state migration operations:
 
-.. *Make a backup of the state file* using the following command: `terragrunt state pull > backup.tfstate`
-   You can use this to rollback the state to before you attempted the migration with the
-   following command: `terragrunt state push "$(pwd)/backup.tfstate"`.
-
-* NOTE: Make sure to use the Terraform version that is required for your module, as specified in the
-  https://www.terraform.io/docs/language/settings/index.html#specifying-a-required-terraform-version[required_version]
-  configuration of the module.
-
-.. *Run the provided migration script* for the service (refer to <<service_migration_guides,the dedicated
-    service migration guide>> for information on which script to run).
-.. *Sanity check the migration operation* by running `terragrunt plan`. You should only see backward compatible changes
-   (only `~` or `+` operations, never `-` operations), unless otherwise noted in the dedicated service migration guide.
+.. *Run the provided migration script* for the service. Not all services have a migration script. Refer to the
+    <<service_migration_guides,dedicated service migration guide>> for the script to run.
+.. *Sanity check the migration operation* by running `terragrunt plan`. If the guide states that the upgrade is fully
+   backward compatible, then you should only see backward compatible changes (only `~` or `+` operations, not `-`
+   operations). Otherwise, expect some destroys.
 * NOTE: If you run into any errors related to code verification during provider plugin initialization, you will need to
   update to the latest terraform patch version that contains the latest terraform GPG key to sign the providers. When
-  updating the terraform version, note that you will need to run `terragrunt init` to reinitialize the providers. The
+  updating the terraform version, you also need to run `terragrunt init` to reinitialize the providers. The
   following lists the minimum patch version that includes the latest GPG key:
 ** https://github.com/hashicorp/terraform/releases/tag/v0.11.15[0.11.15]
 ** https://github.com/hashicorp/terraform/releases/tag/v0.12.31[0.12.31]
@@ -478,38 +500,34 @@ the migration guides in the release notes of the Service Catalog to bump beyond 
 ** https://github.com/hashicorp/terraform/releases/tag/v0.14.11[0.14.11]
 ** https://github.com/hashicorp/terraform/releases/tag/v0.15.1[0.15.1]
 
-. Once the state migration operations are complete, and you've verified no destructive changes in `terragrunt plan`,
-  roll out the changes using `terragrunt apply`.
-. If the service has downstream dependencies, run `terragrunt validate-all` at the ACCOUNT folder to identify any
+. Once you're satisfied with the plan, roll out the changes using `terragrunt apply`.
+. If the service has downstream dependencies, run `terragrunt validate-all` from the ACCOUNT directory to identify any
   outputs that have changed. Fix the output references on the `dependency` block for each error.
 
 
 [[service_migration_guides]]
 === Appendix: Dedicated service migration guides
 
-* link:refarch2-guides/alb.md[ALB Service Migration Guide]
-* link:refarch2-guides/asg.md[ASG Service Migration Guide]
-* link:refarch2-guides/aurora.md[Aurora Service Migration Guide]
-* link:refarch2-guides/cloudtrail.md[CloudTrail Service Migration Guide]
-* link:refarch2-guides/cloudwatch-dashboard.md[cloudwatch-dashboard Service Migration
-Guide]
-* link:refarch2-guides/ecr-repos.md[ecr-repos Service Migration Guide]
-* link:refarch2-guides/ecs-cluster.md[ecs-cluster Service Migration Guide]
-* link:refarch2-guides/ecs-service-with-alb.md[ecs-service-with-alb Service Migration
-Guide]
-* link:refarch2-guides/eks-migration-guides/README.md[EKS Service Migration Guide]
-* link:refarch2-guides/iam-cross-account.md[iam-cross-account Service Migration Guide]
-* link:refarch2-guides/iam-groups.md[iam-groups Service Migration Guide]
-* link:refarch2-guides/iam-user-password-policy.md[iam-user-password-policy Service
-Migratirefarch2-guides/on Guide]
-* link:refarch2-guides/jenkins.md[Jenkins Service Migration Guide]
-* link:refarch2-guides/kms-master-key.md[kms-master-key Service Migration Guide]
-* link:refarch2-guides/memcached.md[Memcached Service Migration Guide]
-* link:refarch2-guides/openvpn-server.md[OpenVPN Server Service Migration Guide]
-* link:refarch2-guides/rds.md[RDS Service migration Guide]
-* link:refarch2-guides/redis.md[Redis Service Migration Guide]
-* link:refarch2-guides/route53-private.md[Route 53 (private) Migration Guide]
-* link:refarch2-guides/route53-public.md[Route 53 (public) Migration Guide]
-* link:refarch2-guides/sns-topics.md[sns-topics Service Migration Guide]
-* link:refarch2-guides/vpc.md[VPC (app) Migration Guide]
-* link:refarch2-guides/vpc-mgmt.md[VPC (mgmt) Migration Guide]
+* link:https://github.com/gruntwork-io/infrastructure-live-multi-account-acme/blob/master/_docs/_ref_arch_v1_to_v2_migration_guides/alb.adoc[ALB Service Migration Guide]
+* link:https://github.com/gruntwork-io/infrastructure-live-multi-account-acme/blob/master/_docs/_ref_arch_v1_to_v2_migration_guides/asg.adoc[ASG Service Migration Guide]
+* link:https://github.com/gruntwork-io/infrastructure-live-multi-account-acme/blob/master/_docs/_ref_arch_v1_to_v2_migration_guides/aurora.adoc[Aurora Service Migration Guide]
+* link:https://github.com/gruntwork-io/infrastructure-live-multi-account-acme/blob/master/_docs/_ref_arch_v1_to_v2_migration_guides/cloudtrail.adoc[CloudTrail Service Migration Guide]
+* link:https://github.com/gruntwork-io/infrastructure-live-multi-account-acme/blob/master/_docs/_ref_arch_v1_to_v2_migration_guides/cloudwatch-dashboard.adoc[cloudwatch-dashboard Service Migration Guide]
+* link:https://github.com/gruntwork-io/infrastructure-live-multi-account-acme/blob/master/_docs/_ref_arch_v1_to_v2_migration_guides/ecr-repos.adoc[ecr-repos Service Migration Guide]
+* link:https://github.com/gruntwork-io/infrastructure-live-multi-account-acme/blob/master/_docs/_ref_arch_v1_to_v2_migration_guides/ecs-cluster.adoc[ecs-cluster Service Migration Guide]
+* link:https://github.com/gruntwork-io/infrastructure-live-multi-account-acme/blob/master/_docs/_ref_arch_v1_to_v2_migration_guides/ecs-service-with-alb.adoc[ecs-service-with-alb Service Migration Guide]
+* link:https://github.com/gruntwork-io/infrastructure-live-multi-account-acme/blob/master/_docs/_ref_arch_v1_to_v2_migration_guides/eks.adoc[EKS Service Migration Guide]
+* link:https://github.com/gruntwork-io/infrastructure-live-multi-account-acme/blob/master/_docs/_ref_arch_v1_to_v2_migration_guides/iam-cross-account.adoc[iam-cross-account Service Migration Guide]
+* link:https://github.com/gruntwork-io/infrastructure-live-multi-account-acme/blob/master/_docs/_ref_arch_v1_to_v2_migration_guides/iam-groups.adoc[iam-groups Service Migration Guide]
+* link:https://github.com/gruntwork-io/infrastructure-live-multi-account-acme/blob/master/_docs/_ref_arch_v1_to_v2_migration_guides/iam-user-password-policy.adoc[iam-user-password-policy Service Migration Guide]
+* link:https://github.com/gruntwork-io/infrastructure-live-multi-account-acme/blob/master/_docs/_ref_arch_v1_to_v2_migration_guides/jenkins.adoc[Jenkins Service Migration Guide]
+* link:https://github.com/gruntwork-io/infrastructure-live-multi-account-acme/blob/master/_docs/_ref_arch_v1_to_v2_migration_guides/kms-master-key.adoc[kms-master-key Service Migration Guide]
+* link:https://github.com/gruntwork-io/infrastructure-live-multi-account-acme/blob/master/_docs/_ref_arch_v1_to_v2_migration_guides/memcached.adoc[Memcached Service Migration Guide]
+* link:https://github.com/gruntwork-io/infrastructure-live-multi-account-acme/blob/master/_docs/_ref_arch_v1_to_v2_migration_guides/openvpn-server.adoc[OpenVPN Server Service Migration Guide]
+* link:https://github.com/gruntwork-io/infrastructure-live-multi-account-acme/blob/master/_docs/_ref_arch_v1_to_v2_migration_guides/rds.adoc[RDS Service migration Guide]
+* link:https://github.com/gruntwork-io/infrastructure-live-multi-account-acme/blob/master/_docs/_ref_arch_v1_to_v2_migration_guides/redis.adoc[Redis Service Migration Guide]
+* link:https://github.com/gruntwork-io/infrastructure-live-multi-account-acme/blob/master/_docs/_ref_arch_v1_to_v2_migration_guides/route53-private.adoc[Route 53 (private) Migration Guide]
+* link:https://github.com/gruntwork-io/infrastructure-live-multi-account-acme/blob/master/_docs/_ref_arch_v1_to_v2_migration_guides/route53-public.adoc[Route 53 (public) Migration Guide]
+* link:https://github.com/gruntwork-io/infrastructure-live-multi-account-acme/blob/master/_docs/_ref_arch_v1_to_v2_migration_guides/sns-topics.adoc[sns-topics Service Migration Guide]
+* link:https://github.com/gruntwork-io/infrastructure-live-multi-account-acme/blob/master/_docs/_ref_arch_v1_to_v2_migration_guides/vpc-app.adoc[VPC (app) Migration Guide]
+* link:https://github.com/gruntwork-io/infrastructure-live-multi-account-acme/blob/master/_docs/_ref_arch_v1_to_v2_migration_guides/vpc-mgmt.adoc[VPC (mgmt) Migration Guide]
