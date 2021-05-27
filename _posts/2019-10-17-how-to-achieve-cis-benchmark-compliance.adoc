@@ -886,14 +886,18 @@ cryptographically secure, long password (20+ characters) for the root user. All 
 can generate and store passwords for you in one step, so use them!
 
 Add security questions to your root account::
-CIS recommendation 1.3 suggests that you register your AWS account with security questions. This is so that when someone contacts AWS customer service support from this account they will have to authenticate. To add your security questions to the root account, navigate in the web console for AWS to `My Account` and then the `Personal Information` page.
-There you should be able to click on `Configure Security Challenge Questions` and add your questions.
+The CIS benchmark suggests adding security questions when registering your AWS account so that when somebody contacts
+AWS support, they will be required to complete a security challenge. To add security questions to the root account,
+navigate in the AWS web console to `My Account` and then to the `Personal Information` page. There you should be able
+to click on `Configure Security Challenge Questions` and add your questions.
 
 Enable MFA::
 Make sure to
 https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html#id_root-user_manage_mfa[enable MFA for your root user].
-Feel free to use a virtual or hardware MFA device—whichever is easier or required by your company—as either one
-dramatically improves the security of your root user. It is up to your discretion to decide which option yis suitable for your use case. CIS 1.3 bechmark recommends that any virtual or hardware device you use to fulfil MFA is not personal, but instead dedicated or company-owned.
+Feel free to use a virtual or hardware MFA device, whichever is more straightforward or required by your company, as either one
+dramatically improves the security of your root user. It is up to your discretion to decide which option is suitable
+for your use case. The CIS benchmark recommends using a dedicated or company-owned device for MFA and not a personal
+one. This applies to both virtual and hardware devices.
 
 Disable access keys::
 Make sure to
@@ -951,7 +955,6 @@ dramatically improves the security of your IAM user. Note that using SMS (text m
 https://www.schneier.com/blog/archives/2016/08/nist_is_no_long.html[no longer recommended by NIST] due to known
 https://www.theverge.com/2017/9/18/16328172/sms-two-factor-authentication-hack-password-bitcoin[vulnerabilities with the cellular system],
 so using a virtual or hardware MFA device is preferable; that said, MFA with SMS is still better than no MFA at all.
-##
 
 wrapper module]. Complete this step before creating any IAM users!
 === Configure the security baseline for the root account
