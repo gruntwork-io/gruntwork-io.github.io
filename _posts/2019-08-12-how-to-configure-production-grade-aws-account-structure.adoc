@@ -989,10 +989,10 @@ Next, we'll configure a security baseline for the root account that is responsib
 It will also configure AWS Organizations, IAM Roles, IAM Users, IAM Groups, IAM Password Policies, Amazon GuardDuty,
 AWS CloudTrail and AWS Config.
 
-We'll be using the `account-baseline-root` module from https://github.com/gruntwork-io/terraform-aws-security[terraform-aws-security].
+We'll be using the `account-baseline-root` module from https://github.com/gruntwork-io/terraform-aws-service-catalog[terraform-aws-service-catalog].
 
 [.exceptional]
-IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork subscriber# to access `terraform-aws-security`.
+IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork subscriber# to access `terraform-aws-service-catalog`.
 
 First, create a _wrapper module_ called `account-baseline-root` in your `infrastructure-modules` repo under the `landingzone` subdirectory:
 
@@ -1038,7 +1038,7 @@ Next, use the `account-baseline-root` module from the Gruntwork Infrastructure a
 [source,hcl]
 ----
 module "root_baseline" {
-  source = "git::git@github.com:gruntwork-io/terraform-aws-security.git//modules/account-baseline-root?ref=v0.44.10"
+  source = "git::git@github.com:gruntwork-io/terraform-aws-service-catalog.git//modules/landingzone/account-baseline-root?ref=v0.39.0"
 
   aws_account_id = var.aws_account_id
   aws_region     = var.aws_region
@@ -1813,7 +1813,7 @@ Next, use the `account-baseline-app` module from the Gruntwork Infrastructure as
 [source,hcl]
 ----
 module "security_baseline" {
-  source = "git::git@github.com:gruntwork-io/terraform-aws-security.git//modules/account-baseline-app?ref=v0.44.10"
+  source = "git::git@github.com:gruntwork-io/terraform-aws-service-catalog.git//modules/landingzone/account-baseline-app?ref=v0.39.0"
 
   name_prefix    = var.name_prefix
   aws_region     = var.aws_region
@@ -2176,7 +2176,7 @@ Next, use the `account-baseline-security` module from the Gruntwork Infrastructu
 [source,hcl]
 ----
 module "security_baseline" {
-  source = "git::git@github.com:gruntwork-io/terraform-aws-security.git//modules/account-baseline-security?ref=v0.44.10"
+  source = "git::git@github.com:gruntwork-io/terraform-aws-service-catalog.git//modules/landingzone/account-baseline-security?ref=v0.39.0"
 
   name_prefix    = var.name_prefix
   aws_region     = var.aws_region
