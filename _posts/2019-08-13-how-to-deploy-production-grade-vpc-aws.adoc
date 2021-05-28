@@ -318,7 +318,7 @@ Allow/Deny::
   Each NACL rule can either `ALLOW` or `DENY` the traffic defined in that rule.
 
 Stateful/Stateless::
-  Security groups are _stateful_, so if have a rule that allows an inbound connection on, say, port 80, the security
+  Security groups are _stateful_, so if a security group has a rule that allows an inbound connection on, say, port 80, the security
   group will automatically also open up an outbound port for that specific connection so it can respond. With a NACL,
   if you have a rule that allows an inbound connection on port 80, that connection will not be able to respond unless
   you also manually add another rule that allows outbound connections for the response. You normally don't know exactly
