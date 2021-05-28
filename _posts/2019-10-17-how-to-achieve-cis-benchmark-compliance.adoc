@@ -3175,6 +3175,19 @@ authenticating:
   that you've configured in `aws-vault`. For example, `aws-vault login logs-from-root` will open up your web browser
   and log you into the logs account using the `OrganizationAccountAccessRole` IAM Role.
 
+[[configure_security_hub]]
+=== Configure AWS Security Hub in the root account
+
+// TODO need to reword this. I've just thrown and edited two parts, but it doesn't make sense 
+
+Next, we'll configure link:https://aws.amazon.com/security-hub/[AWS Security Hub] in the root account. AWS Security Hub
+is deployed by the account baselines in every enabled region of an AWS account to check your account link:https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-standards.html[for compliance]
+with the AWS CIS Foundations Benchmark. The Security Hub runs the exact audit steps specified in the Benchmark using AWS
+Config managed rules. Note: Security Hub is not explicitly required by the Benchmark, however we suggest enabling it,
+so you can track your compliance efforts and be notified if any recommendations have not been implemented.
+
+Caveat: In the AWS Console UI, AWS Security Hub will show a low security score for the CIS AWS Foundations Benchmark v1.2.0. However, this is due to AWS limitations on checking compliance standards for cross-region/cross-account rules. This does not indicate that the accounts are not in compliance; it is a failure of the AWS audit tool. Note also that the accounts are configured for the latest version of the benchmark, v1.3.0; the AWS Security Hub does not support this version.
+
 [[iam_roles_for_instances]]
 === Use IAM roles for EC2 instances
 All Gruntwork modules that require AWS API access use roles rather than an IAM user with static API credentials for
@@ -3372,15 +3385,6 @@ Congratulations! If you've made it this far, you should have achieved compliance
 Benchmark. Now it's time to confirm that your configurations are correct and you didn't miss any steps.
  +
  +
-
-Use the
-link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/blob/master/modules/aws-securityhub/README.adoc[`aws-securityhub`
-module]
-to enable link:https://aws.amazon.com/security-hub/[AWS Security Hub] in every region of an AWS account to check your
-account link:https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-standards.html[for compliance with the
-AWS CIS Foundations Benchmark]. The Security Hub runs the exact audit steps specified in the Benchmark using AWS Config
-managed rules. By enabling the Security Hub, you can track your compliance efforts and be notified if any
-recommendations have not been implemented.
 
 
 [[traceability_matrix]]
