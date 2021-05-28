@@ -1,0 +1,218 @@
+---
+title: How to update to Terraform 15
+categories: Upgrades
+image: /assets/img/guides/refresh_icon.png
+excerpt: Learn how to update your infrastructure code that depends on the Gruntwork Infrastructure as Code Library to Terraform 0.15.
+tags: ["aws", "terraform", "terragrunt"]
+cloud: ["aws"]
+redirect_from: /static/guides/upgrades/how-to-update-to-terraform-15/
+---
+:page-type: guide
+:page-layout: post
+
+:toc:
+:toc-placement!:
+
+// GitHub specific settings. See https://gist.github.com/dcode/0cfbf2699a1fe9b46ff04c41721dda74 for details.
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+toc::[]
+endif::[]
+
+== Intro
+
+This guide will walk you through how to update any code that depends on the
+https://gruntwork.io/infrastructure-as-code-library/[Gruntwork Infrastructure as Code Library] to
+https://www.terraform.io/upgrade-guides/0-15.html[Terraform 0.15]. Terraform 0.15 introduces several new features
+and fixes, but it also has a number of backwards incompatibilities that have to be incorporated into your codebase.
+
+=== What you'll learn in this guide
+
+This guide consists of two main sections:
+
+<<core_concepts>>::
+  An overview of Terraform 0.15 and why it is important to update your code for compatibility.
+
+<<deployment_walkthrough>>::
+  The steps you need to take to update your code relying on the Gruntwork Infrastructure as Code library to work with
+  Terraform 0.15. Includes a
+  <<compatibility_table,version compatibility table>> you can use as a reference to know which Gruntwork Repo version
+  tag is compatible with Terraform 0.15.
+
+
+[[core_concepts]]
+== Core Concepts
+
+=== Background
+
+https://www.hashicorp.com/blog/announcing-hashicorp-terraform-0-15-general-availability[Terraform 0.15 was released on
+April 14, 2021]. Some of the major new features in 0.15 include:
+
+. A more stable state file format that will be compatible with Terraform 0.14, 0.15, and, once it's released, 1.0.
+. Stronger support for handling input variables, output variables, and resource attributes that are "sensitive" (e.g.,
+  passwords).
+. Structured logging.
+. Better console support, especially on Windows.
+
+For more info, check out the
+https://www.hashicorp.com/blog/announcing-hashicorp-terraform-0-15-general-availability[announcement blog post].
+
+0.15 is a major new release for Terraform, which means it includes some backwards incompatible changes. We have
+gone through all the Terraform modules in the https://gruntwork.io/infrastructure-as-code-library/[Gruntwork
+Infrastructure as Code Library] and updated them to work with Terraform 0.15. In order to use 0.15, you will need to
+update to these new versions and make other changes to your code, as described in the following section.
+
+
+
+[[deployment_walkthrough]]
+== Deployment walkthrough
+
+=== Step 1: update your code to be compatible with Terraform 0.14
+
+If you haven't already, you need to:
+
+. Update your code to work with Terraform 0.14. Do NOT skip from, say, 0.11, straight to 0.15. You MUST update to
+  0.14.0 or above first!
+.. If you're still on Terraform 0.11 or older, see our
+   https://docs.gruntwork.io/guides/upgrading-to-tf12-tg19/[Terraform 0.12 upgrade guide] for instructions.
+.. If you're still on Terraform 0.12, see our
+   https://gruntwork.io/guides/upgrades/how-to-update-to-terraform-13/[Terraform 0.13 upgrade guide].
+.. If you're still on Terraform 0.13, see our
+   https://gruntwork.io/guides/upgrades/how-to-update-to-terraform-14/[Terraform 0.14 upgrade guide].
+. Update all your Gruntwork modules to the latest versions just _before_ the TF 0.15 versions in the compatibility
+  table below. The upgrade will be much easier and less error prone if you keep the number of version jumps as small
+  as possible.
+
+=== Step 2: update your code to be compatible with Terraform 0.15
+
+The first step is to update your own code (e.g., the code that lives in your `infrastructure-modules` repo) to be
+compatible with Terraform 0.15 by following HashiCorp's https://www.terraform.io/upgrade-guides/0-15.html[Terraform 0.15
+Upgrade Guide].
+
+=== Step 3: update references to the Gruntwork Infrastructure as Code Library
+
+In order to take advantage of the Terraform 0.15, you need to update your references to the Gruntwork
+Infrastructure as Code Library to use a compatible version. We (Gruntwork) have gone through all our modules in the
+library to test and update the code to be compatible with Terraform 0.15. As a customer, you need to update to
+the proper versions of the Gruntwork library to pick up the fixes/changes that we made to be compatible. Refer to
+https://gruntwork.io/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library/#updating[the
+"Updating" section of "How to use the Gruntwork Infrastructure as Code Library"] for instructions on how to update the
+versions in your code.
+
+For the vast majority of the repos, the only change that will be necessary is a version number bump, but several repos
+require more extensive code changes and state migrations. To upgrade without downtime and data loss, **you MUST follow
+the migration instructions in the release notes in each repo to know what changes need to be made to update to the new
+version.**
+
+[.exceptional]
+IMPORTANT: Gruntwork follows
+https://gruntwork.io/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library/#versioning[semantic
+versioning]. For any pre-1.0 modules, this means that version updates to the minor version are considered backwards
+incompatible releases for any version updates prior to 1.0.0 release. Make sure to read the release notes for the
+relevant modules any time you are updating minor versions! Note that you will want to read the release notes for each
+minor version that is updated (e.g., if you are going from v0.5.x to v0.9.x, you will want to read the notes for v0.6.0,
+v0.7.0, v0.8.0, and v0.9.0 to get the full list of backwards incompatible updates).
+
+The following table provides a summary of all the relevant Gruntwork AWS modules and the respective versions that are
+compatible with Terraform 0.15:
+
+[[compatibility_table]]
+[cols="1,1h"]
+|===
+|Gruntwork Repo |Minimum version with Terraform 0.15 support
+
+|Terratest
+|https://github.com/gruntwork-io/terratest/releases/tag/v0.31.1[v0.31.1]
+
+|Terragrunt
+|https://github.com/gruntwork-io/terragrunt/releases/tag/v0.27.0[v0.27.0]
+
+|terraform-aws-utilities
+|https://github.com/gruntwork-io/terraform-aws-utilities/releases/tag/v0.4.0[v0.4.0]
+
+|terraform-aws-vpc
+|https://github.com/gruntwork-io/terraform-aws-vpc/releases/tag/v0.14.0[v0.14.0]
+
+|terraform-aws-asg
+|https://github.com/gruntwork-io/terraform-aws-asg/releases/tag/v0.12.0[v0.12.0]
+
+|terraform-aws-server
+|https://github.com/gruntwork-io/terraform-aws-server/releases/tag/v0.11.0[v0.11.0]
+
+|terraform-aws-lambda
+|https://github.com/gruntwork-io/terraform-aws-lambda/releases/tag/v0.10.0[v0.10.0]
+
+|terraform-aws-security
+|https://github.com/gruntwork-io/terraform-aws-security/releases/tag/v0.46.0[v0.46.0]
+
+|terraform-aws-load-balancer
+|https://github.com/gruntwork-io/terraform-aws-load-balancer/releases/tag/v0.22.0[v0.22.0]
+
+|terraform-aws-data-storage
+|https://github.com/gruntwork-io/terraform-aws-data-storage/releases/tag/v0.18.0[v0.18.0]
+
+|terraform-aws-cache
+|https://github.com/gruntwork-io/terraform-aws-cache/releases/tag/v0.13.0[v0.13.0]
+
+|terraform-aws-messaging
+|https://github.com/gruntwork-io/terraform-aws-messaging/releases/tag/v0.5.0[v0.5.0]
+
+|terraform-aws-static-assets
+|https://github.com/gruntwork-io/terraform-aws-static-assets/releases/tag/v0.8.0[v0.8.0]
+
+|terraform-aws-monitoring
+|https://github.com/gruntwork-io/terraform-aws-monitoring/releases/tag/v0.25.0[v0.25.0]
+
+|terraform-aws-openvpn
+|https://github.com/gruntwork-io/terraform-aws-openvpn/releases/tag/v0.14.0[v0.14.0]
+
+|terraform-aws-ecs
+|https://github.com/gruntwork-io/terraform-aws-ecs/releases/tag/v0.28.0[v0.28.0]
+
+|terraform-aws-ci
+|https://github.com/gruntwork-io/terraform-aws-ci/releases/tag/v0.32.0[v0.32.0]
+
+|terraform-aws-eks
+|https://github.com/gruntwork-io/terraform-aws-eks/releases/tag/v0.36.0[v0.36.0]
+
+|terraform-aws-zookeeper
+|https://github.com/gruntwork-io/terraform-aws-zookeeper/releases/tag/v0.9.0[v0.9.0]
+
+|terraform-aws-kafka
+|https://github.com/gruntwork-io/terraform-aws-kafka/releases/tag/v0.8.0[v0.8.0]
+
+|terraform-aws-elk
+|https://github.com/gruntwork-io/terraform-aws-elk/releases/tag/v0.8.0[v0.8.0]
+
+|terraform-kubernetes-namespace
+|https://github.com/gruntwork-io/terraform-kubernetes-namespace/releases/tag/v0.2.0[v0.2.0]
+
+|terraform-aws-cis-service-catalog
+|https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/releases/tag/v0.16.0[v0.16.0]
+
+|terraform-aws-sam
+|https://github.com/gruntwork-io/terraform-aws-sam/releases/tag/v0.4.0[v0.4.0]
+
+|terraform-aws-couchbase
+|https://github.com/gruntwork-io/terraform-aws-couchbase/releases/tag/v0.5.0[v0.5.0]
+
+|terraform-aws-vault
+|https://github.com/hashicorp/terraform-aws-vault/releases/tag/v0.15.0[v0.15.0]
+
+|terraform-aws-consul
+|https://github.com/hashicorp/terraform-aws-consul/releases/tag/v0.9.0[v0.9.0]
+
+|terraform-aws-nomad
+|https://github.com/hashicorp/terraform-aws-nomad/releases/tag/v0.8.0[v0.8.0]
+
+|terraform-aws-architecture-catalog
+|https://github.com/gruntwork-io/terraform-aws-architecture-catalog/releases/tag/v0.0.5[v0.0.5]
+
+|terraform-aws-service-catalog
+|https://github.com/gruntwork-io/terraform-aws-service-catalog/releases/tag/v0.34.1[v0.34.1]
+
+|===
