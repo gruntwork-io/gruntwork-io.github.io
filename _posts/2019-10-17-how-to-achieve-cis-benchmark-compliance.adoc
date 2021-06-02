@@ -1031,11 +1031,6 @@ module "root_baseline" {
   force_destroy_users      = var.force_destroy
   cloudtrail_force_destroy = var.force_destroy
   config_force_destroy     = var.force_destroy
-
-  # Enable IAM Access Analyzer
-  iam_access_analyzer_type   = var.iam_access_analyzer_type
-  iam_access_analyzer_name   = var.iam_access_analyzer_name
-  enable_iam_access_analyzer = var.enable_iam_access_analyzer
 }
 ----
 
@@ -1200,41 +1195,6 @@ variable "force_destroy" {
   default     = false
 }
 
-# ---------------------------------------------------------------------------------------------------------------------
-# IAM ACCESS ANALYZER MODULE EXAMPLE PARAMETERS
-# ---------------------------------------------------------------------------------------------------------------------
-
-variable "enable_iam_access_analyzer" {
-  description = "A feature flag to enable or disable this module."
-  type        = bool
-  default     = false
-// TODO -> this needs to be true, as IAM Access Analyzer needs to be enabled for CIS across all regions. Maybe we should even remove this variable from the example?
-}
-
-# This variable sets the type of the IAM Access Analyzer. Depending on the trust zone required for the analyzer to cover,
-# the possible values are:
-# - ACCOUNT;
-# - ORGANIZATION.
-# When set to ACCOUNT - the trust zone for the IAM Access Analyzer will be limited to just the account and resources
-# only within this account will be scanned, instead of the organizational boundaries and its policies.
-# When set to ORGANIZATION - the trust zone will be set to the whole organization, which allows the IAM Access Analyzer
-# to scan relevant resources shared and applicable within the bounds of the organization. The AWS account with type of
-# IAM Access Analyzer type set to ORGANIZATION, must
-# - an AWS organization master account;
-# - or be part of an AWS organization & set as a delegated admin for this feature.
-#
-# For more information, please read here: https://docs.aws.amazon.com/IAM/latest/UserGuide/what-is-access-analyzer.html
-variable "iam_access_analyzer_type" {
-  description = "If set to ORGANIZATION, the analyzer will be scanning the current organization and any policies that refer to linked resources and their policies within the organization's boundaries."
-  type        = string
-  default     = "ORGANIZATION"
-}
-
-variable "iam_access_analyzer_name" {
-  description = "The name of the IAM Access Analyzer module"
-  type        = string
-  default     = "baseline_root-iam_access_analyzer"
-}
 ----
 
 Finally, add some useful outputs in `outputs.tf`:
@@ -1246,16 +1206,15 @@ Finally, add some useful outputs in `outputs.tf`:
 # CONFIG OUTPUTS
 # ---------------------------------------------------------------------------------------------------------------------
 
-//TODO -> this needs fixing in the example - currently not referencing a real output
-//output "config_s3_bucket_name" {
-//  description = "The name of the S3 bucket used by AWS Config to store configuration items."
-//  value       = module.root_baseline.config_s3_bucket_name
-//}
-//
-//output "config_s3_bucket_arn" {
-//  description = "The ARN of the S3 bucket used by AWS Config to store configuration items."
-//  value       = module.root_baseline.config_s3_bucket_arn
-//}
+output "config_s3_bucket_name" {
+  description = "The name of the S3 bucket used by AWS Config to store configuration items."
+  value       = module.root_baseline.config_s3_bucket_name
+}
+
+output "config_s3_bucket_arn" {
+  description = "The ARN of the S3 bucket used by AWS Config to store configuration items."
+  value       = module.root_baseline.config_s3_bucket_arn
+}
 
 output "config_iam_role_arns" {
   description = "The ARNs of the IAM role used by the config recorder."
@@ -1324,16 +1283,16 @@ output "cloudtrail_s3_bucket_arn" {
   description = "The ARN of the S3 bucket where cloudtrail logs are delivered."
   value       = module.root_baseline.cloudtrail_s3_bucket_arn
 }
-//todo -> same as last
-//output "cloudtrail_kms_key_arn" {
-//  description = "The ARN of the KMS key used by the S3 bucket to encrypt cloudtrail logs."
-//  value       = module.root_baseline.cloudtrail_kms_key_arn
-//}
-//
-//output "cloudtrail_kms_key_alias_name" {
-//  description = "The alias of the KMS key used by the S3 bucket to encrypt cloudtrail logs."
-//  value       = module.root_baseline.cloudtrail_kms_key_alias_name
-//}
+
+output "cloudtrail_kms_key_arn" {
+  description = "The ARN of the KMS key used by the S3 bucket to encrypt cloudtrail logs."
+  value       = module.root_baseline.cloudtrail_kms_key_arn
+}
+
+output "cloudtrail_kms_key_alias_name" {
+  description = "The alias of the KMS key used by the S3 bucket to encrypt cloudtrail logs."
+  value       = module.root_baseline.cloudtrail_kms_key_alias_name
+}
 
 output "cloudtrail_iam_role_name" {
   description = "The name of the IAM role used by the cloudwatch log group."
