@@ -956,6 +956,7 @@ https://www.theverge.com/2017/9/18/16328172/sms-two-factor-authentication-hack-p
 so using a virtual or hardware MFA device is preferable; that said, MFA with SMS is still better than no MFA at all.
 
 Complete this step before creating any IAM users!
+
 === Configure the security baseline for the root account
 
 Next, we'll configure a security baseline for the root account that is responsible for creating all the child accounts.
@@ -964,7 +965,7 @@ It will also configure AWS Organizations, IAM Roles, IAM Users, IAM Groups, IAM 
 We'll be using the `landingzone/account-baseline-root` module from https://github.com/gruntwork-io/terraform-aws-cis-service-catalog[terraform-aws-cis-service-catalog].
 
 [.exceptional]
-IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork subscriber# to access `terraform-aws-service-catalog`.
+IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork subscriber# to access `terraform-aws-cis-service-catalog`.
 
 First, create a _wrapper module_ called `account-baseline-root` in your `infrastructure-modules` repo under the `landingzone` subdirectory:
 
@@ -1320,7 +1321,7 @@ git push --follow-tags
 ----
 
 NOTE: This guide will use https://github.com/gruntwork-io/terragrunt[Terragrunt] and its associated file and folder
-structure to deploy Terraform modules. Please note that *Terragrunt is NOT required for using Terraform modules from the Gruntwork Infrastructure as Code Library.* Check out `link`:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library[How to use the Gruntwork Infrastructure as Code Library]
+structure to deploy Terraform modules. Please note that *Terragrunt is NOT required for using Terraform modules from the Gruntwork Infrastructure as Code Library.* Check out link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library[How to use the Gruntwork Infrastructure as Code Library]
 for instructions on alternative options, such as how to
 link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#deploy_using_plain_terraform[deploying how to use plain terraform].
 
@@ -1442,7 +1443,7 @@ S3 buckets. Later on, you'll configure all the other accounts to send their data
 . **Create IAM groups**. By default, `account-baseline-root` will **not** create a `full-access` IAM group as CIS requirement 1.16 guides. It will create a `support` and a `billing` IAM group (for the support and finance teams).
 
 . **Create IAM users**. For this example, we create `alice` and `bob`, adding `alice` to the `full-access`
-IAM group and `carol` to the `billing` IAM group. _Note_: your own IAM user (the one you created manually) should be
+IAM group and `bob` to the `billing` IAM group. _Note_: your own IAM user (the one you created manually) should be
 in the `users` list; we'll use the `import` command to put this user under Terraform management shortly.
 
 . **Generate a password for each user**. We encrypt this password with that user’s PGP key from Keybase (we’ll come
@@ -3136,7 +3137,7 @@ authenticating:
 [[configure_security_hub]]
 === Configure AWS Security Hub in the root account
 
-// TODO need to reword this. I've just thrown and edited two parts, but it doesn't make sense 
+// TODO need to reword this. I've just thrown and edited two parts, but it doesn't make sense
 
 Next, we'll configure link:https://aws.amazon.com/security-hub/[AWS Security Hub] in the root account. AWS Security Hub
 is deployed by the account baselines in every enabled region of an AWS account to check your account link:https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-standards.html[for compliance]
@@ -3282,7 +3283,7 @@ Filters]. Gruntwork has simplified this section to a single module: the
 link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/blob/master/modules/cloudwatch-logs-metric-filters/README.adoc[`cloudwatch-logs-metric
 -filters` wrapper module]. It will create and configure all the CloudWatch Logs metric filters necessary for
 compliance with the Benchmark. Note that when you deploy the CIS account baseline modules, the CloudWatch Logs metric
-filters will be created and configured automatically.have to do anything special to enable the metric filters on the
+filters will be created and configured automatically, so that you don't have to do anything special to enable the metric filters on the
 deployed CloudTrail configuration.
 
 Note that you must have a subscriber on the SNS topic to be compliant. Refer to <<subscribe_sns>> for details on how to
