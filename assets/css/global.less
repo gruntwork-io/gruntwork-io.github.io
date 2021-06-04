@@ -459,16 +459,27 @@ a.caret-right{
   border: none;
 }
 
-.navbar > .container > .navbar-header .navbar-brand-beta {
+.navbar > .container {
   @media (min-width: @screen-md-min) {
-    margin-left: -1em;
+    width: 720px;
+    .navbar-header {
+      margin-right: 0;
+    }
   }
   @media (min-width: @screen-lg-min) {
-    margin-left: -1.5em;
+    width: 960px;
+    .navbar-header {
+      margin-right: 0;
+    }
   }
   @media (min-width: 1400px) {
-    margin-left: -4.5em;
+    width: 1280px;
+    .navbar-header {
+      margin-right: 3em;
+      transition: margin 0.2s ease-out;
+    }
   }
+  transition: width 0.2s ease-out;
 }
 
 .navbar-brand {
@@ -492,33 +503,14 @@ a.caret-right{
   padding: @padding-base-vertical @padding-base-horizontal;
   margin-top: ((@navbar-height - 42) / 2);
   margin-bottom: ((@navbar-height - 42) / 2);
-  margin-left: 20px;
+  margin: 20px;
   &:hover,
   &:focus {
     color: #fff;
   }
 }
 
-.navbar-nav > li > a.contact-sales {
-  @media (min-width: 1200px) {
-    margin-right: -5em;
-  }
-  @media (min-width: 1400px) {
-    margin-right: -9em;
-  }
-}
 
-#guides-nav-item {
-  @media (min-width: 992px) {
-    margin-right: 50px;
-  }
-  @media (min-width: 1200px) {
-    margin-right: 110px;
-  }
-  @media (min-width: 1400px) {
-    margin-right: 186px;
-  }
-}
 
 // Home page navbar styles
 .index-page .navbar-default,

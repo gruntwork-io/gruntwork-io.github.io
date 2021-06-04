@@ -19,7 +19,7 @@
         >
       </div>
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
-        <ul class="nav navbar-nav navbar-right">
+        <ul class="nav navbar-nav navbar-left">
           <li>
             <a
               href="/how-it-works/"
@@ -98,12 +98,32 @@
               </li>
             </ul>
           </li>
-          <li id="guides-nav-item">
+          <li>
             <a
               href="/guides/"
               ga-event-category="nav-{{ page.path | slugify }}"
               ga-event-action="guides"
               >Guides</a
+            >
+          </li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li>
+            <a
+              href="https://app.gruntwork.io"
+              ga-on="click"
+              ga-event-category="nav-{{ page.path | slugify }}"
+              ga-event-action="sign-in"
+              >Sign In</a
+            >
+          </li>
+          <li>
+            <a
+              href="/contact/"
+              ga-on="click"
+              ga-event-category="nav-{{ page.path | slugify }}"
+              ga-event-action="contact-sales"
+              >Contact Sales</a
             >
           </li>
           <li>
@@ -116,16 +136,6 @@
               ga-event-category="nav-{{ page.path | slugify }}"
               ga-event-action="buy-now"
               >Buy Now</a
-            >
-          </li>
-          <li>
-            <a
-              href="/contact/"
-              class="contact-sales"
-              ga-on="click"
-              ga-event-category="nav-{{ page.path | slugify }}"
-              ga-event-action="contact-sales"
-              >Contact Sales</a
             >
           </li>
         </ul>
