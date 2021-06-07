@@ -1024,12 +1024,6 @@ module "root_baseline" {
 
   # IAM users to create in this account
   users = var.users
-
-  # These are variables you only need to set at test time so that everything can be deleted cleanly.
-  # You will likely NOT need to set this in any real environments.
-  force_destroy_users      = var.force_destroy
-  cloudtrail_force_destroy = var.force_destroy
-  config_force_destroy     = var.force_destroy
 }
 ----
 
@@ -1187,13 +1181,6 @@ variable "users" {
 
   default = {}
 }
-
-variable "force_destroy" {
-  description = "If set to true, when you run 'terraform destroy', delete all objects from all S3 buckets and any IAM users created by this module so that everything can be destroyed without error. Warning: these objects are not recoverable so only use this if you're absolutely sure you want to permanently delete everything! This is mostly useful when testing."
-  type        = bool
-  default     = false
-}
-
 ----
 
 Finally, add some useful outputs in `outputs.tf`:
@@ -1546,7 +1533,6 @@ Terraform will perform the following actions:
 # module.root_baseline.module.iam_users.aws_iam_user.user["alice"] will be created
   + resource "aws_iam_user" "user" {
       + arn           = (known after apply)
-      + force_destroy = true
       + id            = (known after apply)
       + name          = "alice"
       + path          = "/"
@@ -1848,11 +1834,6 @@ module "app_baseline" {
   security_hub_seed_region                    = var.aws_region
   security_hub_associate_to_master_account_id = var.security_hub_associate_to_master_account_id
   security_hub_external_member_accounts       = var.security_hub_external_member_accounts
-
-  # These are variables you only need to set at test time so that everything can be deleted cleanly. You will likely
-  # NOT need to set this in any real environments.
-  cloudtrail_force_destroy = var.force_destroy
-  config_force_destroy     = var.force_destroy
 }
 ----
 
@@ -1879,12 +1860,6 @@ variable "aws_region" {
   description = "The AWS region in which all resources will be created"
   type        = string
   default     = "us-east-1"
-}
-
-variable "force_destroy" {
-  description = "If set to true, when you run 'terraform destroy', delete all objects from all S3 buckets and any IAM users created by this module so that everything can be destroyed without error. Warning: these objects are not recoverable so only use this if you're absolutely sure you want to permanently delete everything! This is mostly useful when testing."
-  type        = bool
-  default     = false
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
