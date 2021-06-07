@@ -1659,6 +1659,7 @@ modified by the `aws-provider-patch` command.
 rm -rf .terragrunt-cache
 ----
 
+[[apply_account_baseline_root]]
 === Apply the security baseline to the root account
 
 You're now ready to apply the security baseline to the root account. You should be authenticated as the same IAM user
@@ -3351,41 +3352,42 @@ Benchmark. Now it's time to confirm that your configurations are correct and you
 Use the table below as a quick reference to map the CIS AWS Foundations Benchmark recommendations to the
 sections above.
 
-[cols="^1,<10,15",format=csv]
+[cols="^1,<10,15",format=csv,separator=;]
 |===
-#,Section,Description
-1.1,<<security_questions>>,Complete the contact details on the AWS account page
-1.2,<<security_questions>>,Complete the security contact information on the AWS account page
-1.3,<<security_questions>>,Answer the security questions on the AWS account page
-1.4,<<configure_security_hub>>,Use the Gruntwork Security Hub module to enable AWS Security Hub to ensure that no access key exists for the root user
-1.5,<<root_mfa>>,Manually configure MFA for the root user
-1.6,<<root_mfa>>,Use a Yubikey (or other hardware MFA) for the root user
-1.7,<<manual_steps>>,Take manual steps to complete this recommendation
-1.8-9,<<apply_account_baseline_security>>,Use the `account-baseline-security` module to create users
-1.10,<<configure_authentication>>,Configure authentication using SAML or IAM
-1.11,<<apply_account_baseline_security>>,Use the `account-baseline-security` module to create users
-1.12,<<configure_security_hub>>,Use the Gruntwork Security Hub module to enable AWS Security Hub to ensure that there are no unused credentials
-1.13,<<configure_security_hub>>,Use the Gruntwork Security Hub module to enable AWS Security Hub to ensure that there are no extra access keys
-1.14,<<configure_security_hub>>,Use the Gruntwork Security Hub module to enable AWS Security Hub to ensure that there are no unused access keys
-1.15,<<apply_account_baseline_security>>,Use the `account-baseline-security` module to create users and groups
-1.16,<<apply_account_baseline_security>>,Use the `account-baseline-security` module to create best-practices groups and roles
-1.17,<<apply_account_baseline_security>>,Use the `account-baseline-security` module to create a support group
-1.18,<<iam_roles_for_instances>>,Use Gruntwork modules to ensure EC2 instances use roles for access
-1.19,<<cleanup_expired_certs>>,Use Gruntwork modules to automatically remove expired certificates from IAM
-1.20,<<s3_buckets_deployment>>,Use the `private-s3-bucket` module
-1.21,<<iam_access_analyzer>>,Use Gruntwork modules to enable IAM Access Analyzer across regions
-1.22,<<account_structure>>,Use the security AWS account as described in the Gruntwork production-grade AWS account structure
-2.1.1-2.1.2,<<s3_buckets_deployment>>,Use the `private-s3-bucket` module
-2.2.1,<<configure_ebs_encryption>>,Use Gruntwork modules to configure AWS EBS encryption
-3.1-3.4,<<apply_account_baseline_logs>>,Use the `account-baseline-*` modules to ensure Cloudtrail is enabled and configured in all regions
-3.5,<<apply_account_baseline_security>>,Use the `account-baseline-security` module to ensure AWS Config is enabled
-3.6-3.7,<<apply_account_baseline_logs>>,Use the `account-baseline-*` modules to ensure Cloudtrail is enabled and configured in all regions
-3.8,<<kms>>,Use the KMS module
-3.9,<<vpc_flow_logs>>,Use the Gruntwork CIS-compliant `vpc` service to provision VPCs with flow logs enabled
-3.10-3.11,<<apply_account_baseline_logs>>,Use the `account-baseline-*` modules to ensure Cloudtrail is enabled and configured in all regions
-4.1-4.15,<<maintain_compliance_monitoring>>,The CloudWatch Logs metrics filters wrapper module will satisfy each recommendation
-5.1,<<maintain_compliance_networking>>,Use the Gruntwork CIS-compliant `vpc` service to ensure there is no public remote access
-5.2,<<maintain_compliance_networking>>,Use the Gruntwork CIS-compliant `vpc` service for a secure network configuration
-5.3,<<maintain_compliance_networking>>,Use the `cloud-nuke` tool to remove all default security groups
-5.4,<<maintain_compliance_networking>>,Use the Gruntwork CIS-compliant `vpc` service to configure least-privilege routing by default
+#;Section;Description
+1.1;<<security_questions>>;Complete the contact details on the AWS account page
+1.2;<<security_questions>>;Complete the security contact information on the AWS account page
+1.3;<<security_questions>>;Answer the security questions on the AWS account page
+1.4;<<configure_security_hub>>;Use the Gruntwork Security Hub module to enable AWS Security Hub to ensure you are notified if the root user has access keys set
+1.5;<<root_mfa>>;Manually configure MFA for the root user
+1.6;<<root_mfa>>;Use a Yubikey (or other hardware MFA) for the root user
+1.7;<<manual_steps>>;Take manual steps to complete this recommendation
+1.8-9;<<apply_account_baseline_security>>;Use the `account-baseline-security` module to set up the IAM password policy
+1.10;<<configure_authentication>>;Configure authentication using SAML or IAM
+1.11;<<apply_account_baseline_security>>;Use the `account-baseline-security` module to create users
+1.12;<<apply_account_baseline_root>>, <<apply_account_baseline_security>>, <<apply_account_baseline_logs>>;Use the `account-basline-*` modules to set up your accounts. This will ensure that there are no unused credentials
+1.13;<<apply_account_baseline_root>>, <<apply_account_baseline_security>>, <<apply_account_baseline_logs>>;Use the `account-basline-*` modules to set up your accounts. This will ensure that there are no extra access keys
+1.14;<<apply_account_baseline_root>>, <<apply_account_baseline_security>>, <<apply_account_baseline_logs>>;Use the `account-basline-*` modules to set up your accounts. This will ensure that there are no unused access keys
+1.15;<<apply_account_baseline_security>>;Use the `account-baseline-security` module to create users and groups
+1.16;<<apply_account_baseline_security>>;Use the `account-baseline-security` module to ensure no full-access policies are attached to any groups or users
+1.17;<<apply_account_baseline_security>>;Use the `account-baseline-security` module to create a support group
+1.18;<<iam_roles_for_instances>>;Use Gruntwork modules to ensure EC2 instances use roles for access
+1.19;<<cleanup_expired_certs>>;Use Gruntwork modules to automatically remove expired certificates from IAM
+1.20;<<s3_buckets_deployment>>;Use the `private-s3-bucket` module
+1.21;<<iam_access_analyzer>>;Use Gruntwork modules to enable IAM Access Analyzer across regions
+1.22;<<account_structure>>;Use the security AWS account as described in the Gruntwork production-grade AWS account structure
+2.1.1-2.1.2;<<s3_buckets_deployment>>;Use the `private-s3-bucket` module
+2.2.1;<<configure_ebs_encryption>>;Use Gruntwork modules to configure AWS EBS encryption
+3.1-3.4;<<apply_account_baseline_logs>>;Use the `account-baseline-*` modules to ensure Cloudtrail is enabled and configured in all regions
+3.5;<<apply_account_baseline_security>>;Use the `account-baseline-security` module to ensure AWS Config is enabled in all regions
+3.6;<<apply_account_baseline_logs>>;Use the `account-baseline-*` modules to ensure Cloudtrail S3 bucket has access logging enabled
+3.7;<<apply_account_baseline_logs>>;Use the `account-baseline-*` modules to ensure Cloudtrail logs are encrypted at rest using KMS CMKs
+3.8;<<kms>>;Use the KMS module
+3.9;<<vpc_flow_logs>>;Use the Gruntwork CIS-compliant `vpc` service to provision VPCs with flow logs enabled
+3.10-3.11;<<apply_account_baseline_logs>>;Use the `account-baseline-*` modules to ensure Object-level logging is enabled for S3 buckets for read and write events
+4.1-4.15;<<maintain_compliance_monitoring>>;The CloudWatch Logs metrics filters wrapper module will satisfy each recommendation
+5.1;<<maintain_compliance_networking>>;Use the Gruntwork CIS-compliant `vpc` service to ensure there is no public remote access
+5.2;<<maintain_compliance_networking>>;Use the Gruntwork CIS-compliant `vpc` service for a secure network configuration
+5.3;<<maintain_compliance_networking>>;Use the `cloud-nuke` tool to remove all default security groups
+5.4;<<maintain_compliance_networking>>;Use the Gruntwork CIS-compliant `vpc` service to configure least-privilege routing by default
 |===
