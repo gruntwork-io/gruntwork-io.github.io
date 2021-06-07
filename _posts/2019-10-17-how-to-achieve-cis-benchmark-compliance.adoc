@@ -449,8 +449,8 @@ aws iam delete-server-certificate --server-certificate-name <CERTIFICATE_NAME>
 ----
 
 To automate this process you might decide to implement a Lambda function that runs on a regular schedule and removes
-all expired SSL/TLS certificates. Check out the <<cleanup_expired_certs_deployment>> section of the deployment walkthrough
-to see how to deploy a ready-made module that can be deployed in each of your AWS accounts.
+all expired SSL/TLS certificates. Check out the <<apply_account_baseline_root>>, <<apply_account_baseline_logs>> and <<apply_account_baseline_security>> section of the deployment walkthrough
+to see how this module is used from the Landing Zone account baselines and is deployed in each of your AWS accounts.
 
 [[iam_access_analyzer]]
 ==== IAM Access Analyzer
@@ -459,8 +459,8 @@ AWS Account or Organization.
 
 To achieve this compliance requirement, enable the IAM Access Analyzer service for every AWS region you have enabled in
 every one of your AWS accounts. Alternatively, you could make use of the `iam-access-analyzer-multi-region` module
-available in the Gruntwork Service Catalog, as described in the <<iam_access_analyzer_deployment>> section of the
-deployment walkthrough.
+available in the Gruntwork Service Catalog, or if you're following this guide, refer to <<apply_account_baseline_root>>, <<apply_account_baseline_logs>> and <<apply_account_baseline_security>> sections of the
+deployment walkthrough to see how this module is used from the Landing Zone account baselines and is deployed in each of your AWS accounts.
 
 Once enabled, it will scan only within the boundaries of the AWS Account or Organization it has access to. Only specific
 resources are analyzed and included in the results - e.g. S3 buckets, SQS, etc. (For the full list of resources supported,
