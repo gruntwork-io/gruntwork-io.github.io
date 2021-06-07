@@ -3081,14 +3081,6 @@ IMPORTANT: On some operating systems, such as MacOS, you may also need to increa
 
 Remember to repeat this process in the other child accounts too (i.e., dev, prod, shared-services, etc)!
 
-
-//TODO: rest of account-baseline app, logs, security, etc
-
-
-
-
-
-
 === Try authenticating as an IAM user to the child accounts
 
 Now that you have IAM users in the security account and IAM roles in the other accounts, it's time to practice
@@ -3113,15 +3105,13 @@ authenticating:
 [[configure_security_hub]]
 === Configure AWS Security Hub in the root account
 
-// TODO need to reword this. I've just thrown and edited two parts, but it doesn't make sense
-
 Next, we'll configure link:https://aws.amazon.com/security-hub/[AWS Security Hub] in the root account. AWS Security Hub
 is deployed by the account baselines in every enabled region of an AWS account to check your account link:https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-standards.html[for compliance]
 with the AWS CIS Foundations Benchmark. The Security Hub runs the exact audit steps specified in the Benchmark using AWS
-Config managed rules. Note: Security Hub is not explicitly required by the Benchmark, however we suggest enabling it,
-so you can track your compliance efforts and be notified if any recommendations have not been implemented.
+Config managed rules. _Note: Security Hub is not explicitly required by the Benchmark, however we suggest enabling it,
+so you can track your compliance efforts and be notified if any recommendations have not been implemented._
 
-Caveat: In the AWS Console UI, AWS Security Hub will show a low security score for the CIS AWS Foundations Benchmark v1.2.0. However, this is due to AWS limitations on checking compliance standards for cross-region/cross-account rules. This does not indicate that the accounts are not in compliance; it is a failure of the AWS audit tool. Note also that the accounts are configured for the latest version of the benchmark, v1.3.0; the AWS Security Hub does not support this version.
+Caveat: In the AWS Console UI, AWS Security Hub will show a low security score for the CIS AWS Foundations Benchmark v1.2.0. However, this is due to AWS limitations on checking compliance standards for cross-region/cross-account rules. This does not indicate that the accounts are not in compliance; it is a failure of the AWS audit tool. Note also that the accounts are configured for the latest version of the benchmark, v1.3.0; the AWS Security Hub does not support this version at the current time.
 
 [[iam_roles_for_instances]]
 === Use IAM roles for EC2 instances
