@@ -3111,7 +3111,12 @@ with the AWS CIS Foundations Benchmark. The Security Hub runs the exact audit st
 Config managed rules. _Note: Security Hub is not explicitly required by the Benchmark, however we suggest enabling it,
 so you can track your compliance efforts and be notified if any recommendations have not been implemented._
 
-Caveat: In the AWS Console UI, AWS Security Hub will show a low security score for the CIS AWS Foundations Benchmark v1.2.0. However, this is due to AWS limitations on checking compliance standards for cross-region/cross-account rules. This does not indicate that the accounts are not in compliance; it is a failure of the AWS audit tool. Note also that the accounts are configured for the latest version of the benchmark, v1.3.0; the AWS Security Hub does not support this version at the current time.
+In order to ensure the Security Hub dashboard shows a positive score, you will need to follow these link:https://gruntwork.io/guides/compliance/how-to-achieve-cis-benchmark-compliance/#identity-and-access-management-2[Manual Steps]
+to complete CIS compliance. These steps cannot be automated using AWS APIs. Additionally, in the AWS Console UI, AWS Security
+Hub will show a low security score for the CIS AWS Foundations Benchmark v1.2.0. This is due to AWS limitations on
+checking compliance standards for cross-region/cross-account rules. This does not indicate that the accounts are not in
+compliance; it is a failure of the AWS audit tool. Note also that the accounts are configured for the latest version of
+the benchmark, v1.3.0; the AWS Security Hub does not support this version at the current time.
 
 [[iam_roles_for_instances]]
 === Use IAM roles for EC2 instances
