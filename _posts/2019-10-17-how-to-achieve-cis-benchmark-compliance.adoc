@@ -130,8 +130,8 @@ _Number of recommendations: 11_
 AWS has a variety of logging, monitoring, and auditing features, and the Benchmark has recommendations for
 several of them:
 
-* link:https://aws.amazon.com/cloudtrail/[AWS CloudTrail] tracks user activity and API usage
-* link:https://aws.amazon.com/config/[AWS Config] records and evaluates resource configurations
+* link:https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-user-guide.html[AWS CloudTrail] tracks user activity and API usage
+* link:https://docs.aws.amazon.com/config/latest/developerguide/WhatIsConfig.html[AWS Config] records and evaluates resource configurations
 * link:https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html[VPC Flow Logs] capture network traffic information
   in VPCs
 
@@ -458,7 +458,7 @@ As of version 1.3.0, the CIS recommendations stipulate that the AWS IAM Access A
 AWS Account or Organization.
 
 To achieve this compliance requirement, enable the IAM Access Analyzer service for every AWS region you have enabled in
-every one of your AWS accounts. Alternatively, you could make use of the `iam-access-analyzer-multi-region` module
+every one of your AWS accounts. Alternatively, you could make use of the link:https://github.com/gruntwork-io/terraform-aws-security/tree/master/modules/iam-access-analyzer-multi-region[`iam-access-analyzer-multi-region`] module
 available in the Gruntwork Service Catalog, or if you're following this guide, refer to <<apply_account_baseline_root>>, <<apply_account_baseline_logs>> and <<apply_account_baseline_security>> sections of the
 deployment walkthrough to see how this module is used from the Landing Zone account baselines and is deployed in each of your AWS accounts.
 
@@ -557,10 +557,10 @@ resource "aws_ebs_encryption_by_default" "ebs_encryption" {
 === Logging
 In the Logging section, the Benchmark recommendations target the following services:
 
-* link:https://aws.amazon.com/cloudtrail/[AWS CloudTrail]
-* link:https://aws.amazon.com/config/[AWS Config]
-* KMS key rotation
-* VPC Flow logs
+* link:https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-user-guide.html[AWS CloudTrail]
+* link:https://docs.aws.amazon.com/config/latest/developerguide/WhatIsConfig.html[AWS Config]
+* link:https://docs.aws.amazon.com/kms/latest/developerguide/rotate-keys.html[KMS key rotation]
+* link:https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html[VPC Flow Logs]
 
 We'll cover each of them in turn.
 
@@ -772,7 +772,7 @@ automatically.
 [[gruntwork_solution]]
 === The Gruntwork solution
 Gruntwork offers battle-tested infrastructure as code modules to help you create production grade infrastructure in a
-fraction of the time it would take to develop from scratch. Each of the code modules are "compliance-ready"; they are
+fraction of the time it would take to develop from scratch. Each of the core modules are "compliance-ready"; they are
 mostly unopinionated by default, but they can be configured for compliance with the right settings.
 
 To further simplify and expedite compliance, the Gruntwork CIS Service Catalog uses both standalone compliance
@@ -1416,9 +1416,9 @@ address you used for the root account or any of the other child accounts. You'll
 accounts in your company's email system, or, if your company uses Gmail (perhaps as part of G Suite), you can take
 advantage of the fact that https://gmail.googleblog.com/2008/03/2-hidden-ways-to-get-more-from-your.html[Gmail
   ignores everything after a plus sign in an email address], so that while AWS will see
-`root-accounts+security@your-company.com`, `root-accounts+shared@your-company.com`, and
-`root-accounts+dev@your-company.com` as three unique email addresses, Gmail will see them all as the same email
-address, `root-accounts@your-company.com`.
+`root-accounts+security@acme.com`, `root-accounts+shared@acme.com`, and
+`root-accounts+dev@acme.com` as three unique email addresses, Gmail will see them all as the same email
+address, `root-accounts@acme.com`.
 
 . **Mark one of the child accounts as a logs account**. We set `is_logs_account = true` on one of the child accounts
 to indicate it is the logs account where we will aggregate AWS Config, CloudTrail, IAM Access Analyzer and Security Hub data from all the other accounts.
@@ -2184,11 +2184,12 @@ inputs = {
   # Use the S3 bucket that was already created in this logs account by account-baseline-root
   config_s3_bucket_name = "<CONFIG_BUCKET_NAME>"
 
+  # Set this to false because this is the account to aggregate Config data
   config_aggregate_config_data_in_external_account = false
   config_central_account_id                        = null
 
-  # Set to true to create an S3 bucket of name var.config_s3_bucket_name in this account for storing AWS Config data (e.g., if this is the logs account). Set to false to assume the bucket specified in var.config_s3_bucket_name already exists in another AWS account (e.g., if this is the stage or prod account and var.config_s3_bucket_name is the name of a bucket in the logs account).
-  config_should_create_s3_bucket = true
+  # The bucket was created by account-baseline-root in this account
+  config_should_create_s3_bucket = false
 
   # The name of the SNS topic in where AWS Config notifications will be sent. Can be in the same account or in another account.
   config_sns_topic_name = "<DEFINE_SNS_TOPIC_NAME>"
@@ -2205,9 +2206,9 @@ inputs = {
   # Specify all of the account IDs that should be able to write to the logs account. You might want to set this to the `security` child account, or `dev`, `prod` or `stage` AWS Account IDs.
   cloudtrail_external_aws_account_ids_with_write_access = ["<ANY_CHILD_AWS_ACCOUNT_ID>", "<SECURITY_ACCOUNT_ID>", "<DEV_ACCOUNT_ID>"]
 
-  # Set to false to create an S3 bucket of name var.cloudtrail_s3_bucket_name in this account for storing CloudTrail logs (e.g., if this is the logs account). Set to true to assume the bucket specified in var.cloudtrail_s3_bucket_name already exists in another AWS account (e.g., if this is the stage or prod account and var.cloudtrail_s3_bucket_name is the name of a bucket in the logs account).
-  cloudtrail_s3_bucket_already_exists = false
-  cloudtrail_kms_key_already_exists = false
+  # Set to false because both S3 bucket and KMS key were created in this account by account-baseline-root
+  cloudtrail_s3_bucket_already_exists = true
+  cloudtrail_kms_key_already_exists = true
 
   # Use the S3 bucket and KMS key that were already created in this logs account by account-baseline-root
   cloudtrail_s3_bucket_name = "<CLOUDTRAIL_BUCKET_NAME>"
@@ -2217,11 +2218,6 @@ inputs = {
 
   # Set to point to the AWS Account that has set up the Security Hub organisation and has sent out invitations to other AWS Child accounts. For example, get the `root` account to send invitations to `security`, `logs`, `dev`, etc.
   security_hub_associate_to_master_account_id = "<ROOT_ACCOUNT_ID>"
-  security_hub_external_member_accounts = { security = {
-                                               account_id = "<LOGS_ACCOUNT_ID>"
-                                               email      = "root-accounts+logs@acme.com"
-                                             }
-                                        }
 
   # Allow users in the security account to assume IAM roles in this account
   allow_read_only_access_from_other_account_arns = ["arn:aws:iam::<SECURITY_ACCOUNT_ID>:root"]
