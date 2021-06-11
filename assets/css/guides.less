@@ -47,7 +47,11 @@
   padding: 0;
 
   a {
-    color: #999999;
+    color: #999;
+
+    code {
+      color: #999;
+    }
   }
 
   a:active,
@@ -137,6 +141,11 @@
   a:active {
     color: @guides-primary-color;
     text-decoration: none;
+
+    code {
+      color: @guides-primary-color;
+      text-decoration: none;
+    }
 
     &:before {
       content: "";
@@ -1044,6 +1053,10 @@ body .guides .guides-section-white {
   // Limit width so typography remains readable on wide screens: https://ux.stackexchange.com/a/108803/4869
   max-width: 760px;
   margin: 0 auto;
+
+  code {
+    color: @guides-font;
+  }
 
   .imageblock > .title {
     font-size: 12px;
