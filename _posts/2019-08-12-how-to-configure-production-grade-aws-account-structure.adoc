@@ -898,6 +898,13 @@ Code repository::
   You will need to initialize an `infrastructure-live` repository to contain all of the Terragrunt configuration code for your
   infrastructure. You may use the https://github.com/gruntwork-io/terraform-aws-service-catalog/tree/v0.41.4/examples/for-production/infrastructure-live[`for-production` example code] to start with.
 
+Keybase (optional)::
+  As part of this guide, you will create IAM users, including, optionally, credentials for those IAM users. If you
+  choose to create credentials, those credentials will be encrypted with a PGP key. You could provide the PGP keys
+  manually, but a more manageable option may be to have your team members to sign up for https://keybase.io[Keybase],
+  create PGP keys for themselves, and then you can provide their Keybase usernames, and the PGP keys will be retrieved
+  automatically.
+
 
 === Prepare your `infrastructure-live` repository
 
@@ -996,6 +1003,7 @@ inputs = {
   # Set commonly used inputs globally to keep child terragrunt.hcl files DRY
   aws_account_id = local.account_id
   aws_region     = local.aws_region
+  name_prefix    = local.name_prefix
 }
 ----
 
@@ -1009,11 +1017,32 @@ locals {
   name_prefix = ""
   # TODO: Enter the default AWS region, the same as where the terraform state S3 bucket is currently provisioned.
   default_region = ""
+
+  # TODO: An accounts map to conveniently store all account IDs.
+  # Centrally define all the AWS account IDs. We use JSON so that it can be readily parsed outside of Terraform.
+  accounts = jsondecode(file("accounts.json"))
+}
+----
+
+This file references an `accounts.json`, which you should also create at the root of the repo. _You will fill out
+the account IDs after applying the account-baseline-root to the root account._
+
+.infrastructure-live/accounts.json
+[source,json]
+----
+{
+  "dev": "",
+  "logs": "",
+  "prod": "",
+  "security": "",
+  "shared": "",
+  "stage": ""
 }
 ----
 
 In each account folder (e.g., `infrastructure-live/dev`, `infrastructure-live/shared`, etc.), add a file named
-`account.hcl` with the following contents.
+`account.hcl` with the following contents. _Leave `account_id` blank until after the `account-baseline-root` has been
+applied to the root account._
 
 [source,hcl]
 ----
@@ -1309,14 +1338,14 @@ You should get JSON output with information about your IAM user:
 }
 ----
 
-You're now almost ready to deploy the `account-baseline` module in the root account. But first, you may need to import
-some existing resources.
+You're now almost ready to deploy the `account-baseline` module in the root account. But first, let's import the IAM user
+and any other existing resources.
 
 
-=== Import existing resources from the root account
+=== Import existing resources from the root account into Terraform state
 
-Before applying the security baseline to the root account, we need to import any existing resources—including the IAM
-user you created manually earlier—into Terraform state, so that Terraform manages those existing resources instead of
+Before applying the `account-baseline-root` module to the root account, we need to import existing resources—including
+the IAM user you created manually earlier—into Terraform state, so that Terraform manages those resources instead of
 trying to create totally new ones. You can do this using the
 https://www.terraform.io/docs/import/index.html[`import` command], which uses the format:
 
@@ -1329,7 +1358,7 @@ Where `<ADDRESS>` is the https://www.terraform.io/docs/internals/resource-addres
 resource you're importing and `<ID>` is a resource-specific identifier (e.g., for `aws_instance`, it's the instance ID,
 whereas for `aws_lb`, it's the load balancer's name—check the docs for the resource to find out what to use).
 
-As a first example, let's import the IAM user you created manually in the root account. IAM users are managed using the
+Let's import the IAM user you created manually in the root account. IAM users are managed using the
 `aws_iam_user` resource, and the
 https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_user#import[documentation for that
 resource] tells us to use the user's `name` as the `<ID>`; we'll assume for this example that your IAM user's name was
@@ -1491,7 +1520,7 @@ bucket, the name of the CloudTrail S3 bucket, and the ARN of the CloudTrail KMS 
 
 [source,hcl]
 ----
-# (this output has been edited to be easier to read)
+# (This output has been truncated to be easier to read)
 child_accounts = {
   "dev" = {
     "email" = "root-accounts+dev@acme.com"
@@ -1529,10 +1558,11 @@ cloudtrail_s3_bucket_name = "<CLOUDTRAIL_BUCKET_NAME>"
 config_s3_bucket_name     = "<CONFIG_BUCKET_NAME>"
 ----
 
-Take note of all of this data. In fact, it's a good time to update your root-level
-`common.hcl` to include these account IDs.
+Now, you can update the `accounts.json` file with the account IDs from the Terraform output! Also `account.hcl` files
+located in each account folder (e.g., infrastructure-live/dev, infrastructure-live/shared, etc.), with the appropriate
+account ID shown in the Terraform output.
 
-One other useful output will be the encrypted passwords for any IAM users you created:
+One other useful output are the encrypted passwords for IAM users you created:
 
 [source,hcl]
 ----
@@ -1568,232 +1598,7 @@ those root users again.
 === Apply the security baseline to the logs account
 
 The next step is to configure the logs account, which is used to aggregate AWS Config and CloudTrail data from all the
-other accounts. To do this, create a new module called `account-baseline-app`  in your `infrastructure-modules` repo:
-
-----
-infrastructure-modules
-  └ landingzone
-    └ account-baseline-root
-    └ account-baseline-app
-      └ main.tf
-      └ outputs.tf
-      └ variables.tf
-----
-
-Inside of `main.tf`, configure your AWS provider and Terraform settings:
-
-.infrastructure-modules/landingzone/account-baseline-app/main.tf
-[source,hcl]
-----
-provider "aws" {
-  # The AWS region in which all resources will be created
-  region = var.aws_region
-
-  # Require a 3.x version of the AWS provider
-  version = "~> 3.23"
-
-  # Only these AWS Account IDs may be operated on by this template
-  allowed_account_ids = [var.aws_account_id]
-}
-
-terraform {
-  # Partially configure the backend. It will be filled in by Terragrunt if a root level terragrunt.hcl defines
-  # remote_state. See https://www.terraform.io/docs/backends/config.html#partial-configuration
-  backend "s3" {}
-
-  # Only allow this Terraform version. Note that if you upgrade to a newer version, Terraform won't allow you to use an
-  # older version, so when you upgrade, you should upgrade everyone on your team and your CI servers all at once.
-  required_version = "= 0.12.29"
-}
-----
-
-Next, use the `account-baseline-app` module from the Gruntwork Infrastructure as Code Library:
-
-.infrastructure-modules/landingzone/account-baseline-app/main.tf
-[source,hcl]
-----
-module "security_baseline" {
-  source = "git::git@github.com:gruntwork-io/terraform-aws-service-catalog.git//modules/landingzone/account-baseline-app?ref=v0.39.0"
-
-  name_prefix    = var.name_prefix
-  aws_region     = var.aws_region
-  aws_account_id = var.aws_account_id
-
-  # We assume the S3 bucket for AWS Config has already been created by account-baseline-root
-  config_should_create_s3_bucket                   = false
-  config_s3_bucket_name                            = var.config_s3_bucket_name
-  config_central_account_id                        = var.config_central_account_id
-  config_aggregate_config_data_in_external_account = var.config_aggregate_config_data_in_external_account
-
-  # We assume the S3 bucket and KMS key for CloudTrail have already been created by account-baseline-root
-  cloudtrail_s3_bucket_already_exists = true
-  cloudtrail_s3_bucket_name           = var.cloudtrail_s3_bucket_name
-  cloudtrail_kms_key_arn              = var.cloudtrail_kms_key_arn
-
-  dev_permitted_services  = var.dev_permitted_services
-  auto_deploy_permissions = var.auto_deploy_permissions
-
-  allow_read_only_access_from_other_account_arns = var.allow_read_only_access_from_other_account_arns
-  allow_billing_access_from_other_account_arns   = var.allow_billing_access_from_other_account_arns
-  allow_logs_access_from_other_account_arns      = var.allow_logs_access_from_other_account_arns
-  allow_dev_access_from_other_account_arns       = var.allow_dev_access_from_other_account_arns
-  allow_full_access_from_other_account_arns      = var.allow_full_access_from_other_account_arns
-  allow_auto_deploy_from_other_account_arns      = var.allow_auto_deploy_from_other_account_arns
-}
-----
-
-Create all the corresponding input variables for `account-baseline-app` in `variables.tf`:
-
-.infrastructure-modules/landingzone/account-baseline-app/variables.tf
-[source,hcl]
-----
-# ---------------------------------------------------------------------------------------------------------------------
-# MODULE PARAMETERS
-# These variables are expected to be passed in by the operator
-# ---------------------------------------------------------------------------------------------------------------------
-
-variable "name_prefix" {
-  description = "The name used to prefix AWS Config and CloudTrail resources,
-    including the S3 bucket names and SNS topics used for each."
-  type        = string
-}
-
-variable "aws_region" {
-  description = "The AWS Region to use as the global config recorder and seed region
-    for GuardDuty."
-  type        = string
-}
-
-variable "aws_account_id" {
-  description = "The AWS Account ID the template should be operated on. This avoids
-    misconfiguration errors caused by environment variables."
-  type        = string
-}
-
-# ---------------------------------------------------------------------------------------------------------------------
-# OPTIONAL PARAMETERS
-# These variables have reasonable defaults that can be overridden for further customizations.
-# ---------------------------------------------------------------------------------------------------------------------
-
-variable "cloudtrail_s3_bucket_name" {
-  description = "The name of the S3 Bucket where CloudTrail logs will be stored. This could be a bucket in this AWS account (e.g., if this is the logs account) or the name of a bucket in another AWS account where logs should be sent (e.g., if this is the stage or prod account and you're specifying the name of a bucket in the logs account)."
-  type        = string
-}
-
-variable "config_s3_bucket_name" {
-  description = "The name of the S3 Bucket where Config items will be stored. This could be a bucket in this AWS account (e.g., if this is the logs account) or the name of a bucket in another AWS account where Config items should be sent (e.g., if this is the stage or prod account and you're specifying the name of a bucket in the logs account)."
-  type        = string
-}
-
-variable "config_aggregate_config_data_in_external_account" {
-  description = "Set to true to send the AWS Config data to another account (e.g., a logs account) for aggregation purposes. You must set the ID of that other account via the config_central_account_id variable. This redundant variable has to exist because Terraform does not allow computed data in count and for_each parameters and var.config_central_account_id may be computed if its the ID of a newly-created AWS account."
-  type        = bool
-}
-
-variable "config_central_account_id" {
-  description = "If the S3 bucket and SNS topics used for AWS Config live in a different AWS account, set this variable to the ID of that account (e.g., if this is the stage or prod account, set this to the ID of the logs account). If the S3 bucket and SNS topics live in this account (e.g., this is the logs account), set this variable to null. Only used if config_aggregate_config_data_in_external_account is true."
-  type        = string
-}
-
-variable "cloudtrail_kms_key_arn" {
-  description = "All CloudTrail Logs will be encrypted with a KMS CMK (Customer Master Key) that governs access to write API calls older than 7 days and all read API calls. If that CMK already exists (e.g., if this is the stage or prod account and you want to use a CMK that already exists in the logs account), set this to the ARN of that CMK. Otherwise (e.g., if this is the logs account), set this to null, and a new CMK will be created."
-  type        = string
-}
-
-# ---------------------------------------------------------------------------------------------------------------------
-# OPTIONAL CROSS ACCOUNT IAM ROLES PARAMETERS
-# These variables have defaults, but may be overridden by the operator.
-# ---------------------------------------------------------------------------------------------------------------------
-
-variable "dev_permitted_services" {
-  description = "A list of AWS services for which the developers from the accounts in var.allow_dev_access_from_other_account_arns will receive full permissions. See https://goo.gl/ZyoHlz to find the IAM Service name. For example, to grant developers access only to EC2 and Amazon Machine Learning, use the value [\"ec2\",\"machinelearning\"]. Do NOT add iam to the list of services, or that will grant Developers de facto admin access."
-  type        = list(string)
-  default     = []
-}
-
-variable "allow_read_only_access_from_other_account_arns" {
-  description = "A list of IAM ARNs from other AWS accounts that will be allowed read-only access to this account."
-  type        = list(string)
-  default     = []
-  # Example:
-  # default = [
-  #   "arn:aws:iam::123445678910:root"
-  # ]
-}
-
-variable "allow_billing_access_from_other_account_arns" {
-  description = "A list of IAM ARNs from other AWS accounts that will be allowed full (read and write) access to the billing info for this account."
-  type        = list(string)
-  default     = []
-  # Example:
-  # default = [
-  #   "arn:aws:iam::123445678910:root"
-  # ]
-}
-
-variable "allow_logs_access_from_other_account_arns" {
-  description = "A list of IAM ARNs from other AWS accounts that will be allowed read access to the logs in CloudTrail, AWS Config, and CloudWatch for this account. If var.cloudtrail_kms_key_arn is specified, will also be given permissions to decrypt with the KMS CMK that is used to encrypt CloudTrail logs."
-  type        = list(string)
-  default     = []
-  # Example:
-  # default = [
-  #   "arn:aws:iam::123445678910:root"
-  # ]
-}
-
-variable "allow_dev_access_from_other_account_arns" {
-  description = "A list of IAM ARNs from other AWS accounts that will be allowed full (read and write) access to the services in this account specified in var.dev_permitted_services."
-  type        = list(string)
-  default     = []
-  # Example:
-  # default = [
-  #   "arn:aws:iam::123445678910:root"
-  # ]
-}
-
-variable "allow_full_access_from_other_account_arns" {
-  description = "A list of IAM ARNs from other AWS accounts that will be allowed full (read and write) access to this account."
-  type        = list(string)
-  default     = []
-  # Example:
-  # default = [
-  #   "arn:aws:iam::123445678910:root"
-  # ]
-}
-
-variable "allow_auto_deploy_from_other_account_arns" {
-  description = "A list of IAM ARNs from other AWS accounts that will be allowed to assume the auto deploy IAM role that has the permissions in var.auto_deploy_permissions."
-  type        = list(string)
-  default     = []
-  # Example:
-  # default = [
-  #   "arn:aws:iam::123445678910:role/jenkins"
-  # ]
-}
-
-variable "auto_deploy_permissions" {
-  description = "A list of IAM permissions (e.g. ec2:*) that will be added to an IAM Group for doing automated deployments. NOTE: If var.should_create_iam_group_auto_deploy is true, the list must have at least one element (e.g. '*')."
-  type        = list(string)
-  default     = []
-}
-----
-
-At this point, you'll want to test your code. To do this without deploying resources, run `terragrunt plan`. Make sure the plan output looks sane before proceeding.
-
-If you have time to write more robust testing, also see
-link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#manual_tests_terraform[Manual tests for Terraform code] and
-link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#automated_tests_terraform[Automated tests for Terraform code]
-for instructions.
-
-When you're done testing, commit and release your changes:
-
-[source,bash]
-----
-git add landingzone/account-baseline-app
-git commit -m "Add app account baseline wrapper module"
-git tag -a "v0.3.1" -m "Created app account baseline module"
-git push --follow-tags
-----
+other accounts.
 
 Create a `terragrunt.hcl` file in `infrastructure-live` under the file path `logs/_global/account-baseline`:
 
@@ -1806,14 +1611,13 @@ infrastructure-live
         └ terragrunt.hcl
 ----
 
-Point the `source` URL in your `terragrunt.hcl` file to your `account-baseline-app` wrapper module in the `infrastructure-modules`
-repo, setting the `ref` param to the version you released earlier:
+Point the `source` URL in your `terragrunt.hcl` file to the https://github.com/gruntwork-io/terraform-aws-service-catalog/tree/v0.41.4/modules/landingzone/account-baseline-app[account-baseline-app] service in the Service Catalog.
 
 .infrastructure-live/logs/_global/account-baseline/terragrunt.hcl
 [source,hcl]
 ----
 terraform {
-  source = "git::git@github.com:<YOUR_ORG>/infrastructure-modules.git//landingzone/account-baseline-app?ref=v0.3.1"
+  source = "git::git@github.com:gruntwork-io/terraform-aws-service-catalog.git//modules/landingzone/account-baseline-app?ref=v0.41.4"
 
   # This module deploys some resources (e.g., AWS Config) across all AWS regions, each of which needs its own provider,
   # which in Terraform means a separate process. To avoid all these processes thrashing the CPU, which leads to network
@@ -1828,7 +1632,7 @@ terraform {
 [.exceptional]
 IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=2`), as shown above, with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors.
 
-Configure your Terraform backend:
+Include all the settings from the root terragrunt.hcl file:
 
 .infrastructure-live/logs/_global/account-baseline/terragrunt.hcl
 [source,hcl]
@@ -1843,27 +1647,46 @@ Set the variables for the `account-baseline-app` module in this environment in t
 .infrastructure-live/logs/_global/account-baseline/terragrunt.hcl
 [source,hcl]
 ----
+locals = {
+  # A local for more convenient access to the accounts map.
+  accounts = local.common_vars.locals.accounts
+
+  # A local for convenient access to the security account root ARN.
+  security_account_root_arn = "arn:aws:iam::${local.accounts.security}:root"
+}
+
 inputs = {
-  # Fill in your region you want to use (only used for API calls) and the ID of your logs AWS account
-  aws_region     = "us-east-2"
-  aws_account_id = "<LOGS_ACCOUNT_ID>"
-
-  # Prefix all resources with this name
-  name_prefix    = "<COMPANY_NAME>-logs"
-
   # Use the S3 bucket and KMS key that were already created in the logs account by account-baseline-root
   cloudtrail_s3_bucket_name = "<CLOUDTRAIL_BUCKET_NAME>"
   cloudtrail_kms_key_arn    = "<CLOUDTRAIL_KMS_KEY_ARN>"
 
+  # All of the other accounts send logs to this account.
+  cloudtrail_allow_kms_describe_key_to_external_aws_accounts = true
+  cloudtrail_external_aws_account_ids_with_write_access = [
+    for name, id in local.accounts :
+      id if name != "logs"
+  ]
+
   # Use the S3 bucket that was already created in the logs account by account-baseline-root
   config_s3_bucket_name                            = "<CONFIG_BUCKET_NAME>"
   config_aggregate_config_data_in_external_account = false
-  config_central_account_id                        = null
+  config_central_account_id                        = local.accounts.logs
+  config_force_destroy                             = false
+
+  # This is the Logs account, so we create the S3 bucket and SNS topic for aggregating Config logs from all accounts.
+  config_should_create_s3_bucket = true
+  config_should_create_sns_topic = true
+
+  # All of the other accounts send logs to this account.
+  config_linked_accounts = [
+    for name, id in local.accounts :
+      id if name != "logs"
+  ]
 
   # Allow users in the security account to assume IAM roles in this account
-  allow_full_access_from_other_account_arns      = ["arn:aws:iam::<SECURITY_ACCOUNT_ID>:root"]
-  allow_read_only_access_from_other_account_arns = ["arn:aws:iam::<SECURITY_ACCOUNT_ID>:root"]
-  allow_logs_access_from_other_account_arns      = ["arn:aws:iam::<SECURITY_ACCOUNT_ID>:root"]
+  allow_full_access_from_other_account_arns      = [local.security_account_root_arn]
+  allow_read_only_access_from_other_account_arns = [local.security_account_root_arn]
+  allow_logs_access_from_other_account_arns      = [local.security_account_root_arn]
 }
 ----
 
@@ -1884,7 +1707,7 @@ to https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-t
 for this guide, we're going to keep using `aws-vault`.
 
 Open up `~/.aws/config` and you should see a `profile` that was created automatically when you ran
-`aws-vault add root-iam-user`  earlier:
+`aws-vault add root-iam-user` earlier:
 
 [source,text]
 ----
@@ -1935,415 +1758,6 @@ IMPORTANT: On some operating systems, such as MacOS, you may also need to increa
 Now that your logs accounts is fully configured, you need to apply the security baseline to the security account, which
 is where all your IAM users and groups will be defined and managed.
 
-Create a new module called `account-baseline-security` in your `infrastructure-modules` repo:
-
-----
-infrastructure-modules
-  └ landingzone
-    └ account-baseline-root
-    └ account-baseline-app
-    └ account-baseline-security
-      └ main.tf
-      └ outputs.tf
-      └ variables.tf
-----
-
-Inside of `main.tf`, configure your AWS provider and Terraform settings:
-
-.infrastructure-modules/landingzone/account-baseline-security/main.tf
-[source,hcl]
-----
-provider "aws" {
-  # The AWS region in which all resources will be created
-  region = var.aws_region
-
-  # Require a 3.x version of the AWS provider
-  version = "~> 3.23"
-
-  # Only these AWS Account IDs may be operated on by this template
-  allowed_account_ids = [var.aws_account_id]
-}
-
-terraform {
-  # Partially configure the backend. It will be filled in by Terragrunt if a root level terragrunt.hcl defines
-  # remote_state. See https://www.terraform.io/docs/backends/config.html#partial-configuration
-  backend "s3" {}
-
-  # Only allow this Terraform version. Note that if you upgrade to a newer version, Terraform won't allow you to use an
-  # older version, so when you upgrade, you should upgrade everyone on your team and your CI servers all at once.
-  required_version = "= 0.12.29"
-}
-----
-
-Next, use the `account-baseline-security` module from the Gruntwork Infrastructure as Code Library:
-
-.infrastructure-modules/landingzone/account-baseline-security/main.tf
-[source,hcl]
-----
-module "security_baseline" {
-  source = "git::git@github.com:gruntwork-io/terraform-aws-service-catalog.git//modules/landingzone/account-baseline-security?ref=v0.39.0"
-
-  name_prefix    = var.name_prefix
-  aws_region     = var.aws_region
-  aws_account_id = var.aws_account_id
-
-  # We assume the S3 bucket for AWS Config has already been created by account-baseline-root
-  config_should_create_s3_bucket                   = false
-  config_s3_bucket_name                            = var.config_s3_bucket_name
-  config_central_account_id                        = var.config_central_account_id
-  config_aggregate_config_data_in_external_account = true
-
-  # We assume the S3 bucket and KMS key for CloudTrail have already been created by account-baseline-root
-  cloudtrail_s3_bucket_already_exists = true
-  cloudtrail_s3_bucket_name           = var.cloudtrail_s3_bucket_name
-  cloudtrail_kms_key_arn              = var.cloudtrail_kms_key_arn
-
-  iam_groups_for_cross_account_access            = var.iam_groups_for_cross_account_access
-  cross_account_access_all_group_name            = var.cross_account_access_all_group_name
-  allow_ssh_grunt_access_from_other_account_arns = var.allow_ssh_grunt_access_from_other_account_arns
-
-  should_create_iam_group_full_access              = var.should_create_iam_group_full_access
-  should_create_iam_group_billing                  = var.should_create_iam_group_billing
-  should_create_iam_group_logs                     = var.should_create_iam_group_logs
-  should_create_iam_group_developers               = var.should_create_iam_group_developers
-  should_create_iam_group_read_only                = var.should_create_iam_group_read_only
-  should_create_iam_group_support                  = var.should_create_iam_group_support
-  should_create_iam_group_user_self_mgmt           = var.should_create_iam_group_user_self_mgmt
-  should_create_iam_group_iam_admin                = var.should_create_iam_group_iam_admin
-  should_create_iam_group_use_existing_iam_roles   = var.should_create_iam_group_use_existing_iam_roles
-  should_create_iam_group_auto_deploy              = var.should_create_iam_group_auto_deploy
-  should_create_iam_group_cross_account_access_all = var.should_create_iam_group_cross_account_access_all
-
-  iam_group_name_full_access            = var.iam_group_name_full_access
-  iam_group_name_billing                = var.iam_group_name_billing
-  iam_group_name_logs                   = var.iam_group_name_logs
-  iam_group_name_developers             = var.iam_group_name_developers
-  iam_group_name_read_only              = var.iam_group_name_read_only
-  iam_group_names_ssh_grunt_sudo_users  = var.iam_group_names_ssh_grunt_sudo_users
-  iam_group_names_ssh_grunt_users       = var.iam_group_names_ssh_grunt_users
-  iam_group_name_use_existing_iam_roles = var.iam_group_name_use_existing_iam_roles
-  iam_group_name_auto_deploy            = var.iam_group_name_auto_deploy
-  iam_group_name_support                = var.iam_group_name_support
-  iam_group_name_iam_user_self_mgmt     = var.iam_group_name_iam_user_self_mgmt
-  iam_group_name_iam_admin              = var.iam_group_name_iam_admin
-
-  users = var.users
-}
-----
-
-Create all the corresponding input variables for `account-baseline-security` in `variables.tf`:
-
-.infrastructure-modules/landingzone/account-baseline-security/variables.tf
-[source,hcl]
-----
-# ---------------------------------------------------------------------------------------------------------------------
-# MODULE PARAMETERS
-# These variables are expected to be passed in by the operator
-# ---------------------------------------------------------------------------------------------------------------------
-
-variable "name_prefix" {
-  description = "The name used to prefix AWS Config and CloudTrail resources, including the S3 bucket names and SNS topics used for each."
-  type        = string
-}
-
-variable "aws_region" {
-  description = "The AWS Region to use as the global config recorder and seed region for GuardDuty."
-  type        = string
-}
-
-variable "aws_account_id" {
-  description = "The AWS Account ID the template should be operated on. This avoids misconfiguration errors caused by environment variables."
-  type        = string
-}
-
-variable "config_s3_bucket_name" {
-  description = "The name of the S3 Bucket where Config items will be stored. This could be a bucket in this AWS account or the name of a bucket in another AWS account where Config items should be sent. We recommend setting this to the name of an S3 bucket in a separate logs account."
-  type        = string
-}
-
-variable "config_central_account_id" {
-  description = "If the S3 bucket and SNS topics used for AWS Config live in a different AWS account, set this variable to the ID of that account. If the S3 bucket and SNS topics live in this account, set this variable to null. We recommend setting this to the ID of a separate logs account."
-  type        = string
-}
-
-variable "cloudtrail_s3_bucket_name" {
-  description = "The name of the S3 Bucket where CloudTrail logs will be stored. This could be a bucket in this AWS account or the name of a bucket in another AWS account where logs should be sent. We recommend setting this to the name of a bucket in a separate logs account."
-  type        = string
-}
-
-variable "cloudtrail_kms_key_arn" {
-  description = "All CloudTrail Logs will be encrypted with a KMS CMK (Customer Master Key) that governs access to write API calls older than 7 days and all read API calls. If that CMK already exists, set this to the ARN of that CMK. Otherwise, set this to null, and a new CMK will be created. We recommend setting this to the ARN of a CMK that already exists in a separate logs account."
-  type        = string
-}
-
-# ---------------------------------------------------------------------------------------------------------------------
-# OPTIONAL IAM-GROUPS PARAMETERS
-# These variables have defaults, but may be overridden by the operator.
-# ---------------------------------------------------------------------------------------------------------------------
-
-variable "iam_groups_for_cross_account_access" {
-  description = "This variable is used to create groups that allow IAM users to assume roles in your other AWS accounts. It should be a list of objects, where each object has the fields 'group_name', which will be used as the name of the IAM group, and 'iam_role_arns', which is a list of ARNs of IAM Roles that you can assume when part of that group. For each entry in the list of objects, we will create an IAM group that allows users to assume the given IAM role(s) in the other AWS account. This allows you to define all your IAM users in one account (e.g. the users account) and to grant them access to certain IAM roles in other accounts (e.g. the stage, prod, audit accounts)."
-  type = list(object({
-    group_name    = string
-    iam_role_arns = list(string)
-  }))
-  default = []
-
-  # Example:
-  # default = [
-  #   {
-  #     group_name   = "stage-full-access"
-  #     iam_role_arns = ["arn:aws:iam::123445678910:role/mgmt-full-access"]
-  #   },
-  #   {
-  #     group_name   = "prod-read-only-access"
-  #     iam_role_arns = [
-  #       "arn:aws:iam::9876543210:role/prod-read-only-ec2-access",
-  #       "arn:aws:iam::9876543210:role/prod-read-only-rds-access"
-  #     ]
-  #   }
-  # ]
-}
-
-# The only IAM groups you typically need in the security account are full access (for admins) and groups that allows
-# access to other AWS accounts
-variable "should_create_iam_group_full_access" {
-  description = "Should we create the IAM Group for full access? Allows full access to all AWS resources. (true or false)"
-  type        = bool
-  default     = true
-}
-
-variable "should_create_iam_group_billing" {
-  description = "Should we create the IAM Group for billing? Allows read-write access to billing features only. (true or false)"
-  type        = bool
-  default     = false
-}
-
-variable "should_create_iam_group_logs" {
-  description = "Should we create the IAM Group for logs? Allows read access to CloudTrail, AWS Config, and CloudWatch. If var.cloudtrail_kms_key_arn is set, will also give decrypt access to a KMS CMK. (true or false)"
-  type        = bool
-  default     = false
-}
-
-variable "should_create_iam_group_developers" {
-  description = "Should we create the IAM Group for developers? The permissions of that group are specified via var.iam_group_developers_permitted_services. (true or false)"
-  type        = bool
-  default     = false
-}
-
-variable "should_create_iam_group_read_only" {
-  description = "Should we create the IAM Group for read-only? Allows read-only access to all AWS resources. (true or false)"
-  type        = bool
-  default     = false
-}
-
-variable "should_create_iam_group_support" {
-  description = "Should we create the IAM Group for support users? Allows users to access AWS support."
-  type        = bool
-  default     = false
-}
-
-variable "should_create_iam_group_user_self_mgmt" {
-  description = "Should we create the IAM Group for user self-management? Allows users to manage their own IAM user accounts, but not other IAM users. (true or false)"
-  type        = bool
-  default     = true
-}
-
-variable "should_create_iam_group_iam_admin" {
-  description = "Should we create the IAM Group for IAM administrator access? Allows users to manage all IAM entities, effectively granting administrator access. (true or false)"
-  type        = bool
-  default     = false
-}
-
-variable "should_create_iam_group_use_existing_iam_roles" {
-  description = "Should we create the IAM Group for use-existing-iam-roles? Allow launching AWS resources with existing IAM Roles, but no ability to create new IAM Roles. (true or false)"
-  type        = bool
-  default     = false
-}
-
-variable "should_create_iam_group_auto_deploy" {
-  description = "Should we create the IAM Group for auto-deploy? Allows automated deployment by granting the permissions specified in var.auto_deploy_permissions. (true or false)"
-  type        = bool
-  default     = false
-}
-
-variable "should_create_iam_group_cross_account_access_all" {
-  description = "Should we create the IAM Group for access to all external AWS accounts? "
-  type        = bool
-  default     = true
-}
-
-variable "iam_group_name_full_access" {
-  description = "The name to be used for the IAM Group that grants full access to all AWS resources."
-  type        = string
-  default     = "full-access"
-}
-
-variable "iam_group_name_billing" {
-  description = "The name to be used for the IAM Group that grants read/write access to all billing features in AWS."
-  type        = string
-  default     = "billing"
-}
-
-variable "iam_group_name_logs" {
-  description = "The name to be used for the IAM Group that grants read access to CloudTrail, AWS Config, and CloudWatch in AWS."
-  type        = string
-  default     = "logs"
-}
-
-variable "iam_group_name_developers" {
-  description = "The name to be used for the IAM Group that grants IAM Users a reasonable set of permissions for developers."
-  type        = string
-  default     = "developers"
-}
-
-variable "iam_group_name_read_only" {
-  description = "The name to be used for the IAM Group that grants read-only access to all AWS resources."
-  type        = string
-  default     = "read-only"
-}
-
-variable "iam_group_names_ssh_grunt_sudo_users" {
-  description = "The list of names to be used for the IAM Group that enables its members to SSH as a sudo user into any server configured with the ssh-grunt Gruntwork module. Pass in multiple to configure multiple different IAM groups to control different groupings of access at the server level. Pass in empty list to disable creation of the IAM groups."
-  type        = list(string)
-  default     = ["ssh-grunt-sudo-users"]
-}
-
-variable "iam_group_names_ssh_grunt_users" {
-  description = "The name to be used for the IAM Group that enables its members to SSH as a non-sudo user into any server configured with the ssh-grunt Gruntwork module. Pass in multiple to configure multiple different IAM groups to control different groupings of access at the server level. Pass in empty list to disable creation of the IAM groups."
-  type        = list(string)
-  default     = ["ssh-grunt-users"]
-}
-
-variable "iam_group_name_use_existing_iam_roles" {
-  description = "The name to be used for the IAM Group that grants IAM Users the permissions to use existing IAM Roles when launching AWS Resources. This does NOT grant the permission to create new IAM Roles."
-  type        = string
-  default     = "use-existing-iam-roles"
-}
-
-variable "iam_group_name_auto_deploy" {
-  description = "The name of the IAM Group that allows automated deployment by graning the permissions specified in var.auto_deploy_permissions."
-  type        = string
-  default     = "_machine.ecs-auto-deploy"
-}
-
-variable "iam_group_name_support" {
-  description = "The name of the IAM Group that allows access to AWS Support."
-  type        = string
-  default     = "support"
-}
-
-variable "iam_group_name_iam_user_self_mgmt" {
-  description = "The name to be used for the IAM Group that grants IAM Users the permissions to manage their own IAM User account."
-  type        = string
-  default     = "iam-user-self-mgmt"
-}
-
-variable "iam_group_name_iam_admin" {
-  description = "The name to be used for the IAM Group that grants IAM administrative access. Effectively grants administrator access."
-  type        = string
-  default     = "iam-admin"
-}
-
-variable "cross_account_access_all_group_name" {
-  description = "The name of the IAM group that will grant access to all external AWS accounts in var.iam_groups_for_cross_account_access."
-  type        = string
-  default     = "_all-accounts"
-}
-
-# ---------------------------------------------------------------------------------------------------------------------
-# OPTIONAL USERS MODULE PARAMETERS
-# These variables have defaults, but may be overridden by the operator.
-# ---------------------------------------------------------------------------------------------------------------------
-
-variable "users" {
-  description = "A map of users to create. The keys are the user names and the values are an object with the optional keys 'groups' (a list of IAM groups to add the user to), 'tags' (a map of tags to apply to the user), 'pgp_key' (either a base-64 encoded PGP public key, or a keybase username in the form keybase:username, used to encrypt the user's credentials; required if create_login_profile or create_access_keys is true), 'create_login_profile' (if set to true, create a password to login to the AWS Web Console), 'create_access_keys' (if set to true, create access keys for the user), 'path' (the path), and 'permissions_boundary' (the ARN of the policy that is used to set the permissions boundary for the user)."
-
-  # Ideally, this would be a map of (string, object), but object does not support optional properties, and we want
-  # users to be able to specify, say, tags for some users, but not for others. We can't use a map(any) either, as that
-  # would require the values to all have the same type, and due to optional parameters, that wouldn't work either. So,
-  # we have to lamely fall back to any.
-  type = any
-
-  # Example:
-  # users = {
-  #   alice = {
-  #     groups = ["iam-user-self-mgmt", "developers", "ssh-grunt-sudo-users"]
-  #   }
-  #
-  #   bob = {
-  #     path   = "/"
-  #     groups = ["iam-user-self-mgmt", "ops", "admins"]
-  #     tags   = {
-  #       foo = "bar"
-  #     }
-  #   }
-  #
-  #   carol = {
-  #     groups               = ["iam-user-self-mgmt", "developers", "ssh-users"]
-  #     pgp_key              = "keybase:carol_on_keybase"
-  #     create_login_profile = true
-  #     create_access_keys   = true
-  #   }
-  # }
-
-  default = {}
-}
-
-# ---------------------------------------------------------------------------------------------------------------------
-# OPTIONAL CROSS ACCOUNT IAM ROLES PARAMETERS
-# These variables have defaults, but may be overridden by the operator.
-# ---------------------------------------------------------------------------------------------------------------------
-
-variable "allow_ssh_grunt_access_from_other_account_arns" {
-  description = "A list of IAM ARNs from other AWS accounts that will be allowed read access to IAM groups and publish SSH keys. This is used for ssh-grunt."
-  type        = list(string)
-  default     = []
-  # Example:
-  # default = [
-  #   "arn:aws:iam::123445678910:root"
-  # ]
-}
-----
-
-Finally, add some useful outputs in `outputs.tf`:
-
-.infrastructure-modules/landingzone/account-baseline-security/outputs.tf
-[source,hcl]
-----
-output "user_arns" {
-  description = "A map of usernames to the ARN for that IAM user."
-  value       = module.security_baseline.user_arns
-}
-
-output "user_passwords" {
-  description = "A map of usernames to that user's AWS Web Console password, encrypted with that user's PGP key (only shows up for users with create_login_profile = true). You can decrypt the password on the CLI: echo <password> | base64 --decode | keybase pgp decrypt"
-  value       = module.security_baseline.user_passwords
-}
-
-output "user_access_keys" {
-  description = "A map of usernames to that user's access keys (a map with keys access_key_id and secret_access_key), with the secret_access_key encrypted with that user's PGP key (only shows up for users with create_access_keys = true). You can decrypt the secret_access_key on the CLI: echo <secret_access_key> | base64 --decode | keybase pgp decrypt"
-  value       = module.security_baseline.user_access_keys
-}
-----
-
-At this point, you'll want to test your code. Run `terraform plan` to do plan testing, make sure there are no errors and the output looks sane.
-
-For more robust testing, also see
-link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#manual_tests_terraform[Manual tests for Terraform code] and
-link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#automated_tests_terraform[Automated tests for Terraform code]
-for instructions.
-
-When you're done testing, commit and release your changes:
-
-[source,bash]
-----
-git add landingzone/account-baseline-security
-git commit -m "Add security account baseline wrapper module"
-git tag -a "v0.3.2" -m "Created security account baseline module"
-git push --follow-tags
-----
-
 Create a `terragrunt.hcl` file in `infrastructure-live` under the file path `security/_global/account-baseline`:
 
 ----
@@ -2356,14 +1770,13 @@ infrastructure-live
         └ terragrunt.hcl
 ----
 
-Point the `source` URL in your `terragrunt.hcl` file to your `account-baseline-security` wrapper module in the `infrastructure-modules`
-repo, setting the `ref` param to the version you released earlier:
+Point the `source` URL in your `terragrunt.hcl` file to the https://github.com/gruntwork-io/terraform-aws-service-catalog/tree/v0.41.4/modules/landingzone/account-baseline-security[account-baseline-security] service in the Service Catalog.
 
 .infrastructure-live/security/_global/account-baseline/terragrunt.hcl
 [source,hcl]
 ----
 terraform {
-  source = "git::git@github.com:<YOUR_ORG>/infrastructure-modules.git//landingzone/account-baseline-security?ref=v0.3.2"
+  source = "git::git@github.com:gruntwork-io/terraform-aws-service-catalog.git//modules/landingzone/account-baseline-security?ref=v0.41.4"
 
   # This module deploys some resources (e.g., AWS Config) across all AWS regions, each of which needs its own provider,
   # which in Terraform means a separate process. To avoid all these processes thrashing the CPU, which leads to network
@@ -2378,9 +1791,9 @@ terraform {
 [.exceptional]
 IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=2`), as shown above, with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors.
 
-Configure your Terraform backend:
+Include all the settings from the root terragrunt.hcl file:
 
-.infrastructure-live/security/_global/account-baseline/terragrunt.hcl
+.infrastructure-live/logs/_global/account-baseline/terragrunt.hcl
 [source,hcl]
 ----
 include {
@@ -2394,13 +1807,6 @@ Set the variables for the `account-baseline-security` module in this environment
 [source,hcl]
 ----
 inputs = {
-  # Fill in your region you want to use (only used for API calls) and the ID of your security AWS account
-  aws_region     = "us-east-2"
-  aws_account_id = "<SECURITY_ACCOUNT_ID>"
-
-  # Prefix all resources with this name
-  name_prefix = "<COMPANY_NAME>-security"
-
   # Use the S3 bucket and KMS key that were already created in the logs account by account-baseline-root
   cloudtrail_s3_bucket_name = "<CLOUDTRAIL_BUCKET_NAME>"
   cloudtrail_kms_key_arn    = "<CLOUDTRAIL_KMS_KEY_ARN>"
@@ -2576,14 +1982,13 @@ infrastructure-live
         └ terragrunt.hcl
 ----
 
-Point the `source` URL in your `terragrunt.hcl` file to your `account-baseline-app` wrapper module in the `infrastructure-modules`
-repo, setting the `ref` param to the latest version:
+Point the `source` URL in your `terragrunt.hcl` file to the https://github.com/gruntwork-io/terraform-aws-service-catalog/tree/v0.41.4/modules/landingzone/account-baseline-app[account-baseline-app] service in the Service Catalog.
 
 .infrastructure-live/stage/_global/account-baseline/terragrunt.hcl
 [source,hcl]
 ----
 terraform {
-  source = "git::git@github.com:<YOUR_ORG>/infrastructure-modules.git//landingzone/account-baseline-app?ref=v0.3.2"
+  source = "git::git@github.com:gruntwork-io/terraform-aws-service-catalog.git//modules/landingzone/account-baseline-app?ref=v0.41.4"
 
   # This module deploys some resources (e.g., AWS Config) across all AWS regions, each of which needs its own provider,
   # which in Terraform means a separate process. To avoid all these processes thrashing the CPU, which leads to network
@@ -2598,9 +2003,9 @@ terraform {
 [.exceptional]
 IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=2`), as shown above, with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors.
 
-Configure your Terraform backend:
+Include all the settings from the root terragrunt.hcl file:
 
-.infrastructure-live/stage/_global/account-baseline/terragrunt.hcl
+.infrastructure-live/logs/_global/account-baseline/terragrunt.hcl
 [source,hcl]
 ----
 include {
@@ -2614,13 +2019,6 @@ Set the variables for the `account-baseline-app` module in this environment in t
 [source,hcl]
 ----
 inputs = {
-  # Fill in your region you want to use (only used for API calls) and the ID of your security AWS account
-  aws_region     = "us-east-2"
-  aws_account_id = "<STAGE_ACCOUNT_ID>"
-
-  # Prefix all resources with this name
-  name_prefix = "<COMPANY_NAME>-stage"
-
   # Use the S3 bucket and KMS key that were already created in the logs account by account-baseline-root
   cloudtrail_s3_bucket_name = "<CLOUDTRAIL_BUCKET_NAME>"
   cloudtrail_kms_key_arn    = "<CLOUDTRAIL_KMS_KEY_ARN>"
