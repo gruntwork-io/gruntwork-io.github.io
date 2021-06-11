@@ -1647,7 +1647,7 @@ Set the variables for the `account-baseline-app` module in this environment in t
 .infrastructure-live/logs/_global/account-baseline/terragrunt.hcl
 [source,hcl]
 ----
-locals = {
+locals {
   # A local for more convenient access to the accounts map.
   accounts = local.common_vars.locals.accounts
 
@@ -1793,7 +1793,7 @@ IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low valu
 
 Include all the settings from the root terragrunt.hcl file:
 
-.infrastructure-live/logs/_global/account-baseline/terragrunt.hcl
+.infrastructure-live/security/_global/account-baseline/terragrunt.hcl
 [source,hcl]
 ----
 include {
@@ -1806,6 +1806,14 @@ Set the variables for the `account-baseline-security` module in this environment
 .infrastructure-live/security/_global/account-baseline/terragrunt.hcl
 [source,hcl]
 ----
+locals {
+  # A local for more convenient access to the accounts map.
+  accounts = local.common_vars.locals.accounts
+
+  # A local for convenient access to the security account root ARN.
+  security_account_root_arn = "arn:aws:iam::${local.accounts.security}:root"
+}
+
 inputs = {
   # Use the S3 bucket and KMS key that were already created in the logs account by account-baseline-root
   cloudtrail_s3_bucket_name = "<CLOUDTRAIL_BUCKET_NAME>"
@@ -1813,7 +1821,7 @@ inputs = {
 
   # Use the S3 bucket that was already created in the logs account by account-baseline-root
   config_s3_bucket_name     = "<CONFIG_BUCKET_NAME>"
-  config_central_account_id = "<LOGS_ACCOUNT_ID>"
+  config_central_account_id = local.accounts.logs
 
   # Enable the IAM groups you want
   should_create_iam_group_full_access    = true
@@ -1831,23 +1839,23 @@ inputs = {
   iam_groups_for_cross_account_access = [
     {
       group_name    = "_account.stage-full-access",
-      iam_role_arns = ["arn:aws:iam::<STAGE_ACCOUNT_ID>:role/allow-full-access-from-other-accounts"]
+      iam_role_arns = ["arn:aws:iam::${locals.accounts.stage}:role/allow-full-access-from-other-accounts"]
     },
     {
       group_name    = "_account.stage-read-only",
-      iam_role_arns = ["arn:aws:iam::<STAGE_ACCOUNT_ID>:role/allow-read-only-access-from-other-accounts"]
+      iam_role_arns = ["arn:aws:iam::${locals.accounts.stage}:role/allow-read-only-access-from-other-accounts"]
     },
     {
       group_name    = "_account.stage-dev",
-      iam_role_arns = ["arn:aws:iam::<STAGE_ACCOUNT_ID>:role/allow-dev-access-from-other-accounts"]
+      iam_role_arns = ["arn:aws:iam::${locals.accounts.stage}:role/allow-dev-access-from-other-accounts"]
     },
     {
       group_name    = "_account.stage-openvpn-admins",
-      iam_role_arns = ["arn:aws:iam::<STAGE_ACCOUNT_ID>:role/openvpn-allow-certificate-revocations-for-external-accounts"]
+      iam_role_arns = ["arn:aws:iam::${locals.accounts.stage}:role/openvpn-allow-certificate-revocations-for-external-accounts"]
     },
     {
       group_name    = "_account.stage-openvpn-users",
-      iam_role_arns = ["arn:aws:iam::<STAGE_ACCOUNT_ID>:role/openvpn-allow-certificate-requests-for-external-accounts"]
+      iam_role_arns = ["arn:aws:iam::${locals.accounts.stage}:role/openvpn-allow-certificate-requests-for-external-accounts"]
     },
 
     # ... Repeat the same set of groups for each of dev, prod, logs, and shared services account IDs too!
@@ -1876,12 +1884,10 @@ inputs = {
     }
   }
 
-  # Allow ssh-grunt in all other accounts to look up user SSH keys in this account
+  # Allow accounts to have read access to IAM groups and the public SSH keys of users in the group.
   allow_ssh_grunt_access_from_other_account_arns = [
-    "arn:aws:iam::<DEV_ACCOUNT_ID>:root",
-    "arn:aws:iam::<STAGE_ACCOUNT_ID>:root",
-    "arn:aws:iam::<PROD_ACCOUNT_ID>:root",
-    "arn:aws:iam::<SHARED_SERVICES_ACCOUNT_ID>:root",
+    for name, id in local.accounts :
+      "arn:aws:iam::${id}:root" if name != "security"
   ]
 }
 ----
@@ -1962,9 +1968,9 @@ accounts (i.e., dev, stage, prod, and shared, plus sandbox and testing accounts 
 detailed in the <<child_accounts>> section. Feel free to adjust this as necessary based on the accounts your company
 needs.
 
-You can re-use the `account-baseline-app` module you created earlier in your `infrastructure-modules` repo for all of
-these child accounts; this module can be used interchangeably between app accounts and log accounts as they deploy most
-of the same resources.
+The `account-baseline-app` module in the Service Catalog can be used interchangeably between app accounts and log
+accounts as they deploy most of the same resources. That means this module can be re-used for all of the child
+accounts.
 
 Create `terragrunt.hcl` files in `infrastructure-live` under the file paths `<ACCOUNT>/_global/account-baseline`,
 where `<ACCOUNT>` is one of these other child accounts, such as dev, stage, prod, and shared. In the rest of
@@ -2005,7 +2011,7 @@ IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low valu
 
 Include all the settings from the root terragrunt.hcl file:
 
-.infrastructure-live/logs/_global/account-baseline/terragrunt.hcl
+.infrastructure-live/stage/_global/account-baseline/terragrunt.hcl
 [source,hcl]
 ----
 include {
@@ -2018,6 +2024,14 @@ Set the variables for the `account-baseline-app` module in this environment in t
 .infrastructure-live/stage/_global/account-baseline/terragrunt.hcl
 [source,hcl]
 ----
+locals {
+  # A local for more convenient access to the accounts map.
+  accounts = local.common_vars.locals.accounts
+
+  # A local for convenient access to the security account root ARN.
+  security_account_root_arn = "arn:aws:iam::${local.accounts.security}:root"
+}
+
 inputs = {
   # Use the S3 bucket and KMS key that were already created in the logs account by account-baseline-root
   cloudtrail_s3_bucket_name = "<CLOUDTRAIL_BUCKET_NAME>"
@@ -2026,7 +2040,7 @@ inputs = {
   # Use the S3 bucket that was already created in the logs account by account-baseline-root
   config_s3_bucket_name                            = "<CONFIG_BUCKET_NAME>"
   config_aggregate_config_data_in_external_account = true
-  config_central_account_id                        = "<LOGS_ACCOUNT_ID>"
+  config_central_account_id                        = local.accounts.logs
 
   # Specify the services the dev IAM role will have access to
   dev_permitted_services = ["ec2", "s3", "rds", "dynamodb", "elasticache", "eks", "ecs"]
@@ -2035,13 +2049,19 @@ inputs = {
   auto_deploy_permissions = ["cloudwatch:*", "logs:*", "dynamodb:*", "ecr:*", "ecs:*", "iam:GetPolicy", "iam:GetPolicyVersion", "iam:ListEntitiesForPolicy", "eks:DescribeCluster", "route53:*", "s3:*", "autoscaling:*", "elasticloadbalancing:*", "iam:GetRole", "iam:GetRolePolicy", "iam:PassRole"]
 
   # Allow users in the security account to access the IAM roles in this account
-  allow_read_only_access_from_other_account_arns = ["arn:aws:iam::<SECURITY_ACCOUNT_ID>:root"]
-  allow_billing_access_from_other_account_arns   = ["arn:aws:iam::<SECURITY_ACCOUNT_ID>:root"]
-  allow_dev_access_from_other_account_arns       = ["arn:aws:iam::<SECURITY_ACCOUNT_ID>:root"]
-  allow_full_access_from_other_account_arns      = ["arn:aws:iam::<SECURITY_ACCOUNT_ID>:root"]
+  allow_read_only_access_from_other_account_arns = [local.security_account_root_arn]
+  allow_billing_access_from_other_account_arns   = [local.security_account_root_arn]
+  allow_dev_access_from_other_account_arns       = [local.security_account_root_arn]
+  allow_full_access_from_other_account_arns      = [local.security_account_root_arn]
 
-  # Allow a CI server in the shared account to assume the auto-deploy IAM role in this account
-  allow_auto_deploy_from_other_account_arns      = ["arn:aws:iam::<SHARED_SERVICES_ACCOUNT_ID>:root"]
+  # A list of account root ARNs that should be able to assume the auto deploy role.
+  allow_auto_deploy_from_other_account_arns = [
+    # External CI/CD systems may use an IAM user in the security account to perform deployments.
+    local.security_account_root_arn,
+
+    # The shared account contains automation and infrastructure tools, such as CI/CD systems.
+    "arn:aws:iam::${local.accounts.shared}:root",
+  ]
 }
 ----
 
