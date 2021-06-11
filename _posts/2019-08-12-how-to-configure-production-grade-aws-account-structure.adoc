@@ -1484,7 +1484,7 @@ aws-vault exec root-iam-user -- terragrunt apply
 ----
 
 [.exceptional]
-IMPORTANT: On some operating systems, such as MacOS, you may also need to increase your open files limit to avoid "pipe: too many open files" errors by running: `ulimit -n 1024`.
+IMPORTANT: On some operating systems, such as MacOS, you may also need to increase your open files limit to avoid "pipe: too many open files" errors by running: `ulimit -n 10240`.
 
 Once `apply` completes, you should see output variables with all of your account IDs, the name of the AWS Config S3
 bucket, the name of the CloudTrail S3 bucket, and the ARN of the CloudTrail KMS key:
@@ -1928,7 +1928,7 @@ aws-vault exec logs-from-root -- terragrunt apply
 ----
 
 [.exceptional]
-IMPORTANT: On some operating systems, such as MacOS, you may also need to increase your open files limit to avoid "pipe: too many open files" errors by running: `ulimit -n 1024`.
+IMPORTANT: On some operating systems, such as MacOS, you may also need to increase your open files limit to avoid "pipe: too many open files" errors by running: `ulimit -n 10240`.
 
 === Apply the security baseline to the security account
 
@@ -2538,7 +2538,7 @@ aws-vault exec security-from-root -- terragrunt apply
 ----
 
 [.exceptional]
-IMPORTANT: On some operating systems, such as MacOS, you may also need to increase your open files limit to avoid "pipe: too many open files" errors by running: `ulimit -n 1024`.
+IMPORTANT: On some operating systems, such as MacOS, you may also need to increase your open files limit to avoid "pipe: too many open files" errors by running: `ulimit -n 10240`.
 
 When `apply` finishes, the module will output the encrypted passwords for the users defined above. Send the encrypted
 password to each user, along with their user name, and the IAM user sign-in URL for the account. Each user can then
@@ -2706,7 +2706,7 @@ aws-vault exec stage-from-root -- terragrunt apply
 ----
 
 [.exceptional]
-IMPORTANT: On some operating systems, such as MacOS, you may also need to increase your open files limit to avoid "pipe: too many open files" errors by running: `ulimit -n 1024`.
+IMPORTANT: On some operating systems, such as MacOS, you may also need to increase your open files limit to avoid "pipe: too many open files" errors by running: `ulimit -n 10240`.
 
 Remember to repeat this process in the other child accounts too (i.e., dev, prod, shared, etc)!
 
