@@ -898,9 +898,159 @@ Code repository::
   You will need to initialize an `infrastructure-live` repository to contain all of the Terragrunt configuration code for your
   infrastructure. You may use the https://github.com/gruntwork-io/terraform-aws-service-catalog/tree/v0.41.4/examples/for-production/infrastructure-live[`for-production` example code] to start with.
 
+
+=== Prepare your `infrastructure-live` repository
+
+[NOTE]
+.Terragrunt not required
+====
+This guide uses https://github.com/gruntwork-io/terragrunt[Terragrunt] and its associated file and folder
+structure to deploy Terraform modules. Please note that *Terragrunt is NOT required for using Terraform modules from
+the Gruntwork Infrastructure as Code Library.* Check out link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library[How to use the Gruntwork Infrastructure as Code Library]
+for instructions on alternative options, such as
+link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#deploy_using_plain_terraform[deploying with plain Terraform].
+====
+
+Now we're going to make some HCL files that store variables to be used across your modules. _You won't be able to fill
+everything out just yet._ Your AWS account IDs will be generated after applying the account-baseline-root to the root
+account. At that point you can update these files. Create them now to have them ready to use.
+
+----
+infrastructure-live
+  └ terragrunt.hcl
+  └ landingzone
+    └ account-baseline-root
+    └ account-baseline-app
+      └ main.tf
+      └ outputs.tf
+      └ variables.tf
+----
+
+The Terraform modules in the Service Catalog are missing some required blocks for Terraform to operate (e.g., the
+`provider` and `terraform` state backend blocks). This is by design, to allow the modules to be flexibly used in
+different contexts. We'll define a root `terragrunt.hcl` that injects these these required blocks.
+
+Create a `terragrunt.hcl` at the root of your infrastructure-live repo and insert the following contents. As you can
+see, it references `common`, `account`, and `region` hcl files which we'll create shortly.
+
+.infrastructure-live/terragrunt.hcl
+[source,hcl]
+----
+# -----------------------------------------------------------------------------
+# TERRAGRUNT CONFIGURATION
+# -----------------------------------------------------------------------------
+
+locals {
+  common_vars  = read_terragrunt_config("${get_terragrunt_dir()}/common.hcl")
+  account_vars = read_terragrunt_config(find_in_parent_folders("account.hcl"))
+  region_vars  = read_terragrunt_config(find_in_parent_folders("region.hcl"))
+
+  name_prefix    = local.common_vars.locals.name_prefix
+  account_name   = local.account_vars.locals.account_name
+  account_id     = local.account_vars.locals.account_id
+  default_region = local.common_vars.locals.default_region
+  aws_region     = local.region_vars["aws_region"]
+}
+
+# -----------------------------------------------------------------------------
+# GENERATED PROVIDER BLOCK
+# -----------------------------------------------------------------------------
+
+generate "provider" {
+  path      = "provider.tf"
+  if_exists = "overwrite_terragrunt"
+  contents  = <<EOF
+provider "aws" {
+  region = "${local.aws_region}"
+  version = ">= 3.13.0"
+  # Only these AWS Account IDs may be operated on by this template
+  allowed_account_ids = ["${local.account_id}"]
+}
+EOF
+}
+
+# -----------------------------------------------------------------------------
+# GENERATED REMOTE STATE BLOCK
+# -----------------------------------------------------------------------------
+
+remote_state {
+  backend = "s3"
+  generate = {
+    path      = "backend.tf"
+    if_exists = "overwrite_terragrunt"
+  }
+  config = {
+    encrypt        = true
+    bucket         = "${local.name_prefix}-${local.account_name}-${local.aws_region}-terraform-state"
+    key            = "${path_relative_to_include()}/terraform.tfstate"
+    region         = local.default_region
+    dynamodb_table = "terraform-locks"
+  }
+}
+
+# -----------------------------------------------------------------------------
+# GLOBAL PARAMETERS
+# -----------------------------------------------------------------------------
+
+inputs = {
+  # Set commonly used inputs globally to keep child terragrunt.hcl files DRY
+  aws_account_id = local.account_id
+  aws_region     = local.aws_region
+}
+----
+
+Also create a `common.hcl` file at the root of your `infrastructure-live` repo, with the following contents.
+
+.infrastructure-live/common.hcl
+[source,hcl]
+----
+locals {
+  # TODO: Enter a unique name prefix to set for all resources created in your accounts, e.g., your org name.
+  name_prefix = ""
+  # TODO: Enter the default AWS region, the same as where the terraform state S3 bucket is currently provisioned.
+  default_region = ""
+}
+----
+
+In each account folder (e.g., `infrastructure-live/dev`, `infrastructure-live/shared`, etc.), add a file named
+`account.hcl` with the following contents.
+
+[source,hcl]
+----
+locals {
+  # TODO: Update with the actual information of each account
+  # The user friendly name of the AWS account. Usually matches the folder name.
+  account_name = ""
+  # The 12 digit ID number of your AWS account.
+  account_id = ""
+}
+----
+
+Now in each `infrastructure-live/<account_name>/_global/` folder, create a `region.hcl` file.
+
+[source,hcl]
+----
+# Modules in the account _global folder don't live in any specific AWS region, but you still have to send the API calls
+# to _some_ AWS region, so here we use the default region for those API calls.
+locals {
+  aws_region = read_terragrunt_config(find_in_parent_folders("common.hcl")).locals.default_region
+}
+----
+
+Do the same in each region folder (e.g., `infrastructure-live/dev/us-east-1/`). This `region.hcl` file is a bit different.
+
+[source,hcl]
+----
+locals {
+# TODO: Enter the region to use for all resources in this subfolder.
+  aws_region = ""
+}
+----
+
+
 === Create the root account
 
-The first step is to create your root account. This account will be the parent of all of your other AWS accounts and
+Now let's create your root AWS account. This account will be the parent of all of your other AWS accounts and
 the central place where you manage billing. You create this initial account manually, via a web browser:
 
 . Go to https://aws.amazon.com.
@@ -989,134 +1139,14 @@ Enable MFA::
 
 Next, we'll configure a security baseline for the root account that is responsible for creating all the child accounts.
 It will also configure AWS Organizations, IAM Roles, IAM Users, IAM Groups, IAM Password Policies, Amazon GuardDuty,
-AWS CloudTrail and AWS Config.
+AWS CloudTrail, and AWS Config.
 
 We'll be using the `account-baseline-root` module from https://github.com/gruntwork-io/terraform-aws-service-catalog[terraform-aws-service-catalog].
 
 [.exceptional]
 IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork subscriber# to access `terraform-aws-service-catalog`.
 
-==== Create reusable variables across modules and terragrunt files
-
-NOTE: This guide uses https://github.com/gruntwork-io/terragrunt[Terragrunt] and its associated file and folder
-structure to deploy Terraform modules. Please note that *Terragrunt is NOT required for using Terraform modules from
-the Gruntwork Infrastructure as Code Library.* Check out link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library[How to use the Gruntwork Infrastructure as Code Library]
-for instructions on alternative options, such as how to
-link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#deploy_using_plain_terraform[deploying how to use plain terraform].
-
-Now you're going to make some HCL files that store variables to be used across your modules. _You won't be able to fill everything out just yet._ Your AWS account IDs
-will be generated after applying the account-baseline-root to the root account. At that point you can update these files. Create them now to have them ready to use.
-
-Create a `terragrunt.hcl` at the root of your infrastructure-live repo. As you can see, it references `common`, `account`, and `region` hcl files which we'll create shortly.
-
-[source,hcl]
-----
-locals {
-  # Automatically load common variables shared across all accounts
-  common_vars = read_terragrunt_config(find_in_parent_folders("common.hcl"))
-
-  # Automatically load account-level variables
-  account_vars = read_terragrunt_config(find_in_parent_folders("account.hcl"))
-
-  # Automatically load region-level variables
-  region_vars = read_terragrunt_config(find_in_parent_folders("region.hcl"))
-
-  # Extract the variables we need for easy access
-  name_prefix  = local.common_vars.locals.name_prefix
-  account_name = local.account_vars.locals.account_name
-  account_id   = local.common_vars.locals.account_ids[local.account_name]
-  aws_region   = local.region_vars.locals.aws_region
-}
-
-# Generate the Terraform backend config to store state in S3
-remote_state {
-  backend = "s3"
-  generate = {
-    path      = "backend.tf"
-    if_exists = "overwrite_terragrunt"
-  }
-  config = {
-    encrypt        = true
-# TODO: Replace with your organization name!
-      bucket         = "${local.name_prefix}-${local.account_name}-${local.aws_region}"
-      key            = "${path_relative_to_include()}/terraform.tfstate"
-# TODO: Replace with your region!
-      region         = "us-west-1"
-      dynamodb_table = "terraform-locks"
-  }
-}
-----
-
-Also create a `common.hcl` file at the root of your infrastructure-live repo.
-
-[source,hcl]
-----
-locals {
-  # Default AWS region for API calls
-  # TODO: Replace with your default region!
-  default_region = "us-west-1"
-
-  # A prefix used for naming resources
-  # TODO: Replace with your organization name!
-  name_prefix = "<YOUR_ORGANIZATION_NAME>"
-
-  # Centrally define all our AWS account IDs
-  # TODO: Replace with your account IDs!
-  account_ids = {
-    root     = "<YOUR_ROOT_ACCOUNT_ID>"
-    security = "<YOUR_SECURITY_ACCOUNT_ID>"
-    shared   = "<YOUR_SHARED_SERVICES_ACCOUNT_ID>"
-    dev      = "<YOUR_DEV_ACCOUNT_ID>"
-    stage    = "<YOUR_STAGE_ACCOUNT_ID>"
-    prod     = "<YOUR_PROD_ACCOUNT_ID>"
-    logs     = "<YOUR_LOGS_ACCOUNT_ID>"
-  }
-}
-----
-
-Create a very simple `account.hcl` at the root of each `<account_name>/` folder. For example, in
-the `infrastructure-live/dev/account.hcl`, create:
-[source, hcl]
-----
-# Set account-wide variables
-locals {
-  account_name = "dev"
-}
-----
-
-Be sure to match the `account_name` with the actual account name (`dev`, `stage`, `prod`, `shared`, `logs`, `security`).
-
-
-Now in each `<account_name>/_global/` folder, a `region.hcl` file.
-
-[source,hcl]
-----
-# Modules in the account _global folder don't live in any specific AWS region, but you still have to send the API calls
-# to _some_ AWS region, so here we use the default region for those API calls.
-locals {
-  aws_region = read_terragrunt_config(find_in_parent_folders("common.hcl")).locals.default_region
-}
-----
-
-Do the same in each `<account_name>/<region>/` folder. This `region.hcl` file is a bit different.
-
-[source,hcl]
-----
-# Common variables for this region
-locals {
-    # Automatically load common variables shared across all accounts
-    common_vars = read_terragrunt_config(find_in_parent_folders("common.hcl"))
-
-    # Automatically load account-level variables
-    account_vars = read_terragrunt_config(find_in_parent_folders("account.hcl"))
-
-    # TODO: Update to use your default region here!
-    aws_region   = "us-west-1"
-    state_bucket = "${local.common_vars.locals.name_prefix}-${local.account_vars.locals.account_name}-${local.aws_region}-tf-state"
-}
-----
-
-==== Set up the inputs for account-baseline for the root account
+==== Set up the inputs for `account-baseline` for the root account
 
 Next, create a `terragrunt.hcl` file in `infrastructure-live`. It should go under the file path `root/_global/account-baseline`:
 
@@ -1128,14 +1158,13 @@ infrastructure-live
         └ terragrunt.hcl
 ----
 
-Point the `source` URL in your `terragrunt.hcl` file to your `account-baseline` wrapper module in the `infrastructure-modules`
-repo, setting the `ref` param to the version you released earlier:
+Define the `terraform` block with the source pointing to the https://github.com/gruntwork-io/terraform-aws-service-catalog[terraform-aws-service-catalog account-baseline-root] module.
 
 .infrastructure-live/root/_global/account-baseline/terragrunt.hcl
 [source,hcl]
 ----
 terraform {
-  source = "git::git@github.com:<YOUR_ORG>/infrastructure-modules.git//modules/account-baseline-root?ref=v0.3.0"
+  source = "git::git@github.com:gruntwork-io/terraform-aws-service-catalog.git//modules/account-baseline-root?ref=v0.41.4"
 
   # This module deploys some resources (e.g., AWS Config) across all AWS regions, each of which needs its own provider,
   # which in Terraform means a separate process. To avoid all these processes thrashing the CPU, which leads to network
@@ -1149,21 +1178,14 @@ terraform {
 
 
 [.exceptional]
-IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=2`), as shown above, with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors.
+IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (i.e., `-parallelism=2`), as shown above, with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors.
 
-Set the variables for the `account-baseline-root` module in this environment in the `inputs = { ... }` block of `terragrunt.hcl`:
+Set the variables for the `account-baseline-root` module in this environment in the `inputs = { ... }` block.
 
 .infrastructure-live/root/_global/account-baseline/terragrunt.hcl
 [source,hcl]
 ----
 inputs = {
-  # Fill in your region you want to use (only used for API calls) and the ID of your root AWS account
-  aws_region     = "us-east-2"
-  aws_account_id = "<ROOT_ACCOUNT_ID>"
-
-  # Prefix all resources with this name
-  name_prefix = "<COMPANY_NAME>-root"
-
   # If you've already created an AWS Organization in your root account, you'll be able to import it later in this guide
   create_organization = true
 
