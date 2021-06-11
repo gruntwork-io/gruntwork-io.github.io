@@ -780,9 +780,7 @@ standalone compliance modules are designed with the compliance requirements buil
 call the core modules with configuration values that are compliant with the AWS Foundations Benchmark. You can use both
 types of modules by creating a module of your own (in the case of the wrapper modules, this can be considered a second
 wrapper) and using the compliance module as the `source`. Optionally, you can also use `terragrunt` to call your module,
-thus creating a chain of IaC modules. For more information on creating your own service catalog of modules please refer
-to the link:https://github.com/gruntwork-io/terraform-aws-service-catalog/blob/master/core-concepts.md#create-your-own-service-catalog[Create your own service catalog section]
-in the Gruntwork Service Catalog documentation.
+thus creating a chain of IaC modules.
  +
  +
 
@@ -814,17 +812,6 @@ the core module with a configuration that is customized for compliance with the 
 These modules are in the link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog[`terraform-aws-cis-service-catalog`
 repository] (accessible to Gruntwork Compliance subscribers).
 
-[[infrastructure_modules]]
-==== infrastructure-modules
-The `infrastructure-modules` are your organization's "blueprint" for how to deploy infrastructure. You can
-use `infrastructure-modules` to customize the settings according to the needs of your environment. Subscribers can refer to
-the link:https://github.com/gruntwork-io/terraform-aws-service-catalog/blob/master/core-concepts.md#create-your-own-service-catalog[Create your own service catalog section]
-in the Gruntwork Service Catalog documentation for more information on how you might use `infrastructure-modules`.
- +
- +
-If you're using Terragrunt, the `infrastructure-modules` are optional; you can call the compliance
-wrapper modules directly as the `source` from a Terragrunt configuration. The benefit of this is that you have less code to maintain by depending directly on Gruntwork's upstream compliance modules.
-
 [[infrastructure_live]]
 ==== infrastructure-live
 `infrastructure-live` uses link:https://github.com/gruntwork-io/terragrunt[Terragrunt] to make it easier to
@@ -832,7 +819,7 @@ work with Terraform modules in multiple environments. `infrastructure-live` is o
 with or without Terragrunt.
  +
  +
-If you're not using Terragrunt, you can use `infrastructure-modules` to call the compliance wrapper modules. Subscribers can refer to the
+If you're not using Terragrunt, you can use Terraform modules to call the compliance wrapper modules directly. Subscribers can refer to the
 link:https://github.com/gruntwork-io/terraform-aws-service-catalog/blob/master/core-concepts.md#create-your-own-service-catalog[Create your own service catalog section]
 in the Gruntwork Service Catalog documentation for more information on how you might use `infrastructure-live`.
 
