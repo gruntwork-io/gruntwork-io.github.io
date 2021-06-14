@@ -919,26 +919,35 @@ link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#dep
 ====
 
 Now we're going to make some HCL files that store variables to be used across your modules. _You won't be able to fill
-everything out just yet._ Your AWS account IDs will be generated after applying the account-baseline-root to the root
+everything out just yet._ Your AWS account IDs will be generated after applying the `account-baseline-root` to the root
 account. At that point you can update these files. Create them now to have them ready to use.
+
+For example, assuming `us-east-1` is your default region, your directory structure would look like the following, with
+`_global` and `<region>` directories in each account directory:
 
 ----
 infrastructure-live
+  └ common.hcl
+  └ accounts.json
   └ terragrunt.hcl
-  └ landingzone
-    └ account-baseline-root
-    └ account-baseline-app
-      └ main.tf
-      └ outputs.tf
-      └ variables.tf
+  └ dev
+  └ logs
+  └ stage
+  └ security
+  └ shared
+  └ prod
+    └ _global
+      └ region.hcl
+    └ us-east-1
+      └ region.hcl
 ----
 
-The Terraform modules in the Service Catalog are missing some required blocks for Terraform to operate (e.g., the
-`provider` and `terraform` state backend blocks). This is by design, to allow the modules to be flexibly used in
+The Terraform modules in the Service Catalog do not define some blocks that are required for Terraform to operate
+(e.g., the `provider` and `terraform` state backend blocks). This is to allow the modules to be flexibly used in
 different contexts. We'll define a root `terragrunt.hcl` that injects these these required blocks.
 
 Create a `terragrunt.hcl` at the root of your infrastructure-live repo and insert the following contents. As you can
-see, it references `common`, `account`, and `region` hcl files which we'll create shortly.
+see, it references `common`, `account`, and `region` HCL files which we'll create shortly.
 
 .infrastructure-live/terragrunt.hcl
 [source,hcl]
