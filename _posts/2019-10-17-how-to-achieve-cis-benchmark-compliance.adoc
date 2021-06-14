@@ -992,16 +992,26 @@ Set the variables for the `account-baseline-root` module in this environment in 
 .infrastructure-live/root/_global/account-baseline/terragrunt.hcl
 [source,hcl]
 ----
+locals {
+  accounts = {
+    root = "216044045972"
+  }
+
+  # Both buckets will created in the logs account by account-baseline-root
+  config_s3_bucket_name     = "acme-config-bucket-logs"
+  cloudtrail_s3_bucket_name = "acme-cloudtrail-logs"
+}
+
 inputs = {
   # Fill in your region you want to use (only used for API calls) and the ID of your root AWS account
-  aws_region     = "us-east-2"
-  aws_account_id = "<ROOT_ACCOUNT_ID>"
+  aws_region     = "us-east-1"
+  aws_account_id = local.accounts.root
 
   # Prefix all resources with this name
-  name_prefix = "<COMPANY_NAME>-root"
+  name_prefix = "acme-root"
 
-  # If you've already created an AWS Organization in your root account, set this to false and you'll be able to import it later in this guide
-  create_organization = true
+  # If you've already created an AWS Organization in your root account, set this to false
+  create_organization = false
 
   # The child AWS accounts to create in this AWS organization
   child_accounts = {
@@ -1047,6 +1057,57 @@ inputs = {
       create_access_keys   = false
     }
   }
+
+  ################################
+  # Parameters for AWS Config
+  ################################
+  # Send Config logs to the common S3 bucket.
+  config_s3_bucket_name = local.config_s3_bucket_name
+
+  # Do not allow objects in the Config S3 bucket to be forcefully removed during destroy operations.
+  config_force_destroy = false
+
+  ################################
+  # Parameters for CloudTrail
+  ################################
+
+  # Send CloudTrail logs to the common S3 bucket.
+  cloudtrail_s3_bucket_name = local.cloudtrail_s3_bucket_name
+
+  # The ARN is a key alias, not a key ID. This variable prevents a perpetual diff when using an alias.
+  cloudtrail_kms_key_arn_is_alias = true
+
+  # Do not allow objects in the CloudTrail S3 bucket to be forcefully removed during destroy operations.
+  cloudtrail_force_destroy = false
+
+  ##################################
+  # Cross-account IAM role permissions
+  ##################################
+
+  # By granting access to the root ARN of the Security account in each of the roles below,
+  # we allow administrators to further delegate access to other IAM entities
+
+  # Assuming the developers role will grant access to these services.
+  dev_permitted_services = [
+    "ec2",
+    "ecs",
+    "lambda",
+    "rds",
+    "elasticache",
+    "route53",
+  ]
+
+  # Assuming the auto-deploy role will grant access to these services.
+  auto_deploy_permissions = [
+    "iam:GetRole",
+    "iam:GetRolePolicy",
+  ]
+
+  # Configures the auto deploy max session duration to be 4 hours.
+  max_session_duration_machine_users = 14400
+
+  # Configures the max session duration for roles that humans use to be 8 hours.
+  max_session_duration_human_users = 28800
 }
 ----
 
@@ -1250,35 +1311,7 @@ your Terraform state and will henceforth be managed by Terraform.
 You'll now be able to manage that IAM user as code going forward!
 
 If you created other resources manually in the root account, you may want to `import` them too, so you can manage
-everything as code, and so that Terraform doesn't try to create any duplicate resources. For example, if you already
-manually created an AWS Organization in your root account, you'll need to import it using a command that looks like
-this:
-
-[source,bash]
-----
-aws-vault exec root-iam-user -- terragrunt import \
-  'module.root_baseline.module.organization.aws_organizations_organization.root[0]' \
-  '<ORG_ID>'
-----
-
-Where `<ORG_ID>` is the ID of your AWS Organization. Note that this is NOT the same as the AWS account ID, but a
-separate ID you can find by going to the https://console.aws.amazon.com/organizations/home[AWS Organizations] page in
-the AWS console, clicking on your root account (the one with a star to the left of it), and looking at the root
-account's ARN, which will look something like, `arn:aws:organizations::<ACCOUNT_ID>:account/<ORG_ID>/<ACCOUNT_ID>`. The
-`<ORG_ID>` is the part between slashes, and it'll look something like `o-a2lce3bbqq`.
-
-You may also want to import child accounts you created manually. You'll need to add each of these to the
-`child_accounts` variable in `terragrunt.hcl`, and you can then import each one as follows:
-
-[source,bash]
-----
-aws-vault exec root-iam-user -- terragrunt import \
-  'module.root_baseline.module.organization.aws_organizations_account.child_accounts["<ACCOUNT_NAME>"]' \
-  '<ACCOUNT_ID>'
-----
-
-Where `<ACCOUNT_NAME>` is the name you used for the account in the `child_accounts` variable and `<ACCOUNT_ID>` is the
-12-digit ID of that AWS account.
+everything as code, and so that Terraform doesn't try to create any duplicate resources.
 
 Once you're done importing, you'll want to undo the `aws-provider-patch` workaround. The easiest way to do that is to
 delete the `.terraform` or `.terragrunt-cache` folders to remove any locally cached modules, as they would've been
@@ -1426,58 +1459,149 @@ Set the variables for the `account-baseline-app` module in this environment in t
 .infrastructure-live/logs/_global/account-baseline/terragrunt.hcl
 [source,hcl]
 ----
+locals {
+  accounts = {
+    logs     = "409800740445"
+    security = "673123100581"
+    shared   = "384759303421"
+    dev      = "293847503945"
+    stage    = "384924092834"
+    prod     = "784260063686"
+    root     = "216044045972"
+  }
+
+  # Both buckets are created in the logs account by account-baseline-root
+  config_s3_bucket_name     = "acme-config-bucket-logs"
+  cloudtrail_s3_bucket_name = "acme-cloudtrail-logs"
+
+  # The Cloudtrail KMS Key is deployed at the logs account but it's value is an output from the root account.
+  cloudtrail_kms_key_arn = "arn:aws:kms:us-east-1:409800740445:alias/cloudtrail-acme"
+
+  # A local for convenient access to the security account root ARN.
+  security_account_root_arn = "arn:aws:iam::${local.accounts.security}:root"
+}
+
 inputs = {
-  # Fill in your region you want to use (only used for API calls) and the ID of your logs AWS account
-  aws_region     = "us-east-2"
-  aws_account_id = "<LOGS_ACCOUNT_ID>"
+  # Fill in your region you want to use (only used for API calls) and the ID of your root AWS account
+  aws_region     = "us-east-1"
+  aws_account_id = local.accounts["logs"]
 
   # Prefix all resources with this name
-  name_prefix    = "<COMPANY_NAME>-logs"
+  name_prefix = "acme-logs"
+ ################################
+  # Parameters for AWS Config
+  ################################
+  # Send Config logs to the common S3 bucket.
+  config_s3_bucket_name = local.config_s3_bucket_name
 
-  # Set to true to create an sns topic in this account for sending AWS Config notifications (e.g., if this is the logs account).
+  # Send Config logs and events to the logs account.
+  config_central_account_id = local.accounts.logs
+
+  # Do not allow objects in the Config S3 bucket to be forcefully removed during destroy operations.
+  config_force_destroy = false
+
+  #  This is the Logs account, so we create the SNS topic for aggregating Config logs from all accounts.
   config_should_create_sns_topic = true
 
-  # Use the S3 bucket that was already created in this logs account by account-baseline-root
-  config_s3_bucket_name = "<CONFIG_BUCKET_NAME>"
+  # All of the other accounts send logs to this account.
+  config_linked_accounts = [
+  for name, id in local.accounts :
+  id if name != "logs"
+  ]
 
-  # Set this to false because this is the account to aggregate Config data
-  config_aggregate_config_data_in_external_account = false
-  config_central_account_id                        = null
+  ################################
+  # Parameters for CloudTrail
+  ################################
 
-  # The bucket was created by account-baseline-root in this account
-  config_should_create_s3_bucket = false
+  # Send CloudTrail logs to the common S3 bucket.
+  cloudtrail_s3_bucket_name = local.cloudtrail_s3_bucket_name
 
-  # The name of the SNS topic in where AWS Config notifications will be sent. Can be in the same account or in another account.
-  config_sns_topic_name = "<DEFINE_SNS_TOPIC_NAME>"
+  # All of the other accounts send logs to this account.
+  cloudtrail_allow_kms_describe_key_to_external_aws_accounts = true
+  cloudtrail_external_aws_account_ids_with_write_access = [
+  for name, id in local.accounts :
+  id if name != "logs"
+  ]
 
-  # Specify all of the account IDs that should be able to write to the AWS Config in the `logs` account. You might want to set this to the `security` child account, or `dev`, `prod` or `stage` AWS Account IDs.
-  config_linked_accounts = ["<ANY_CHILD_AWS_ACCOUNT_ID>", "<SECURITY_ACCOUNT_ID>", "<DEV_ACCOUNT_ID>"]
+  # The ARN is a key alias, not a key ID. This variable prevents a perpetual diff when using an alias.
+  cloudtrail_kms_key_arn_is_alias = true
 
-  # Create a KMS master key that can be used to encrypt CloudTrail data. Make the logs account the admin/user of this key.
-  # In practice, this means you can use IAM policies in the logs account to specify who has access to this key.
-  cloudtrail_kms_key_administrator_iam_arns = ["arn:aws:iam::<LOGS_ACCOUNT_ID>:root"]
-  cloudtrail_kms_key_user_iam_arns          = ["arn:aws:iam::<LOGS_ACCOUNT_ID>:root"]
+  # By granting access to the root ARN of the Logs account, we allow administrators to further delegate to access
+  # other IAM entities
+  cloudtrail_kms_key_administrator_iam_arns = ["arn:aws:iam::${local.accounts.logs}:root"]
+  cloudtrail_kms_key_user_iam_arns          = ["arn:aws:iam::${local.accounts.logs}:root"]
 
-  # Allow other accounts to write Cloudtrail logs to this account
-  # Specify all of the account IDs that should be able to write to the logs account. You might want to set this to the `security` child account, or `dev`, `prod` or `stage` AWS Account IDs.
-  cloudtrail_external_aws_account_ids_with_write_access = ["<ANY_CHILD_AWS_ACCOUNT_ID>", "<SECURITY_ACCOUNT_ID>", "<DEV_ACCOUNT_ID>"]
+  # Do not allow objects in the CloudTrail S3 bucket to be forcefully removed during destroy operations.
+  cloudtrail_force_destroy = false
+  ##################################
+  # Benchmark SNS alarms configuration
+  ##################################
 
-  # Set to false because both S3 bucket and KMS key were created in this account by account-baseline-root
-  cloudtrail_s3_bucket_already_exists = true
-  cloudtrail_kms_key_already_exists = true
-
-  # Use the S3 bucket and KMS key that were already created in this logs account by account-baseline-root
-  cloudtrail_s3_bucket_name = "<CLOUDTRAIL_BUCKET_NAME>"
-  cloudtrail_kms_key_arn    = "<CLOUDTRAIL_KMS_KEY_ARN>"
-
+  # Create the alarms topic in the logs account
   cloudtrail_benchmark_alarm_sns_topic_already_exists = false
+  cloudtrail_benchmark_alarm_sns_topic_name           = "BenchmarkAlarmTopic"
 
-  # Set to point to the AWS Account that has set up the Security Hub organisation and has sent out invitations to other AWS Child accounts. For example, get the `root` account to send invitations to `security`, `logs`, `dev`, etc.
-  security_hub_associate_to_master_account_id = "<ROOT_ACCOUNT_ID>"
+  ##################################
+  # Cross-account IAM role permissions
+  ##################################
 
-  # Allow users in the security account to assume IAM roles in this account
-  allow_read_only_access_from_other_account_arns = ["arn:aws:iam::<SECURITY_ACCOUNT_ID>:root"]
-  allow_logs_access_from_other_account_arns      = ["arn:aws:iam::<SECURITY_ACCOUNT_ID>:root"]
+  # By granting access to the root ARN of the Security account in each of the roles below,
+  # we allow administrators to further delegate access to other IAM entities
+
+  # A role that allows administrator access to the account.
+  allow_full_access_from_other_account_arns = [local.security_account_root_arn]
+
+  # A role for developers to use to access services in the account.
+  # Access to services is managed using the dev_permitted_services input.
+  allow_dev_access_from_other_account_arns = [local.security_account_root_arn]
+
+  # Assuming the developers role will grant access to these services.
+  dev_permitted_services = [
+    "ec2",
+    "ecs",
+    "lambda",
+    "rds",
+    "elasticache",
+    "route53",
+  ]
+
+  # A role to allow users that can view and modify AWS account billing information.
+  allow_billing_access_from_other_account_arns = [local.security_account_root_arn]
+
+  # A role that allows read only access.
+  allow_read_only_access_from_other_account_arns = [local.security_account_root_arn]
+
+  # A role that allows access to support only.
+  allow_support_access_from_other_account_arns = [local.security_account_root_arn]
+
+  # A list of account root ARNs that should be able to assume the auto deploy role.
+  allow_auto_deploy_from_other_account_arns = [
+    # External CI/CD systems may use an IAM user in the security account to perform deployments.
+    local.security_account_root_arn,
+
+    # The shared account contains automation and infrastructure tools, such as CI/CD systems.
+    "arn:aws:iam::${local.accounts.shared}:root",
+  ]
+
+  # Assuming the auto-deploy role will grant access to these services.
+  auto_deploy_permissions = [
+    "iam:GetRole",
+    "iam:GetRolePolicy",
+  ]
+
+  # Configures the auto deploy max session duration to be 4 hours.
+  max_session_duration_machine_users = 14400
+
+  # Configures the max session duration for roles that humans use to be 8 hours.
+  max_session_duration_human_users = 28800
+
+  service_linked_roles = ["autoscaling.amazonaws.com"]
+
+  ##################################
+  # CIS compliance settings
+  ##################################
+
+  security_hub_associate_to_master_account_id = local.accounts.root
 }
 ----
 
@@ -1599,49 +1723,109 @@ Set the variables for the `account-baseline-security` module in this environment
 .infrastructure-live/security/_global/account-baseline/terragrunt.hcl
 [source,hcl]
 ----
-inputs = {
-  # Fill in your region you want to use (only used for API calls) and the ID of your security AWS account
-  aws_region     = "us-east-2"
-  aws_account_id = "<SECURITY_ACCOUNT_ID>"
+locals {
+  accounts = {
+    logs     = "409800740445"
+    security = "673123100581"
+    shared   = "384759303421"
+    dev      = "293847503945"
+    stage    = "384924092834"
+    prod     = "784260063686"
+    root     = "216044045972"
+  }
+
+  # Both buckets are created in the logs account by account-baseline-root
+  config_s3_bucket_name     = "acme-config-bucket-logs"
+  cloudtrail_s3_bucket_name = "acme-cloudtrail-logs"
+
+  # The Cloudtrail KMS Key is deployed at the logs account but it's value is an output from the root account.
+  cloudtrail_kms_key_arn = "arn:aws:kms:us-east-1:216044045972:alias/cloudtrail-acme"
+
+  # A local for convenient access to the security account root ARN.
+  security_account_root_arn = "arn:aws:iam::${local.accounts.security}:root"
+}
+input = {
+ # Fill in your region you want to use (only used for API calls) and the ID of your root AWS account
+  aws_region     = "us-east-1"
+  aws_account_id = local.accounts["security"]
 
   # Prefix all resources with this name
-  name_prefix = "<COMPANY_NAME>-security"
+  name_prefix = "acme-security"
 
-  # Use the S3 bucket and KMS key that were already created in this logs account by account-baseline-root
-  cloudtrail_s3_bucket_name = "<CLOUDTRAIL_BUCKET_NAME>"
-  cloudtrail_kms_key_arn    = "<CLOUDTRAIL_KMS_KEY_ARN>"
+  ################################
+  # Parameters for AWS Config
+  ################################
+  # Send Config logs to the common S3 bucket.
+  config_s3_bucket_name = local.config_s3_bucket_name
 
-  # Use the S3 bucket that was already created in this logs account by account-baseline-root
-  config_s3_bucket_name     = "<CONFIG_BUCKET_NAME>"
-  config_central_account_id = "<LOGS_ACCOUNT_ID>"
+  # Send Config logs and events to the logs account.
+  config_central_account_id = local.accounts.logs
+
+  # Do not allow objects in the Config S3 bucket to be forcefully removed during destroy operations.
+  config_force_destroy = false
+
+  # This account sends logs to the Logs account.
   config_aggregate_config_data_in_external_account = true
 
-  # Enable the IAM groups you want
-  should_create_iam_group_full_access    = true
-  should_create_iam_group_read_only      = true
-  should_create_iam_group_user_self_mgmt = true
+  # The ID of the Logs account.
+  config_central_account_id = local.accounts.logs
 
-  # Configure the names for IAM groups
-  iam_group_name_iam_user_self_mgmt     = "iam-admin"
-  iam_group_names_ssh_grunt_users       = ["ssh-grunt-users"]
+  ################################
+  # Parameters for CloudTrail
+  ################################
 
-  # Cleanup expired SSL/TLS certificates
-  schedule_expression                         = "rate(1 hour)"
+  # Send CloudTrail logs to the common S3 bucket.
+  cloudtrail_s3_bucket_name = local.cloudtrail_s3_bucket_name
 
-  # Security Hub - accept invitation from `root` account
-  security_hub_associate_to_master_account_id = "<ROOT_ACCOUNT_ID>"
+  # The CloudTrail bucket is created in the logs account, so don't create it here.
+  cloudtrail_s3_bucket_already_exists = true
 
-  # Create IAM groups that grant access to the other AWS accounts
-  iam_groups_for_cross_account_access = [
-    {
-      group_name    = "_account.dev-read-only",
-      iam_role_arns = ["arn:aws:iam::<DEV_ACCOUNT_ID>:role/allow-read-only-access-from-other-accounts"]
-    },
+  # Encrypt CloudTrail logs using a common KMS key.
+  cloudtrail_kms_key_arn = local.cloudtrail_kms_key_arn
 
-    # ... Repeat the same set of groups for each of stage, prod, logs, and shared services account IDs too!
+  # The ARN is a key alias, not a key ID. This variable prevents a perpetual diff when using an alias.
+  cloudtrail_kms_key_arn_is_alias = true
+
+  ##################################
+  # Benchmark SNS alarms configuration
+  ##################################
+
+  # The ARN of an SNS topic for sending alarms about CIS Benchmark compliance issues.
+  # The topic exists in the logs account
+  cloudtrail_benchmark_alarm_sns_topic_arn = "arn:aws:sns:${local.aws_region}:${local.accounts.logs}:BenchmarkAlarmTopic"
+  ##################################
+  # Cross-account IAM role permissions
+  ##################################
+
+  # Create groups that allow IAM users in this account to assume roles in your other AWS accounts.
+  iam_groups_for_cross_account_access = local.cross_account_groups.cross_account_groups
+
+  # Allow these accounts to have read access to IAM groups and the public SSH keys of users in the group.
+  allow_ssh_grunt_access_from_other_account_arns = [
+    for name, id in local.accounts :
+    "arn:aws:iam::${id}:root" if name != "security"
   ]
 
-  # Create all the IAM users for your company and assign them to IAM groups
+  # A list of account root ARNs that should be able to assume the auto deploy role.
+  allow_auto_deploy_from_other_account_arns = [
+    # External CI/CD systems may use an IAM user in the security account to perform deployments.
+    "arn:aws:iam::${local.accounts.security}:root",
+
+    # The shared account contains automation and infrastructure tools, such as CI/CD systems.
+    "arn:aws:iam::${local.accounts.shared}:root",
+  ]
+  auto_deploy_permissions = [
+    "iam:GetRole",
+    "iam:GetRolePolicy",
+  ]
+
+  # Configures the auto deploy max session duration to be 4 hours
+  max_session_duration_machine_users = 14400
+
+  # Configures the max session duration for roles that humans use to be 8 hours
+  max_session_duration_human_users = 28800
+  # IAM users
+
   users = {
     alice = {
       groups               = ["user-self-mgmt", "ssh-sudo-users", "_account.dev-full-access"]
@@ -1658,13 +1842,12 @@ inputs = {
     }
   }
 
-  # Allow ssh-grunt in all other accounts to look up user SSH keys in this account
-  allow_ssh_grunt_access_from_other_account_arns = [
-    "arn:aws:iam::<DEV_ACCOUNT_ID>:root",
-    "arn:aws:iam::<STAGE_ACCOUNT_ID>:root",
-    "arn:aws:iam::<PROD_ACCOUNT_ID>:root",
-    "arn:aws:iam::<SHARED_SERVICES_ACCOUNT_ID>:root",
-  ]
+
+  ##################################
+  # CIS compliance settings
+  ##################################
+
+  security_hub_associate_to_master_account_id = local.accounts.root
 }
 ----
 
@@ -1810,37 +1993,159 @@ Set the variables for the `account-baseline-app` module in this environment in t
 .infrastructure-live/stage/_global/account-baseline/terragrunt.hcl
 [source,hcl]
 ----
+locals {
+  aws_region = "us-east-1"
+
+  accounts = {
+    logs     = "409800740445"
+    security = "673123100581"
+    shared   = "384759303421"
+    dev      = "293847503945"
+    stage    = "384924092834"
+    prod     = "784260063686"
+    root     = "216044045972"
+  }
+
+  # Both buckets are created in the logs account by account-baseline-root
+  config_s3_bucket_name     = "acme-config-bucket-logs"
+  cloudtrail_s3_bucket_name = "acme-cloudtrail-logs"
+
+  # The Cloudtrail KMS Key is deployed at the logs account but it's value is an output from the root account.
+  cloudtrail_kms_key_arn = "arn:aws:kms:us-east-1:409800740445:alias/cloudtrail-acme"
+
+  # A local for convenient access to the security account root ARN.
+  security_account_root_arn = "arn:aws:iam::${local.accounts.security}:root"
+}
+
 inputs = {
-  # Fill in your region you want to use (only used for API calls) and the ID of your security AWS account
-  aws_region     = "us-east-2"
-  aws_account_id = "<STAGE_ACCOUNT_ID>"
+  # Fill in your region you want to use (only used for API calls) and the ID of your root AWS account
+  aws_region     = local.aws_region
+  aws_account_id = local.accounts["stage"]
 
   # Prefix all resources with this name
-  name_prefix = "<COMPANY_NAME>-stage"
+  name_prefix = "stage-logs"
+ ################################
+  # Parameters for AWS Config
+  ################################
+  # Send Config logs to the common S3 bucket.
+  config_s3_bucket_name = local.config_s3_bucket_name
 
-  # Use the S3 bucket and KMS key that were already created in this logs account by account-baseline-root
-  cloudtrail_s3_bucket_name = "<CLOUDTRAIL_BUCKET_NAME>"
-  cloudtrail_kms_key_arn    = "<CLOUDTRAIL_KMS_KEY_ARN>"
+  # Send Config logs and events to the logs account.
+  config_central_account_id = local.accounts.logs
 
-  # Use the S3 bucket that was already created in this logs account by account-baseline-root
-  config_s3_bucket_name                            = "<CONFIG_BUCKET_NAME>"
+  # Do not allow objects in the Config S3 bucket to be forcefully removed during destroy operations.
+  config_force_destroy = false
+
+  # This account sends logs to the Logs account.
   config_aggregate_config_data_in_external_account = true
-  config_central_account_id                        = "<LOGS_ACCOUNT_ID>"
 
-  # Specify the services the dev IAM role will have access to
-  dev_permitted_services = ["ec2", "s3", "rds", "dynamodb", "elasticache", "eks", "ecs"]
+  # The ID of the Logs account.
+  config_central_account_id = local.accounts.logs
 
-  # Specify the services the auto-deploy IAM role will have access to
-  auto_deploy_permissions = ["cloudwatch:*", "logs:*", "dynamodb:*", "ecr:*", "ecs:*", "iam:GetPolicy", "iam:GetPolicyVersion", "iam:ListEntitiesForPolicy", "eks:DescribeCluster", "route53:*", "s3:*", "autoscaling:*", "elasticloadbalancing:*", "iam:GetRole", "iam:GetRolePolicy", "iam:PassRole"]
+  ################################
+  # Parameters for CloudTrail
+  ################################
 
-  # Allow users in the security account to access the IAM roles in this account
-  allow_read_only_access_from_other_account_arns = ["arn:aws:iam::<SECURITY_ACCOUNT_ID>:root"]
-  allow_billing_access_from_other_account_arns   = ["arn:aws:iam::<SECURITY_ACCOUNT_ID>:root"]
-  allow_dev_access_from_other_account_arns       = ["arn:aws:iam::<SECURITY_ACCOUNT_ID>:root"]
-  allow_full_access_from_other_account_arns      = ["arn:aws:iam::<SECURITY_ACCOUNT_ID>:root"]
+  # Send CloudTrail logs to the common S3 bucket.
+  cloudtrail_s3_bucket_name = local.cloudtrail_s3_bucket_name
 
-  # Allow a CI server in the shared-services account to assume the auto-deploy IAM role in this account
-  allow_auto_deploy_from_other_account_arns      = ["arn:aws:iam::<SHARED_SERVICES_ACCOUNT_ID>:root"]
+  # Encrypt CloudTrail logs using a common KMS key.
+  cloudtrail_kms_key_arn = local.cloudtrail_kms_key_arn
+
+  # The ARN is a key alias, not a key ID. This variable prevents a perpetual diff when using an alias.
+  cloudtrail_kms_key_arn_is_alias = true
+  ##################################
+  # Benchmark SNS alarms configuration
+  ##################################
+
+  # The ARN of an SNS topic for sending alarms about CIS Benchmark compliance issues.
+  # The topic exists in the logs account
+  cloudtrail_benchmark_alarm_sns_topic_arn = "arn:aws:sns:${local.aws_region}:${local.accounts.logs}:BenchmarkAlarmTopic"
+
+  ##################################
+  # Cross-account IAM role permissions
+  ##################################
+
+  # By granting access to the root ARN of the Security account in each of the roles below,
+  # we allow administrators to further delegate access to other IAM entities
+
+  # A role that allows administrator access to the account.
+  allow_full_access_from_other_account_arns = [local.security_account_root_arn]
+
+  # A role for developers to use to access services in the account.
+  # Access to services is managed using the dev_permitted_services input.
+  allow_dev_access_from_other_account_arns = [local.security_account_root_arn]
+
+  # Assuming the developers role will grant access to these services.
+  dev_permitted_services = [
+    "ec2",
+    "ecs",
+    "lambda",
+    "rds",
+    "elasticache",
+    "route53",
+  ]
+
+  # A role to allow users that can view and modify AWS account billing information.
+  allow_billing_access_from_other_account_arns = [local.security_account_root_arn]
+
+  # A role that allows read only access.
+  allow_read_only_access_from_other_account_arns = [local.security_account_root_arn]
+
+  # A role that allows access to support only.
+  allow_support_access_from_other_account_arns = [local.security_account_root_arn]
+
+  # A list of account root ARNs that should be able to assume the auto deploy role.
+  allow_auto_deploy_from_other_account_arns = [
+    # External CI/CD systems may use an IAM user in the security account to perform deployments.
+    local.security_account_root_arn,
+
+    # The shared account contains automation and infrastructure tools, such as CI/CD systems.
+    "arn:aws:iam::${local.accounts.shared}:root",
+  ]
+
+  # Assuming the auto-deploy role will grant access to these services.
+  auto_deploy_permissions = [
+    "iam:GetRole",
+    "iam:GetRolePolicy",
+  ]
+
+  # Configures the auto deploy max session duration to be 4 hours.
+  max_session_duration_machine_users = 14400
+
+  # Configures the max session duration for roles that humans use to be 8 hours.
+  max_session_duration_human_users = 28800
+
+  service_linked_roles = ["autoscaling.amazonaws.com"]
+  ##################################
+  # KMS grants
+  ##################################
+
+  # These grants allow the autoscaling service-linked role to access to the AMI encryption key so that it
+  # can launch instances from AMIs that were shared from the shared-services account.
+  kms_grant_regions = {
+    ami_encryption_key = local.aws_region
+  }
+  kms_grants = {
+    ami_encryption_key = {
+      kms_cmk_arn       = "arn:aws:kms:us-east-1:${local.accounts.shared}:alias/ami-encryption"
+      grantee_principal = "arn:aws:iam::${local.accounts[local.account_name]}:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling"
+      granted_operations = [
+        "Encrypt",
+        "Decrypt",
+        "ReEncryptFrom",
+        "ReEncryptTo",
+        "GenerateDataKey",
+        "DescribeKey"
+      ]
+    }
+  }
+
+  ##################################
+  # CIS compliance settings
+  ##################################
+
+  security_hub_associate_to_master_account_id = local.accounts.root
 }
 ----
 
