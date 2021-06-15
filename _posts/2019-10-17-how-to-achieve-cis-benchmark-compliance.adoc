@@ -992,6 +992,8 @@ Set the variables for the `account-baseline-root` module in this environment in 
 [source,hcl]
 ----
 locals {
+  aws_region = "us-east-1"
+
   accounts = {
     root = "216044045972"
   }
@@ -1003,7 +1005,7 @@ locals {
 
 inputs = {
   # Fill in the region you want to use (only used for API calls) and the ID of your root AWS account (see the locals above)
-  aws_region     = "us-east-1"
+  aws_region     = local.aws_region
   aws_account_id = local.accounts.root
 
   # Prefix all resources with this name
@@ -1459,6 +1461,8 @@ Set the variables for the `account-baseline-app` module in this environment in t
 [source,hcl]
 ----
 locals {
+  aws_region = "us-east-1"
+
   accounts = {
     logs     = "409800740445"
     security = "673123100581"
@@ -1482,8 +1486,8 @@ locals {
 
 inputs = {
   # Fill in the region you want to use (only used for API calls) and the IDs of your AWS accounts (see the locals above)
-  aws_region     = "us-east-1"
-  aws_account_id = local.accounts["logs"]
+  aws_region     = local.aws_region
+  aws_account_id = local.accounts.logs
 
   # Prefix all resources with this name
   name_prefix = "acme-logs"
@@ -1723,6 +1727,8 @@ Set the variables for the `account-baseline-security` module in this environment
 [source,hcl]
 ----
 locals {
+  aws_region = "us-east-1"
+
   accounts = {
     logs     = "409800740445"
     security = "673123100581"
@@ -1745,8 +1751,8 @@ locals {
 }
 input = {
   # Fill in the region you want to use (only used for API calls) and the IDs of your AWS accounts (see the locals above)
-  aws_region     = "us-east-1"
-  aws_account_id = local.accounts["security"]
+  aws_region     = local.aws_region
+  aws_account_id = local.accounts.security
 
   # Prefix all resources with this name
   name_prefix = "acme-security"
@@ -2019,7 +2025,7 @@ locals {
 inputs = {
   # Fill in the region you want to use (only used for API calls) and the IDs of your AWS accounts (see the locals above)
   aws_region     = local.aws_region
-  aws_account_id = local.accounts["stage"]
+  aws_account_id = local.accounts.stage
 
   # Prefix all resources with this name
   name_prefix = "stage-logs"
