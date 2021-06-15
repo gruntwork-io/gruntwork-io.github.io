@@ -1112,7 +1112,7 @@ inputs = {
 
 The example code above does the following:
 
-. **Create 6 child AWS accounts**. These are the accounts described in the <<child_accounts>> sections.
+. **Create 6 child AWS accounts**. These accounts are described in more detail in the https://www.gruntwork.io/guides/foundations/how-to-configure-production-grade-aws-account-structure/#child_accounts[How to configure a production-grade AWS account structure using Gruntwork AWS Landing Zone child accounts section].
 
 . **Associate an email address with each of the child accounts**. This will be the email address for the root user of
 each account and AWS requires that the root user's email address is _globally_ unique, so it cannot be the email
@@ -1942,8 +1942,8 @@ echo "<PASSWORD>" | base64 --decode | keybase pgp decrypt
 === Apply the security baseline to the other child accounts
 
 Now that your security account is fully configured, you need to apply the security baseline to the remaining child
-accounts (e.g., dev, stage, prod, shared-services) as detailed in the <<child_accounts>> section. Feel free to adjust
-this as necessary based on the accounts your company needs.
+accounts (e.g., dev, stage, prod, shared-services). Feel free to adjust this as necessary based on the accounts your
+company needs.
 
 You can re-use the `account-baseline-app` module you created earlier in your `infrastructure-modules` repo for all of
 these child accounts; this module can be used interchangeably between app accounts and log accounts as they deploy most
