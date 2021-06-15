@@ -939,7 +939,6 @@ https://www.schneier.com/blog/archives/2016/08/nist_is_no_long.html[no longer re
 https://www.theverge.com/2017/9/18/16328172/sms-two-factor-authentication-hack-password-bitcoin[vulnerabilities with the cellular system],
 so using a virtual or hardware MFA device is preferable; that said, MFA with SMS is still better than no MFA at all.
 
-Complete this step before creating any IAM users!
 
 === Configure the security baseline for the root account
 
@@ -1003,7 +1002,7 @@ locals {
 }
 
 inputs = {
-  # Fill in your region you want to use (only used for API calls) and the ID of your root AWS account
+  # Fill in the region you want to use (only used for API calls) and the ID of your root AWS account (see the locals above)
   aws_region     = "us-east-1"
   aws_account_id = local.accounts.root
 
@@ -1482,7 +1481,7 @@ locals {
 }
 
 inputs = {
-  # Fill in your region you want to use (only used for API calls) and the ID of your root AWS account
+  # Fill in the region you want to use (only used for API calls) and the IDs of your AWS accounts (see the locals above)
   aws_region     = "us-east-1"
   aws_account_id = local.accounts["logs"]
 
@@ -1745,7 +1744,7 @@ locals {
   security_account_root_arn = "arn:aws:iam::${local.accounts.security}:root"
 }
 input = {
- # Fill in your region you want to use (only used for API calls) and the ID of your root AWS account
+  # Fill in the region you want to use (only used for API calls) and the IDs of your AWS accounts (see the locals above)
   aws_region     = "us-east-1"
   aws_account_id = local.accounts["security"]
 
@@ -2018,7 +2017,7 @@ locals {
 }
 
 inputs = {
-  # Fill in your region you want to use (only used for API calls) and the ID of your root AWS account
+  # Fill in the region you want to use (only used for API calls) and the IDs of your AWS accounts (see the locals above)
   aws_region     = local.aws_region
   aws_account_id = local.accounts["stage"]
 
