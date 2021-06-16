@@ -1004,24 +1004,17 @@ Set the variables for the `account-baseline-root` module in this environment in 
 [source,hcl]
 ----
 locals {
-  aws_region = "us-east-1"
+  # A local for more convenient access to the accounts map.
+  accounts = local.common_vars.locals.accounts
 
-  accounts = {
-    root = "216044045972"
-  }
-
-  # Both buckets will created in the logs account by account-baseline-root
+  # Both buckets will be created in the logs account by account-baseline-root
   config_s3_bucket_name     = "acme-config-bucket-logs"
   cloudtrail_s3_bucket_name = "acme-cloudtrail-logs"
 }
 
 inputs = {
-  # Fill in the region you want to use (only used for API calls) and the ID of your root AWS account (see the locals above)
-  aws_region     = local.aws_region
-  aws_account_id = local.accounts.root
-
   # Prefix all resources with this name
-  name_prefix = "acme-root"
+  name_prefix = "<SOME_UNIQUE_IDENTIFIER>-root"
 
   # If you've already created an AWS Organization in your root account, set this to false
   create_organization = false
@@ -1730,6 +1723,7 @@ Set the variables for the `account-baseline-security` module in this environment
 [source,hcl]
 ----
 locals {
+  # A local for more convenient access to the accounts map.
   accounts = local.common_vars.locals.accounts
 
   # Both buckets are created in the logs account by account-baseline-root
@@ -1988,6 +1982,7 @@ Set the variables for the `account-baseline-app` module in this environment in t
 [source,hcl]
 ----
 locals {
+  # A local for more convenient access to the accounts map.
   accounts = local.common_vars.locals.accounts
 
   # Both buckets are created in the logs account by account-baseline-root
