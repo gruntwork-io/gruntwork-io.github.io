@@ -1028,6 +1028,11 @@ locals {
   # TODO: Enter the default AWS region, the same as where the terraform state S3 bucket is currently provisioned.
   default_region = ""
 
+  # TODO: Fill these in after applying the account-baseline-root to the root account.
+  config_s3_bucket_name = ""
+  cloudtrail_s3_bucket_name = ""
+  cloudtrail_kms_key_arn = ""
+
   # TODO: An accounts map to conveniently store all account IDs.
   # Centrally define all the AWS account IDs. We use JSON so that it can be readily parsed outside of Terraform.
   accounts = jsondecode(file("accounts.json"))
@@ -1571,6 +1576,9 @@ config_s3_bucket_name     = "<CONFIG_BUCKET_NAME>"
 Now, you can update the `accounts.json` file with the account IDs from the Terraform output! Also `account.hcl` files
 located in each account folder (e.g., infrastructure-live/dev, infrastructure-live/shared, etc.), with the appropriate
 account ID shown in the Terraform output.
+
+Also update the entries for `cloudtrail_kms_key_arn`, `cloudtrail_s3_bucket_name`, and `config_s3_bucket_name` into your
+`infrastructure-live/common.hcl` file, because you'll need these values for every account in the steps below.
 
 One other useful output are the encrypted passwords for IAM users you created:
 
