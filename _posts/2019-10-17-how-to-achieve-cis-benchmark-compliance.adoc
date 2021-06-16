@@ -1937,9 +1937,9 @@ Now that your security account is fully configured, you need to apply the securi
 accounts (e.g., dev, stage, prod, shared-services). Feel free to adjust this as necessary based on the accounts your
 company needs.
 
-You can re-use the `account-baseline-app` module you created earlier in your `infrastructure-modules` repo for all of
-these child accounts; this module can be used interchangeably between app accounts and log accounts as they deploy most
-of the same resources.
+The `account-baseline-app` module in the Service Catalog can be used interchangeably between app accounts and log
+accounts as they deploy most of the same resources. That means this module can be re-used for all of the child
+accounts.
 
 Create `terragrunt.hcl` files in `infrastructure-live` under the file paths `<ACCOUNT>/_global/account-baseline`,
 where `<ACCOUNT>` is one of these other child accounts, such as dev, stage, prod, and shared-services. In the rest of
