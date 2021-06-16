@@ -1514,7 +1514,7 @@ inputs = {
   # All of the other accounts send logs to this account.
   config_linked_accounts = [
   for name, id in local.accounts :
-  id if name != "logs"
+    id if name != "logs"
   ]
 
   ################################
@@ -1528,7 +1528,7 @@ inputs = {
   cloudtrail_allow_kms_describe_key_to_external_aws_accounts = true
   cloudtrail_external_aws_account_ids_with_write_access = [
   for name, id in local.accounts :
-  id if name != "logs"
+    id if name != "logs"
   ]
 
   # The ARN is a key alias, not a key ID. This variable prevents a perpetual diff when using an alias.
@@ -1813,7 +1813,7 @@ input = {
   # Allow these accounts to have read access to IAM groups and the public SSH keys of users in the group.
   allow_ssh_grunt_access_from_other_account_arns = [
     for name, id in local.accounts :
-    "arn:aws:iam::${id}:root" if name != "security"
+      "arn:aws:iam::${id}:root" if name != "security"
   ]
 
   # A list of account root ARNs that should be able to assume the auto deploy role.
