@@ -942,9 +942,10 @@ infrastructure-live
       └ region.hcl
 ----
 
-The Terraform modules in the Service Catalog do not define some blocks that are required for Terraform to operate
-(e.g., the `provider` and `terraform` state backend blocks). This is to allow the modules to be flexibly used in
-different contexts. We'll define a root `terragrunt.hcl` that injects these these required blocks.
+The Terraform modules in the link:https://github.com/gruntwork-io/terraform-aws-service-catalog/[Service Catalog]
+do not define some blocks that are required for Terraform to operate (e.g., the `provider` and `terraform`
+state backend blocks). This is to allow the modules to be flexibly used in different contexts.
+We'll define a root `terragrunt.hcl` that injects these these required blocks.
 
 Create a `terragrunt.hcl` at the root of your infrastructure-live repo and insert the following contents. As you can
 see, it references `common`, `account`, and `region` HCL files which we'll create shortly.
