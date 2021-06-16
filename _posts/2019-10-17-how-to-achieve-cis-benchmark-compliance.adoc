@@ -1391,6 +1391,9 @@ now you can update the `accounts.json` file with the account IDs from the Terraf
 located in each account folder (e.g., `infrastructure-live/dev`, `infrastructure-live/shared`, etc.), with the
 appropriate account ID shown in the Terraform output.
 
+Also add entries for `cloudtrail_kms_key_arn`, `cloudtrail_s3_bucket_name`, and `config_s3_bucket_name` into your
+`infrastructure-live/common.hcl` file, because you'll need these values for every account in the steps below.
+
 One other useful output are the encrypted passwords for IAM users you created:
 
 [source,hcl]
@@ -1473,11 +1476,11 @@ locals {
   accounts = local.common_vars.locals.accounts
 
   # Both buckets are created in the logs account by account-baseline-root
-  config_s3_bucket_name     = "acme-config-bucket-logs"
-  cloudtrail_s3_bucket_name = "acme-cloudtrail-logs"
+  config_s3_bucket_name     = local.common_vars.locals.config_s3_bucket_name
+  cloudtrail_s3_bucket_name = local.common_vars.locals.cloudtrail_s3_bucket_name
 
   # The Cloudtrail KMS Key is deployed at the logs account but it's value is an output from the root account.
-  cloudtrail_kms_key_arn = "arn:aws:kms:us-east-1:409800740445:alias/cloudtrail-acme"
+  cloudtrail_kms_key_arn = local.common_vars.locals.cloudtrail_kms_key_arn
 
   # A local for convenient access to the security account root ARN.
   security_account_root_arn = "arn:aws:iam::${local.accounts.security}:root"
@@ -1727,11 +1730,11 @@ locals {
   accounts = local.common_vars.locals.accounts
 
   # Both buckets are created in the logs account by account-baseline-root
-  config_s3_bucket_name     = "acme-config-bucket-logs"
-  cloudtrail_s3_bucket_name = "acme-cloudtrail-logs"
+  config_s3_bucket_name     = local.common_vars.locals.config_s3_bucket_name
+  cloudtrail_s3_bucket_name = local.common_vars.locals.cloudtrail_s3_bucket_name
 
   # The Cloudtrail KMS Key is deployed at the logs account but it's value is an output from the root account.
-  cloudtrail_kms_key_arn = "arn:aws:kms:us-east-1:216044045972:alias/cloudtrail-acme"
+  cloudtrail_kms_key_arn = local.common_vars.locals.cloudtrail_kms_key_arn
 
   # A local for convenient access to the security account root ARN.
   security_account_root_arn = "arn:aws:iam::${local.accounts.security}:root"
@@ -1986,11 +1989,11 @@ locals {
   accounts = local.common_vars.locals.accounts
 
   # Both buckets are created in the logs account by account-baseline-root
-  config_s3_bucket_name     = "acme-config-bucket-logs"
-  cloudtrail_s3_bucket_name = "acme-cloudtrail-logs"
+  config_s3_bucket_name     = local.common_vars.locals.config_s3_bucket_name
+  cloudtrail_s3_bucket_name = local.common_vars.locals.cloudtrail_s3_bucket_name
 
   # The Cloudtrail KMS Key is deployed at the logs account but it's value is an output from the root account.
-  cloudtrail_kms_key_arn = "arn:aws:kms:us-east-1:409800740445:alias/cloudtrail-acme"
+  cloudtrail_kms_key_arn = local.common_vars.locals.cloudtrail_kms_key_arn
 
   # A local for convenient access to the security account root ARN.
   security_account_root_arn = "arn:aws:iam::${local.accounts.security}:root"
