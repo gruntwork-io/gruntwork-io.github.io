@@ -66,3 +66,65 @@ Feel free to read the guide from start to finish or skip around to whatever part
 == Core concepts
 
 [[bastion_host_overview]]
+=== Bastion host overview
+image::../assets/img/guides/bastion/bastion.png[]
+Here are the key points to define bastion hosts:
+
+  - They provide entry into your private subnet.
+  - The bastion host will need to be exposed to the external world, so it needs a public IP address. This also means that it needs to be placed within the boundaries of the public subnet.
+  - To communicate with the bastion host, users will need SSH or VPN access set up. These are the most common ways a bastion server can be set up.
+
+[[why_bastion]]
+=== Why use a bastion host?
+Your team will need some way of accessing private services such as the data stores, the application servers, and so on. If you open these up to be publicly accessible so your team can access them, that would expose your system to much bigger threats. Therefore it is consideted best practice to not expose internal services, but instead get to them via a bastion host.
+
+This way you would have to prioritise securing the bastion server, instead of split your effort between securing mutiple servers (if all application servers and data stores were exposed to the Internet).
+
+[[how_bastion_with_ssh]]
+=== How SSH access works with a bastion host?
+
+[[bastion_alternatives]]
+== What alternatives are there to using a bastion host?
+Some of the alternatives to using a bastion host that will also work with resources in private subnets include
+https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/Connect-using-EC2-Instance-Connect.html[EC2 Instance Connect],
+which can allow you to SSH to EC2 Instances via a browser-based SSH client in the Amazon EC2 Console, and
+https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager.html[AWS Systems Manager Sessions], which
+allow you to manage and connect to EC2 Instances via a custom protocol managed by AWS.
+
+[[deployment_walkthrough]]
+== Deployment walkthrough
+
+Let's now walk through how to deploy a production-grade server that will be our bastion host, fully defined and managed as code, using the Gruntwork Infrastructure as Code Library.
+
+//TODO add your code
+
+[[pre_requisites]]
+=== Pre-requisites
+
+This walkthrough has the following pre-requisites:
+
+Gruntwork Infrastructure as Code Library::
+  This guide uses code from the https://gruntwork.io/infrastructure-as-code-library/[Gruntwork Infrastructure as Code Library], as it
+  implements most of the production-grade design for you out of the box. Make sure to read
+  link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library[How to use the Gruntwork Infrastructure as Code Library].
++
+[.exceptional]
+IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork subscriber# to access the Gruntwork Infrastructure as Code Library.
+
+Terraform::
+  This guide uses https://www.terraform.io/[Terraform] to define and manage all the infrastructure as code. If you're
+  not familiar with Terraform, check out https://blog.gruntwork.io/a-comprehensive-guide-to-terraform-b3d32832baca[A
+  Comprehensive Guide to Terraform], https://training.gruntwork.io/p/terraform[A Crash Course on Terraform], and
+  link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library[How to Use the Gruntwork Infrastructure as Code Library]
+
+AWS accounts::
+  This guide deploys infrastructure into one or more AWS accounts. Check out the
+  link:/guides/foundations/how-to-configure-production-grade-aws-account-structure[Production Grade AWS Account Structure] guide for instructions.
+  You will also need to be able to authenticate to these accounts on the CLI: check out
+  https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[A Comprehensive Guide to Authenticating to AWS on the Command Line]
+  for instructions.
+
+[[deploy_bastion_server]]
+=== Deploy a bastion server
+
+For this part we will be deploying one of our core module https://github.com/gruntwork-io/terraform-aws-server/blob/master/modules/single-server[`single-server module`].
