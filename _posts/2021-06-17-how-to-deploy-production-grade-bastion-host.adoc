@@ -1,0 +1,68 @@
+---
+title: How to deploy a production-grade bastion host on AWS
+categories: Networking
+image:
+excerpt: Learn how to deploy a secure bastion host for your production system on AWS.
+tags: ["aws", "networking", "terraform"]
+cloud: ["aws"]
+redirect_from: /static/guides/networking/how-to-deploy-production-grade-bastion-host-aws/
+---
+:page-type: guide
+:page-layout: post
+
+:toc:
+:toc-placement!:
+
+// GitHub specific settings. See https://gist.github.com/dcode/0cfbf2699a1fe9b46ff04c41721dda74 for details.
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+toc::[]
+endif::[]
+
+== Intro
+
+This guide will walk you through the process of configuring a production-grade bastion host on AWS.
+
+If you were following the https://gruntwork.io/guides/networking/how-to-deploy-production-grade-vpc-aws[Gruntwork guide on how to deploy a production grade VPC on AWS], then you probably came across https://gruntwork.io/guides/networking/how-to-deploy-production-grade-vpc-aws/#bastion_host[the section talking about bastion hosts].
+
+When deploying your infrastructure in AWS or any of the other main cloud providers, it is considered secure to keep your data stores and application servers in a private network. While this might depend on your system architecture, most likely, you would want to keep them secure and only allow access from trusted sources. This means you will need some way of determining if the access and traffic to your private network is to be trusted or not. There's many ways to achieve that, and one of them is to simply restrict access to only come from the so-called bastion server.
+
+Typically, as a network administrator, or as a developer with the privileges to set up such servers and configure them, you would want to set up a bastion host yourself. This would allow you to examine the system logs and configure what parts of the network that server can reach, where it lives in your system, when it's online and offline, and of course who can access it.
+
+A bastion host sits in the public network, and is accessible directly from the Internet, or the whitelisted IP addresses in its configuration. Once connected to it, usually over SSH, the bastion host enables you to access private network resources such as EC2 and RDS instances, or any other resources also placed in the private subnet.
+
+=== What is a bastion host?
+
+The word "bastion" was originally coined as a term in network security in 1990 by Marcus J. Ranum. Many centuries before that, the name bastion was used to describe a projecting part of a fortification, designed in such a way to offer maximum defenses from multiple angles.
+
+In the technical world of infrastructure, a _bastion host_ is a single, highly locked-down server that allows you to connect your private network to the public Internet over SSH or VPN.
+Once connected to a bastion host, you will be "in the network", assuming the IP of that bastion host. This way you'll be able to access all
+resources available to that network that the bastion host is connected to. As defined in AWS's security blog https://aws.amazon.com/blogs/security/how-to-record-ssh-sessions-established-through-a-bastion-host/[here], within the context of AWS, a bastion host is meant to provide access  to a private network from an external one (e.g. the Internet) and minimize the risk of penetration to the resources launched in a private subnet of your Amazon Virtual Private Cloud (VPC).
+
+=== What you'll learn in this guide
+
+This guide consists of four main sections:
+
+<<core_concepts>>::
+  An overview of the core concepts you need to understand for bastion hosts and how and when to use them.
+
+<<production_grade_design>>::
+  An overview of how to configure a secure server to serve as a bastion host in a production environment. To get a
+  sense of what production-grade means, check out link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#production_grade_infra_checklist[The production-grade infrastructure checklist].
+
+<<deployment_walkthrough>>::
+  A step-by-step guide to deploying a production-grade bastion host in AWS using code from the Gruntwork Infrastructure as Code Library.
+
+<<next_steps>>::
+  What to do once your bastion host is configured and set up.
+
+Feel free to read the guide from start to finish or skip around to whatever part interests you!
+
+[[core_concepts]]
+== Core concepts
+
+[[bastion_host_overview]]
