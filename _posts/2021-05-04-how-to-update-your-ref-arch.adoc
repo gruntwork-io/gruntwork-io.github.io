@@ -136,7 +136,7 @@ these files into your own `infrastructure-live` repository.
 # ---------------------------------------------------------------------------------------------------------------------
 
 locals {
-  common_vars  = read_terragrunt_config("${get_terragrunt_dir()}/common.hcl")
+  common_vars  = read_terragrunt_config(find_in_parent_folders("common.hcl"))
   account_vars = read_terragrunt_config(find_in_parent_folders("account.hcl"))
 
   # Optional: Update to use HCL instead of YAML
