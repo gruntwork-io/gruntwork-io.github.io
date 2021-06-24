@@ -462,13 +462,13 @@ Now for the full-fledged instructions to upgrade a single service:
     * Change the `include` path to `find_in_parent_folders("terragrunt_service_catalog.hcl")`. This ensures that you use the
       Service Catalog compatible root config you created in the previous step.
     * Change the `terraform.source` attribute to point to the corresponding Terraform module in the
-      `terraform-aws-service-catalog` repo. When updating the source, make sure to set the ref to target `v0.35.5`.
+      `terraform-aws-service-catalog` repo. When updating the source, make sure to set the ref to target `v0.35.5`, unless otherwise noted down below in <<service_migration_guides>>.
 
 +
 [NOTE]
 .Explanation
 ====
-This migration guide targets `v0.35.5` of the Service Catalog. Newer versions may require additional state migrations
+This migration guide targets `v0.35.5` of the Service Catalog, unless otherwise noted down below in <<service_migration_guides>>. Newer versions may require additional state migrations
 that are not covered by the automated scripts. If you wish to update further, first update to `v0.35.5` and then read
 the migration guides in the release notes of the Service Catalog to bump beyond that version.
 ====
@@ -520,6 +520,13 @@ These dedicated guides are meant to be used in tandem with the main detailed gui
 `infrastructure-live-multi-account-acme` repository, which is now archived because it was used to share examples
 of Reference Architecture 1.0. You can still interact with the archived repo, and use it to help you upgrade your
 existing Reference Architecture.
+
+[NOTE]
+.Exceptions to Service Catalog Versions
+====
+The following modules require a different version of the Service Catalog than `v0.35.5` to migrate properly:
+- `route53-public`: `v0.32.0`
+====
 
 * link:https://github.com/gruntwork-io/infrastructure-live-multi-account-acme/blob/v0.0.1-20210527/_docs/_ref_arch_v1_to_v2_migration_guides/alb.adoc[ALB Service Migration Guide]
 * link:https://github.com/gruntwork-io/infrastructure-live-multi-account-acme/blob/v0.0.1-20210527/_docs/_ref_arch_v1_to_v2_migration_guides/asg.adoc[ASG Service Migration Guide]
