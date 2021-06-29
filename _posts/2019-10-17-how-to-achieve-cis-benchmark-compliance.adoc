@@ -1004,6 +1004,9 @@ Set the variables for the `account-baseline-root` module in this environment in 
 [source,hcl]
 ----
 locals {
+
+  common_vars = read_terragrunt_config(find_in_parent_folders("common.hcl"))
+
   # A local for more convenient access to the accounts map.
   accounts = local.common_vars.locals.accounts
 
@@ -1387,9 +1390,23 @@ config_s3_bucket_name     = "<CONFIG_BUCKET_NAME>"
 ----
 
 If you followed the http://gruntwork.io/guides/foundations/how-to-configure-production-grade-aws-account-structure/#prepare-your-infrastructure-live-repository[steps for preparing your `infrastructure-live` repo],
-now you can update the `accounts.json` file with the account IDs from the Terraform output! Also `account.hcl` files
-located in each account folder (e.g., `infrastructure-live/dev`, `infrastructure-live/shared`, etc.), with the
-appropriate account ID shown in the Terraform output.
+now you can update the `accounts.json` file with the account IDs from the Terraform output! If you are instead making use of `account.hcl` files (located in each account folder (e.g., `infrastructure-live/dev`, `infrastructure-live/shared`, etc.), update them too with the
+appropriate account ID shown in the Terraform output, so they look like:
+[source,hcl]
+----
+locals {
+  account_name = "<REPLACE_WITH_NAME_OF_ACCOUNT>"
+  account_id = "<REPLACE_WITH_ID_OF_ACCOUNT>"
+}
+
+----
+
+[source,json]
+----
+{
+  "account_name": "<REPLACE_WITH_ID_OF_ACCOUNT>"
+}
+----
 
 Also update the entries for `cloudtrail_kms_key_arn`, `cloudtrail_s3_bucket_name`, and `config_s3_bucket_name` into your
 `infrastructure-live/common.hcl` file, because you'll need these values for every account in the steps below.
