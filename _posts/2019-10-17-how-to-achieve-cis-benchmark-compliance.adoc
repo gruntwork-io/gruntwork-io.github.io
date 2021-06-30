@@ -1384,13 +1384,12 @@ child_accounts = {
     # (...)
   }
 }
-cloudtrail_kms_key_arn    = "<CLOUDTRAIL_KMS_KEY_ARN>"
+
 cloudtrail_s3_bucket_name = "<CLOUDTRAIL_BUCKET_NAME>"
 config_s3_bucket_name     = "<CONFIG_BUCKET_NAME>"
 ----
 
-If you followed the http://gruntwork.io/guides/foundations/how-to-configure-production-grade-aws-account-structure/#prepare-your-infrastructure-live-repository[steps for preparing your `infrastructure-live` repo],
-now you can update the `accounts.json` file with the account IDs from the Terraform output! If you are instead making use of `account.hcl` files (located in each account folder (e.g., `infrastructure-live/dev`, `infrastructure-live/shared`, etc.), update them too with the
+If you followed the http://gruntwork.io/guides/foundations/how-to-configure-production-grade-aws-account-structure/#prepare-your-infrastructure-live-repository[steps for preparing your `infrastructure-live` repo], now you can update the `account.hcl` with the account IDs from the Terraform output! If you are instead making use of `account.hcl` files (located in each account folder (e.g., `infrastructure-live/dev`, `infrastructure-live/shared`, etc.), update them too with the
 appropriate account ID shown in the Terraform output, so they look like:
 [source,hcl]
 ----
@@ -1408,10 +1407,34 @@ locals {
 }
 ----
 
-Also update the entries for `cloudtrail_kms_key_arn`, `cloudtrail_s3_bucket_name`, and `config_s3_bucket_name` into your
+Note that we haven't specified any region here so far. If you're following the guide on how to prepare your `infrastructure-live` repo, you might have created previously files called `region.hcl` like below:
+
+[source, hcl]
+----
+# Common variables for this region
+locals {
+  # Automatically load common variables shared across all accounts
+  common_vars = read_terragrunt_config(find_in_parent_folders("common.hcl"))
+
+  # Automatically load account-level variables
+  account_vars = read_terragrunt_config(find_in_parent_folders("account.hcl"))
+
+  aws_region   = "us-west-2"
+  state_bucket = "${local.common_vars.locals.name_prefix}-${local.account_vars.locals.account_name}-${local.aws_region}-tf-state"
+}
+----
+
+Alternatively, you can add to your locals where necessary the following line, containing your choice of AWS regions:
+
+[source, hcl]
+----
+  aws_region   = "us-west-2"
+----
+
+Now, that you have values for `cloudtrail_s3_bucket_name`, and `config_s3_bucket_name`, add them to your
 `infrastructure-live/common.hcl` file, because you'll need these values for every account in the steps below.
 
-One other useful output are the encrypted passwords for IAM users you created:
+Some of the terraform outputs to pay attention to, and maybe even store in a common configuration (like the `common.hcl` file), that you'll need later are: `cloudtrail_kms_key_arn` & the encrypted passwords for IAM users you created:
 
 [source,hcl]
 ----
