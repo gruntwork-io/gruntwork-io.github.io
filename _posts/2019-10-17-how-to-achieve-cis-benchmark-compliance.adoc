@@ -1070,9 +1070,6 @@ inputs = {
   # Send Config logs to the common S3 bucket.
   config_s3_bucket_name = local.config_s3_bucket_name
 
-  # Do not allow objects in the Config S3 bucket to be forcefully removed during destroy operations.
-  config_force_destroy = false
-
   ################################
   # Parameters for CloudTrail
   ################################
@@ -1082,9 +1079,6 @@ inputs = {
 
   # The ARN is a key alias, not a key ID. This variable prevents a perpetual diff when using an alias.
   cloudtrail_kms_key_arn_is_alias = true
-
-  # Do not allow objects in the CloudTrail S3 bucket to be forcefully removed during destroy operations.
-  cloudtrail_force_destroy = false
 
   ##################################
   # Cross-account IAM role permissions
@@ -1505,9 +1499,6 @@ inputs = {
   # Send Config logs and events to the logs account.
   config_central_account_id = local.accounts.logs
 
-  # Do not allow objects in the Config S3 bucket to be forcefully removed during destroy operations.
-  config_force_destroy = false
-
   #  This is the Logs account, so we create the SNS topic for aggregating Config logs from all accounts.
   config_should_create_sns_topic = true
 
@@ -1539,8 +1530,6 @@ inputs = {
   cloudtrail_kms_key_administrator_iam_arns = ["arn:aws:iam::${local.accounts.logs}:root"]
   cloudtrail_kms_key_user_iam_arns          = ["arn:aws:iam::${local.accounts.logs}:root"]
 
-  # Do not allow objects in the CloudTrail S3 bucket to be forcefully removed during destroy operations.
-  cloudtrail_force_destroy = false
   ##################################
   # Benchmark SNS alarms configuration
   ##################################
@@ -1770,9 +1759,6 @@ input = {
 
   # Send Config logs and events to the logs account.
   config_central_account_id = local.accounts.logs
-
-  # Do not allow objects in the Config S3 bucket to be forcefully removed during destroy operations.
-  config_force_destroy = false
 
   # This account sends logs to the Logs account.
   config_aggregate_config_data_in_external_account = true
@@ -2042,9 +2028,6 @@ inputs = {
 
   # Send Config logs and events to the logs account.
   config_central_account_id = local.accounts.logs
-
-  # Do not allow objects in the Config S3 bucket to be forcefully removed during destroy operations.
-  config_force_destroy = false
 
   # This account sends logs to the Logs account.
   config_aggregate_config_data_in_external_account = true
