@@ -430,10 +430,9 @@ The command output should return an array that contains all of the SSL/TLS certi
 	"ServerCertificateMetadataList": [{
 		"ServerCertificateId": "EHDGFRW7EJFYTE88D",
 		"ServerCertificateName": "MyServerCertificate",
-		"Expiration": "2020-07-10T23:59:59Z",
+		"Expiration": "2021-07-05T23:59:59Z",
 		"Path": "/",
-		"Arn": "arn:aws:iam::012345678910:server-
-		certificate / MySSLCertificate ",
+		"Arn": "arn:aws:iam::012345678910:server-certificate/MySSLCertificate",
 		"UploadDate": "2018-06-10T11:56:08Z"
 	}]
 }
@@ -1652,9 +1651,9 @@ You should see JSON output indicating that you've successfully assumed an IAM ro
 [source,json]
 ----
 {
-  "UserId": "AIDAXXXXXXXXXXXX:1597932316055520000",
+  "UserId": "AIDAXXXXXXXXXXXX:1111111111111111111",
   "Account": "<LOGS_ACCOUNT_ID>",
-  "Arn": "arn:aws:sts::<LOGS_ACCOUNT_ID>:assumed-role/OrganizationAccountAccessRole/1597932316055520000"
+  "Arn": "arn:aws:sts::<LOGS_ACCOUNT_ID>:assumed-role/OrganizationAccountAccessRole/1111111111111111111"
 }
 ----
 
@@ -1732,7 +1731,7 @@ locals {
   cloudtrail_s3_bucket_name = "acme-cloudtrail-logs"
 
   # The Cloudtrail KMS Key is deployed at the logs account but it's value is an output from the root account.
-  cloudtrail_kms_key_arn = "arn:aws:kms:us-east-1:216044045972:alias/cloudtrail-acme"
+  cloudtrail_kms_key_arn = "arn:aws:kms:us-east-1:${local.accounts.logs}:alias/cloudtrail-acme"
 
   # A local for convenient access to the security account root ARN.
   security_account_root_arn = "arn:aws:iam::${local.accounts.security}:root"
@@ -1887,7 +1886,7 @@ Add a new `profile` entry in `~/.aws/config` for your security account that uses
 [source,text]
 ----
 [profile security-from-root]
-role_arn=arn:aws:iam::<SECURITY_ACCOUNT_ID>:role/OrganizationAccountAccessRole
+role_arn=arn:aws:iam::${local.accounts.security}:role/OrganizationAccountAccessRole
 source_profile=root-iam-user
 ----
 
@@ -1903,9 +1902,9 @@ You should see JSON output indicating that you've successfully assumed an IAM ro
 [source,json]
 ----
 {
-  "UserId": "AIDAXXXXXXXXXXXX:1597932316055520000",
-  "Account": "<SECURITY_ACCOUNT_ID>",
-  "Arn": "arn:aws:sts::<SECURITY_ACCOUNT_ID>:assumed-role/OrganizationAccountAccessRole/1597932316055520000"
+  "UserId": "AIDAXXXXXXXXXXXX:1111111111111111111",
+  "Account": "${local.accounts.security}",
+  "Arn": "arn:aws:sts::${local.accounts.security}:assumed-role/OrganizationAccountAccessRole/1111111111111111111"
 }
 ----
 
@@ -2001,7 +2000,7 @@ locals {
   cloudtrail_s3_bucket_name = "acme-cloudtrail-logs"
 
   # The Cloudtrail KMS Key is deployed at the logs account but it's value is an output from the root account.
-  cloudtrail_kms_key_arn = "arn:aws:kms:us-east-1:409800740445:alias/cloudtrail-acme"
+  cloudtrail_kms_key_arn = "arn:aws:kms:us-east-1:${local.accounts.logs}:alias/cloudtrail-acme"
 
   # A local for convenient access to the security account root ARN.
   security_account_root_arn = "arn:aws:iam::${local.accounts.security}:root"
@@ -2097,12 +2096,6 @@ inputs = {
     "iam:GetRolePolicy",
   ]
 
-  # Configures the auto deploy max session duration to be 4 hours.
-  max_session_duration_machine_users = 14400
-
-  # Configures the max session duration for roles that humans use to be 8 hours.
-  max_session_duration_human_users = 28800
-
   service_linked_roles = ["autoscaling.amazonaws.com"]
   ##################################
   # KMS grants
@@ -2174,7 +2167,7 @@ Add a new `profile` entry in `~/.aws/config` for your stage account that uses th
 [source,text]
 ----
 [profile stage-from-root]
-role_arn=arn:aws:iam::<STAGE_ACCOUNT_ID>:role/OrganizationAccountAccessRole
+role_arn=arn:aws:iam::${local.accounts.stage}:role/OrganizationAccountAccessRole
 source_profile=root-iam-user
 ----
 
@@ -2190,9 +2183,9 @@ You should see JSON output indicating that you've successfully assumed an IAM ro
 [source,json]
 ----
 {
-  "UserId": "AIDAXXXXXXXXXXXX:1597932316055520000",
-  "Account": "<STAGE_ACCOUNT_ID>",
-  "Arn": "arn:aws:sts::<STAGE_ACCOUNT_ID>:assumed-role/OrganizationAccountAccessRole/1597932316055520000"
+  "UserId": "AIDAXXXXXXXXXXXX:1111111111111111111",
+  "Account": "${local.accounts.stage}",
+  "Arn": "arn:aws:sts::${local.accounts.stage}:assumed-role/OrganizationAccountAccessRole/1111111111111111111"
 }
 ----
 
