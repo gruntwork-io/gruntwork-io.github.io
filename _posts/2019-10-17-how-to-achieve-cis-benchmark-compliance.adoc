@@ -588,8 +588,8 @@ Use the link:https://www.terraform.io/docs/providers/aws/r/cloudtrail.html[`aws_
 is_multi_region_trail         = true
 include_global_service_events = true
 enable_log_file_validation    = true
-s3_bucket_name                = <YOUR BUCKET NAME>
-cloud_watch_logs_group_arn    = <YOUR CLOUDWATCH LOGS GROUP ARN>
+s3_bucket_name                = local.
+cloud_watch_logs_group_arn    = local.
 
 event_selector {
   read_write_type           = "All"
@@ -597,7 +597,7 @@ event_selector {
 
   data_resource {
     type   = "AWS::S3::Object"
-    values = [<YOUR BUCKET ARN>]
+    values = [${local.}]
   }
 }
 ----
@@ -996,10 +996,10 @@ Set the variables for the `account-baseline-root` module in this environment in 
 [source,hcl]
 ----
 locals {
-  aws_region = "us-east-1"
+  aws_region = local.aws_region
 
   accounts = {
-    root = "216044045972"
+    root = local.accounts.root
   }
 
   # Both buckets will created in the logs account by account-baseline-root
@@ -1101,12 +1101,6 @@ inputs = {
     "iam:GetRole",
     "iam:GetRolePolicy",
   ]
-
-  # Configures the auto deploy max session duration to be 4 hours.
-  max_session_duration_machine_users = 14400
-
-  # Configures the max session duration for roles that humans use to be 8 hours.
-  max_session_duration_human_users = 28800
 }
 ----
 
@@ -1166,7 +1160,7 @@ Enter Secret Key: YYYYYYYYYYYY
 You should also enable MFA for the IAM user (https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_mfa_enable_virtual.html)[see the AWS docs on enabling a virtual MFA device]) and add the configuration to your profile as follows:
 [source,bash]
 ----
-mfa_serial=arn:aws:iam::<YOUR_ROOT_ACCOUNT_ID>:mfa/<YOUR_IAM_USER>
+mfa_serial=arn:aws:iam::${local.accounts.root}:mfa/<YOUR_IAM_USER>
 ----
 
 Next, https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html[install the AWS CLI], and check that
@@ -1183,8 +1177,8 @@ You should get JSON output with information about your IAM user:
 ----
 {
   "UserId": "AIDAXXXXXXXXXXXX",
-  "Account": "<ROOT_ACCOUNT_ID>",
-  "Arn": "arn:aws:iam::<ROOT_ACCOUNT_ID>:user/<YOUR_IAM_USER>"
+  "Account": "${local.accounts.logs}",
+  "Arn": "arn:aws:iam::${local.accounts.root}:user/<YOUR_IAM_USER>"
 }
 ----
 
@@ -1459,24 +1453,16 @@ Set the variables for the `account-baseline-app` module in this environment in t
 [source,hcl]
 ----
 locals {
-  aws_region = "us-east-1"
+  aws_region = local.aws_region
 
-  accounts = {
-    logs     = "409800740445"
-    security = "673123100581"
-    shared   = "384759303421"
-    dev      = "293847503945"
-    stage    = "384924092834"
-    prod     = "784260063686"
-    root     = "216044045972"
-  }
+  accounts = local.accounts
 
   # Both buckets are created in the logs account by account-baseline-root
   config_s3_bucket_name     = "acme-config-bucket-logs"
   cloudtrail_s3_bucket_name = "acme-cloudtrail-logs"
 
   # The Cloudtrail KMS Key is deployed at the logs account but it's value is an output from the root account.
-  cloudtrail_kms_key_arn = "arn:aws:kms:us-east-1:409800740445:alias/cloudtrail-acme"
+  cloudtrail_kms_key_arn = "arn:aws:kms:${local.aws_region}:${local.accounts.logs}:alias/cloudtrail-acme"
 
   # A local for convenient access to the security account root ARN.
   security_account_root_arn = "arn:aws:iam::${local.accounts.security}:root"
@@ -1635,7 +1621,7 @@ Add a new `profile` entry in `~/.aws/config` for your logs account that uses the
 [source,text]
 ----
 [profile logs-from-root]
-role_arn=arn:aws:iam::<LOGS_ACCOUNT_ID>:role/OrganizationAccountAccessRole
+role_arn=arn:aws:iam::${local.accounts.logs}:role/OrganizationAccountAccessRole
 source_profile=root-iam-user
 ----
 
@@ -1652,8 +1638,8 @@ You should see JSON output indicating that you've successfully assumed an IAM ro
 ----
 {
   "UserId": "AIDAXXXXXXXXXXXX:1111111111111111111",
-  "Account": "<LOGS_ACCOUNT_ID>",
-  "Arn": "arn:aws:sts::<LOGS_ACCOUNT_ID>:assumed-role/OrganizationAccountAccessRole/1111111111111111111"
+  "Account": "${local.accounts.logs}",
+  "Arn": "arn:aws:sts::${local.accounts.logs}:assumed-role/OrganizationAccountAccessRole/1111111111111111111"
 }
 ----
 
@@ -1714,24 +1700,16 @@ Set the variables for the `account-baseline-security` module in this environment
 [source,hcl]
 ----
 locals {
-  aws_region = "us-east-1"
+  aws_region = local.aws_region
 
-  accounts = {
-    logs     = "409800740445"
-    security = "673123100581"
-    shared   = "384759303421"
-    dev      = "293847503945"
-    stage    = "384924092834"
-    prod     = "784260063686"
-    root     = "216044045972"
-  }
+  accounts = local.accounts
 
   # Both buckets are created in the logs account by account-baseline-root
   config_s3_bucket_name     = "acme-config-bucket-logs"
   cloudtrail_s3_bucket_name = "acme-cloudtrail-logs"
 
   # The Cloudtrail KMS Key is deployed at the logs account but it's value is an output from the root account.
-  cloudtrail_kms_key_arn = "arn:aws:kms:us-east-1:${local.accounts.logs}:alias/cloudtrail-acme"
+  cloudtrail_kms_key_arn = "arn:aws:kms:${local.aws_region}:${local.accounts.logs}:alias/cloudtrail-acme"
 
   # A local for convenient access to the security account root ARN.
   security_account_root_arn = "arn:aws:iam::${local.accounts.security}:root"
@@ -1983,24 +1961,16 @@ Set the variables for the `account-baseline-app` module in this environment in t
 [source,hcl]
 ----
 locals {
-  aws_region = "us-east-1"
+  aws_region = local.aws_region
 
-  accounts = {
-    logs     = "409800740445"
-    security = "673123100581"
-    shared   = "384759303421"
-    dev      = "293847503945"
-    stage    = "384924092834"
-    prod     = "784260063686"
-    root     = "216044045972"
-  }
+  accounts = local.accounts
 
   # Both buckets are created in the logs account by account-baseline-root
   config_s3_bucket_name     = "acme-config-bucket-logs"
   cloudtrail_s3_bucket_name = "acme-cloudtrail-logs"
 
   # The Cloudtrail KMS Key is deployed at the logs account but it's value is an output from the root account.
-  cloudtrail_kms_key_arn = "arn:aws:kms:us-east-1:${local.accounts.logs}:alias/cloudtrail-acme"
+  cloudtrail_kms_key_arn = "arn:aws:kms:${local.aws_region}:${local.accounts.logs}:alias/cloudtrail-acme"
 
   # A local for convenient access to the security account root ARN.
   security_account_root_arn = "arn:aws:iam::${local.accounts.security}:root"
@@ -2108,7 +2078,7 @@ inputs = {
   }
   kms_grants = {
     ami_encryption_key = {
-      kms_cmk_arn       = "arn:aws:kms:us-east-1:${local.accounts.shared}:alias/ami-encryption"
+      kms_cmk_arn       = "arn:aws:kms:${local.aws_region}:${local.accounts.shared}:alias/ami-encryption"
       grantee_principal = "arn:aws:iam::${local.accounts[local.account_name]}:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling"
       granted_operations = [
         "Encrypt",
