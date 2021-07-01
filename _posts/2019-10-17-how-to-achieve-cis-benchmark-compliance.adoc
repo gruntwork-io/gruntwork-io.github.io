@@ -953,9 +953,11 @@ The Landing Zone will be deployed in three steps - the `account-baseline-root` t
 The standalone modules will follow the pattern of referencing the module and providing the necessary input variables for it, then applying with `terragrunt`.
 
 [[deploy_landingzone]]
-=== Deploy Landing Zone solution
+== Deploy Landing Zone solution
 
-==== 1. Configure the "account-baseline-root" baseline for the root account
+=== Deploy the `account-baseline-root` to the root account
+
+==== 1. Configure the `account-baseline-root` for the root account
 
 [.exceptional]
 IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork subscriber# to access https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/[`terraform-aws-cis-service-catalog`].
@@ -1369,7 +1371,7 @@ rm -rf .terragrunt-cache
 ----
 
 [[apply_account_baseline_root]]
-==== 3. Apply the security baseline to the root account
+==== 3. Apply the `account-baseline-root` baseline to the root account
 
 You're now ready to apply the security baseline to the root account. You should be authenticated as the same IAM user
 in the root account as in the previous two sections. To apply the security baseline, you run `terragrunt apply`:
@@ -1446,7 +1448,7 @@ Each user can then decrypt the password on their own computer (which should have
 echo "<PASSWORD>" | base64 --decode | keybase pgp decrypt
 ----
 
-===== Reset the root user password in each child account
+==== 4. Reset the root user password in each child account
 
 When creating the child accounts, you may have noticed that you provided an email address for each root user, but
 confusingly, not a password. So how do you login as the root user then? It's not obvious, but the answer is that you
@@ -1455,14 +1457,14 @@ using the "Forgot your password?" prompt on the https://console.aws.amazon.com/[
 you a reset link, which you can click to go to a page that will allow you to configure a password for the root user.
 Use this process to reset the password for the root user of each child account you created.
 
-===== Lock down the root user in the child accounts
+==== 5. Lock down the root user in the child accounts
 
 Once you're able to access the root user of each child account, you should follow the steps in <<lock_down_root_user>>
 for each of those child accounts—including enabling MFA and deleting the root user's access keys—and (almost) never use
 those root users again.
 
 [[apply_account_baseline_logs]]
-==== 4. Apply the `account-baseline-app` baseline to the logs account
+=== Apply the `account-baseline-app` baseline to the logs account
 
 The next step is to configure the **logs** account, which is used to aggregate AWS Config and CloudTrail data from all the
 other accountss.
@@ -1667,7 +1669,7 @@ aws-vault exec logs-from-root -- terragrunt apply
 IMPORTANT: On some operating systems, such as MacOS, you may also need to increase your open files limit to avoid "pipe: too many open files" errors by running: `ulimit -n 1024`.
 
 [[apply_account_baseline_security]]
-==== 5. Apply the `account-baseline-security` to the security account
+=== Apply the `account-baseline-security` to the security account
 
 Now that your logs accounts is fully configured, you need to apply the security baseline to the security account, which
 is where all your IAM users and groups will be defined and managed.
@@ -1893,7 +1895,6 @@ decrypt the password on their own computer (which should have their PGP key) as 
 ----
 echo "<PASSWORD>" | base64 --decode | keybase pgp decrypt
 ----
-
 
 === Apply the `account-baseline-app` to the other child accounts
 
@@ -2297,7 +2298,7 @@ link:https://github.com/gruntwork-io/cloud-nuke[`cloud-nuke defaults-aws`] comma
 all regions in an account, saving you the hassle of creating flow logs in each default VPC.
 
 [[maintain_compliance_monitoring]]
-=== Maintaining compliance by following Monitoring best practices
+==== 1. Maintaining compliance by following Monitoring best practices
 The Monitoring section of the Benchmark centers on a collection of
 link:https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/MonitoringLogData.html[CloudWatch Logs Metric
 Filters]. Gruntwork has simplified this section to a single module: the
@@ -2311,7 +2312,7 @@ Note that you must have a subscriber on the SNS topic to be compliant. Refer to 
 setup a subscriber to the SNS topics that are created.
 
 [[maintain_compliance_networking]]
-=== Maintaining compliance by following Networking best practices
+==== 2. Maintaining compliance by following Networking best practices
 
 To ensure all the networking recommendations are satisfied, use the
 link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/modules/networking/vpc[`vpc`] (and/or
@@ -2342,6 +2343,7 @@ terraform { # We're using a local file path here just so our automated tests run
   # source = "git::git@github.com:gruntwork-io/terraform-aws-cis-service-catalog.git//modules/networking/vpc-mgmt?ref=v0.20.0"
   source = "${get_parent_terragrunt_dir()}/../../..//modules/networking/vpc-mgmt"
 ----
+
 [source, hcl]
 ----
 inputs = {
