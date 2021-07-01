@@ -774,17 +774,11 @@ automatically.
 
 [[gruntwork_solution]]
 === The Gruntwork solution
-Gruntwork offers battle-tested infrastructure as code modules to help you create production grade infrastructure in a
-fraction of the time it would take you to develop from scratch. Each of the core modules are "compliance-ready"; they are
-mostly unopinionated by default, but they can be configured for compliance with the right settings.
+Gruntwork offers infrastructure-as-code battle-tested modules that will help you create _production-grade_ infrastructure faster and much more efficiently than if you develop your modules from scratch. In the CIS compliance library, there are many core modules, and each one of them is "compliance-ready". They are configured in a way to help you achieve CIS compliance up to the latest supported benchmark, but still allow some flexibility in the setup.
 
-To further simplify and expedite compliance, the Gruntwork CIS Service Catalog uses both standalone compliance
-modules as well as "wrappers" around the core, unopinionated modules in the Infrastructure as Code Library. The
-standalone compliance modules are designed with the compliance requirements built-in, whereas the wrappers
-call the core modules with configuration values that are compliant with the AWS Foundations Benchmark. You can use both
-types of modules by creating a module of your own (in the case of the wrapper modules, this can be considered a second
-wrapper) and using the compliance module as the `source`. Optionally, you can also use `terragrunt` to call your module,
-thus creating a chain of IaC modules.
+The compliance library is known as "Gruntwork CIS Service Catalog" and it has its own standalone modules, or could be building on top of the existing standard & non-compliant core modules from the "Standard Service Catalog" or "Infrastructure as Code Library". Each of these modules can be used on their own, or within "wrappers" (explained later) by passing in the required inputs and using `terraform` or `terragrunt`.
+
+The image below shows the hierarchy between the different levels of modules from the different code libraries Gruntwork offers.
  +
  +
 
