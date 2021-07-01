@@ -588,8 +588,8 @@ Use the link:https://www.terraform.io/docs/providers/aws/r/cloudtrail.html[`aws_
 is_multi_region_trail         = true
 include_global_service_events = true
 enable_log_file_validation    = true
-s3_bucket_name                = local.
-cloud_watch_logs_group_arn    = local.
+s3_bucket_name                = local.cloudtrail_s3_bucket_name
+cloud_watch_logs_group_arn    = local.cloudtrail_s3_bucket_arn
 
 event_selector {
   read_write_type           = "All"
@@ -597,7 +597,7 @@ event_selector {
 
   data_resource {
     type   = "AWS::S3::Object"
-    values = [${local.}]
+    values = ["${local.cloudtrail_s3_bucket_name}"]
   }
 }
 ----
@@ -1177,7 +1177,7 @@ You should get JSON output with information about your IAM user:
 ----
 {
   "UserId": "AIDAXXXXXXXXXXXX",
-  "Account": "${local.accounts.logs}",
+  "Account": "${local.accounts.root}",
   "Arn": "arn:aws:iam::${local.accounts.root}:user/<YOUR_IAM_USER>"
 }
 ----
