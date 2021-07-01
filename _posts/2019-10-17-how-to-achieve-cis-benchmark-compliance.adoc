@@ -944,12 +944,53 @@ https://www.theverge.com/2017/9/18/16328172/sms-two-factor-authentication-hack-p
 so using a virtual or hardware MFA device is preferable; that said, MFA with SMS is still better than no MFA at all.
 
 
-=== Configure the security baseline for the root account
+=== Configure the "account-baseline-root" baseline for the root account
 
 [.exceptional]
-IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork subscriber# to access `terraform-aws-cis-service-catalog`.
+IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork subscriber# to access https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/[`terraform-aws-cis-service-catalog`].
 
-Next, we'll configure a security baseline for the root account that is responsible for creating all the child accounts.
+Before we dive into the code and deployment for each of the resources, let's take a step back and understand how the code is structured. Most of the features explained in the "Production-grade design" section will be deployed by using the Landing Zone solution, and some more standalone modules. The Landing Zone will be deployed in three steps - the `account-baseline-root` to set up your organisation-wide configurations, and create the necessary child AWS accounts. Then the `account-baseline-security` will be applied, and that's responsible to set up your IAM roles, groups that would allow you to access the rest of the accounts within your organization. And finally, the `account-baseline-app` will be applied to an AWS account with the purpose of hosting an application.
+
+First, let's set consider the repository structure that is recommended by this guide. It is available for your reference in the "/examples/for-production" section in the https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/examples/for-production[`terraform-aws-cis-service-catalog` repository]. It looks like this:
+
+[source]
+----
+Consider the following directory structure for your `infrastructure-live` repository. It showcases the configuration files foryour local variables.
+.
+├── prod
+│ ├── _global
+│    └── region.hcl
+│ ├── account.hcl
+│ └── us-east-1
+│    └── region.hcl
+└── common.hcl
+----
+
+Each of the `region.hcl`, `account.hcl` and `common.hcl` should contain the relevant information, so in your modules you're able to reference the values like this:
+
+[source, hcl]
+----
+locals {
+  # Automatically load common variables shared across all accounts
+  common_vars = read_terragrunt_config(find_in_parent_folders("common.hcl"))
+
+  # Automatically load account-level variables
+  account_vars = read_terragrunt_config(find_in_parent_folders("account.hcl"))
+
+  # Extract the account_name for easy access
+  account_name = local.account_vars.locals.account_name
+
+  # Automatically load region-level variables
+  region_vars = read_terragrunt_config(find_in_parent_folders("region.hcl"))
+
+  # Extract the region for easy access
+  aws_region = local.region_vars.locals.aws_region
+}
+----
+
+You'll need to create these files in order to be able to follow the code examples following. For examples on what to put in each of these files, refer to the https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/examples/for-production[`terraform-aws-cis-service-catalog` repository]. The `locals` configuration above can be used in each of the `terragrunt.hcl` files to help you avoid repetition. Note that the examples below won't show this in the interest of clarity.
+
+Next, we'll configure the `account-baseline-root` baseline for the root account that is responsible for creating all the child accounts.
 It will also configure AWS Organizations, IAM Roles, IAM Users, IAM Groups, IAM Password Policies, Amazon GuardDuty, AWS CloudTrail, AWS Config and Security Hub.
 
 We'll be using the `landingzone/account-baseline-root` module from https://github.com/gruntwork-io/terraform-aws-cis-service-catalog[terraform-aws-cis-service-catalog].
@@ -963,19 +1004,20 @@ Next, create a `terragrunt.hcl` file in `infrastructure-live`. It should go unde
 
 ----
 infrastructure-live
-  └ root
+  └ prod
     └ _global
+      └ region.hcl
       └ account-baseline
         └ terragrunt.hcl
 ----
 Point the `source` URL in your `terragrunt.hcl` file to the `account-baseline-root` module in the https://github.com/gruntwork-io/terraform-aws-cis-service-catalog[terraform-aws-cis-service-catalog]
 repo, setting the `ref` param to the version you require:
 
-.infrastructure-live/root/_global/account-baseline/terragrunt.hcl
+.infrastructure-live/prod/_global/account-baseline/terragrunt.hcl
 [source,hcl]
 ----
 terraform {
-  source = "git::git@github.com/gruntwork-io/terraform-aws-cis-service-catalog//modules/landingzone/account-baseline-app?ref=v0.22.0"
+  source = "git::git@github.com/gruntwork-io/terraform-aws-cis-service-catalog//modules/landingzone/account-baseline-root?ref=v0.22.0"
 
   # This module deploys some resources (e.g., AWS Config) across all AWS regions, each of which needs its own provider,
   # which in Terraform means a separate process. To avoid all these processes thrashing the CPU, which leads to network
@@ -992,7 +1034,7 @@ IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low valu
 
 Set the variables for the `account-baseline-root` module in this environment in the `inputs = { ... }` block of `terragrunt.hcl`:
 
-.infrastructure-live/root/_global/account-baseline/terragrunt.hcl
+.infrastructure-live/prod/_global/account-baseline/terragrunt.hcl
 [source,hcl]
 ----
 locals {
@@ -1121,7 +1163,7 @@ address, `root-accounts@acme.com`.
 . **Mark one of the child accounts as a logs account**. We set `is_logs_account = true` on one of the child accounts
 to indicate it is the logs account where we will aggregate AWS Config, CloudTrail, IAM Access Analyzer and Security Hub data from all the other accounts.
 The `account-baseline-root` module will automatically create an S3 bucket for AWS Config and an S3 bucket and KMS CMK
-for CloudTrail in this account and configure the root account to send all the AWS Config and CloudTrail data to these
+= for CloudTrail in this account and configure the root account to send all the AWS Config and CloudTrail data to these
 S3 buckets. Later on, you'll configure all the other accounts to send their data to these S3 buckets too.
 
 . **Create IAM groups**. By default, `account-baseline-root` will **not** create a `full-access` IAM group as CIS requirement 1.16 guides. It will create a `support` and a `billing` IAM group (for the support and finance teams).
@@ -1210,7 +1252,7 @@ An easy way to get it is to run `plan`:
 
 [source,bash]
 ----
-cd infrastructure-live/root/_global/account-baseline
+cd infrastructure-live/prod/_global/account-baseline
 aws-vault exec root-iam-user -- terragrunt plan
 ----
 
@@ -1323,7 +1365,7 @@ in the root account as in the previous two sections. To apply the security basel
 
 [source,bash]
 ----
-cd infrastructure-live/root/_global/account-baseline
+cd infrastructure-live/prod/_global/account-baseline
 aws-vault exec root-iam-user -- terragrunt apply
 ----
 
@@ -1373,7 +1415,7 @@ cloudtrail_s3_bucket_name = "<CLOUDTRAIL_BUCKET_NAME>"
 config_s3_bucket_name     = "<CONFIG_BUCKET_NAME>"
 ----
 
-Take note of all of this data, as you'll need it again shortly!
+Take note of all of this data, as you'll need it again shortly! This is exactly the place where your `common.hcl` comes in handy - add all of these values in there as locals.
 
 One other useful output will be the encrypted passwords for any IAM users you created:
 
@@ -1409,16 +1451,16 @@ for each of those child accounts—including enabling MFA and deleting the root 
 those root users again.
 
 [[apply_account_baseline_logs]]
-=== Apply the security baseline to the logs account
+=== Apply the `account-baseline-app` baseline to the logs account
 
-The next step is to configure the logs account, which is used to aggregate AWS Config and CloudTrail data from all the
+The next step is to configure the **logs** account, which is used to aggregate AWS Config and CloudTrail data from all the
 other accountss.
 
 Create a `terragrunt.hcl` file in `infrastructure-live` under the file path `logs/_global/account-baseline`:
 
 ----
 infrastructure-live
-  └ root
+  └ prod
   └ logs
     └ _global
       └ account-baseline
@@ -1458,8 +1500,8 @@ locals {
   accounts = local.accounts
 
   # Both buckets are created in the logs account by account-baseline-root
-  config_s3_bucket_name     = "acme-config-bucket-logs"
-  cloudtrail_s3_bucket_name = "acme-cloudtrail-logs"
+  config_s3_bucket_name     = local.config_s3_bucket_name
+  cloudtrail_s3_bucket_name = local.cloudtrail_s3_bucket_name
 
   # The Cloudtrail KMS Key is deployed at the logs account but it's value is an output from the root account.
   cloudtrail_kms_key_arn = "arn:aws:kms:${local.aws_region}:${local.accounts.logs}:alias/cloudtrail-acme"
@@ -1555,27 +1597,6 @@ inputs = {
 
   # A role that allows access to support only.
   allow_support_access_from_other_account_arns = [local.security_account_root_arn]
-
-  # A list of account root ARNs that should be able to assume the auto deploy role.
-  allow_auto_deploy_from_other_account_arns = [
-    # External CI/CD systems may use an IAM user in the security account to perform deployments.
-    local.security_account_root_arn,
-
-    # The shared account contains automation and infrastructure tools, such as CI/CD systems.
-    "arn:aws:iam::${local.accounts.shared}:root",
-  ]
-
-  # Assuming the auto-deploy role will grant access to these services.
-  auto_deploy_permissions = [
-    "iam:GetRole",
-    "iam:GetRolePolicy",
-  ]
-
-  service_linked_roles = ["autoscaling.amazonaws.com"]
-
-  ##################################
-  # CIS compliance settings
-  ##################################
 
   security_hub_associate_to_master_account_id = local.accounts.root
 }
@@ -1912,10 +1933,6 @@ echo "<PASSWORD>" | base64 --decode | keybase pgp decrypt
 Now that your security account is fully configured, you need to apply the security baseline to the remaining child
 accounts (e.g., dev, stage, prod, shared-services). Feel free to adjust this as necessary based on the accounts your
 company needs.
-
-You can re-use the `account-baseline-app` module you created earlier in your `infrastructure-modules` repo for all of
-these child accounts; this module can be used interchangeably between app accounts and log accounts as they deploy most
-of the same resources.
 
 Create `terragrunt.hcl` files in `infrastructure-live` under the file paths `<ACCOUNT>/_global/account-baseline`,
 where `<ACCOUNT>` is one of these other child accounts, such as dev, stage, prod, and shared-services. In the rest of
@@ -2289,6 +2306,31 @@ module "vpc" {
   cidr_block                                              = var.cidr_block
   num_nat_gateways                                        = var.num_nat_gateways
   allow_administrative_remote_access_cidrs_public_subnets = var.allow_administrative_remote_access_cidrs_public_subnets
+  kms_key_user_iam_arns = [
+    "arn:aws:iam::${local.common_vars.locals.accounts[local.account_name]}:root",
+  ]
+}
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# MODULE PARAMETERS
+# These are the variables we have to pass in to use the module specified in the terragrunt configuration above
+# ---------------------------------------------------------------------------------------------------------------------
+inputs = {
+  vpc_name         = "mgmt"
+  num_nat_gateways = 1
+  cidr_block       = local.cidr_block
+  kms_key_user_iam_arns = [
+    "arn:aws:iam::${local.common_vars.locals.accounts[local.account_name]}:root",
+  ]
+
+  allow_administrative_remote_access_cidrs_public_subnets = merge(
+    {
+      for cidr in local.common_vars.locals.ip_allow_list
+      : index(local.common_vars.locals.ip_allow_list, cidr) => cidr
+    },
+    { length(local.common_vars.locals.ip_allow_list) = local.cidr_block }
+  )
 }
 ----
 
@@ -2377,20 +2419,33 @@ infrastructure-modules
 .infrastructure-modules/networking/vpc/myvpc/main.tf
 [source,hcl]
 ----
-module "vpc" {
-  # Replace <VERSION> with the most recent release from the https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/releases:
-  source = "git::git@github.com:gruntwork-io/terraform-aws-cis-service-catalog.git//modules/networking/vpc?ref=<VERSION>"
-
-  # Set the basic required variables first
-  vpc_name         = var.vpc_name
-  aws_region       = var.aws_region
-  cidr_block       = var.cidr_block
-  num_nat_gateways = var.num_nat_gateways
+terraform { # We're using a local file path here just so our automated tests run against the absolute latest code. However, when
+  # using these modules in your code, you should use a Git URL with a ref attribute that pins you to a specific version:
+  # source = "git::git@github.com:gruntwork-io/terraform-aws-cis-service-catalog.git//modules/networking/vpc-mgmt?ref=v0.20.0"
+  source = "${get_parent_terragrunt_dir()}/../../..//modules/networking/vpc-mgmt"
+----
+[source, hcl]
+----
+inputs = {
+  vpc_name         = "mgmt"
+  num_nat_gateways = 1
+  cidr_block       = local.cidr_block
+  kms_key_user_iam_arns = [
+    "arn:aws:iam::${local.common_vars.locals.accounts[local.account_name]}:root",
+  ]
 
   # Next, pass values for the allow_administrative_remote_access_* variables, thus creating the NACL rules under the hood
-  allow_administrative_remote_access_cidrs_public_subnets              = var.allow_administrative_remote_access_cidrs
   allow_administrative_remote_access_cidrs_private_app_subnets         = { all_app_vpc_cidrs  = module.vpc.vpc_cidr_block }
   allow_administrative_remote_access_cidrs_private_persistence_subnets = { all_app_vpc_cidrs  = module.vpc.vpc_cidr_block }
+
+  allow_administrative_remote_access_cidrs_public_subnets = merge(
+    {
+      for cidr in local.common_vars.locals.ip_allow_list
+      : index(local.common_vars.locals.ip_allow_list, cidr) => cidr
+    },
+    { length(local.common_vars.locals.ip_allow_list) = local.cidr_block }
+  )
+}
 ----
 
 Refer to the https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/examples/for-learning-and-testing/networking/vpc/terraform[terraform-aws-cis-service-catalog]
