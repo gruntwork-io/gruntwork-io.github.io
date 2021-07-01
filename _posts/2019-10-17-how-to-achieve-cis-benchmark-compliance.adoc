@@ -944,7 +944,7 @@ https://www.theverge.com/2017/9/18/16328172/sms-two-factor-authentication-hack-p
 so using a virtual or hardware MFA device is preferable; that said, MFA with SMS is still better than no MFA at all.
 
 [[deployment_approach]]
-== Deployment approach
+=== Deployment approach
 Before we dive into the code and deployment for each of the resources, let's take a step back and understand how the code is structured.
 Most of the features explained in the "Production-grade design" section will be deployed by using the Landing Zone solution, and some more standalone modules like the VPC module.
 
@@ -953,9 +953,9 @@ The Landing Zone will be deployed in three steps - the `account-baseline-root` t
 The standalone modules will follow the pattern of referencing the module and providing the necessary input variables for it, then applying with `terragrunt`.
 
 [[deploy_landingzone]]
-== Deploy Landing Zone solution
+=== Deploy Landing Zone solution
 
-=== Configure the "account-baseline-root" baseline for the root account
+==== 1. Configure the "account-baseline-root" baseline for the root account
 
 [.exceptional]
 IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork subscriber# to access https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/[`terraform-aws-cis-service-catalog`].
@@ -1238,7 +1238,7 @@ You should get JSON output with information about your IAM user:
 You're now almost ready to deploy the `account-baseline` module in the root account. But first, you may need to import
 some existing resources.
 
-=== Import existing resources from the root account
+==== 2. Import existing resources from the root account
 
 Before applying the security baseline to the root account, we need to import any existing resources—including the IAM
 user you created manually earlier—into Terraform state, so that Terraform manages those existing resources instead of
@@ -1369,7 +1369,7 @@ rm -rf .terragrunt-cache
 ----
 
 [[apply_account_baseline_root]]
-=== Apply the security baseline to the root account
+==== 3. Apply the security baseline to the root account
 
 You're now ready to apply the security baseline to the root account. You should be authenticated as the same IAM user
 in the root account as in the previous two sections. To apply the security baseline, you run `terragrunt apply`:
@@ -1446,7 +1446,7 @@ Each user can then decrypt the password on their own computer (which should have
 echo "<PASSWORD>" | base64 --decode | keybase pgp decrypt
 ----
 
-=== Reset the root user password in each child account
+===== Reset the root user password in each child account
 
 When creating the child accounts, you may have noticed that you provided an email address for each root user, but
 confusingly, not a password. So how do you login as the root user then? It's not obvious, but the answer is that you
@@ -1455,14 +1455,14 @@ using the "Forgot your password?" prompt on the https://console.aws.amazon.com/[
 you a reset link, which you can click to go to a page that will allow you to configure a password for the root user.
 Use this process to reset the password for the root user of each child account you created.
 
-=== Lock down the root user in the child accounts
+===== Lock down the root user in the child accounts
 
 Once you're able to access the root user of each child account, you should follow the steps in <<lock_down_root_user>>
 for each of those child accounts—including enabling MFA and deleting the root user's access keys—and (almost) never use
 those root users again.
 
 [[apply_account_baseline_logs]]
-=== Apply the `account-baseline-app` baseline to the logs account
+==== 4. Apply the `account-baseline-app` baseline to the logs account
 
 The next step is to configure the **logs** account, which is used to aggregate AWS Config and CloudTrail data from all the
 other accountss.
@@ -1667,7 +1667,7 @@ aws-vault exec logs-from-root -- terragrunt apply
 IMPORTANT: On some operating systems, such as MacOS, you may also need to increase your open files limit to avoid "pipe: too many open files" errors by running: `ulimit -n 1024`.
 
 [[apply_account_baseline_security]]
-=== Apply the `account-baseline-security` to the security account
+==== 5. Apply the `account-baseline-security` to the security account
 
 Now that your logs accounts is fully configured, you need to apply the security baseline to the security account, which
 is where all your IAM users and groups will be defined and managed.
@@ -2115,12 +2115,9 @@ aws-vault exec stage-from-root -- terragrunt apply
 [.exceptional]
 IMPORTANT: On some operating systems, such as MacOS, you may also need to increase your open files limit to avoid "pipe: too many open files" errors by running: `ulimit -n 1024`.
 
-Remember to repeat this process in the other child accounts too (i.e., dev, prod, shared-services, etc)!
+.Remember to repeat this process in the other child accounts too (i.e., dev, prod, shared-services, etc)!
 
-=== Try authenticating as an IAM user to the child accounts
-
-Now that you have IAM users in the security account and IAM roles in the other accounts, it's time to practice
-authenticating:
+**Next, try authenticating as an IAM user to the child accounts:**
 
 . Use your IAM user's user name and password (decrypted using keybase) to log into the web console of the security
   account (remember to use the IAM user sign-in URL for the security account).
@@ -2139,7 +2136,7 @@ authenticating:
   and log you into the logs account using the `OrganizationAccountAccessRole` IAM Role.
 
 [[configure_security_hub]]
-=== Configure AWS Security Hub in the root account
+**Configure AWS Security Hub in the root account**
 
 Next, we'll configure link:https://aws.amazon.com/security-hub/[AWS Security Hub] in the root account. AWS Security Hub
 is deployed by the account baselines in every enabled region of an AWS account to check your account link:https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-standards.html[for compliance]
@@ -2155,7 +2152,7 @@ compliance; it is a failure of the AWS audit tool. Note also that the accounts a
 the benchmark, v1.3.0; the AWS Security Hub does not support this version at the current time.
 
 [[iam_roles_for_instances]]
-=== Use IAM roles for EC2 instances
+**Use IAM roles for EC2 instances**
 All Gruntwork modules that require AWS API access use roles rather than an IAM user with static API credentials for
 authentication. For example:
 
@@ -2174,7 +2171,7 @@ Use these modules whenever possible. You should always use IAM roles in your own
 access to the AWS API. Using static API credentials should be avoided whenever possible.
 
 [[maintain_compliance_iam]]
-=== Maintaining compliance by following IAM best practices
+**Maintaining compliance by following IAM best practices**
 We conclude the IAM section with a few parting words of wisdom for maintaining compliance over time:
 
 . Do not attach any policies without requiring MFA.
@@ -2189,10 +2186,10 @@ the use of root].  Fortunately, most of these activities are rare, so usage of t
 a minimum.
 
 [[maintain_compliance_storage]]
-=== Maintaining compliance by following Storage best practices
+**Maintaining compliance by following Storage best practices**
 
 [[s3_buckets_deployment]]
-==== S3 Buckets
+**S3 Buckets**
 To make sure your S3 buckets are compliant with the benchmark, use the
 link:https://github.com/gruntwork-io/terraform-aws-security/tree/master/modules/private-s3-bucket[`private-s3-bucket` module]
 to create and manage all of your S3 buckets. This module blocks public access and enforces encryption by default. Note
@@ -2202,19 +2199,20 @@ You can either use the `private-s3-bucket` module in your own modules, or, if yo
 from the Gruntwork Service Catalog.
 
 [[maintain_compliance_logging]]
-=== Maintaining compliance by following Logging best practices
+**Maintaining compliance by following Logging best practices**
 
 The logging section of the Benchmark includes configurations for CloudTrail, AWS Config, KMS keys, and VPC
 flow logs.
 
 [[kms]]
-==== Enable key rotation for KMS keys
+**Enable key rotation for KMS keys**
 To make sure your KMS keys are compliant with the benchmark, use the
 link:https://github.com/gruntwork-io/terraform-aws-security/blob/master/modules/kms-master-key/README.md[`kms-master-key` module]
 to create KMS keys with key rotation enabled by default.
 
 [[vpc_flow_logs]]
-== Create VPC flow logs
+=== Create VPC flow logs
+
 The Benchmark recommends enabling link:https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html[VPC Flow Logs]
 for all VPCs in all regions. You can use the
 link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/blob/master/modules/networking/vpc[`vpc` service]
