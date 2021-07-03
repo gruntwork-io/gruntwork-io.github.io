@@ -939,9 +939,9 @@ so using a virtual or hardware MFA device is preferable; that said, MFA with SMS
 [[deployment_approach]]
 === Deployment approach
 Before we dive into the code and deployment for each of the resources, let's take a step back and understand how the code is structured.
-Most of the features explained in the "Production-grade design" section will be deployed by using the Landing Zone solution, and some more standalone modules like the VPC module.
+Most of the features explained in the <<production_grade_design>> section will be deployed by using the Landing Zone solution, and some more standalone modules like the VPC module.
 
-The Landing Zone will be deployed in three steps - the `account-baseline-root` to set up your organisation-wide configurations, and create the necessary child AWS accounts. Next, we'll need to apply the `account-baseline-app` baseline against the created logs account, which would in its turn set up the CloudTrail, AWS Config buckets and a few more settings that will be used for aggregation of logs and metrics from the whole organization. Then the `account-baseline-security` will be applied, and that's responsible to set up your IAM roles, groups that would allow you to access the rest of the accounts within your organization. And finally, the `account-baseline-app` will be applied to an AWS account with the purpose of hosting an application.
+The Landing Zone will be deployed in three steps - the `account-baseline-root` to set up your organisation-wide configurations, create the necessary child AWS accounts, set up the CloudTrail and AWS Config buckets. Next, we'll need to apply the `account-baseline-app` against the created logs account, adding more settings that will be used for aggregation of logs and metrics from the whole organization. Then the `account-baseline-security` will be applied, and that's responsible to set up your IAM roles, groups that would allow you to access the rest of the accounts within your organization. And finally, the `account-baseline-app` will be applied to an AWS account with the purpose of hosting an application.
 
 The standalone modules will follow the pattern of referencing the module and providing the necessary input variables for it, then applying with `terragrunt`.
 
@@ -953,13 +953,12 @@ The standalone modules will follow the pattern of referencing the module and pro
 ===== Configure the `account-baseline-root` for the root account
 
 [.exceptional]
-IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork subscriber# to access https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/[`terraform-aws-cis-service-catalog`].
+IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork Compliance subscriber# to access the Gruntwork Infrastructure as Code Library and the https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/[CIS AWS Foundations Benchmark modules].
 
-First, let's set consider the repository structure that is recommended by this guide. It is available for your reference in the "/examples/for-production" section in the https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/examples/for-production[`terraform-aws-cis-service-catalog` repository]. It looks like this:
+First, let's set consider the repository structure that is recommended by this guide. It is available for your reference in the "/examples/for-production" section in the https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/examples/for-production[`terraform-aws-cis-service-catalog` repository]. Consider the following directory structure for your `infrastructure-live` repository. It showcases the configuration files foryour local variables.
 
 [source]
 ----
-Consider the following directory structure for your `infrastructure-live` repository. It showcases the configuration files foryour local variables.
 .
 └ infrastructure-live
     └ prod
@@ -1047,7 +1046,7 @@ locals {
   aws_region = local.aws_region
 
   accounts = {
-    root = local.accounts.root
+    root = "<ROOT_ACCOUNT_ID>"
   }
 
   # Both buckets will created in the logs account by account-baseline-root
@@ -2198,7 +2197,7 @@ from the Gruntwork Service Catalog.
 The logging section of the Benchmark includes configurations for CloudTrail, AWS Config, KMS keys, and VPC
 flow logs.
 
-[[kms]]
+[[enable_key_rotation_for_kms]]
 **Enable key rotation for KMS keys**
 To make sure your KMS keys are compliant with the benchmark, use the
 link:https://github.com/gruntwork-io/terraform-aws-security/blob/master/modules/kms-master-key/README.md[`kms-master-key` module]
@@ -2411,7 +2410,7 @@ sections above.
 3.5;<<apply_account_baseline_security>>;Use the `account-baseline-security` module to ensure AWS Config is enabled in all regions
 3.6;<<apply_account_baseline_logs>>;Use the `account-baseline-*` modules to ensure Cloudtrail S3 bucket has access logging enabled
 3.7;<<apply_account_baseline_logs>>;Use the `account-baseline-*` modules to ensure Cloudtrail logs are encrypted at rest using KMS CMKs
-3.8;<<kms>>;Use the KMS module
+3.8;<<enable_key_rotation_for_kms>>;Use the KMS module
 3.9;<<vpc_flow_logs>>;Use the Gruntwork CIS-compliant `vpc` service to provision VPCs with flow logs enabled
 3.10-3.11;<<apply_account_baseline_logs>>;Use the `account-baseline-*` modules to ensure Object-level logging is enabled for S3 buckets for read and write events
 4.1-4.15;<<maintain_compliance_monitoring>>;The CloudWatch Logs metrics filters wrapper module will satisfy each recommendation
