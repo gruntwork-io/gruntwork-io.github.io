@@ -25,23 +25,22 @@ endif::[]
 
 == Intro
 
-This guide will walk you through the process of configuring a production-grade bastion host on AWS.
-
 If you were following the https://gruntwork.io/guides/networking/how-to-deploy-production-grade-vpc-aws[Gruntwork guide on how to deploy a production grade VPC on AWS], then you probably came across https://gruntwork.io/guides/networking/how-to-deploy-production-grade-vpc-aws/#bastion_host[the section talking about bastion hosts].
 
-When deploying your infrastructure in AWS or any of the other main cloud providers, it is considered secure to keep your data stores and application servers in a private network. While this might depend on your system architecture, most likely, you would want to keep them secure and only allow access from trusted sources. This means you will need some way of determining if the access and traffic to your private network is to be trusted or not. There's many ways to achieve that, and one of them is to simply restrict access to only come from the so-called bastion server.
+This guide will walk you through the process of configuring a production-grade bastion host on AWS.
 
-Typically, as a network administrator, or as a developer with the privileges to set up such servers and configure them, you would want to set up a bastion host yourself. This would allow you to examine the system logs and configure what parts of the network that server can reach, where it lives in your system, when it's online and offline, and of course who can access it.
+When deploying your infrastructure in AWS or any of the other main cloud providers, we recommend keeping your data stores and application servers in a private network (see the https://gruntwork.io/guides/networking/how-to-deploy-production-grade-vpc-aws/#multiple_subnets[production-grade VPC guide]). While this might depend on your system architecture, most likely, you would want to keep them secure and only allow access from trusted sources. This means you will need some way of determining if the access and traffic to your private network is to be trusted or not. There's many ways to achieve that, and one of them is to simply restrict access to your private resources, and only allow it from the so-called "bastion server". We'll cover what this means exactly in a bit.
 
 A bastion host sits in the public network, and is accessible directly from the Internet, or the whitelisted IP addresses in its configuration. Once connected to it, usually over SSH, the bastion host enables you to access private network resources such as EC2 and RDS instances, or any other resources also placed in the private subnet.
+
+Typically, as a network administrator, or as a developer with the privileges to set up such servers and configure them, you would want to set up a bastion host yourself. This would allow you to examine the system logs and configure what parts of the network that server can reach, where it lives in your system, when it's online and offline, and of course who can access it.
 
 === What is a bastion host?
 
 The word "bastion" was originally coined as a term in network security in 1990 by Marcus J. Ranum. Many centuries before that, the name bastion was used to describe a projecting part of a fortification, designed in such a way to offer maximum defenses from multiple angles.
 
-In the technical world of infrastructure, a _bastion host_ is a single, highly locked-down server that allows you to connect your private network to the public Internet over SSH or VPN.
-Once connected to a bastion host, you will be "in the network", assuming the IP of that bastion host. This way you'll be able to access all
-resources available to that network that the bastion host is connected to. As defined in AWS's security blog https://aws.amazon.com/blogs/security/how-to-record-ssh-sessions-established-through-a-bastion-host/[here], within the context of AWS, a bastion host is meant to provide access  to a private network from an external one (e.g. the Internet) and minimize the risk of penetration to the resources launched in a private subnet of your Amazon Virtual Private Cloud (VPC).
+In the technical world of infrastructure, a _bastion host_ is founded on this concept too - is a single, highly locked-down server that allows you to connect your private network to the public Internet over SSH or VPN.
+Once connected to a bastion host, you will be "in the network", assuming the IP of that bastion host. This way you'll be able to access all resources available to that network that the bastion host is connected to. As explained in https://aws.amazon.com/blogs/security/how-to-record-ssh-sessions-established-through-a-bastion-host/[AWS's security blog], a bastion host in AWS is meant to provide access to a private subnet from an external one (e.g. one that is accessible from the Internet) and minimize the risk of penetration to the resources launched in your private subnet within your Amazon Virtual Private Cloud (VPC).
 
 === What you'll learn in this guide
 
@@ -66,19 +65,38 @@ Feel free to read the guide from start to finish or skip around to whatever part
 == Core concepts
 
 [[bastion_host_overview]]
-=== Bastion host overview
+=== What exactly does a bastion host do?
 image::../assets/img/guides/bastion/bastion.png[]
-Here are the key points to define bastion hosts:
 
+As we've already briefly explained, a bastion host can provide you access to resources within your private or persistent subnets. But let's take a deeper look at what exactly happens behind the scenes.
+
+A bastion host is a essentially a server with some special settings that allows access only from specific IP addresses under certain conditions that may be location, recognised devices, or number of users using the bastion host at a time, and so on. The important detail to note here is that your network is configured also in a way, where it expects access to the private resources and data stores, only from that same bastion host. This would ensure that you only have one point of entry, which reduces the surface attack area.
+
+In the next sections we'll cover a bit widely some of the concepts and the special settings that make up a bastion server.
+
+=== Do you even need a bastion host?
+
+A bastion server is considered to be one of the security best practices, especially when it comes to the cloud and AWS. It is very popular as a solution, because of the benefits it brings in comparison to the risks it helps you mitigate.
+
+Let's consider this example:
+
+You have a webapp that processes some personal and payment data. For your customers to be able to interact with the webapp, it will need to be hosted on a public-facing EC2 instance, or something equivalent (in case you're using containerised solutions). You might be confident with the design and configuration of your webapp server, but you may not want to allow customers to have direct access to your payment services and data stores of payment and personal data. In that case, you place your application servers (the ones responsible for your payment and personal data processing) and your data stores in a private subnet in the VPC. This means you've essentially created a "DMZ" zone, short for "demilitarized zone". A DMZ zone is the perimeter within your network you're comfortable with it being accessible to the external world. For more in-depth explanation of what a good VPC and network setup looks like for your production environments, read https://gruntwork.io/guides/networking/how-to-deploy-production-grade-vpc-aws/#multiple_subnets[our guide on the topic].
+
+Now let's extend the example with your developers needing access to the private services (payment processing server) and maybe even data stores, ehile they're troubleshooting a live incident. How would they access your private subnet resources? You could allow permanent access for your developers to these internal systems with highly-senstive data, but this breaks one of the many security-best practices such as least privilege access by default.
+
+This is where having a bastion host is truly useful. Having a bastion box ready to go (sometimes referred to as a "jump") box), you'll be in a position where you can enable your developers to jump on the bastion host, and from there be able to get access to the internal services and data stores only while investigating the incident. Once the incident is resolved, you could simply turn off the bastion host, and all access to it will be ceased. Which means in its turn, access to the private services with sensitive and highly confidential data is no longer accessible by the developers, or anyone else.
+
+=== Production-grade server hardening techniques for the bastion serve
+The above example assumed the bastion box is set up in a way, where it allows your developers access immediately and easily, the server itself can be turned on or off, and has access to the private resources. Let's have a look how what would the network setup look like for a bastion server, and what are the production-grade security settings for a bastion box.
+
+=== How do you access the bastion host?
+
+=== Are there alternatives to bastion servers?
+=== What is the difference between SSH, RDP and VPN?
+=== Does the bastion server need securing too?
   - They provide entry into your private subnet.
   - The bastion host will need to be exposed to the external world, so it needs a public IP address. This also means that it needs to be placed within the boundaries of the public subnet.
   - To communicate with the bastion host, users will need SSH or VPN access set up. These are the most common ways a bastion server can be set up.
-
-[[why_bastion]]
-=== Why use a bastion host?
-Your team will need some way of accessing private services such as the data stores, the application servers, and so on. If you open these up to be publicly accessible so your team can access them, that would expose your system to much bigger threats. Therefore it is consideted best practice to not expose internal services, but instead get to them via a bastion host.
-
-This way you would have to prioritise securing the bastion server, instead of split your effort between securing mutiple servers (if all application servers and data stores were exposed to the Internet).
 
 [[how_bastion_with_ssh]]
 === How SSH access works with a bastion host?
