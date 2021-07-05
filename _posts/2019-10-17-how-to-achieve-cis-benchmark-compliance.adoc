@@ -961,7 +961,7 @@ First, let's set consider the repository structure that is recommended by this g
 ----
 .
 └ infrastructure-live
-    └ prod
+    └ root
         └ account.hcl
         └ global
             └ region.hcl
@@ -1009,7 +1009,7 @@ Next, create a `terragrunt.hcl` file in `infrastructure-live`. It should go unde
 
 ----
 infrastructure-live
-  └ prod
+  └ root
     └ _global
       └ region.hcl
       └ account-baseline
@@ -1018,7 +1018,7 @@ infrastructure-live
 Point the `source` URL in your `terragrunt.hcl` file to the `account-baseline-root` module in the https://github.com/gruntwork-io/terraform-aws-cis-service-catalog[terraform-aws-cis-service-catalog]
 repo, setting the `ref` param to the version you require:
 
-.infrastructure-live/prod/_global/account-baseline/terragrunt.hcl
+.infrastructure-live/root/_global/account-baseline/terragrunt.hcl
 [source,hcl]
 ----
 terraform {
@@ -1039,7 +1039,7 @@ IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low valu
 
 Set the variables for the `account-baseline-root` module in this environment in the `inputs = { ... }` block of `terragrunt.hcl`:
 
-.infrastructure-live/prod/_global/account-baseline/terragrunt.hcl
+.infrastructure-live/root/_global/account-baseline/terragrunt.hcl
 [source,hcl]
 ----
 locals {
@@ -1257,7 +1257,7 @@ An easy way to get it is to run `plan`:
 
 [source,bash]
 ----
-cd infrastructure-live/prod/_global/account-baseline
+cd infrastructure-live/root/_global/account-baseline
 aws-vault exec root-iam-user -- terragrunt plan
 ----
 
@@ -1370,7 +1370,7 @@ in the root account as in the previous two sections. To apply the security basel
 
 [source,bash]
 ----
-cd infrastructure-live/prod/_global/account-baseline
+cd infrastructure-live/root/_global/account-baseline
 aws-vault exec root-iam-user -- terragrunt apply
 ----
 
@@ -1465,7 +1465,7 @@ Create a `terragrunt.hcl` file in `infrastructure-live` under the file path `log
 
 ----
 infrastructure-live
-  └ prod
+  └ root
   └ logs
     └ _global
       └ account-baseline
@@ -1891,7 +1891,7 @@ echo "<PASSWORD>" | base64 --decode | keybase pgp decrypt
 ==== Apply the `account-baseline-app` to the other child accounts
 
 Now that your **security** account is fully configured, you need to apply the security baseline to the remaining child
-accounts (e.g., dev, stage, prod, shared-services). Feel free to adjust this as necessary based on the accounts your
+accounts (e.g., `dev`, `stage`, `prod`, `shared-services`). Feel free to adjust this as necessary based on the accounts your
 company needs.
 
 Create `terragrunt.hcl` files in `infrastructure-live` under the file paths `<ACCOUNT>/_global/account-baseline`,
@@ -2014,7 +2014,7 @@ inputs = {
   ##################################
 
   # These grants allow the autoscaling service-linked role to access to the AMI encryption key so that it
-  # can launch instances from AMIs that were shared from the shared-services account.
+  # can launch instances from AMIs that were shared from the `shared-services` account.
   kms_grant_regions = {
     ami_encryption_key = local.aws_region
   }
@@ -2047,7 +2047,7 @@ The code above does the following:
 the services specified in `dev_permitted_services`.
 
 . **Configure the Auto Deploy IAM role**. We also create an `auto-deploy` IAM role that can be assumed by a CI server
-in the shared-services account to do deployments. This role will have the permissions specified in
+in the `shared-services` account to do deployments. This role will have the permissions specified in
 `auto_deploy_permissions`.
 
 . **Configure cross-account IAM roles**. We then specify which other accounts are allowed to assume the IAM roles in
@@ -2108,7 +2108,7 @@ aws-vault exec stage-from-root -- terragrunt apply
 [.exceptional]
 IMPORTANT: On some operating systems, such as MacOS, you may also need to increase your open files limit to avoid "pipe: too many open files" errors by running: `ulimit -n 1024`.
 
-.Remember to repeat this process in the other child accounts too (i.e., dev, prod, shared-services, etc)!
+.Remember to repeat this process in the other child accounts too (i.e., `dev`, `prod`, `shared-services`, etc)!
 
 **Next, try authenticating as an IAM user to the child accounts:**
 
@@ -2126,7 +2126,7 @@ IMPORTANT: On some operating systems, such as MacOS, you may also need to increa
   https://github.com/gruntwork-io/module-security/tree/master/modules/cross-account-iam-roles#resources-created[here]).
 . Alternatively, you can use the `aws-vault login xxx` command to login to the AWS Web Console for any profile `xxx`
   that you've configured in `aws-vault`. For example, `aws-vault login logs-from-root` will open up your web browser
-  and log you into the logs account using the `OrganizationAccountAccessRole` IAM Role.
+  and log you into the `logs` account using the `OrganizationAccountAccessRole` IAM Role.
 
 [[configure_security_hub]]
 **Configure AWS Security Hub in the root account**
@@ -2212,7 +2212,7 @@ link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/blob/mast
 in the AWS CIS Service Catalog to create your VPCs. This service is configured for CIS compliance, and as such has VPC flow
 logs enabled. See the examples below:
 
-.infrastructure-live/prod/us-east-1/prod/networking/vpc/terragrunt.hcl
+.infrastructure-live/root/us-east-1/prod/networking/vpc/terragrunt.hcl
 [source,hcl]
 ----
 # ---------------------------------------------------------------------------------------------------------------------
@@ -2319,7 +2319,7 @@ VPC using the `vpc` service from `terraform-aws-cis-service-catalog`:
 
 ----
 infrastructure-live
-└── prod
+└── root
     └── us-east-1
         └── prod
             └─ networking
