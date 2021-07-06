@@ -846,6 +846,13 @@ If you need to brush up on how the IaC Library works, read the
 link:https://gruntwork.io/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library/[How to use
 the Gruntwork Infrastructure as Code Library] guide.
 
+
+=== Prepare your `infrastructure-live` repository
+
+We've previously described exactly how to prepare your repository in the
+link:https://gruntwork.io/guides/foundations/how-to-configure-production-grade-aws-account-structure/#prepare-your-infrastructure-live-repository[Gruntwork Landing Zone guide].
+Follow the steps in that section to get your `infrastructure-live` repository set up for the next steps.
+
 === Create the root account
 
 The first step is to create your root account. This account will be the parent of all of your other AWS accounts and
@@ -960,7 +967,7 @@ structure to deploy Terraform modules. Please note that *Terragrunt is NOT requi
 for instructions on alternative options, such as how to
 link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#deploy_using_plain_terraform[deploying how to use plain terraform].
 
-Next, create a `terragrunt.hcl` file in `infrastructure-live`. It should go under the file path `root/_global/account-baseline`:
+Next, create a `terragrunt.hcl` file in `infrastructure-live`, under the file path `root/_global/account-baseline`:
 
 ----
 infrastructure-live
@@ -997,24 +1004,20 @@ Set the variables for the `account-baseline-root` module in this environment in 
 [source,hcl]
 ----
 locals {
-  aws_region = "us-east-1"
 
-  accounts = {
-    root = "216044045972"
-  }
+  common_vars = read_terragrunt_config(find_in_parent_folders("common.hcl"))
 
-  # Both buckets will created in the logs account by account-baseline-root
+  # A local for more convenient access to the accounts map.
+  accounts = local.common_vars.locals.accounts
+
+  # Both buckets will be created in the logs account by account-baseline-root
   config_s3_bucket_name     = "acme-config-bucket-logs"
   cloudtrail_s3_bucket_name = "acme-cloudtrail-logs"
 }
 
 inputs = {
-  # Fill in the region you want to use (only used for API calls) and the ID of your root AWS account (see the locals above)
-  aws_region     = local.aws_region
-  aws_account_id = local.accounts.root
-
   # Prefix all resources with this name
-  name_prefix = "acme-root"
+  name_prefix = "<SOME_UNIQUE_IDENTIFIER>-root"
 
   # If you've already created an AWS Organization in your root account, set this to false
   create_organization = false
@@ -1198,7 +1201,7 @@ You should get JSON output with information about your IAM user:
 You're now almost ready to deploy the `account-baseline` module in the root account. But first, you may need to import
 some existing resources.
 
-=== Import existing resources from the root account
+=== Import existing resources from the root account into Terraform state
 
 Before applying the security baseline to the root account, we need to import any existing resources—including the IAM
 user you created manually earlier—into Terraform state, so that Terraform manages those existing resources instead of
@@ -1214,7 +1217,7 @@ Where `<ADDRESS>` is the https://www.terraform.io/docs/internals/resource-addres
 resource you're importing and `<ID>` is a resource-specific identifier (e.g., for `aws_instance`, it's the instance ID,
 whereas for `aws_lb`, it's the load balancer's name—check the docs for the resource to find out what to use).
 
-As a first example, let's import the IAM user you created manually in the root account. IAM users are managed using the
+Let's import the IAM user you created manually in the root account. IAM users are managed using the
 `aws_iam_user` resource, and the
 https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_user#import[documentation for that
 resource] tells us to use the user's `name` as the `<ID>`; we'll assume for this example that your IAM user's name was
@@ -1381,14 +1384,57 @@ child_accounts = {
     # (...)
   }
 }
-cloudtrail_kms_key_arn    = "<CLOUDTRAIL_KMS_KEY_ARN>"
+
 cloudtrail_s3_bucket_name = "<CLOUDTRAIL_BUCKET_NAME>"
 config_s3_bucket_name     = "<CONFIG_BUCKET_NAME>"
 ----
 
-Take note of all of this data, as you'll need it again shortly!
+If you followed the http://gruntwork.io/guides/foundations/how-to-configure-production-grade-aws-account-structure/#prepare-your-infrastructure-live-repository[steps for preparing your `infrastructure-live` repo], now you can update the `account.hcl` with the account IDs from the Terraform output! If you are instead making use of `account.hcl` files (located in each account folder (e.g., `infrastructure-live/dev`, `infrastructure-live/shared`, etc.), update them too with the
+appropriate account ID shown in the Terraform output, so they look like:
+[source,hcl]
+----
+locals {
+  account_name = "<REPLACE_WITH_NAME_OF_ACCOUNT>"
+  account_id = "<REPLACE_WITH_ID_OF_ACCOUNT>"
+}
 
-One other useful output will be the encrypted passwords for any IAM users you created:
+----
+
+[source,json]
+----
+{
+  "account_name": "<REPLACE_WITH_ID_OF_ACCOUNT>"
+}
+----
+
+Note that we haven't specified any region here so far. If you're following the guide on how to prepare your `infrastructure-live` repo, you might have created previously files called `region.hcl` like below:
+
+[source, hcl]
+----
+# Common variables for this region
+locals {
+  # Automatically load common variables shared across all accounts
+  common_vars = read_terragrunt_config(find_in_parent_folders("common.hcl"))
+
+  # Automatically load account-level variables
+  account_vars = read_terragrunt_config(find_in_parent_folders("account.hcl"))
+
+  aws_region   = "us-west-2"
+  state_bucket = "${local.common_vars.locals.name_prefix}-${local.account_vars.locals.account_name}-${local.aws_region}-tf-state"
+}
+----
+
+Alternatively, you can add to your locals where necessary the following line, containing your choice of AWS regions:
+
+[source, hcl]
+----
+  aws_region   = "us-west-2"
+----
+
+Now, that you have values for `cloudtrail_s3_bucket_name`, and `config_s3_bucket_name`, add them to your
+`infrastructure-live/common.hcl` file, because you'll need these values for every account in the steps below.
+
+Some of the terraform outputs to pay attention to, and maybe even store in a common configuration (like the `common.hcl` file), that you'll need later are: `cloudtrail_kms_key_arn` & the encrypted passwords for IAM users you created:
 
 [source,hcl]
 ----
@@ -1466,36 +1512,24 @@ Set the variables for the `account-baseline-app` module in this environment in t
 [source,hcl]
 ----
 locals {
-  aws_region = "us-east-1"
-
-  accounts = {
-    logs     = "409800740445"
-    security = "673123100581"
-    shared   = "384759303421"
-    dev      = "293847503945"
-    stage    = "384924092834"
-    prod     = "784260063686"
-    root     = "216044045972"
-  }
+  # A local for more convenient access to the accounts map.
+  accounts = local.common_vars.locals.accounts
 
   # Both buckets are created in the logs account by account-baseline-root
-  config_s3_bucket_name     = "acme-config-bucket-logs"
-  cloudtrail_s3_bucket_name = "acme-cloudtrail-logs"
+  config_s3_bucket_name     = local.common_vars.locals.config_s3_bucket_name
+  cloudtrail_s3_bucket_name = local.common_vars.locals.cloudtrail_s3_bucket_name
 
   # The Cloudtrail KMS Key is deployed at the logs account but it's value is an output from the root account.
-  cloudtrail_kms_key_arn = "arn:aws:kms:us-east-1:409800740445:alias/cloudtrail-acme"
+  cloudtrail_kms_key_arn = local.common_vars.locals.cloudtrail_kms_key_arn
 
   # A local for convenient access to the security account root ARN.
   security_account_root_arn = "arn:aws:iam::${local.accounts.security}:root"
 }
 
 inputs = {
-  # Fill in the region you want to use (only used for API calls) and the IDs of your AWS accounts (see the locals above)
-  aws_region     = local.aws_region
-  aws_account_id = local.accounts.logs
-
   # Prefix all resources with this name
-  name_prefix = "acme-logs"
+  name_prefix = "<SOME_UNIQUE_IDENTIFIER>-logs"
+
  ################################
   # Parameters for AWS Config
   ################################
@@ -1732,35 +1766,22 @@ Set the variables for the `account-baseline-security` module in this environment
 [source,hcl]
 ----
 locals {
-  aws_region = "us-east-1"
-
-  accounts = {
-    logs     = "409800740445"
-    security = "673123100581"
-    shared   = "384759303421"
-    dev      = "293847503945"
-    stage    = "384924092834"
-    prod     = "784260063686"
-    root     = "216044045972"
-  }
+  # A local for more convenient access to the accounts map.
+  accounts = local.common_vars.locals.accounts
 
   # Both buckets are created in the logs account by account-baseline-root
-  config_s3_bucket_name     = "acme-config-bucket-logs"
-  cloudtrail_s3_bucket_name = "acme-cloudtrail-logs"
+  config_s3_bucket_name     = local.common_vars.locals.config_s3_bucket_name
+  cloudtrail_s3_bucket_name = local.common_vars.locals.cloudtrail_s3_bucket_name
 
   # The Cloudtrail KMS Key is deployed at the logs account but it's value is an output from the root account.
-  cloudtrail_kms_key_arn = "arn:aws:kms:us-east-1:216044045972:alias/cloudtrail-acme"
+  cloudtrail_kms_key_arn = local.common_vars.locals.cloudtrail_kms_key_arn
 
   # A local for convenient access to the security account root ARN.
   security_account_root_arn = "arn:aws:iam::${local.accounts.security}:root"
 }
 input = {
-  # Fill in the region you want to use (only used for API calls) and the IDs of your AWS accounts (see the locals above)
-  aws_region     = local.aws_region
-  aws_account_id = local.accounts.security
-
   # Prefix all resources with this name
-  name_prefix = "acme-security"
+  name_prefix = "<SOME_UNIQUE_IDENTIFIER>-security"
 
   ################################
   # Parameters for AWS Config
@@ -1813,7 +1834,7 @@ input = {
   # Allow these accounts to have read access to IAM groups and the public SSH keys of users in the group.
   allow_ssh_grunt_access_from_other_account_arns = [
     for name, id in local.accounts :
-    "arn:aws:iam::${id}:root" if name != "security"
+      "arn:aws:iam::${id}:root" if name != "security"
   ]
 
   # A list of account root ARNs that should be able to assume the auto deploy role.
@@ -1956,9 +1977,9 @@ Now that your security account is fully configured, you need to apply the securi
 accounts (e.g., dev, stage, prod, shared-services). Feel free to adjust this as necessary based on the accounts your
 company needs.
 
-You can re-use the `account-baseline-app` module you created earlier in your `infrastructure-modules` repo for all of
-these child accounts; this module can be used interchangeably between app accounts and log accounts as they deploy most
-of the same resources.
+The `account-baseline-app` module in the Service Catalog can be used interchangeably between app accounts and log
+accounts as they deploy most of the same resources. That means this module can be re-used for all of the child
+accounts.
 
 Create `terragrunt.hcl` files in `infrastructure-live` under the file paths `<ACCOUNT>/_global/account-baseline`,
 where `<ACCOUNT>` is one of these other child accounts, such as dev, stage, prod, and shared-services. In the rest of
@@ -2004,36 +2025,24 @@ Set the variables for the `account-baseline-app` module in this environment in t
 [source,hcl]
 ----
 locals {
-  aws_region = "us-east-1"
-
-  accounts = {
-    logs     = "409800740445"
-    security = "673123100581"
-    shared   = "384759303421"
-    dev      = "293847503945"
-    stage    = "384924092834"
-    prod     = "784260063686"
-    root     = "216044045972"
-  }
+  # A local for more convenient access to the accounts map.
+  accounts = local.common_vars.locals.accounts
 
   # Both buckets are created in the logs account by account-baseline-root
-  config_s3_bucket_name     = "acme-config-bucket-logs"
-  cloudtrail_s3_bucket_name = "acme-cloudtrail-logs"
+  config_s3_bucket_name     = local.common_vars.locals.config_s3_bucket_name
+  cloudtrail_s3_bucket_name = local.common_vars.locals.cloudtrail_s3_bucket_name
 
   # The Cloudtrail KMS Key is deployed at the logs account but it's value is an output from the root account.
-  cloudtrail_kms_key_arn = "arn:aws:kms:us-east-1:409800740445:alias/cloudtrail-acme"
+  cloudtrail_kms_key_arn = local.common_vars.locals.cloudtrail_kms_key_arn
 
   # A local for convenient access to the security account root ARN.
   security_account_root_arn = "arn:aws:iam::${local.accounts.security}:root"
 }
 
 inputs = {
-  # Fill in the region you want to use (only used for API calls) and the IDs of your AWS accounts (see the locals above)
-  aws_region     = local.aws_region
-  aws_account_id = local.accounts.stage
-
   # Prefix all resources with this name
-  name_prefix = "stage-logs"
+  name_prefix = "<SOME_UNIQUE_IDENTIFIER>-logs"
+
  ################################
   # Parameters for AWS Config
   ################################
