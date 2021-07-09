@@ -588,8 +588,8 @@ Use the link:https://www.terraform.io/docs/providers/aws/r/cloudtrail.html[`aws_
 is_multi_region_trail         = true
 include_global_service_events = true
 enable_log_file_validation    = true
-s3_bucket_name                = local.cloudtrail_s3_bucket_name
-cloud_watch_logs_group_arn    = local.cloudtrail_cloudwatch_group_arn
+s3_bucket_name                = "<YOUR CLOUDTRAIL BUCKET NAME>"
+cloud_watch_logs_group_arn    = "<YOUR CLOUDWATCH LOGS GROUP ARN>"
 
 event_selector {
   read_write_type           = "All"
@@ -597,7 +597,7 @@ event_selector {
 
   data_resource {
     type   = "AWS::S3::Object"
-    values = ["${local.cloudtrail_s3_bucket_arn}"]
+    values = ["<YOUR CLOUDTRAIL BUCKET ARN>"]
   }
 }
 ----
@@ -938,10 +938,10 @@ so using a virtual or hardware MFA device is preferable; that said, MFA with SMS
 
 [[deployment_approach]]
 === Deployment approach
-Before we dive into the code and deployment for each of the resources, let's take a step back and understand how the code is structured.
-Most of the features explained in the <<production_grade_design>> section will be deployed by using the Landing Zone solution, and some more standalone modules like the VPC module.
+Before we dive into the code and deployment for each resource, let's take a step back and understand how the code is structured.
+Most of the features explained in the <<production_grade_design>> section will be deployed using the Landing Zone solution, and some more standalone modules like the VPC module.
 
-The Landing Zone will be deployed in three steps - the `account-baseline-root` to set up your organisation-wide configurations, create the necessary child AWS accounts, set up the CloudTrail and AWS Config buckets. Next, we'll need to apply the `account-baseline-app` against the created logs account, adding more settings that will be used for aggregation of logs and metrics from the whole organization. Then the `account-baseline-security` will be applied, and that's responsible to set up your IAM roles, groups that would allow you to access the rest of the accounts within your organization. And finally, the `account-baseline-app` will be applied to an AWS account with the purpose of hosting an application.
+The Landing Zone will be deployed in three steps - the `account-baseline-root` to set up your organization-wide configurations, create the necessary child AWS accounts, set up the CloudTrail and AWS Config buckets. Next, we'll need to apply the `account-baseline-app` against the created logs account, adding more settings that will be used for aggregation of logs and metrics from the whole organization. Then the `account-baseline-security` will be applied, and that's responsible to set up your IAM roles and groups that would allow you to access the rest of the accounts within your organization. And finally, the `account-baseline-app` will be applied to an AWS account with the purpose of hosting an application.
 
 The standalone modules will follow the pattern of referencing the module and providing the necessary input variables for it, then applying with `terragrunt`.
 
@@ -950,14 +950,13 @@ The standalone modules will follow the pattern of referencing the module and pro
 
 ==== Apply the `account-baseline-root` to the root account
 
-===== Configure the `account-baseline-root` for the root account
+Configure the `account-baseline-root` for the root account
 
 [.exceptional]
 IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork Compliance subscriber# to access the Gruntwork Infrastructure as Code Library and the https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/[CIS AWS Foundations Benchmark modules].
 
 First, let's set consider the repository structure that is recommended by this guide. It is available for your reference in the "/examples/for-production" section in the https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/examples/for-production[`terraform-aws-cis-service-catalog` repository]. Consider the following directory structure for your `infrastructure-live` repository. It showcases the configuration files foryour local variables.
 
-[source]
 ----
 .
 └ infrastructure-live
@@ -971,7 +970,7 @@ First, let's set consider the repository structure that is recommended by this g
     └ accounts.json
 ----
 
-Each of the `region.hcl`, `account.hcl` and `common.hcl` should contain the relevant information, so in your modules you're able to reference the values like this:
+Each of the `region.hcl`, `accounts.hcl` and `common.hcl` should contain the relevant information, so in your modules, you're able to reference the values like this:
 
 [source, hcl]
 ----
@@ -993,7 +992,7 @@ locals {
 }
 ----
 
-You'll need to create these files in order to be able to follow the code examples following. For examples on what to put in each of these files, refer to the https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/examples/for-production[`terraform-aws-cis-service-catalog` repository]. The `locals` configuration above can be used in each of the `terragrunt.hcl` files to help you avoid repetition. Note that the examples below won't show this in the interest of clarity.
+You'll need to create these files to be able to follow the code examples following. For examples on what to put in each of these files, refer to the https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/examples/for-production[`terraform-aws-cis-service-catalog` repository]. Each of the `terragrunt.hcl` files will use the above `locals` configuration to help you avoid repetition. Note that the examples below won't show this in the interest of clarity.
 
 Next, we'll configure the `account-baseline-root` with settings needed for creating all the child accounts - AWS Organizations, IAM Roles, IAM Users, IAM Groups, IAM Password Policies, Amazon GuardDuty, AWS CloudTrail, AWS Config and Security Hub.
 
