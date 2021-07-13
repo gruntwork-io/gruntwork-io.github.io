@@ -110,7 +110,7 @@ https://github.com/gruntwork-io/terragrunt/releases/tag/v0.28.18[0.28.18]. If yo
 be sure to update to at least this version first.
 
 .A walkthrough of a single module update
-video::rSaTzxA8xWI[youtube,width=560,height=315,align=center]
+video::EHPKifjviR8[youtube,width=560,height=315,align=center]
 
 === Step 1: Prepare your Terragrunt configuration to support the Service Catalog
 
@@ -136,7 +136,7 @@ these files into your own `infrastructure-live` repository.
 # ---------------------------------------------------------------------------------------------------------------------
 
 locals {
-  common_vars  = read_terragrunt_config("${get_terragrunt_dir()}/common.hcl")
+  common_vars  = read_terragrunt_config(find_in_parent_folders("common.hcl"))
   account_vars = read_terragrunt_config(find_in_parent_folders("account.hcl"))
 
   # Optional: Update to use HCL instead of YAML
@@ -319,6 +319,30 @@ function assert_jq_is_installed {
   assert_is_installed 'jq' 'https://stedolan.github.io/jq/download/'
 }
 
+# Move resources in a literal terraform state move. Unlike a simple terragrunt state mv call, this does error checking
+# to make sure the given state actually exists.
+function move_state {
+  local -r original_addr="$1"
+  local -r new_addr="$2"
+
+  if [[ "$original_addr" == "$new_addr" ]]; then
+    echo "Nothing to change. Skipping state migration."
+    return
+  fi
+
+  if ! terragrunt state show "$original_addr" >/dev/null 2>&1; then
+    echo "Original address $original_addr not found in state file. Nothing to change. Skipping state migration."
+    return
+  fi
+
+  echo "Migrating state:"
+  echo
+  echo "    $original_addr =>"
+  echo "      $new_addr"
+  echo
+  terragrunt state mv "$original_addr" "$new_addr"
+}
+
 # Move resources in terraform state using fuzzy matches.
 function fuzzy_move_state {
   local -r original_addr_query="$1"
@@ -330,7 +354,7 @@ function fuzzy_move_state {
   local original_addr
   original_addr="$(find_state_address "$original_addr_query")"
 
-  if [[ -z "$original_addr" ]]; then
+  if [[ -z "$original_addr" ]] || [[ "$original_addr" == "$new_addr" ]]; then
     echo "Nothing to change. Skipping state migration."
   else
     echo "Migrating state:"
@@ -340,6 +364,22 @@ function fuzzy_move_state {
     echo
     terragrunt state mv "$original_addr" "$new_addr"
   fi
+}
+
+# The following routine extracts a resource attribute.
+function extract_attribute {
+  local -r address="$1"
+  local -r resource_basename="$2"
+  local -r attribute="$3"
+
+  local state
+  state="$(terragrunt state show "$address")"
+  local state_nocolor
+  state_nocolor="$(strip_bash_color "$state")"
+
+  echo "$state_nocolor" \
+    | hcledit attribute get "$resource_basename"."$attribute" \
+    | jq -r '.'
 }
 
 # Move resources in terraform state using an import call instead of state mv. This is useful when moving resources
@@ -360,20 +400,9 @@ function fuzzy_import_move_state {
 
   log "$friendly_name needs to be migrated"
 
-  # The following routine extracts the resource ID so that it can be used to import it into the new resource, since the
-  # underlying resource type changed.
-  log "Idenfitying $friendly_name ID to import into new resource."
-  local state
-  state="$(terragrunt state show "$original_addr")"
-  local state_nocolor
-  state_nocolor="$(strip_bash_color "$state")"
-
+  log "Identifying $friendly_name ID to import into new resource."
   local resource_id
-  resource_id="$(
-    echo "$state_nocolor" \
-      | hcledit attribute get "$resource_basename".id \
-      | jq -r '.'
-  )"
+  resource_id="$(extract_attribute $original_addr $resource_basename "id")"
 
   if [[ -z "$resource_id" ]]; then
     log "ERROR: could not identify $friendly_name ID to import."
@@ -388,6 +417,70 @@ function fuzzy_import_move_state {
 
   log "Removing old $friendly_name state."
   terragrunt state rm "$original_addr"
+}
+
+# This function migrates the original list into a new map at the original address.
+# First it moves each item in the list into a new map.
+# Then it moves the new map back to the original address.
+# The keys of the new map correspond to the value of the attribute that is passed into `attribute`.
+# We look up this value in the function.
+function move_state_list_to_map {
+  local -r original_addr="$1"
+  local -r attribute="$2"
+
+  # Move the list to a temporary map
+  local map_addr
+  map_addr="$1_tmp"
+
+  # Pull the full list of addresses in the original_addr (aws_ecr_repository.repos[0], aws_ecr_repository.repos[1], etc)
+  local list_addresses
+  list_addresses="$(find_state_address "$original_addr")"
+  for addr in $list_addresses
+  do
+    # Extract the attribute that will be the new key in the map.
+    local key
+    key="$(extract_attribute "$addr" "resource.$original_addr" "$attribute")"
+    echo "Migrating state:"
+    echo
+    echo "    $addr =>"
+    echo "      $map_addr[$key]"
+    echo
+    # Move the resource to the new temporary map address.
+    terragrunt state mv "$addr" "$map_addr[\"$key\"]"
+  done
+
+  # Move the temporary map back to the original address, now as a map
+  terragrunt state mv "$map_addr" "$original_addr"
+}
+
+# This function migrates a list to a new list with a different name.
+function fuzzy_move_list {
+  local -r original_list="$1"
+  local -r new_list="$2"
+  local -r friendly_name="$3"
+
+  log "Checking if $friendly_name needs to be migrated"
+
+  if [[ -z "$original_list" ]] || [[ "$original_list" == "$new_list" ]]; then
+    echo "Nothing to change. Skipping state migration."
+  else
+    local original_addrs
+    original_addrs="$(find_state_address "$original_list")"
+    for addr in $original_addrs
+    do
+      local new_addr
+      new_addr="$(
+        echo "$addr" \
+          | sed "s/$original_list/$new_list/"
+      )"
+      echo "Migrating state:"
+      echo
+      echo "    $addr =>"
+      echo "      $new_addr"
+      echo
+      terragrunt state mv "$addr" "$new_addr"
+    done
+  fi
 }
 ----
 
@@ -462,13 +555,13 @@ Now for the full-fledged instructions to upgrade a single service:
     * Change the `include` path to `find_in_parent_folders("terragrunt_service_catalog.hcl")`. This ensures that you use the
       Service Catalog compatible root config you created in the previous step.
     * Change the `terraform.source` attribute to point to the corresponding Terraform module in the
-      `terraform-aws-service-catalog` repo. When updating the source, make sure to set the ref to target `v0.35.5`.
+      `terraform-aws-service-catalog` repo. When updating the source, make sure to set the ref to target `v0.35.5`, unless otherwise noted down below in <<service_migration_guides>>.
 
 +
 [NOTE]
 .Explanation
 ====
-This migration guide targets `v0.35.5` of the Service Catalog. Newer versions may require additional state migrations
+This migration guide targets `v0.35.5` of the Service Catalog, unless otherwise noted down below in <<service_migration_guides>>. Newer versions may require additional state migrations
 that are not covered by the automated scripts. If you wish to update further, first update to `v0.35.5` and then read
 the migration guides in the release notes of the Service Catalog to bump beyond that version.
 ====
@@ -515,6 +608,19 @@ the migration guides in the release notes of the Service Catalog to bump beyond 
 
 [[service_migration_guides]]
 === Appendix: Dedicated service migration guides
+
+These dedicated guides are meant to be used in tandem with the main detailed guide above. They are stored in the
+`infrastructure-live-multi-account-acme` repository, which is now archived because it was used to share examples
+of Reference Architecture 1.0. You can still interact with the archived repo, and use it to help you upgrade your
+existing Reference Architecture.
+
+[NOTE]
+.Exceptions to Service Catalog Versions
+====
+The following modules require a different version of the Service Catalog than `v0.35.5` to migrate properly:
+
+- `route53-public`: `v0.32.0`
+====
 
 * link:https://github.com/gruntwork-io/infrastructure-live-multi-account-acme/blob/v0.0.1-20210527/_docs/_ref_arch_v1_to_v2_migration_guides/alb.adoc[ALB Service Migration Guide]
 * link:https://github.com/gruntwork-io/infrastructure-live-multi-account-acme/blob/v0.0.1-20210527/_docs/_ref_arch_v1_to_v2_migration_guides/asg.adoc[ASG Service Migration Guide]
