@@ -8519,6 +8519,7 @@ $(".modal .video").each(function(index, el) {
 $(function() {
   var submitButton = $("#submit-button");
   var form = $("#contact-form");
+  var next = $("#_next");
   var inCall = false;
 
   var validateForm = function() {
@@ -8553,7 +8554,7 @@ $(function() {
     $("#error-message").html("");
     form.find("*").removeClass("has-error");
   };
-  
+
   var submitForm = function(e) {
     e.preventDefault();
     if (inCall) {
@@ -8561,12 +8562,15 @@ $(function() {
     }
     inCall = true;
 
+    var url = form.prop('action');
     var data = serialize(form.get(0), { hash: true });
+    var redirect = next.val();
+
     if (validateForm()) {
       grecaptcha.ready(function() {
         grecaptcha.execute('6LcXFLoZAAAAAHVaImPgU3xGnBmyY-lwQ6sHllGN', {action: 'submit'}).then(function(token) {
           data['g-recaptcha-response']=token;
-          submitToFormSpree(data);
+          submitToFormSpree(url, data, redirect);
         });
       });
     } else {
@@ -8574,12 +8578,12 @@ $(function() {
     }
   };
 
-  var submitToFormSpree = function(data) {
+  var submitToFormSpree = function(url, data, redirect) {
     submitButton.html("Sending...");
     submitButton.prop("disabled", true);
 
     var postParams = {
-      url: "https://api.formbucket.com/f/buk_7iB8j7vEJPW9ad2ClJwFfm5M",
+      url: url,
       type: "POST",
       data: data,
       dataType: "json"
@@ -8588,7 +8592,7 @@ $(function() {
     $.ajax(postParams)
       .done(function() {
         inCall = false;
-        window.location.replace("/thanks");
+        window.location.replace(redirect);
       })
       .fail(function(error) {
         showFormError(
