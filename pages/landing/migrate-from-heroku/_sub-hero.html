@@ -4,21 +4,6 @@
       <div>
         <img src="{{ logo }}" />
       </div>
-      <h2>Features</h2>
-      <div class="row" style="margin-top: 50px; display: flex; flex-wrap: wrap;">
-        {% for feature in site.data.migrate-from-heroku-features %}
-          <div class="col-xs-6 col-md-4" style="margin-bottom:20px;">
-            <div class="row" style="display: flex; flex-wrap: wrap;">
-              <div class="col-xs-12 col-sm-4 hidden-print" style="padding-right: 0; padding-left: 0;">
-                <img src="/assets/img/reference-architecture-icons/reference-architecture-feature-{{ forloop.index }}.png" alt="{{ feature.title }}" style="max-width: 105px;" />
-              </div>
-              <div class="col-xs-12 col-sm-8" style="line-height: 1.4;">
-                <h4 class="h6 text-bold" style="margin: 5px 0 5px 0">{{ feature.title }}</h4>
-                <p>{{ feature.description }}</p>
-              </div>
-            </div>
-          </div>
-        {% endfor %}
     {% endfor %}
   </div>
 </div>
