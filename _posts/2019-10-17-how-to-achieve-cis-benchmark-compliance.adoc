@@ -430,10 +430,9 @@ The command output should return an array that contains all of the SSL/TLS certi
 	"ServerCertificateMetadataList": [{
 		"ServerCertificateId": "EHDGFRW7EJFYTE88D",
 		"ServerCertificateName": "MyServerCertificate",
-		"Expiration": "2020-07-10T23:59:59Z",
+		"Expiration": "2021-07-05T23:59:59Z",
 		"Path": "/",
-		"Arn": "arn:aws:iam::012345678910:server-
-		certificate / MySSLCertificate ",
+		"Arn": "arn:aws:iam::012345678910:server-certificate/MySSLCertificate",
 		"UploadDate": "2018-06-10T11:56:08Z"
 	}]
 }
@@ -524,7 +523,7 @@ statement {
   effect  = "Deny"
   actions = ["s3:*"]
   resources = [
-    <YOUR BUCKET ARN>,
+    "<YOUR BUCKET ARN>",
     "${<YOUR BUCKET ARN>}/*"
   ]
   principals {
@@ -589,8 +588,8 @@ Use the link:https://www.terraform.io/docs/providers/aws/r/cloudtrail.html[`aws_
 is_multi_region_trail         = true
 include_global_service_events = true
 enable_log_file_validation    = true
-s3_bucket_name                = <YOUR BUCKET NAME>
-cloud_watch_logs_group_arn    = <YOUR CLOUDWATCH LOGS GROUP ARN>
+s3_bucket_name                = "<YOUR CLOUDTRAIL BUCKET NAME>"
+cloud_watch_logs_group_arn    = "<YOUR CLOUDWATCH LOGS GROUP ARN>"
 
 event_selector {
   read_write_type           = "All"
@@ -598,7 +597,7 @@ event_selector {
 
   data_resource {
     type   = "AWS::S3::Object"
-    values = [<YOUR BUCKET ARN>]
+    values = ["<YOUR CLOUDTRAIL BUCKET ARN>"]
   }
 }
 ----
@@ -775,17 +774,11 @@ automatically.
 
 [[gruntwork_solution]]
 === The Gruntwork solution
-Gruntwork offers battle-tested infrastructure as code modules to help you create production grade infrastructure in a
-fraction of the time it would take to develop from scratch. Each of the core modules are "compliance-ready"; they are
-mostly unopinionated by default, but they can be configured for compliance with the right settings.
+Gruntwork offers infrastructure-as-code battle-tested modules that will help you create _production-grade_ infrastructure faster and much more efficiently than if you develop your modules from scratch. In the CIS compliance library, there are many core modules, and each one of them is "compliance-ready". They are configured in a way to help you achieve CIS compliance up to the latest supported benchmark, but still allow some flexibility in the setup.
 
-To further simplify and expedite compliance, the Gruntwork CIS Service Catalog uses both standalone compliance
-modules as well as "wrappers" around the core, unopinionated modules in the Infrastructure as Code Library. The
-standalone compliance modules are designed with the compliance requirements built-in, whereas the wrappers
-call the core modules with configuration values that are compliant with the AWS Foundations Benchmark. You can use both
-types of modules by creating a module of your own (in the case of the wrapper modules, this can be considered a second
-wrapper) and using the compliance module as the `source`. Optionally, you can also use `terragrunt` to call your module,
-thus creating a chain of IaC modules.
+The compliance library is known as "Gruntwork CIS Service Catalog" and it has its own standalone modules, or could be building on top of the existing standard & non-compliant core modules from the "Standard Service Catalog" or "Infrastructure as Code Library". Each of these modules can be used on their own, or within "wrappers" (explained later) by passing in the required inputs and using `terraform` or `terragrunt`.
+
+The image below shows the hierarchy between the different levels of modules from the different code libraries Gruntwork offers.
  +
  +
 
@@ -907,7 +900,6 @@ The only time you'll need it is for account recovery situations (e.g., you accid
 your credentials) or for the
 https://docs.aws.amazon.com/general/latest/gr/aws_tasks-that-require-root.html[small number of tasks that require root user credentials].
 
-
 [[create_iam_user_in_root]]
 === Create an IAM user in the root account
 
@@ -951,14 +943,65 @@ https://www.schneier.com/blog/archives/2016/08/nist_is_no_long.html[no longer re
 https://www.theverge.com/2017/9/18/16328172/sms-two-factor-authentication-hack-password-bitcoin[vulnerabilities with the cellular system],
 so using a virtual or hardware MFA device is preferable; that said, MFA with SMS is still better than no MFA at all.
 
+[[deployment_approach]]
+=== Deployment approach
+Before we dive into the code and deployment for each resource, let's take a step back and understand how the code is structured.
+Most of the features explained in the <<production_grade_design>> section will be deployed using the Landing Zone solution, and some more standalone modules like the VPC module.
 
-=== Configure the security baseline for the root account
+The Landing Zone will be deployed in three steps - the `account-baseline-root` to set up your organization-wide configurations, create the necessary child AWS accounts, set up the CloudTrail and AWS Config buckets. Next, we'll need to apply the `account-baseline-app` against the created logs account, adding more settings that will be used for aggregation of logs and metrics from the whole organization. Then the `account-baseline-security` will be applied, and that's responsible to set up your IAM roles and groups that would allow you to access the rest of the accounts within your organization. And finally, the `account-baseline-app` will be applied to an AWS account with the purpose of hosting an application.
+
+The standalone modules will follow the pattern of referencing the module and providing the necessary input variables for it, then applying with `terragrunt`.
+
+[[deploy_landingzone]]
+=== Deploy Landing Zone solution
+
+==== Apply the `account-baseline-root` to the root account
+
+Configure the `account-baseline-root` for the root account
 
 [.exceptional]
-IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork subscriber# to access `terraform-aws-cis-service-catalog`.
+IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork Compliance subscriber# to access the Gruntwork Infrastructure as Code Library and the https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/[CIS AWS Foundations Benchmark modules].
 
-Next, we'll configure a security baseline for the root account that is responsible for creating all the child accounts.
-It will also configure AWS Organizations, IAM Roles, IAM Users, IAM Groups, IAM Password Policies, Amazon GuardDuty, AWS CloudTrail, AWS Config and Security Hub.
+First, let's set consider the repository structure that is recommended by this guide. It is available for your reference in the "/examples/for-production" section in the https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/examples/for-production[`terraform-aws-cis-service-catalog` repository]. Consider the following directory structure for your `infrastructure-live` repository. It showcases the configuration files for your local variables.
+
+----
+.
+└ infrastructure-live
+    └ root
+        └ account.hcl
+        └ _global
+            └ region.hcl
+        └ us-east-1
+            └ region.hcl
+    └ common.hcl
+    └ accounts.json
+----
+
+Each of the `region.hcl`, `accounts.hcl` and `common.hcl` should contain the relevant information, so in your modules, you're able to reference the values like this:
+
+[source, hcl]
+----
+locals {
+  # Automatically load common variables shared across all accounts
+  common_vars = read_terragrunt_config(find_in_parent_folders("common.hcl"))
+
+  # Automatically load account-level variables
+  account_vars = read_terragrunt_config(find_in_parent_folders("account.hcl"))
+
+  # Extract the account_name for easy access
+  account_name = local.account_vars.locals.account_name
+
+  # Automatically load region-level variables
+  region_vars = read_terragrunt_config(find_in_parent_folders("region.hcl"))
+
+  # Extract the region for easy access
+  aws_region = local.region_vars.locals.aws_region
+}
+----
+
+You'll need to create these files to be able to follow the code examples following. For examples on what to put in each of these files, refer to the https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/examples/for-production[`terraform-aws-cis-service-catalog` repository]. Each of the `terragrunt.hcl` files will use the above `locals` configuration to help you avoid repetition. Note that the examples below won't show this in the interest of clarity.
+
+Next, we'll configure the `account-baseline-root` with settings needed for creating all the child accounts - AWS Organizations, IAM Roles, IAM Users, IAM Groups, IAM Password Policies, Amazon GuardDuty, AWS CloudTrail, AWS Config and Security Hub.
 
 We'll be using the `landingzone/account-baseline-root` module from https://github.com/gruntwork-io/terraform-aws-cis-service-catalog[terraform-aws-cis-service-catalog].
 
@@ -973,6 +1016,7 @@ Next, create a `terragrunt.hcl` file in `infrastructure-live`, under the file pa
 infrastructure-live
   └ root
     └ _global
+      └ region.hcl
       └ account-baseline
         └ terragrunt.hcl
 ----
@@ -983,7 +1027,7 @@ repo, setting the `ref` param to the version you require:
 [source,hcl]
 ----
 terraform {
-  source = "git::git@github.com/gruntwork-io/terraform-aws-cis-service-catalog//modules/landingzone/account-baseline-app?ref=v0.22.0"
+  source = "git::git@github.com/gruntwork-io/terraform-aws-cis-service-catalog//modules/landingzone/account-baseline-root?ref=v0.22.0"
 
   # This module deploys some resources (e.g., AWS Config) across all AWS regions, each of which needs its own provider,
   # which in Terraform means a separate process. To avoid all these processes thrashing the CPU, which leads to network
@@ -1073,9 +1117,6 @@ inputs = {
   # Send Config logs to the common S3 bucket.
   config_s3_bucket_name = local.config_s3_bucket_name
 
-  # Do not allow objects in the Config S3 bucket to be forcefully removed during destroy operations.
-  config_force_destroy = false
-
   ################################
   # Parameters for CloudTrail
   ################################
@@ -1085,9 +1126,6 @@ inputs = {
 
   # The ARN is a key alias, not a key ID. This variable prevents a perpetual diff when using an alias.
   cloudtrail_kms_key_arn_is_alias = true
-
-  # Do not allow objects in the CloudTrail S3 bucket to be forcefully removed during destroy operations.
-  cloudtrail_force_destroy = false
 
   ##################################
   # Cross-account IAM role permissions
@@ -1111,12 +1149,6 @@ inputs = {
     "iam:GetRole",
     "iam:GetRolePolicy",
   ]
-
-  # Configures the auto deploy max session duration to be 4 hours.
-  max_session_duration_machine_users = 14400
-
-  # Configures the max session duration for roles that humans use to be 8 hours.
-  max_session_duration_human_users = 28800
 }
 ----
 
@@ -1137,7 +1169,7 @@ address, `root-accounts@acme.com`.
 . **Mark one of the child accounts as a logs account**. We set `is_logs_account = true` on one of the child accounts
 to indicate it is the logs account where we will aggregate AWS Config, CloudTrail, IAM Access Analyzer and Security Hub data from all the other accounts.
 The `account-baseline-root` module will automatically create an S3 bucket for AWS Config and an S3 bucket and KMS CMK
-for CloudTrail in this account and configure the root account to send all the AWS Config and CloudTrail data to these
+= for CloudTrail in this account and configure the root account to send all the AWS Config and CloudTrail data to these
 S3 buckets. Later on, you'll configure all the other accounts to send their data to these S3 buckets too.
 
 . **Create IAM groups**. By default, `account-baseline-root` will **not** create a `full-access` IAM group as CIS requirement 1.16 guides. It will create a `support` and a `billing` IAM group (for the support and finance teams).
@@ -1176,7 +1208,7 @@ Enter Secret Key: YYYYYYYYYYYY
 You should also enable MFA for the IAM user (https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_mfa_enable_virtual.html)[see the AWS docs on enabling a virtual MFA device]) and add the configuration to your profile as follows:
 [source,bash]
 ----
-mfa_serial=arn:aws:iam::<YOUR_ROOT_ACCOUNT_ID>:mfa/<YOUR_IAM_USER>
+mfa_serial=arn:aws:iam::${local.accounts.root}:mfa/<YOUR_IAM_USER>
 ----
 
 Next, https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html[install the AWS CLI], and check that
@@ -1193,8 +1225,8 @@ You should get JSON output with information about your IAM user:
 ----
 {
   "UserId": "AIDAXXXXXXXXXXXX",
-  "Account": "<ROOT_ACCOUNT_ID>",
-  "Arn": "arn:aws:iam::<ROOT_ACCOUNT_ID>:user/<YOUR_IAM_USER>"
+  "Account": "${local.accounts.root}",
+  "Arn": "arn:aws:iam::${local.accounts.root}:user/<YOUR_IAM_USER>"
 }
 ----
 
@@ -1286,7 +1318,7 @@ we need to temporarily hard-code some of the `region` and `role_arn` parameters 
 [source,bash]
 ----
 terragrunt aws-provider-patch \
-  --terragrunt-override-attr region="eu-west-1" \
+  --terragrunt-override-attr region="${local.aws_region}" \
   --terragrunt-override-attr assume_role.role_arn=""
 ----
 
@@ -1305,7 +1337,7 @@ aws-vault exec root-iam-user -- terragrunt import \
 You should see log output that looks something like this:
 
 ----
-[terragrunt] 2020/10/13 14:19:16 Running command: terraform import module.root_baseline.module.iam_users.aws_iam_user.user["alice"] alice
+[terragrunt] 2021/05/13 14:19:16 Running command: terraform import module.root_baseline.module.iam_users.aws_iam_user.user["alice"] alice
 module.root_baseline.module.iam_users.aws_iam_user.user["alice"]: Importing from ID "alice"...
 module.root_baseline.module.iam_users.aws_iam_user.user["alice"]: Import prepared!
   Prepared aws_iam_user for import
@@ -1332,7 +1364,7 @@ rm -rf .terragrunt-cache
 ----
 
 [[apply_account_baseline_root]]
-=== Apply the security baseline to the root account
+==== Apply the `account-baseline-root` baseline to the root account
 
 You're now ready to apply the security baseline to the root account. You should be authenticated as the same IAM user
 in the root account as in the previous two sections. To apply the security baseline, you run `terragrunt apply`:
@@ -1384,9 +1416,10 @@ child_accounts = {
     # (...)
   }
 }
-
-cloudtrail_s3_bucket_name = "<CLOUDTRAIL_BUCKET_NAME>"
-config_s3_bucket_name     = "<CONFIG_BUCKET_NAME>"
+cloudtrail_kms_key_arn          = "<CLOUDTRAIL_KMS_KEY_ARN>"
+cloudtrail_s3_bucket_name       = "<CLOUDTRAIL_BUCKET_NAME>"
+config_s3_bucket_name           = "<CONFIG_BUCKET_NAME>"
+cloudtrail_cloudwatch_group_arn = "<CLOUDWATCH_GROUP_ARN>"
 ----
 
 If you followed the http://gruntwork.io/guides/foundations/how-to-configure-production-grade-aws-account-structure/#prepare-your-infrastructure-live-repository[steps for preparing your `infrastructure-live` repo], now you can update the `account.hcl` with the account IDs from the Terraform output! If you are instead making use of `account.hcl` files (located in each account folder (e.g., `infrastructure-live/dev`, `infrastructure-live/shared`, etc.), update them too with the
@@ -1431,10 +1464,7 @@ Alternatively, you can add to your locals where necessary the following line, co
   aws_region   = "us-west-2"
 ----
 
-Now, that you have values for `cloudtrail_s3_bucket_name`, and `config_s3_bucket_name`, add them to your
-`infrastructure-live/common.hcl` file, because you'll need these values for every account in the steps below.
-
-Some of the terraform outputs to pay attention to, and maybe even store in a common configuration (like the `common.hcl` file), that you'll need later are: `cloudtrail_kms_key_arn` & the encrypted passwords for IAM users you created:
+Similarly, you will need to use the `common.hcl` file to store some terraform output values too. We will be needing throughout the rest of this guide the following values: `cloudtrail_s3_bucket_name`, `config_s3_bucket_name`, `cloudtrail_kms_key_arn`, `cloudtrail_cloudwatch_group_arn`, and the encrypted passwords for IAM users you created:
 
 [source,hcl]
 ----
@@ -1452,7 +1482,7 @@ Each user can then decrypt the password on their own computer (which should have
 echo "<PASSWORD>" | base64 --decode | keybase pgp decrypt
 ----
 
-=== Reset the root user password in each child account
+===== Reset the root user password in each child account
 
 When creating the child accounts, you may have noticed that you provided an email address for each root user, but
 confusingly, not a password. So how do you login as the root user then? It's not obvious, but the answer is that you
@@ -1461,16 +1491,16 @@ using the "Forgot your password?" prompt on the https://console.aws.amazon.com/[
 you a reset link, which you can click to go to a page that will allow you to configure a password for the root user.
 Use this process to reset the password for the root user of each child account you created.
 
-=== Lock down the root user in the child accounts
+===== Lock down the root user in the child accounts
 
 Once you're able to access the root user of each child account, you should follow the steps in <<lock_down_root_user>>
 for each of those child accounts—including enabling MFA and deleting the root user's access keys—and (almost) never use
 those root users again.
 
 [[apply_account_baseline_logs]]
-=== Apply the security baseline to the logs account
+==== Apply the `account-baseline-app` to the logs account
 
-The next step is to configure the logs account, which is used to aggregate AWS Config and CloudTrail data from all the
+The next step is to configure the **logs** account, which is used to aggregate AWS Config and CloudTrail data from all the
 other accountss.
 
 Create a `terragrunt.hcl` file in `infrastructure-live` under the file path `logs/_global/account-baseline`:
@@ -1512,6 +1542,8 @@ Set the variables for the `account-baseline-app` module in this environment in t
 [source,hcl]
 ----
 locals {
+  aws_region = local.region.aws_region
+
   # A local for more convenient access to the accounts map.
   accounts = local.common_vars.locals.accounts
 
@@ -1539,16 +1571,13 @@ inputs = {
   # Send Config logs and events to the logs account.
   config_central_account_id = local.accounts.logs
 
-  # Do not allow objects in the Config S3 bucket to be forcefully removed during destroy operations.
-  config_force_destroy = false
-
   #  This is the Logs account, so we create the SNS topic for aggregating Config logs from all accounts.
   config_should_create_sns_topic = true
 
   # All of the other accounts send logs to this account.
   config_linked_accounts = [
   for name, id in local.accounts :
-  id if name != "logs"
+    id if name != "logs"
   ]
 
   ################################
@@ -1562,7 +1591,7 @@ inputs = {
   cloudtrail_allow_kms_describe_key_to_external_aws_accounts = true
   cloudtrail_external_aws_account_ids_with_write_access = [
   for name, id in local.accounts :
-  id if name != "logs"
+    id if name != "logs"
   ]
 
   # The ARN is a key alias, not a key ID. This variable prevents a perpetual diff when using an alias.
@@ -1573,8 +1602,6 @@ inputs = {
   cloudtrail_kms_key_administrator_iam_arns = ["arn:aws:iam::${local.accounts.logs}:root"]
   cloudtrail_kms_key_user_iam_arns          = ["arn:aws:iam::${local.accounts.logs}:root"]
 
-  # Do not allow objects in the CloudTrail S3 bucket to be forcefully removed during destroy operations.
-  cloudtrail_force_destroy = false
   ##################################
   # Benchmark SNS alarms configuration
   ##################################
@@ -1587,26 +1614,6 @@ inputs = {
   # Cross-account IAM role permissions
   ##################################
 
-  # By granting access to the root ARN of the Security account in each of the roles below,
-  # we allow administrators to further delegate access to other IAM entities
-
-  # A role that allows administrator access to the account.
-  allow_full_access_from_other_account_arns = [local.security_account_root_arn]
-
-  # A role for developers to use to access services in the account.
-  # Access to services is managed using the dev_permitted_services input.
-  allow_dev_access_from_other_account_arns = [local.security_account_root_arn]
-
-  # Assuming the developers role will grant access to these services.
-  dev_permitted_services = [
-    "ec2",
-    "ecs",
-    "lambda",
-    "rds",
-    "elasticache",
-    "route53",
-  ]
-
   # A role to allow users that can view and modify AWS account billing information.
   allow_billing_access_from_other_account_arns = [local.security_account_root_arn]
 
@@ -1615,33 +1622,6 @@ inputs = {
 
   # A role that allows access to support only.
   allow_support_access_from_other_account_arns = [local.security_account_root_arn]
-
-  # A list of account root ARNs that should be able to assume the auto deploy role.
-  allow_auto_deploy_from_other_account_arns = [
-    # External CI/CD systems may use an IAM user in the security account to perform deployments.
-    local.security_account_root_arn,
-
-    # The shared account contains automation and infrastructure tools, such as CI/CD systems.
-    "arn:aws:iam::${local.accounts.shared}:root",
-  ]
-
-  # Assuming the auto-deploy role will grant access to these services.
-  auto_deploy_permissions = [
-    "iam:GetRole",
-    "iam:GetRolePolicy",
-  ]
-
-  # Configures the auto deploy max session duration to be 4 hours.
-  max_session_duration_machine_users = 14400
-
-  # Configures the max session duration for roles that humans use to be 8 hours.
-  max_session_duration_human_users = 28800
-
-  service_linked_roles = ["autoscaling.amazonaws.com"]
-
-  ##################################
-  # CIS compliance settings
-  ##################################
 
   security_hub_associate_to_master_account_id = local.accounts.root
 }
@@ -1687,7 +1667,7 @@ Add a new `profile` entry in `~/.aws/config` for your logs account that uses the
 [source,text]
 ----
 [profile logs-from-root]
-role_arn=arn:aws:iam::<LOGS_ACCOUNT_ID>:role/OrganizationAccountAccessRole
+role_arn=arn:aws:iam::${local.accounts.logs}:role/OrganizationAccountAccessRole
 source_profile=root-iam-user
 ----
 
@@ -1703,13 +1683,13 @@ You should see JSON output indicating that you've successfully assumed an IAM ro
 [source,json]
 ----
 {
-  "UserId": "AIDAXXXXXXXXXXXX:1597932316055520000",
-  "Account": "<LOGS_ACCOUNT_ID>",
-  "Arn": "arn:aws:sts::<LOGS_ACCOUNT_ID>:assumed-role/OrganizationAccountAccessRole/1597932316055520000"
+  "UserId": "AIDAXXXXXXXXXXXX:1111111111111111111",
+  "Account": "${local.accounts.logs}",
+  "Arn": "arn:aws:sts::${local.accounts.logs}:assumed-role/OrganizationAccountAccessRole/1111111111111111111"
 }
 ----
 
-You're now ready to deploy the `account-baseline` module in the logs account by running `terragrunt apply`:
+You're now ready to deploy the `account-baseline-app` in the logs account by running `terragrunt apply`:
 
 [source,bash]
 ----
@@ -1721,7 +1701,7 @@ aws-vault exec logs-from-root -- terragrunt apply
 IMPORTANT: On some operating systems, such as MacOS, you may also need to increase your open files limit to avoid "pipe: too many open files" errors by running: `ulimit -n 1024`.
 
 [[apply_account_baseline_security]]
-=== Apply the security baseline to the security account
+==== Apply the `account-baseline-security` to the security account
 
 Now that your logs accounts is fully configured, you need to apply the security baseline to the security account, which
 is where all your IAM users and groups will be defined and managed.
@@ -1766,6 +1746,8 @@ Set the variables for the `account-baseline-security` module in this environment
 [source,hcl]
 ----
 locals {
+  aws_region = local.region.aws_region
+
   # A local for more convenient access to the accounts map.
   accounts = local.common_vars.locals.accounts
 
@@ -1791,9 +1773,6 @@ input = {
 
   # Send Config logs and events to the logs account.
   config_central_account_id = local.accounts.logs
-
-  # Do not allow objects in the Config S3 bucket to be forcefully removed during destroy operations.
-  config_force_destroy = false
 
   # This account sends logs to the Logs account.
   config_aggregate_config_data_in_external_account = true
@@ -1850,33 +1829,22 @@ input = {
     "iam:GetRolePolicy",
   ]
 
-  # Configures the auto deploy max session duration to be 4 hours
-  max_session_duration_machine_users = 14400
-
-  # Configures the max session duration for roles that humans use to be 8 hours
-  max_session_duration_human_users = 28800
   # IAM users
-
   users = {
     alice = {
-      groups               = ["user-self-mgmt", "ssh-sudo-users", "_account.dev-full-access"]
+      groups               = ["user-self-mgmt", "ssh-sudo-users"]
       pgp_key              = "keybase:alice_on_keybase"
       create_login_profile = true
       create_access_keys   = false
     }
 
     bob = {
-      groups               = ["user-self-mgmt", "_account.dev-full-access", "_account.prod-read-only"]
+      groups               = ["user-self-mgmt", "_account.prod-read-only"]
       pgp_key              = "keybase:bob_on_keybase"
       create_login_profile = true
       create_access_keys   = false
     }
   }
-
-
-  ##################################
-  # CIS compliance settings
-  ##################################
 
   security_hub_associate_to_master_account_id = local.accounts.root
 }
@@ -1928,7 +1896,7 @@ Add a new `profile` entry in `~/.aws/config` for your security account that uses
 [source,text]
 ----
 [profile security-from-root]
-role_arn=arn:aws:iam::<SECURITY_ACCOUNT_ID>:role/OrganizationAccountAccessRole
+role_arn=arn:aws:iam::${local.accounts.security}:role/OrganizationAccountAccessRole
 source_profile=root-iam-user
 ----
 
@@ -1944,9 +1912,9 @@ You should see JSON output indicating that you've successfully assumed an IAM ro
 [source,json]
 ----
 {
-  "UserId": "AIDAXXXXXXXXXXXX:1597932316055520000",
-  "Account": "<SECURITY_ACCOUNT_ID>",
-  "Arn": "arn:aws:sts::<SECURITY_ACCOUNT_ID>:assumed-role/OrganizationAccountAccessRole/1597932316055520000"
+  "UserId": "AIDAXXXXXXXXXXXX:1111111111111111111",
+  "Account": "${local.accounts.security}",
+  "Arn": "arn:aws:sts::${local.accounts.security}:assumed-role/OrganizationAccountAccessRole/1111111111111111111"
 }
 ----
 
@@ -1970,19 +1938,14 @@ decrypt the password on their own computer (which should have their PGP key) as 
 echo "<PASSWORD>" | base64 --decode | keybase pgp decrypt
 ----
 
+==== Apply the `account-baseline-app` to the other child accounts
 
-=== Apply the security baseline to the other child accounts
-
-Now that your security account is fully configured, you need to apply the security baseline to the remaining child
-accounts (e.g., dev, stage, prod, shared-services). Feel free to adjust this as necessary based on the accounts your
+Now that your **security** account is fully configured, you need to apply the security baseline to the remaining child
+accounts (e.g., `dev`, `stage`, `prod`, `shared-services`). Feel free to adjust this as necessary based on the accounts your
 company needs.
 
-The `account-baseline-app` module in the Service Catalog can be used interchangeably between app accounts and log
-accounts as they deploy most of the same resources. That means this module can be re-used for all of the child
-accounts.
-
 Create `terragrunt.hcl` files in `infrastructure-live` under the file paths `<ACCOUNT>/_global/account-baseline`,
-where `<ACCOUNT>` is one of these other child accounts, such as dev, stage, prod, and shared-services. In the rest of
+where `<ACCOUNT>` is one of these other child accounts, such as `dev`, `stage`, `prod`, and `shared-services`. In the rest of
 this example, we’ll look solely at the stage account, but make sure you follow the analogous steps for EACH of your
 child accounts.
 
@@ -2025,6 +1988,8 @@ Set the variables for the `account-baseline-app` module in this environment in t
 [source,hcl]
 ----
 locals {
+  aws_region = local.region.aws_region
+
   # A local for more convenient access to the accounts map.
   accounts = local.common_vars.locals.accounts
 
@@ -2051,9 +2016,6 @@ inputs = {
 
   # Send Config logs and events to the logs account.
   config_central_account_id = local.accounts.logs
-
-  # Do not allow objects in the Config S3 bucket to be forcefully removed during destroy operations.
-  config_force_destroy = false
 
   # This account sends logs to the Logs account.
   config_aggregate_config_data_in_external_account = true
@@ -2084,27 +2046,6 @@ inputs = {
   ##################################
   # Cross-account IAM role permissions
   ##################################
-
-  # By granting access to the root ARN of the Security account in each of the roles below,
-  # we allow administrators to further delegate access to other IAM entities
-
-  # A role that allows administrator access to the account.
-  allow_full_access_from_other_account_arns = [local.security_account_root_arn]
-
-  # A role for developers to use to access services in the account.
-  # Access to services is managed using the dev_permitted_services input.
-  allow_dev_access_from_other_account_arns = [local.security_account_root_arn]
-
-  # Assuming the developers role will grant access to these services.
-  dev_permitted_services = [
-    "ec2",
-    "ecs",
-    "lambda",
-    "rds",
-    "elasticache",
-    "route53",
-  ]
-
   # A role to allow users that can view and modify AWS account billing information.
   allow_billing_access_from_other_account_arns = [local.security_account_root_arn]
 
@@ -2114,40 +2055,20 @@ inputs = {
   # A role that allows access to support only.
   allow_support_access_from_other_account_arns = [local.security_account_root_arn]
 
-  # A list of account root ARNs that should be able to assume the auto deploy role.
-  allow_auto_deploy_from_other_account_arns = [
-    # External CI/CD systems may use an IAM user in the security account to perform deployments.
-    local.security_account_root_arn,
-
-    # The shared account contains automation and infrastructure tools, such as CI/CD systems.
-    "arn:aws:iam::${local.accounts.shared}:root",
-  ]
-
-  # Assuming the auto-deploy role will grant access to these services.
-  auto_deploy_permissions = [
-    "iam:GetRole",
-    "iam:GetRolePolicy",
-  ]
-
-  # Configures the auto deploy max session duration to be 4 hours.
-  max_session_duration_machine_users = 14400
-
-  # Configures the max session duration for roles that humans use to be 8 hours.
-  max_session_duration_human_users = 28800
-
   service_linked_roles = ["autoscaling.amazonaws.com"]
+
   ##################################
   # KMS grants
   ##################################
 
   # These grants allow the autoscaling service-linked role to access to the AMI encryption key so that it
-  # can launch instances from AMIs that were shared from the shared-services account.
+  # can launch instances from AMIs that were shared from the `shared-services` account.
   kms_grant_regions = {
     ami_encryption_key = local.aws_region
   }
   kms_grants = {
     ami_encryption_key = {
-      kms_cmk_arn       = "arn:aws:kms:us-east-1:${local.accounts.shared}:alias/ami-encryption"
+      kms_cmk_arn       = "arn:aws:kms:${local.aws_region}:${local.accounts.shared}:alias/ami-encryption"
       grantee_principal = "arn:aws:iam::${local.accounts[local.account_name]}:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling"
       granted_operations = [
         "Encrypt",
@@ -2159,10 +2080,6 @@ inputs = {
       ]
     }
   }
-
-  ##################################
-  # CIS compliance settings
-  ##################################
 
   security_hub_associate_to_master_account_id = local.accounts.root
 }
@@ -2178,7 +2095,7 @@ The code above does the following:
 the services specified in `dev_permitted_services`.
 
 . **Configure the Auto Deploy IAM role**. We also create an `auto-deploy` IAM role that can be assumed by a CI server
-in the shared-services account to do deployments. This role will have the permissions specified in
+in the `shared-services` account to do deployments. This role will have the permissions specified in
 `auto_deploy_permissions`.
 
 . **Configure cross-account IAM roles**. We then specify which other accounts are allowed to assume the IAM roles in
@@ -2195,7 +2112,7 @@ include {
 }
 ----
 
-Just as with the logs and security accounts, you're going to use the `OrganizationAccountAccessRole` IAM role created by
+Just as with the **logs** and **security** accounts, you're going to use the `OrganizationAccountAccessRole` IAM role created by
 `account-baseline-root` to authenticate to the stage account and all other child accounts. There are many ways to
 https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[assume an IAM role on the CLI];
 for this guide, we're going to keep using `aws-vault`.
@@ -2206,7 +2123,7 @@ Add a new `profile` entry in `~/.aws/config` for your stage account that uses th
 [source,text]
 ----
 [profile stage-from-root]
-role_arn=arn:aws:iam::<STAGE_ACCOUNT_ID>:role/OrganizationAccountAccessRole
+role_arn=arn:aws:iam::${local.accounts.stage}:role/OrganizationAccountAccessRole
 source_profile=root-iam-user
 ----
 
@@ -2222,13 +2139,13 @@ You should see JSON output indicating that you've successfully assumed an IAM ro
 [source,json]
 ----
 {
-  "UserId": "AIDAXXXXXXXXXXXX:1597932316055520000",
-  "Account": "<STAGE_ACCOUNT_ID>",
-  "Arn": "arn:aws:sts::<STAGE_ACCOUNT_ID>:assumed-role/OrganizationAccountAccessRole/1597932316055520000"
+  "UserId": "AIDAXXXXXXXXXXXX:1111111111111111111",
+  "Account": "${local.accounts.stage}",
+  "Arn": "arn:aws:sts::${local.accounts.stage}:assumed-role/OrganizationAccountAccessRole/1111111111111111111"
 }
 ----
 
-You're now ready to deploy the `account-baseline` module in the stage account by running `terragrunt apply`:
+You're now ready to deploy the `account-baseline-app` in the **stage** account by running `terragrunt apply`:
 
 [source,bash]
 ----
@@ -2239,12 +2156,9 @@ aws-vault exec stage-from-root -- terragrunt apply
 [.exceptional]
 IMPORTANT: On some operating systems, such as MacOS, you may also need to increase your open files limit to avoid "pipe: too many open files" errors by running: `ulimit -n 1024`.
 
-Remember to repeat this process in the other child accounts too (i.e., dev, prod, shared-services, etc)!
+.Remember to repeat this process in the other child accounts too (i.e., `dev`, `prod`, `shared-services`, etc)!
 
-=== Try authenticating as an IAM user to the child accounts
-
-Now that you have IAM users in the security account and IAM roles in the other accounts, it's time to practice
-authenticating:
+**Next, try authenticating as an IAM user to the child accounts:**
 
 . Use your IAM user's user name and password (decrypted using keybase) to log into the web console of the security
   account (remember to use the IAM user sign-in URL for the security account).
@@ -2260,10 +2174,10 @@ authenticating:
   https://github.com/gruntwork-io/module-security/tree/master/modules/cross-account-iam-roles#resources-created[here]).
 . Alternatively, you can use the `aws-vault login xxx` command to login to the AWS Web Console for any profile `xxx`
   that you've configured in `aws-vault`. For example, `aws-vault login logs-from-root` will open up your web browser
-  and log you into the logs account using the `OrganizationAccountAccessRole` IAM Role.
+  and log you into the `logs` account using the `OrganizationAccountAccessRole` IAM Role.
 
 [[configure_security_hub]]
-=== Configure AWS Security Hub in the root account
+**Configure AWS Security Hub in the root account**
 
 Next, we'll configure link:https://aws.amazon.com/security-hub/[AWS Security Hub] in the root account. AWS Security Hub
 is deployed by the account baselines in every enabled region of an AWS account to check your account link:https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-standards.html[for compliance]
@@ -2271,7 +2185,7 @@ with the AWS CIS Foundations Benchmark. The Security Hub runs the exact audit st
 Config managed rules. _Note: Security Hub is not explicitly required by the Benchmark, however we suggest enabling it,
 so you can track your compliance efforts and be notified if any recommendations have not been implemented._
 
-In order to ensure the Security Hub dashboard shows a positive score, you will need to follow these link:https://gruntwork.io/guides/compliance/how-to-achieve-cis-benchmark-compliance/#identity-and-access-management-2[Manual Steps]
+TIP: In order to ensure the Security Hub dashboard shows a positive score, you will need to follow these link:https://gruntwork.io/guides/compliance/how-to-achieve-cis-benchmark-compliance/#identity-and-access-management-2[Manual Steps]
 to complete CIS compliance. These steps cannot be automated using AWS APIs. Additionally, in the AWS Console UI, AWS Security
 Hub will show a low security score for the CIS AWS Foundations Benchmark v1.2.0. This is due to AWS limitations on
 checking compliance standards for cross-region/cross-account rules. This does not indicate that the accounts are not in
@@ -2279,7 +2193,7 @@ compliance; it is a failure of the AWS audit tool. Note also that the accounts a
 the benchmark, v1.3.0; the AWS Security Hub does not support this version at the current time.
 
 [[iam_roles_for_instances]]
-=== Use IAM roles for EC2 instances
+**Use IAM roles for EC2 instances**
 All Gruntwork modules that require AWS API access use roles rather than an IAM user with static API credentials for
 authentication. For example:
 
@@ -2298,7 +2212,7 @@ Use these modules whenever possible. You should always use IAM roles in your own
 access to the AWS API. Using static API credentials should be avoided whenever possible.
 
 [[maintain_compliance_iam]]
-=== Maintaining compliance by following IAM best practices
+**Maintaining compliance by following IAM best practices**
 We conclude the IAM section with a few parting words of wisdom for maintaining compliance over time:
 
 . Do not attach any policies without requiring MFA.
@@ -2313,10 +2227,10 @@ the use of root].  Fortunately, most of these activities are rare, so usage of t
 a minimum.
 
 [[maintain_compliance_storage]]
-=== Maintaining compliance by following Storage best practices
+**Maintaining compliance by following Storage best practices**
 
 [[s3_buckets_deployment]]
-==== S3 Buckets
+**S3 Buckets**
 To make sure your S3 buckets are compliant with the benchmark, use the
 link:https://github.com/gruntwork-io/terraform-aws-security/tree/master/modules/private-s3-bucket[`private-s3-bucket` module]
 to create and manage all of your S3 buckets. This module blocks public access and enforces encryption by default. Note
@@ -2326,88 +2240,105 @@ You can either use the `private-s3-bucket` module in your own modules, or, if yo
 from the Gruntwork Service Catalog.
 
 [[maintain_compliance_logging]]
-=== Maintaining compliance by following Logging best practices
+**Maintaining compliance by following Logging best practices**
 
 The logging section of the Benchmark includes configurations for CloudTrail, AWS Config, KMS keys, and VPC
 flow logs.
 
-[[kms]]
-==== Enable key rotation for KMS keys
+[[enable_key_rotation_for_kms]]
+**Enable key rotation for KMS keys**
 To make sure your KMS keys are compliant with the benchmark, use the
 link:https://github.com/gruntwork-io/terraform-aws-security/blob/master/modules/kms-master-key/README.md[`kms-master-key` module]
 to create KMS keys with key rotation enabled by default.
 
 [[vpc_flow_logs]]
-==== Create VPC flow logs
+=== Create VPC flow logs
+
 The Benchmark recommends enabling link:https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html[VPC Flow Logs]
 for all VPCs in all regions. You can use the
 link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/blob/master/modules/networking/vpc[`vpc` service]
 in the AWS CIS Service Catalog to create your VPCs. This service is configured for CIS compliance, and as such has VPC flow
-logs enabled. For example, you might create a VPC using the VPC service:
+logs enabled. See the examples below:
 
-.infrastructure-modules/networking/vpc/myvpc/main.tf
+.infrastructure-live/root/us-east-1/prod/networking/vpc/terragrunt.hcl
 [source,hcl]
 ----
+# ---------------------------------------------------------------------------------------------------------------------
+# MODULE PARAMETERS
+# These are the variables we have to pass in to use the module specified in the terragrunt configuration above
+# ---------------------------------------------------------------------------------------------------------------------
+inputs = {
+  vpc_name         = "app"
+  num_nat_gateways = 1
+  cidr_block       = local.cidr_block
+  kms_key_user_iam_arns = [
+    "arn:aws:iam::${local.common_vars.locals.accounts[local.account_name]}:root",
+  ]
+  eks_cluster_names    = ["${local.name_prefix}-${local.account_name}"]
+  tag_for_use_with_eks = true
 
-module "vpc" {
-  # Replace <VERSION> with the most recent release from https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/releases
-  source = "git::git@github.com:gruntwork-io/terraform-aws-cis-service-catalog.git//modules/networking/vpc?ref=<VERSION>"
-
-  vpc_name                                                = var.vpc_name
-  aws_region                                              = var.aws_region
-  cidr_block                                              = var.cidr_block
-  num_nat_gateways                                        = var.num_nat_gateways
-  allow_administrative_remote_access_cidrs_public_subnets = var.allow_administrative_remote_access_cidrs_public_subnets
+  allow_administrative_remote_access_cidrs_public_subnets = merge(
+    {
+      for cidr in local.common_vars.locals.ip_allow_list
+      : index(local.common_vars.locals.ip_allow_list, cidr) => cidr
+    },
+    { length(local.common_vars.locals.ip_allow_list) = local.cidr_block }
+  )
 }
 ----
 
-Under the hood, the service will enable VPC flow logs. All that's remaining is to define the parameters in a `variables.tf`:
+In here you'll still need to reference the `locals` configuration, and ensure that you're setting the right `source` to the module, so add this to your `terragrunt.hcl` file too:
 
-.infrastructure-modules/networking/vpc/myvpc/variables.tf
 [source,hcl]
 ----
-variable "aws_region" {
-  description = "The AWS region to deploy to (e.g. us-east-1)"
-  type        = string
+# Terragrunt will copy the Terraform configurations specified by the source parameter, along with any files in the
+# working directory, into a temporary folder, and execute your Terraform commands in that folder. If you're iterating
+# locally, you can use --terragrunt-source /path/to/local/checkout/of/module to override the source parameter to a
+# local check out of the module for faster iteration.
+terraform {
+  # We're using a local file path here just so our automated tests run against the absolute latest code. However, when
+  # using these modules in your code, you should use a Git URL with a ref attribute that pins you to a specific version:
+  # source = "git::git@github.com:gruntwork-io/terraform-aws-cis-service-catalog.git//modules/networking/vpc?ref=v0.20.0"
+  source = "${get_parent_terragrunt_dir()}/../../..//modules/networking/vpc"
 }
 
-variable "vpc_name" {
-  description = "The name of the VPC to create"
-  type        = string
+# Include all settings from the root terragrunt.hcl file
+include {
+  path = find_in_parent_folders()
 }
 
-variable "cidr_block" {
-  description = "The IP address range of the app VPC in CIDR notation."
-  type        = string
-}
+# ---------------------------------------------------------------------------------------------------------------------
+# Locals are named constants that are reusable within the configuration.
+# ---------------------------------------------------------------------------------------------------------------------
+locals {
+  # Automatically load common variables shared across all accounts
+  common_vars = read_terragrunt_config(find_in_parent_folders("common.hcl"))
 
-variable "num_nat_gateways" {
-  description = "The number of NAT Gateways to launch for this VPC."
-  type        = number
-}
+  # Extract the name prefix for easy access
+  name_prefix = local.common_vars.locals.name_prefix
 
-variable "allow_administrative_remote_access_cidrs_public_subnets" {
-  description = "A map of CIDR blocks that will be allowed access to administrative ports (e.g., SSH, RDP) in the public subnet tier."
-  type        = map(string)
+  # Automatically load account-level variables
+  account_vars = read_terragrunt_config(find_in_parent_folders("account.hcl"))
 
-  # Example:
-  #
-  #   default = {
-  #    UsOffice = "1.2.3.4/32"
-  #    EuOffice = "5.6.7.8/32"
-  # }
+  # Extract the account_name for easy access
+  account_name = local.account_vars.locals.account_name
+
+  # Automatically load region-level variables
+  region_vars = read_terragrunt_config(find_in_parent_folders("region.hcl"))
+
+  # Extract the region for easy access
+  aws_region = local.region_vars.locals.aws_region
+
+  cidr_block = local.common_vars.locals.app_vpc_cidrs[local.account_name]
 }
 ----
-
-Refer to the VPC
-link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/examples/for-learning-and-testing/networking/vpc/terraform[example code].
 
 To limit the number of flow logs, you may want to use the
 link:https://github.com/gruntwork-io/cloud-nuke[`cloud-nuke defaults-aws`] command. It will remove the default VPC from
 all regions in an account, saving you the hassle of creating flow logs in each default VPC.
 
 [[maintain_compliance_monitoring]]
-=== Maintaining compliance by following Monitoring best practices
+==== Maintaining compliance by following Monitoring best practices
 The Monitoring section of the Benchmark centers on a collection of
 link:https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/MonitoringLogData.html[CloudWatch Logs Metric
 Filters]. Gruntwork has simplified this section to a single module: the
@@ -2421,7 +2352,7 @@ Note that you must have a subscriber on the SNS topic to be compliant. Refer to 
 setup a subscriber to the SNS topics that are created.
 
 [[maintain_compliance_networking]]
-=== Maintaining compliance by following Networking best practices
+==== Maintaining compliance by following Networking best practices
 
 To ensure all the networking recommendations are satisfied, use the
 link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/modules/networking/vpc[`vpc`] (and/or
@@ -2435,31 +2366,47 @@ when creating VPCs. These variables are used to create appropriate Network ACL R
 VPC using the `vpc` service from `terraform-aws-cis-service-catalog`:
 
 ----
-infrastructure-modules
-└── networking
-    └── vpc
-        └── myvpc
-            ├── main.tf
-            └── variables.tf
+infrastructure-live
+└── root
+    └── us-east-1
+        └── prod
+            └─ networking
+                └─ vpc
+                    └─ terragrunt.hcl
 ----
 
 .infrastructure-modules/networking/vpc/myvpc/main.tf
 [source,hcl]
 ----
-module "vpc" {
-  # Replace <VERSION> with the most recent release from the https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/releases:
-  source = "git::git@github.com:gruntwork-io/terraform-aws-cis-service-catalog.git//modules/networking/vpc?ref=<VERSION>"
+terraform { # We're using a local file path here just so our automated tests run against the absolute latest code. However, when
+  # using these modules in your code, you should use a Git URL with a ref attribute that pins you to a specific version:
+  # source = "git::git@github.com:gruntwork-io/terraform-aws-cis-service-catalog.git//modules/networking/vpc-mgmt?ref=v0.20.0"
+  source = "${get_parent_terragrunt_dir()}/../../..//modules/networking/vpc-mgmt"
+}
+----
 
-  # Set the basic required variables first
-  vpc_name         = var.vpc_name
-  aws_region       = var.aws_region
-  cidr_block       = var.cidr_block
-  num_nat_gateways = var.num_nat_gateways
+[source, hcl]
+----
+inputs = {
+  vpc_name         = "mgmt"
+  num_nat_gateways = 1
+  cidr_block       = local.cidr_block
+  kms_key_user_iam_arns = [
+    "arn:aws:iam::${local.common_vars.locals.accounts[local.account_name]}:root",
+  ]
 
   # Next, pass values for the allow_administrative_remote_access_* variables, thus creating the NACL rules under the hood
-  allow_administrative_remote_access_cidrs_public_subnets              = var.allow_administrative_remote_access_cidrs
   allow_administrative_remote_access_cidrs_private_app_subnets         = { all_app_vpc_cidrs  = module.vpc.vpc_cidr_block }
   allow_administrative_remote_access_cidrs_private_persistence_subnets = { all_app_vpc_cidrs  = module.vpc.vpc_cidr_block }
+
+  allow_administrative_remote_access_cidrs_public_subnets = merge(
+    {
+      for cidr in local.common_vars.locals.ip_allow_list
+      : index(local.common_vars.locals.ip_allow_list, cidr) => cidr
+    },
+    { length(local.common_vars.locals.ip_allow_list) = local.cidr_block }
+  )
+}
 ----
 
 Refer to the https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/examples/for-learning-and-testing/networking/vpc/terraform[terraform-aws-cis-service-catalog]
@@ -2475,7 +2422,6 @@ Congratulations! If you've made it this far, you should have achieved compliance
 Benchmark. Now it's time to confirm that your configurations are correct and you didn't miss any steps.
  +
  +
-
 
 [[traceability_matrix]]
 == Traceability matrix
@@ -2512,7 +2458,7 @@ sections above.
 3.5;<<apply_account_baseline_security>>;Use the `account-baseline-security` module to ensure AWS Config is enabled in all regions
 3.6;<<apply_account_baseline_logs>>;Use the `account-baseline-*` modules to ensure Cloudtrail S3 bucket has access logging enabled
 3.7;<<apply_account_baseline_logs>>;Use the `account-baseline-*` modules to ensure Cloudtrail logs are encrypted at rest using KMS CMKs
-3.8;<<kms>>;Use the KMS module
+3.8;<<enable_key_rotation_for_kms>>;Use the KMS module
 3.9;<<vpc_flow_logs>>;Use the Gruntwork CIS-compliant `vpc` service to provision VPCs with flow logs enabled
 3.10-3.11;<<apply_account_baseline_logs>>;Use the `account-baseline-*` modules to ensure Object-level logging is enabled for S3 buckets for read and write events
 4.1-4.15;<<maintain_compliance_monitoring>>;The CloudWatch Logs metrics filters wrapper module will satisfy each recommendation
