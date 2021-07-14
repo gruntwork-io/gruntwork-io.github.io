@@ -11,6 +11,7 @@
     id="_subject"
     value="New person to add to waitlist from {{ site.url }}"
   />
+  <input type="hidden" name="_selection" id="_selection" />
   <input type="hidden" name="_viewing" id="_viewing" value="v1-static" />
   <input type="hidden" name="_next" value="{{ site.url }}/thanks/" />
   <input type="hidden" name="landing-page" value="{{ page.url }}" />
@@ -49,3 +50,8 @@
     </button>
   </div>
 </form>
+<script type="application/javascript">
+  const urlParams = new URLSearchParams(window.location.search);
+  const selection = urlParams.get('selection');
+  document.getElementById('_selection').value = selection;
+</script>
