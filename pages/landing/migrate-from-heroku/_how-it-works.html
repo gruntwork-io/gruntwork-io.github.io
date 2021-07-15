@@ -10,18 +10,18 @@
     {% if item.tab_block %}
       <div class="{% if item.image_side == "left" %}col-xs-8 col-xs-offset-2 col-sm-5 col-sm-offset-0 col-md-6 col-diagram hidden-print{% else %}col-xs-10 col-xs-offset-1 col-sm-5 col-sm-push-7 col-sm-offset-0 col-md-6 col-md-push-6 col-diagram{% endif %}">
         <div class="tab_block">
-        {% for tab in site.data.do-tabs %}
-          <div class="tab">
-            <button class="tablinks" onclick="openTab(event, '{{tab.title}}')">{{ tab.title }}</button>
-          </div>
-        {% endfor %}
+          {% for tab in site.data.heroku-landing-page-tabs %}
+            <div class="tab">
+              <button class="tablinks" onclick="openTab(event, '{{tab.title}}')">{{ tab.title }}</button>
+            </div>
+          {% endfor %}
         </div>
         <div class="content">
-        {% for tab in site.data.do-tabs %}
-            <div id={{tab.title}} class="{% if forloop.first %}first_tabcontent tabcontent{% else %}tabcontent{% endif %}">
-                <p>{{ tab.content }}</p>
-            </div>
-        {% endfor %}
+          {% for tab in site.data.heroku-landing-page-tabs %}
+              <div id={{tab.title}} class="{% if forloop.first %}first_tabcontent tabcontent{% else %}tabcontent{% endif %}">
+                  <img src="{{tab.content}}"/>
+              </div>
+          {% endfor %}
         </div>
       </div>
     {% endif %}
@@ -72,8 +72,6 @@
   }
 
   .tabcontent, .first_tabcontent {
-    display: none;
-    padding: 6px 12px;
     border-top: none;
   }
 
