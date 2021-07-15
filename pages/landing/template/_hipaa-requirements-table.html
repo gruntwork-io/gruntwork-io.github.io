@@ -24,7 +24,14 @@
             {{ package.requirement }}
           </th>
           <td style="width: 50%">{{ package.description | truncate: 100 }}</td>
-          <td style="width: 20%">{{ package.ref_arch_base }}</td>
+          <td style="width: 20%">
+            {% if package.ref_arch_base == true %}
+            <img
+              style="width: 50%"
+              src="/assets/img/table-icons/green-check.png"
+            />
+            {% endif %}
+          </td>
           <td style="width: 20%">{{ package.ref_arch_cis }}</td>
           <td sytle="width: 20%">{{ package.ref_arch_hipaa }}</td>
         </tr>
