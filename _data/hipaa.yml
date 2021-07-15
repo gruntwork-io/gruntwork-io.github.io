@@ -10,31 +10,39 @@
   ref_arch_base: true
   ref_arch_cis: true
   ref_arch_hipaa: true
-
-- requirement: "Risk Assessment"
+- requirement: "Audit logging"
+  description: |
+    Collect all logs and events related to PHI from cloud infra, operating system and application-level logs.
+  ref_arch_base: true
+  ref_arch_cis: true
+  ref_arch_hipaa: true
+- requirement: "Automatic Logoff"
+  description: |
+    Any workstations that store PHI should automatically logoff the user after a certain period of time.
+  ref_arch_base: false
+  ref_arch_cis: false
+  ref_arch_hipaa: false- requirement: "Risk Assessment"
   description: |
     HIPAA requires teams to perform a security risk assessment yearly.
   ref_arch_base: "N/A"
   ref_arch_cis: "N/A"
   ref_arch_hipaa: "Customer Responsibility"
-
 - requirement: "Incident Response Plan"
   description: |
     HIPAA requires teams to prepare an incident response plan in-case of a potential security breach.
   ref_arch_base: "N/A"
   ref_arch_cis: "N/A"
   ref_arch_hipaa: "Customer Responsibility"
-
 - requirement: "Disaster Recovery Plan"
   description: |
     HIPAA requires teams to have backup and disaster recovery in place that is regularly verified.
   ref_arch_base: "N/A"
   ref_arch_cis: "N/A"
   ref_arch_hipaa: "Customer Responsibility"
-
 - requirement: "Business Associates Agreements (BAA)"
   description: |
     HIPAA requires that teams have a BAA in place with all vendors that manage PHI.
   ref_arch_base: "N/A"
   ref_arch_cis: "N/A"
   ref_arch_hipaa: "Customer Responsibility"
+
