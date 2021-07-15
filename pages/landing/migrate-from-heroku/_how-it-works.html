@@ -1,5 +1,12 @@
 {% for item in page.how_it_works %}
   <div class="row">
+    {% if item.code_block%}
+      <div style="float: left; width: 40%; margin: 20px;">
+        {% highlight yaml %}
+          {{ item.code_block }}
+        {% endhighlight %}
+      </div>
+    {% endif %}
     <div class="{% if item.image_side == "left" %}col-xs-8 col-xs-offset-2 col-sm-5 col-sm-offset-0 col-md-6 col-diagram hidden-print{% else %}col-xs-10 col-xs-offset-1 col-sm-5 col-sm-push-7 col-sm-offset-0 col-md-6 col-md-push-6 col-diagram{% endif %}">
       <img src="{{ item.image }}" width="{{ item.image_width }}" style="margin-left: 3px;"/>
     </div>
