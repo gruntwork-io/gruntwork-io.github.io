@@ -1,1 +1,12 @@
-<h1>{{ test }}</h1>
+{% if pass == "yes" %}
+<img
+  style="max-width: 40px; margin: 10px"
+  src="/assets/img/table-icons/green-check.png"
+/>
+{% elsif pass == "no" %}
+<img
+  style="max-width: 40px; margin: 10px"
+  src="/assets/img/table-icons/red-cross.png"
+/>
+{% endif %} {% if time %} <br />
+{{ time }} {% endif %}
