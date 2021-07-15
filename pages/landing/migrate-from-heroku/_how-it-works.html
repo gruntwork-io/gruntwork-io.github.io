@@ -1,18 +1,103 @@
 {% for item in page.how_it_works %}
   <div class="row">
-    {% if item.code_block%}
+    {% if item.code_block %}
       <div style="float: left; width: 40%; margin: 20px;">
         {% highlight yaml %}
           {{ item.code_block }}
         {% endhighlight %}
       </div>
     {% endif %}
-    <div class="{% if item.image_side == "left" %}col-xs-8 col-xs-offset-2 col-sm-5 col-sm-offset-0 col-md-6 col-diagram hidden-print{% else %}col-xs-10 col-xs-offset-1 col-sm-5 col-sm-push-7 col-sm-offset-0 col-md-6 col-md-push-6 col-diagram{% endif %}">
-      <img src="{{ item.image }}" width="{{ item.image_width }}" style="margin-left: 3px;"/>
-    </div>
+    {% if item.tab_block %}
+      <div class="{% if item.image_side == "left" %}col-xs-8 col-xs-offset-2 col-sm-5 col-sm-offset-0 col-md-6 col-diagram hidden-print{% else %}col-xs-10 col-xs-offset-1 col-sm-5 col-sm-push-7 col-sm-offset-0 col-md-6 col-md-push-6 col-diagram{% endif %}">
+        <div class="tab_block">
+        {% for tab in site.data.do-tabs %}
+          <div class="tab">
+            <button class="tablinks" onclick="openTab(event, '{{tab.title}}')">{{ tab.title }}</button>
+          </div>
+        {% endfor %}
+        </div>
+        <div class="content">
+        {% for tab in site.data.do-tabs %}
+            <div id={{tab.title}} class="{% if forloop.first %}first_tabcontent tabcontent{% else %}tabcontent{% endif %}">
+                <p>{{ tab.content }}</p>
+            </div>
+        {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+    {% if item.image %}
+      <div class="{% if item.image_side == "left" %}col-xs-8 col-xs-offset-2 col-sm-5 col-sm-offset-0 col-md-6 col-diagram hidden-print{% else %}col-xs-10 col-xs-offset-1 col-sm-5 col-sm-push-7 col-sm-offset-0 col-md-6 col-md-push-6 col-diagram{% endif %}">
+        <img src="{{ item.image }}" width="{{ item.image_width }}" style="margin-left: 3px;"/>
+      </div>
+    {% endif %}
     <div class="{% if item.image_side == "left" %}col-xs-12 col-sm-7 col-md-6 col-description{% else %}col-xs-12 col-sm-7 col-sm-pull-5 col-md-6 col-md-pull-6 col-description{% endif %}">
       <h2>{{ item.heading }}</h2>
       <p>{{ item.body }}</p>
     </div>
   </div>
 {% endfor %}
+
+<style>
+  .tab_block {
+    width: 100%;
+    display: inline-table;
+    max-width: 500px;
+  }
+
+  .tab {
+    overflow: hidden;
+    background-color: #13cfe7;
+    display: table-cell;
+    width: auto;
+    color: white;
+  }
+
+  .tab button {
+    background-color: inherit;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    width: 100%;
+    color: white;
+  }
+
+  .tab button:hover {
+    background-color: #06a2ff;
+  }
+
+  .tab button.active {
+    background-color: #06a2ff;
+  }
+
+  .tabcontent, .first_tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border-top: none;
+  }
+
+  .tabcontent {
+    display: none;
+  }
+
+  .first_tabcontent {
+    display: block;
+  }
+</style>
+
+<script>
+  function openTab(evt, tabName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(tabName).style.display = "block";
+    evt.currentTarget.className += " active";
+  }
+</script>
