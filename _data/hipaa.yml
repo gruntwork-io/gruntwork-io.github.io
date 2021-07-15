@@ -1,27 +1,27 @@
 - requirement: "Encryption in transit"
   description: |
     Utilize SSL/TLS when sending data
-  ref_arch_base: true
-  ref_arch_cis: true
-  ref_arch_hipaa: true
+  ref_arch_base: "yes"
+  ref_arch_cis: "yes"
+  ref_arch_hipaa: "yes"
 - requirement: "Encryption at rest"
   description: |
     Data is stored on encrypted volumes
-  ref_arch_base: true
-  ref_arch_cis: true
-  ref_arch_hipaa: true
+  ref_arch_base: "yes"
+  ref_arch_cis: "yes"
+  ref_arch_hipaa: "yes"
 - requirement: "Audit logging"
   description: |
     Collect all logs and events related to PHI from cloud infra, operating system and application-level logs.
-  ref_arch_base: true
-  ref_arch_cis: true
-  ref_arch_hipaa: true
+  ref_arch_base: "yes"
+  ref_arch_cis: "yes"
+  ref_arch_hipaa: "yes"
 - requirement: "Automatic Logoff"
   description: |
     Any workstations that store PHI should automatically logoff the user after a certain period of time.
-  ref_arch_base: false
-  ref_arch_cis: false
-  ref_arch_hipaa: false
+  ref_arch_base: "no"
+  ref_arch_cis: "no"
+  ref_arch_hipaa: "no"
 - requirement: "Risk Assessment"
   description: |
     HIPAA requires teams to perform a security risk assessment yearly.
