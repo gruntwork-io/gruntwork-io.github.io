@@ -1,13 +1,12 @@
-<div style="text-align: right">
-  <small id="search-results-count"></small>
-</div>
+<h2>We did the heavy lifting for you</h2>
 <div class="table-responsive">
   <div>
-    <table class="table table-striped" style="min-width: 500px">
+    <table class="table-dark table-striped" style="min-width: 500px">
       <thead>
         <tr>
           <th>Requirement</th>
           <th>Description</th>
+          <th>DIY</th>
           <th>Base</th>
           <th>CIS</th>
           <th>HIPAA</th>
@@ -20,15 +19,67 @@
         data-target="#modal-{{ package.name | replace: " ", "_" | replace: "(",
         "_" | replace: ")", "_" }}{% endcapture %}
         <tr>
-          <th style="width: 30%; vertical-align: middle">
-            {{ package.requirement }}
-          </th>
-          <td style="width: 50%">{{ package.description | truncate: 100 }}</td>
-          <td style="width: 20%">{{ package.ref_arch_base }}</td>
-          <td style="width: 20%">{{ package.ref_arch_cis }}</td>
-          <td sytle="width: 20%">{{ package.ref_arch_hipaa }}</td>
+          <td style="">{{ package.requirement }}</td>
+          <td style="width: 20%">{{ package.description | truncate: 100 }}</td>
+          <td style="width: 20%">
+            {% if package.build_it_yourself == "yes" %}
+            <img
+              style="width: 35%"
+              src="/assets/img/table-icons/green-check.png"
+            />
+            {% elsif package.build_it_yourself == "no" %}
+            <img
+              style="width: 35%"
+              src="/assets/img/table-icons/red-cross.png"
+            />
+            {% endif %} {% if package.build_it_yourself_time %} <br />
+            {{ package.build_it_yourself_time }} {% endif %}
+          </td>
+          <td style="width: 20%">
+            {% if package.ref_arch_base == "yes" %}
+            <img
+              style="width: 35%"
+              src="/assets/img/table-icons/green-check.png"
+            />
+            {% elsif package.ref_arch_base == "no" %}
+            <img
+              style="width: 35%"
+              src="/assets/img/table-icons/red-cross.png"
+            />
+            {% endif %} {% if package.ref_arch_base %} <br />
+            {{ package.ref_arch_base_time }} {% endif %}
+          </td>
+          <td style="width: 20%">
+            {% if package.ref_arch_cis == "yes" %}
+            <img
+              style="width: 35%"
+              src="/assets/img/table-icons/green-check.png"
+            />
+            {% elsif package.ref_arch_cis == "no" %}
+            <img
+              style="width: 35%"
+              src="/assets/img/table-icons/red-cross.png"
+            />
+            {% endif %} {% if package.ref_arch_cis %} <br />
+            {{ package.ref_arch_cis_time }} {% endif %}
+          </td>
+          <td sytle="width: 20%">
+            {% if package.ref_arch_hipaa == "yes" %}
+            <img
+              style="width: 35%"
+              src="/assets/img/table-icons/green-check.png"
+            />
+            {% elsif package.ref_arch_hipaa == "no" %}
+            <img
+              style="width: 35%"
+              src="/assets/img/table-icons/red-cross.png"
+            />
+            {% else %} {{ package.ref_arch_hipaa }} {% endif %} {% if
+            package.ref_arch_hipaa_time %}
+            <br />
+            {{ package.ref_arch_hipaa_time }} {% endif %}
+          </td>
         </tr>
-
         {% endfor %}
       </tbody>
     </table>
