@@ -1,0 +1,36 @@
+<div style="text-align: right">
+  <small id="search-results-count"></small>
+</div>
+<div class="table-responsive">
+  <div>
+    <table class="table table-striped" style="min-width: 500px">
+      <thead>
+        <tr>
+          <th>Requirement</th>
+          <th>Description</th>
+          <th>Base</th>
+          <th>CIS</th>
+          <th>HIPAA</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for package in site.data.hipaa %} {% capture id %}{{
+        package.requirement | replace: " ", "_" | replace: ")", "_" | replace:
+        "(", "_" }}" class="table-clickable-row" data-toggle="modal"
+        data-target="#modal-{{ package.name | replace: " ", "_" | replace: "(",
+        "_" | replace: ")", "_" }}{% endcapture %}
+        <tr>
+          <th style="width: 30%; vertical-align: middle">
+            {{ package.requirement }}
+          </th>
+          <td style="width: 50%">{{ package.description | truncate: 100 }}</td>
+          <td style="width: 20%">{{ package.ref_arch_base }}</td>
+          <td style="width: 20%">{{ package.ref_arch_cis }}</td>
+          <td sytle="width: 20%">{{ package.ref_arch_hipaa }}</td>
+        </tr>
+
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
