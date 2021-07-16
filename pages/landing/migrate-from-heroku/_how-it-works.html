@@ -18,7 +18,7 @@
         </div>
         <div class="content">
           {% for tab in site.data.heroku-landing-page-tabs %}
-              <div id={{tab.title}} class="{% if forloop.first %}first_tabcontent tabcontent{% else %}tabcontent{% endif %}">
+              <div id="{{tab.title}}" class="{% if forloop.first %}first_tabcontent tabcontent{% else %}tabcontent{% endif %}">
                   <img src="{{tab.content}}"/>
               </div>
           {% endfor %}
