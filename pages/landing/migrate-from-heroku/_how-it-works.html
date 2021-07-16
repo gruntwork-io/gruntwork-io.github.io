@@ -27,9 +27,9 @@
       <div class="{% if item.image_side == "left" %}col-xs-8 col-xs-offset-2 col-sm-5 col-sm-offset-0 col-md-6 col-diagram hidden-print{% else %}col-xs-10 col-xs-offset-1 col-sm-5 col-sm-push-7 col-sm-offset-0 col-md-6 col-md-push-6 col-diagram{% endif %}">
         <div class="tab_block">
           {% for tab in site.data.heroku-landing-page-tabs-code %}
-          <div class="tab">
-            <button class="{% if forloop.first %}active tablinks{% else %}tablinks{% endif %}" onclick="openTab(event, '{{tab.id}}')">{{ tab.title }}</button>
-          </div>
+            <div class="tab">
+              <button class="{% if forloop.first %}active tablinks{% else %}tablinks{% endif %}" onclick="openTab(event, '{{tab.id}}')">{{ tab.title }}</button>
+            </div>
           {% endfor %}
         </div>
         <div class="content">
