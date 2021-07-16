@@ -12,13 +12,13 @@
         <div class="tab_block">
           {% for tab in site.data.heroku-landing-page-tabs %}
             <div class="tab">
-              <button class="tablinks" onclick="openTab(event, '{{tab.title}}')">{{ tab.title }}</button>
+              <button class="tablinks" onclick="openTab(event, '{{tab.id}}')">{{ tab.title }}</button>
             </div>
           {% endfor %}
         </div>
         <div class="content">
           {% for tab in site.data.heroku-landing-page-tabs %}
-              <div id="{{tab.title}}" class="{% if forloop.first %}first_tabcontent tabcontent{% else %}tabcontent{% endif %}">
+              <div id="{{tab.id}}" class="{% if forloop.first %}first_tabcontent tabcontent{% else %}tabcontent{% endif %}">
                   <img src="{{tab.content}}"/>
               </div>
           {% endfor %}
@@ -86,16 +86,8 @@
 
 <script>
   function openTab(evt, tabName) {
-    var i, tabcontent, tablinks;
-    tabcontent = document.getElementsByClassName("tabcontent");
-    for (i = 0; i < tabcontent.length; i++) {
-      tabcontent[i].style.display = "none";
-    }
-    tablinks = document.getElementsByClassName("tablinks");
-    for (i = 0; i < tablinks.length; i++) {
-      tablinks[i].className = tablinks[i].className.replace(" active", "");
-    }
-    document.getElementById(tabName).style.display = "block";
-    evt.currentTarget.className += " active";
+    $('.tabcontent').hide(); // hide all tab content
+    $('.tablinks').removeClass('active'); // ensure all links are inactive
+    $(evt.currentTarget).addClass('active'); // mark the current tab as active
   }
 </script>
