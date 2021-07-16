@@ -1,55 +1,111 @@
-- id: eks
-  title: EKS
+- id: fargate
+  title: Fargate
   content: |
-    <figure><figcaption>.circleci/config.yml</figcaption>
+    <figure><figcaption>ecs-fargate-service/main.tf</figcaption>
       <pre>
       <code class="language-js">
-      workflows:
-        version: 2
-        build-and-test:
-          jobs:
-            - test:
-                filters:
-                  tags:
-                    only: /^v.*/
+        module "fargate_service" {
+          source = "git::git@github.com:gruntwork-io/terraform-aws-ecs.git//modules/ecs-service?ref=v1.0.8"
+
+          service_name    = var.service_name
+          ecs_cluster_arn = aws_ecs_cluster.fargate_cluster.arn
+
+          desired_number_of_tasks        = var.desired_number_of_tasks
+          ecs_task_container_definitions = data.template_file.container_definition.rendered
+          launch_type                    = "FARGATE"
+          platform_version               = "1.4.0"
+
+          # Network information is necessary for Fargate, as it required VPC type
+          ecs_task_definition_network_mode = "awsvpc"
+          ecs_service_network_configuration = {
+            subnets          = data.aws_subnet_ids.default.ids
+            security_groups  = [aws_security_group.ecs_task_security_group.id]
+            assign_public_ip = true
+          }
+
+          # https://docs.aws.amazon.com/AmazonECS/latest/developerguide/AWS_Fargate.html#fargate-tasks-size.
+          # Specify memory in MB
+          task_cpu    = 256
+          task_memory = 512
+
+          enable_ecs_deployment_check      = var.enable_ecs_deployment_check
+          deployment_check_timeout_seconds = var.deployment_check_timeout_seconds
+
+          # EFS volumes
+          efs_volumes = local.efs_volumes
+
+          # Make sure all the ECS cluster resources are deployed before deploying any ECS service resources. This is also
+          # necessary to avoid issues on 'destroy'.
+          depends_on = [aws_ecs_cluster.fargate_cluster]
+        }
       </code>
       </pre>
       <figure>
 - id: ecs
   title: ECS
   content: |
-    <figure><figcaption>.circleci/config.yml</figcaption>
+    <figure><figcaption>ecs-cluster/main.tf</figcaption>
       <pre>
       <code class="language-js">
-      workflows:
-        version: 2
-        build-and-test:
-            - build:
-                requires:
-                  - test
-                filters:
-                  tags:
-                    only: /^v.*/
+        module "ecs_cluster" {
+          source = "git::git@github.com:gruntwork-io/terraform-aws-ecs.git//modules/ecs-cluster?ref=v1.0.0"
+
+          cluster_name = var.ecs_cluster_name
+
+          # Make the max size twice the min size to allow for rolling out updates to the cluster without downtime
+          cluster_min_size = 2
+          cluster_max_size = 4
+
+          cluster_instance_ami              = var.ecs_cluster_instance_ami
+          cluster_instance_type             = module.instance_type.recommended_instance_type
+          cluster_instance_keypair_name     = var.ecs_cluster_instance_keypair_name
+          cluster_instance_user_data        = data.template_file.user_data.rendered
+          enable_cluster_container_insights = true
+
+          vpc_id         = var.vpc_id
+          vpc_subnet_ids = var.ecs_cluster_vpc_subnet_ids
+
+          alb_security_group_ids = [module.alb.alb_security_group_id]
+
+          custom_tags_security_group = {
+            Foo = "Bar"
+          }
+
+          custom_tags_ec2_instances = [
+            {
+              key                 = "Foo"
+              value               = "Bar"
+              propagate_at_launch = true
+            },
+          ]
+        }
       </code>
       </pre>
       <figure>
-- id: EC2
-  title: EC2
+- id: eks
+  title: EKS
   content: |
-    <figure><figcaption>.circleci/config.yml</figcaption>
+    <figure><figcaption>eks-cluster/main.tf</figcaption>
       <pre>
       <code class="language-js">
-      workflows:
-        version: 2
-        build-and-test:
-            - deploy:
-                requires:
-                  - build
-                filters:
-                  tags:
-                    only: /^v.*/
-                  branches:
-                    ignore: /.*/
+        module "eks_cluster" {
+          source = "git::git@github.com:gruntwork-io/terraform-aws-eks.git//modules/eks-cluster-control-plane?ref=v0.1.0"
+
+          cluster_name = var.eks_cluster_name
+
+          vpc_id                       = module.vpc_app.vpc_id
+          vpc_control_plane_subnet_ids = local.usable_subnet_ids
+          endpoint_public_access_cidrs = var.endpoint_public_access_cidrs
+
+          kubernetes_version  = var.kubernetes_version
+          configure_kubectl   = var.configure_kubectl
+          kubectl_config_path = var.kubectl_config_path
+
+          # Disable waiting for rollout, since the dependency ordering of worker pools causes terraform to deploy the script
+          # before the workers. As such, rollout will always fail. Note that this should be set to true after the first deploy
+          # to ensure that terraform waits until rollout of the upgraded components completes before completing the apply.
+          upgrade_cluster_script_wait_for_rollout = false
+        }
       </code>
       </pre>
       <figure>

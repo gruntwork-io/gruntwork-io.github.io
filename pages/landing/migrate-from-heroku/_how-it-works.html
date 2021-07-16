@@ -28,16 +28,14 @@
         <div class="tab_block">
           {% for tab in site.data.heroku-landing-page-tabs-code %}
             <div class="tab">
-              <button class="{% if forloop.first %}active tablinks{% else %}tablinks{% endif %}" onclick="openTab(event, '{{tab.id}}')">{{ tab.title }}</button>
+              <button class="{% if forloop.first %}active tablinks_code{% else %}tablinks_code{% endif %}" onclick="openCodeTab(event, '{{tab.id}}')">{{ tab.title }}</button>
             </div>
           {% endfor %}
         </div>
         <div class="content">
           {% for tab in site.data.heroku-landing-page-tabs-code %}
-          <div id="{{tab.id}}" class="{% if forloop.first %}first_tabcontent tabcontent{% else %}tabcontent{% endif %}">
-            <div class="item-precode {% if item.image_side == "left" %}col-xs-12 col-sm-7 col-md-6 col-description{% else %}col-xs-12 col-sm-7 col-sm-pull-5 col-md-6 col-md-pull-6 col-description{% endif %}">
-              {{ tab.precode }}
-            </div>
+          <div id="{{tab.id}}" class="item-precode {% if forloop.first %}first_tabcontent_code tabcontent_code{% else %}tabcontent_code{% endif %}">
+              {{ tab.content }}
           </div>
           {% endfor %}
         </div>
@@ -89,19 +87,19 @@
     background-color: #06a2ff;
   }
 
-  .tabcontent, .first_tabcontent {
+  .tabcontent, .first_tabcontent, .first_tabcontent_code {
     border-top: none;
   }
 
-  .tabcontent {
+  .tabcontent, .tabcontent_code {
     display: none;
   }
 
-  .first_tabcontent {
+  .first_tabcontent, .first_tabcontent_code {
     display: block;
   }
 
-  .first_tablinks {
+  .first_tablinks, .first_tablinks_code {
     background-color: #06a2ff !important;
   }
 
@@ -123,12 +121,23 @@
     letter-spacing: 1px;
     padding: 0 10px;
   }
+
+  pre[class*="language-"] {
+    font-size: 11px;
+  }
 </style>
 
 <script>
   function openTab(evt, tabName) {
     $('.tabcontent').hide(); // hide all tab content
     $('.tablinks').removeClass('active'); // ensure all links are inactive
+    $('#' + tabName).show();
+    $(evt.currentTarget).addClass('active'); // mark the current tab as active
+  }
+
+  function openCodeTab(evt, tabName) {
+    $('.tabcontent_code').hide(); // hide all tab content
+    $('.tablinks_code').removeClass('active'); // ensure all links are inactive
     $('#' + tabName).show();
     $(evt.currentTarget).addClass('active'); // mark the current tab as active
   }
