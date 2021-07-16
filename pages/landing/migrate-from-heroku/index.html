@@ -7,17 +7,6 @@ title: Migrate from Heroku to AWS in about a day.
 excerpt: Automatically package your app and deploy it into a production-grade architecture on AWS in ~1 day. Manage 100% of your infrastructure as code and always stay up to date with automatic updates.
 permalink: /migrate-from-heroku/
 
-tabs:
-  - id: cloudwatch_logs
-    title: CloudWatch Logs
-    content: /assets/img/landing-pages-content/cloudwatch-logs.png
-  - id: cloudwatch_metrics
-    title: CloudWatch Metrics
-    content: /assets/img/landing-pages-content/cloudwatch-metrics.png
-  - id: cloudwatch_alarms
-    title: CloudWatch Alarms
-    content: /assets/img/landing-pages-content/cloudwatch-alarms.png
-
 hero:
   image: /assets/img/infrastructure-cube-icons/infrastructure-in-a-day.png
   cta: Migrate your first app for free!
@@ -63,8 +52,16 @@ how_it_works:
       Gruntwork will configure a CI / CD pipeline for AWS similar to what you’re used to with Heroku. You can choose from CircleCi, GitLab, GitHub Actions, or Jenkins.
 
   - heading: "Step 3: Instrument your app"
-    tab_block: |
-      tabs
+    tab_block:
+      - id: cloudwatch_logs
+        title: CloudWatch Logs
+        content: /assets/img/landing-pages-content/cloudwatch-logs.png
+      - id: cloudwatch_metrics
+        title: CloudWatch Metrics
+        content: /assets/img/landing-pages-content/cloudwatch-metrics.png
+      - id: cloudwatch_alarms
+        title: CloudWatch Alarms
+        content: /assets/img/landing-pages-content/cloudwatch-alarms.png
     image_side: right
     body: |
       Gruntwork will update your app with cloud-native best practices for monitoring, logging, service discovery, secrets management, schema migrations, and more.
