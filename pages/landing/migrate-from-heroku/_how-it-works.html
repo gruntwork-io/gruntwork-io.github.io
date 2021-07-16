@@ -1,10 +1,8 @@
 {% for item in page.how_it_works %}
   <div class="row">
-    {% if item.code_block %}
-      <div style="float: left; width: 40%; margin: 20px;">
-        {% highlight yaml %}
-          {{ item.code_block }}
-        {% endhighlight %}
+    {% if item.precode %}
+      <div class="item-precode {% if item.image_side == "left" %}col-xs-12 col-sm-7 col-md-6 col-description{% else %}col-xs-12 col-sm-7 col-sm-pull-5 col-md-6 col-md-pull-6 col-description{% endif %}">
+        {{ item.precode }}
       </div>
     {% endif %}
     {% if item.tab_block %}
@@ -81,6 +79,29 @@
 
   .first_tabcontent {
     display: block;
+  }
+
+  .first_tablinks {
+    background-color: #06a2ff !important;
+  }
+
+  .row .item-precode {
+    position: relative;
+  }
+
+  .row .item-precode figcaption {
+    position: absolute;
+    top: -15px;
+    left: 15px;
+    background-color: #ee4f5d;
+    border-radius: 4px;
+    color: white;
+    text-transform: uppercase;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 1.7;
+    letter-spacing: 1px;
+    padding: 0 10px;
   }
 </style>
 
