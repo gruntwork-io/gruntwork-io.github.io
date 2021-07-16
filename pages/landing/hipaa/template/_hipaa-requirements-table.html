@@ -2,7 +2,7 @@
 <table class="table table-striped">
   <thead>
     <tr>
-      <th>Requirement tes</th>
+      <th>Requirements</th>
       <th>Description</th>
       <th>DIY</th>
       <th>Base</th>
@@ -17,8 +17,8 @@
     package.name | replace: " ", "_" | replace: "(", "_" | replace: ")", "_"
     }}{% endcapture %}
     <tr>
-      <td style="">{{ package.requirement }}</td>
-      <td>{{ package.description | truncate: 100 }}</td>
+      <td style="width:25%; color:white">{{ package.requirement }}</td>
+      <td >{{ package.description | truncate: 100 }}</td>
       <td>
         <!-- Do it yourself -->
         {% assign pass = package.build_it_yourself %} {% assign time =
