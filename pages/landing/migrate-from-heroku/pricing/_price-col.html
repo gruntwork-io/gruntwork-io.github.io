@@ -6,13 +6,26 @@
     </div>
     <hr>
     {% if include.pricing.price == "Contact Us" %}
+    <div class="flex flex-middle flex-column text-center">
+      <div data-mh="plans-pricing-top" style="height:150px">
+        <p class="h1 enterprise-h1">Contact Us</p>
+        <p class="help-block"></p>
+      </div>
+      <div data-mh="plans-pricing-bottom" style="height:100px">
+        <p><a class="btn btn-primary" href="contact?selection={{ include.pricing.title | slugify }}">Contact Us</a></p>
+        <p class="text-muted small">
+          <em>Annual contract.<br />Billed monthly or annually.</em>
+        </p>
+      </div>
+    </div>
+    {% elsif include.pricing.price == "Free" %}
       <div class="flex flex-middle flex-column text-center">
         <div data-mh="plans-pricing-top" style="height:150px">
-          <p class="h1 enterprise-h1">Contact Us</p>
+          <p class="h1 enterprise-h1">Free</p>
           <p class="help-block"></p>
         </div>
         <div data-mh="plans-pricing-bottom" style="height:100px">
-          <p><a class="btn btn-primary" href="contact?selection={{ include.pricing.title | slugify }}">Contact Us</a></p>
+          <p><a id="pricing-cta-aws" class="btn btn-info pricing-ctas" href="contact?selection={{ include.pricing.title | slugify }}" ga-on="click" ga-event-category="{{ page.path | slugify }}" ga-event-action="select-cta">Select</a></p>
           <p class="text-muted small">
             <em>Annual contract.<br />Billed monthly or annually.</em>
           </p>
