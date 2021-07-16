@@ -88,6 +88,7 @@
   function openTab(evt, tabName) {
     $('.tabcontent').hide(); // hide all tab content
     $('.tablinks').removeClass('active'); // ensure all links are inactive
+    $('#' + tabName).show();
     $(evt.currentTarget).addClass('active'); // mark the current tab as active
   }
 </script>
