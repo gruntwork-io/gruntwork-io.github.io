@@ -1,8 +1,17 @@
 <h2>We did the heavy lifting for you</h2>
-<table class="table table-striped">
+<p>Achieve HIPAA compliance out-of-the-box, so you can go live in fractions of the time with Gruntwork's world-class, production-grade infrastructure.</p>
+<style>
+  #hipaa.table tr:nth-child(odd) td:last-child {
+    background-color: rgb(31, 59, 82);
+  }
+  #hipaa.table tr:nth-child(even) td:last-child {
+    background-color: rgb(23, 51, 77);
+  }
+</style>
+<table class="table table-striped" id="hipaa">
   <thead>
     <tr>
-      <th>Requirement tes</th>
+      <th>Requirements</th>
       <th>Description</th>
       <th>DIY</th>
       <th>Base</th>
@@ -17,8 +26,8 @@
     package.name | replace: " ", "_" | replace: "(", "_" | replace: ")", "_"
     }}{% endcapture %}
     <tr>
-      <td style="">{{ package.requirement }}</td>
-      <td>{{ package.description | truncate: 100 }}</td>
+      <td style="width:25%; color:white">{{ package.requirement }}</td>
+      <td >{{ package.description | truncate: 100 }}</td>
       <td>
         <!-- Do it yourself -->
         {% assign pass = package.build_it_yourself %} {% assign time =
