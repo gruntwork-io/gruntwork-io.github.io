@@ -1,9 +1,55 @@
 - id: eks
   title: EKS
-  content: /assets/img/landing-pages-content/cloudwatch-logs.png
+  content: |
+  <figure><figcaption>.circleci/config.yml</figcaption>
+    <pre>
+    <code class="language-js">
+    workflows:
+      version: 2
+      build-and-test:
+        jobs:
+          - test:
+              filters:
+                tags:
+                  only: /^v.*/
+    </code>
+    </pre>
+    <figure>
 - id: ecs
   title: ECS
-  content: /assets/img/landing-pages-content/cloudwatch-metrics.png
+  content: |
+  <figure><figcaption>.circleci/config.yml</figcaption>
+    <pre>
+    <code class="language-js">
+    workflows:
+      version: 2
+      build-and-test:
+          - build:
+              requires:
+                - test
+              filters:
+                tags:
+                  only: /^v.*/
+    </code>
+    </pre>
+    <figure>
 - id: EC2
   title: EC2
-  content: /assets/img/landing-pages-content/cloudwatch-alarms.png
+  content: |
+  <figure><figcaption>.circleci/config.yml</figcaption>
+    <pre>
+    <code class="language-js">
+    workflows:
+      version: 2
+      build-and-test:
+          - deploy:
+              requires:
+                - build
+              filters:
+                tags:
+                  only: /^v.*/
+                branches:
+                  ignore: /.*/
+    </code>
+    </pre>
+    <figure>
