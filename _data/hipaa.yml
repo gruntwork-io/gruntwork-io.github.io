@@ -2,28 +2,42 @@
   description: |
     How long will it take you to configure and launch your app with HIPAA compliance?
   build_it_yourself: "12–18 months"
-  ref_arch_base: "6 months"
-  ref_arch_cis: "3 months"
+  ref_arch_base: "3–6 months"
+  ref_arch_cis: "2–3 months"
   ref_arch_hipaa: "about a day"
 - requirement: "Encryption in transit"
   description: |
     Utilize SSL/TLS when sending data.
-  build_it_yourself: "—"
+  build_it_yourself: "no"
   ref_arch_base: "yes"
   ref_arch_cis: "yes"
   ref_arch_hipaa: "yes"
 - requirement: "Encryption at rest"
   description: |
     Data is stored on encrypted volumes.
-  build_it_yourself: "—"
+  build_it_yourself: "no"
   ref_arch_base: "yes"
   ref_arch_cis: "yes"
   ref_arch_hipaa: "yes"
 - requirement: "Audit logging"
   description: |
     Collect all logs and events related to PHI from cloud infra, OS and application-level logs.
-  build_it_yourself: "—"
+  build_it_yourself: "no"
   ref_arch_base: "yes"
+  ref_arch_cis: "yes"
+  ref_arch_hipaa: "yes"
+- requirement: "CIS Benchmark Certified infrastructure"
+  description: |
+    Our IaC library is certified by the Center for Internet Security against the CIS Benchmark.
+  build_it_yourself: "no"
+  ref_arch_base: "no"
+  ref_arch_cis: "yes"
+  ref_arch_hipaa: "yes"
+- requirement: "CIS Benchmark Certified sample app"
+  description: |
+    Our sample app meets the same CIS benchmark standards out-of-the-box.
+  build_it_yourself: "no"
+  ref_arch_base: "no"
   ref_arch_cis: "yes"
   ref_arch_hipaa: "yes"
 - requirement: "HIPAA Certified infrastructure"
@@ -43,7 +57,7 @@
 - requirement: "Automatic Logoff"
   description: |
     Any workstations that store PHI should automatically log off after a certain period of time.
-  build_it_yourself: "—"
+  build_it_yourself: "no"
   ref_arch_base: "no"
   ref_arch_cis: "no"
   ref_arch_hipaa: "yes"
