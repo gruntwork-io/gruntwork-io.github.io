@@ -32,27 +32,27 @@ how_it_works:
         <pre>
             <code class="language-js">
               workflows:
-                version: 2
-                build-and-test:
+                test-build-push-deploy:
                   jobs:
-                    - test:
-                        filters:
-                          tags:
-                            only: /^v.*/
-                    - build:
+                    - run_tests
+                    - build_docker_image:
                         requires:
-                          - test
-                        filters:
-                          tags:
-                            only: /^v.*/
-                    - deploy:
+                          - run_tests                          
+                    - push_docker_image:
                         requires:
-                          - build
+                          - build_docker_image        
+                    - deploy_docker_image_to_staging:
+                        requires:
+                          - push_docker_image_to_ecr
                         filters:
-                          tags:
-                            only: /^v.*/
                           branches:
-                            ignore: /.*/
+                            only: staging
+                    - deploy_docker_image_to_production:
+                        requires:
+                          - push_docker_image_to_ecr
+                        filters:
+                          branches:
+                            only: main
             </code>
           </pre>
         <figure>
