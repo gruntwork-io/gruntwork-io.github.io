@@ -9,7 +9,7 @@ permalink: /hipaa-cloud-compliance/
 
 hero:
   image: /assets/img/infrastructure-cube-icons/infrastructure-in-a-day.png
-  cta: Join the Waitlist
+  cta: Request early access
   logos:
     - /assets/img/logos-technologies/partner_logo_aws.png
     - /assets/img/logos-compliance/cis.png
@@ -21,13 +21,13 @@ how_it_works:
     image_width: 379px
     image_side: right
     body: |
-      We are experts in Cloud infrastructure and AWS. Our IaC library and architectures are certified HIPAA-complaint via third party audit.
+      Deploy an off-the-shelf, production-grade AWS Architecture that is HIPAA compliant out-of-the-box
 
   - heading: Build on strong foundations with our HIPAA-compliant sample app
     image: /assets/img/infrastructure-cube-icons/hipaa-sample-app.png
     image_side: left
     body: |
-      Start off on the right foot. We've already built world-class, HIPAA-compliant sample apps certified via third party audit — just add your business logic.
+      Start off on the right foot. We've already built world-class, HIPAA-compliant sample apps certified via third party audit — just add your business logic. We commercially maintain our code, keeping you up to date with the latest compliance requirements, security patches, and AWS/DevOps best practices.
 
   - heading: Go to prod faster, easier, and cheaper
     image: /assets/img/infrastructure-cube-icons/infrastructure-expert-support.png
@@ -59,7 +59,21 @@ footer:
   <div class="section">
     <div class="container">
       <div class="row row-community">
+        {% include_relative _product-details.html %}
+      </div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="container">
+      <div class="row row-community">
         {% include_relative _hipaa-requirements-table.html %}
+      </div>
+    </div>
+    <div class="section">
+      <div class="container">
+        <div class="row row-community">
+          {% include_relative _diy-or-gruntwork-table.html %}
+        </div>
       </div>
     </div>
   </div>

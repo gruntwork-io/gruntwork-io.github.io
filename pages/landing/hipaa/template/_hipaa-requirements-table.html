@@ -1,5 +1,15 @@
-<h2>We did the heavy lifting for you</h2>
-<p>Achieve HIPAA compliance out-of-the-box, so you can go live in fractions of the time with Gruntwork's world-class, production-grade infrastructure.</p>
+<h2>Our Roadmap to HIPAA-compliance</h2>
+<p>
+  Gruntwork's IaC Library of 350,000+ lines of battle-tested code is already one
+  of the most secure and comprehensive solutions for running production-grade
+  infrastructure in the cloud.
+</p>
+
+<p>
+  We're hard at work bridging the gap to make our solutions HIPAA-compliant as
+  well. All of our early backers will recieve complimentary upgrades to full
+  HIPAA-compliance as soon as it's available.
+</p>
 <style>
   #hipaa.table tr:nth-child(odd) td:last-child {
     background-color: rgb(31, 59, 82);
@@ -11,12 +21,10 @@
 <table class="table table-striped" id="hipaa">
   <thead>
     <tr>
-      <th>Requirements</th>
+      <th>Requirement</th>
       <th>Description</th>
-      <th>DIY</th>
-      <th>Base</th>
-      <th>CIS</th>
-      <th>HIPAA</th>
+      <th>Gruntwork today</th>
+      <th>Gruntwork HIPAA</th>
     </tr>
   </thead>
   <tbody>
@@ -26,28 +34,14 @@
     package.name | replace: " ", "_" | replace: "(", "_" | replace: ")", "_"
     }}{% endcapture %}
     <tr>
-      <td style="width:25%; color:white">{{ package.requirement }}</td>
-      <td >{{ package.description | truncate: 100 }}</td>
-      <td>
-        <!-- Do it yourself -->
-        {% assign pass = package.build_it_yourself %} {% assign time =
-        package.build_it_yourself_time %} {% include_relative
-        _yes-no-table-cell.html pass = pass time = time %}
-        <!-- End Do it yourself -->
-      </td>
+      <td style="width: 25%; color: white">{{ package.requirement }}</td>
+      <td>{{ package.description | truncate: 100 }}</td>
       <td>
         <!-- Ref Arch Base -->
         {% assign pass = package.ref_arch_base %} {% assign time =
         package.ref_arch_base_time %} {% include_relative
         _yes-no-table-cell.html pass = pass time = time %}
         <!-- End Ref Arch Base -->
-      </td>
-      <td>
-        <!-- Ref Arch CIS -->
-        {% assign pass = package.ref_arch_cis %} {% assign time =
-        package.ref_arch_cis_time %} {% include_relative _yes-no-table-cell.html
-        pass = pass time = time %}
-        <!-- End Ref Arch CIS -->
       </td>
       <td>
         <!-- Ref Arch HIPAA -->
