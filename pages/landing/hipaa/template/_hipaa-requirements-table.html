@@ -12,39 +12,49 @@
     background-color: rgb(23, 51, 77);
   }
 </style>
-<table class="table table-striped" id="hipaa">
-  <thead>
-    <tr>
-      <th>Requirement</th>
-      <th>Description</th>
-      <th>Gruntwork today</th>
-      <th>Gruntwork HIPAA</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for package in site.data.hipaa %} {% capture id %}{{ package.requirement
-    | replace: " ", "_" | replace: ")", "_" | replace: "(", "_" }}"
-    class="table-clickable-row" data-toggle="modal" data-target="#modal-{{
-    package.name | replace: " ", "_" | replace: "(", "_" | replace: ")", "_"
-    }}{% endcapture %}
-    <tr>
-      <td style="width: 25%; color: white">{{ package.requirement }}</td>
-      <td>{{ package.description | truncate: 100 }}</td>
-      <td>
-        <!-- Ref Arch Base -->
-        {% assign pass = package.ref_arch_base %} {% assign time =
-        package.ref_arch_base_time %} {% include_relative
-        _yes-no-table-cell.html pass = pass time = time %}
-        <!-- End Ref Arch Base -->
-      </td>
-      <td>
-        <!-- Ref Arch HIPAA -->
-        {% assign pass = package.ref_arch_hipaa %} {% assign time =
-        package.ref_arch_hipaa_time %} {% include_relative
-        _yes-no-table-cell.html pass = pass time = time %}
-        <!-- End Ref Arch HIPAA -->
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+<div class="table-responsive">
+  <table class="table table-striped" id="hipaa">
+    <thead>
+      <tr>
+        <th>Requirement</th>
+        <th>Description</th>
+        <th>Gruntwork today</th>
+        <th>Gruntwork HIPAA</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for package in site.data.hipaa %} {% capture id %}{{
+      package.requirement | replace: " ", "_" | replace: ")", "_" | replace:
+      "(", "_" }}" class="table-clickable-row" data-toggle="modal"
+      data-target="#modal-{{ package.name | replace: " ", "_" | replace: "(",
+      "_" | replace: ")", "_" }}{% endcapture %}
+      <tr>
+        <td style="width: 25%; color: white">{{ package.requirement }}</td>
+        <td>{{ package.description | truncate: 100 }}</td>
+        <td>
+          <!-- Ref Arch Base -->
+          {% assign pass = package.ref_arch_base %} {% assign time =
+          package.ref_arch_base_time %} {% include_relative
+          _yes-no-table-cell.html pass = pass time = time %}
+          <!-- End Ref Arch Base -->
+        </td>
+        <td>
+          <!-- Ref Arch HIPAA -->
+          {% assign pass = package.ref_arch_hipaa %} {% assign time =
+          package.ref_arch_hipaa_time %} {% include_relative
+          _yes-no-table-cell.html pass = pass time = time %}
+          <!-- End Ref Arch HIPAA -->
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <h2>Why Gruntwork?</h2>
+  <p>
+    If you're looking to evaluate going with Gruntwork vs building everything
+    yourself,
+    <a href="/hipaa-cloud-compliance-more-details#why-use-gruntwork"
+      >check out this breakdown</a
+    >.
+  </p>
+</div>

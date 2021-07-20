@@ -3,6 +3,12 @@ layout: landing
 type: landing
 slug: index-page
 
+extra_nav_links:
+  - name: Gruntwork HIPAA
+    url: /hipaa-cloud-compliance
+
+alternate_cta_link: /hipaa-cloud-compliance/pricing
+
 title: The fastest way to launch HIPAA-compliant apps on AWS
 excerpt: Build on top of HIPAA-compliant AWS architectures, CI / CD pipelines, and application templates that have been HITRUST-certified via third party audit. We'll provide a Node.js application to start, followed by Python, Golang and more.
 permalink: /hipaa-cloud-compliance-more-details/
@@ -14,40 +20,6 @@ hero:
     - /assets/img/logos-technologies/partner_logo_aws.png
     - /assets/img/logos-compliance/cis.png
     - /assets/img/logos-compliance/hipaa.png
-
-how_it_works:
-  - heading: HIPAA-compliant infrastructure out of-the-box
-    image: /assets/img/infrastructure-cube-icons/infrastructure-hipaa.png
-    image_width: 379px
-    image_side: right
-    body: |
-      Deploy an off-the-shelf, production-grade AWS Architecture that is HIPAA compliant out-of-the-box. The solution includes: Multi-account Landing Zone (CloudTrail, AWS Config, GuardDuty, IAM Roles) VPCs, Orchestration, Data Storage (RDS, ElastiCache, ElasticSearch), CI / CD (CircleCI, Jenkins, GitLab)
-
-  - heading: Get started quickly with our application templates
-    image: /assets/img/infrastructure-cube-icons/hipaa-sample-app.png
-    image_side: left
-    body: |
-      We're building world-class, HIPAA-compliant application templates that you can use as a launch pad for your own applications. All you need to do is add your business logic.
-
-  - heading: Influence our implementation to meet your needs
-    image: /assets/img/infrastructure-cube-icons/hipaa-sample-app.png
-    image_side: left
-    body: |
-      We'll work with you to ensure that our implementation of the HIPAA requirements satisfies your organization's needs.
-
-  - heading: We'll help you pass your audit
-    image: /assets/img/infrastructure-cube-icons/infrastructure-expert-support.png
-    image_width: 418px
-    image_side: right
-    body: |
-      Our team will support you throughout your audit process. We will implement any technical changes that are required to maintain compliance for your infrastructure or your application needs.
-
-  - heading: Stay up to date
-    image: /assets/img/infrastructure-cube-icons/infrastructure-expert-support.png
-    image_width: 418px
-    image_side: left
-    body: |
-      The tools and techniques, as well as the best practices to achieve HIPAA-compliance are constantly changing, as are auditor expectations. That's why we commercially maintain our code, keeping you up to date with the latest compliance requirements, security patches, and AWS/DevOps best practices
 
 footer:
   heading: Go live with Gruntwork HIPAA Cloud!
@@ -65,12 +37,6 @@ footer:
     <div class="container">
       <div class="row">{% include_relative _sub-hero.html %}</div>
     </div>
-  </div>
-  <div id="how-it-works" class="section section-dark">
-    <div class="container">{% include_relative _how-it-works.html %}</div>
-  </div>
-  <div id="features" class="section section-dark">
-    <div class="container">{% include_relative _features.html %}</div>
   </div>
   <div class="section">
     <div class="container">
