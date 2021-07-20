@@ -30,17 +30,17 @@ how_it_works:
     precode: |
       <figure><figcaption>.circleci/config.yml</figcaption>
         <pre>
-            <code class="language-js">
+            <code class="language-yml">
               workflows:
                 test-build-push-deploy:
                   jobs:
                     - run_tests
                     - build_docker_image:
                         requires:
-                          - run_tests                          
+                          - run_tests
                     - push_docker_image:
                         requires:
-                          - build_docker_image        
+                          - build_docker_image
                     - deploy_docker_image_to_staging:
                         requires:
                           - push_docker_image_to_ecr
