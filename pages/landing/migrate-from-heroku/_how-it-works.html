@@ -1,7 +1,7 @@
 {% for item in page.how_it_works %}
   <div class="row">
     {% if item.precode %}
-      <div class="item-precode row-image-content {% if item.image_side == "left" %}col-xs-12 col-sm-7 col-md-6 col-description{% else %}col-xs-12 col-sm-7 col-sm-pull-5 col-md-6 col-md-pull-6 col-description{% endif %}">
+      <div class="item_precode row-image-content {% if item.image_side == "left" %}col-xs-12 col-sm-7 col-md-6 col-description{% else %}col-xs-12 col-sm-7 col-sm-pull-5 col-md-6 col-md-pull-6 col-description{% endif %}">
         {{ item.precode }}
       </div>
     {% endif %}
@@ -34,7 +34,7 @@
         </div>
         <div class="tab_code_content">
           {% for tab in site.data.heroku-landing-page-tabs-code %}
-          <div id="{{tab.id}}" class="item-precode {% if forloop.first %}first_tabcontent_code tabcontent_code{% else %}tabcontent_code{% endif %}">
+          <div id="{{tab.id}}" class="item_precode {% if forloop.first %}first_tabcontent_code tabcontent_code{% else %}tabcontent_code{% endif %}">
               {{ tab.content }}
           </div>
           {% endfor %}
@@ -43,7 +43,7 @@
     {% endif %}
       {% if item.image %}
         <div class="{% if item.image_side == "left" %}col-xs-8 col-xs-offset-2 col-sm-5 col-sm-offset-0 col-md-6 col-diagram hidden-print{% else %}col-xs-10 col-xs-offset-1 col-sm-5 col-sm-push-7 col-sm-offset-0 col-md-6 col-md-push-6 col-diagram{% endif %}">
-          <img src="{{ item.image }}" class="row-image-content" width="{{ item.image_width }}"/>
+          <img src="{{ item.image }}" class="row_image_content" width="{{ item.image_width }}"/>
         </div>
       {% endif %}
       <div class="{% if item.image_side == "left" %}col-xs-12 col-sm-7 col-md-6 col-description{% else %}col-xs-12 col-sm-7 col-sm-pull-5 col-md-6 col-md-pull-6 col-description{% endif %}">
@@ -113,14 +113,14 @@
     background-color: #06a2ff !important;
   }
 
-  .row .item-precode {
+  .row .item_precode {
     position: relative;
   }
 
   figcaption {
     font-size: 14px;
   }
-  .row .item-precode figcaption {
+  .row .item_precode figcaption {
     position: absolute;
     top: -15px;
     background-color: #ee4f5d;
@@ -138,7 +138,7 @@
     margin: 0;
   }
 
-  .row-image-content {
+  .row_image_content {
     border: 1px solid #194c5f;
     border-radius: 4px;
     border-collapse: collapse;
@@ -149,6 +149,10 @@
     outline: none;
     border: none;
     margin: 0;
+  }
+
+  .row_image_content:last-child {
+    border: none;
   }
 
 </style>
