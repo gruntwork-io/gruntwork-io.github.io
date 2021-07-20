@@ -3,40 +3,40 @@
   content: |
     <figure><figcaption>ecs-fargate-service/main.tf</figcaption>
       <pre>
-      <code class="language-js">
+      <code class="language-hcl">
         module "fargate_service" {
-          source = "git::git@github.com:gruntwork-io/terraform-aws-ecs.git//modules/ecs-service?ref=v1.0.8"
+          source = "git::git@github.com:gruntwork-io/terraform-aws-service-catalog.git//modules/services/ecs-service?ref=v0.51.0"
 
-          service_name    = var.service_name
-          ecs_cluster_arn = aws_ecs_cluster.fargate_cluster.arn
+          service_name          = "my-heroku-app"
+          launch_type           = "FARGATE"
+          ecs_cluster_arn       = module.fargate_cluster.arn
 
-          desired_number_of_tasks        = var.desired_number_of_tasks
-          ecs_task_container_definitions = data.template_file.container_definition.rendered
-          launch_type                    = "FARGATE"
-          platform_version               = "1.4.0"
+          task_cpu                = 256
+          task_memory             = 512
+          desired_number_of_tasks = 3
 
-          # Network information is necessary for Fargate, as it required VPC type
-          ecs_task_definition_network_mode = "awsvpc"
-          ecs_service_network_configuration = {
-            subnets          = data.aws_subnet_ids.default.ids
-            security_groups  = [aws_security_group.ecs_task_security_group.id]
-            assign_public_ip = true
-          }
+          container_definitions = [
+            {
+              name         = "my-heroku-app"
+              image        = "https://123456789012.dkr.ecr.us-east-1.amazonaws.com/my-heroku-app:v1"
+              essential    = true
+              portMappings = [
+                {
+                  "hostPort"      = 3000
+                  "containerPort" = 3000
+                  "protocol"      = "tcp"
+                }
+              ]
+            }
+          ]
 
-          # https://docs.aws.amazon.com/AmazonECS/latest/developerguide/AWS_Fargate.html#fargate-tasks-size.
-          # Specify memory in MB
-          task_cpu    = 256
-          task_memory = 512
+          domain_name = "example.your-domain.com"
+        }
 
-          enable_ecs_deployment_check      = var.enable_ecs_deployment_check
-          deployment_check_timeout_seconds = var.deployment_check_timeout_seconds
+        module "fargate_cluster" {
+          source = "git::git@github.com:gruntwork-io/terraform-aws-service-catalog.git//modules/services/ecs-fargate-cluster?ref=v0.51.0"
 
-          # EFS volumes
-          efs_volumes = local.efs_volumes
-
-          # Make sure all the ECS cluster resources are deployed before deploying any ECS service resources. This is also
-          # necessary to avoid issues on 'destroy'.
-          depends_on = [aws_ecs_cluster.fargate_cluster]
+          cluster_name = "my-fargate-cluster"
         }
       </code>
       </pre>
@@ -46,38 +46,45 @@
   content: |
     <figure><figcaption>ecs-cluster/main.tf</figcaption>
       <pre>
-      <code class="language-js">
-        module "ecs_cluster" {
-          source = "git::git@github.com:gruntwork-io/terraform-aws-ecs.git//modules/ecs-cluster?ref=v1.0.0"
+      <code class="language-hcl">
+        module "ecs_service" {
+          source = "git::git@github.com:gruntwork-io/terraform-aws-service-catalog.git//modules/services/ecs-service?ref=v0.51.0"
 
-          cluster_name = var.ecs_cluster_name
+          service_name          = "my-heroku-app"
+          launch_type           = "EC2"
+          ecs_cluster_arn       = module.ecs_cluster.arn
 
-          # Make the max size twice the min size to allow for rolling out updates to the cluster without downtime
-          cluster_min_size = 2
-          cluster_max_size = 4
+          desired_number_of_tasks = 3
 
-          cluster_instance_ami              = var.ecs_cluster_instance_ami
-          cluster_instance_type             = module.instance_type.recommended_instance_type
-          cluster_instance_keypair_name     = var.ecs_cluster_instance_keypair_name
-          cluster_instance_user_data        = data.template_file.user_data.rendered
-          enable_cluster_container_insights = true
-
-          vpc_id         = var.vpc_id
-          vpc_subnet_ids = var.ecs_cluster_vpc_subnet_ids
-
-          alb_security_group_ids = [module.alb.alb_security_group_id]
-
-          custom_tags_security_group = {
-            Foo = "Bar"
-          }
-
-          custom_tags_ec2_instances = [
+          container_definitions = [
             {
-              key                 = "Foo"
-              value               = "Bar"
-              propagate_at_launch = true
-            },
+              name         = "my-heroku-app"
+              image        = "https://123456789012.dkr.ecr.us-east-1.amazonaws.com/my-heroku-app:v1"
+              essential    = true
+              cpu          = 256
+              memory       = 512
+              portMappings = [
+                {
+                  "hostPort"      = 3000
+                  "containerPort" = 3000
+                  "protocol"      = "tcp"
+                }
+              ]
+            }
           ]
+
+          domain_name = "example.your-domain.com"
+        }
+
+        module "ecs_cluster" {
+          source = "git::git@github.com:gruntwork-io/terraform-aws-service-catalog.git//modules/services/ecs-cluster?ref=v0.51.0"
+
+          cluster_name = "my-ecs-cluster"
+
+          cluster_min_size      = 3
+          cluster_max_size      = 10
+          cluster_instance_type = "m4.large"
+          cluster_instance_ami  = "ami-abcd1234"
         }
       </code>
       </pre>
@@ -87,24 +94,43 @@
   content: |
     <figure><figcaption>eks-cluster/main.tf</figcaption>
       <pre>
-      <code class="language-js">
+      <code class="language-hcl">
+        module "k8s_service" {
+          source = "git::git@github.com:gruntwork-io/terraform-aws-service-catalog.git//modules/services/k8s-service?ref=v0.51.0"
+
+          application_name       = "my-heroku-app"
+          namespace              = "my-namespace"
+          desired_number_of_pods = 3
+
+          container_port  = 5000
+          container_image = {
+            repository = "https://123456789012.dkr.ecr.us-east-1.amazonaws.com/my-heroku-app"
+            tag        = "v1"
+          }
+
+          domain_name = "example.your-domain.com"
+        }
+
         module "eks_cluster" {
-          source = "git::git@github.com:gruntwork-io/terraform-aws-eks.git//modules/eks-cluster-control-plane?ref=v0.1.0"
+          source = "git::git@github.com:gruntwork-io/terraform-aws-service-catalog.git//modules/services/eks-cluster?ref=v0.51.0"
 
-          cluster_name = var.eks_cluster_name
+          cluster_name          = "my-eks-cluster"
+          kubernetes_version    = "1.20"
+          cluster_instance_ami  = "ami-abcd1234"
 
-          vpc_id                       = module.vpc_app.vpc_id
-          vpc_control_plane_subnet_ids = local.usable_subnet_ids
-          endpoint_public_access_cidrs = var.endpoint_public_access_cidrs
+          managed_node_group_configurations = {
+            default = {
+              min_size       = 3
+              max_size       = 10
+              instance_types = ["m4.large"]
+            }
+          }
+        }
 
-          kubernetes_version  = var.kubernetes_version
-          configure_kubectl   = var.configure_kubectl
-          kubectl_config_path = var.kubectl_config_path
-
-          # Disable waiting for rollout, since the dependency ordering of worker pools causes terraform to deploy the script
-          # before the workers. As such, rollout will always fail. Note that this should be set to true after the first deploy
-          # to ensure that terraform waits until rollout of the upgraded components completes before completing the apply.
-          upgrade_cluster_script_wait_for_rollout = false
+        provider "kubernetes" {
+          host                   = module.eks_cluster.endpoint
+          cluster_ca_certificate = module.eks_cluster.certificate_authority.0.data
+          token                  = module.eks_cluster.kubernetes_token[0].token
         }
       </code>
       </pre>
