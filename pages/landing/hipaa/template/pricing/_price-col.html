@@ -7,13 +7,13 @@
     <hr>
       <div class="flex flex-middle flex-column text-center">
         <div data-mh="plans-pricing-top" style="height:200px">
-          <p class="medium-price"><font color="red"><del><span>$</span>{{ include.pricing.strike_price }} / mo + <span> $</span>{{ include.pricing.strike_flat_fee }} flat fee</del></font></p>
+          <p class="medium-price"><font color="#C53030"><del><span>$</span>{{ include.pricing.strike_price }} / mo + <span> $</span>{{ include.pricing.strike_flat_fee }} flat fee</del></font></p>
           <p class="big-price"><span>$</span>{{ include.pricing.price }} / mo<sup>*</sup></p>
           <p class="medium-price">+ $</span>{{ include.pricing.flat_fee }} flat fee</p>
         </div>
         <div data-mh="plans-pricing-bottom" style="height:100px">
           <p><a id="pricing-cta-aws" class="btn btn-info pricing-ctas" href="contact?selection={{ include.pricing.title | slugify }}" ga-on="click" ga-event-category="{{ page.path | slugify }}" ga-event-action="select-cta">Join the Waitlist</a></p>
-          <p class="text-muted small"><em>Annual contract<br>Billed monthly or annually.</em><br>* Subject to change.</p>
+          <p class="text-muted small"><em>Annual contract<br>Billed monthly or annually.</em><br>* All prices are subject to change.</p>
         </div>
       </div>
     <hr>
