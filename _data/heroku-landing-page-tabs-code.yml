@@ -1,0 +1,143 @@
+- id: fargate
+  title: Fargate
+  content: |
+    <figure><figcaption>ecs-fargate-service/main.tf</figcaption>
+      <pre>
+      <code class="language-hcl">
+        module "fargate_service" {
+          source  = "github.com/gruntwork-io/service-catalog//ecs-service"
+          version = "v0.51.0"
+
+          service_name          = "my-heroku-app"
+          launch_type           = "FARGATE"
+          ecs_cluster_arn       = module.fargate_cluster.arn
+
+          task_cpu                = 256
+          task_memory             = 512
+          desired_number_of_tasks = 3
+
+          container_definitions = [
+            {
+              name         = "my-heroku-app"
+              image        = "https://123456789012.dkr.ecr.us-east-1.amazonaws.com/my-heroku-app:v1"
+              essential    = true
+              portMappings = [
+                {
+                  "hostPort"      = 3000
+                  "containerPort" = 3000
+                  "protocol"      = "tcp"
+                }
+              ]
+            }
+          ]
+
+          domain_name = "example.your-domain.com"
+        }
+
+        module "fargate_cluster" {
+          source  = "github.com/gruntwork-io/service-catalog//ecs-fargate-cluster"
+          version = "v0.51.0"
+
+          cluster_name = "my-fargate-cluster"
+        }
+      </code>
+      </pre>
+      <figure>
+- id: ecs
+  title: ECS
+  content: |
+    <figure><figcaption>ecs-cluster/main.tf</figcaption>
+      <pre>
+      <code class="language-hcl">
+        module "ecs_service" {
+          source  = "github.com/gruntwork-io/service-catalog//ecs-service"
+          version = "v0.51.0"
+
+          service_name          = "my-heroku-app"
+          launch_type           = "EC2"
+          ecs_cluster_arn       = module.ecs_cluster.arn
+
+          desired_number_of_tasks = 3
+
+          container_definitions = [
+            {
+              name         = "my-heroku-app"
+              image        = "https://123456789012.dkr.ecr.us-east-1.amazonaws.com/my-heroku-app:v1"
+              essential    = true
+              cpu          = 256
+              memory       = 512
+              portMappings = [
+                {
+                  "hostPort"      = 3000
+                  "containerPort" = 3000
+                  "protocol"      = "tcp"
+                }
+              ]
+            }
+          ]
+
+          domain_name = "example.your-domain.com"
+        }
+
+        module "ecs_cluster" {
+          source  = "github.com/gruntwork-io/service-catalog//ecs-cluster"
+          version = "v0.51.0"
+
+          cluster_name = "my-ecs-cluster"
+
+          cluster_min_size      = 3
+          cluster_max_size      = 10
+          cluster_instance_type = "m4.large"
+          cluster_instance_ami  = "ami-abcd1234"
+        }
+      </code>
+      </pre>
+      <figure>
+- id: eks
+  title: EKS
+  content: |
+    <figure><figcaption>eks-cluster/main.tf</figcaption>
+      <pre>
+      <code class="language-hcl">
+        module "k8s_service" {
+          source  = "github.com/gruntwork-io/service-catalog//k8s-service"
+          version = "v0.51.0"
+
+          application_name       = "my-heroku-app"
+          namespace              = "my-namespace"
+          desired_number_of_pods = 3
+
+          container_port  = 5000
+          container_image = {
+            repository = "https://123456789012.dkr.ecr.us-east-1.amazonaws.com/my-heroku-app"
+            tag        = "v1"
+          }
+
+          domain_name = "example.your-domain.com"
+        }
+
+        module "eks_cluster" {
+          source  = "github.com/gruntwork-io/service-catalog//eks-cluster"
+          version = "v0.51.0"
+
+          cluster_name          = "my-eks-cluster"
+          kubernetes_version    = "1.20"
+          cluster_instance_ami  = "ami-abcd1234"
+
+          managed_node_group_configurations = {
+            default = {
+              min_size       = 3
+              max_size       = 10
+              instance_types = ["m4.large"]
+            }
+          }
+        }
+
+        provider "kubernetes" {
+          host                   = module.eks_cluster.endpoint
+          cluster_ca_certificate = module.eks_cluster.certificate_authority.0.data
+          token                  = module.eks_cluster.kubernetes_token[0].token
+        }
+      </code>
+      </pre>
+      <figure>

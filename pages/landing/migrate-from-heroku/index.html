@@ -1,0 +1,143 @@
+---
+layout: landing
+type: landing
+slug: index-page
+
+title: Migrate from Heroku to AWS in about a day.
+excerpt: Automatically package your app and deploy into a production-grade architecture on AWS in ~1 day. Get the delightful "git push to deploy" workflow of Heroku with the scalability and control of managing 100% of your infrastructure as code.
+permalink: /migrate-from-heroku-to-aws/
+custom_js:
+- prism
+prism_css: /assets/css/prism-landing-zone.css
+
+hero:
+  image: /assets/img/infrastructure-cube-icons/infrastructure-in-a-day.png
+  cta: Migrate your first app for free!
+  logos:
+  - /assets/img/logos-technologies/partner_logo_aws.png
+  - /assets/img/logos-technologies/partner_logo_kubernetes.png
+  - /assets/img/logos-technologies/partner_logo_terraform.png
+
+how_it_works:
+  - heading: "Step 1: Connect your Git repo"
+    image: /assets/img/landing-heroku-page/github-step-1.png
+    image_width: 379px
+    image_side: right
+    body: |
+      Gruntwork will scan the repo, walk you through a list of migration steps, and open a pull request for each step, so you can customize everything as much as you want!
+    logos:
+      - title: GitHub
+        src: /assets/img/landing-heroku-page/github-icon.png
+      - title: GitLab
+        src: /assets/img/landing-heroku-page/gitlab-icon.png
+      - title: BitBucket
+        src: /assets/img/landing-heroku-page/bitbucket-icon.png
+
+  - heading: "Step 2: Configure CI / CD"
+    precode: |
+      <figure><figcaption>.circleci/config.yml</figcaption>
+        <pre>
+            <code class="language-yml">
+              workflows:
+                test-build-push-deploy:
+                  jobs:
+                    - run_tests
+                    - build_docker_image:
+                        requires:
+                          - run_tests
+                    - push_docker_image:
+                        requires:
+                          - build_docker_image
+                    - deploy_docker_image_to_staging:
+                        requires:
+                          - push_docker_image_to_ecr
+                        filters:
+                          branches:
+                            only: staging
+                    - deploy_docker_image_to_production:
+                        requires:
+                          - push_docker_image_to_ecr
+                        filters:
+                          branches:
+                            only: main
+            </code>
+          </pre>
+        </figure>
+    image_side: left
+    body: |
+      Gruntwork will configure a CI / CD pipeline for AWS that will give you the "git push to deploy" workflow you’re used to with Heroku. You can choose to use CircleCi, GitLab, GitHub Actions, or Jenkins as the CI server to run this pipeline.
+    logos:
+      - title: CircleCi
+        src: /assets/img/landing-heroku-page/circleci-icon.png
+      - title: Jenkins
+        src: /assets/img/landing-heroku-page/jenkins-icon.png
+      - title: GitLab
+        src: /assets/img/landing-heroku-page/gitlab-icon.png
+
+  - heading: "Step 3: Instrument your app"
+    tab_block: site.data.heroku-landing-page-tabs-images
+    image_side: right
+    body: |
+      Gruntwork will update your app with cloud-native best practices for monitoring, logging, service discovery, secrets management, schema migrations, and more.
+    logos:
+      - title: CloudWatch
+        src: /assets/img/landing-heroku-page/cloudwatch-icon.png
+      - title: DataDog
+        src: /assets/img/landing-heroku-page/datadog-icon.png
+      - title: Prometheus and Grafana
+        src: /assets/img/landing-heroku-page/prometheus-icon.png
+
+  - heading: "Step 4: Deploy to AWS"
+    tab_code_preview: site.data.heroku-landing-page-tabs-code
+    image_side: left
+    body: |
+      Deploy your app onto a battle-tested AWS architecture based on ECS, EKS, EC2, or Fargate. Pick from a variety of "add-ons" such as RDS (PostgreSQL, MySQL, etc), ElastiCache (Redis, Memcached), and Elasticsearch. All the infrastructure is managed as code using Terraform, Docker, and Packer, so you can customize everything!
+    logos:
+      - title: Terraform
+        src: /assets/img/landing-heroku-page/terraform-icon.png
+      - title: Docker
+        src: /assets/img/landing-heroku-page/docker-icon.png
+      - title: Packer
+        src: /assets/img/landing-heroku-page/packer-icon.png
+
+  - heading: "Step 5: You're live!"
+    image: /assets/img/landing-heroku-page/grunty-free-step-5.png
+    image_width: 250px
+    image_side: right
+    body: |
+      At this point, your app is up and running in AWS and you can deploy updates any time with "git push."
+
+footer:
+  heading: The infrastructure you've always wanted
+  body: The seamless experience you expect from Heroku. The control and scalability you expect from AWS. The production-grade code you expect from Gruntwork.
+  cta: Migrate your first app now!
+---
+
+<div class="main">
+  <div class="section section-hero">
+    <div class="container">
+      <div class="row">
+        {% include_relative _hero.html %}
+      </div>
+    </div>
+  </div>
+  <div class="section section-blue section-sub-hero">
+    <div class="container">
+      <div class="row">
+        {% include_relative _sub-hero.html %}
+      </div>
+    </div>
+  </div>
+  <div id="how-it-works" class="section section-dark">
+    <div class="container">
+      {% include_relative _how-it-works.html %}
+    </div>
+  </div>
+  <div class="section section-blue">
+    <div class="container">
+      <div class="row row-community">
+        {% include_relative _social-proof.html %}
+      </div>
+    </div>
+  </div>
+</div>
