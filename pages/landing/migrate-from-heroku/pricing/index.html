@@ -47,7 +47,7 @@ categories:
         plans: ["Pro", "Enterprise"]
   - title: Data Storage
     features:
-      - name: Aurora Serverless
+      - name: RDS Aurora Serverless
         description: Store data in Aurora Serverless, an on-demand, auto scaling relational database with PostgreSQL and MySQL compatibility.
         plans: ["Lite", "Pro", "Enterprise"]
       - name: ECR
@@ -85,8 +85,11 @@ categories:
       - name: API Gateway
         description: Expose APIs and build fully serverless apps using API Gateway.
         plans: ["Lite", "Pro", "Enterprise"]
-      - name: VPC
-        description: Deploy all your AWS resources in logically isolated networks called Virtual Private Clouds (VPCs).
+      - name: Default VPC
+        description: Deploy all your AWS resources into the default Virtual Private Cloud (VPC).
+        plans: ["Lite", "Pro", "Enterprise"]
+      - name: Custom VPC
+        description: Deploy all your AWS resources into a custom Virtual Private Cloud (VPC), which gives you a more secure, locked-down, logically isolated network.
         plans: ["Pro", "Enterprise"]
       - name: VPN
         description: Connect to your VPCs via a Virtual Private Network (VPN) powered by OpenVPN.
