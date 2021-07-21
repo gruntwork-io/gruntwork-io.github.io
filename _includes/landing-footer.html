@@ -6,7 +6,7 @@
           <div class="col-xs-12 text-center">
             <h2 class="h1 no-anchor">{{ page.footer.heading }}</h2>
             <p style="margin-top: -30px">{{ page.footer.body }}</p>
-            <p><a href="pricing" class="btn btn-info" role="button" ga-on="click" ga-event-category="{{ page.path | slugify }}" ga-event-action="footer-cta">{{ page.footer.cta }}</a></p>
+            <p><a href="{{ page.permalink }}pricing/" class="btn btn-info" role="button" ga-on="click" ga-event-category="{{ page.path | slugify }}" ga-event-action="footer-cta">{{ page.footer.cta }}</a></p>
           </div>
         </div>
       {% endif %}
