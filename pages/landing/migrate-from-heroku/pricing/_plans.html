@@ -47,17 +47,17 @@
       {% for pricing in page.pricing %}
         <td style="width: 25%; border-left: 1px solid #194c5f; border-right: 1px solid #194c5f; background-color: #252e3a" class="text-center">
           {% if pricing.price == "Contact Us" %}
-            <p><a class="btn btn-primary" href="contact?selection={{ include.pricing.title | slugify }}">Contact Us</a></p>
+            <p><a class="btn btn-primary" href="contact?selection={{ pricing.title | slugify }}">Contact Us</a></p>
             <p class="text-muted small">
               <em>Annual contract.<br />Billed monthly or annually.</em>
             </p>
           {% elsif pricing.price == "Free" %}
-            <p><a id="pricing-cta-aws" class="btn btn-info pricing-ctas" href="contact?selection={{ include.pricing.title | slugify }}" ga-on="click" ga-event-category="{{ page.path | slugify }}" ga-event-action="select-cta">Select</a></p>
+            <p><a id="pricing-cta-aws" class="btn btn-info pricing-ctas" href="contact?selection={{ pricing.title | slugify }}" ga-on="click" ga-event-category="{{ page.path | slugify }}" ga-event-action="select-cta">Select</a></p>
             <p class="text-muted small">
               <em>Annual contract.<br />Billed monthly or annually.</em>
             </p>
           {% else %}
-            <p><a id="pricing-cta-aws" class="btn btn-info pricing-ctas" href="contact?selection={{ include.pricing.title | slugify }}" ga-on="click" ga-event-category="{{ page.path | slugify }}" ga-event-action="select-cta">Select</a></p>
+            <p><a id="pricing-cta-aws" class="btn btn-info pricing-ctas" href="contact?selection={{ pricing.title | slugify }}" ga-on="click" ga-event-category="{{ page.path | slugify }}" ga-event-action="select-cta">Select</a></p>
             <p class="text-muted small"><em>Annual contract<br>Billed monthly or annually.</em></p>
           {% endif %}
         </td>
