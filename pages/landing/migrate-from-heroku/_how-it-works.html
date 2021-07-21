@@ -49,6 +49,16 @@
       <div class="{% if item.image_side == "left" %}col-xs-12 col-sm-7 col-md-6 col-description{% else %}col-xs-12 col-sm-7 col-sm-pull-5 col-md-6 col-md-pull-6 col-description{% endif %}">
         <h2>{{ item.heading }}</h2>
         <p>{{ item.body }}</p>
+        <div>
+          {% for logo in item.logos %}
+            <div style="display: inline-block; margin-right: 10px">
+              <div style="display: inline-block; width: 30px; text-align: center">
+                <img src="{{ logo.src }}" alt="{{ logo.title }}" title="{{ logo.title }}">
+              </div>
+              <strong style="font-size: 15px">{{ logo.title }}</strong>
+            </div>
+          {% endfor %}
+        </div>
       </div>
     </div>
 {% endfor %}
