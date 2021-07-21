@@ -25,6 +25,13 @@ how_it_works:
     image_side: right
     body: |
       Gruntwork will scan the repo, walk you through a list of migration steps, and open a pull request for each step, so you can customize everything as much as you want!
+    logos:
+      - title: GitHub
+        src: /assets/img/landing-heroku-page/github-icon.png
+      - title: GitLab
+        src: /assets/img/landing-heroku-page/gitlab-icon.png
+      - title: BitBucket
+        src: /assets/img/landing-heroku-page/bitbucket-icon.png
 
   - heading: "Step 2: Configure CI / CD"
     precode: |
@@ -59,18 +66,39 @@ how_it_works:
     image_side: left
     body: |
       Gruntwork will configure a CI / CD pipeline for AWS that will give you the "git push to deploy" workflow you’re used to with Heroku. You can choose to use CircleCi, GitLab, GitHub Actions, or Jenkins as the CI server to run this pipeline.
+    logos:
+      - title: CircleCi
+        src: /assets/img/landing-heroku-page/circleci-icon.png
+      - title: Jenkins
+        src: /assets/img/landing-heroku-page/jenkins-icon.png
+      - title: GitLab
+        src: /assets/img/landing-heroku-page/gitlab-icon.png
 
   - heading: "Step 3: Instrument your app"
     tab_block: site.data.heroku-landing-page-tabs-images
     image_side: right
     body: |
       Gruntwork will update your app with cloud-native best practices for monitoring, logging, service discovery, secrets management, schema migrations, and more.
+    logos:
+      - title: CloudWatch
+        src: /assets/img/landing-heroku-page/cloudwatch-icon.png
+      - title: DataDog
+        src: /assets/img/landing-heroku-page/datadog-icon.png
+      - title: Prometheus and Grafana
+        src: /assets/img/landing-heroku-page/prometheus-icon.png
 
   - heading: "Step 4: Deploy to AWS"
     tab_code_preview: site.data.heroku-landing-page-tabs-code
     image_side: left
     body: |
-      Deploy your app onto a battle-tested AWS architecture based on ECS, EKS, EC2, or Fargate. Pick from a variety of "add-ons" such as RDS (PostgreSQL, MySQL, etc), ElastiCache (Redis, Memcached), and Elasticsearch. All the infrastructure is managed as code using Terraform, so you can customize everything!
+      Deploy your app onto a battle-tested AWS architecture based on ECS, EKS, EC2, or Fargate. Pick from a variety of "add-ons" such as RDS (PostgreSQL, MySQL, etc), ElastiCache (Redis, Memcached), and Elasticsearch. All the infrastructure is managed as code using Terraform, Docker, and Packer, so you can customize everything!
+    logos:
+      - title: Terraform
+        src: /assets/img/landing-heroku-page/terraform-icon.png
+      - title: Docker
+        src: /assets/img/landing-heroku-page/docker-icon.png
+      - title: Packer
+        src: /assets/img/landing-heroku-page/packer-icon.png
 
   - heading: "Step 5: You're live!"
     image: /assets/img/landing-heroku-page/grunty-free-step-5.png

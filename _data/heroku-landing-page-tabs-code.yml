@@ -5,7 +5,8 @@
       <pre>
       <code class="language-hcl">
         module "fargate_service" {
-          source = "git::git@github.com:gruntwork-io/terraform-aws-service-catalog.git//modules/services/ecs-service?ref=v0.51.0"
+          source  = "github.com/gruntwork-io/service-catalog//ecs-service"
+          version = "v0.51.0"
 
           service_name          = "my-heroku-app"
           launch_type           = "FARGATE"
@@ -34,7 +35,8 @@
         }
 
         module "fargate_cluster" {
-          source = "git::git@github.com:gruntwork-io/terraform-aws-service-catalog.git//modules/services/ecs-fargate-cluster?ref=v0.51.0"
+          source  = "github.com/gruntwork-io/service-catalog//ecs-fargate-cluster"
+          version = "v0.51.0"
 
           cluster_name = "my-fargate-cluster"
         }
@@ -48,7 +50,8 @@
       <pre>
       <code class="language-hcl">
         module "ecs_service" {
-          source = "git::git@github.com:gruntwork-io/terraform-aws-service-catalog.git//modules/services/ecs-service?ref=v0.51.0"
+          source  = "github.com/gruntwork-io/service-catalog//ecs-service"
+          version = "v0.51.0"
 
           service_name          = "my-heroku-app"
           launch_type           = "EC2"
@@ -77,7 +80,8 @@
         }
 
         module "ecs_cluster" {
-          source = "git::git@github.com:gruntwork-io/terraform-aws-service-catalog.git//modules/services/ecs-cluster?ref=v0.51.0"
+          source  = "github.com/gruntwork-io/service-catalog//ecs-cluster"
+          version = "v0.51.0"
 
           cluster_name = "my-ecs-cluster"
 
@@ -96,7 +100,8 @@
       <pre>
       <code class="language-hcl">
         module "k8s_service" {
-          source = "git::git@github.com:gruntwork-io/terraform-aws-service-catalog.git//modules/services/k8s-service?ref=v0.51.0"
+          source  = "github.com/gruntwork-io/service-catalog//k8s-service"
+          version = "v0.51.0"
 
           application_name       = "my-heroku-app"
           namespace              = "my-namespace"
@@ -112,7 +117,8 @@
         }
 
         module "eks_cluster" {
-          source = "git::git@github.com:gruntwork-io/terraform-aws-service-catalog.git//modules/services/eks-cluster?ref=v0.51.0"
+          source  = "github.com/gruntwork-io/service-catalog//eks-cluster"
+          version = "v0.51.0"
 
           cluster_name          = "my-eks-cluster"
           kubernetes_version    = "1.20"
