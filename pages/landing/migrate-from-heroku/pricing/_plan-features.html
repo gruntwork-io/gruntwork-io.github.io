@@ -1,0 +1,40 @@
+{% for category in page.categories %}
+  <tr>
+    <td style="text-align: left"><h3 class="margin-bottom-none">{{ category.title }}</h3></td>
+    <td style="border-left: 1px solid #194c5f; border-right: 1px solid #194c5f; background-color: #252e3a"><hr style="margin-bottom: 10px"></td>
+    <td style="border-left: 1px solid #194c5f; border-right: 1px solid #194c5f; background-color: #252e3a"><hr style="margin-bottom: 10px"></td>
+    <td style="border-left: 1px solid #194c5f; border-right: 1px solid #194c5f; background-color: #252e3a"><hr style="margin-bottom: 10px"></td>
+  </tr>
+  {% for feature in category.features %}
+    <tr>
+      <th><span class="help-text light" title="{{ feature.description }}" data-toggle="tooltip">{{ feature.name }}</span></th>
+      <td style="border-left: 1px solid #194c5f; border-right: 1px solid #194c5f; background-color: #252e3a;">
+        {% if feature.values %}
+          <span style="color: white">{{ feature.values["Lite"] }}</span>
+        {% elsif feature.plans contains "Lite" %}
+          <i class="fa fa-check" style="color: #69ff66" aria-hidden="true"></i>
+        {% else %}
+          <i class="fa fa-times" style="color: #f92e64" aria-hidden="true"></i>
+        {% endif %}
+      </td>
+      <td style="border-left: 1px solid #194c5f; border-right: 1px solid #194c5f; background-color: #252e3a;">
+        {% if feature.values %}
+          <span style="color: white">{{ feature.values["Pro"] }}</span>
+        {% elsif feature.plans contains "Pro" %}
+          <i class="fa fa-check" style="color: #69ff66" aria-hidden="true"></i>
+        {% else %}
+          <i class="fa fa-times" style="color: #f92e64" aria-hidden="true"></i>
+        {% endif %}
+      </td>
+      <td style="border-left: 1px solid #194c5f; border-right: 1px solid #194c5f; background-color: #252e3a;">
+        {% if feature.values %}
+          <span style="color: white">{{ feature.values["Enterprise"] }}</span>
+        {% elsif feature.plans contains "Enterprise" %}
+          <i class="fa fa-check" style="color: #69ff66" aria-hidden="true"></i>
+        {% else %}
+          <i class="fa fa-times" style="color: #f92e64" aria-hidden="true"></i>
+        {% endif %}
+      </td>
+    </tr>
+  {% endfor %}
+{% endfor %}
