@@ -8,7 +8,7 @@ excerpt: Configure the plan just right for your team.
 permalink: /migrate-from-heroku-to-aws/pricing/
 
 categories:
-  - title: Basics
+  - title: ""
     features:
       - name: Apps
         description: The number of apps you can migrate and deploy on this plan
@@ -22,12 +22,6 @@ categories:
           Lite: 1
           Pro: 10
           Enterprise: Unlimited
-      - name: Estimated AWS bill
-        description: This is a rough estimate of your monthly AWS billing using the infrastructure included in this plan. This assumes you have access to the AWS Free Tier.
-        values:
-          Lite: $0/mo
-          Pro: $500/mo and up
-          Enterprise: $2,000/mo and up
   - title: Compute
     features:
       - name: Fargate
@@ -154,11 +148,16 @@ categories:
       - name: SCPs
         description: Configure Service Control Policies (SCPs) as guard rails across all your AWS accounts.
         plans: ["Enterprise"]
-  - title: Security
+  - title: Auth
     features:
       - name: IAM Users, Groups, Roles
         description: Use IAM Users, Groups, and Roles to manage authentication and authorization for your AWS accounts
         plans: ["Lite", "Pro", "Enterprise"]
+      - name: ADFS, Google, Okta (SSO)
+        description: Use AWS Single Sign On (SSO) to manage authentication and authorization for your AWS accounts with an existing identity provider, such as ADFS, Google, or Okta
+        plans: ["Enterprise"]
+  - title: Compliance
+    features:
       - name: End-to-end encryption
         description: Encrypt all traffic in transit and at rest
         plans: ["Lite", "Pro", "Enterprise"]
@@ -168,9 +167,6 @@ categories:
       - name: Server hardening
         description: Install server hardening tools such as fail2ban, ip-lockdown, auto-update, and anti-virus to protect your EC2 instances
         plans: ["Pro", "Enterprise"]
-      - name: AWS SSO
-        description: Use AWS Single Sign On (SSO) to manage authentication and authorization for your AWS accounts with an existing identity provider, such as ADFS, Google, or Okta
-        plans: ["Enterprise"]
       - name: CIS Compliance
         description: Deploy infrastructure that is compliant out-of-the-box with the CIS AWS Foundations Benchmark.
         plans: ["Enterprise"]
@@ -210,6 +206,52 @@ pricing:
     price: Contact Us
     image: /assets/img/grunty-enterprise-heroku@2x.png
     image_styles: "max-width: 150px; margin-top: 18px"
+
+faq:
+  - question: What sort of AWS bill should I expect?
+    answer: |
+      <p>
+        Your AWS bill depends on a number of factors: which services you use, the instance types you pick, how much load you're dealing with, etc. That said, assuming you have access to the AWS Free Tier, here's a ballpark range for what your AWS bill will be if you deploy an app using infrastructure from the following subscription option:
+      </p>
+      <ul>
+        <li><strong>Gruntwork Lite</strong>: $0 / month</li>
+        <li><strong>Gruntwork Pro</strong>: $500 / month and up</li>
+        <li><strong>Gruntwork Pro</strong>: $2,000 / month and up</li>
+      </ul>
+
+  - question: What's a user?
+    answer: |
+        <p>
+          A user is any human or machine that makes use of Gruntwork's services, including using the Gruntwork Customer
+          Portal, accessing code from the Infrastructure as Code Library, or submitting requests to support.
+        </p>
+
+  - question: Is an annual subscription required?
+    answer: |
+      <p>
+        Gruntwork Pro and Gruntwork Enterprise require an annual subscription, though we can bill you either annually or monthly. Why an annual subscription? We give you access to all the code to run your infrastructure on day 1, and we let you keep that code even if you cancel. If we didn't have the annual subscription requirement, customers could sign up for one day, get access to all the code, and cancel immediately.
+        </p>
+      <p>
+        However, we offer a 30-day money back guarantee, so if for any reason you're not happy after signing up, we'll let you out of the annual subscription and refund 100% of your money in the first 30 days.
+      </p>
+
+  - question: What if I want to cancel my Gruntwork Subscription?
+    answer: |
+      <p>
+        We offer a 30-day money-back guarantee. You can try out Gruntwork Pro or Gruntwork Enterprise, and if you're not happy for any reason, you can cancel within the first 30 days, and we'll let you out of the annual subscription and refund 100% of your money.
+      </p>
+      <p>
+        Note that if you cancel in the first 30 days, you lose the license to the code in the Infrastructure as Code Library, so you must stop using it and delete any references to it; on the other hand, if you do stick with the annual subscription, and cancel after at least one year, you can keep using all the code you had been using up to that point.
+      </p>
+
+  - question: What happens to my code if I cancel my subscription?
+    answer: |
+      <p>
+        If you cancel within the first 30 days, we'll refund 100% of your money and let you out of the annual subscription, but you lose the license to the code in the Infrastructure as Code Library, so you must stop using it and delete all copies of the code.
+      </p>
+      <p>
+        If, however, you remain a subscriber for at least 12 months, the license allows you to fork and modify the code and create derivative works as much as you want, and even if you cancel your subscription, you can keep using all the code you had been using up to that point. We recommend that prior to canceling, you make copies of all the repos in the Infrastructure as Code Library into your own version control system. After you cancel your Gruntwork Subscription, you'll no longer have access to the customer portal UI, or any of the updates, additions, and fixes we make to the Infrastructure as Code Library, support from the Gruntwork team, security alerts, and any other subscription benefits. However, your infrastructure will continue to work just fine and you'll still have all the code you had been using up to that point.
+      </p>
 ---
 
 <div class="main page-pricing">
@@ -219,6 +261,9 @@ pricing:
   <div class="section-dark">
     <div class="container">
       {% include_relative _plans.html %}
+      {% include_relative _need-help.html %}
+      {% include_relative _benefits.html %}
+      {% include_relative _faq.html %}
     </div>
   </div>
 </div>
