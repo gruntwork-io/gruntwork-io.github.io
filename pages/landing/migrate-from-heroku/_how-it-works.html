@@ -1,7 +1,7 @@
 {% for item in page.how_it_works %}
   <div class="row">
     {% if item.precode %}
-      <div class="item_precode row-image-content {% if item.image_side == "left" %}col-xs-12 col-sm-7 col-md-6 col-description{% else %}col-xs-12 col-sm-7 col-sm-pull-5 col-md-6 col-md-pull-6 col-description{% endif %}">
+      <div class="item_precode_code row-image-content {% if item.image_side == "left" %}col-xs-12 col-sm-7 col-md-6 col-description{% else %}col-xs-12 col-sm-7 col-sm-pull-5 col-md-6 col-md-pull-6 col-description{% endif %}">
         {{ item.precode }}
       </div>
     {% endif %}
@@ -54,6 +54,11 @@
 {% endfor %}
 
 <style>
+  .tab_content, .tab_code_content {
+    border: 1px solid #194c5f;
+    border-radius: 0 0 4px 4px;
+  }
+
   .tab_content {
     padding: 20px;
     height: 350px;
@@ -64,6 +69,11 @@
     width: 100%;
     display: inline-table;
     max-width: 500px;
+    border: 1px solid #194c5f;
+    border-bottom: none;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+
   }
 
   .tab {
@@ -74,6 +84,7 @@
     border-collapse: collapse;
     border: 1px solid #194c5f;
     border-top: none;
+    border-bottom: none;
   }
 
   .tab.code:first-child, .tab:first-child, .tab.code:last-child, .tab:last-child {
@@ -113,14 +124,19 @@
     background-color: #06a2ff !important;
   }
 
-  .row .item_precode {
+  .row .item_precode_code, .item_precode {
     position: relative;
+  }
+
+  .item_precode_code figure {
+    border: 1px solid #194c5f;
+    border-radius: 4px;
   }
 
   figcaption {
     font-size: 14px;
   }
-  .row .item_precode figcaption {
+  .row .item_precode figcaption, .row .item_precode_code figcaption {
     position: absolute;
     top: -15px;
     background-color: #ee4f5d;
@@ -151,7 +167,7 @@
     margin: 0;
   }
 
-  .row_image_content:last-child {
+  .row:last-of-type .row_image_content {
     border: none;
   }
 
