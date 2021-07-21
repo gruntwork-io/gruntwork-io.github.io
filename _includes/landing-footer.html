@@ -2,13 +2,33 @@
   <div class="section section-footer-content">
     <div class="container">
       {% if page.footer %}
-        <div class="row row-call-to-action">
-          <div class="col-xs-12 text-center">
-            <h2 class="h1 no-anchor">{{ page.footer.heading }}</h2>
-            <p style="margin-top: -30px">{{ page.footer.body }}</p>
-            <p><a href="{{ page.permalink }}pricing/" class="btn btn-info" role="button" ga-on="click" ga-event-category="{{ page.path | slugify }}" ga-event-action="footer-cta">{{ page.footer.cta }}</a></p>
-          </div>
+      <div class="row row-call-to-action">
+        <div class="col-xs-12 text-center">
+          <h2 class="h1 no-anchor">{{ page.footer.heading }}</h2>
+          <p style="margin-top: -30px">{{ page.footer.body }}</p>
+          <p>
+            <a
+              {%
+              if
+              page.alternate_cta_link
+              %}
+              href="{{ page.alternate_cta_link }}"
+              {%
+              else
+              %}
+              href="pricing"
+              {%
+              endif
+              %}class="btn btn-info"
+              role="button"
+              ga-on="click"
+              ga-event-category="{{ page.path | slugify }}"
+              ga-event-action="footer-cta"
+              >{{ page.footer.cta }}</a
+            >
+          </p>
         </div>
+      </div>
       {% endif %}
     </div>
   </div>
@@ -16,13 +36,24 @@
     <div class="container">
       <div class="row">
         <div class="col-xs-12 text-center">
-          &copy; 2016 - {{ 'now' | date: "%Y" }} Gruntwork, Inc. All rights reserved.
+          &copy; 2016 - {{ 'now' | date: "%Y" }} Gruntwork, Inc. All rights
+          reserved.
           <div>
-          <span style="display:inline-block; margin-right:12px;"><a href="/legal/terms">Terms of Service</a></span>
-          <span style="display:inline-block; margin-right:12px;"><a href="/legal/website-terms">Website Terms</a></span>
-          <span style="display:inline-block; margin-right:12px;"><a href="/legal/privacy-policy">Privacy Policy</a></span>
-          <span style="display:inline-block; margin-right:12px;"><a href="/legal/cookie-policy">Cookie Policy</a></span>
-          <span style="display:inline-block; margin-right:24px;"><a href="/about">About Gruntwork</a></span>
+            <span style="display: inline-block; margin-right: 12px"
+              ><a href="/legal/terms">Terms of Service</a></span
+            >
+            <span style="display: inline-block; margin-right: 12px"
+              ><a href="/legal/website-terms">Website Terms</a></span
+            >
+            <span style="display: inline-block; margin-right: 12px"
+              ><a href="/legal/privacy-policy">Privacy Policy</a></span
+            >
+            <span style="display: inline-block; margin-right: 12px"
+              ><a href="/legal/cookie-policy">Cookie Policy</a></span
+            >
+            <span style="display: inline-block; margin-right: 24px"
+              ><a href="/about">About Gruntwork</a></span
+            >
           </div>
         </div>
       </div>
