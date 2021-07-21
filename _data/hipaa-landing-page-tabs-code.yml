@@ -1,0 +1,150 @@
+- id: runapp
+  title: Bash
+  content: |
+    <figure><figcaption>Read Secrets From AWS Secrets Manager on startup</figcaption>
+      <pre>
+      <code class="language-bash">
+      # Returns the raw value of a secret string stored in AWS Secrets Manager.
+      function read_secret_from_aws_secrets_manager {
+        local -r environment_name="$1"
+        local -r aws_region="$2"
+        local -r secret_id="$3"
+
+        log_info "Reading secret '$secret_id' from AWS Secrets Manager in $aws_region"
+
+        # Use '--output text' to avoid having Secrets Manager escape any of the characters in the secret value. E.g., If the
+        # secret value contained JSON and '--output json' was set instead, then all the double quoutes would be escaped in
+        # the resulting output.
+        aws secretsmanager get-secret-value \
+          --region "$aws_region" \
+          --secret-id "$secret_id" \
+          --output text \
+          --query 'SecretString'
+      }
+          </code>
+          </pre>
+          <figure>
+- id: database
+  title: database.js
+  content: |
+    <figure><figcaption>Use database secrets to connect securely</figcaption>
+      <pre>
+      <code class="language-javascript">
+        const { sendBackendResponse, sendResponse } = require("../views/views.jsx");
+        const db = require("../models/db");
+        const config = require("config");
+        const { urlsToTry, supportChannels } = require("../models/sample-app");
+        const util = require("util");
+        const { hasConfig } = require("../util/util");
+
+        /**
+         * An example of how to run a database query and show the response on the page.
+         *
+         * @param req
+         * @param res
+         * @returns {Promise<void>}
+         */
+          exports.dbExample = async (req, res) => {
+          if (!hasConfig("database")) {
+            const data = {
+              title: "Not Found",
+              message: "This sample app does not have a 'database' configuration, so the database example is disabled!",
+              urlsToTry,
+              supportChannels
+            };
+            sendResponse(res, "error", data, 404);
+            return
+          }
+
+          const dbConfig = config.get("database");
+          const engine = dbConfig.get("engine");
+
+          const query = "SELECT 1 + 1 AS solution";
+          const result = await db.runQuery(dbConfig, query);
+
+            throw new Error(`Expected to get a result with 1 row, but instead got: ${util.inspect(result)}`);
+          }
+
+          const solution = result[0].solution;
+
+          const data = {
+            engine,
+            query,
+            solution,
+            urlsToTry,
+            supportChannels
+          };
+
+          // This endpoint is only enabled for the backend, so call sendBackendResponse directly instead of sendResponse
+          sendBackendResponse(res, data);
+        };
+      </code>
+      </pre>
+      <figure>
+- id: servicediscovery
+  title: service-call.js
+  content: |
+    <figure><figcaption>Discover and call other services</figcaption>
+      <pre>
+      <code class="language-js">
+      const { sendResponse } = require("../views/views.jsx");
+      const service = require("../models/service");
+      const config = require("config");
+      const { urlsToTry, supportChannels } = require("../models/sample-app");
+      const { hasConfig } = require("../util/util");
+
+      /**
+       * An example of how to make a service call to a backend service and show the response on the page.
+       *
+       * @param req
+       * @param res
+       * @returns {Promise<void>}
+       */
+      exports.serviceCallExample = async (req, res) => {
+        const serviceName = req.params["serviceName"];
+
+        if (!hasConfig("services")) {
+          const data = {
+            title: "Not Found",
+            message: "This sample app does not have a 'services' configuration, so the service call examples are disabled!",
+            urlsToTry,
+            supportChannels
+          };
+          sendResponse(res, "error", data, 404);
+          return
+        }
+
+        const services = config.get("services");
+        const serviceConfig = services[serviceName];
+
+        if (!serviceConfig) {
+          const data = {
+            title: "Request Error",
+            message: `This sample app does not have a 'services' configuration for service '${serviceName}'.`,
+            urlsToTry,
+            supportChannels
+          };
+          sendResponse(res, "error", data, 400);
+          return
+        }
+
+        const servicePathRaw = req.params["0"] || "";
+        const servicePath = servicePathRaw.startsWith("/") ? servicePathRaw : `/${servicePathRaw}`;
+
+        const serviceResponse = await service.makeServiceCall(serviceConfig, serviceName, servicePath);
+
+        const data = {
+          title: "Service Call Example",
+          serviceName,
+          servicePath,
+          serviceResponse: JSON.stringify(serviceResponse, null, 2),
+          urlsToTry,
+          supportChannels
+        };
+        sendResponse(res, "service", data);
+      };
+
+             
+            </code>
+      </pre>
+      <figure>
