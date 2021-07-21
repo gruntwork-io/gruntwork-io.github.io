@@ -1,64 +1,49 @@
 - requirement: "Encryption in transit"
   description: |
     Utilize SSL/TLS when sending data.
-  build_it_yourself: "no"
-  ref_arch_base: "yes"
-  ref_arch_hipaa: "yes"
+  available: "yes"
 - requirement: "Encryption at rest"
   description: |
     Data is stored on encrypted volumes.
-  build_it_yourself: "no"
-  ref_arch_base: "yes"
-  ref_arch_hipaa: "yes"
+  available: "yes"
 - requirement: "Audit logging"
   description: |
     Collect all logs and events related to PHI from cloud infra, OS and application-level logs.
-  ref_arch_base: "yes"
-  ref_arch_hipaa: "yes"
+  available: "yes"
 - requirement: "CIS Benchmark Certified infrastructure"
   description: |
     Our IaC library is certified by the Center for Internet Security against the CIS Benchmark.
-  ref_arch_base: "yes"
-  ref_arch_hipaa: "yes"
+  available: "yes"
 - requirement: "CIS Benchmark Certified sample app"
   description: |
     Our sample app meets the same CIS benchmark standards out-of-the-box.
-  build_it_yourself: "no"
-  ref_arch_base: "no"
-  ref_arch_hipaa: "yes"
+  available: "soon"
 - requirement: "HIPAA Certified infrastructure as code (IaC) library"
   description: |
     We ran our IaC library through a third party auditor to ensure HIPAA-compliance.
-  build_it_yourself: "no"
-  ref_arch_base: "no"
-  ref_arch_hipaa: "yes"
+  available: "soon"
 - requirement: "HIPAA Certified application template"
   description: |
     We did the work up front to build world-class production-grade HIPAA-compliant application templates you can easily extend.
-  ref_arch_base: "no"
-  ref_arch_hipaa: "yes"
+  available: "soon"
 - requirement: "Automatic Logoff"
   description: |
     Any workstations that store PHI should automatically log off after a certain period of time.
-  ref_arch_base: "no"
-  ref_arch_hipaa: "yes"
-- requirement: "Risk Assessment"
-  description: |
-    HIPAA requires teams to perform a security risk assessment annually.
-  ref_arch_base: "no"
-  ref_arch_hipaa: "Customer Responsibility"
-- requirement: "Incident Response Plan"
-  description: |
-    HIPAA requires teams to prepare an incident response plan in-case of a potential security breach.
-  ref_arch_base: "no"
-  ref_arch_hipaa: "Customer Responsibility"
-- requirement: "Disaster Recovery Plan"
-  description: |
-    HIPAA requires teams to have backup and disaster recovery in place that is regularly verified.
-  ref_arch_base: "no"
-  ref_arch_hipaa: "Customer Responsibility"
+  available: "soon"
 - requirement: "Business Associates Agreements (BAA)"
   description: |
     HIPAA requires that teams have a BAA in place with all vendors that manage PHI.
-  ref_arch_base: "no"
-  ref_arch_hipaa: "yes"
+  available: "soon"
+- requirement: "Risk Assessment"
+  description: |
+    HIPAA requires teams to perform a security risk assessment annually.
+  available: "Customer Responsibility"
+- requirement: "Incident Response Plan"
+  description: |
+    HIPAA requires teams to prepare an incident response plan in-case of a potential security breach.
+  available: "Customer Responsibility"
+- requirement: "Disaster Recovery Plan"
+  description: |
+    HIPAA requires teams to have backup and disaster recovery in place that is regularly verified.
+  available: "Customer Responsibility"
+

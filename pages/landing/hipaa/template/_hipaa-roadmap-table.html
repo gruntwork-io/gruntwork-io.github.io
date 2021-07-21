@@ -1,9 +1,9 @@
 <h2>Our Roadmap to HIPAA-compliance</h2>
 <p>
-  Today we offer a complete CIS Benchmark compliant reference architecture, which is
-  a giant first step. We’re hard at work bridging the gap to make our solutions
-  HIPAA-compliant as well. All early access subscribers will recieve complimentary upgrades
-  to full HIPAA-compliance as soon as it’s available.
+  Gruntwork already gets you closer than anything else in the market with our complete CIS
+  Benchmark compliant reference architecture. We’re hard at work making our solutions fully
+  HIPAA-compliant, and your support will get us there faster. All early access subscribers
+  will recieve complimentary upgrades to full HIPAA-compliance as soon as it’s available.
 </p>
 <p>To learn about how a Gruntwork subscription compares to building it from scratch,
     <a href="/hipaa-cloud-compliance/why-gruntwork#why-use-gruntwork"
@@ -23,8 +23,7 @@
       <tr>
         <th>Requirement</th>
         <th>Description</th>
-        <th>Gruntwork today</th>
-        <th>Gruntwork HIPAA</th>
+        <th>Availability</th>
       </tr>
     </thead>
     <tbody>
@@ -35,20 +34,12 @@
       "_" | replace: ")", "_" }}{% endcapture %}
       <tr>
         <td style="width: 25%; color: white">{{ package.requirement }}</td>
-        <td>{{ package.description | truncate: 100 }}</td>
-        <td>
-          <!-- Ref Arch Base -->
-          {% assign pass = package.ref_arch_base %} {% assign time =
-          package.ref_arch_base_time %} {% include_relative
-          _yes-no-table-cell.html pass = pass time = time %}
-          <!-- End Ref Arch Base -->
-        </td>
-        <td>
-          <!-- Ref Arch HIPAA -->
-          {% assign pass = package.ref_arch_hipaa %} {% assign time =
-          package.ref_arch_hipaa_time %} {% include_relative
-          _yes-no-table-cell.html pass = pass time = time %}
-          <!-- End Ref Arch HIPAA -->
+        <td>{{ package.description | truncate: 150 }}</td>
+        <td style="text-align:center;">
+          <!-- Availability -->
+          {% assign pass = package.available %} {% include_relative
+          _availability-table-cell.html pass = pass %}
+          <!-- End Availability -->
         </td>
       </tr>
       {% endfor %}
