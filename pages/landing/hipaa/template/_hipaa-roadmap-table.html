@@ -1,29 +1,3 @@
-<h2>Seeking Early Access HIPAA Subscribers!</h2>
-<p>
-  Gruntwork already gets you closer than anything else in the market with our CIS
-  Benchmark compliant reference architecture. We’re hard at work making our solutions fully
-  HIPAA-compliant, and your support will get us there faster. All early access subscribers
-  will recieve:
-  <ul>
-    <li>Early access to HIPAA-Compliant Infrastructure (see availability table below)</li>
-    <li>Complimentary upgrades to full HIPAA-compliance as soon as it’s available</li>
-    <li>The opportunity to work with us and influence implementation direction</li>
-    <li>HITECH audit support</li>
-    <li>A perpetual subscription discount</li>
-  </ul>
-</p>
-<ul>
-  <li><b>Deploy your pre-prod env today on Gruntwork's CIS Compliant Architecture.</b> Our CIS Reference Architecture gets you most of the way to HIPAA in a single day.</li>
-  <li><b>Work with Gruntwork to fill in the remaining HIPAA pieces.</b> We're working on filling in the gaps between CIS and HIPAA. Help define the requirements and get early access to the HIPAA components as we complete each one.</li>
-  <li><b>Deploy your prod environment with full HIPAA compliance.</b> When all the pieces are in place, we'll deploy your new HIPAA compliant prod environment.</li>
-  <li><b>Go through an audit with Gruntwork.</b> If there are any technical gaps found in the auditing process, Gruntwork will address those concerns.</li>
-  <li><b>You're live!</b></li>
-  <li><b>Stay compliant with our versioned updates.</b> We will continue to update our libraries to keep in line with changing HIPAA requirements. Apply these updates easily to your infrastructure.</li>
-</ul>
-<p>To learn about how a Gruntwork subscription compares to building it from scratch,
-    <a href="/hipaa-cloud-compliance/why-gruntwork#why-use-gruntwork"
-      >check out our comparison chart</a
-    >.</p>
 <style>
   #hipaa.table tr:nth-child(odd) td:last-child {
     background-color: rgb(31, 59, 82);
@@ -50,7 +24,7 @@
       <tr>
         <td style="width: 25%; color: white">{{ package.requirement }}</td>
         <td>{{ package.description | truncate: 150 }}</td>
-        <td style="text-align:center;">
+        <td style="text-align: center">
           <!-- Availability -->
           {% assign pass = package.available %} {% include_relative
           _availability-table-cell.html pass = pass %}
@@ -60,4 +34,11 @@
       {% endfor %}
     </tbody>
   </table>
+  <p>
+    To learn about how a Gruntwork subscription compares to building it from
+    scratch,
+    <a href="/hipaa-cloud-compliance/why-gruntwork#why-use-gruntwork"
+      >check out our comparison chart</a
+    >.
+  </p>
 </div>
