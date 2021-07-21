@@ -12,7 +12,7 @@
           <p class="help-block"></p>
         </div>
         <div data-mh="plans-pricing-bottom" style="height:100px">
-          <p><a class="btn btn-primary" href="contact?selection={{ include.pricing.title | slugify }}">Contact Us</a></p>
+          <p><a class="btn btn-primary" href="{{ page.permalink }}contact/?selection={{ include.pricing.title | slugify }}">Contact Us</a></p>
           <p class="text-muted small">
             <em>Annual contract.<br />Billed monthly or annually.</em>
           </p>
@@ -25,7 +25,7 @@
           <p class="help-block" style="margin-top:-9px;">per month</p>
         </div>
         <div data-mh="plans-pricing-bottom" style="height:100px">
-          <p><a id="pricing-cta-aws" class="btn btn-info pricing-ctas" href="contact?selection={{ include.pricing.title | slugify }}" ga-on="click" ga-event-category="{{ page.path | slugify }}" ga-event-action="select-cta">Select</a></p>
+          <p><a id="pricing-cta-aws" class="btn btn-info pricing-ctas" href="{{ page.permalink }}contact/?selection={{ include.pricing.title | slugify }}" ga-on="click" ga-event-category="{{ page.path | slugify }}" ga-event-action="select-cta">Select</a></p>
           <p class="text-muted small"><em>Annual contract<br>Billed monthly or annually.</em></p>
         </div>
       </div>
