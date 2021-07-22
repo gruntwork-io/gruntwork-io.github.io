@@ -4,10 +4,11 @@
       <h3 class="h2 no-anchor margin-top-none" style="margin-bottom: 8px;">{{ include.pricing.title }}</h3>
       <p class="description" id="aws-plan">{{ include.pricing.description }}</p>
     </div>
-    <hr>
+    <hr style="margin-bottom: 10px;">
     <div class="flex flex-middle flex-column text-center">
-      <h2>Special early access pricing</h2>
+      <h2 style="margin: 5px;">Special early access pricing</h2>
       <div data-mh="plans-pricing-top" style="height:200px">
+        <p class="medium-price"><font color="#C53030"><del><span>$</span>{{ include.pricing.strike_price }} / mo + <span> $</span>{{ include.pricing.strike_flat_fee }} flat fee</del></font></p>
         <p class="big-price"><span>$</span>{{ include.pricing.price }} / mo<sup>*</sup></p>
         <p class="medium-price">+ $</span>{{ include.pricing.flat_fee }} flat fee</p>
       </div>
