@@ -5,32 +5,48 @@
       <p class="description" id="aws-plan">{{ include.pricing.description }}</p>
     </div>
     <hr>
-      <div class="flex flex-middle flex-column text-center">
-        <div data-mh="plans-pricing-top" style="height:200px">
-          <p class="medium-price"><font color="#C53030"><del><span>$</span>{{ include.pricing.strike_price }} / mo + <span> $</span>{{ include.pricing.strike_flat_fee }} flat fee</del></font></p>
-          <p class="big-price"><span>$</span>{{ include.pricing.price }} / mo<sup>*</sup></p>
-          <p class="medium-price">+ $</span>{{ include.pricing.flat_fee }} flat fee</p>
-        </div>
-        <div data-mh="plans-pricing-bottom" style="height:100px">
-          <p><a id="pricing-cta-aws" class="btn btn-info pricing-ctas" href="contact?selection={{ include.pricing.title | slugify }}" ga-on="click" ga-event-category="{{ page.path | slugify }}" ga-event-action="select-cta">Join the Waitlist</a></p>
-          <p class="text-muted small"><em>Annual contract<br>Billed monthly or annually.</em><br>* All prices are subject to change.</p>
-        </div>
+    <div class="flex flex-middle flex-column text-center">
+      <h2>Special early access pricing</h2>
+      <div data-mh="plans-pricing-top" style="height:200px">
+        <p class="big-price"><span>$</span>{{ include.pricing.price }} / mo<sup>*</sup></p>
+        <p class="medium-price">+ $</span>{{ include.pricing.flat_fee }} flat fee</p>
       </div>
+      <div data-mh="plans-pricing-bottom" style="height:100px">
+        <p><a id="pricing-cta-aws" class="btn btn-info pricing-ctas"
+            href="/hipaa-compliance/contact" ga-on="click"
+            ga-event-category="{{ page.path | slugify }}" ga-event-action="select-cta">I'm interested</a></p>
+        <p class="text-muted small"><em>Annual contract<br>Billed monthly or annually.</em><br>* All prices are subject
+          to change.</p>
+      </div>
+    </div>
     <hr>
 
-    <div class="col-lg-12 col-md-12 text-center" data-mh="plans-features">
-      <ul class="check-list text-white">
-        {% for feature in include.pricing.features %}
-        <li>
+    <div class="row">
+      <div class="col-md-6">
+        <ul class="check-list text-white">
+        {% for feature in include.pricing.features limit:5 %}
+          <li>
             <span class="help-text light" title="{{ feature.description }}" data-toggle="tooltip">
               {{ feature.name }}
             </span>
-        </li>
+          </li>
         {% endfor %}
-      </ul>
+        </ul>
+      </div>
+      <div class="col-md-4">
+        <ul class="check-list text-white">
+        {% for feature in include.pricing.features limit:5 offset: continue %}
+          <li>
+            <span class="help-text light" title="{{ feature.description }}" data-toggle="tooltip">
+              {{ feature.name }}
+            </span>
+          </li>
+        {% endfor %}
+        </ul>
+      </div>
     </div>
-    <figure class="gw-pricing-columns__grunty">
-      <img src="{{ include.pricing.image }}" style="{{ include.pricing.image_styles }}"/>
-    </figure>
   </div>
+  <figure class="gw-pricing-columns__grunty">
+    <img src="{{ include.pricing.image }}" style="{{ include.pricing.image_styles }}" />
+  </figure>
 </div>
