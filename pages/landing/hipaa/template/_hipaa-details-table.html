@@ -10,23 +10,26 @@
   <table class="table table-striped" id="hipaa">
     <thead>
       <tr>
-        <th>Requirement</th>
+        <th>Title</th>
+        <th>Standard</th>
         <th>Description</th>
         <th>Availability</th>
       </tr>
     </thead>
     <tbody>
-      {% for package in site.data.hipaa %} {% capture id %}{{
-      package.requirement | replace: " ", "_" | replace: ")", "_" | replace:
-      "(", "_" }}" class="table-clickable-row" data-toggle="modal"
-      data-target="#modal-{{ package.name | replace: " ", "_" | replace: "(",
-      "_" | replace: ")", "_" }}{% endcapture %}
+      {% for feature in site.data.hipaa.features %} 
+      {% capture id %}{{ feature.title | 
+        replace: " ", "_" }}" 
+        class="table-clickable-row" 
+        data-toggle="modal" 
+        data-target="#modal-{{ feature.title | replace: " ", "_" }}{% endcapture %}
       <tr>
-        <td style="width: 25%; color: white">{{ package.requirement }}</td>
-        <td>{{ package.description | truncate: 150 }}</td>
+        <td style="width: 25%; color: white">{{ feature.title }}</td>
+        <td style="width: 25%; color: white">{{ feature.standard }}</td>
+        <td>{{ feature.description }}</td>
         <td style="text-align: center">
           <!-- Availability -->
-          {% assign pass = package.available %} {% include_relative
+          {% assign pass = feature.available %} {% include_relative
           _availability-table-cell.html pass = pass %}
           <!-- End Availability -->
         </td>

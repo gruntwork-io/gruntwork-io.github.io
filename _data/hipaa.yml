@@ -1,40 +1,71 @@
-- requirement: "Encryption in transit"
-  description: |
-    Utilize SSL/TLS when sending data.
+features:
+- title: Protection from malicious software
+  standard: §164.308(a)(5)(ii)(B)
+  description: We offer a number of techniques for protecting against malicious software, including least-privilege-based security group rules, network access control lists, regularly updated machine images, hardened operating systems, and more.
   available: "yes"
-- requirement: "Encryption at rest"
-  description: |
-    Data is stored on encrypted volumes.
+
+- title: Log in monitoring
+  standard: §164.308(a)(5)(ii)(C)
+  description: We include code to monitor for and send notifications about unusual and unauthorized log in activity.
   available: "yes"
-- requirement: "Audit logging"
-  description: |
-    Collect all logs and events related to PHI from cloud infra, OS and application-level logs.
+
+- title: Password management
+  standard: §164.308(a)(5)(ii)(D)
+  description: The AWS IAM user password policy is defined in code. We also provide patterns for handling secrets securely.
   available: "yes"
-- requirement: "HIPAA compliant infrastructure as code (IaC) library"
-  description: |
-    We ran our IaC library through a third party auditor to ensure HIPAA-compliance.
-  available: "soon"
-- requirement: "HIPAA compliant application template"
-  description: |
-    We did the work up front to build world-class production-grade HIPAA-compliant application templates you can easily extend.
-  available: "soon"
-- requirement: "Automatic Logoff"
-  description: |
-    Any workstations that store PHI should automatically log off after a certain period of time.
-  available: "soon"
-- requirement: "Risk Assessment"
-  description: |
-    We provide a complete risk assessment including threat analysis, potential vulnerabilities, all wrapped up in a risk assessment report.
-  available: "soon"
-- requirement: "Business Associates Agreements (BAA)"
-  description: |
-    HIPAA requires that teams have a BAA in place with all vendors that manage PHI.
-  available: "user"
-- requirement: "Incident Response Plan"
-  description: |
-    HIPAA requires teams to prepare an incident response plan in-case of a potential security breach.
-  available: "user"
-- requirement: "Disaster Recovery Plan"
-  description: |
-    HIPAA requires teams to have backup and disaster recovery in place that is regularly verified.
-  available: "user"
+
+- title: Encryption
+  standard: §164.312(a)(2)(iv) 
+  description: Our modules use encryption by default. Databases, disk volumes, S3 buckets, and machine images are all encrypted. Network connections are encrypted.
+  available: "yes"
+
+- title: Audit controls
+  standard: §164.312(b)
+  description: Audit data from multiple levels in the infrastructure are aggregated in a dedicated, compartmentalized logging account, including AWS Config, CloudTrail, GuardDuty, and VPC flow logs.
+  available: "yes"
+
+- title: Authorization
+  standard: §164.308(a)(4)(ii)(B)
+  description: All user access is tracked in code, including users and a pre-defined set of roles and groups.
+  available: "yes"
+
+- title: Inventory and categorize systems
+  standard: §164.308(a)(1)(ii)(A)
+  description: We've devised a system of resource tags to help you perform live reports on which system contain PHI.
+  available: soon
+
+- title: Conduct a risk assessment
+  standard: §164.308(a)(1)(ii)(A)
+  description: We have conducted a risk assessment for all of the infrastructure code, including a threat analysis, list of potential vulnerabilities, and a security control review, all wrapped up in a risk assessment report.
+  available: soon
+
+- title: Update risk assessments
+  standard: §164.308(a)(1)(ii)(A)
+  description: Gruntwork will help you keep your infrastructure up-to-date, and we'll update the risk assesssment as we go.
+  available: soon
+
+- title: Select appropriate security controls
+  standard: §164.308(a)(1)(ii)(B)
+  description: We have built-in controls to mitigate the risks identified by the assessment. We provide documentation and procedures to help you understand and operate the environment accordingly.
+  available: soon
+
+- title: Access control
+  standard: §164.308(a)(4)(ii)(C)
+  description: We include code that regularly monitors user access and sends a notification when unused accounts are detected.
+  available: soon
+
+- title: 
+  standard: §164.308(a)(1)(ii)(D)
+  description: We have built-in controls that mitigate the risks identified by the assessment. We provide documentation and procedures to help you understand and operate these controls.
+  available: soon
+
+- title: Policy violations
+  standard: §164.308(a)(1)(ii)(C)
+  description: You'll need documented policies and processes that lay out what individual actions will be taken if HIPAA safeguards are violated.
+  available: user
+
+- title: Assign responsibility for security
+  standard: §164.308(a)(2)
+  description: Identify an individual who is responsible for implementing the policies and procedures within the organization.
+  available: user
+

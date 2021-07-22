@@ -28,52 +28,64 @@ how_it_works:
     image_side: right
     body: |
       Deploy an off-the-shelf, production-grade AWS Architecture that is HIPAA compliant out-of-the-box. The architecture includes: <ul><li>Multi-account Landing Zone</li><li>Networking (VPCs, VPN, SSH, DNS)</li> <li>Orchestration (EKS, ECS, EC2)</li><li>Data Storage (RDS, ElastiCache, ElasticSearch)</li><li>CI / CD (CircleCI, Jenkins, GitLab)</li><li>Monitoring (CloudWatch, CloudTrail, AWS Config)</li><li>End-to-end encryption (TLS, secrets management)</li><li>And much more (<a href="/hipaa-compliance-on-aws/bootstrap-your-app">see the full list of features</a>)</li></ul>
+- heading: Step 2. Bootstrap your app with our HIPAA-compliant templates
+  image: /assets/img/hipaa/hipaa-sample-app.png
+  image_side: left
+  body: |
+    We’re building world-class, HIPAA-compliant application templates that you can use as a launch pad for your own applications. Meanwhile, we'll deploy a CIS Reference Architecture for you.
 
-  - heading: Step 2. Bootstrap your app with our HIPAA-compliant templates
-    image: /assets/img/hipaa/hipaa-sample-app.png
-    image_side: left
-    body: |
-      We’re building world-class, HIPAA-compliant application templates that you can use as a launch pad for your own applications. Meanwhile, we'll deploy a CIS Reference Architecture for you.
+- heading: Step 3. Work with us to define requirements that meet your needs
+  image: /assets/img/hipaa/hipaa-chat.png
+  image_side: right
+  body: |
+    We’ll work with you to ensure that our implementation of the HIPAA requirements satisfies the needs of your organization—and those of your auditors!
 
-  - heading: Step 3. Work with us to define requirements that meet your needs
-    image: /assets/img/hipaa/hipaa-chat.png
-    image_side: right
-    body: |
-      We’ll work with you to ensure that our implementation of the HIPAA requirements satisfies the needs of your organization—and those of your auditors!
+- heading: Step 4. We’ll help you pass your audit
+  image: /assets/img/hipaa/grunty-audit.png
+  image_width: 350px
+  image_side: left
+  body: |
+    Our team will support you throughout your audit process. If your auditor identifies any issues with the technical safeguards in your infrastructure, the Gruntwork team will jump in to get them fixed.
 
-  - heading: Step 4. We’ll help you pass your audit
-    image: /assets/img/hipaa/grunty-audit.png
-    image_width: 350px
-    image_side: left
-    body: |
-      Our team will support you throughout your audit process. If your auditor identifies any issues with the technical safeguards in your infrastructure, the Gruntwork team will jump in to get them fixed.
-
-  - heading: Step 5. Stay up to date automatically via Terraform pull requests
-    image: /assets/img/hipaa/stay-up-to-date.png
-    image_width: 500px
-    image_side: right
-    body: |
-      The tools we all rely on (AWS, Terraform, Kubernetes, Docker), DevOps best practices, and auditor expectations are constantly changing. To help you remain HIPAA compliant, we offer commercial support and maintenance for our app and infrastructure code, all of which is semantically versioned, so you can stay completely up-to-date with the latest compliance requirements, security patches, and AWS/DevOps best practices via simple version number bumps.
+- heading: Step 5. Stay up to date automatically via Terraform pull requests
+  image: /assets/img/hipaa/stay-up-to-date.png
+  image_width: 500px
+  image_side: right
+  body: |
+    The tools we all rely on (AWS, Terraform, Kubernetes, Docker), DevOps best practices, and auditor expectations are constantly changing. To help you remain HIPAA compliant, we offer commercial support and maintenance for our app and infrastructure code, all of which is semantically versioned, so you can stay completely up-to-date with the latest compliance requirements, security patches, and AWS/DevOps best practices via simple version number bumps.
 
 whats_included:
-  - heading: Inventory and categorize systems 
-    req: §164.308(a)(1)(ii)(A)
-    body: Gruntwork includes use a system of resource tags to help you perform live reports on which system contain PHI.
-    available: soon
+- heading: Inventory and categorize systems
+  req: §164.308(a)(1)(ii)(A)
+  body: Gruntwork includes use a system of resource tags to help you perform live reports on which system contain PHI.
+  available: soon
 
-  - heading: Perform a risk assessment
-    req: §164.308(a)(1)(ii)(A)
-    body: Gruntwork includes a complete risk assessment for your infrastructure, including threat analysis, potential vulnerabilities, and security control review, all wrapped up in a risk assessment report.
-    available: soon
+- heading: Perform a risk assessment
+  req: §164.308(a)(1)(ii)(A)
+  body: Gruntwork includes a complete risk assessment for your infrastructure, including threat analysis, potential vulnerabilities, and security control review, all wrapped up in a risk assessment report.
+  available: soon
 
 footer:
   heading: Go live with Gruntwork HIPAA
   body: |
-    Request early access to receive exclusive benefits and discounts!
-    <ul class="check-list check-white" style="text-align: left; display: inline-block;"><li><span class="help-text light" title="" data-toggle="tooltip" data-original-title="You’ll be the first to gain access to the solution once it’s ready"> Pre-release HIPAA-Compliant Infrastructure </span> </li><li><span class="help-text light" title="" data-toggle="tooltip" data-original-title="Early adopters will receive the solution at a major discount!"> Early adopter discount</span> </li><li><span class="help-text light" title="" data-toggle="tooltip" data-original-title="We’ll work with you to ensure the solution meets your organization’s requirements"> Influence the product direction</span> </li><li><span class="help-text light" title="" data-toggle="tooltip" data-original-title="We’ll go through the audit with you, implementing any technical changes indicated by the auditor"> Audit support</span> </li></ul>
+    Request early access to receive exclusive benefits and discounts!  <ul class="check-list check-white" style="text-align: left; display: inline-block;"> <li><span class="help-text light" title="" data-toggle="tooltip" data-original-title="You’ll be the first to gain access to the solution once it’s ready"> Pre-release HIPAA-Compliant Infrastructure </span> </li> <li><span class="help-text light" title="" data-toggle="tooltip" data-original-title="Early adopters will receive the solution at a major discount!"> Early adopter discount</span> </li> <li><span class="help-text light" title="" data-toggle="tooltip" data-original-title="We’ll work with you to ensure the solution meets your organization’s requirements"> Influence the product direction</span> </li> <li><span class="help-text light" title="" data-toggle="tooltip" data-original-title="We’ll go through the audit with you, implementing any technical changes indicated by the auditor"> Audit support</span> </li> </ul>
   cta: Request early access
 ---
 
+<script>
+ window.onload = function hipaaDetails () {
+    var windowWidth = $(window).width();
+    var mobileDiv = document.getElementById('hipaaDetailsMobile');
+    var desktopDiv = document.getElementById('hipaaDetails');
+    if (windowWidth < 767) {
+      mobileDiv.style.display = 'block';
+      desktopDiv.style.display = 'none';
+    } else {
+      desktopDiv.style.display = 'block';
+      mobileDiv.style.display = 'none';
+    }
+  };
+</script>
 <div class="main">
   <div class="section section-hero">
     <div class="container">
@@ -100,8 +112,11 @@ footer:
   </div>
   <div class="section">
     <div class="container">
-      <div class="row row-community">
-        {% include_relative _hipaa-whats-included.html %}
+      <div class="row row-community" id="hipaaDetails">
+        {% include_relative _hipaa-details-table.html %}
+      </div>
+      <div class="row row-community" id="hipaaDetailsMobile">
+        {% include_relative _hipaa-details-boxes.html %}
       </div>
     </div>
   </div>
