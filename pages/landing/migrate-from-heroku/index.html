@@ -4,7 +4,14 @@ type: landing
 slug: index-page
 
 title: Migrate from Heroku to AWS in about a day.
-excerpt: Automatically package your app and deploy into a production-grade architecture on AWS in ~1 day. Get the delightful "git push to deploy" workflow of Heroku with the scalability and control of managing 100% of your infrastructure as code.
+excerpt: |
+  <ul class="check-list check-list-white" style="display: inline-block; text-align: left; margin-top: 10px; margin-bottom: 0">
+    <li>Configure a "git push to deploy" CI / CD pipeline.</li>
+    <li>Instrument your app with cloud-native packaging, monitoring, logging, etc.</li>
+    <li>Deploy your app onto a production-grade architecture on AWS.</li>
+    <li>Manage 100% of your infrastructure as code using Terraform.</li>
+    <li>Migrate your first app for free!</li>
+  </ul>
 permalink: /migrate-from-heroku-to-aws/
 custom_js:
 - prism
@@ -12,7 +19,7 @@ prism_css: /assets/css/prism-landing-zone.css
 
 hero:
   image: /assets/img/infrastructure-cube-icons/infrastructure-in-a-day.png
-  cta: Request early access!
+  cta: Request early access
   logos:
   - /assets/img/logos-technologies/partner_logo_aws.png
   - /assets/img/logos-technologies/partner_logo_kubernetes.png
@@ -78,7 +85,7 @@ how_it_works:
     tab_block: site.data.heroku-landing-page-tabs-images
     image_side: right
     body: |
-      Gruntwork will update your app with cloud-native best practices for monitoring, logging, service discovery, secrets management, schema migrations, and more.
+      Gruntwork will update your app with cloud-native best practices for packaging, monitoring, logging, service discovery, secrets management, schema migrations, and more.
     logos:
       - title: CloudWatch
         src: /assets/img/landing-heroku-page/cloudwatch-icon.png
@@ -110,10 +117,11 @@ how_it_works:
 footer:
   heading: The infrastructure you've always wanted
   body: |
-    <ul class="check-list check-white" style="display: inline-block; text-align: left; margin-top: 10px; margin-bottom: 0">
+    <ul class="check-list" style="display: inline-block; text-align: left; margin-top: 10px; margin-bottom: 0">
       <li>The seamless experience you expect from Heroku.</li>
       <li>The control and scalability you expect from AWS.</li>
       <li>The production-grade code you expect from Gruntwork.</li>
+      <li>Migrate your first app for free!</li>
     </ul>
   cta: Request early access!
 ---
