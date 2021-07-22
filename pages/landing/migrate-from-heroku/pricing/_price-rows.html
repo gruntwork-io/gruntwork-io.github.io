@@ -21,16 +21,26 @@
       {% if pricing.price == "Contact Us" %}
         <p><a class="btn btn-primary" href="{{ page.permalink }}contact/?selection={{ pricing.title | slugify }}" ga-on="click" ga-event-category="{{ page.path | slugify }}" ga-event-action="select-cta">Contact Us</a></p>
         <p class="text-muted small">
-          <em>Annual contract.<br />Billed monthly or annually.</em>
+          <em>
+            Currently in private beta.<br>
+            Annual subscription.
+          </em>
         </p>
       {% elsif pricing.price == "Free" %}
-        <p><a id="pricing-cta-aws" class="btn btn-info pricing-ctas" href="{{ page.permalink }}contact/?selection={{ pricing.title | slugify }}" ga-on="click" ga-event-category="{{ page.path | slugify }}" ga-event-action="select-cta">Select</a></p>
+        <p><a id="pricing-cta-aws" class="btn btn-info pricing-ctas" href="{{ page.permalink }}contact/?selection={{ pricing.title | slugify }}" ga-on="click" ga-event-category="{{ page.path | slugify }}" ga-event-action="select-cta">Request Access</a></p>
         <p class="text-muted small">
-          <em>Annual contract.<br />Billed monthly or annually.</em>
+          <em>
+            Currently in private beta.
+          </em>
         </p>
       {% else %}
-        <p><a id="pricing-cta-aws" class="btn btn-info pricing-ctas" href="{{ page.permalink }}contact/?selection={{ pricing.title | slugify }}" ga-on="click" ga-event-category="{{ page.path | slugify }}" ga-event-action="select-cta">Select</a></p>
-        <p class="text-muted small"><em>Annual contract<br>Billed monthly or annually.</em></p>
+        <p><a id="pricing-cta-aws" class="btn btn-info pricing-ctas" href="{{ page.permalink }}contact/?selection={{ pricing.title | slugify }}" ga-on="click" ga-event-category="{{ page.path | slugify }}" ga-event-action="select-cta">Request Access</a></p>
+        <p class="text-muted small">
+          <em>
+            Currently in private beta.<br>
+            Annual subscription.
+          </em>
+        </p>
       {% endif %}
     </td>
   {% endfor %}
