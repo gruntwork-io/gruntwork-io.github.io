@@ -1,0 +1,157 @@
+- id: runapp
+  title: Terraform
+  content: |
+    <figure><figcaption>EKS Cluster Configuration in Terraform</figcaption>
+      <pre>
+      <code class="language-hcl">
+        # ---------------------------------------------------------------------------------------------------------------------
+        # CONFIGURE OUR KUBERNETES CONNECTIONS
+        # Note that we can't configure our Kubernetes connection until EKS is up and running, so we try to depend on the
+        # resource being created.
+        # ---------------------------------------------------------------------------------------------------------------------
+
+        # The provider needs to depend on the cluster being setup.
+        provider "kubernetes" {
+          load_config_file       = false
+          host                   = data.template_file.kubernetes_cluster_endpoint.rendered
+          cluster_ca_certificate = base64decode(data.template_file.kubernetes_cluster_ca.rendered)
+
+          # EKS clusters use short-lived authentication tokens that can expire in the middle of an 'apply' or 'destroy'. To
+          # avoid this issue, we use an exec-based plugin here to fetch an up-to-date token. Note that this code requires a
+          # binary—either kubergrunt or aws—to be installed and on your PATH.
+          exec {
+            api_version = "client.authentication.k8s.io/v1alpha1"
+            command     = var.use_kubergrunt_to_fetch_token ? "kubergrunt" : "aws"
+            args = (
+              var.use_kubergrunt_to_fetch_token
+              ? ["eks", "token", "--cluster-id", module.eks_cluster.eks_cluster_name]
+              : ["eks", "get-token", "--cluster-name", module.eks_cluster.eks_cluster_name]
+            )
+          }
+        }
+
+        # Workaround for Terraform limitation where you cannot directly set a depends on directive or interpolate from resources
+        # in the provider config.
+        # Specifically, Terraform requires all information for the Terraform provider config to be available at plan time,
+        # meaning there can be no computed resources. We work around this limitation by creating a template_file data source
+        # that does the computation.
+        # See https://github.com/hashicorp/terraform/issues/2430 for more details
+        data "template_file" "kubernetes_cluster_endpoint" {
+          template = module.eks_cluster.eks_cluster_endpoint
+        }
+
+        data "template_file" "kubernetes_cluster_ca" {
+          template = module.eks_cluster.eks_cluster_certificate_authority
+        }
+          </code>
+          </pre>
+          <figure>
+- id: Docker
+  title: Docker
+  content: |
+    <figure><figcaption>Dockerfile</figcaption>
+      <pre>
+      <code class="language-docker">
+
+        FROM python:3.8-alpine AS with-secrets-python
+        MAINTAINER Gruntwork <info@gruntwork.io>
+
+        # Require a build-time arg of your GitHub Personal Token. Be sure to read the intro notes to understand the risks of
+        # passing in secrets this way.
+        # Example command: docker build --build-arg GITHUB_OAUTH_TOKEN --tag gruntwork/ecs-deploy-runner .
+        # This example will set the GITHUB_OAUTH_TOKEN build arg using the value of the environment variable with the same name.
+        ARG GITHUB_OAUTH_TOKEN
+
+        # These build args have defaults that can be overridden. For example, you can update the terraform version by passing
+        # in: --build-arg terraform_version=0.12.21
+        ARG terraform_version=0.15.5
+        ARG terragrunt_version=v0.30.7
+        ARG packer_version=1.6.6
+        ARG kubergrunt_version=v0.7.2
+        # This should correspond to the latest version supported by EKS
+        ARG kubectl_version=v1.20.4
+
+        # If the build-time arg is not defined, make it clear to the user.
+        RUN if [ -z "$GITHUB_OAUTH_TOKEN" ]; then echo "ERROR: You must set GITHUB_OAUTH_TOKEN as a Docker build arg."; exit 1; fi
+
+        RUN apk add --no-cache jq bash sudo curl && echo "set disable_coredump false" > /etc/sudo.conf
+        RUN curl -Ls https://raw.githubusercontent.com/gruntwork-io/gruntwork-installer/master/bootstrap-gruntwork-installer.sh | bash /dev/stdin --version v0.0.23
+        RUN gruntwork-install --module-name "gruntwork-module-circleci-helpers" --repo "https://github.com/gruntwork-io/terraform-aws-ci" --tag "$module_ci_tag" --branch "$module_ci_branch" && \
+            gruntwork-install --module-name "infrastructure-deploy-script" --repo "https://github.com/gruntwork-io/terraform-aws-ci" --tag "$module_ci_tag" --branch "$module_ci_branch" && \
+            gruntwork-install --module-name "build-helpers" --repo "https://github.com/gruntwork-io/terraform-aws-ci" --tag "$module_ci_tag" --branch "$module_ci_branch" && \
+            gruntwork-install --module-name "git-helpers" --repo "https://github.com/gruntwork-io/terraform-aws-ci" --tag "$module_ci_tag" --branch "$module_ci_branch" && \
+            gruntwork-install --module-name "terraform-helpers" --repo "https://github.com/gruntwork-io/terraform-aws-ci" --tag "$module_ci_tag" --branch "$module_ci_branch" && \
+            gruntwork-install --binary-name "kubergrunt" --repo "https://github.com/gruntwork-io/kubergrunt" --tag "$kubergrunt_version"
+
+        # Install Terraform, Terragrunt, Packer, and kubectl using configure-environment-for-gruntwork-module.
+        RUN configure-environment-for-gruntwork-module \
+              --go-version "NONE" \
+              --terraform-version "$terraform_version" \
+              --terragrunt-version "$terragrunt_version" \
+              --packer-version "$packer_version" \
+              --kubectl-version "$kubectl_version"
+
+        # Install awscli with pip
+        RUN pip install awscli
+        
+        ...
+      </code>
+      </pre>
+      <figure>
+- id: Packer
+  title: Packer
+  content: |
+    <figure><figcaption>Packer configurations to create AMIs</figcaption>
+      <pre>
+      <code class="language-json">
+      {
+        "variables": {
+          "service_catalog_ref": null,
+          "version_tag": null,
+          "aws_region": "us-east-1",
+          "ami_name": "eks-workers",
+          "github_auth_token": "{{env `GITHUB_OAUTH_TOKEN`}}",
+          "encrypt_boot": "true",
+          "vpc_filter_key": "isDefault",
+          "vpc_filter_value": "true",
+          "vpc_subnet_filter_key": "default-for-az",
+          "vpc_subnet_filter_value": "true",
+          "gruntwork_installer_version": "v0.0.36",
+          "kubernetes_version": "1.20",
+          "enable_ssh_grunt": "true",
+          "ssh_interface": "public_ip",
+          "associate_public_ip_address": "true"
+        },
+         "vpc_filter": {
+            "filters": {
+              "{{user `vpc_filter_key`}}": "{{user `vpc_filter_value`}}"
+            }
+          },
+          "subnet_filter": {
+            "filters": {
+              "{{user `vpc_subnet_filter_key`}}": "{{user `vpc_subnet_filter_value`}}"
+            },
+            "most_free": "true"
+          },
+        }],
+        "provisioners": [{
+          "type": "shell",
+          "inline": [
+            "sudo yum update -y && sudo yum install -y aws-cli unzip perl-Digest-SHA jq",
+            "curl -Ls https://raw.githubusercontent.com/gruntwork-io/gruntwork-installer/master/bootstrap-gruntwork-installer.sh | bash /dev/stdin --version {{user `gruntwork_installer_version`}}",
+            "gruntwork-install --module-name services/eks-workers --repo https://github.com/gruntwork-io/terraform-aws-service-catalog --tag {{user `service_catalog_ref`}}"
+          ],
+          "environment_vars": [
+            "GITHUB_OAUTH_TOKEN={{user `github_auth_token`}}",
+            "terraform_aws_eks_version={{user `terraform_aws_eks_version`}}",
+            "module_security_version={{user `module_security_version`}}",
+            "module_ec2_baseline_branch={{user `module_ec2_baseline_branch`}}",
+            "enable_cloudwatch_metrics={{user `enable_cloudwatch_metrics`}}",
+            "enable_cloudwatch_log_aggregation={{user `enable_cloudwatch_log_aggregation`}}"
+          ],
+          "pause_before": "30s"
+        }]
+      }
+      </code>
+      </pre>
+      <figure>
