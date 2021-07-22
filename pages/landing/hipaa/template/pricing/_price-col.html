@@ -4,6 +4,23 @@
       <h3 class="h2 no-anchor margin-top-none" style="margin-bottom: 8px;">{{ include.pricing.title }}</h3>
       <p class="description" id="aws-plan">{{ include.pricing.description }}</p>
     </div>
+<hr>
+
+    <div class="row justify-content-center">
+      <h3 class="text-center">Exclusive Benefits for Early Subscribers</h3>
+      <ul class="list-group text-left">
+        {% for feature in include.pricing.early_adoption_features %}
+        <li class="list-group-item" style="border: none">
+          <img style="max-width: 40px; margin: 10px" src="/assets/img/table-icons/dotted-check.png"/>
+          <span class="help-text light" title="{{ feature.description }}" data-toggle="tooltip">
+            {{ feature.name }}
+          </span>        </li>
+      {% endfor %}
+      </ul>
+    </div>
+
+
+
     <hr style="margin-bottom: 10px;">
     <div class="flex flex-middle flex-column text-center">
       <h2 style="margin: 5px;">Special early access pricing</h2>
