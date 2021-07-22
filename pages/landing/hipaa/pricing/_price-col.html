@@ -25,8 +25,9 @@
 
     <div class="row">
       <div class="col-md-6">
+        <h3>Exclusive Early Access Benefits</h3>
         <ul class="check-list text-white">
-        {% for feature in include.pricing.features limit:5 %}
+        {% for feature in include.pricing.exclusive_features %}
           <li>
             <span class="help-text light" title="{{ feature.description }}" data-toggle="tooltip">
               {{ feature.name }}
@@ -36,8 +37,9 @@
         </ul>
       </div>
       <div class="col-md-6">
+        <h3>Subscriber Features</h3>
         <ul class="check-list text-white">
-        {% for feature in include.pricing.features limit:5 offset: continue %}
+        {% for feature in include.pricing.features %}
           <li>
             <span class="help-text light" title="{{ feature.description }}" data-toggle="tooltip">
               {{ feature.name }}
