@@ -32,7 +32,11 @@
             </div>
           {% endfor %}
         </div>
+<<<<<<< HEAD
         <div class="tab_code_content">
+=======
+        <div style="height: 450px; overflow-y: scroll;"class="tab_code_content">
+>>>>>>> Remove extra 'template' directory from hipaa path
           {% for tab in site.data.hipaa-landing-page-tabs-code %}
           <div id="{{tab.id}}" class="item_precode {% if forloop.first %}first_tabcontent_code tabcontent_code{% else %}tabcontent_code{% endif %}">
               {{ tab.content }}
@@ -49,6 +53,7 @@
       <div class="{% if item.image_side == "left" %}col-xs-12 col-sm-7 col-md-6 col-description{% else %}col-xs-12 col-sm-7 col-sm-pull-5 col-md-6 col-md-pull-6 col-description{% endif %}">
         <h2>{{ item.heading }}</h2>
         <p>{{ item.body }}</p>
+<<<<<<< HEAD
         {% if item.icon_row %}
   <div class="list-group">
     {% for icon in item.icon_row %}
@@ -56,6 +61,15 @@
     {% endfor %}
   </div>
       {% endif %}
+=======
+      	{% if item.icon_row %}
+	<div class="list-group">
+		{% for icon in item.icon_row %}
+		<img src="/assets/img/landing-page-hipaa/{{ icon }}.png">
+		{% endfor %}
+	</div>
+    	{% endif %}
+>>>>>>> Remove extra 'template' directory from hipaa path
 </div>
     </div>
 {% endfor %}
