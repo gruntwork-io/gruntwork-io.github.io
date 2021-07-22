@@ -79,7 +79,7 @@ group :jekyll_plugins do
 end
 ```
 
-** Important ** Be sure that you don't end up committing this change because we do want the Jekyll Feed plugin to run for production!
+*Important* Be sure that you don't end up committing this change because we do want the Jekyll Feed plugin to run for production!
 
 ### I made changes locally but they're not being reflected in my hot-reloaded development environment
 
