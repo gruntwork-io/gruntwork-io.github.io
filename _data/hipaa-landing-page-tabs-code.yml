@@ -37,6 +37,7 @@
         /****************************************************
         * How to use config to connect to a database securely
         *****************************************************/
+
         const { sendBackendResponse, sendResponse } = require("../views/views.jsx");
         const db = require("../models/db");
         const config = require("config");
@@ -97,6 +98,7 @@
      /****************************************************
       * How to discover and call other services
       *****************************************************/
+
       const { sendResponse } = require("../views/views.jsx");
       const service = require("../models/service");
       const config = require("config");
