@@ -1,9 +1,13 @@
-- id: runapp
+- id: infra-terraform
   title: Terraform
   content: |
-    <figure><figcaption>EKS Cluster Configuration in Terraform</figcaption>
+    <figure>
       <pre>
       <code class="language-hcl">
+        ########################################
+        # EKS Cluster Configuration in Terraform
+        ########################################
+
         # ---------------------------------------------------------------------------------------------------------------------
         # CONFIGURE OUR KUBERNETES CONNECTIONS
         # Note that we can't configure our Kubernetes connection until EKS is up and running, so we try to depend on the
@@ -46,12 +50,15 @@
           </code>
           </pre>
           <figure>
-- id: Docker
+- id: infra-docker
   title: Docker
   content: |
-    <figure><figcaption>Dockerfile</figcaption>
+    <figure>
       <pre>
       <code class="language-docker">
+        #############
+        # Dockerfile
+        #############
 
         FROM python:3.8-alpine AS with-secrets-python
         MAINTAINER Gruntwork <info@gruntwork.io>
@@ -98,12 +105,15 @@
       </code>
       </pre>
       <figure>
-- id: Packer
+- id: infra-packer
   title: Packer
   content: |
-    <figure><figcaption>Packer configurations to create AMIs</figcaption>
+    <figure>
       <pre>
       <code class="language-json">
+      /*************************************
+      * Packer configurations to create AMIs
+      **************************************/
       {
         "variables": {
           "service_catalog_ref": null,

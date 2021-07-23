@@ -1,4 +1,5 @@
-{% for item in page.how_it_works %}
+<h2>HIPAA-compliant Infra at a Glance</h2>
+{% for item in page.infra_how_it_works %}
   <div class="row">
     {% if item.precode %}
       <div class="item_precode row-image-content {% if item.image_side == "left" %}col-xs-12 col-sm-7 col-md-6 col-description{% else %}col-xs-12 col-sm-7 col-sm-pull-5 col-md-6 col-md-pull-6 col-description{% endif %}">
@@ -33,7 +34,7 @@
           {% endfor %}
         </div>
         <div style="height: 450px; overflow-y: scroll;"class="tab_code_content">
-          {% for tab in site.data.hipaa-landing-page-tabs-code %}
+          {% for tab in site.data.hipaa-landing-page-tabs-ref-arch-code %}
           <div id="{{tab.id}}" class="item_precode {% if forloop.first %}first_tabcontent_code tabcontent_code{% else %}tabcontent_code{% endif %}">
               {{ tab.content }}
           </div>
@@ -163,19 +164,3 @@
   }
 
 </style>
-
-<script>
-  function openTab(evt, tabName) {
-    $('.tabcontent').hide(); // hide all tab content
-    $('.tablinks').removeClass('active'); // ensure all links are inactive
-    $('#' + tabName).show();
-    $(evt.currentTarget).addClass('active'); // mark the current tab as active
-  }
-
-  function openCodeTab(evt, tabName) {
-    $('.tabcontent_code').hide(); // hide all tab content
-    $('.tablinks_code').removeClass('active'); // ensure all links are inactive
-    $('#' + tabName).show();
-    $(evt.currentTarget).addClass('active'); // mark the current tab as active
-  }
-</script>
