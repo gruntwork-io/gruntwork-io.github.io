@@ -12,6 +12,7 @@ extra_nav_links:
 title: The fastest way to launch HIPAA-compliant apps on AWS
 excerpt: Build your apps on top of HIPAA-compliant application templates. Deploy your apps onto battle-tested AWS architectures that have been certified via third party auditors.
 permalink: /hipaa-compliance-on-aws/
+redirect_from: /hipaa-cloud-compliance/
 alternate_cta_link: /hipaa-compliance-on-aws/pricing
 
 hero:
@@ -63,18 +64,18 @@ footer:
 ---
 
 <script>
- window.onload = function hipaaDetails() {
+  window.onload = function hipaaDetails() {
     var windowWidth = $(window).width();
-    var mobileDiv = document.getElementById('hipaaDetailsMobile');
-    var desktopDiv = document.getElementById('hipaaDetails');
+    var mobileDiv = document.getElementById("hipaaDetailsMobile");
+    var desktopDiv = document.getElementById("hipaaDetails");
     if (windowWidth < 767) {
-      mobileDiv.style.display = 'block';
-      desktopDiv.style.display = 'none';
+      mobileDiv.style.display = "block";
+      desktopDiv.style.display = "none";
     } else {
-      desktopDiv.style.display = 'block';
-      mobileDiv.style.display = 'none';
+      desktopDiv.style.display = "block";
+      mobileDiv.style.display = "none";
     }
-  }
+  };
 </script>
 <div class="main">
   <div class="section section-hero">
@@ -92,16 +93,18 @@ footer:
   </div>
   <div class="section">
     <div class="container">
-      <div class="row">
-      </div>
+      <div class="row"></div>
     </div>
   </div>
   <div class="section">
     <div class="container">
-        <h1>Compliance in progress</h1>
-        <p>Our existing CIS compliant infrastructure is trusted by thousands of developers and is a big step towards HIPAA compliance.
-          From this starting point, we're actively working on the rest of the HIPAA requirements.
-        </p>
+      <h1>Compliance in progress</h1>
+      <p>
+        Our existing CIS compliant infrastructure is trusted by thousands of
+        developers and is a big step towards HIPAA compliance. From this
+        starting point, we're actively working on the rest of the HIPAA
+        requirements.
+      </p>
       <div class="row row-community" id="hipaaDetails">
         {% include_relative _hipaa-details-table.html %}
       </div>
