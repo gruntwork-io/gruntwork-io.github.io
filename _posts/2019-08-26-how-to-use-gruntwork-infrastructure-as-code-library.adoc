@@ -238,11 +238,11 @@ IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork subscriber# to access thes
   so you know how to run things in dev, how to deploy changes to prod, how to find metrics and logs, how to connect
   over VPN and SSH, and so on. This is a great starting point for exploring the Reference Architecture.
 +
-* https://github.com/gruntwork-io/infrastructure-modules-multi-account-acme[infrastructure-modules]: In this repo,
+* https://github.com/gruntwork-io/terraform-aws-service-catalog[AWS Service Catalog]: In this repo,
   you'll find the reusable modules that define the infrastructure for the entire company (in this case, for Acme).
   These are like the blueprints for a house.
 * https://github.com/gruntwork-io/infrastructure-live-multi-account-acme[infrastructure-live]: This repo uses
-  the modules from `infrastructure-modules` to deploy all of the live environments for the company (dev, stage, prod,
+  the modules from `terraform-aws-service-catalog` to deploy all of the live environments for the company (dev, stage, prod,
   etc). These are like the real houses built from the blueprints.
 * https://github.com/gruntwork-io/sample-app-frontend-multi-account-acme[sample-app-frontend]: This repo contains a
   sample app that demonstrates best practices for a Docker-based frontend app or microservice, including examples of
@@ -640,114 +640,62 @@ next two sections of the guide will walk you through how to use each of these.
 === Using Terraform Modules
 
 This section will show you how to use Terraform modules from the Gruntwork Infrastructure as Code Library. As an illustrative example,
-we'll deploy the `vpc-app`  Terraform module from https://github.com/gruntwork-io/module-vpc[module-vpc].
+we'll deploy the `vpc-app` Terraform module from https://github.com/gruntwork-io/terraform-aws-vpc[terraform-aws-vpc], using the https://github.com/gruntwork-io/terraform-aws-service-catalog/tree/master/modules/networking/vpc[`vpc` service
+module] from the https://github.com/gruntwork-io/terraform-aws-service-catalog[`terraform-aws-service-catalog` repo].
 
 [.exceptional]
-IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork subscriber# to access `module-vpc`.
+IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork subscriber# to access `terraform-aws-vpc` and `terraform-aws-service-catalog`.
 
-You can use this module to deploy a production-grade VPC on AWS. For full background information on VPCs, check
+You can use these modules to deploy a production-grade VPC on AWS. For full background information on VPCs, check
 out link:/guides/networking/how-to-deploy-production-grade-vpc-aws[How to deploy a production-grade VPC on AWS].
 
-==== Create a wrapper module
+==== Get to know the Service Catalog module
 
 The Terraform modules in the Gruntwork Infrastructure as Code Library are intentionally designed to be unopinionated, so they do not
 configure `provider` or `backend` settings. Moreover, you will often use multiple modules from the Infrastructure as Code Library,
 rather than just one at a time. Therefore, the canonical way to consume a Terraform module from the Gruntwork
-Infrastructure as Code Library is to create a _wrapper module_ in one of your own Git repos.
+Infrastructure as Code Library is to use the _Service Catalog_ module from the Gruntwork `terraform-aws-service-catalog` repo.
 
-Let's assume you have a repo called `infrastructure-modules` and create a `vpc-app` wrapper module in it:
+Take a look at the `vpc-app` wrapper module (_service module_) to get familiar with how this module uses the underlying `vpc-app`
+module from `terraform-aws-vpc`.
 
 ----
-infrastructure-modules
-  └ networking
-    └ vpc-app
-      └ main.tf
-      └ outputs.tf
-      └ variables.tf
+terraform-aws-service-catalog
+  └ modules
+    └ networking
+      └ vpc
+        └ README.md
+        └ main.tf
+        └ outputs.tf
+        └ variables.tf
 ----
 
-==== Configure your providers
+==== Terraform and providers are configured
 
-Inside of `main.tf`, configure whatever Terraform providers you're using. Since the `vpc-app` module you're using in
-this guide is an AWS module, you'll need to configure the AWS provider:
+The service catalog module's `main.tf` file configures the Terraform providers to use. Since the `vpc-app` module in
+this guide is an AWS module, it configures the AWS provider in the configuration of Terraform itself in `main.tf`:
 
-.infrastructure-modules/networking/vpc-app/main.tf
-[source,hcl]
-----
-provider "aws" {
-  # The AWS region in which all resources will be created
-  region = var.aws_region
-
-  # Require a 2.x version of the AWS provider
-  version = "~> 2.6"
-
-  # Only these AWS Account IDs may be operated on by this template
-  allowed_account_ids = [var.aws_account_id]
-}
-----
-
-This configures the AWS provider as follows:
-
-Use a specific AWS region::
-  The AWS region is configured via the `aws_region` input variable (you'll declare this shortly). This allows you to
-  deploy this module in multiple regions.
-
-Pin the AWS provider version::
-  The code above ensures that you always get AWS provider version `2.x` and won't accidentally get version `3.x` in the
-  future, which would be backwards incompatible. We recommend pinning the versions for all providers you're using.
-
-Pin AWS account IDs::
-  The code above will only allow you to run it against the AWS account with ID passed in via the `aws_account_id` input
-  variable (you'll declare this shortly). This is an extra safety measure to ensure you don't accidentally authenticate
-  to the wrong AWS account while deploying this code—e.g., so you don't accidentally deploy changes intended for
-  staging to production (for more info on working with multiple AWS accounts, see
-  link:/guides/foundations/how-to-configure-production-grade-aws-account-structure[How to Configure a Production Grade AWS Account Structure]).
-
-Let's add the corresponding input variables in `variables.tf`:
-
-.infrastructure-modules/networking/vpc-app/variables.tf
-[source,hcl]
-----
-variable "aws_region" {
-  description = "The AWS region in which all resources will be created"
-  type        = string
-}
-
-variable "aws_account_id" {
-  description = "The ID of the AWS Account in which to create resources."
-  type        = string
-}
-----
-
-==== Configure Terraform
-
-Next, configure Terraform itself in `main.tf`:
-
-.infrastructure-modules/networking/vpc-app/main.tf
+.terraform-aws-service-catalog/modules/networking/vpc/main.tf
 [source,hcl]
 ----
 terraform {
-  # Partial configuration for the backend: https://www.terraform.io/docs/backends/config.html#partial-configuration
-  backend "s3" {}
+  required_version: ">= 0.12.26"
 
-  # Only allow this Terraform version. Note that if you upgrade to a newer version, Terraform won't allow you to use an
-  # older version, so when you upgrade, you should upgrade everyone on your team and your CI servers all at once.
-  required_version = "= 0.12.6"
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+      version = "~> 2.69"
+    }
+  }
 }
 ----
 
-This configures Terraform as follows:
+This does the following:
 
-Configure a backend::
-  The code above configures a _backend_, which is a shared location where Terraform state can be stored and accessed by
-  your team. You can use any of the https://www.terraform.io/docs/backends/types/index.html[supported backends] (the
-  example above uses S3, which is a good choice for AWS users). See
-  https://blog.gruntwork.io/how-to-manage-terraform-state-28f5697e68fa[How to manage Terraform state] for more info.
-
-Partial configuration::
-  The backend uses a _https://www.terraform.io/docs/backends/config.html#partial-configuration[partial configuration]_,
-  which means most of the backend configuration (e.g., which S3 bucket and path to use) will be specified from outside
-  of the code. You'll see an example of this soon.
+Pin the AWS provider version::
+  This pins the AWS provider version, ensuring that you always get AWS provider version `2.x` and won't accidentally get
+  version `3.x` in the future, which would be backward incompatible. We recommend pinning the versions for all
+  providers you're using.
 
 Pin the Terraform version::
   The code above will ONLY allow you to run it with a specific Terraform version. This is a safety measure to ensure
@@ -759,21 +707,57 @@ Pin the Terraform version::
   team and all your CI servers to `0.12.7`. It's best to do this explicitly, rather than accidentally, so we recommend
   pinning Terraform versions.
 
-==== Use the modules from the Gruntwork Infrastructure as Code Library
 
-Now you can pull in the Terraform modules you want from the Gruntwork Infrastructure as Code Library as follows:
+Let's look at the corresponding input variables in `variables.tf`. You'll provide values for these when you start using the
+module in the next section.
 
-.infrastructure-modules/networking/vpc-app/main.tf
+.terraform-aws-service-catalog/modules/networking/vpc/variables.tf
+[source,hcl]
+----
+variable "aws_region" {
+  description = "The AWS region in which all resources will be created"
+  type        = string
+}
+
+variable "vpc_name" {
+  description = "Name of the VPC. Examples include 'prod', 'dev', 'mgmt', etc."
+  type        = string
+}
+
+variable "cidr_block" {
+  description = "The IP address range of the VPC in CIDR notation. A prefix of /18 is recommended. Do not use a prefix higher than /27. Examples include '10.100.0.0/18', '10.200.0.0/18', etc."
+  type        = string
+}
+
+variable "num_nat_gateways" {
+  description = "The number of NAT Gateways to launch for this VPC. For production VPCs, a NAT Gateway should be placed in each Availability Zone (so likely 3 total), whereas for non-prod VPCs, just one Availability Zone (and hence 1 NAT Gateway) will suffice."
+  type        = number
+}
+
+# Plus many more optional variables...
+
+----
+
+==== Gruntwork Infrastructure as Code Library modules are referenced
+
+The service catalog module now pulls in the Terraform modules you want from the Gruntwork Infrastructure as Code
+Library as follows:
+
+.terraform-aws-service-catalog/modules/networking/vpc/main.tf
 [source,hcl]
 ----
 module "vpc" {
-  # Make sure to replace <VERSION> in this URL with the latest module-vpc release
-  source = "git@github.com:gruntwork-io/module-vpc.git//modules/vpc-app?ref=<VERSION>"
+  # Make sure to replace <VERSION> in this URL with the latest terraform-aws-vpc release
+  source = "git::git@github.com:gruntwork-io/terraform-aws-vpc.git//modules/vpc-app?ref=<VERSION>"
 
-  aws_region       = var.aws_region
-  vpc_name         = var.vpc_name
-  cidr_block       = var.cidr_block
-  num_nat_gateways = var.num_nat_gateways
+  vpc_name               = var.vpc_name
+  aws_region             = var.aws_region
+  tenancy                = var.tenancy
+  num_availability_zones = var.num_availability_zones
+  num_nat_gateways       = var.num_nat_gateways
+  cidr_block             = var.cidr_block
+
+  # Plus many more configurations...
 }
 ----
 
@@ -797,192 +781,56 @@ Versioned URL::
 
 Module arguments::
   Below the `source` URL, you'll need to pass in the module-specific arguments. You can find all the required and
-  optional variables defined in `vars.tf` (old name) or `variables.tf` (new name) of the module (e.g.,
-  here's https://github.com/gruntwork-io/module-vpc/blob/master/modules/vpc-app/vars.tf[the variables.tf for vpc-app]).
+  optional variables defined in `variables.tf` (new name) of the module (e.g.,
+  here's https://github.com/gruntwork-io/terraform-aws-vpc/blob/master/modules/vpc-app/vars.tf[the variables.tf for vpc-app]).
   The code above sets these to input variables (which you'll define shortly) so that you can use different values in
   different environments.
 
-Let's add the new input variables in `variables.tf`:
+Familiarize yourself with the output variables in https://github.com/gruntwork-io/terraform-aws-service-catalog/blob/master/modules/networking/vpc/outputs.tf[`outputs.tf`]:
 
-.infrastructure-modules/networking/vpc-app/variables.tf
-[source,hcl]
-----
-variable "vpc_name" {
-  description = "Name of the VPC. Examples include 'prod', 'dev', 'mgmt', etc."
-  type        = string
-}
-
-variable "cidr_block" {
-  description = "The IP address range of the VPC in CIDR notation. A prefix of /16 is recommended. Do not use a prefix higher than /27. Example: '10.100.0.0/16'."
-  type        = string
-}
-
-variable "num_nat_gateways" {
-  description = "The number of NAT Gateways to launch for this VPC. For production VPCs, multiple NAT Gateways are recommended."
-  type        = number
-}
-----
-
-You may also want to add useful output variables in `outputs.tf`:
-
-.infrastructure-modules/networking/vpc-app/outputs.tf
-[source,hcl]
-----
-output "vpc_name" {
-  description = "The VPC name"
-  value       = module.vpc.vpc_name
-}
-
-output "vpc_id" {
-  description = "The VPC ID"
-  value       = module.vpc.vpc_id
-}
-
-output "vpc_cidr_block" {
-  description = "The VPC CIDR block"
-  value       = module.vpc.vpc_cidr_block
-}
-
-output "public_subnet_cidr_blocks" {
-  description = "The CIDR blocks of the public subnets"
-  value       = module.vpc.public_subnet_cidr_blocks
-}
-
-output "private_app_subnet_cidr_blocks" {
-  description = "The CIDR blocks of the private app subnets"
-  value       = module.vpc.private_app_subnet_cidr_blocks
-}
-
-output "private_persistence_subnet_cidr_blocks" {
-  description = "The CIDR blocks of the private persistence subnets"
-  value       = module.vpc.private_persistence_subnet_cidr_blocks
-}
-
-output "public_subnet_ids" {
-  description = "The IDs of the public subnets"
-  value       = module.vpc.public_subnet_ids
-}
-
-output "private_app_subnet_ids" {
-  description = "The IDs of the private app subnets"
-  value       = module.vpc.private_app_subnet_ids
-}
-
-output "private_persistence_subnet_ids" {
-  description = "The IDs of the private persistence subnets"
-  value       = module.vpc.private_persistence_subnet_ids
-}
-----
-
-[[manual_tests_terraform]]
-==== Manual tests for Terraform code
-
-Now that the code is written, you may want to test it manually. We recommend testing in a _sandbox environment_ where
-you can deploy infrastructure without affecting any other environments (especially production!). For example, if you're
-using AWS, this should be a separate AWS account.
-
-The easiest way to test is to create a `testing/terraform.tfvars` file:
-
-----
-infrastructure-modules
-  └ networking
-    └ vpc-app
-      └ main.tf
-      └ outputs.tf
-      └ variables.tf
-      └ testing
-        └ terraform.tfvars
-----
-
-Inside this file, you can set all the variables for your module to test-friendly values:
-
-.infrastructure-modules/networking/vpc-app/testing/terraform.tfvars
-[source,hcl]
-----
-aws_region       = "us-east-2"
-aws_account_id   = "555566667777"
-vpc_name         = "example-vpc"
-cidr_block       = "10.0.0.0/16"
-num_nat_gateways = 1
-----
-
-You should also add a `testing/backend.hcl` file:
-
-----
-infrastructure-modules
-  └ networking
-    └ vpc-app
-      └ main.tf
-      └ outputs.tf
-      └ variables.tf
-      └ testing
-        └ terraform.tfvars
-        └ backend.hcl
-----
-
-In this file, you can configure test-friendly settings for your backend. For example, if you're using the S3 backend,
-you can specify:
-
-.infrastructure-modules/networking/vpc-app/testing/backend.hcl
-[source,hcl]
-----
-bucket = "<YOUR-BUCKET-FOR-TESTING>"
-key    = "manual-testing/<YOUR-NAME>/terraform.tfstate"
-region = "us-east-2"
-----
-
-You can now test manually by authenticating to your sandbox environment (see
-https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[A Comprehensive Guide to Authenticating to AWS on the Command Line])
-and running:
-
-[source,bash]
-----
-cd infrastructure-modules/networking/vpc-app/testing
-terraform init -backend-config=backend.hcl ../
-terraform apply ../
-----
-
-When you're done testing, clean up by running:
-
-[source,bash]
-----
-terraform destroy ../
-----
 
 [[automated_tests_terraform]]
 ==== Automated tests for Terraform code
 
-You may also want to create automated tests for your module. Automated tests for infrastructure code will spin up and
-tear down a lot of infrastructure, so we recommend a separate _testing environment_ (e.g. yet another AWS account) for
-running automated tests—separate even from the sandboxes you use for manual testing. You can run a tool like
-https://github.com/gruntwork-io/cloud-nuke[cloud-nuke] on a schedule to periodically clean up left-over resources in
-your testing environment (e.g., delete all resources that are older than 24h).
+The underlying library module is tested within https://github.com/gruntwork-io/terraform-aws-vpc/tree/master/test[`terraform-aws-vpc`] itself, and the service catalog
+module is tested within the https://github.com/gruntwork-io/terraform-aws-service-catalog/blob/master/test/networking/vpc_test.go[`terraform-aws-service-catalog`
+`vpc_test`].
 
-The only way to build confidence that your infrastructure code works as you expect is to deploy it into a real AWS
-account. That means you'll primarily be writing _integration tests_ that:
+You can learn how to run these tests by reading the instructions in library module https://github.com/gruntwork-io/terraform-aws-vpc/tree/master/test[here].
 
-. Run `terraform apply` to deploy your module
+We run these automated tests for all modules. Automated tests for infrastructure code spin up and
+tear down a lot of infrastructure, so we use a separate _testing environment_ (e.g. yet another AWS account) for
+running automated tests—separate even from the sandboxes we use for manual testing. We run https://github.com/gruntwork-io/cloud-nuke[cloud-nuke] on a schedule to periodically clean up left-over resources in
+the testing environment (e.g., delete all resources that are older than 24h).
+
+Thus we provide you the confidence you need that your infrastructure code works as you expect, because we deploy it into a real AWS
+account, with _integration tests_ that:
+
+. Run `terraform apply` to deploy the module
 . Perform a bunch of validations that the deployed infrastructure works as expected
 . Run `terraform destroy` at the end to clean up
 
-In short, you're automating the steps you took to manually test your module!
+In short, we've automated the steps you previously might have had to take to manually test your modules!
 
 You can make it easier to write tests of this format by leveraging https://github.com/gruntwork-io/terratest/[Terratest],
 an open source Go library that contains helpers for testing many types of infrastructure code, including Terraform,
 Packer, and Docker.
 
-You can define tests for your `vpc-app` module in a `vpc_app_test.go` file in a `test` folder:
+For example, we've created a https://github.com/gruntwork-io/terraform-aws-vpc/blob/master/test/vpc_app_test.go[`vpc_app_test.go`]
+that tests the `vpc-app` library module. Here's the directory structure
+that you'll see in this library module, as well as all other Gruntwork Infrastructure as Code Library modules:
 
 ----
-infrastructure-modules
-  └ networking
-    └ vpc-app
-      └ main.tf
-      └ outputs.tf
-      └ variables.tf
-      └ testing
-        └ terraform.tfvars
-        └ backend.hcl
+terraform-aws-vpc
+  └ modules
+    └ networking
+      └ vpc-app
+        └ main.tf
+        └ outputs.tf
+        └ variables.tf
+        └ testing
+          └ terraform.tfvars
+          └ backend.hcl
   └ test
     └ vpc_app_test.go
 ----
@@ -990,68 +838,58 @@ infrastructure-modules
 Check out the https://github.com/gruntwork-io/terratest/#quickstart[Terratest install instructions] for how to
 configure your environment for Go and install Terratest.
 
-Next, write some test code in `vpc_app_test.go` that looks like this:
+Here's a look at the test code in `vpc_app_test.go`:
 
-.infrastructure-modules/test/vpc_app_test.go
+.terraform-aws-vpc/test/vpc_app_test.go
 [source,go]
 ----
 package test
 
 import (
-	"testing"
+    "testing"
 
-	"fmt"
-	"github.com/gruntwork-io/terratest/modules/random"
-	"github.com/gruntwork-io/terratest/modules/terraform"
+    "fmt"
+    "github.com/gruntwork-io/terratest/modules/random"
+    "github.com/gruntwork-io/terratest/modules/terraform"
+    "github.com/stretchr/testify/assert"
 )
 
 func TestVpcApp(t *testing.T) {
-	// Run this test in parallel with all the others
-	t.Parallel()
+  	// Run this test in parallel with all the others
+    t.Parallel()
 
-	// Unique ID to namespace resources
-	uniqueId := random.UniqueId()
-	// Generate a unique name for each VPC so tests running in parallel don't clash
-	vpcName := fmt.Sprintf("test-vpc-%s", uniqueId)
-	// Generate a unique key in the S3 bucket for the Terraform state
-	backendS3Key := fmt.Sprintf("vpc-app-test/%s/terraform.tfstate", uniqueId)
+    awsRegion := pickRandomAwsRegion(t)
 
-	terraformOptions := &terraform.Options {
-		// Where the Terraform code is located
-		TerraformDir: "../networking/vpc-app",
+    // Generates Terraform Options such as region, account_id, etc.
+    terraformOptions := createVpcAppTerratestOptions(t, awsRegion)
 
-		// Variables to pass to the Terraform code
-		Vars: map[string]interface{}{
-			"aws_region":       "us-east-2",
-			"aws_account_id":   "111122223333", // ID of testing account
-			"vpc_name":         vpcName,
-			"cidr_block":       "10.0.0.0/16",
-			"num_nat_gateways": 1,
-		},
+    // Be sure to clean up resources so they do not accrue cost.
+    defer terraform.Destroy(t, terraformOptions)
 
-		// Backend configuration to pass to the Terraform code
-		BackendConfig: map[string]interface{}{
-			"bucket":   "<YOUR-S3-BUCKET>", // bucket in testing account
-			"region":   "us-east-2", // region of bucket in testing account
-			"key":      backendS3Key,
-		},
-	}
+	  // Run 'terraform init' and 'terraform apply' to deploy the module
+    terraform.InitAndApply(t, terraformOptions)
 
-	// Run 'terraform destroy' at the end of the test to clean up
-	defer terraform.Destroy(t, terraformOptions)
+    // Check for perpetual diff
+    assert.Equal(t, 0, terraform.InitAndPlanWithExitCode(t, terraformOptions))
 
-	// Run 'terraform init' and 'terraform apply' to deploy the module
-	terraform.InitAndApply(t, terraformOptions)
+    expectedCidrBlocks := []string{"10.0.240.0/24", "10.0.241.0/24", "10.0.242.0/24", "10.0.243.0/24", "10.0.244.0/24", "10.0.245.0/24"}
+    validateSubnetsConfiguredForCIDRBlocks(t, "private_persistence_subnet_ids", expectedCidrBlocks, terraformOptions, awsRegion)
+}
+
+func createVpcAppTerratestOptions(t *testing.T, awsRegion string) *terraform.Options {
+    // Create options based on a base set of Terraform Options (see helper function in test folder)
+    terratestOptions := createBaseTerraformOptions(t, templatesVPCAppPath, awsRegion)
+
+	  // Generate a unique name for each VPC so tests running in parallel don't clash
+    terratestOptions.Vars["vpc_name"] = fmt.Sprintf("Prod%s", random.UniqueId())
+    return terratestOptions
 }
 ----
 
-The test code above implements a minimal test that does the following:
+The test code above implements a test that does the following:
 
 Configure variables::
-  This is similar to the `testing/terraform.tfvars` used in manual testing.
-
-Configure the backend::
-  This is similar to the `testing-backend.hcl` used in manual testing.
+  This is similar to the `testing/terraform.tfvars` you would use in manual testing.
 
 Namespace resources::
   The code uses `random.UniqueId()` to generate unique identifiers for all the resources in this test. This allows
@@ -1065,17 +903,15 @@ Defer terraform destroy::
 terraform init and apply::
   The test runs `terraform init` and `terraform apply` on the module. If this hits any errors, the test will fail.
 
-This is a minimal test that just makes sure your module can deploy and undeploy successfully. This is a great start,
-and will catch a surprising number of bugs, but for production-grade code, you'll probably want more validation logic.
-Check out the real https://github.com/gruntwork-io/module-vpc/tree/master/test[module-vpc tests] to see how we validate
-VPCs by, for example, launching EC2 instances in various subnets and making sure that connections between some subnets
+This is a complete production-grade test that not only ensures your module can deploy and undeploy successfully; it
+also validates VPCs by launching EC2 instances in various subnets and ensures that connections between some subnets
 work, and others are blocked, based on the networking settings in that VPC.
 
 To run the test, authenticate to your testing environment and do the following:
 
 [source,bash]
 ----
-cd infrastructure-modules/test
+cd terraform-aws-vpc/test
 go test -v -timeout 45m
 ----
 
@@ -1108,8 +944,7 @@ production). There are many ways to deploy Terraform modules, so in this guide, 
 [[deploy_using_plain_terraform]]
 ===== Deploy using plain Terraform
 
-One option is to deploy all of your environments using plain-old-Terraform. The approach is nearly identical to the
-way you did manual testing; let's walk through it for the staging environment.
+One option is to deploy all of your environments using plain-old-Terraform. Let's walk through it for the staging environment.
 
 First, create a `staging/terraform.tfvars` file:
 
@@ -1206,19 +1041,8 @@ To deploy to other environments, create analogous `.tfvars` and `.hcl` files (e.
 Another option is to use https://github.com/gruntwork-io/terragrunt[Terragrunt], an open source wrapper for Terraform
 that helps alleviate some of the drawbacks mentioned in the previous approach.
 
-The first step with Terragrunt is to version your code. You can do this by creating Git tags in
-`infrastructure-modules`:
-
-[source,bash]
-----
-cd infrastructure-modules
-git tag -a "v0.0.1" -m "Created vpc-app module"
-git push --follow-tags
-----
-
-This will allow you to deploy different versions of your module in different environments (e.g., `v0.0.1` in prod and
-`v0.0.2` in stage) and rollback to previous versions if necessary. With Terragrunt, we recommend defining your live
-environments in a separate repo called `infrastructure-live` that uses a folder structure with the following format:
+With Terragrunt, we recommend defining your live environments in a separate repo called `infrastructure-live`
+that uses a folder structure with the following format:
 
 ----
 infrastructure-live
@@ -1226,7 +1050,7 @@ infrastructure-live
     └ terragrunt.hcl
     └ _global
     └ <region>
-      └ _global
+      └ _regional
       └ <environment>
         └ <resource>
           └ terragrunt.hcl
@@ -1245,7 +1069,7 @@ Where:
 
 <environment>::
   Within each region, there will be one or more environments, such as dev, stage, prod, mgmt, etc. There may also be a
-  `_global` folder that defines resources that are available across all the environments in this region.
+  `_regional` folder that defines resources that are available across all the environments in this region.
 
 <resource>::
   Within each environment, you use Terraform modules to deploy one or more resources, such as servers, databases load
@@ -1258,6 +1082,8 @@ each of these accounts, the folder structure would look like this:
 
 ----
 infrastructure-live
+  └ common.hcl
+  └ terragrunt.hcl
   └ staging
     └ terragrunt.hcl
     └ us-east-2
@@ -1284,74 +1110,38 @@ applications, but also a `mgmt` environment, which contains a separate VPC for r
 server).
 ====
 
-The `terragrunt.hcl` in the root of each account defines the backend settings for that account (including special
-helpers to automatically set the `key` value). Here's an example of what `staging/terragrunt.hcl` might look
-like:
-
-.infrastructure-live/staging/terragrunt.hcl
-[source,hcl]
-----
-remote_state {
-  backend = "s3"
-  config = {
-    # Set defaults for all the backend settings for this environment
-    bucket         = "<YOUR-BUCKET-FOR-STAGING>"
-    region         = "us-east-2"
-    encrypt        = true
-    dynamodb_table = "<DYNAMODB-TABLE-FOR-STAGING>"
-
-    # Automatically set the key parameter to the relative path between this root terragrunt.hcl file and the child
-    # terragrunt.hcl file (e.g., for vpc-app, it'll end up us-east-2/stage/networking/vpc-app/terraform.tfstate).
-    key = "${path_relative_to_include()}/terraform.tfstate"
-  }
-}
-----
+The `terragrunt.hcl` in the root of `infrastructure-live` defines the backend settings for all accounts (including special
+helpers to automatically set the `key` value). Here's an example of how a
+https://github.com/gruntwork-io/terraform-aws-service-catalog/blob/master/examples/for-production/infrastructure-live/terragrunt.hcl[`terragrunt.hcl`]
+might look. It references common variables that are set in the
+https://github.com/gruntwork-io/terraform-aws-service-catalog/blob/master/examples/for-production/infrastructure-live/common.hcl[`common.hcl`]
+file also at the root of `infrastructure-live`. Also important is the
+https://github.com/gruntwork-io/terraform-aws-service-catalog/blob/master/examples/for-production/infrastructure-live/stage/account.hcl[`account.hcl`]
+file at the root of each account, which sets the `account_name` and `domain_name` variables if applicable.
 
 The `terragrunt.hcl` for each child module within an account specifies what module to deploy—including the version to
-use—and sets the variables to values appropriate for that environment. Here's an example of what
-`staging/us-east-2/stage/vpc-app/terragrunt.hcl` might look like:
-
-.infrastructure-live/staging/us-east-2/stage/vpc-app/terragrunt.hcl
-[source,hcl]
-----
-# Deploy the vpc-app module at a specific version (via the ref=xxx param)
-terraform {
-  source = "git@github.com:<ORG>/infrastructure-modules.git//networking/vpc-app?ref=v0.0.1"
-}
-
-# Set the variables for the vpc-app module in this environment
-inputs = {
-  aws_region       = "us-east-2"
-  aws_account_id   = "888888888888"
-  vpc_name         = "staging-vpc"
-  cidr_block       = "10.10.0.0/16"
-  num_nat_gateways = 1
-}
-
-# Automatically include settings from the root terragrunt.hcl in this account
-include {
-  path = find_in_parent_folders()
-}
-----
+use—and sets the variables to values appropriate for that environment. Take a look at what the
+https://github.com/gruntwork-io/terraform-aws-service-catalog/blob/master/examples/for-production/infrastructure-live/stage/us-west-2/stage/networking/vpc/terragrunt.hcl[`terragrunt.hcl`]
+file looks like for the staging environment for the `vpc` module.
 
 To deploy `vpc-app` in staging, you do the following:
 
 [source,bash]
 ----
-cd infrastructure-live/staging/us-east-2/stage/vpc-app
+cd infrastructure-live/staging/us-east-2/stage/vpc
 terragrunt apply
 ----
 
 When you run this command, Terragrunt will:
 
-. Checkout the `infrastructure-modules` repo at version `v0.0.1` into a scratch directory.
+. Checkout the `terraform-aws-service-catalog` repo at the current version into a scratch directory.
 . Run `terraform init` in the scratch directory, configuring the backend to the values in the root `terragrunt.hcl`.
 . Run `terraform apply` in the scratch directory, configuring the variables to the values in the `inputs = { ... }`
   block.
 
 You can deploy the production environment by creating an analogous
-`infrastructure-live/production/us-east-2/prod/vpc-app/terragrunt.hcl` file and running `terragrunt apply` in
-`infrastructure-live/production/us-east-2/prod/vpc-app/`. If you have multiple modules and you want to deploy all of
+`infrastructure-live/production/us-east-2/prod/vpc/terragrunt.hcl` file and running `terragrunt apply` in
+`infrastructure-live/production/us-east-2/prod/vpc/`. If you have multiple modules and you want to deploy all of
 them, you can use `terragrunt apply-all`. For example, to deploy _everything_ in the production account, you would
 do the following:
 
@@ -1384,15 +1174,16 @@ Now that you have your Terraform module deployed, you can pull in updates as fol
 . Subscribe to the monthly https://blog.gruntwork.io/tagged/gruntwork-newsletter[Gruntwork Newsletter] to be notified
   of all updates to the Gruntwork Infrastructure as Code Library. Alternatively, you can "watch" repos in GitHub that you're
   interested in.
-. When you find an update you'd like for a specific module, update any code using that module in
-  `infrastructure-modules` to the new version number. For example, if you were using `module-vpc` at `v0.7.2` and you
-  wanted to update to `v0.7.3`, you would change from:
+. Pull in updates to the Gruntwork AWS Service Catalog whenever they are posted. For example, when we make improvements to
+  the `terraform-aws-vpc` modules, we will cut a new release with a new tag. At the same time, we release a new version of the
+  AWS Service Catalog (`terraform-aws-service-catalog`) so that _its_ `vpc` module references that new version. All you have
+  to do is pull in the new service catalog module version into your `infrastructure-live` repo. For example, if you were
+  using `terraform-aws-service-catalog` at `v0.51.3` and you wanted to update to `v0.51.4`, you would change from:
 +
 [source,hcl]
 ----
-module "vpc" {
-  source = "git@github.com:gruntwork-io/module-vpc.git//modules/vpc-app?ref=v0.7.2"
-  # ...
+terraform {
+  source = "git::git@github.com:gruntwork-io/terraform-aws-service-catalog.git//modules/networking/vpc?ref=v0.51.3"
 }
 ----
 +
@@ -1400,13 +1191,12 @@ to:
 +
 [source,hcl]
 ----
-module "vpc" {
-  source = "git@github.com:gruntwork-io/module-vpc.git//modules/vpc-app?ref=v0.7.3"
-  # ...
+terraform {
+  source = "ggit::it@github.com:gruntwork-io/terraform-aws-service-catalog.git//modules/networking/vpc?ref=v0.51.4"
 }
 ----
 . Pay close attention to the release notes for any additional instructions. In particular, if the MINOR version number
-  was increased (e.g., `v0.6.0` -> `v0.7.0`), that implies a backwards incompatible change, and the release notes will
+  was increased (e.g., `v0.6.0` -> `v0.7.0`), that implies a backward incompatible change, and the release notes will
   explain what you need to do (e.g., you might have to add, remove, or change arguments you pass to the module).
 . Tests your changes locally. You do this using the same process outlined in <<manual_tests_terraform>> and
   <<automated_tests_terraform>>.
@@ -2623,3 +2413,17 @@ infrastructure! Here are some good first steps:
 
 . link:/guides/foundations/how-to-configure-production-grade-aws-account-structure[How to Configure a Production Grade AWS Account Structure]
 . link:/guides/kubernetes/how-to-deploy-production-grade-kubernetes-cluster-aws[How to deploy a production grade Kubernetes (EKS) cluster in AWS]
+
+TODO: move this to the "using the module" section
+This configures Terraform as follows:
+
+Configure a backend::
+  The code above configures a _backend_, which is a shared location where Terraform state can be stored and accessed by
+  your team. You can use any of the https://www.terraform.io/docs/backends/types/index.html[supported backends] (the
+  example above uses S3, which is a good choice for AWS users). See
+  https://blog.gruntwork.io/how-to-manage-terraform-state-28f5697e68fa[How to manage Terraform state] for more info.
+
+Partial configuration::
+  The backend uses a _https://www.terraform.io/docs/backends/config.html#partial-configuration[partial configuration]_,
+  which means most of the backend configuration (e.g., which S3 bucket and path to use) will be specified from outside
+  of the code. You'll see an example of this soon.
