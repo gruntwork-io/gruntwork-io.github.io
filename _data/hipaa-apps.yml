@@ -1,57 +1,57 @@
 features:
   - title: Service discovery
-    description: Your app has to do the right thing to use service discovery. That might be looking up service endpoints via env vars; or DNS; or IPs; or a client-library.
+    description: Apps must look up service endpoints via environment variables, or DNS, or specific IP addresses, or a client-library.
     available: "yes"
 
   - title: Service mesh
-    description: After finding a service, you also need to authenticate to it, encrypt the communication channel, balance the load, route traffic in specific ways.
+    description: After apps successfully find a service, they also need to authenticate to it, encrypt the communication channel, balance the load, and route traffic in specific ways.
     available: "yes"
 
   - title: Service Resilience
-    description: when talking to other services, especially at large scale, you need to think through things like retries, exponential back-off, jitter, circuit breakers, thread management, async I/O, throttling, error handling, and a ton of other concerns.
+    description: Apps must handle retries, exponential back-off, jitter, circuit breakers, thread management, async I/O, throttling, error handling, and a ton of other concerns.
     available: "yes"
 
   - title: Metrics / observability
-    description: Our modules use encryption by default. Databases, disk volumes, S3 buckets, and machine images are all encrypted. Network connections are encrypted.
+    description: Apps must use encryption by default. Databases, disk volumes, S3 buckets, and machine images must be encrypted. Network connections must be encrypted.
     available: "yes"
 
   - title: Logging
-    description: In a Dockerized world, you “just” send logs to stdout/stderr and everything supposedly works… But that is a vast simplification.
+    description: Apps that are Dockerized should be able to “just” send logs to stdout/stderr and have everything work as intended, but this is a vast over-simplification. First, not all frameworks send logs to stdout/stderr by default. Second, not everyone uses Docker. Third, even with Docker apps may require sidecars and proper configs to aggregate or ship logs properly.
     available: "yes"
 
   - title: Packaging
-    description: Knowing how to Dockerize an app properly is surprisingly hard. You have to balance small base images vs secure/up-to-date base images. You have to be thoughtful about how you use the Docker Layer Cache.
+    description: Knowing how to Dockerize an app properly is surprisingly hard. Developers must balance small base images vs secure/up-to-date base images, be thoughtful about use of the Docker Layer Cache, how to version and where to store artifacts, to name a few concerns.
     available: "yes"
 
   - title: Secrets management
-    description: Although you are likely to rely on an external service to store or encrypt the secret (e.g., AWS Secrets Manager, Vault, KMS, K8S), the app still has to do the right thing to use that secret.
+    description: Apps may use an external service to store or encrypt secrets (e.g., AWS Secrets Manager, Vault, KMS, K8S), however they still must do the right thing to use that secret.
     available: "yes"
 
   - title: App configuration
-    description: Figuring out how to configure an app differently in different environments (dev, stage, prod, etc) is very tricky. You can use config files in JSON, YAML, or a thousand other formats;
+    description: Apps must be configurable to run differently in different environments (dev, stage, prod, etc). They may use config files in JSON, YAML, or a thousand other formats. Configuration involves careful treatment of sensitive values, hot reloading to prevent downtime, exposing performance tuning settings, and contstraints unique to the organization deploying the application.
     available: "yes"
 
   - title: Database management
-    description: You have to do schema migrations using tools like Flyway, ActiveRecord, Phinx, etc. You may have to run those before the app boots or as a separate deploy step.
+    description: Apps require schema migrations using tools like Flyway, ActiveRecord, Phinx, etc. These may need to be run before the app boots or as a separate deploy step. Secure database connections, connection pooling, TLS usage, certificate validation, service discovery, and ORM or DB library usage must all be thought through and carefully implemented.
     available: "yes"
 
   - title: Server hardening
-    description: If you run on EC2, there are a number of server hardening tasks you have to do.
+    description: Apps running on EC2 must handle or consider security and compliance requirements such as firewalls, anti-virus, file integrity monitoring, SSH access, VPN access, automatic updates, time synchronization and more.
     available: "yes"
 
   - title: Build system
-    description: Every app / framework has one that you have to configure. For Spring Boot, that’s mostly Gradle these days.
+    description: Frameworks all have a build system that you have to configure in order to properly manage dependencies, compilation, tests and more.
     available: "yes"
 
   - title: Automated tests
-    description: Everyone wastes a huge amount of time setting up scaffolding for this. It should be available out of the box
+    description: All maintainable applications need good tests, but setting them up correctly requires knowledge of pre-commit checks, code-formatting, static analysis, unit tests, integration tests, end to end tests, performance tests, testing frameworks, clear test output and more.
     available: "yes"
 
   - title: Asset pipeline
-    description: If your app depends on static content, you typically have to solve asset compilation (e.g., compile TypeScript to JS), minification, concatenation, fingerprinting, deployment to CDN, and making the URLs work in dev & prod.
+    description: Applications that depend on static content typically require asset compilation (e.g., compile TypeScript to JS), minification, concatenation, fingerprinting, deployment to one or more CDNs, and making the URLs work in dev & prod.
 
     available: "yes"
 
   - title: Security baseline
-    description: Every app needs a baseline of security features, such as CSRF protection, XSS protection (esp in the templating language), security headers, OS user you run as, authn / authz filter, and so on.
+    description: Every app needs a baseline of security features, such as CSRF protection, XSS protection (especially in the application's templating language), security headers, OS user you run as, authn / authz filter, and so on.
     available: "yes"
