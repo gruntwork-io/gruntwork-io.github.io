@@ -1208,7 +1208,7 @@ Define the `terraform` block with the source pointing to the https://github.com/
 [source,hcl]
 ----
 terraform {
-  source = "git::git@github.com:gruntwork-io/terraform-aws-service-catalog.git//modules/account-baseline-root?ref=v0.41.4"
+  source = "git::git@github.com:gruntwork-io/terraform-aws-service-catalog.git//modules/landingzone/account-baseline-root?ref=v0.41.4"
 
   # This module deploys some resources (e.g., AWS Config) across all AWS regions, each of which needs its own provider,
   # which in Terraform means a separate process. To avoid all these processes thrashing the CPU, which leads to network
