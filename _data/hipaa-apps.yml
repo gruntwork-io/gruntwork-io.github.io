@@ -1,6 +1,6 @@
 features:
   - title: Service discovery
-    description: Apps must look up service endpoints via environment variables, or DNS, or specific IP addresses, or a client-library.
+    description: Production apps are often composed of many individual services. Apps must therefore look up service endpoints via environment variables, DNS, specific IP addresses, or a client-library before they can call them. The challenge is to enable this in a manner that scales well as  more services are added over time.
     available: "yes"
 
   - title: Service mesh
@@ -8,23 +8,23 @@ features:
     available: "soon"
 
   - title: Service Resilience
-    description: Apps must handle retries, exponential back-off, jitter, circuit breakers, thread management, async I/O, throttling, error handling, and a ton of other concerns.
+    description: Apps must handle retries, exponential back-off, jitter, circuit breakers, thread management, async I/O, throttling, error handling, and much more in order to continue running in the face of changing demand, unpredictable network conditions and varying resource usage.
     available: "soon"
 
   - title: Metrics / observability
-    description: Correctly instrumented request tracing and observability allows developers to drill into production issues quickly and efficiently.
+    description: Correctly instrumented request tracing and observability allows developers to drill into production issues quickly and efficiently, while ensuring that resource consumption remains within desired parameters. Comprehensive observability is essential to successfully running an application in production.
     available: "yes"
 
   - title: Logging
-    description: Apps that are Dockerized should be able to “just” send logs to stdout/stderr and have everything work as intended, but this is a vast over-simplification. First, not all frameworks send logs to stdout/stderr by default. Second, not everyone uses Docker. Third, even with Docker apps may require sidecars and proper configs to aggregate or ship logs properly.
+    description: Dockerizing apps makes sense from a deployment perspective, yet it complicates logging. Not all fameworks send logs to STDOUT or STDERR by default, and Dockerized apps may require specialized conifgurations or sidecar applications in order to aggregate and ship logs correctly.
     available: "yes"
 
   - title: Packaging
-    description: Knowing how to Dockerize an app properly is surprisingly hard. Developers must balance small base images vs secure/up-to-date base images, be thoughtful about use of the Docker Layer Cache, how to version and where to store artifacts, to name a few concerns.
+    description: Dockerizing an app properly is surprisingly hard. Developers must balance keeping base images small against keeping them secure and up-to-date. Successfully packaging a production app also requires thoughtful use of the Docker Layer Cache, as well as strategies for versioning and storing artifacts.
     available: "yes"
 
   - title: Secrets management
-    description: Apps may use an external service to store or encrypt secrets (e.g., AWS Secrets Manager, Vault, KMS, K8S), however they still must do the right thing to use that secret.
+    description: Secure secrets management is critical to any production application, but doubly so when dealing with strict compliance requirements such as HIPAA. Apps may use an external service to store or encrypt secrets (e.g., AWS Secrets Manager, Vault, KMS, K8S), but they require additional configuration to fetch and use these secrets properly in a way that maintains compliance.
     available: "yes"
 
   - title: App configuration
@@ -36,11 +36,11 @@ features:
     available: "yes"
 
   - title: Server hardening
-    description: Apps running on EC2 must handle or consider security and compliance requirements such as firewalls, anti-virus, file integrity monitoring, SSH access, VPN access, automatic updates, time synchronization and more.
+    description: Apps running on EC2 must handle or consider security and compliance requirements such as firewalls, anti-virus, file integrity monitoring, SSH access, VPN access, automatic updates, time synchronization and more. Server hardening is especially critical when attempting to reach compliance with standards like HIPAA.
     available: "yes"
 
   - title: Build system
-    description: Frameworks all have a build system that you have to configure in order to properly manage dependencies, compilation, tests and more.
+    description: Frameworks all have a build system that you have to configure in order to properly manage dependencies, compilation, tests and more. Each app will therefore have build commands that must be invoked in the correct order to install dependencies, clean up or generate caches, synchronize file systems, begin serving HTTP traffic, etc.
     available: "yes"
 
   - title: Automated tests
@@ -48,10 +48,10 @@ features:
     available: "yes"
 
   - title: Asset pipeline
-    description: Applications that depend on static content typically require asset compilation (e.g., compile TypeScript to JS), minification, concatenation, fingerprinting, deployment to one or more CDNs, and making the URLs work in dev & prod.
+    description: Applications that depend on static content typically require asset compilation (e.g., compile TypeScript to JS), minification, concatenation, fingerprinting, deployment to one or more CDNs, as well as logic to make the URLs work in both development and production environments.
 
     available: "soon"
 
   - title: Security baseline
-    description: Every app needs a baseline of security features, such as CSRF protection, XSS protection (especially in the application's templating language), security headers, OS user you run as, authn / authz filter, and so on.
+    description: Every app needs a baseline of security features, such as CSRF protection, XSS protection (especially in the application's templating language), security headers, consideration for OS users, authentication and authorization, and more.
     available: "soon"
