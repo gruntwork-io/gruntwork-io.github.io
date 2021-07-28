@@ -4,52 +4,44 @@
     <figure>
       <pre>
       <code class="language-hcl">
-        ########################################
-        # EKS Cluster Configuration in Terraform
-        ########################################
+        module "fargate_service" {
+          source  = "github.com/gruntwork-io/service-catalog//ecs-service"
+          version = "v0.51.0"
 
-        # ---------------------------------------------------------------------------------------------------------------------
-        # CONFIGURE OUR KUBERNETES CONNECTIONS
-        # Note that we can't configure our Kubernetes connection until EKS is up and running, so we try to depend on the
-        # resource being created.
-        # ---------------------------------------------------------------------------------------------------------------------
+          service_name          = "my-heroku-app"
+          launch_type           = "FARGATE"
+          ecs_cluster_arn       = module.fargate_cluster.arn
 
-        # The provider needs to depend on the cluster being setup.
-        provider "kubernetes" {
-          load_config_file       = false
-          host                   = data.template_file.kubernetes_cluster_endpoint.rendered
-          cluster_ca_certificate = base64decode(data.template_file.kubernetes_cluster_ca.rendered)
+          task_cpu                = 256
+          task_memory             = 512
+          desired_number_of_tasks = 3
 
-          # EKS clusters use short-lived authentication tokens that can expire in the middle of an 'apply' or 'destroy'. To
-          # avoid this issue, we use an exec-based plugin here to fetch an up-to-date token. Note that this code requires a
-          # binary—either kubergrunt or aws—to be installed and on your PATH.
-          exec {
-            api_version = "client.authentication.k8s.io/v1alpha1"
-            command     = var.use_kubergrunt_to_fetch_token ? "kubergrunt" : "aws"
-            args = (
-              var.use_kubergrunt_to_fetch_token
-              ? ["eks", "token", "--cluster-id", module.eks_cluster.eks_cluster_name]
-              : ["eks", "get-token", "--cluster-name", module.eks_cluster.eks_cluster_name]
-            )
-          }
+          container_definitions = [
+            {
+              name         = "my-heroku-app"
+              image        = "https://123456789012.dkr.ecr.us-east-1.amazonaws.com/my-heroku-app:v1"
+              essential    = true
+              portMappings = [
+                {
+                  "hostPort"      = 3000
+                  "containerPort" = 3000
+                  "protocol"      = "tcp"
+                }
+              ]
+            }
+          ]
+
+          domain_name = "example.your-domain.com"
         }
 
-        # Workaround for Terraform limitation where you cannot directly set a depends on directive or interpolate from resources
-        # in the provider config.
-        # Specifically, Terraform requires all information for the Terraform provider config to be available at plan time,
-        # meaning there can be no computed resources. We work around this limitation by creating a template_file data source
-        # that does the computation.
-        # See https://github.com/hashicorp/terraform/issues/2430 for more details
-        data "template_file" "kubernetes_cluster_endpoint" {
-          template = module.eks_cluster.eks_cluster_endpoint
-        }
+        module "fargate_cluster" {
+          source  = "github.com/gruntwork-io/service-catalog//ecs-fargate-cluster"
+          version = "v0.51.0"
 
-        data "template_file" "kubernetes_cluster_ca" {
-          template = module.eks_cluster.eks_cluster_certificate_authority
+          cluster_name = "my-fargate-cluster"
         }
-          </code>
-          </pre>
-          <figure>
+      </code>
+      </pre>
 - id: infra-docker
   title: Docker
   content: |
