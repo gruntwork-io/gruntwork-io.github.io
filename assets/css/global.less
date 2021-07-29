@@ -237,8 +237,11 @@ label {
   color: @text-color;
 }
 
-.help-block {
+.help-block, .help-block-disabled {
   font-size: @font-size-small;
+}
+.help-block-disabled {
+  color: grey;
 }
 .has-error label {
   color: @brand-danger;
@@ -1552,9 +1555,10 @@ h6, .h6 { .heading-margin-variant(0.68; 0.52; @line-height-h6); }
   }
 }
 
-.big-price {
+.big-price, .big-price-disabled {
   font-size: 72px;
 }
+
 .large-price{
   font-size: 66px;
   @media (max-width: @screen-sm-min) {
@@ -1568,7 +1572,7 @@ h6, .h6 { .heading-margin-variant(0.68; 0.52; @line-height-h6); }
     }
   }
 }
-.medium-price {
+.medium-price, .medium-price-disabled {
   font-size: 36px;
   @media (max-width: @screen-sm-min) {
     &.medium-price--mobile{
@@ -1590,14 +1594,18 @@ h6, .h6 { .heading-margin-variant(0.68; 0.52; @line-height-h6); }
 
 }
 
-.big-price, .large-price, .medium-price, .small-price {
+.big-price, .big-price-disabled, .large-price, .medium-price, .medium-price-disabled, .medium-price-disabled, .small-price {
   font-weight: 700;
   color: #FFF;
   margin-bottom: 10px;
   line-height: 1;
 }
 
-.big-price span, .large-price span, .medium-price span, .small-price span {
+.medium-price-disabled, .big-price-disabled {
+  color: grey;
+}
+
+.big-price span, .big-price-disabled span, .large-price span, .medium-price span, .small-price span {
   font-weight: 300;
 }
 
