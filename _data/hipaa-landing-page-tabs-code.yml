@@ -1,96 +1,101 @@
 - id: bash-read-aws-secrets-manager
-  title: Secrets
+  title: redis.js
   content: |
     <figure>
       <pre>
-      <code class="language-bash">
-      ######################################
-      # How to read from AWS Secrets Manager 
-      # ####################################
-       
-      # Returns the raw value of a secret string stored in AWS Secrets Manager.
-      function read_secret_from_aws_secrets_manager {
-        local -r environment_name="$1"
-        local -r aws_region="$2"
-        local -r secret_id="$3"
+      <code class="language-js">
+      /***************************
+       * How to interact with Redis
+       **************************/
+      const redis = require("redis");
+      const util = require("../util/util");
 
-        log_info "Reading secret '$secret_id' from AWS Secrets Manager in $aws_region"
-
-        # Use '--output text' to avoid having Secrets Manager escape any of the characters in the secret value. E.g., If the
-        # secret value contained JSON and '--output json' was set instead, then all the double quoutes would be escaped in
-        # the resulting output.
-        aws secretsmanager get-secret-value \
-          --region "$aws_region" \
-          --secret-id "$secret_id" \
-          --output text \
-          --query 'SecretString'
-      }
-          </code>
+      /**
+       * Set the given key-value pair in Redis.
+       * @param cacheConfig - An object that contains the cache config, including the engine, host, and port.
+       * @param key - The key.
+       * @param value - The value.
+       * @param expirationSeconds - After how long the key should expire, in seconds.
+       * @returns {Promise<any>}
+       */
+      exports.set = (cacheConfig, key, value, expirationSeconds) => {
+        const client = getClient(cacheConfig);
+        return new Promise((resolve, reject) => {
+          client.set(key, value, 'EX', expirationSeconds, (err, response) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(response);
+            }
+          });
+        });
+      };
+         </code>
           </pre>
           <figure>
 - id: database
-  title: Databases
+  title: database.js
   content: |
     <figure>
       <pre>
       <code class="language-javascript">
-        /****************************************************
-        * How to use config to connect to a database securely
-        *****************************************************/
+      /****************************************************
+      * How to use config to connect to a database securely
+      *****************************************************/
 
-        const { sendBackendResponse, sendResponse } = require("../views/views.jsx");
-        const db = require("../models/db");
-        const config = require("config");
-        const { urlsToTry, supportChannels } = require("../models/sample-app");
-        const util = require("util");
-        const { hasConfig } = require("../util/util");
+      const { sendBackendResponse, sendResponse } = require("../views/views.jsx");
+      const db = require("../models/db");
+      const config = require("config");
+      const { urlsToTry, supportChannels } = require("../models/sample-app");
+      const util = require("util");
+      const { hasConfig } = require("../util/util");
 
-        /**
-         * An example of how to run a database query and show the response on the page.
-         *
-         * @param req
-         * @param res
-         * @returns {Promise<void>}
-         */
-          exports.dbExample = async (req, res) => {
-          if (!hasConfig("database")) {
-            const data = {
-              title: "Not Found",
-              message: "This sample app does not have a 'database' configuration, so the database example is disabled!",
-              urlsToTry,
-              supportChannels
-            };
-            sendResponse(res, "error", data, 404);
-            return
-          }
-
-          const dbConfig = config.get("database");
-          const engine = dbConfig.get("engine");
-
-          const query = "SELECT 1 + 1 AS solution";
-          const result = await db.runQuery(dbConfig, query);
-
-            throw new Error(`Expected to get a result with 1 row, but instead got: ${util.inspect(result)}`);
-          }
-
-          const solution = result[0].solution;
-
+      /**
+       * An example of how to run a database query and show the response on the page.
+       *
+       * @param req
+       * @param res
+       * @returns {Promise<void>}
+       */
+        exports.dbExample = async (req, res) => {
+        if (!hasConfig("database")) {
           const data = {
-            engine,
-            query,
-            solution,
+            title: "Not Found",
+            message: "This sample app does not have a 'database' configuration, so the database example is disabled!",
             urlsToTry,
             supportChannels
           };
+          sendResponse(res, "error", data, 404);
+          return
+        }
 
-          // This endpoint is only enabled for the backend, so call sendBackendResponse directly instead of sendResponse
-          sendBackendResponse(res, data);
+        const dbConfig = config.get("database");
+        const engine = dbConfig.get("engine");
+
+        const query = "SELECT 1 + 1 AS solution";
+        const result = await db.runQuery(dbConfig, query);
+
+          throw new Error(`Expected to get a result with 1 row, but instead got: ${util.inspect(result)}`);
+        }
+
+        const solution = result[0].solution;
+
+        const data = {
+          engine,
+          query,
+          solution,
+          urlsToTry,
+          supportChannels
         };
+
+        // This endpoint is only enabled for the backend, so call sendBackendResponse directly instead of sendResponse
+        sendBackendResponse(res, data);
+      };
       </code>
       </pre>
       <figure>
 - id: servicediscovery
-  title: Services
+  title: services.js
   content: |
     <figure>
       <pre>
@@ -156,7 +161,7 @@
         sendResponse(res, "service", data);
       };
 
-             
+
             </code>
       </pre>
       <figure>
