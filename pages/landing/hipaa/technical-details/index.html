@@ -320,7 +320,7 @@ pricing:
           aria-controls="reference-infra"
           role="tab"
           data-toggle="tab"
-          >Reference Infrastructure</a
+          >Reference Architecture</a
         >
       </li>
     </ul>
@@ -328,7 +328,8 @@ pricing:
     <div class="tab-content">
       <!-- Reference Applications tab -->
       <div role="tabpanel" class="tab-pane active" id="reference-apps">
-        <div class="container">{% include_relative _how-it-works.html %}</div>
+      <div class="container"><h1>HIPAA-compliant Reference Applications</h1>
+	{% include_relative _how-it-works.html %}</div>
         <div id="more-app-details" class="section section-dark">
           <div class="container">
             {% include_relative _app-more-details.html %}
@@ -339,6 +340,7 @@ pricing:
       <div role="tabpanel" class="tab-pane" id="reference-infra">
         <div id="how-it-works" class="section section-dark">
           <div class="container">
+            <h1>HIPAA-compliant Reference Architecture</h1>
             {% include_relative _infra-how-it-works.html %}
           </div>
         </div>
