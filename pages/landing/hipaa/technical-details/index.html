@@ -306,16 +306,54 @@ pricing:
     </div>
   </div>
   <div id="how-it-works" class="section section-dark">
-    <div class="container">{% include_relative _how-it-works.html %}</div>
-  </div>
-  <div id="more-app-details" class="section section-dark">
-    <div class="container">{% include_relative _app-more-details.html %}</div>
-  </div>
-  <div id="how-it-works" class="section section-dark">
-    <div class="container">{% include_relative _infra-how-it-works.html %}</div>
-  </div>
-  <div id="more-infra-details" class="section section-dark">
-    <div class="container">{% include_relative _infra-more-details.html %}</div>
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+      <li role="presentation" class="active">
+        <a
+          href="#"
+          data-target="#reference-apps"
+          aria-controls="reference-apps"
+          role="tab"
+          data-toggle="tab"
+          >Reference Applications</a
+        >
+      </li>
+      <li role="presentation">
+        <a
+          href="#"
+          data-target="#reference-infra"
+          aria-controls="reference-infra"
+          role="tab"
+          data-toggle="tab"
+          >Reference Infrastructure</a
+        >
+      </li>
+    </ul>
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <!-- Reference Applications tab -->
+      <div role="tabpanel" class="tab-pane active" id="reference-apps">
+        <div class="container">{% include_relative _how-it-works.html %}</div>
+        <div id="more-app-details" class="section section-dark">
+          <div class="container">
+            {% include_relative _app-more-details.html %}
+          </div>
+        </div>
+      </div>
+      <!-- Reference Infrastructure tab -->
+      <div role="tabpanel" class="tab-pane" id="reference-infra">
+        <div id="how-it-works" class="section section-dark">
+          <div class="container">
+            {% include_relative _infra-how-it-works.html %}
+          </div>
+        </div>
+        <div id="more-infra-details" class="section section-dark">
+          <div class="container">
+            {% include_relative _infra-more-details.html %}
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <div id="more-infra-details" class="section section-dark">
     <div class="container">{% include_relative _code-viewer-css-js.html %}</div>
