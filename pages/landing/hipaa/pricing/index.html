@@ -3,8 +3,8 @@ layout: landing
 type: landing
 slug: index-page
 
-title: Pricing
-excerpt: Configure the plan just right for your team.
+title: Pick a plan
+excerpt: Pick the plan just right for your team.
 permalink: /hipaa-compliance-on-aws/pricing/
 redirect_from: /hipaa-cloud-compliance/pricing/
 
@@ -13,46 +13,49 @@ extra_nav_links:
     url: /hipaa-compliance-on-aws/technical-details
   - name: Why Gruntwork?
     url: /hipaa-compliance-on-aws/why-gruntwork
+categories:
+  - title: Product
+    features:
+      - name: Reference App
+        description:
+        plans: ["Standard", "Early Access"]
+      - name: Reference Architecture
+        description:
+        plans: ["Standard", "Early Access"]
+      - name: IaC Library
+        description: Deploy your apps onto Amazon Elastic Kubernetes Service (EKS).
+        plans: ["Standard", "Early Access"]
+      - name: DevOps Training Library
+        description: Deploy your apps onto Amazon Elastic Container Service.
+        plans: ["Standard", "Early Access"]
+  - title: Support
+    features:
+      - name: Community forum
+        plans: ["Standard", "Early Access"]
+      - name: Private shared Slack Channel
+        plans: ["Early Access"]
+      - name: SLA on response times
+        plans: ["Early Access"]
+  - title: Audit
+    features:
+      - name: HIPAA compliance audit assistance
+        plans: ["Early Access"]
+      - name: Prioritized bug fixes
+        description: Expose APIs and build fully serverless apps using API Gateway.
+        plans: ["Early Access"]
 
 pricing:
-  - title: Gruntwork HIPAA Early Access
-    description:
-      Early access subscribers will receive a CIS staging environment when invited<br>
-      and a fully HIPAA-compliant production infrastructure when it’s ready.
+  - title: Standard
+    description: Sign up when Gruntwork HIPAA Compliance is generally available (GA)
+    price: "9,950"
+    image: /assets/img/grunty-pro@2x.png
+    image_styles: "max-width: 150px; margin-top: 18px"
+
+  - title: Early Access
+    description: Sign up for early access to Gruntwork HIPAA Compliance now!
     price: "5,950"
-    strike_price: "9,950"
-    flat_fee: "0"
-    strike_flat_fee: "9,900"
-    image: /assets/img/logos-compliance/hipaa.png
-    image_styles: "max-width: 130px"
-    exclusive_features:
-      - name: Early access to the code
-        description: Deploy dev and stage infrastructure today and start building your application. HIPAA compliance coming soon!
-      - name: Discount pricing
-        description: Lock in a reduced rate for your subscription, in perpetuity!
-      - name: No up-front fee
-        description: Skip the up front cost completely.
-      - name: Direct support
-        description: Get a higher level of support from our team of experts at no extra cost.
-      - name: HITRUST CSF assessment assistance
-        description: We’ll work with you throughout your audit process and make any security changes required.
-    features:
-      - name: HIPAA-compliant reference architecture
-        description: Assessed by qualified 3rd parties for peace of mind.
-      - name: HIPAA-compliant sample applications
-        description: World-class sample applications that you can easily extend.
-      - name: Infrastructure as Code Library
-        description: Access our entire library to augment and extend your reference architecture.
-      - name: Gruntwork customer support
-        description: Gruntwork engineers can answer your technical questions and help you resolve problems if they come up.
-      - name: IaC video learning library
-        description: Our training library is a collection of video courses to help you learn Terraform, Terragrunt, and more.
-      - name: HITRUST CSF audit assistance
-        description: After your architecture is deployed, Gruntwork will work with you and your HITRUST assessor to help your infrastructure achieve the HITRUST certification.
-      - name: Landing Zone
-        description: Set up secure AWS baselines for your AWS accounts, with centralized logging, cross-account access, encryption by default, and more.
-      - name: CI/CD Pipelines
-        description: Streamline your infrastructure as code deployments through a repeatable CI/CD pipeline.
+    image: /assets/img/grunty-enterprise-heroku@2x.png
+    image_styles: "max-width: 150px; margin-top: 18px"
 
 faq:
   - question: What sort of AWS bill should I expect?
@@ -63,7 +66,7 @@ faq:
       <ul>
         <li><strong>Gruntwork Lite</strong>: $0 / month</li>
         <li><strong>Gruntwork Pro</strong>: $500 / month and up</li>
-        <li><strong>Gruntwork Enterprise</strong>: $2,000 / month and up</li>
+        <li><strong>Gruntwork Pro</strong>: $2,000 / month and up</li>
       </ul>
 
   - question: Is an annual subscription required?
@@ -108,6 +111,9 @@ faq:
 ---
 
 <div class="main page-pricing">
+  <div class="section page-pricing-header">
+    {% include_relative _hero.html %}
+  </div>
   <div class="section-dark">
     <div class="container">
       {% include_relative _plans.html %} {% include_relative _need-help.html %}
