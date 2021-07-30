@@ -60,7 +60,7 @@
                 {% for link in page.products_dropdown_links %}
                 <li>
                   <a
-                    href="{{ link.href }}"
+                    href="{{ link.url }}"
                     ga-on="click"
                     ga-event-category="nav-{{ page.path | slugify }}"
                     ga-event-action="{{ link.name | slugify }}"

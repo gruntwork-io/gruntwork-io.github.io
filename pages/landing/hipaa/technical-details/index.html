@@ -11,15 +11,15 @@ extra_nav_links:
 
 products_dropdown_links:
   - name: HIPAA-compliant Reference Architecture
-    url: /hipaa-compliance-on-aws/bootstrap-your-app#hipaa-compliant-infra-at-a-glance
-  - name: HIPAA-compliant Reference Application
-    url: /hipaa-compliance-on-aws/bootstrap-your-app
+    url: /hipaa-compliance-on-aws/technical-details#reference-infra
+  - name: HIPAA-compliant Reference Applications
+    url: /hipaa-compliance-on-aws/technical-details
 
 alternate_cta_link: /hipaa-compliance-on-aws/pricing
 
 title: HIPAA-compliant Reference Applications
 excerpt: Build your apps on top of reference applications for your favorite languages and frameworks (e.g., Ruby on Rails, Express.js, Spring Boot) that are HIPAA compliant and follow cloud-native best practices out of the box.
-permalink: /hipaa-compliance-on-aws/bootstrap-your-app/
+permalink: /hipaa-compliance-on-aws/technical-details/
 redirect_from: /hipaa-cloud-compliance/bootstrap-your-app
 custom_js:
   - prism
@@ -328,8 +328,10 @@ pricing:
     <div class="tab-content">
       <!-- Reference Applications tab -->
       <div role="tabpanel" class="tab-pane active" id="reference-apps">
-      <div class="container"><h1>HIPAA-compliant Reference Applications</h1>
-	{% include_relative _how-it-works.html %}</div>
+        <div class="container">
+          <h1>HIPAA-compliant Reference Applications</h1>
+          {% include_relative _how-it-works.html %}
+        </div>
         <div id="more-app-details" class="section section-dark">
           <div class="container">
             {% include_relative _app-more-details.html %}

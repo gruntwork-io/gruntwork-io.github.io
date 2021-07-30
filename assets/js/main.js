@@ -8932,3 +8932,17 @@ function generateUUID() {
     return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
   });
 }
+
+// Only run the following code on the hipaa /technical-details page
+if (location.pathname === "/hipaa-compliance-on-aws/technical-details/") {
+  var hash = location.hash.replace(/^#/, ""); // ^ only match the first hash
+  if (hash) {
+    // Open the tab referenced by the hash, for example #reference-infra
+    $('.nav-tabs a[data-target="#' + hash + '"]').tab("show");
+  }
+
+  // Change hash for page-reload
+  $(".nav-tabs a").on("shown.bs.tab", function (e) {
+    window.location.hash = e.target.hash;
+  });
+}
