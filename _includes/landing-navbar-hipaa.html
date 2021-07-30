@@ -48,23 +48,35 @@
                 >Why Gruntwork?</a
               >
             </li>
-            <li>
+            <li class="dropdown">
               <a
-                href="{{ landing_page_base_url }}/technical-details#reference-infra"
-                ga-on="click"
-                ga-event-category="nav-{{ page.path | slugify }}"
-                ga-event-action="hipaa-reference-architecture"
-                >Reference Infrastructure</a
-              >
-            </li>
-            <li>
-              <a
-                href="{{ landing_page_base_url }}/technical-details"
-                ga-on="click"
-                ga-event-category="nav-{{ page.path | slugify }}"
-                ga-event-action="hipaa-reference-apps"
-                >Reference Applications</a
-              >
+                href="#"
+                class="dropdown-toggle"
+                data-toggle="dropdown"
+                role="button"
+                aria-expanded="false"
+                >Products <i class="fa fa-caret-down" aria-hidden="true"></i
+              ></a>
+              <ul class="dropdown-menu dropdown-menu-left" role="menu">
+                <li>
+                  <a
+                    href="{{ landing_page_base_url }}/technical-details#reference-infra"
+                    ga-on="click"
+                    ga-event-category="nav-{{ page.path | slugify }}"
+                    ga-event-action="hipaa-reference-architecture"
+                    >Reference Infrastructure</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="{{ landing_page_base_url }}/technical-details"
+                    ga-on="click"
+                    ga-event-category="nav-{{ page.path | slugify }}"
+                    ga-event-action="hipaa-reference-apps"
+                    >Reference Applications</a
+                  >
+                </li>
+              </ul>
             </li>
             <li>
               <a
