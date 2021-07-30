@@ -8933,6 +8933,9 @@ if (location.pathname === "/hipaa-compliance-on-aws/technical-details/") {
   if (hash) {
     // Open the tab referenced by the hash, for example #reference-infra
     $('.nav-pills a[data-target="#' + hash + '"]').tab("show");
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+    }, 10);
   }
 
   // Change hash for page-reload
