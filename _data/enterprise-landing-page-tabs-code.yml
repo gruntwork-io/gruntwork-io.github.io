@@ -1,0 +1,98 @@
+- id: eks
+  title: EKS cluster
+  content: |
+    <figure><figcaption>eks-cluster/main.tf</figcaption>
+      <pre>
+      <code class="language-hcl">
+        module "eks_cluster" {
+          source  = "github.com/gruntwork-io/service-catalog//eks-cluster"
+          version = "v0.51.0"
+
+          service_name  = "my-heroku-app"
+          cluster_name  = "my-prod-cluster"
+
+          vpc_id = dependency.vpc.outputs.vpc_id
+
+          # Simplify management by running the control plane on fargate
+          schedule_control_plane_services_on_fargate = true
+
+          autoscaling_group_configurations = {
+            "prod-asg" = {
+              min_size   = "2"
+              max_size   = "4"
+              subnet_ids = dependency.vpc.outputs.private_app_subnet_ids
+              tags       = []
+            }
+          }
+
+          allow_inbound_api_access_from_cidr_blocks = ["0.0.0.0/0"]
+        }
+      </code>
+      </pre>
+      <figure>
+- id: eks-core
+  title: EKS core services
+  content: |
+    <figure><figcaption>eks-core-services/main.tf</figcaption>
+      <pre>
+      <code class="language-hcl">
+      module "eks_core_services" {
+        source  = "github.com/gruntwork-io/service-catalog//eks-core-services"
+        version = "v0.51.0"
+
+        schedule_alb_ingress_controller_on_fargate = true
+        schedule_external_dns_on_fargate           = true
+        schedule_cluster_autoscaler_on_fargate     = true
+
+        # We create service DNS mappings for data stores so that we can use the 
+        # service discovery mechanism baked into Kubernetes to reach the relevant services.
+        service_dns_mappings = {
+          database = {
+            target_dns  = dependency.rds.outputs.primary_host
+            target_port = tostring(dependency.rds.outputs.port)
+            namespace   = dependency.eks_applications_namespace.outputs.namespace_name
+          }
+        }
+      }
+      </code>
+      </pre>
+      <figure>
+- id: eks-service
+  title: EKS service
+  content: |
+    <figure><figcaption>my-spring-app/main.tf</figcaption>
+      <pre>
+      <code class="language-hcl">
+      module "k8s_service" {
+        source  = "github.com/gruntwork-io/service-catalog//k8s-service"
+        version = "v0.51.0"
+
+        application_name       = "my-spring-app"
+        namespace              = "my-namespace"
+        desired_number_of_pods = 3
+
+        container_port  = 5000
+        container_image = {
+          repository = "https://123456789012.dkr.ecr.us-east-1.amazonaws.com/my-spring-app"
+          tag        = "v1"
+        }
+
+        domain_name = "example.your-domain.com"
+
+        iam_role_name = "gruntwork-sample-app-backend"
+
+        env_vars = {
+          DATABASE_CREDENTIALS = var.db_secrets_manager_arn
+          CONFIG_CACHE_HOST    = dependency.redis.outputs.primary_endpoint
+          CONFIG_CACHE_PORT    = tostring(dependency.redis.outputs.cache_port)
+        }
+
+        # Configure the liveness probe (whether or not the container is up).
+        enable_liveness_probe   = true
+        liveness_probe_port     = local.container_port
+        liveness_probe_protocol = "HTTPS"
+        liveness_probe_path     = "/health"
+      }
+      </code>
+      </pre>
+      <figure>
