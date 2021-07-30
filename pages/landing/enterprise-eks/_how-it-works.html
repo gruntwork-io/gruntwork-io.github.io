@@ -1,0 +1,200 @@
+{% for item in page.how_it_works %}
+  <div class="row">
+    {% if item.precode %}
+      <div class="item_precode_code row-image-content {% if item.image_side == "left" %}col-xs-12 col-sm-7 col-md-6 col-description{% else %}col-xs-12 col-sm-7 col-sm-pull-5 col-md-6 col-md-pull-6 col-description{% endif %}">
+        {{ item.precode }}
+      </div>
+    {% endif %}
+    {% if item.tab_block %}
+      <div class="row-image-content {% if item.image_side == "left" %}col-xs-8 col-xs-offset-2 col-sm-5 col-sm-offset-0 col-md-6 col-diagram hidden-print{% else %}col-xs-10 col-xs-offset-1 col-sm-5 col-sm-push-7 col-sm-offset-0 col-md-6 col-md-push-6 col-diagram{% endif %}">
+        <div class="tab_block">
+          {% for tab in site.data.enterprise-landing-page-tabs-images %}
+          <div class="tab">
+            <button class="{% if forloop.first %}active tablinks{% else %}tablinks{% endif %}" onclick="openTab(event, '{{tab.id}}')">{{ tab.title }}</button>
+          </div>
+          {% endfor %}
+        </div>
+        <div class="tab_content">
+          {% for tab in site.data.enterprise-landing-page-tabs-images %}
+          <div id="{{tab.id}}" class="{% if forloop.first %}first_tabcontent tabcontent{% else %}tabcontent{% endif %}">
+            <img src="{{tab.content}}"/>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+    {% if item.tab_code_preview %}
+      <div class="row-image-content {% if item.image_side == "left" %}col-xs-8 col-xs-offset-2 col-sm-5 col-sm-offset-0 col-md-6 col-diagram hidden-print{% else %}col-xs-10 col-xs-offset-1 col-sm-5 col-sm-push-7 col-sm-offset-0 col-md-6 col-md-push-6 col-diagram{% endif %}">
+        <div class="tab_block">
+          {% for tab in site.data.heroku-landing-page-tabs-code %}
+            <div class="tab code">
+              <button class="{% if forloop.first %}active tablinks_code{% else %}tablinks_code{% endif %}" onclick="openCodeTab(event, '{{tab.id}}')">{{ tab.title }}</button>
+            </div>
+          {% endfor %}
+        </div>
+        <div class="tab_code_content">
+          {% for tab in site.data.heroku-landing-page-tabs-code %}
+          <div id="{{tab.id}}" class="item_precode {% if forloop.first %}first_tabcontent_code tabcontent_code{% else %}tabcontent_code{% endif %}">
+              {{ tab.content }}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+      {% if item.image %}
+        <div class="{% if item.image_side == "left" %}col-xs-8 col-xs-offset-2 col-sm-5 col-sm-offset-0 col-md-6 col-diagram hidden-print{% else %}col-xs-10 col-xs-offset-1 col-sm-5 col-sm-push-7 col-sm-offset-0 col-md-6 col-md-push-6 col-diagram{% endif %}">
+          <img src="{{ item.image }}" class="row_image_content" width="{{ item.image_width }}"/>
+        </div>
+      {% endif %}
+      <div class="{% if item.image_side == "left" %}col-xs-12 col-sm-7 col-md-6 col-description{% else %}col-xs-12 col-sm-7 col-sm-pull-5 col-md-6 col-md-pull-6 col-description{% endif %}">
+        <h2>{{ item.heading }}</h2>
+        <p>{{ item.body }}</p>
+        <div>
+          {% for logo in item.logos %}
+            <div style="display: inline-block; margin-right: 10px">
+              <div style="display: inline-block; width: 30px; text-align: center">
+                <img src="{{ logo.src }}" alt="{{ logo.title }}" title="{{ logo.title }}">
+              </div>
+              <strong style="font-size: 15px">{{ logo.title }}</strong>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+{% endfor %}
+
+<style>
+  .tab_content, .tab_code_content {
+    border: 1px solid #194c5f;
+    border-radius: 0 0 4px 4px;
+  }
+
+  .tab_content {
+    padding: 20px;
+    height: 350px;
+    background-color: #242e3b;
+  }
+
+  .tab_block {
+    width: 100%;
+    display: inline-table;
+    max-width: 500px;
+    border: 1px solid #194c5f;
+    border-bottom: none;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+
+  }
+
+  .tab {
+    overflow: hidden;
+    display: table-cell;
+    width: auto;
+    color: #bfbfbf;;
+    border-collapse: collapse;
+    border: 1px solid #194c5f;
+    border-top: none;
+    border-bottom: none;
+  }
+
+  .tab.code:first-child, .tab:first-child, .tab.code:last-child, .tab:last-child {
+    border-left: none;
+    border-right: none;
+  }
+
+  .tab button {
+    background-color: inherit;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    width: 100%;
+    color: #bfbfbf;
+    font-size: 16px;
+    border: none;
+  }
+
+  .tab button:hover,.tab button.active {
+    color: white;
+    background-color: #242e3b;
+  }
+
+  .tabcontent, .first_tabcontent, .first_tabcontent_code {
+    border-top: none;
+  }
+
+  .tabcontent, .tabcontent_code {
+    display: none;
+  }
+
+  .first_tabcontent, .first_tabcontent_code {
+    display: block;
+  }
+
+  .first_tablinks, .first_tablinks_code {
+    background-color: #06a2ff !important;
+  }
+
+  .row .item_precode_code, .item_precode {
+    position: relative;
+  }
+
+  .item_precode_code figure {
+    border: 1px solid #194c5f;
+    border-radius: 4px;
+  }
+
+  figcaption {
+    font-size: 14px;
+  }
+  .row .item_precode figcaption, .row .item_precode_code figcaption {
+    position: absolute;
+    top: -15px;
+    background-color: #ee4f5d;
+    border-radius: 4px;
+    color: white;
+    text-transform: uppercase;
+    font-weight: bold;
+    line-height: 1.7;
+    letter-spacing: 1px;
+    padding: 0 10px;
+  }
+
+  pre[class*="language-"] {
+    font-size: 11px;
+    margin: 0;
+  }
+
+  .row_image_content {
+    border: 1px solid #194c5f;
+    border-radius: 4px;
+    border-collapse: collapse;
+    padding: 0;
+  }
+
+  pre {
+    outline: none;
+    border: none;
+    margin: 0;
+  }
+
+  .row:last-of-type .row_image_content {
+    border: none;
+  }
+
+</style>
+
+<script>
+  function openTab(evt, tabName) {
+    $('.tabcontent').hide(); // hide all tab content
+    $('.tablinks').removeClass('active'); // ensure all links are inactive
+    $('#' + tabName).show();
+    $(evt.currentTarget).addClass('active'); // mark the current tab as active
+  }
+
+  function openCodeTab(evt, tabName) {
+    $('.tabcontent_code').hide(); // hide all tab content
+    $('.tablinks_code').removeClass('active'); // ensure all links are inactive
+    $('#' + tabName).show();
+    $(evt.currentTarget).addClass('active'); // mark the current tab as active
+  }
+</script>
