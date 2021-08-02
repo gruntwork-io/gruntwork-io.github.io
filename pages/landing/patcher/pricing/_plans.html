@@ -1,0 +1,10 @@
+<div class="row row-page-header">
+  <div class="col-xs-12">
+    <div class="gw-pricing-columns row row-collapse row-equalize-col-height row-panels row-panels-sm">
+      {% for pricing in page.pricing %}
+        {% include_relative _price-col.html pricing=pricing %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
