@@ -2,25 +2,20 @@
 <img
   style="max-width: 40px; margin: 10px"
   src="/assets/img/table-icons/green-check.png"
-  /><br>Available now
-{% elsif pass == "soon" %}
+/><br />Available{% elsif pass == "soon" %}
 <img
   style="max-width: 40px; margin: 10px"
   src="/assets/img/table-icons/dotted-check.png"
-  /><br>Coming soon
-{% elsif pass == "no" %}
+/><br />Coming soon {% elsif pass == "no" %}
 <img
   style="max-width: 40px; margin: 10px"
   src="/assets/img/table-icons/red-cross.png"
-/>Not included
-{% elsif pass == "user" %}
+/><br />Not included {% elsif pass == "user" %}
 <img
   style="max-width: 40px; margin: 10px"
   src="/assets/img/table-icons/user-circle.png"
-  /><br>Customer Responsibility
-{% else %}
+/><br />Customer Responsibility {% else %}
 <img
   style="max-width: 40px; margin: 10px"
   src="/assets/img/table-icons/red-cross.png"
-/>{{ pass }}
-{% endif %}
+/>{{ pass }} {% endif %}

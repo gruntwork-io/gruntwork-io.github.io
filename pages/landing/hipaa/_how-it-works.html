@@ -33,6 +33,7 @@
           {% endfor %}
         </div>
         <div class="tab_code_content">
+        <div style="height: 450px; overflow-y: scroll;"class="tab_code_content">
           {% for tab in site.data.hipaa-landing-page-tabs-code %}
           <div id="{{tab.id}}" class="item_precode {% if forloop.first %}first_tabcontent_code tabcontent_code{% else %}tabcontent_code{% endif %}">
               {{ tab.content }}
@@ -56,6 +57,13 @@
     {% endfor %}
   </div>
       {% endif %}
+      	{% if item.icon_row %}
+	<div class="list-group">
+		{% for icon in item.icon_row %}
+		<img src="/assets/img/landing-page-hipaa/{{ icon }}.png">
+		{% endfor %}
+	</div>
+    	{% endif %}
 </div>
     </div>
 {% endfor %}
