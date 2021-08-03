@@ -42,8 +42,7 @@ To deploy the site:
 1. Hosted on Amazon S3, with CloudFront as a CDN. Using [s3_website](https://github.com/laurilehmijoki/s3_website) to
    automatically upload static content to S3.
 1. We use [Bootstrap](http://www.getbootstrap.com/) and [Less](http://lesscss.org/).
-1. We're using [UptimeRobot](http://uptimerobot.com/) and [Google Analytics](http://www.google.com/analytics/) for
-   monitoring and metrics.
+1. We're using [UptimeRobot](http://uptimerobot.com/), [Google Analytics](http://www.google.com/analytics/), and [HubSpot Traffic Analytics](https://knowledge.hubspot.com/reports/analyze-your-site-traffic-with-the-traffic-analytics-tool) for monitoring and metrics.
 
 ## Troubleshooting
 
