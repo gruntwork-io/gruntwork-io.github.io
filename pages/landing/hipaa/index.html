@@ -52,6 +52,19 @@ how_it_works:
     body: |
       The tools we all rely on (AWS, Terraform, Kubernetes, Docker), DevOps best practices, and auditor expectations are constantly changing. To help you remain HIPAA compliant, we offer commercial support and maintenance for our app and infrastructure code, all of which is semantically versioned, so you can stay completely up-to-date with the latest compliance requirements, security patches, and AWS/DevOps best practices via simple version number bumps.
 
+  - heading: Step 6. Ensure ongoing compliance with scanning tools
+    image: /assets/img/hipaa/aws-security-hub-green.png
+    image_width: 500px
+    image_side: left
+    body: |
+      Gruntwork's HIPAA Reference Architecture is configured out-of-the-box to work with compliance scanning tools, so you have continuous monitoring and alerts on your compliance status.
+
+  - heading: Step 7. Verify all future code changes against Open Policy Agent (OPA) policies
+    image: /assets/img/hipaa/opa-policy.png
+    image_width: 500px
+    image_side: right
+    body: |
+      Gruntwork's HIPAA Architecture comes with a CI/CD pipeline that runs your code against a library of OPA policies to validate that every commit remains in compliance with HIPAA requirements.
 footer:
   heading: Go live with Gruntwork HIPAA
   body: |
