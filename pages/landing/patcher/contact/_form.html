@@ -22,26 +22,6 @@
   <div class="form-group">
     <div class="row">
       <div class="col-xs-12 col-md-4">
-        <label>Which programming languages are you interested in?</label>
-      </div>
-      <div class="col-xs-12 col-md-4">
-        {% include_relative _input-checkbox.html name="interested-language" id="terraform" value="Terraform" %}
-        {% include_relative _input-checkbox.html name="interested-language" id="terragrunt" value="Terragrunt" %}
-        {% include_relative _input-checkbox.html name="interested-language" id="javascript" value="JavaScript" checked=true %}
-        {% include_relative _input-checkbox.html name="interested-language" id="ruby" value="Ruby" %}
-      </div>
-      <div class="col-xs-12 col-md-4">
-        {% include_relative _input-checkbox.html name="interested-language" id="go" value="Go" %}
-        {% include_relative _input-checkbox.html name="interested-language" id="python" value="Python" %}
-        {% include_relative _input-checkbox.html name="interested-language" id="java" value="Java" %}
-        {% include_relative _input-checkbox.html name="interested-language" id="docker" value="Docker" %}
-        {% include_relative _input-hidden.html id="user-utc-timezone-offset" %}
-      </div>
-    </div>
-  </div>
-  <div class="form-group">
-    <div class="row">
-      <div class="col-xs-12 col-md-4">
         <label>Which version control systems do you use?</label>
       </div>
       <div class="col-xs-12 col-md-4">
@@ -53,6 +33,17 @@
         {% include_relative _input-checkbox.html name="vcs" id="bitbucket-server" value="Bitbucket Server" %}
         {% include_relative _input-checkbox.html name="vcs" id="gitlab" value="GitLab" %}
         {% include_relative _input-checkbox.html name="vcs" id="gitlab-enterprise" value="GitLab Enterprise" %}
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="row">
+      <div class="col-xs-12 col-md-4">
+        <label>Which plan are you interested in?</label>
+      </div>
+      <div class="col-xs-12 col-md-8">
+        {% include_relative _input-radio.html name="interested-plan" id="plan-basic" value="Basic" checked=true %}
+        {% include_relative _input-radio.html name="interested-plan" id="plan-enterprise" value="Enterprise" %}
       </div>
     </div>
   </div>
