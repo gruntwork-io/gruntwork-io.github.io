@@ -9,7 +9,7 @@ permalink: /patcher/pricing/
 
 
 categories:
-  - title:
+  - title: Code management
     features:
     - name: Version number bumps
       description: Bump to the latest versions all your dependencies.
@@ -23,28 +23,52 @@ categories:
     - name: Private repos
       description: Keep your private respository dependencies up to date.
       plans: ["Free", "Basic", "Enterprise"]
-    - name: Support for side effects
-      description: Get a preview of the side effects on your code.
+  - title: Custom scripts
+    features:
+    - name: Custom scripts
+      description: Execute custom scripts (e.g., update Terraform state, or a single 'go mod tidy') before or after your Patcher updates.
       plans: ["Enterprise"]
-    - name: Remote agents
-      description: Get ECS and other agents working with your code. 
+  - title: Security
+    features:
+      - name: Remote agents
+        description: Run Patcher updates yourself directly in your AWS account without giving us access to your code.
+        plans: ["Enterprise"]
+  - title: Workflows
+    features:
+      - name: Promotion workflow
+        description: Promote your updates safely from one branch or environment to another, mimicking your release workflow.
+        plans: ["Enterprise"]
+      - name: Internal dependency updates
+        description: Create a workflow to help you update the internal dependencies in a way that follows your usual software development flow.
+        plans: ["Enterprise"]
+  - title: A Web UI
+    features:
+      - name: Dashboard
+        description: See all your repos, dependencies and available updates.
+        plans: ["Basic", "Enterprise"]
+      - name: Update directly using the UI
+        description: Control each of your repositories and dependencies, and apply updates directly with a click using the UI.
+        plans: ["Enterprise"]
+      - name: Manage your Patcher updates
+        description: Choose if the Patcher updates are applied and merged automatically under certain conditions, or you get to review all updates and approve.
+        plans: ["Enterprise"]
 
 pricing:
   - title: Free
-    description: Always stay up to date - up to 5 repos if you're here for Patcher only. Or if you're already a Gruntwork subscriber, keep all your repos up date for free for a year.
+    description: Free up to 5 repos, or Gruntwork subscribers for the first 12 months.
     price: "Free"
     image: /assets/img/aws-logo@2x.png
     image_styles: "max-width: 130px"
 
   - title: Basic
-    description: Description of Option 2
-    price: "495"
+    description: Free up to 5 repos, then 295 for every next repo.
+    price: "295"
     image: /assets/img/gcp-logo@2x.png
     image_styles: "max-width: 130px"
 
   - title: Enterprise
-    description: Description of Enterprise
-    price: Contact Us
+    description:
+    price: "595"
     image: /assets/img/grunty-enterprise-logo@2x.png
     image_styles: "max-width: 130px; margin-top: 24px"
 ---
