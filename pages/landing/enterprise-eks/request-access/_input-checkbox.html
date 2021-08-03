@@ -1,5 +1,5 @@
 <div>
-  <input id="{{ include.id }}" name="{{ include.name }}" type="radio" value="{{ include.value }}"{% if include.checked %} checked{% endif %}>
+  <input id="{{ include.id }}" name="{{ include.name }}" type="checkbox" value="{{ include.value }}"{% if include.checked %} checked{% endif %}>
   <label for="{{ include.id }}">
     {{ include.value }}
     {% if include.small_text %}

@@ -1,0 +1,38 @@
+<tr>
+  <td style="width: 25%">&nbsp;</td>
+  {% for pricing in page.pricing %}
+  <td
+    style="
+      width: 25%;
+      border-left: 1px solid #194c5f;
+      border-right: 1px solid #194c5f;
+      background-color: #252e3a;
+      {% if include.bottom_border %}
+      border-bottom: 1px solid #194c5f;
+      {% endif %}
+    "
+    class="text-center"
+  >
+    <hr />
+    {% if pricing.disabled_price %}
+    <p class="big-price-disabled"><span>$</span>{{ pricing.disabled_price }}</p>
+    <p class="help-block-disabled" style="margin-top: -9px">per month</p>
+    <p class="text-muted small">
+      <em>
+        Currently in development.<br />
+        Annual subscription.
+      </em>
+    </p>
+    {% else %}
+    <p class="big-price"><span>$</span>{{ pricing.price }}</p>
+    <p class="help-block" style="margin-top: -9px">per month</p>
+    <p class="text-muted small">
+      <em>
+        Currently in private beta.<br />
+        Annual subscription.
+      </em>
+    </p>
+    {% endif %}
+  </td>
+  {% endfor %}
+</tr>

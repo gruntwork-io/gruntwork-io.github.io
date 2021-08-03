@@ -3,8 +3,8 @@ layout: landing
 type: landing
 slug: index-page
 
-title: Enterprise apps, defined as code, deployed to Amazon EKS. In about a day.
-excerpt: Deploy enterprise applications using hardened, flexible, production-grade Amazon EKS clusters in your own AWS accounts. Manage 100% of your infrastructure using code, all in ~1 day. <b>Join now for special early access pricing!</b>
+title: Enterprise apps on Amazon EKS. In about a day.
+excerpt: Build battle-tested Amazon EKS clusters, designed for enterprise with security, observability, and usability built-in. Manage 100% of your infrastructure using code, all in ~1 day. <b>Join now for special early access pricing!</b>
 permalink: /eks-for-enterprise/
 custom_js:
 - prism
@@ -18,7 +18,7 @@ technologies:
 
 hero:
   image: /assets/img/infrastructure-cube-icons/infrastructure-in-a-day.png
-  cta: Request early access!
+  cta: Request early access
   logos:
   - /assets/img/logos-technologies/partner_logo_aws.png
   - /assets/img/logos-technologies/partner_logo_kubernetes.png
@@ -82,10 +82,10 @@ how_it_works:
     tab_code_preview: site.data.enterprise-landing-page-tabs-code
     image_side: left
     body: |
-      Deploy your custom configured EKS cluster. Use our friendly interface to generate code for your existing AWS
-      accounts and VPCs, or use <a href="https://gruntwork.io/landing-zone-for-aws/">Gruntwork Landing Zone</a> and the
+      Deploy your custom configured EKS cluster. Our friendly user interface can generate code for your existing AWS
+      accounts and VPCs, or you can dive right in to the code. Or, use <a href="https://gruntwork.io/landing-zone-for-aws/">Gruntwork Landing Zone</a> and the
       <a href="https://gruntwork.io/reference-architecture">Gruntwork Reference Architecture</a> for a complete,
-      end-to-end stack, fully managed as code. No matter what you choose, everything is managed as code with Terraform.
+      end-to-end stack, built with extensibility in mind. No matter what you choose, everything is managed as code with Terraform.
     logos:
       - title: Terraform
         src: /assets/img/landing-heroku-page/terraform-icon.png
@@ -94,13 +94,13 @@ how_it_works:
       - title: Packer
         src: /assets/img/landing-heroku-page/packer-icon.png
 
-  - heading: "Step 3: Instrument your app"
+  - heading: "Step 3: Set up your app"
     image: /assets/img/landing-page-enterprise/sample-app-clip.gif
     image_side: right
     body: |
-      Automatically optimize your app for EKS using Gruntwork tooling. Update your app with cloud-native best practices for
+      Use Gruntwork tools to optimize your enterprise apps for EKS. Update your app with cloud-native best practices for
       packaging, monitoring, logging, service discovery, secrets management, schema migrations, and more. Or customize
-      the optimizations yourself using Gruntwork sample apps as a template. We support common enterprise languages and
+      the optimizations yourself using Gruntwork sample apps as a template. We include sample apps common enterprise languages and
       frameworks:
       <ul>
           <li>Spring boot</li>
@@ -117,14 +117,14 @@ how_it_works:
       - title: Django
         src: /assets/img/logos-technologies/logo-django.png
 
-  - heading: "Step 4: Operate your app"
+  - heading: "Step 4: Run your app"
     tab_block: site.data.enterprise-landing-page-tabs-images
     image_side: left
     body: |
-      Gruntwork enterprise EKS supports various deployment strategies out of the box, including canary, blue/green
-      deployments, automatic rollbacks, security scans, GitOps workflows, etc. Post deployment, use powerful
-      observability patterns to manage your apps, including dashboards for key metrics and cluster data, one-click
-      access to containers, and multiple options for centralized logging. And always stay up to date (see Patcher).
+      Gruntwork Enterprise EKS supports various deployment strategies out of the box, including canary, blue/green
+      deployments, automatic rollbacks, security scans, CI/CD, GitOps workflows, etc. Post deployment, use powerful
+      observability tools to manage your apps, including dashboards for key metrics and cluster data, one-click
+      access to containers, and multiple options for centralized logging. Stay up to date automatically (see Patcher<!-- TODO: link to patcher page-->).
     logos:
       - title: Lens
         src: /assets/img/logos-technologies/logo-lens.png
@@ -133,22 +133,22 @@ how_it_works:
       - title: Datadog
         src: /assets/img/logos-technologies/logo-datadog.png
 
-  - heading: "Commercially maintained and supported"
+  - heading: "Step 5: Get help and support"
     image: /assets/img/landing-heroku-page/grunty-free-step-5.png
     image_width: 250px
     image_side: right
     body: |
-      Enjoy ongoing updates from Gruntwork, including updates to the latest releases of Kubernetes, Terraform, Docker, and other tooling within days or weeks. Our engineers are there to help when your team has questions about how something works.
+      Enjoy consistent updates from Gruntwork, including updates to the latest releases of Kubernetes, Terraform, Docker, and other tooling. Our engineers can help when your team has questions.
 
-footer:
-  heading: The EKS experience you've been waiting for
+conclusion:
+  heading: The enterprise EKS experience you've been looking for.
   body: |
     <ul class="check-list" style="display: inline-block; text-align: left; margin-top: 10px; margin-bottom: 0">
-      <li>The power, security, and flexibility of EKS.</li>
+      <li>The power, security, and flexibility of Kubernetes.</li>
       <li>The control and scalability you expect from AWS.</li>
       <li>The production-grade code you expect from Gruntwork.</li>
     </ul>
-  cta: Request early access!
+  cta: Request early access
 ---
 
 <div class="main">
@@ -169,6 +169,17 @@ footer:
   <div id="how-it-works" class="section section-dark">
     <div class="container">
       {% include_relative _how-it-works.html %}
+    </div>
+  </div>
+  <div class="row row-call-to-action">
+    <div class="col-xs-12 text-center">
+      <h2 style="padding-top: 30px" class="h1 no-anchor">{{ page.conclusion.heading }}</h2>
+      <p style="margin-top: -30px">{{ page.conclusion.body }}</p>
+      <p>
+        <a {% if page.alternate_cta_link %} href="{{ page.alternate_cta_link }}" {% else %}
+          href="{{ page.permalink }}request-access/" {% endif %}class="btn btn-info" role="button" ga-on="click"
+          ga-event-category="{{ page.path | slugify }}" ga-event-action="conclusion-cta">{{ page.conclusion.cta }}</a>
+      </p>
     </div>
   </div>
   <div class="section section-blue">

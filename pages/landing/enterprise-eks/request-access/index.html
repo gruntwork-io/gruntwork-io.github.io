@@ -1,0 +1,105 @@
+---
+layout: landing
+type: landing
+slug: index-page
+
+title: Amazon EKS for Enterprise Early Access
+excerpt: Sign up now for early access to Amazon EKS for Enterprise! Early access subscribers will receive exclusive benefits and a significantly reduced subscription price.
+permalink: /eks-for-enterprise/request-access/
+
+categories:
+  - title: Feature
+    features:
+      - name: IaC Library
+        description: Every Amazon EKS for Enterprise subscription also includes complete access to the Gruntwork Infrastructure as Code Library.
+        plans: ["Standard", "Early Access"]
+      - name: Reference Architecture
+        description: Optionally, you can run enterprise-grade EKS clusters on the Gruntwork Reference Architecture, an end-to-end tech stack, controlled entirely as code, deployed directly to your AWS accounts.
+        available: now
+        plans: ["Standard", "Early Access"]
+      - name: CIS Benchmark
+        description: Optionally, entirely Amazon EKS clusters that have been hardened according to the CIS Benchmark for Kubernetes and CIS Benchmark for Amazon EKS, all defined as Terraform code.
+        plans: ["Standard", "Early Access"]
+      - name: Istio
+        description: Use the Istio service mesh to enable service-to-service communication with security, flexibility, and observability.
+        plans: ["Standard", "Early Access"]
+      - name: AWS App Mesh
+        description: Set up AWS App Mesh to monitor your applications on the network, control traffic, and connect microservices, with features for automatic encryption, retries, and more.
+        plans: ["Standard", "Early Access"]
+      - name: Consul Connect
+        description: Configure HashiCorp Consul Connect for automatic inter-service encryption, identity-based authorization, and traffic observability.
+        plans: ["Standard", "Early Access"]
+      - name: Flux
+        description: Deploy your apps using GitOps practices with Flux. Employ techniques such as canary deployments, feature flags, and staggered deployments, with built-in notifications and alerts.
+        plans: ["Standard", "Early Access"]
+      - name: Argo
+        description: Achieve continuous delivery with Argo CD. Argo includes automatic deployments for a variety of standard application definition options, such as Kustomize, Helm, and more. Manage multiple clusters and integrate with a variety of managed and self-hosted version control systems.
+        plans: ["Standard", "Early Access"]
+      - name: Prometheus
+        description: Instrument your apps and ship metrics to Prometheus, the monitoring and alerting toolkit. Query metrics along multiple dimensions and create dashboards to view app behavior. 
+        plans: ["Standard", "Early Access"]
+      - name: Datadog
+        description: If you prefer hosted services, ship logs and metrics to Datadog and benefit from the native Kubernetes and EKS integration.
+        plans: ["Standard", "Early Access"]
+      - name: Grafana
+        description: Create beautiful, intuitive dashboards to track your application performance using Grafana, the open observability platform.
+        plans: ["Standard", "Early Access"]
+      - name: Lens
+        description: Improve your productivity with Amazon EKS using Lens, the Kubernetes IDE, a graphical web UI that makes using Kubernetes easier and more productive.
+        plans: ["Standard", "Early Access"]
+      - name: Porter
+        description: Combine the benefits of Kubernetes with the ease of Heroku using Porter, a Platform-as-a-Service for your Amazon EKS clusters.
+        plans: ["Standard", "Early Access"]
+      - name: Pluggable deployment strategies
+        description: Deploy your apps using a variety of industry standard deployment techniques, including canary releases and blue/green deploys. Institute automatic rollbacks in the event of a deployment failure or error condition.
+        plans: ["Standard", "Early Access"]
+      - name: Spring Boot sample app
+        description: A complete sample application demonstrating how to deploy and optimize Spring Boot applications.
+        plans: ["Standard", "Early Access"]
+      - name: Ruby on Rails sample app
+        description: A complete sample application demonstrating how to deploy and optimize Ruby on Rails applications.
+        plans: ["Standard", "Early Access"]
+      - name: Django sample app
+        description: A complete sample application demonstrating how to deploy and optimize Django applications.
+        plans: ["Standard", "Early Access"]
+      - name: Java sample app
+        description: A complete sample application demonstrating how to deploy and optimize Java applications.
+        plans: ["Standard", "Early Access"]
+  - title: Support
+    features:
+      - name: Community forum
+        description: Access to a community Slack channel where Gruntwork customers can ask for assistance from other community members and Gruntwork engineers
+        plans: ["Standard", "Early Access"]
+      - name: Private shared Slack Channel
+        description: A dedicated Slack channel for fast, private access to support from Gruntwork engineers
+        plans: ["Early Access"]
+      - name: SLA on response times
+        description: Gruntwork will provide SLAs to guarantee you the fastest support possible
+        plans: ["Early Access"]
+
+pricing:
+  - title: Standard
+    description: Wait until Gruntwork Enterprise EKS is generally available (GA)
+    disabled_price: "9,950"
+    price_styles: "color: red; text-decoration: line-through;"
+    image_styles: "max-width: 150px; margin-top: 18px;"
+
+  - title: Early Access
+    description: Sign up for early access to Gruntwork Enterprise EKS now!
+    price: "5,950"
+    image: /assets/img/grunty-enterprise-logo@2x.png
+    image_styles: "max-width: 150px; margin-top: 10px"
+---
+
+<div class="main page-pricing">
+  <div class="section page-pricing-header">
+    {% include_relative _hero.html %}
+  </div>
+  <div class="section-dark">
+    <div class="container">
+      {% include_relative _plans.html %}
+      {% include_relative _form.html %}
+      {% include_relative _benefits.html %}
+    </div>
+  </div>
+</div>
