@@ -30,14 +30,15 @@ how_it_works:
       <figure><figcaption>eks-configuration.yml</figcaption>
         <pre>
             <code class="language-yml">
+            # Configure CIS Benchmark compliance
+            cis:
+              enabled: true
+
             # Choose from istio, consul-connect, aws-app-mesh
             service_mesh: "istio"
 
             # Choose from flux, jenkins, argocd
             cicd: "flux"
-
-            # Choose from lens, porter, grafana
-            dashboard: "lens"
 
             # Choose from prometheus, datadog, cloudwatch
             observability: prometheus
@@ -65,7 +66,7 @@ how_it_works:
       <ul>
           <li>Service meshes (Istio, Consul connect, AWS App Mesh)</li>
           <li>GitOps CI/CD (Flux, Jenkins, Argo)</li>
-          <li>UI dashboards (Lens, Porter, Grafana)</li>
+          <li>UI dashboards (Porter, Grafana)</li>
           <li>Observability (Prometheus, Datadog, CloudWatch, ELK)</li>
           <li>And more (cluster-autoscaler, sealed secrets, AWS Load Balancer Controller, etc)</li>
       </ul>
@@ -126,8 +127,6 @@ how_it_works:
       observability tools to manage your apps, including dashboards for key metrics and cluster data, one-click
       access to containers, and multiple options for centralized logging. Stay up to date automatically (see Patcher<!-- TODO: link to patcher page-->).
     logos:
-      - title: Lens
-        src: /assets/img/logos-technologies/logo-lens.png
       - title: Prometheus
         src: /assets/img/logos-technologies/logo-prometheus.png
       - title: Datadog
