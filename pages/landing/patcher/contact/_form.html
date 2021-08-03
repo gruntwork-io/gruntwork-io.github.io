@@ -16,9 +16,47 @@
   <input type="hidden" name="hello_gruntwork" value=""/>
   <input type="hidden" name="_landing-page" value="{{ site.url }}{{ page.url }}" />
   <input type="text" name="_gotcha" style="display:none" />
-  {% include_relative _input-text.html id="contact-name" label="Name" required=true placeholder="Jon Doe" %}
-  {% include_relative _input-text.html id="contact-email" label="Email" required=true placeholder="jon@acme.com" type="email" %}
+  {% include_relative _input-text.html id="contact-name" label="Name" required=true placeholder="Jane Doe" %}
+  {% include_relative _input-text.html id="contact-email" label="Email" required=true placeholder="jane@acme.com" type="email" %}
   {% include_relative _input-text.html id="contact-company" label="Company" required=true placeholder="Acme, Inc." %}
+  <div class="form-group">
+    <div class="row">
+      <div class="col-xs-12 col-md-4">
+        <label>Which programming languages are you interested in?</label>
+      </div>
+      <div class="col-xs-12 col-md-4">
+        {% include_relative _input-checkbox.html name="interested-language" id="terraform" value="Terraform" %}
+        {% include_relative _input-checkbox.html name="interested-language" id="terragrunt" value="Terragrunt" %}
+        {% include_relative _input-checkbox.html name="interested-language" id="javascript" value="JavaScript" checked=true %}
+        {% include_relative _input-checkbox.html name="interested-language" id="ruby" value="Ruby" %}
+      </div>
+      <div class="col-xs-12 col-md-4">
+        {% include_relative _input-checkbox.html name="interested-language" id="go" value="Go" %}
+        {% include_relative _input-checkbox.html name="interested-language" id="python" value="Python" %}
+        {% include_relative _input-checkbox.html name="interested-language" id="java" value="Java" %}
+        {% include_relative _input-checkbox.html name="interested-language" id="docker" value="Docker" %}
+        {% include_relative _input-hidden.html id="user-utc-timezone-offset" %}
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="row">
+      <div class="col-xs-12 col-md-4">
+        <label>Which version control systems do you use?</label>
+      </div>
+      <div class="col-xs-12 col-md-4">
+        {% include_relative _input-checkbox.html name="vcs" id="github" value="GitHub" %}
+        {% include_relative _input-checkbox.html name="vcs" id="github-enterprise" value="GitHub Enterprise" %}
+        {% include_relative _input-checkbox.html name="vcs" id="bitbucket-cloud" value="Bitbucket Cloud" %}
+      </div>
+      <div class="col-xs-12 col-md-4">
+        {% include_relative _input-checkbox.html name="vcs" id="bitbucket-server" value="Bitbucket Server" %}
+        {% include_relative _input-checkbox.html name="vcs" id="gitlab" value="GitLab" %}
+        {% include_relative _input-checkbox.html name="vcs" id="gitlab-enterprise" value="GitLab Enterprise" %}
+      </div>
+    </div>
+  </div>
+
   <div class="form-group">
     <div class="row">
       <div class="col-xs-12 col-md-4">
