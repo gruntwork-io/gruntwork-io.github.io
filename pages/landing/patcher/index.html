@@ -1,0 +1,150 @@
+---
+layout: landing
+type: landing
+slug: index-page
+
+title: "Keep your code up to date, even with breaking changes."
+excerpt: Patcher automatically creates pull requests to keep your dependencies up to date, updating not only the version numbers, but also patching your code to handle backwards incompatible changes.
+permalink: /patcher/
+
+hero:
+  image: /assets/img/infrastructure-cube-icons/infrastructure-in-a-day.png
+  cta: Request early access
+  logos:
+  - /assets/img/logos-technologies/partner_logo_aws.png
+  - /assets/img/logos-technologies/partner_logo_kubernetes.png
+  - /assets/img/logos-technologies/partner_logo_terraform.png
+
+how_it_works:
+  - heading: Install the Patcher GitHub App
+    image: /assets/img/infrastructure-cube-icons/infrastructure-design-your-stack.png
+    image_width: 379px
+    image_side: right
+    body: |
+      It takes just a few clicks to add Patcher to your GitHub repos. GitLab and BitBucket support is coming soon. You can get started completely for free.
+
+  - heading: Patcher discovers your dependencies automatically
+    image: /assets/img/infrastructure-cube-icons/infrastructure-design-your-stack-grunty.png
+    image_side: left
+    body: |
+      Patcher will automatically discover dependencies for popular languages and tools such as JavaScript, Ruby, Java, Python, Go, Terraform, and Docker. You can also add special comments to your code to help Patcher discover dependencies in non-standard locations (e.g., in a Bash script).
+
+  - heading: Maintainers release new versions and patches
+    image: /assets/img/infrastructure-cube-icons/infrastructure-expert-support.png
+    image_width: 418px
+    image_side: right
+    body: |
+      As the maintainer of a dependency, you release new versions as usual (e.g., via a new Git tag), but if you are making a breaking change, you can now also create <em>patch files</em> to automatically update your users' code to handle the backwards incompatibilities.
+
+  - heading: Patcher automatically patches your code and opens a pull request
+    image: /assets/img/infrastructure-cube-icons/infrastructure-design-your-stack-grunty.png
+    image_side: left
+    body: |
+      Patcher automatically updates you to the new version and runs the maintainer's patches to update your code in case of backwards incompatible changes. All patches are run in a secure, sandboxed environment, so your code is always kept safe.
+
+  - heading: You review and merge
+    image: /assets/img/infrastructure-cube-icons/infrastructure-expert-support.png
+    image_width: 418px
+    image_side: right
+    body: |
+      You review the pull request, check if your automated tests have passed, and if everything looks good, you can merge, safely and easily keeping all your dependencies up to date.
+
+supported:
+  - logo: /assets/img/logos-patcher/python.png
+    name: Python
+  - logo: /assets/img/logos-patcher/javascript.png
+    name: JavaScript
+  - logo: /assets/img/logos-patcher/ruby.png
+    name: Ruby
+  - logo: /assets/img/logos-patcher/java.png
+    name: Java
+  - logo: /assets/img/logos-patcher/golang.png
+    name: Go
+  - logo: /assets/img/logos-patcher/c-sharp.png
+    name: C#
+  - logo: /assets/img/logos-patcher/php.png
+    name: PHP
+  - logo: /assets/img/logos-patcher/rust.png
+    name: Rust
+  - logo: /assets/img/logos-patcher/terraform.png
+    name: Terraform
+  - logo: /assets/img/logos-patcher/terragrunt.png
+    name: Terragrunt
+  - logo: /assets/img/logos-patcher/docker.png
+    name: Docker
+  - logo: /assets/img/logos-patcher/helm.png
+    name: Helm
+
+features:
+  - title: Update dependency versions
+    description: Like DependaBot, Patcher automatically updates you to the latest versions of dependencies
+    icon: /assets/img/library-icons/library-feature-1.png
+
+  - title: Handle breaking changes
+    description: Unlike DependaBot, Patcher can also patch your code to handle backwards incompatible changes
+    icon: /assets/img/library-icons/library-feature-2.png
+
+  - title: Simple to install
+    description: Patcher is a GitHub app, so install takes just a few clicks
+    icon: /assets/img/reference-architecture-icons/reference-architecture-feature-3.png
+
+  - title: Pull request driven
+    description: All updates are submitted as pull requests, so you can review and run tests before merging
+    icon: /assets/img/library-icons/library-feature-3.png
+
+  - title: Stay secure
+    description: Automatically stay up to date with security patches
+    icon: /assets/img/reference-architecture-icons/reference-architecture-feature-4.png
+
+  - title: Configurable
+    description: "Specify how often to open pull requests: immediately after new releases, daily, weekly, etc."
+    icon: /assets/img/library-icons/library-feature-7.png
+
+footer:
+  heading: Make breaking changes a thing of the past
+  body: Stay up to date with new features and security fixes, and even breaking changes, completely automatically.
+  cta: Request early access
+---
+
+<div class="main">
+  <div class="section section-hero">
+    <div class="container">
+      <div class="row">
+        {% include_relative _hero.html %}
+      </div>
+    </div>
+  </div>
+  <div class="section section-blue section-sub-hero">
+    <div class="container">
+      <div class="row">
+        {% include_relative _sub-hero.html %}
+      </div>
+    </div>
+  </div>
+  <div id="how-it-works" class="section section-dark">
+    <div class="container">
+      {% include_relative _how-it-works.html %}
+    </div>
+  </div>
+  <div class="section section-blue">
+    <div class="container">
+      <div class="row row-community">
+        {% include_relative _supported.html %}
+      </div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="container">
+      <div class="row row-community">
+        {% include_relative _features.html %}
+      </div>
+    </div>
+  </div>
+  <div class="section section-blue">
+    <div class="container">
+      <div class="row row-community">
+        {% include_relative _social-proof.html %}
+      </div>
+    </div>
+  </div>
+</div>
