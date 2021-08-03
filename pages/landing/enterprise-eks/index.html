@@ -25,106 +25,113 @@ hero:
   - /assets/img/logos-technologies/partner_logo_terraform.png
 
 how_it_works:
-  - heading: "Step 1: Deploy a hardened EKS cluster"
-    tab_code_preview: site.data.enterprise-landing-page-tabs-code
+  - heading: "Step 1: Choose your EKS configuration"
+    precode: |
+      <figure><figcaption>eks-configuration.yml</figcaption>
+        <pre>
+            <code class="language-yml">
+            # Choose from istio, consul-connect, aws-app-mesh
+            service_mesh: "istio"
+
+            # Choose from flux, jenkins, argocd
+            cicd: "flux"
+
+            # Choose from lens, porter, grafana
+            dashboard: "lens"
+
+            # Choose from prometheus, datadog, cloudwatch
+            observability: prometheus
+
+            # Configure various common utilities
+            cluster_autoscaler:
+              enabled: true
+
+            sealed_secrets:
+              enabled: true
+
+            aws_load_balancer_controller:
+              enabled: true
+
+            external_dns:
+              enabled: true
+              domain: gruntwork.io
+            </code>
+        </pre>
+      </figure>
     image_side: right
     body: |
-      Our enterprise-grade EKS clusters are provisioned using Terraform and hardened according to the <a href="https://aws.amazon.com/blogs/containers/introducing-cis-amazon-eks-benchmark/">CIS Amazon EKS Benchmark</a>. Use our friendly interface to generate code for your existing AWS accounts and VPCs, or use <a href="https://gruntwork.io/landing-zone-for-aws/">Gruntwork Landing Zone</a> and the <a href="https://gruntwork.io/reference-architecture">Gruntwork Reference Architecture</a> for a complete, end-to-end stack, fully managed as code. Our comprehensive documentation explains everything, step-by-step.
+      Pick and choose the technologies that you want included in your custom EKS cluster. We
+      support a wide range of popular configurations that include:
+      <ul>
+          <li>Service meshes (Istio, Consul connect, AWS App Mesh)</li>
+          <li>GitOps CI/CD (Flux, Jenkins, Argo)</li>
+          <li>UI dashboards (Lens, Porter, Grafana)</li>
+          <li>Observability (Prometheus, Datadog, CloudWatch, ELK)</li>
+          <li>And more (cluster-autoscaler, sealed secrets, AWS Load Balancer Controller, etc)</li>
+      </ul>
+      On top of that, all our enterprise-grade EKS clusters are hardened according to the <a
+      href="https://aws.amazon.com/blogs/containers/introducing-cis-amazon-eks-benchmark/">CIS Amazon EKS
+      Benchmark</a>, regardless of the chosen technologies.
     logos:
       - title: CIS
         src: /assets/img/logos-compliance/cis-benchmark.png
       - title: EKS
         src: /assets/img/logos-technologies/logo-eks.png
 
-  - heading: "Step 2: Configure CI/CD and service mesh"
-    precode: |
-      <figure><figcaption>flux/chart.yml</figcaption>
-        <pre>
-            <code class="language-yml">
-              replicaCount: 1
-              image:
-                repository: docker.io/fluxcd/flux
-                tag: 1.23.1
-                pullPolicy: IfNotPresent
-
-                service:
-                  type: ClusterIP
-                  createClusterIP: true
-                  port: 3030
-
-                # Specifies which namespaces flux should have access to
-                allowedNamespaces: ["applications"]
-
-                rbac:
-                  create: true
-
-                serviceAccount:
-                  create: true
-
-                resources:
-                  requests:
-                    cpu: 50m
-                    memory: 64Mi
-
-                gpgKeys:
-                  # These keys will be imported into GPG in the Flux container.
-                  # These can be used to verify commit signatures.
-                  secretName: "prod-key"
-
-                git:
-                  url: "git@github.com/my-org/my-spring-app"
-                  # Branch of git repo to use for the Spring Boot app
-                  branch: "main"
-                  # If set, commits will be signed with this GPG key.
-                  signingKey: "prod-key"
-                  # If set, the signatures of the sync tag and commits will be verified.
-                  verifySignatures: true
-
-                # Append "[ci skip]" to commit messages so that CI will skip builds
-                ciSkip: true
-
-                # Period at which to poll git repo for new commits
-                pollInterval: "2m"
-
-              registry:
-                automationInterval: "2m"
-                ecr:
-                  region: "us-east-1"
-                  includeId: "my-spring-app"
-
-              prometheus:
-                enabled: true
-            </code>
-          </pre>
-        </figure>
-    image_side: left
-    body: |
-      Deploy your enterprise apps with confidence using the leading Kubernetes CI/CD tools, ArgoCD and Flux. Rely on the Istio service mesh for security capabilities, observability, traffic managemenRely on the Istio service mesh for security capabilities, observability, and traffic management.
-    logos:
-      - title: Istio
-        src: /assets/img/logos-technologies/logo-istio.png
-      - title: Flux
-        src: /assets/img/logos-technologies/logo-flux.png
-
-  - heading: "Get up and running fast"
-    tab_block: site.data.enterprise-landing-page-tabs-images
-    image_side: right
-    body: |
-      Manage your EKS clusters with <a href="https://k8slens.dev/"></a>Lens, the Kubernetes IDE. Learn from our collection of reference application templates, including common enterprise application frameworks like Spring Boot. Reuse our Helm charts and get help Dockerizing your app.
-    logos:
-      - title: Lens
-        src: /assets/img/logos-technologies/logo-lens.png
-      - title: Spring Boot
-        src: /assets/img/logos-technologies/logo-spring-boot.png
-
-  - heading: "Operate with confidence"
+  - heading: "Step 2: Deploy your EKS cluster"
     tab_code_preview: site.data.enterprise-landing-page-tabs-code
     image_side: left
     body: |
-      Gruntwork enterprise EKS support includes powerful observability patterns, including dashboards for key metrics and cluster data, one-click access to containers, and multiple options for centralized logging.
+      Deploy your custom configured EKS cluster. Use our friendly interface to generate code for your existing AWS
+      accounts and VPCs, or use <a href="https://gruntwork.io/landing-zone-for-aws/">Gruntwork Landing Zone</a> and the
+      <a href="https://gruntwork.io/reference-architecture">Gruntwork Reference Architecture</a> for a complete,
+      end-to-end stack, fully managed as code. No matter what you choose, everything is managed as code with Terraform.
     logos:
+      - title: Terraform
+        src: /assets/img/landing-heroku-page/terraform-icon.png
+      - title: Docker
+        src: /assets/img/landing-heroku-page/docker-icon.png
+      - title: Packer
+        src: /assets/img/landing-heroku-page/packer-icon.png
+
+  - heading: "Step 3: Instrument your app"
+    image: /assets/img/landing-page-enterprise/sample-app-clip.gif
+    image_side: right
+    body: |
+      Automatically optimize your app for EKS using Gruntwork tooling. Update your app with cloud-native best practices for
+      packaging, monitoring, logging, service discovery, secrets management, schema migrations, and more. Or customize
+      the optimizations yourself using Gruntwork sample apps as a template. We support common enterprise languages and
+      frameworks:
+      <ul>
+          <li>Spring boot</li>
+          <li>Standard Java apps (e.g., Tomcat or similar)</li>
+          <li>Ruby on Rails</li>
+          <li>Python Django</li>
+          <li>Or suggest something!</li>
+      </ul>
+    logos:
+      - title: Spring Boot
+        src: /assets/img/logos-technologies/logo-spring-boot.png
+      - title: Rails
+        src: /assets/img/logos-technologies/logo-rails.png
+      - title: Django
+        src: /assets/img/logos-technologies/logo-django.png
+
+  - heading: "Step 4: Operate your app"
+    tab_block: site.data.enterprise-landing-page-tabs-images
+    image_side: left
+    body: |
+      Gruntwork enterprise EKS supports various deployment strategies out of the box, including canary, blue/green
+      deployments, automatic rollbacks, security scans, GitOps workflows, etc. Post deployment, use powerful
+      observability patterns to manage your apps, including dashboards for key metrics and cluster data, one-click
+      access to containers, and multiple options for centralized logging. And always stay up to date (see Patcher).
+    logos:
+      - title: Lens
+        src: /assets/img/logos-technologies/logo-lens.png
       - title: Prometheus
         src: /assets/img/logos-technologies/logo-prometheus.png
+      - title: Datadog
+        src: /assets/img/logos-technologies/logo-datadog.png
 
   - heading: "Commercially maintained and supported"
     image: /assets/img/landing-heroku-page/grunty-free-step-5.png
