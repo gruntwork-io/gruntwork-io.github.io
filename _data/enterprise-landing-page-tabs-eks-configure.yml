@@ -15,21 +15,28 @@
           # Choose from istio, consul-connect, aws-app-mesh
           service_mesh: "istio"
 
-          # Choose from flux, argocd
-          cicd: "flux"
+          # Choose from flux or argocd
+          cicd: "argocd"
+
+          # Choose from argocd or lens
+          self_service: "argocd"
 
           # Choose from prometheus, datadog, cloudwatch
           metric_aggregation: "prometheus"
 
-          # Choose from elk, datadog, cloudwatch
-          log_aggregation: "elk"
+          # Choose from elastic, datadog, cloudwatch
+          log_aggregation: "elastic"
 
           # Configure various common utilities
           cluster_autoscaler:
             enabled: true
 
-          aws_load_balancer_controller:
+          harbor:
             enabled: true
+
+          opa:
+            enable_kubernetes_rules: true
+            enable_terraform_rules: true
 
           sealed_secrets:
             enabled: true

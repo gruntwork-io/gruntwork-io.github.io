@@ -34,19 +34,24 @@ how_it_works:
       popular configurations that include:
       <ul>
           <li>Service meshes (Istio, Consul connect, AWS App Mesh)</li>
-          <li>K8S-native CI/CD (Flux, Argo CD)</li>
-          <li>UI dashboards (Porter, Grafana)</li>
+          <li>K8S-native CI/CD (Argo CD, Flux)</li>
+          <li>Self-service Dashboards (Argo CD Dashboard, Lens)</li>
           <li>Metric Aggregation (Prometheus, Datadog, CloudWatch)
-          <li>Log Aggregation (ELK, Datadog, CloudWatch Logs)</li>
-          <li>And more (cluster-autoscaler, sealed secrets, AWS Load Balancer Controller, etc)</li>
+          <li>Log Aggregation (Elastic Stack, Datadog, CloudWatch Logs)</li>
+          <li>And more (cluster-autoscaler, Sealed Secrets, Harbor, Open Policy Agent, etc)</li>
       </ul>
       On top of that, all our enterprise-grade EKS clusters are hardened to meet 100% of the
       <a href="https://aws.amazon.com/blogs/containers/introducing-cis-amazon-eks-benchmark/">CIS Amazon EKS Benchmark</a>
       requirements, regardless of the chosen technologies.
     logos:
-      # TODO: Logos for Istio, Flux, Some Dashboard tool
       - title: CIS
         src: /assets/img/logos-compliance/cis-benchmark.png
+      - title: Istio
+        src: /assets/img/logos-technologies/logo-istio.svg
+      - title: Argo CD
+        src: /assets/img/logos-technologies/logo-argo.png
+      - title: Flux
+        src: /assets/img/logos-technologies/logo-flux.png
 
   - heading: "Step 2: Deploy your EKS cluster"
     tab_code_preview: eks-deploy
@@ -71,7 +76,7 @@ how_it_works:
     body: |
       Use Gruntwork tools to optimize your enterprise apps for EKS. Update all your apps with cloud-native best practices for
       packaging, monitoring, logging, service discovery, secrets management, schema migrations, and more. Or customize
-      the optimizations yourself using Gruntwork sample apps as a template. We include sample apps for common enterprise languages and
+      the optimizations yourself using Gruntwork sample apps as a template. We support common enterprise languages and
       frameworks:
       <ul>
           <li>Java: Spring Boot, Quarkus</li>
@@ -80,32 +85,54 @@ how_it_works:
           <li>Node.js: Express.js, Next.js</li>
       </ul>
     logos:
-      # TODO: logo for express js
       - title: Spring Boot
         src: /assets/img/logos-technologies/logo-spring-boot.png
       - title: Rails
         src: /assets/img/logos-technologies/logo-rails.png
       - title: Django
         src: /assets/img/logos-technologies/logo-django.png
+      - title: Express
+        src: /assets/img/logos-technologies/logo-express.png
 
   - heading: "Step 4: Deploy your apps"
-    tab_code_preview: eks-app-deploy
+    image: /assets/img/landing-page-enterprise/sample-app-clip.gif
     image_side: left
     body: |
-      Gruntwork Enterprise EKS supports various deployment strategies out of the box, including canary, blue/green
-      deployments, automatic rollbacks, security scans, CI/CD, GitOps workflows, etc. Post deployment, use powerful
-      observability tools to manage your apps, including dashboards for key metrics and cluster data, one-click
-      access to containers, and multiple options for centralized logging. Stay up to date automatically (see Patcher<!-- TODO: link to patcher page-->).
+      Use the self-service dashboard to manage your application deployments. Automatically register, migrate, and deploy
+      your apps using a friendly UI. Gruntwork Enterprise EKS supports various deployment strategies out of the box,
+      including canary, blue/green deployments, automatic rollbacks, security scans, CI/CD, GitOps workflows, etc.
+      Regardless of deployment strategy and configuration, enforce your organization governance policies on artifacts
+      using Open Policy Agent and Harbor.
+    logos:
+      - title: Argo CD
+        src: /assets/img/logos-technologies/logo-argo.png
+      - title: Lens
+        src: /assets/img/logos-technologies/logo-lens.png
+      - title: Harbor
+        src: /assets/img/logos-technologies/logo-harbor.png
+      - title: Open Policy Agent
+        src: /assets/img/logos-technologies/logo-opa.png
+
+  - heading: "Step 5: Monitor your apps"
+    tab_code_preview: eks-app-monitor
+    image_side: right
+    body: |
+      Monitor your deployment and troubleshoot errors right in the UI. Review deployment progress, error messages,
+      and key metrics in the self-service dashboard. Use powerful observability tools to manage your apps, including
+      dashboards for container metrics, cluster data, one-click access to containers, and multiple options for
+      centralized logging. Stay up to date automatically (see Patcher<!-- TODO: link to patcher page-->).
     logos:
       - title: Prometheus
         src: /assets/img/logos-technologies/logo-prometheus.png
+      - title: Elastic Stack
+        src: /assets/img/logos-technologies/logo-elastic.png
       - title: Datadog
-        src: /assets/img/logos-technologies/logo-datadog.png
+        src: /assets/img/logos-technologies/logo-datadog-white.png
 
-  - heading: "Step 5: Stay up to date"
+  - heading: "Step 6: Stay up to date"
     image: /assets/img/landing-heroku-page/grunty-free-step-5.png
     image_width: 250px
-    image_side: right
+    image_side: left
     body: |
       Enjoy consistent updates from Gruntwork, including updates to the latest releases of Kubernetes, Terraform,
       Docker, and other tooling. Our engineers can help when your team has questions.

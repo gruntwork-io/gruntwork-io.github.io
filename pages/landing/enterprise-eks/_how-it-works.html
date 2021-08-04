@@ -7,13 +7,18 @@
     {% endif %}
     {% if item.tab_code_preview %}
 
+    {% comment %}
+    This janky conditional assign exists because we can't do inception within jekyll tags or data (import other data
+    references within a data list). Therefore, we use a switch case mapping that converts the string to the relevant
+    data list.
+    {% endcomment %}
     {% case item.tab_code_preview %}
     {% when "eks-configure" %}
     {% assign tab_data = site.data.enterprise-landing-page-tabs-eks-configure %}
     {% when "eks-deploy" %}
     {% assign tab_data = site.data.enterprise-landing-page-tabs-eks-deploy %}
-    {% when "eks-app-deploy" %}
-    {% assign tab_data = site.data.enterprise-landing-page-tabs-eks-app-deploy %}
+    {% when "eks-app-monitor" %}
+    {% assign tab_data = site.data.enterprise-landing-page-tabs-eks-app-monitor %}
     {% endcase %}
 
       <div class="row-image-content {% if item.image_side == "left" %}col-xs-8 col-xs-offset-2 col-sm-5 col-sm-offset-0 col-md-6 col-diagram hidden-print{% else %}col-xs-10 col-xs-offset-1 col-sm-5 col-sm-push-7 col-sm-offset-0 col-md-6 col-md-push-6 col-diagram{% endif %}">
