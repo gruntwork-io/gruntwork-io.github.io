@@ -7,7 +7,6 @@ title: Pick a plan
 excerpt: Configure the plan just right for your team.
 permalink: /patcher/pricing/
 
-
 categories:
   - title: Code management
     features:
@@ -19,57 +18,57 @@ categories:
       plans: ["Free", "Basic", "Enterprise"]
     - name: Public repos
       description: Keep your public respository dependencies up to date.
-      plans: ["Free", "Basic", "Enterprise"]
+      plans: ["Free", "Basic","Enterprise"]
     - name: Private repos
       description: Keep your private respository dependencies up to date.
-      plans: ["Free", "Basic", "Enterprise"]
+      plans: ["Basic", "Enterprise"]
+  - title: Workflows
+    features:
+    - name: Promotion workflow
+      description: Promote your updates safely from one branch or environment to another, mimicking your release workflow.
+      plans: ["Basic", "Enterprise"]
+    - name: Internal dependency updates
+      description: Create a workflow to help you update the internal dependencies in a way that follows your usual software development flow.
+      plans: ["Basic", "Enterprise"]
+  - title: A Web UI
+    features:
+    - name: Dashboard
+      description: See all your repos, dependencies and available updates.
+      plans: ["Basic", "Enterprise"]
+    - name: Update directly via the UI
+      description: Control each of your repositories and dependencies, and apply updates directly with a click using the UI.
+      plans: ["Basic", "Enterprise"]
+    - name: Manage your Patcher updates
+      description: Choose if the Patcher updates are applied and merged automatically under certain conditions, or you get to review all updates and approve.
+      plans: ["Enterprise"]
   - title: Custom scripts
     features:
     - name: Custom scripts
       description: Execute custom scripts (e.g., update Terraform state, or a single 'go mod tidy') before or after your Patcher updates.
-      plans: ["Enterprise"]
+      plans: ["Basic", "Enterprise"]
   - title: Security
     features:
-      - name: Remote agents
-        description: Run Patcher updates yourself directly in your AWS account without giving us access to your code.
-        plans: ["Enterprise"]
-  - title: Workflows
-    features:
-      - name: Promotion workflow
-        description: Promote your updates safely from one branch or environment to another, mimicking your release workflow.
-        plans: ["Enterprise"]
-      - name: Internal dependency updates
-        description: Create a workflow to help you update the internal dependencies in a way that follows your usual software development flow.
-        plans: ["Enterprise"]
-  - title: A Web UI
-    features:
-      - name: Dashboard
-        description: See all your repos, dependencies and available updates.
-        plans: ["Basic", "Enterprise"]
-      - name: Update directly using the UI
-        description: Control each of your repositories and dependencies, and apply updates directly with a click using the UI.
-        plans: ["Enterprise"]
-      - name: Manage your Patcher updates
-        description: Choose if the Patcher updates are applied and merged automatically under certain conditions, or you get to review all updates and approve.
-        plans: ["Enterprise"]
+    - name: Remote agents
+      description: Run Patcher updates yourself directly in your AWS account without giving us access to your code.
+      plans: ["Enterprise"]
 
 pricing:
   - title: Free
-    description: Free up to 5 repos, or Gruntwork subscribers for the first 12 months.
+    description: Free up to 5 public repos. Free for all repos for the first 1 year if you're a Gruntwork subscriber.
     price: "Free"
-    image: /assets/img/aws-logo@2x.png
+    image: /assets/img/grunty-free@2x.png
     image_styles: "max-width: 130px"
 
   - title: Basic
-    description: Free up to 5 repos, then 295 for every next repo.
-    price: "295"
-    image: /assets/img/gcp-logo@2x.png
+    description: Free for the first 5 repos. Take control of the updates workflow.
+    price: 49
+    image: /assets/img/grunty-pro@2x.png
     image_styles: "max-width: 130px"
 
   - title: Enterprise
-    description:
-    price: "595"
-    image: /assets/img/grunty-enterprise-logo@2x.png
+    description: Get all you can with Patcher for all you repos. You also get full control and flexibility over the Patcher workflow.
+    price: Contact Us
+    image: /assets/img/grunty-enterprise-heroku@2x.png
     image_styles: "max-width: 130px; margin-top: 24px"
 ---
 
@@ -80,6 +79,8 @@ pricing:
   <div class="section-dark">
     <div class="container">
       {% include_relative _plans.html %}
+      {% include_relative _need-help.html %}
     </div>
   </div>
 </div>
+

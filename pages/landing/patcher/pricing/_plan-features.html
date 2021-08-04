@@ -11,7 +11,7 @@
       <td style="border-left: 1px solid #194c5f; border-right: 1px solid #194c5f; background-color: #252e3a;">
         {% if feature.values %}
           <span style="color: white">{{ feature.values["Free"] }}</span>
-        {% elsif feature.plans contains "Lite" %}
+        {% elsif feature.plans contains "Free" %}
           <i class="fa fa-check" style="color: #69ff66" aria-hidden="true"></i>
         {% else %}
           <i class="fa fa-times" style="color: #f92e64" aria-hidden="true"></i>
@@ -20,7 +20,7 @@
       <td style="border-left: 1px solid #194c5f; border-right: 1px solid #194c5f; background-color: #252e3a;">
         {% if feature.values %}
           <span style="color: white">{{ feature.values["Basic"] }}</span>
-        {% elsif feature.plans contains "Pro" %}
+        {% elsif feature.plans contains "Basic" %}
           <i class="fa fa-check" style="color: #69ff66" aria-hidden="true"></i>
         {% else %}
           <i class="fa fa-times" style="color: #f92e64" aria-hidden="true"></i>
