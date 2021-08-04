@@ -5,7 +5,7 @@
 - id: cluster-configure-code
   title: Code
   content: |
-    <figure><figcaption>eks-configuration.yml</figcaption>
+    <figure><figcaption>eks_configuration.yml</figcaption>
       <pre>
           <code class="language-yml">
           # Configure CIS Benchmark compliance
@@ -19,10 +19,10 @@
           cicd: "flux"
 
           # Choose from prometheus, datadog, cloudwatch
-          metric_aggregations: "prometheus"
+          metric_aggregation: "prometheus"
 
           # Choose from elk, datadog, cloudwatch
-          log_aggregations: "elk"
+          log_aggregation: "elk"
 
           # Configure various common utilities
           cluster_autoscaler:

@@ -5,11 +5,12 @@
 - id: cluster-deploy-code
   title: Code
   content: |
-    <figure><figcaption>eks-cluster/main.tf</figcaption>
+    <figure><figcaption>eks_cluster/main.tf</figcaption>
       <pre>
       <code class="language-hcl">
         module "eks_cluster" {
-          # Since CIS is enabled, source from the CIS compliant service catalog.
+          # Since CIS is enabled, source from the CIS compliant
+          # service catalog.
           source  = "github.com/gruntwork-io/cis-service-catalog//eks-cluster"
           version = "v0.51.0"
 
@@ -35,7 +36,8 @@
           eks_cluster_arn = module.eks_cluster.eks_cluster_arn
 
           # Enable services based on form input
-          # All other services default to false, and thus are not enumerated.
+          # All other services default to false, and thus
+          # are not enumerated.
           enable_istio              = true
           enable_flux               = true
           enable_prometheus         = true
@@ -46,7 +48,8 @@
           enable_external_dns       = true
 
           # Additional service configurations based on form input
-          # NOTE: This is configuring the prod cluster, so only setup the prod domain.
+          # NOTE: This is configuring the prod cluster,
+          #       so only setup the prod domain.
           #       For dev, this will be set to gruntwork-dev.com
           external_dns_route53_hosted_zone_id_filters = ["gruntwork.io"]
         }

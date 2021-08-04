@@ -27,46 +27,7 @@ hero:
 
 how_it_works:
   - heading: "Step 1: Configure your EKS cluster"
-    precode: |
-      <figure><figcaption>eks-configuration.yml</figcaption>
-        <pre>
-            <code class="language-yml">
-            # Configure CIS Benchmark compliance
-            cis:
-              enabled: true
-
-            # Choose from istio, consul-connect, aws-app-mesh
-            service_mesh: "istio"
-
-            # Choose from flux, argocd
-            cicd: "flux"
-
-            # Choose from prometheus, datadog, cloudwatch
-            metric_aggregations: "prometheus"
-
-            # Choose from elk, datadog, cloudwatch
-            log_aggregations: "elk"
-
-            # Configure various common utilities
-            cluster_autoscaler:
-              enabled: true
-
-            sealed_secrets:
-              enabled: true
-
-            aws_load_balancer_controller:
-              enabled: true
-
-            external_dns:
-              enabled: true
-              domains:
-                - env: "dev"
-                  domain: "gruntwork-test.com"
-                - env: "prod"
-                  domain: "gruntwork.io"
-            </code>
-        </pre>
-      </figure>
+    tab_code_preview: eks-configure
     image_side: right
     body: |
       Pick and choose the technologies that you want included in your custom EKS cluster. We support a wide range of
@@ -83,12 +44,12 @@ how_it_works:
       <a href="https://aws.amazon.com/blogs/containers/introducing-cis-amazon-eks-benchmark/">CIS Amazon EKS Benchmark</a>
       requirements, regardless of the chosen technologies.
     logos:
+      # TODO: Logos for Istio, Flux, Some Dashboard tool
       - title: CIS
         src: /assets/img/logos-compliance/cis-benchmark.png
-      <!-- TODO: Logos for Istio, Flux, Some Dashboard tool -->
 
   - heading: "Step 2: Deploy your EKS cluster"
-    tab_code_preview: site.data.enterprise-landing-page-tabs-code
+    tab_code_preview: eks-deploy
     image_side: left
     body: |
       Deploy your custom configured EKS cluster. Our friendly user interface can generate code for your existing AWS
@@ -119,16 +80,16 @@ how_it_works:
           <li>Node.js: Express.js, Next.js</li>
       </ul>
     logos:
+      # TODO: logo for express js
       - title: Spring Boot
         src: /assets/img/logos-technologies/logo-spring-boot.png
       - title: Rails
         src: /assets/img/logos-technologies/logo-rails.png
       - title: Django
         src: /assets/img/logos-technologies/logo-django.png
-      <!-- TODO: logo for express js -->
 
   - heading: "Step 4: Deploy your apps"
-    tab_block: site.data.enterprise-landing-page-tabs-images
+    tab_code_preview: eks-app-deploy
     image_side: left
     body: |
       Gruntwork Enterprise EKS supports various deployment strategies out of the box, including canary, blue/green
