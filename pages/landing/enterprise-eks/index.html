@@ -3,8 +3,8 @@ layout: landing
 type: landing
 slug: index-page
 
-title: Enterprise apps on Amazon EKS. In about a day.
-excerpt: Build battle-tested Amazon EKS clusters, designed for enterprise with security, observability, and usability built-in. Manage 100% of your infrastructure using code, all in ~1 day. <b>Join now for special early access pricing!</b>
+title: Amazon EKS for the enterprise. In about a day.
+excerpt: The secure, enterprise-grade, CIS-compliant Kubernetes cluster your ops team wants, with the seamless CI / CD and self-service experience your dev team wants. 100% managed as code and ready in ~1 day. <b>Join now for early access pricing!</b>
 permalink: /eks-for-enterprise/
 custom_js:
 - prism
@@ -25,7 +25,7 @@ hero:
   - /assets/img/logos-technologies/partner_logo_terraform.png
 
 how_it_works:
-  - heading: "Step 1: Choose your EKS configuration"
+  - heading: "Step 1: Configure your EKS cluster"
     precode: |
       <figure><figcaption>eks-configuration.yml</figcaption>
         <pre>
@@ -65,14 +65,14 @@ how_it_works:
       support a wide range of popular configurations that include:
       <ul>
           <li>Service meshes (Istio, Consul connect, AWS App Mesh)</li>
-          <li>GitOps CI/CD (Flux, Jenkins, Argo)</li>
+          <li>K8S-native CI/CD (Flux, Argo)</li>
           <li>UI dashboards (Porter, Grafana)</li>
           <li>Observability (Prometheus, Datadog, CloudWatch, ELK)</li>
           <li>And more (cluster-autoscaler, sealed secrets, AWS Load Balancer Controller, etc)</li>
       </ul>
-      On top of that, all our enterprise-grade EKS clusters are hardened according to the <a
+      On top of that, all our enterprise-grade EKS clusters are hardened to meet 100% of the <a
       href="https://aws.amazon.com/blogs/containers/introducing-cis-amazon-eks-benchmark/">CIS Amazon EKS
-      Benchmark</a>, regardless of the chosen technologies.
+      Benchmark</a> requirements, regardless of the chosen technologies.
     logos:
       - title: CIS
         src: /assets/img/logos-compliance/cis-benchmark.png
@@ -95,7 +95,7 @@ how_it_works:
       - title: Packer
         src: /assets/img/landing-heroku-page/packer-icon.png
 
-  - heading: "Step 3: Set up your app"
+  - heading: "Step 3: Configure your apps"
     image: /assets/img/landing-page-enterprise/sample-app-clip.gif
     image_side: right
     body: |
@@ -104,11 +104,10 @@ how_it_works:
       the optimizations yourself using Gruntwork sample apps as a template. We include sample apps common enterprise languages and
       frameworks:
       <ul>
-          <li>Spring boot</li>
-          <li>Standard Java apps (e.g., Tomcat or similar)</li>
-          <li>Ruby on Rails</li>
-          <li>Python Django</li>
-          <li>Or suggest something!</li>
+          <li>Java: Spring Boot, Quarkus</li>
+          <li>Ruby: Ruby on Rails, Sinatra</li>
+          <li>Python: Django, Flask</li>
+          <li>Node.js: Express.js, Next.js</li>
       </ul>
     logos:
       - title: Spring Boot
@@ -118,7 +117,7 @@ how_it_works:
       - title: Django
         src: /assets/img/logos-technologies/logo-django.png
 
-  - heading: "Step 4: Run your app"
+  - heading: "Step 4: Deploy your apps"
     tab_block: site.data.enterprise-landing-page-tabs-images
     image_side: left
     body: |
@@ -132,7 +131,7 @@ how_it_works:
       - title: Datadog
         src: /assets/img/logos-technologies/logo-datadog.png
 
-  - heading: "Step 5: Get help and support"
+  - heading: "Step 5: Stay up to date"
     image: /assets/img/landing-heroku-page/grunty-free-step-5.png
     image_width: 250px
     image_side: right
