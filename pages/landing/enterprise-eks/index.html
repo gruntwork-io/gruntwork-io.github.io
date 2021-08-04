@@ -21,6 +21,7 @@ hero:
   cta: Request early access
   logos:
   - /assets/img/logos-technologies/partner_logo_aws.png
+  - /assets/img/logos-technologies/logo-eks.png
   - /assets/img/logos-technologies/partner_logo_kubernetes.png
   - /assets/img/logos-technologies/partner_logo_terraform.png
 
@@ -37,11 +38,14 @@ how_it_works:
             # Choose from istio, consul-connect, aws-app-mesh
             service_mesh: "istio"
 
-            # Choose from flux, jenkins, argocd
+            # Choose from flux, argocd
             cicd: "flux"
 
             # Choose from prometheus, datadog, cloudwatch
-            observability: prometheus
+            metric_aggregations: "prometheus"
+
+            # Choose from elk, datadog, cloudwatch
+            log_aggregations: "elk"
 
             # Configure various common utilities
             cluster_autoscaler:
@@ -55,38 +59,43 @@ how_it_works:
 
             external_dns:
               enabled: true
-              domain: gruntwork.io
+              domains:
+                - env: "dev"
+                  domain: "gruntwork-test.com"
+                - env: "prod"
+                  domain: "gruntwork.io"
             </code>
         </pre>
       </figure>
     image_side: right
     body: |
-      Pick and choose the technologies that you want included in your custom EKS cluster. We
-      support a wide range of popular configurations that include:
+      Pick and choose the technologies that you want included in your custom EKS cluster. We support a wide range of
+      popular configurations that include:
       <ul>
           <li>Service meshes (Istio, Consul connect, AWS App Mesh)</li>
-          <li>K8S-native CI/CD (Flux, Argo)</li>
+          <li>K8S-native CI/CD (Flux, Argo CD)</li>
           <li>UI dashboards (Porter, Grafana)</li>
-          <li>Observability (Prometheus, Datadog, CloudWatch, ELK)</li>
+          <li>Metric Aggregation (Prometheus, Datadog, CloudWatch)
+          <li>Log Aggregation (ELK, Datadog, CloudWatch Logs)</li>
           <li>And more (cluster-autoscaler, sealed secrets, AWS Load Balancer Controller, etc)</li>
       </ul>
-      On top of that, all our enterprise-grade EKS clusters are hardened to meet 100% of the <a
-      href="https://aws.amazon.com/blogs/containers/introducing-cis-amazon-eks-benchmark/">CIS Amazon EKS
-      Benchmark</a> requirements, regardless of the chosen technologies.
+      On top of that, all our enterprise-grade EKS clusters are hardened to meet 100% of the
+      <a href="https://aws.amazon.com/blogs/containers/introducing-cis-amazon-eks-benchmark/">CIS Amazon EKS Benchmark</a>
+      requirements, regardless of the chosen technologies.
     logos:
       - title: CIS
         src: /assets/img/logos-compliance/cis-benchmark.png
-      - title: EKS
-        src: /assets/img/logos-technologies/logo-eks.png
+      <!-- TODO: Logos for Istio, Flux, Some Dashboard tool -->
 
   - heading: "Step 2: Deploy your EKS cluster"
     tab_code_preview: site.data.enterprise-landing-page-tabs-code
     image_side: left
     body: |
       Deploy your custom configured EKS cluster. Our friendly user interface can generate code for your existing AWS
-      accounts and VPCs, or you can dive right in to the code. Or, use <a href="https://gruntwork.io/landing-zone-for-aws/">Gruntwork Landing Zone</a> and the
-      <a href="https://gruntwork.io/reference-architecture">Gruntwork Reference Architecture</a> for a complete,
-      end-to-end stack, built with extensibility in mind. No matter what you choose, everything is managed as code with Terraform.
+      accounts and VPCs. Or use <a href="https://gruntwork.io/landing-zone-for-aws/">Gruntwork Landing Zone</a> and the
+      <a href="https://gruntwork.io/reference-architecture">Gruntwork Reference Architecture</a>
+      for a complete, end-to-end stack, built with extensibility in mind. No matter what you choose, everything is
+      managed as code with Terraform.
     logos:
       - title: Terraform
         src: /assets/img/landing-heroku-page/terraform-icon.png
@@ -99,9 +108,9 @@ how_it_works:
     image: /assets/img/landing-page-enterprise/sample-app-clip.gif
     image_side: right
     body: |
-      Use Gruntwork tools to optimize your enterprise apps for EKS. Update your app with cloud-native best practices for
+      Use Gruntwork tools to optimize your enterprise apps for EKS. Update all your apps with cloud-native best practices for
       packaging, monitoring, logging, service discovery, secrets management, schema migrations, and more. Or customize
-      the optimizations yourself using Gruntwork sample apps as a template. We include sample apps common enterprise languages and
+      the optimizations yourself using Gruntwork sample apps as a template. We include sample apps for common enterprise languages and
       frameworks:
       <ul>
           <li>Java: Spring Boot, Quarkus</li>
@@ -116,6 +125,7 @@ how_it_works:
         src: /assets/img/logos-technologies/logo-rails.png
       - title: Django
         src: /assets/img/logos-technologies/logo-django.png
+      <!-- TODO: logo for express js -->
 
   - heading: "Step 4: Deploy your apps"
     tab_block: site.data.enterprise-landing-page-tabs-images
@@ -136,7 +146,8 @@ how_it_works:
     image_width: 250px
     image_side: right
     body: |
-      Enjoy consistent updates from Gruntwork, including updates to the latest releases of Kubernetes, Terraform, Docker, and other tooling. Our engineers can help when your team has questions.
+      Enjoy consistent updates from Gruntwork, including updates to the latest releases of Kubernetes, Terraform,
+      Docker, and other tooling. Our engineers can help when your team has questions.
 
 conclusion:
   heading: The enterprise EKS experience you've been looking for.
