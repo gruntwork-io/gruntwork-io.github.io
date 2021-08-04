@@ -1,0 +1,46 @@
+- id: cluster-configure-ui
+  title: UI
+  content: TODO
+
+- id: cluster-configure-code
+  title: Code
+  content: |
+    <figure><figcaption>eks-configuration.yml</figcaption>
+      <pre>
+          <code class="language-yml">
+          # Configure CIS Benchmark compliance
+          cis:
+            enabled: true
+
+          # Choose from istio, consul-connect, aws-app-mesh
+          service_mesh: "istio"
+
+          # Choose from flux, argocd
+          cicd: "flux"
+
+          # Choose from prometheus, datadog, cloudwatch
+          metric_aggregations: "prometheus"
+
+          # Choose from elk, datadog, cloudwatch
+          log_aggregations: "elk"
+
+          # Configure various common utilities
+          cluster_autoscaler:
+            enabled: true
+
+          aws_load_balancer_controller:
+            enabled: true
+
+          sealed_secrets:
+            enabled: true
+
+          external_dns:
+            enabled: true
+            domains:
+              - env: "dev"
+                domain: "gruntwork-dev.com"
+              - env: "prod"
+                domain: "gruntwork.io"
+          </code>
+      </pre>
+    </figure>
