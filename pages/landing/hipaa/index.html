@@ -2,6 +2,8 @@
 layout: landing-hipaa
 type: landing
 slug: index-page
+custom_js: prism
+prism_css: /assets/css/prism-landing-zone.css
 
 title: The fastest way to launch HIPAA-compliant apps on AWS
 excerpt: Build your apps on top of HIPAA-compliant reference applications. Deploy your apps onto battle-tested AWS architectures that have been certified via third party auditors.
@@ -52,19 +54,33 @@ how_it_works:
     body: |
       The tools we all rely on (AWS, Terraform, Kubernetes, Docker), DevOps best practices, and auditor expectations are constantly changing. To help you remain HIPAA compliant, we offer commercial support and maintenance for our app and infrastructure code, all of which is semantically versioned, so you can stay completely up-to-date with the latest compliance requirements, security patches, and AWS/DevOps best practices via simple version number bumps.
 
-  - heading: Step 6. Ensure ongoing compliance with scanning tools
-    image: /assets/img/hipaa/aws-security-hub-green.png
-    image_width: 500px
+  - heading: Step 6. Verify all future code changes against Open Policy Agent (OPA) policies
+    precode: |
+      <figure><figcaption>Ensure all images come from a trusted registry</figcaption>
+           <pre>
+            <code class="language-python">
+              package kubernetes.admission
+
+              deny[msg] {
+                  input.request.kind.kind == "Pod"
+                  some i
+                  image := input.request.object.spec.containers[i].image
+                  not startswith(image, "hooli.com/")
+                  msg := sprintf("image '%v' comes from untrusted registry", [image])
+              }
+             </code>
+          </pre> 
+       </figure>
     image_side: left
     body: |
-      Gruntwork's HIPAA Reference Architecture is configured out-of-the-box to work with compliance scanning tools, so you have continuous monitoring and alerts on your compliance status.
+      Gruntwork's HIPAA Architecture comes with a CI/CD pipeline that runs your code against a library of OPA policies to validate that every commit remains in compliance with HIPAA requirements.
 
-  - heading: Step 7. Verify all future code changes against Open Policy Agent (OPA) policies
-    image: /assets/img/hipaa/opa-policy.png
+  - heading: Step 7. Ensure ongoing compliance with scanning tools
+    image: /assets/img/hipaa/aws-security-hub-green.png
     image_width: 500px
     image_side: right
     body: |
-      Gruntwork's HIPAA Architecture comes with a CI/CD pipeline that runs your code against a library of OPA policies to validate that every commit remains in compliance with HIPAA requirements.
+      Gruntwork's HIPAA Reference Architecture is configured out-of-the-box to work with compliance scanning tools, so you have continuous monitoring and alerts on your compliance status.
 footer:
   heading: Go live with Gruntwork HIPAA
   body: |
