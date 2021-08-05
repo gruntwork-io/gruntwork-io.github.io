@@ -9,7 +9,7 @@
         <p class="h1 enterprise-h1">Free</p>
       {% else %}
         <p class="big-price"><span>$</span>{{ pricing.price }}</p>
-        <p class="help-block" style="margin-top:-9px;">per repo / per month</p>
+        <p class="help-block" style="margin-top:-9px;">per month</p>
       {% endif %}
     </td>
   {% endfor %}
@@ -21,26 +21,14 @@
       {% if pricing.price == "Contact Us" %}
         <p><a class="btn btn-primary" href="{{ page.permalink }}contact/?selection={{ pricing.title | slugify }}" ga-on="click" ga-event-category="{{ page.path | slugify }}" ga-event-action="select-cta">Contact Us</a></p>
         <p class="text-muted small">
-          <em>
-            Currently in private beta.<br>
-            Annual subscription.
-          </em>
         </p>
       {% elsif pricing.price == "Free" %}
         <p><a id="pricing-cta-aws" class="btn btn-info pricing-ctas" href="{{ page.permalink }}contact/?selection={{ pricing.title | slugify }}" ga-on="click" ga-event-category="{{ page.path | slugify }}" ga-event-action="select-cta">Request Access</a></p>
         <p class="text-muted small">
-          <em>
-            Currently in private beta.
-            Annual subscription.
-          </em>
         </p>
       {% else %}
         <p><a id="pricing-cta-aws" class="btn btn-info pricing-ctas" href="{{ page.permalink }}contact/?selection={{ pricing.title | slugify }}" ga-on="click" ga-event-category="{{ page.path | slugify }}" ga-event-action="select-cta">Request Access</a></p>
         <p class="text-muted small">
-          <em>
-            Currently in private beta.<br>
-            Annual subscription.
-          </em>
         </p>
       {% endif %}
     </td>
