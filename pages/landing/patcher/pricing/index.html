@@ -12,32 +12,32 @@ categories:
     features:
     - name: Version number bumps
       description: Bump to the latest versions all your dependencies.
-      plans: ["Free", "Basic", "Enterprise"]
+      plans: ["Free", "Pro", "Enterprise"]
     - name: Code updates
       description: Get all your code updated (only text transformations including mentions of the version numbers in code, comments or scripts).
-      plans: ["Free", "Basic", "Enterprise"]
+      plans: ["Free", "Pro", "Enterprise"]
     - name: Public repos
       description: Keep your public respository dependencies up to date.
-      plans: ["Free", "Basic","Enterprise"]
+      plans: ["Free", "Pro","Enterprise"]
     - name: Private repos
       description: Keep your private respository dependencies up to date.
-      plans: ["Basic", "Enterprise"]
+      plans: ["Pro", "Enterprise"]
   - title: Workflows
     features:
     - name: Promotion workflow
       description: Promote your updates safely from one branch or environment to another, mimicking your release workflow.
-      plans: ["Basic", "Enterprise"]
+      plans: ["Pro", "Enterprise"]
     - name: Internal dependency updates
       description: Create a workflow to help you update the internal dependencies in a way that follows your usual software development flow.
-      plans: ["Basic", "Enterprise"]
+      plans: ["Pro", "Enterprise"]
   - title: A Web UI
     features:
     - name: Dashboard
       description: See all your repos, dependencies and available updates.
-      plans: ["Basic", "Enterprise"]
+      plans: ["Pro", "Enterprise"]
     - name: Update directly via the UI
       description: Control each of your repositories and dependencies, and apply updates directly with a click using the UI.
-      plans: ["Basic", "Enterprise"]
+      plans: ["Pro", "Enterprise"]
     - name: Manage your Patcher updates
       description: Choose if the Patcher updates are applied and merged automatically under certain conditions, or you get to review all updates and approve.
       plans: ["Enterprise"]
@@ -45,7 +45,7 @@ categories:
     features:
     - name: Custom scripts
       description: Execute custom scripts (e.g., update Terraform state, or a single 'go mod tidy') before or after your Patcher updates.
-      plans: ["Basic", "Enterprise"]
+      plans: ["Pro", "Enterprise"]
   - title: Security
     features:
     - name: Remote agents
@@ -54,19 +54,19 @@ categories:
 
 pricing:
   - title: Free
-    description: Free up to 5 public repos. Free for all repos for the first 1 year if you're a Gruntwork subscriber.
+    description: Free for public repos and open-source projects.
     price: "Free"
     image: /assets/img/grunty-free@2x.png
     image_styles: "max-width: 130px"
 
-  - title: Basic
-    description: Free for the first 5 repos. Take control of the updates workflow.
+  - title: Pro
+    description: For teams operating up to 25 repos in a VSC organization account.
     price: 49
     image: /assets/img/grunty-pro@2x.png
     image_styles: "max-width: 130px"
 
   - title: Enterprise
-    description: Get all you can with Patcher for all you repos. You also get full control and flexibility over the Patcher workflow.
+    description: All of Patcher's features and full control over the workflow for every repo in a VSC organization account.
     price: Contact Us
     image: /assets/img/grunty-enterprise-heroku@2x.png
     image_styles: "max-width: 130px; margin-top: 24px"
