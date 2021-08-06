@@ -26,6 +26,7 @@
     {% else %}
     <p class="big-price"><span>$</span>{{ pricing.price }}</p>
     <p class="help-block" style="margin-top: -9px">per month</p>
+    <p><a id="pricing-cta-aws" class="btn btn-info pricing-ctas" href="{{ page.permalink }}contact/?selection={{ pricing.title | slugify }}" ga-on="click" ga-event-category="{{ page.path | slugify }}" ga-event-action="select-cta">Request Access</a></p>
     <p class="text-muted small">
       <em>
         Currently in private beta.<br />
