@@ -15,6 +15,8 @@
     {% case item.tab_code_preview %}
     {% when "eks-configure" %}
     {% assign tab_data = site.data.enterprise-landing-page-tabs-eks-configure %}
+    {% when "eks-generatecode" %}
+    {% assign tab_data = site.data.enterprise-landing-page-tabs-eks-generatecode %}
     {% when "eks-deploy" %}
     {% assign tab_data = site.data.enterprise-landing-page-tabs-eks-deploy %}
     {% when "eks-app-monitor" %}

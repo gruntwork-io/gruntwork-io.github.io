@@ -1,0 +1,68 @@
+- id: reposcreenshot
+  title: Infrastructure Code
+  content: |
+    <img src="/assets/img/landing-page-enterprise/infrastructure-live-screenshot.png" />
+
+- id: reporeadme
+  title: README.md
+  content: |
+    <img src="/assets/img/landing-page-enterprise/infrastructure-live-readme.png" />
+
+- id: cluster-deploy-code
+  title: main.tf
+  content: |
+    <figure><figcaption>prod/us-west-2/services/eks_cluster/main.tf</figcaption>
+      <pre>
+      <code class="language-hcl">
+        module "eks_cluster" {
+          # Since CIS is enabled, source from the CIS compliant
+          # service catalog.
+          source  = "github.com/gruntwork-io/cis-service-catalog//eks-cluster"
+          version = "v0.51.0"
+
+          cluster_name = "my-prod-cluster"
+          vpc_id       = dependency.vpc.outputs.vpc_id
+
+          managed_node_group_configurations = {
+            "prod-asg" = {
+              min_size   = 2
+              max_size   = 4
+              subnet_ids = dependency.vpc.outputs.private_app_subnet_ids
+              tags       = local.default_tags
+            }
+          }
+
+          allow_inbound_api_access_from_cidr_blocks = ["0.0.0.0/0"]
+        }
+
+        module "eks_core_services" {
+          source  = "github.com/gruntwork-io/cis-service-catalog//eks-core-services"
+          version = "v0.51.0"
+
+          eks_cluster_arn = module.eks_cluster.eks_cluster_arn
+
+          # Enable services based on form input
+          # All other services default to false, and thus
+          # are not enumerated.
+          enable_istio              = true
+          enable_argocd             = true
+          enable_prometheus         = true
+          enable_elastic            = true
+          enable_cluster_autoscaler = true
+          enable_sealed_secrets     = true
+          enable_external_dns       = true
+          enable_harbor             = true
+          enable_opa = {
+            k8s_admission_controller       = true
+            terraform_admission_controller = true
+          }
+
+          # Additional service configurations based on form input
+          # NOTE: This is configuring the prod cluster,
+          #       so only setup the prod domain.
+          #       For dev, this will be set to gruntwork-dev.com
+          external_dns_route53_hosted_zone_id_filters = ["gruntwork.io"]
+        }
+      </code>
+      </pre>
+      <figure>

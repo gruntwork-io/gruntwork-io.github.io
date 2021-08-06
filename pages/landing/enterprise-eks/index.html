@@ -53,15 +53,30 @@ how_it_works:
       - title: Flux
         src: /assets/img/logos-technologies/logo-flux.png
 
-  - heading: "Step 2: Deploy your EKS cluster"
-    tab_code_preview: eks-deploy
+  - heading: "Step 2: Generate Code"
+    tab_code_preview: eks-generatecode
     image_side: left
     body: |
-      Deploy your custom configured EKS cluster. Our friendly user interface can generate code for your existing AWS
-      accounts and VPCs. Or use <a href="https://gruntwork.io/landing-zone-for-aws/">Gruntwork Landing Zone</a> and the
-      <a href="https://gruntwork.io/reference-architecture">Gruntwork Reference Architecture</a>
-      for a complete, end-to-end stack, built with extensibility in mind. No matter what you choose, everything is
-      managed as code with Terraform.
+      Gruntwork takes your requested configuration and generates Terraform code for deploying your EKS cluster in a
+      repository of your choice. We support integrating with GitHub, GitLab, and BitBucket. Rely on battle-tested
+      infrastructure code that has been proven in production at hundreds of companies and is maintained and supported by
+      DevOps experts. The code we deliver is 100% owned by you - use it as is, or customize to your needs.
+    logos:
+      - title: GitHub
+        src: /assets/img/landing-heroku-page/github-icon.png
+      - title: GitLab
+        src: /assets/img/landing-heroku-page/gitlab-icon.png
+      - title: BitBucket
+        src: /assets/img/landing-heroku-page/bitbucket-icon.png
+
+  - heading: "Step 3: Deploy your EKS cluster"
+    image: TODO_SOME_WIREFRAME_WITH_DEPLOYMENT_UI
+    image_side: right
+    body: |
+      Use our self-service user interface to deploy the generated code automatically without installing anything on our
+      machine. Link your AWS accounts in a secure interface relying on AWS IAM Roles, and revoke at the end of the
+      deployment. Or manually deploy everything from your own machines using Packer, Docker, and Terraform without
+      sharing any credentials.
     logos:
       - title: Terraform
         src: /assets/img/landing-heroku-page/terraform-icon.png
@@ -70,9 +85,9 @@ how_it_works:
       - title: Packer
         src: /assets/img/landing-heroku-page/packer-icon.png
 
-  - heading: "Step 3: Configure your apps"
+  - heading: "Step 4: Configure your apps"
     image: /assets/img/landing-page-enterprise/sample-app-clip.gif
-    image_side: right
+    image_side: left
     body: |
       Use Gruntwork tools to optimize your enterprise apps for EKS. Update all your apps with cloud-native best practices for
       packaging, monitoring, logging, service discovery, secrets management, schema migrations, and more. Or customize
@@ -94,15 +109,14 @@ how_it_works:
       - title: Express
         src: /assets/img/logos-technologies/logo-express.png
 
-  - heading: "Step 4: Deploy your apps"
-    image: /assets/img/landing-page-enterprise/sample-app-clip.gif
-    image_side: left
+  - heading: "Step 5: Deploy your apps"
+    image: /assets/img/landing-heroku-page/github-step-1.png
+    image_side: right
     body: |
-      Use the self-service dashboard to manage your application deployments. Automatically register, migrate, and deploy
-      your apps using a friendly UI. Gruntwork Enterprise EKS supports various deployment strategies out of the box,
-      including canary, blue/green deployments, automatic rollbacks, security scans, CI/CD, GitOps workflows, etc.
-      Regardless of deployment strategy and configuration, enforce your organization governance policies on artifacts
-      using Open Policy Agent and Harbor.
+      Connect your Git repo to automatically register, migrate, and deploy your apps using a friendly UI. Gruntwork
+      Enterprise EKS supports various deployment strategies out of the box, including canary, blue/green deployments,
+      automatic rollbacks, security scans, CI/CD, GitOps workflows, etc. Regardless of deployment strategy and
+      configuration, enforce your organization governance policies on artifacts using Open Policy Agent and Harbor.
     logos:
       - title: Argo CD
         src: /assets/img/logos-technologies/logo-argo.png
@@ -113,9 +127,9 @@ how_it_works:
       - title: Open Policy Agent
         src: /assets/img/logos-technologies/logo-opa.png
 
-  - heading: "Step 5: Monitor your apps"
+  - heading: "Step 6: Monitor your apps"
     tab_code_preview: eks-app-monitor
-    image_side: right
+    image_side: left
     body: |
       Monitor your deployment and troubleshoot errors right in the UI. Review deployment progress, error messages,
       and key metrics in the self-service dashboard. Use powerful observability tools to manage your apps, including
@@ -129,10 +143,10 @@ how_it_works:
       - title: Datadog
         src: /assets/img/logos-technologies/logo-datadog-white.png
 
-  - heading: "Step 6: Stay up to date"
+  - heading: "Step 7: Stay up to date"
     image: /assets/img/landing-heroku-page/grunty-free-step-5.png
     image_width: 250px
-    image_side: left
+    image_side: right
     body: |
       Enjoy consistent updates from Gruntwork, including updates to the latest releases of Kubernetes, Terraform,
       Docker, and other tooling. Our engineers can help when your team has questions.
