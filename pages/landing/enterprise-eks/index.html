@@ -27,7 +27,57 @@ hero:
 
 how_it_works:
   - heading: "Step 1: Configure your EKS cluster"
-    tab_code_preview: eks-configure
+    precode: |
+      <figure><figcaption>eks_configuration.yml</figcaption>
+        <pre>
+            <code class="language-yml">
+            # Configure CIS Benchmark compliance
+            cis:
+              enable_pod_security_policies: true
+              enable_network_security_policies: true
+              enable_eks_cluster_hardening: true
+
+            # Choose from istio, consul-connect, aws-app-mesh
+            service_mesh: "istio"
+
+            # Choose from flux or argocd
+            cicd: "argocd"
+
+            # Choose from argocd or lens
+            self_service: "argocd"
+
+            # Choose from prometheus, datadog, cloudwatch
+            metric_aggregation: "prometheus"
+
+            # Choose from elastic, datadog, cloudwatch
+            log_aggregation: "elastic"
+
+            # Configure various common utilities
+            cluster_autoscaler:
+              enabled: true
+              min: 2
+              max: 4
+
+            harbor:
+              enabled: true
+
+            opa:
+              enable_kubernetes_rules: true
+              enable_terraform_rules: true
+
+            sealed_secrets:
+              enabled: true
+
+            external_dns:
+              enabled: true
+              domains:
+                - env: "dev"
+                  domain: "gruntwork-dev.com"
+                - env: "prod"
+                  domain: "gruntwork.io"
+            </code>
+        </pre>
+      </figure>
     image_side: right
     body: |
       Pick and choose the technologies that you want included in your custom EKS cluster. We support a wide range of
@@ -70,13 +120,18 @@ how_it_works:
         src: /assets/img/landing-heroku-page/bitbucket-icon.png
 
   - heading: "Step 3: Deploy your EKS cluster"
-    image: TODO_SOME_WIREFRAME_WITH_DEPLOYMENT_UI
+    image: /assets/img/landing-page-enterprise/tftg-pipeline.gif
     image_side: right
     body: |
-      Use our self-service user interface to deploy the generated code automatically without installing anything on our
-      machine. Link your AWS accounts in a secure interface relying on AWS IAM Roles, and revoke at the end of the
-      deployment. Or manually deploy everything from your own machines using Packer, Docker, and Terraform without
-      sharing any credentials.
+      Use the provided Gruntwork Pipelines configuration embedded in the generated code to automatically deploy without
+      installing anything on our machine. Link your AWS accounts in a secure interface relying on AWS IAM Roles, and
+      revoke at the end of the deployment. Or manually deploy everything from your own machines using Packer, Docker,
+      and Terraform without sharing any credentials. We have first class support for:
+      <ul>
+          <li>Terraform</li>
+          <li>Terraform Enterprise/Terraform Cloud</li>
+          <li>Terragrunt</li>
+      </ul>
     logos:
       - title: Terraform
         src: /assets/img/landing-heroku-page/terraform-icon.png

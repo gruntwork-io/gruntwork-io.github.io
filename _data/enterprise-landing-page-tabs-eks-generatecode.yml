@@ -32,7 +32,9 @@
             }
           }
 
-          allow_inbound_api_access_from_cidr_blocks = ["0.0.0.0/0"]
+          enable_pod_security_policies     = true
+          enable_network_security_policies = true
+          enable_eks_cluster_hardening     = true
         }
 
         module "eks_core_services" {
