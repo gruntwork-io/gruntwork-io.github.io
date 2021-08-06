@@ -26,14 +26,14 @@
       <div class="row-image-content {% if item.image_side == "left" %}col-xs-8 col-xs-offset-2 col-sm-5 col-sm-offset-0 col-md-6 col-diagram hidden-print{% else %}col-xs-10 col-xs-offset-1 col-sm-5 col-sm-push-7 col-sm-offset-0 col-md-6 col-md-push-6 col-diagram{% endif %}">
         <div class="tab_block">
           {% for tab in tab_data %}
-          <div class="tab code">
-            <button class="{% if forloop.first %}active tablinks_code{% else %}tablinks_code{% endif %}" onclick="openCodeTab(event, '{{tab.id}}')">{{ tab.title }}</button>
+          <div class="tab">
+            <button class="{% if forloop.first %}active tablinks_code{% else %}tablinks_code{% endif %}" onclick="openTab(event, '{{item.tab_code_preview}}', '{{tab.id}}')">{{ tab.title }}</button>
           </div>
           {% endfor %}
         </div>
         <div class="tab_code_content">
           {% for tab in tab_data %}
-          <div id="{{tab.id}}" class="item_precode {% if forloop.first %}first_tabcontent_code tabcontent_code{% else %}tabcontent_code{% endif %}">
+          <div id="{{tab.id}}" class="item_precode tabcontent_code {% if forloop.first %}first_tabcontent_code{% endif %} tabcontent_{{item.tab_code_preview}}">
               {{ tab.content }}
           </div>
           {% endfor %}
@@ -183,16 +183,9 @@
 </style>
 
 <script>
-  function openTab(evt, tabName) {
-    $('.tabcontent').hide(); // hide all tab content
+  function openTab(evt, tabClass, tabName) {
+    $('.tabcontent_' + tabClass).hide(); // hide all tab content
     $('.tablinks').removeClass('active'); // ensure all links are inactive
-    $('#' + tabName).show();
-    $(evt.currentTarget).addClass('active'); // mark the current tab as active
-  }
-
-  function openCodeTab(evt, tabName) {
-    $('.tabcontent_code').hide(); // hide all tab content
-    $('.tablinks_code').removeClass('active'); // ensure all links are inactive
     $('#' + tabName).show();
     $(evt.currentTarget).addClass('active'); // mark the current tab as active
   }
