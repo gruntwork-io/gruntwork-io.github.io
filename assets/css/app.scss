@@ -1,0 +1,32 @@
+---
+# We need this frontmatter for Jekyll to compile the Sass code
+---
+
+// Import variables
+//@import "bootstrap/scss/bootstrap.scss";
+//@import "bootstrap/stylesheets/_bootstrap.scss";
+@import "bootstrap/stylesheets/bootstrap";
+@import "user10/variables";
+@import "app-variable-overrides";
+@import "user10/utilities";
+@import "vertical-carousel";
+@import "lity";
+
+// Import deployment guide styles
+@import "guides";
+
+// Import global styles
+@import "global";
+
+// Import page-specific styles
+@import "pages/legal";
+@import "pages/support";
+@import "pages/library";
+@import "pages/pricing";
+@import "pages/checkout";
+@import "pages/landing-zone";
+@import "pages/pipelines";
+@import "pages/heroku";
+
+// Import print styles
+@import "print";
