@@ -38,7 +38,21 @@
     {% endif %}
     {% if item.image %}
       <div class="{% if item.image_side == "left" %}col-xs-8 col-xs-offset-2 col-sm-5 col-sm-offset-0 col-md-6 col-diagram hidden-print{% else %}col-xs-10 col-xs-offset-1 col-sm-5 col-sm-push-7 col-sm-offset-0 col-md-6 col-md-push-6 col-diagram{% endif %}">
+        {% if item.image_link_to_full %}
+        <div class="screenshot">
+          <a href="{{ item.image }}"
+             title="Click to see the full size image"
+             target="_blank"
+          >
+            <img src="{{ item.image }}" class="row_image_content" width="{{ item.image_width }}"/>
+            <div class="img-overlay">
+              <i class="fa fa-search fa-3x" aria-hidden="true"></i>
+            </div>
+          </a>
+        </div>
+        {% else %}
         <img src="{{ item.image }}" class="row_image_content" width="{{ item.image_width }}"/>
+        {% endif %}
       </div>
     {% endif %}
       <div class="{% if item.image_side == "left" %}col-xs-12 col-sm-7 col-md-6 col-description{% else %}col-xs-12 col-sm-7 col-sm-pull-5 col-md-6 col-md-pull-6 col-description{% endif %}">
@@ -178,6 +192,34 @@
     border: none;
   }
 
+  .img-overlay {
+    background: rgba(0,0,0,.75);
+    text-align: center;
+    opacity: 0;
+    -webkit-transition: opacity .25s ease;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+  }
+
+  .img-overlay .fa {
+    height: 54px;
+    margin-top: -27px;
+    position: relative;
+    top: 50%;
+  }
+
+  .screenshot:hover .img-overlay {
+    opacity: 1;
+    color: #fff;
+  }
+
+
+  #ref-arch-accordion .panel-title a:hover {
+    color: #fff;
+  }
 </style>
 
 <script>
