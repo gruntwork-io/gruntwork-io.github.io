@@ -55,29 +55,33 @@ how_it_works:
             # Choose from elastic, datadog, cloudwatch
             log_aggregation: "elastic"
 
-            # Configure various common utilities
+            # Configure auto scaling
             cluster_autoscaler:
               enabled: true
               min: 2
               max: 4
 
+            # Enable harbor as a trusted registry
             harbor:
               enabled: true
 
+            # Enable Open Policy Agent rules to enforce security & compliance baselines
             opa:
               enable_kubernetes_rules: true
               enable_terraform_rules: true
 
+            # Enable a controller for one-way encrypted secrets.
             sealed_secrets:
               enabled: true
 
+            # Allow managing domain names in your K8S manifests
             external_dns:
               enabled: true
               domains:
                 - env: "dev"
-                  domain: "gruntwork-dev.com"
+                  domain: "your-dev-domain.com"
                 - env: "prod"
-                  domain: "gruntwork.io"
+                  domain: "your-prod-domain.com"
             </code>
         </pre>
       </figure>
@@ -86,12 +90,12 @@ how_it_works:
       Pick and choose the technologies that you want included in your custom EKS cluster. We support a wide range of
       popular configurations that include:
       <ul>
-          <li>Service meshes (Istio, Consul connect, AWS App Mesh)</li>
+          <li>Service meshes (Istio, Consul Connect, AWS App Mesh)</li>
           <li>K8S-native CI/CD (Argo CD, Flux)</li>
-          <li>Self-service Dashboards (Argo CD Dashboard, Lens)</li>
-          <li>Metric Aggregation (Prometheus, Datadog, CloudWatch)
-          <li>Log Aggregation (Elastic Stack, Datadog, CloudWatch Logs)</li>
-          <li>And more (cluster-autoscaler, Sealed Secrets, Harbor, Open Policy Agent, etc)</li>
+          <li>Self-service UI (Argo CD Dashboard, Lens)</li>
+          <li>Metrics (Prometheus, Datadog, CloudWatch)
+          <li>Log Aggregation (Elastic Stack, Datadog, CloudWatch)</li>
+          <li>Cluster Autoscaler, Sealed Secrets, OPA, & more!</li>
       </ul>
       On top of that, all our enterprise-grade EKS clusters are hardened to meet 100% of the
       <a href="https://aws.amazon.com/blogs/containers/introducing-cis-amazon-eks-benchmark/">CIS Amazon EKS Benchmark</a>
@@ -110,10 +114,8 @@ how_it_works:
     tab_code_preview: eks-generatecode
     image_side: left
     body: |
-      Gruntwork takes your requested configuration and generates Terraform code for deploying your EKS cluster in a
-      repository of your choice. We support integrating with GitHub, GitLab, and BitBucket. Rely on battle-tested
-      infrastructure code that has been proven in production at hundreds of companies and is maintained and supported by
-      DevOps experts. The code we deliver is 100% owned by you - use it as is, or customize to your needs.
+      Gruntwork takes your requested configuration, generates Terraform code for deploying your EKS cluster, and opens a pull request in a
+      Git repo of your choice (we support GitHub, GitLab, and BitBucket). The code you get has been proven in production at hundreds of companies, is commercially supported and maintained by Gruntwork, and is 100% yours: use it as-is or customize it as much as you want.
     logos:
       - title: GitHub
         src: /assets/img/landing-heroku-page/github-icon.png
@@ -126,12 +128,13 @@ how_it_works:
     image: /assets/img/landing-page-enterprise/tfc-screenshot.png
     image_side: right
     body: |
-      Use the provided Gruntwork Pipelines configuration embedded in the generated code to automatically deploy without
-      installing anything on your machine. Or deploy the code yourself using any of our supported tools:
+      Deploy your EKS cluster using one of the supported deployment tools:
       <ul>
-          <li>Terraform</li>
-          <li>Terraform Cloud/Enterprise</li>
-          <li>Terragrunt</li>
+          <li>Gruntwork Pipelines</li>
+          <li>Terraform Cloud</li>
+          <li>Terraform Enterprise</li>          
+          <li>Terraform CLI</li>
+          <li>Terragrunt CLI</li>
       </ul>
     logos:
       - title: Terraform
@@ -145,8 +148,8 @@ how_it_works:
     image: /assets/img/landing-page-enterprise/sample-app-clip.gif
     image_side: left
     body: |
-      Use Gruntwork tools to optimize your enterprise apps for EKS. Our tool will automatically your apps with
-      cloud-native best practices for packaging, monitoring, logging, service discovery, secrets management, schema
+      Use Gruntwork tools to optimize your enterprise apps for EKS, including
+      cloud-native and K8S-native best practices for packaging, monitoring, logging, service discovery, secrets management, schema
       migrations, and more. We support common enterprise languages and frameworks:
       <ul>
           <li>Java: Spring Boot, Quarkus</li>
@@ -192,12 +195,11 @@ how_it_works:
       - title: Open Policy Agent
         src: /assets/img/logos-technologies/logo-opa.png
 
-  - heading: "Step 6: Monitor your apps"
+  - heading: "Step 6: Manage your apps"
     tab_code_preview: eks-app-monitor
     image_side: left
     body: |
-      Monitor your deployment and troubleshoot errors right in the UI. Review deployment progress, error messages,
-      and key metrics in the self-service dashboard. Use powerful observability tools to manage your apps, including
+      Use the self-service dashboard to track deployment progress, review error messages, and troubleshoot errors in a powerful web UI.  Use observability tools to monitor your apps, including
       dashboards for container metrics, cluster data, one-click access to containers, and multiple options for
       centralized logging.
     logos:
