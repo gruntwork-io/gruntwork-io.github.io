@@ -47,19 +47,23 @@ p + .btn {
 }
 
 .btn-primary {
-  @extend .gradient-primary.gradient-diagonal;
+  @extend .gradient-primary;
+  @extend .gradient-diagonal;
   &:focus,
   &:hover {
     color: #fff;
-    @extend .gradient-primary-hover.gradient-diagonal;
+    @extend .gradient-primary-hover;
+    @extend .gradient-diagonal;
   }
 }
 .btn-info {
-  @extend .gradient-info.gradient-diagonal;
+  @extend .gradient-info;
+  @extend .gradient-diagonal;
   &:focus,
   &:hover {
     color: #fff;
-    @extend .gradient-info-hover.gradient-diagonal;
+    @extend .gradient-info-hover;
+    @extend .gradient-diagonal;
   }
 }
 .btn-primary-hollow {
@@ -528,7 +532,8 @@ a.caret-right{
 
 // Sub page navbar styles
 .sub-page .navbar-default {
-  @extend .gradient-primary.gradient-vertical;
+  @extend .gradient-primary;
+  @extend .gradient-vertical;
 }
 
 
@@ -1084,7 +1089,8 @@ $padding-section-vertical-desktop:          60px;
 .index-page {
   .section-hero {
     color: #fff;
-    @extend .gradient-primary.gradient-vertical;
+    @extend .gradient-primary;
+    @extend .gradient-vertical;
     background: url('../img/bg-header-squares.png') center bottom no-repeat, linear-gradient($brand-primary, #06A2FF); // This is what we need to do in order to stack a background image on top of a background gradient
     @media (min-width: $screen-sm-min) {
       padding-top: 30px;
@@ -1117,7 +1123,7 @@ $padding-section-vertical-desktop:          60px;
 
 .section-bg-blue {
   color: #fff;
-  @extend .gradient-primary.gradient-vertical;
+  @extend .gradient-primary, .gradient-vertical;
   padding-bottom: 20px;
   padding-top: ($navbar-height + 4);
 
@@ -1148,7 +1154,8 @@ $padding-section-vertical-desktop:          60px;
 
 // Hero styles for sub pages
 .sub-page .section-hero {
-  @extend .gradient-steel.gradient-vertical;
+  @extend .gradient-steel;
+  @extend .gradient-vertical;
   background: url('../img/bg-header-squares.png') center bottom no-repeat, linear-gradient(#1a232d, #2e3b4a); // This is what we need to do in order to stack a background image on top of a background gradient
   @media only screen {
     border-bottom: 2px solid rgba(15,192,239,.25);
@@ -1247,7 +1254,8 @@ $padding-section-vertical-desktop:          60px;
 
 // Footer styles that are global
 footer {
-  @extend .gradient-steel.gradient-vertical;
+  @extend .gradient-steel;
+  @extend .gradient-vertical;
   background: url('../img/bg-footer-squares.png') center bottom no-repeat, linear-gradient(#1a232d, #2e3b4a); // This is what we need to do in order to stack a background image on top of a background gradient
 }
 .section-footer-content {
@@ -2482,7 +2490,7 @@ body.checkout .section-heading .gw-icon {
   left: 167px;
   width: 216px;
   height: 180px;
-  background: url('/assets/img/grunty-sprites$2x.png') no-repeat;
+  background: url('/assets/img/grunty-sprites@2x.png') no-repeat;
   background-size: auto 100%;
   z-index: 1;
 
@@ -2507,8 +2515,8 @@ body.checkout .section-heading .gw-icon {
   z-index: 1;
 
   // subscription type variations
-  &[data-subscription-type="aws"] { background: url('/assets/img/aws-logo$2x.png') no-repeat; background-size: auto 100%;}
-  &[data-subscription-type="gcp"] { background: url('/assets/img/gcp-logo$2x.png') no-repeat; background-size: auto 100%;}
+  &[data-subscription-type="aws"] { background: url('/assets/img/aws-logo@2x.png') no-repeat; background-size: auto 100%;}
+  &[data-subscription-type="gcp"] { background: url('/assets/img/gcp-logo@2x.png') no-repeat; background-size: auto 100%;}
 
 
   @media (max-width: $screen-xs-max) {
