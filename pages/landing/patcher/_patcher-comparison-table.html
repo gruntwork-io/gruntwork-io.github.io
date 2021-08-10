@@ -12,8 +12,8 @@
     <tr>
       <th></th>
       <th>DependaBot</th>
-      <th>RenovateBot</th>
       <th>Snyk</th>
+      <th>RenovateBot</th>
       <th>Patcher</th>
     </tr>
     </thead>
@@ -33,14 +33,14 @@
         {% endif %}
       </td>
       <td style="text-align: center;">
-        {% if package.renovatebot == "no" %}
+        {% if package.snyk == "no" %}
           <i class="fa fa-times" style="color: #f92e64; margin-top: 20px;" aria-hidden="true"></i>
         {% else %}
           <i class="fa fa-check" style="color: #48bb78; margin-top: 20px;" aria-hidden="true"></i>
         {% endif %}
       </td>
       <td style="text-align: center;">
-        {% if package.snyk == "no" %}
+        {% if package.renovatebot == "no" %}
           <i class="fa fa-times" style="color: #f92e64; margin-top: 20px;" aria-hidden="true"></i>
         {% else %}
           <i class="fa fa-check" style="color: #48bb78; margin-top: 20px;" aria-hidden="true"></i>
