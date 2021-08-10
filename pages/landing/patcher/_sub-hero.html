@@ -1,8 +1,8 @@
 <div class="col-xs-12">
-  <div class="row-partners" style="margin: 15px;">
+  <div class="row-patcherlanguages">
     {% for logo in page.hero.logos %}
-      <div>
-        <img src="{{ logo }}" />
+      <div class="lang-logo">
+        <img src="{{ logo.logo }}" alt="{{ logo.name }}" /><br>{{ logo.name }}
       </div>
     {% endfor %}
   </div>
