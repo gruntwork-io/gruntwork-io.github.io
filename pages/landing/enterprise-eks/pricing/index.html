@@ -8,69 +8,143 @@ excerpt: Sign up now for early access to Amazon EKS for Enterprise! Early access
 permalink: /eks-for-enterprise/pricing/
 
 categories:
-  - title: Feature
+  - title: EKS
+    features:
+      - name: Control plane
+        description: Support for configuring, deploying, and managing the EKS control plane.
+        plans: ["Standard", "Enterprise"]
+      - name: Worker nodes
+        description: "Support for deploying any of the three worker node types: self-managed ASG, EKS Managed Node Groups, and Fargate."
+        plans: ["Standard", "Enterprise"]
+      - name: Core services
+        description: Suite of core Kubernetes applications every EKS cluster should have, including AWS LoadBalancer controller, external-dns, cluster-autoscaler, and more.
+        plans: ["Standard", "Enterprise"]
+      - name: CI/CD
+        description: Support for setting up an infrastructure CI/CD pipeline using traditional CI services (e.g., Jenkins, CircleCI, GitLab CI, etc).
+        plans: ["Standard", "Enterprise"]
+      - name: Basic monitoring
+        description: Support for metric and log aggregation to AWS CloudWatch.
+        plans: ["Standard", "Enterprise"]
+      - name: Basic deployment models
+        description: Support for rolling deployments where a configurable number of service Pods are replaced at a time.
+        plans: ["Standard", "Enterprise"]
+      - name: Basic networking
+        description: Support for AWS VPC based networking for Kubernetes Pods.
+        plans: ["Standard", "Enterprise"]
+      - name: Cluster auto scaling
+        description: Support for EKS worker node auto scaling throught the Kubernetes cluster-autoscaler.
+        plans: ["Standard", "Enterprise"]
+      - name: K8s native CI/CD
+        description: Support for CI/CD workflows using Kubernetes native services such as Argo CD and Flux.
+        plans: ["Enterprise"]
+      - name: Advanced monitoring
+        description: Support for metric and log aggregation through various 3rd party and in-cluster options, such as DataDog, Prometheus, Grafana, Elastic Stack, etc.
+        plans: ["Enterprise"]
+      - name: Advanced deployment models
+        description: Support for wide range of deployment models including canary, blue/green, automatic rollbacks, etc.
+        plans: ["Enterprise"]
+      - name: Advanced networking
+        description: Support for wide range of Pod networking options including Calico and Service Mesh.
+        plans: ["Enterprise"]
+      - name: Pod auto scaling
+        description: Support for configuring and managing vertical and horizontal Pod auto scaling.
+        plans: ["Enterprise"]
+      - name: Self-service UI
+        description: Friendly developer interface for managing and deploying application services on to the EKS cluster using a self-service dashboard such as Argo CD and Lens.
+        plans: ["Enterprise"]
+  - title: Security
+    features:
+      - name: Server hardening
+        description: Implement security best practices on servers. Includes streamlined support for OS hardening, SSH key management via IAM, fail2ban, NTP, and more.
+        plans: ["Standard", "Enterprise"]
+      - name: Sealed Secrets
+        description: Manage Kubernetes secrets as code by sealing them in your repositories with AWS KMS encryption.
+        plans: ["Standard", "Enterprise"]
+      - name: Authentication and Authorization
+        description: AWS IAM based authentication to Kubernetes API with RBAC role mapping support.
+        plans: ["Standard", "Enterprise"]
+      - name: Container Security Scanning
+        description: Security scanning for container images through AWS ECR.
+        plans: ["Standard", "Enterprise"]
+      - name: Basic encryption
+        description: Support for end to end encryption through self-signed certificates managed with in-cluster (through cert-manager) and out-of-cluster (through CLI tools) management.
+        plans: ["Standard", "Enterprise"]
+      - name: Advanced encryption
+        description: Support for end to end encryption with mutual TLS auth through service meshes.
+        plans: ["Enterprise"]
+      - name: Service communication ACLs
+        description: Support for cross service ACL support through service meshes and Network Security Policies.
+        plans: ["Enterprise"]
+      - name: OPA policies
+        description: Support for enforcing organization governance and compliance through Open Policy Agent.
+        plans: ["Enterprise"]
+      - name: Harbor registry
+        description: Deploy a hardened, trusted, private registry service for serving Container Images and Helm Charts with OPA policy enforcement and advanced security scanning.
+        plans: ["Enterprise"]
+      - name: EKS hardening
+        description: Harden your EKS cluster with industry best practices through Network and Pod Security Policies.
+        plans: ["Enterprise"]
+  - title: Compliance standards
+    features:
+      - name: AWS Well-Architected
+        description: Deploy infrastructure that follows AWS guidelines with latest industry best practices.
+        plans: ["Standard", "Enterprise"]
+      - name: CIS AWS Foundations Benchmark
+        description: Deploy infrastructure that is compliant out-of-the-box with the CIS AWS Foundations Benchmark. The CIS AWS Foundations Benchmark is an objective, consensus-driven guideline for establishing secure infrastructure on AWS.
+        plans: ["Enterprise"]
+      - name: CIS EKS Benchmark
+        description: Deploy EKS clusters that are compliant out-of-the-box with the CIS EKS Benchmark. The CIS EKS Benchmark is an objective, consensus-driven guideline for establishing a secure EKS cluster.
+        plans: ["Enterprise"]
+  - title: Other infrastructure
     features:
       - name: IaC Library
-        description: Every Amazon EKS for Enterprise subscription also includes complete access to the Gruntwork Infrastructure as Code Library.
-        plans: ["Standard", "Early Access"]
+        description: Access a collection of over 300,000 lines of reusable, battle-tested, production-ready infrastructure code for AWS.
+        plans: ["Standard", "Enterprise"]
       - name: Reference Architecture
-        description: Optionally, you can run enterprise-grade EKS clusters on the Gruntwork Reference Architecture, an end-to-end tech stack, controlled entirely as code, deployed directly to your AWS accounts.
-        available: now
-        plans: ["Standard", "Early Access"]
-      - name: CIS Benchmark
-        description: Optionally, entirely Amazon EKS clusters that have been hardened according to the CIS Benchmark for Kubernetes and CIS Benchmark for Amazon EKS, all defined as Terraform code.
-        plans: ["Standard", "Early Access"]
-      - name: Service Mesh
-        description: "Deploy and configure a service mesh technology of your choice to enable service-to-service communication with security, flexibility, and observability. Examples: Istio, Consul Connect, AWS App Mesh."
-        plans: ["Standard", "Early Access"]
-      - name: Kubernetes Native CI/CD
-        description: "Deploy your apps using GitOps practices with Kubernetes native tooling. Employ techniques such as canary deployments, feature flags, and staggered deployments, with built-in notifications and alerts. Examples: Flux, Argo CD."
-        plans: ["Standard", "Early Access"]
-      - name: Self-service Dashboard
-        description: "Have your team deploy apps using self-service dashboards that track deployment progress and provide error messages right in the UI. Examples: Argo CD Dashboard, Lens."
-        plans: ["Standard", "Early Access"]
-      - name: Metrics Aggregation
-        description: "Instrument your apps and ship metrics to metrics aggregation services. Query metrics along multiple dimensions and create dashboards to view app behavior. Examples: Prometheus, Datadog, CloudWatch."
-        plans: ["Standard", "Early Access"]
-      - name: Log Aggregation
-        description: "Ship all container logs to a central location. Query, inspect, and stream all logs from a single location. Examples: Datadog, Elastic Stack, CloudWatch."
-        plans: ["Standard", "Early Access"]
-      - name: Pluggable deployment strategies
-        description: Deploy your apps using a variety of industry standard deployment techniques, including canary releases and blue/green deploys. Institute automatic rollbacks in the event of a deployment failure or error condition.
-        plans: ["Standard", "Early Access"]
-      - name: Cloud-native Reference Applications
-        description: "Complete reference applications demonstrating how to deploy and optimize various applications.  Examples: Spring boot, Ruby on Rails, Django."
-        plans: ["Standard", "Early Access"]
+        description: Deploy an opinionated, end-to-end tech stack built on top of the Infrastructure as Code Library into your AWS accounts in about one day.
+        plans: ["Standard", "Enterprise"]
   - title: Support
     features:
+      - name: DevOps Training Library
+        description: Library of video training courses that teach a variety of DevOps topics, such as infrastructure as code, Terraform, Docker, Packer, AWS, GCP, security, and more.
+        plans: ["Standard", "Enterprise"]
       - name: Commercial maintenance and support
         description: All infrastructure modules receive continuous updates that are commercially maintained by a team of DevOps experts.
-        plans: ["Standard", "Early Access"]
+        plans: ["Standard", "Enterprise"]
       - name: Community forum
         description: Access to a community Slack channel where Gruntwork customers can ask for assistance from other community members and Gruntwork engineers
-        plans: ["Standard", "Early Access"]
+        plans: ["Standard", "Enterprise"]
       - name: Private shared Slack Channel
         description: A dedicated Slack channel for fast, private access to support from Gruntwork engineers
-        plans: ["Early Access"]
+        plans: ["Enterprise"]
       - name: SLA on response times
         description: Gruntwork will provide SLAs to guarantee you the fastest support possible
-        plans: ["Early Access"]
+        plans: ["Enterprise"]
       - name: Prioritized bug fixes
         description: Gruntwork engineers will prioritize your bug fixes
-        plans: ["Early Access"]
+        plans: ["Enterprise"]
+  - title: Limits
+    features:
+      - name: Users
+        description: The number of users you can have on this plan. A user is a human or machine that accesses the Gruntwork code repos, training materials, or support services.
+        values:
+          Standard: 20
+          Enterprise: Unlimited
+
 
 pricing:
   - title: Standard
-    description: Wait until Gruntwork Enterprise EKS is generally available (GA)
-    disabled_price: "9,950"
-    price_styles: "color: red; text-decoration: line-through;"
+    description: For startups and small businesses planning on running a few apps.
+    price: "795"
+    image: /assets/img/grunty-pro@2x.png
     image_styles: "max-width: 150px; margin-top: 18px;"
 
-  - title: Early Access
-    description: Sign up for early access to Gruntwork Enterprise EKS now!
-    price: "5,950"
+  - title: Enterprise
+    description: For larger businesses and enterprises looking to run many apps.
+    price: "Contact Us"
     image: /assets/img/grunty-enterprise-logo@2x.png
     image_styles: "max-width: 150px; margin-top: 10px"
+    private_beta: true
 
 faq:
   - question: Is an annual subscription required?
@@ -104,6 +178,13 @@ faq:
     answer: |
       <p>
         We are currently testing this product out on an invite-only basis with select customers. If you're interested in joining the beta, please request access, and we'll get in touch when the product is available to you!
+      </p>
+
+  - question: What's a user?
+    answer: |
+      <p>
+        A user is any human or machine that makes use of Gruntwork's services, including using the Gruntwork Customer
+        Portal, accessing code from the Infrastructure as Code Library, or submitting requests to support.
       </p>
 
 ---
