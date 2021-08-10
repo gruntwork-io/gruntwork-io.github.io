@@ -1,0 +1,10 @@
+<div>
+  <input id="{{ include.id }}" name="{{ include.name }}" type="checkbox" value="{{ include.value }}"{% if include.checked %} checked{% endif %}>
+  <label for="{{ include.id }}">
+    {{ include.value }}
+    {% if include.small_text %}
+      <br>
+    <small style="font-size: 12px; display: block; margin-bottom: 10px">{{ include.small_text }}</small>
+    {% endif %}
+  </label>
+</div>

@@ -1,0 +1,122 @@
+---
+layout: landing
+type: landing
+slug: index-page
+
+title: Amazon EKS for Enterprise Early Access
+excerpt: Sign up now for early access to Amazon EKS for Enterprise! Early access subscribers will receive exclusive benefits and a significantly reduced subscription price.
+permalink: /eks-for-enterprise/pricing/
+
+categories:
+  - title: Feature
+    features:
+      - name: IaC Library
+        description: Every Amazon EKS for Enterprise subscription also includes complete access to the Gruntwork Infrastructure as Code Library.
+        plans: ["Standard", "Early Access"]
+      - name: Reference Architecture
+        description: Optionally, you can run enterprise-grade EKS clusters on the Gruntwork Reference Architecture, an end-to-end tech stack, controlled entirely as code, deployed directly to your AWS accounts.
+        available: now
+        plans: ["Standard", "Early Access"]
+      - name: CIS Benchmark
+        description: Optionally, entirely Amazon EKS clusters that have been hardened according to the CIS Benchmark for Kubernetes and CIS Benchmark for Amazon EKS, all defined as Terraform code.
+        plans: ["Standard", "Early Access"]
+      - name: Service Mesh
+        description: "Deploy and configure a service mesh technology of your choice to enable service-to-service communication with security, flexibility, and observability. Examples: Istio, Consul Connect, AWS App Mesh."
+        plans: ["Standard", "Early Access"]
+      - name: Kubernetes Native CI/CD
+        description: "Deploy your apps using GitOps practices with Kubernetes native tooling. Employ techniques such as canary deployments, feature flags, and staggered deployments, with built-in notifications and alerts. Examples: Flux, Argo CD."
+        plans: ["Standard", "Early Access"]
+      - name: Self-service Dashboard
+        description: "Have your team deploy apps using self-service dashboards that track deployment progress and provide error messages right in the UI. Examples: Argo CD Dashboard, Lens."
+        plans: ["Standard", "Early Access"]
+      - name: Metrics Aggregation
+        description: "Instrument your apps and ship metrics to metrics aggregation services. Query metrics along multiple dimensions and create dashboards to view app behavior. Examples: Prometheus, Datadog, CloudWatch."
+        plans: ["Standard", "Early Access"]
+      - name: Log Aggregation
+        description: "Ship all container logs to a central location. Query, inspect, and stream all logs from a single location. Examples: Datadog, Elastic Stack, CloudWatch."
+        plans: ["Standard", "Early Access"]
+      - name: Pluggable deployment strategies
+        description: Deploy your apps using a variety of industry standard deployment techniques, including canary releases and blue/green deploys. Institute automatic rollbacks in the event of a deployment failure or error condition.
+        plans: ["Standard", "Early Access"]
+      - name: Cloud-native Reference Applications
+        description: "Complete reference applications demonstrating how to deploy and optimize various applications.  Examples: Spring boot, Ruby on Rails, Django."
+        plans: ["Standard", "Early Access"]
+  - title: Support
+    features:
+      - name: Commercial maintenance and support
+        description: All infrastructure modules receive continuous updates that are commercially maintained by a team of DevOps experts.
+        plans: ["Standard", "Early Access"]
+      - name: Community forum
+        description: Access to a community Slack channel where Gruntwork customers can ask for assistance from other community members and Gruntwork engineers
+        plans: ["Standard", "Early Access"]
+      - name: Private shared Slack Channel
+        description: A dedicated Slack channel for fast, private access to support from Gruntwork engineers
+        plans: ["Early Access"]
+      - name: SLA on response times
+        description: Gruntwork will provide SLAs to guarantee you the fastest support possible
+        plans: ["Early Access"]
+      - name: Prioritized bug fixes
+        description: Gruntwork engineers will prioritize your bug fixes
+        plans: ["Early Access"]
+
+pricing:
+  - title: Standard
+    description: Wait until Gruntwork Enterprise EKS is generally available (GA)
+    disabled_price: "9,950"
+    price_styles: "color: red; text-decoration: line-through;"
+    image_styles: "max-width: 150px; margin-top: 18px;"
+
+  - title: Early Access
+    description: Sign up for early access to Gruntwork Enterprise EKS now!
+    price: "5,950"
+    image: /assets/img/grunty-enterprise-logo@2x.png
+    image_styles: "max-width: 150px; margin-top: 10px"
+
+faq:
+  - question: Is an annual subscription required?
+    answer: |
+      <p>
+        Gruntwork Enterprise EKS requires an annual subscription, though we can bill you either annually or monthly. Why an annual subscription? We give you access to all the code to run your infrastructure on day 1, and we let you keep that code even if you cancel. If we didn't have the annual subscription requirement, customers could sign up for one day, get access to all the code, and cancel immediately.
+        </p>
+      <p>
+        However, we offer a 30-day money back guarantee, so if for any reason you're not happy after signing up, we'll let you out of the annual subscription and refund 100% of your money in the first 30 days.
+      </p>
+
+  - question: What if I want to cancel my Gruntwork Subscription?
+    answer: |
+      <p>
+        We offer a 30-day money-back guarantee. You can try out Gruntwork Enterprise EKS, and if you're not happy for any reason, you can cancel within the first 30 days, and we'll let you out of the annual subscription and refund 100% of your money.
+      </p>
+      <p>
+        Note that if you cancel in the first 30 days, you lose the license to the code in the Infrastructure as Code Library, so you must stop using it and delete any references to it; on the other hand, if you do stick with the annual subscription, and cancel after at least one year, you can keep using all the code you had been using up to that point.
+      </p>
+
+  - question: What happens to my code if I cancel my subscription?
+    answer: |
+      <p>
+        If you cancel within the first 30 days, we'll refund 100% of your money and let you out of the annual subscription, but you lose the license to the code in the Infrastructure as Code Library, so you must stop using it and delete all copies of the code.
+      </p>
+      <p>
+        If, however, you remain a subscriber for at least 12 months, the license allows you to fork and modify the code and create derivative works as much as you want, and even if you cancel your subscription, you can keep using all the code you had been using up to that point. We recommend that prior to canceling, you make copies of all the repos in the Infrastructure as Code Library into your own version control system. After you cancel your Gruntwork Subscription, you'll no longer have access to the customer portal UI, or any of the updates, additions, and fixes we make to the Infrastructure as Code Library, support from the Gruntwork team, security alerts, and any other subscription benefits. However, your infrastructure will continue to work just fine and you'll still have all the code you had been using up to that point.
+      </p>
+
+  - question: How does the private beta work?
+    answer: |
+      <p>
+        We are currently testing this product out on an invite-only basis with select customers. If you're interested in joining the beta, please request access, and we'll get in touch when the product is available to you!
+      </p>
+
+---
+
+<div class="main page-pricing">
+  <div class="section page-pricing-header">
+    {% include_relative _hero.html %}
+  </div>
+  <div class="section-dark">
+    <div class="container">
+      {% include_relative _plans.html %}
+      {% include_relative _benefits.html %}
+      {% include_relative _faq.html %}
+    </div>
+  </div>
+</div>

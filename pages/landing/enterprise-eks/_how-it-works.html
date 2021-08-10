@@ -1,0 +1,232 @@
+{% for item in page.how_it_works %}
+  <div class="row">
+    {% if item.precode %}
+      <div class="item_precode_code row-image-content {% if item.image_side == "left" %}col-xs-12 col-sm-7 col-md-6 col-description{% else %}col-xs-12 col-sm-7 col-sm-pull-5 col-md-6 col-md-push-6 col-description{% endif %}">
+        {{ item.precode }}
+      </div>
+    {% endif %}
+    {% if item.tab_code_preview %}
+
+    {% comment %}
+    This janky conditional assign exists because we can't do inception within jekyll tags or data (import other data
+    references within a data list). Therefore, we use a switch case mapping that converts the string to the relevant
+    data list.
+    {% endcomment %}
+    {% case item.tab_code_preview %}
+    {% when "eks-generatecode" %}
+    {% assign tab_data = site.data.enterprise-landing-page-tabs-eks-generatecode %}
+    {% when "eks-app-monitor" %}
+    {% assign tab_data = site.data.enterprise-landing-page-tabs-eks-app-monitor %}
+    {% endcase %}
+
+      <div class="row-image-content {% if item.image_side == "left" %}col-xs-8 col-xs-offset-2 col-sm-5 col-sm-offset-0 col-md-6 col-diagram hidden-print{% else %}col-xs-10 col-xs-offset-1 col-sm-5 col-sm-push-7 col-sm-offset-0 col-md-6 col-md-push-6 col-diagram{% endif %}">
+        <div class="tab_block">
+          {% for tab in tab_data %}
+          <div class="tab">
+            <button class="{% if forloop.first %}active tablinks_code{% else %}tablinks_code{% endif %}" onclick="openTab(event, '{{item.tab_code_preview}}', '{{tab.id}}')">{{ tab.title }}</button>
+          </div>
+          {% endfor %}
+        </div>
+        <div class="tab_code_content">
+          {% for tab in tab_data %}
+          <div id="{{tab.id}}" class="item_precode tabcontent_code {% if forloop.first %}first_tabcontent_code{% endif %} tabcontent_{{item.tab_code_preview}}">
+              {{ tab.content }}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+    {% if item.image %}
+      <div class="{% if item.image_side == "left" %}col-xs-8 col-xs-offset-2 col-sm-5 col-sm-offset-0 col-md-6 col-diagram hidden-print{% else %}col-xs-10 col-xs-offset-1 col-sm-5 col-sm-push-7 col-sm-offset-0 col-md-6 col-md-push-6 col-diagram{% endif %}">
+        {% if item.image_link_to_full %}
+        <div class="screenshot">
+          <a href="{{ item.image }}"
+             title="Click to see the full size image"
+             target="_blank"
+          >
+            <img src="{{ item.image }}" class="row_image_content" width="{{ item.image_width }}"/>
+            <div class="img-overlay">
+              <i class="fa fa-search fa-3x" aria-hidden="true"></i>
+            </div>
+          </a>
+        </div>
+        {% else %}
+        <img src="{{ item.image }}" class="row_image_content" width="{{ item.image_width }}"/>
+        {% endif %}
+      </div>
+    {% endif %}
+      <div class="{% if item.image_side == "left" %}col-xs-12 col-sm-7 col-md-6 col-description{% else %}col-xs-12 col-sm-7 col-sm-pull-5 col-md-6 col-md-pull-6 col-description{% endif %}">
+        <h2>{{ item.heading }}</h2>
+        <p>{{ item.body }}</p>
+        <div>
+          {% for logo in item.logos %}
+            <div style="display: inline-block; margin-right: 10px">
+              <div style="display: inline-block; width: 30px; text-align: center">
+                <img src="{{ logo.src }}" alt="{{ logo.title }}" title="{{ logo.title }}">
+              </div>
+              <strong style="font-size: 15px">{{ logo.title }}</strong>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+{% endfor %}
+
+<style>
+  .tab_content, .tab_code_content {
+    border: 1px solid #194c5f;
+    border-radius: 0 0 4px 4px;
+  }
+
+  .tab_content {
+    padding: 20px;
+    height: 350px;
+    background-color: #242e3b;
+  }
+
+  .tab_block {
+    width: 100%;
+    display: inline-table;
+    max-width: 500px;
+    border: 1px solid #194c5f;
+    border-bottom: none;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+
+  }
+
+  .tab {
+    overflow: hidden;
+    display: table-cell;
+    width: auto;
+    color: #bfbfbf;;
+    border-collapse: collapse;
+    border: 1px solid #194c5f;
+    border-top: none;
+    border-bottom: none;
+  }
+
+  .tab.code:first-child, .tab:first-child, .tab.code:last-child, .tab:last-child {
+    border-left: none;
+    border-right: none;
+  }
+
+  .tab button {
+    background-color: inherit;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    width: 100%;
+    color: #bfbfbf;
+    font-size: 16px;
+    border: none;
+  }
+
+  .tab button:hover,.tab button.active {
+    color: white;
+    background-color: #242e3b;
+  }
+
+  .tabcontent, .first_tabcontent, .first_tabcontent_code {
+    border-top: none;
+  }
+
+  .tabcontent, .tabcontent_code {
+    display: none;
+  }
+
+  .first_tabcontent, .first_tabcontent_code {
+    display: block;
+  }
+
+  .first_tablinks, .first_tablinks_code {
+    background-color: #06a2ff !important;
+  }
+
+  .row .item_precode_code, .item_precode {
+    position: relative;
+  }
+
+  .item_precode_code figure {
+    border: 1px solid #194c5f;
+    border-radius: 4px;
+  }
+
+  figcaption {
+    font-size: 14px;
+  }
+  .row .item_precode figcaption, .row .item_precode_code figcaption {
+    position: absolute;
+    top: -15px;
+    background-color: #ee4f5d;
+    border-radius: 4px;
+    color: white;
+    text-transform: uppercase;
+    font-weight: bold;
+    line-height: 1.7;
+    letter-spacing: 1px;
+    padding: 0 10px;
+  }
+
+  pre[class*="language-"] {
+    font-size: 11px;
+    margin: 0;
+    max-height: 400px;
+    overflow-y: scroll;
+  }
+
+  .row_image_content {
+    border: 1px solid #194c5f;
+    border-radius: 4px;
+    border-collapse: collapse;
+    padding: 0;
+  }
+
+  pre {
+    outline: none;
+    border: none;
+    margin: 0;
+  }
+
+  .row:last-of-type .row_image_content {
+    border: none;
+  }
+
+  .img-overlay {
+    background: rgba(0,0,0,.75);
+    text-align: center;
+    opacity: 0;
+    -webkit-transition: opacity .25s ease;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+  }
+
+  .img-overlay .fa {
+    height: 54px;
+    margin-top: -27px;
+    position: relative;
+    top: 50%;
+  }
+
+  .screenshot:hover .img-overlay {
+    opacity: 1;
+    color: #fff;
+  }
+
+
+  #ref-arch-accordion .panel-title a:hover {
+    color: #fff;
+  }
+</style>
+
+<script>
+  function openTab(evt, tabClass, tabName) {
+    $('.tabcontent_' + tabClass).hide(); // hide all tab content
+    $('.tablinks').removeClass('active'); // ensure all links are inactive
+    $('#' + tabName).show();
+    $(evt.currentTarget).addClass('active'); // mark the current tab as active
+  }
+</script>
