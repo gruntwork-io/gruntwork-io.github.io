@@ -13,24 +13,25 @@ $guides-primary-color: #06a6fd;
   clear: both;
 }
 
-@mixin no-padding {
-  padding: 0 !important;
-  margin: 0 !important;
-}
-
-.guides-input-placeholder {
+@mixin guides-input-placeholder {
   font-size: 14px;
   font-style: normal;
-  opacity: 1 !important;
   font-weight: 600;
   letter-spacing: -0.23px;
-  color: #0000;
+  //comment out color and opacity to fallback to the browser default
+  //color: darkgray;
+  //opacity: 1 !important;
 }
 
-.no-transform {
+@mixin no-transform {
   transform: none;
   box-shadow: none;
   outline: none !important;
+}
+
+.no-padding {
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
 .center {
@@ -327,7 +328,7 @@ body .guides .guides-section-white {
   a:hover {
     color: #08a9fb;
     cursor: pointer;
-    @extend .no-transform;
+    @include no-transform;
   }
 }
 
@@ -350,7 +351,7 @@ body .guides .guides-section-white {
 
     &:hover,
     &:focus {
-      @extend .no-transform;
+      @include no-transform;
     }
   }
 
@@ -362,29 +363,29 @@ body .guides .guides-section-white {
     height: 56px;
     border: none;
     color: $guides-font;
-    @extend .no-transform;
+    @include no-transform;
 
     &:active,
     &:focus {
-      @extend .no-transform;
+      @include no-transform;
     }
   }
 }
 
 .guides-input-box::-webkit-input-placeholder {
-  @extend .guides-input-placeholder;
+  @include guides-input-placeholder;
 }
 
 .guides-input-box::-moz-placeholder {
-  @extend .guides-input-placeholder;
+  @include guides-input-placeholder;
 }
 
 .guides-input-box::-ms-placeholder {
-  @extend .guides-input-placeholder;
+  @include guides-input-placeholder;
 }
 
 .guides-input-box::placeholder {
-  @extend .guides-input-placeholder;
+  @include guides-input-placeholder;
 }
 
 //Cloud filter styles
@@ -499,7 +500,7 @@ body .guides .guides-section-white {
     &:hover,
     &:focus,
     &:active {
-      @extend .no-transform;
+      @include no-transform;
       background: rgba(0, 185, 248, 0.1);
       color: $guides-primary-color;
     }
@@ -787,7 +788,7 @@ body .guides .guides-section-white {
   padding: 5em 6em;
   font-size: 16px;
   color: $guides-font;
-  display: inline-block;
+  display: flex;
 
   .modal-box {
     padding-bottom: 3em;
@@ -813,7 +814,7 @@ body .guides .guides-section-white {
       border: 1px solid #07a7fc;
       z-index: 1 !important;
       padding: 12px;
-      @extend .no-transform;
+      @include no-transform;
     }
   }
 
@@ -841,7 +842,7 @@ body .guides .guides-section-white {
 
   & .btn:hover,
   .btn:focus {
-    @extend .no-transform;
+    @include no-transform;
   }
 }
 
@@ -898,7 +899,7 @@ body .guides .guides-section-white {
     &:focus {
       background: $guides-primary-color;
       outline: none;
-      @extend .no-transform;
+      @include no-transform;
     }
   }
 }
@@ -936,7 +937,7 @@ body .guides .guides-section-white {
     &:hover,
     &:focus {
       text-decoration: none;
-      @extend .no-transform;
+      @include no-transform;
     }
   }
 
@@ -1188,7 +1189,7 @@ body .guides .guides-section-white {
       font-size: 0.9em !important;
       margin-left: -0.8em !important;
       padding-right: 0.1em !important;
-      @extend .no-transform;
+      @include no-transform;
     }
   }
   h1,
@@ -1536,7 +1537,7 @@ body .guides .guides-section-white {
       .btn-link,
       .btn-primary {
         &:hover {
-          @extend .no-transform;
+          @include no-transform;
         }
       }
     }
