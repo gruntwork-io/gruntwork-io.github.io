@@ -49,9 +49,15 @@
               <i class="fa fa-search fa-3x" aria-hidden="true"></i>
             </div>
           </a>
+          {% if item.image_caption %}
+          <small class="text-muted caption">{{ item.image_caption }}</small>
+          {% endif %}
         </div>
         {% else %}
         <img src="{{ item.image }}" class="row_image_content" width="{{ item.image_width }}"/>
+        {% if item.image_caption %}
+        <small class="text-muted caption">{{ item.image_caption }}</small>
+        {% endif %}
         {% endif %}
       </div>
     {% endif %}
@@ -216,9 +222,10 @@
     color: #fff;
   }
 
-
-  #ref-arch-accordion .panel-title a:hover {
-    color: #fff;
+  small.caption {
+    display: block;
+    text-align: center;
+    font-size: 75%;
   }
 </style>
 
