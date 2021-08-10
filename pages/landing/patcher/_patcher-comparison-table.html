@@ -11,7 +11,6 @@
     <thead>
     <tr>
       <th></th>
-      <th>No tool</th>
       <th>DependaBot</th>
       <th>RenovateBot</th>
       <th>Snyk</th>
@@ -26,13 +25,6 @@
     "_" | replace: ")", "_" }}{% endcapture %}
     <tr>
       <td style="width: 25%; color: white;">{{ package.item}}</td>
-      <td style="text-align: center;">
-        {% if package.no_tool == "no" %}
-          <i class="fa fa-times" style="color: #f92e64; margin-top: 20px;" aria-hidden="true"></i>
-        {% else %}
-          <i class="fa fa-check" style="color: #48bb78; margin-top: 20px;" aria-hidden="true"></i>
-        {% endif %}
-      </td>
       <td style="text-align: center;">
         {% if package.dependabot == "no" %}
           <i class="fa fa-times" style="color: #f92e64; margin-top: 20px;" aria-hidden="true"></i>
