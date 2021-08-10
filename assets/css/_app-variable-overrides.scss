@@ -8,7 +8,7 @@
 // THIS is intended to be the place where you customize variables.
 
 //
-// A... Typography & Colors
+// Colors
 // ==================================================
 
 // Branding
@@ -31,7 +31,10 @@ $main-bg:                                   transparent;
 $footer-bg:                                 transparent;
 $footer-copyright-bg:                       $footer-bg;
 
+//
 // Typography
+// ==================================================
+
 $font-family-sans-serif:                    'Source Sans Pro', sans-serif;
 
 $font-size-base:                            18px;
@@ -134,8 +137,23 @@ $input-border-radius-small:                 0;
 
 $input-bg:                                  lighten($color-bg, 20%);
 $input-bg-disabled:                         transparent;
+// $input-bg-disabled:                         darken($input-bg, 5%);
 
-$input-border:                              $hr-border;
+$input-border:                              #194c5f;
+//$input-border:                              $hr-border;
+$input-border-focus:                        #66afe9;
+
+$form-group-margin-bottom:                  (30px / 1.25);
+
+$input-color:                               $headings-color;
+$input-color-placeholder:                   $text-muted;
+
+$legend-color:                              $text-muted;
+$legend-border-color:                       $color-transparent;
+
+$input-group-addon-bg:                      $input-bg;
+$input-group-addon-border-color:            $input-border;
+
 
 //
 // Labels
@@ -234,10 +252,6 @@ $table-border-color:                        #194c5f;
 $well-bg:                                   #242E3B;
 $well-border:                               transparent;
 
-//
-// Typography
-// ==================================================
-
 
 //
 // Breadcrumbs
@@ -265,28 +279,6 @@ $btn-default-border:                        $color-transparent-light;
 
 $close-color:                               contrast($modal-content-bg);
 $close-text-shadow:                         0 1px 0 $color-bg;
-
-//
-// Forms
-// ==================================================
-
-$form-group-margin-bottom:                  (30px / 1.25);
-
-$input-bg:                                  #fff;
-$input-bg-disabled:                         darken($input-bg, 5%);
-
-$input-color:                               $headings-color;
-$input-border:                              $color-transparent;
-
-$input-border-focus:                        #66afe9;
-$input-color-placeholder:                   $text-muted;
-
-$legend-color:                              $text-muted;
-$legend-border-color:                       $color-transparent;
-
-$input-group-addon-bg:                      $input-bg;
-$input-group-addon-border-color:            $input-border;
-
 
 
 //
