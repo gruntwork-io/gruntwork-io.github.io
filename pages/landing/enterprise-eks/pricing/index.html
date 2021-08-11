@@ -19,7 +19,7 @@ categories:
       - name: Core services
         description: Suite of core Kubernetes applications every EKS cluster should have, including AWS LoadBalancer controller, external-dns, cluster-autoscaler, and more.
         plans: ["Standard", "Enterprise"]
-      - name: CI/CD
+      - name: Basic CI/CD
         description: Support for setting up an infrastructure CI/CD pipeline using traditional CI services (e.g., Jenkins, CircleCI, GitLab CI, etc).
         plans: ["Standard", "Enterprise"]
       - name: Basic monitoring
@@ -31,10 +31,10 @@ categories:
       - name: Basic networking
         description: Support for AWS VPC based networking for Kubernetes Pods.
         plans: ["Standard", "Enterprise"]
-      - name: Cluster auto scaling
+      - name: Basic auto scaling
         description: Support for EKS worker node auto scaling throught the Kubernetes cluster-autoscaler.
         plans: ["Standard", "Enterprise"]
-      - name: K8s native CI/CD
+      - name: Advanced CI/CD
         description: Support for CI/CD workflows using Kubernetes native services such as Argo CD and Flux.
         plans: ["Enterprise"]
       - name: Advanced monitoring
@@ -46,8 +46,8 @@ categories:
       - name: Advanced networking
         description: Support for wide range of Pod networking options including Calico and Service Mesh.
         plans: ["Enterprise"]
-      - name: Pod auto scaling
-        description: Support for configuring and managing vertical and horizontal Pod auto scaling.
+      - name: Advanced auto scaling
+        description: Support for configuring and managing vertical and horizontal Pod auto scaling. Customized cluster auto-scaling based on server metrics.
         plans: ["Enterprise"]
       - name: Self-service UI
         description: Friendly developer interface for managing and deploying application services on to the EKS cluster using a self-service dashboard such as Argo CD and Lens.
