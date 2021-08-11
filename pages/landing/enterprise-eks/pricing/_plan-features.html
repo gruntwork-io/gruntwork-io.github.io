@@ -55,8 +55,8 @@
     "
   >
     {% if feature.values %}
-    <span style="color: white">{{ feature.values["Early Access"] }}</span>
-    {% elsif feature.plans contains "Early Access" %}
+    <span style="color: white">{{ feature.values["Enterprise"] }}</span>
+    {% elsif feature.plans contains "Enterprise" %}
     <i class="fa fa-check" style="color: #69ff66" aria-hidden="true"></i>
     {% else %}
     <i class="fa fa-times" style="color: #f92e64" aria-hidden="true"></i>
@@ -64,3 +64,24 @@
   </td>
 </tr>
 {% endfor %} {% endfor %}
+<tr>
+  <td style="width: 25%">&nbsp;</td>
+  <td
+    style="
+      width: 25%;
+      border-left: 1px solid #194c5f;
+      border-right: 1px solid #194c5f;
+      background-color: #252e3a;
+      border-bottom: 1px solid #194c5f;
+    "
+  >&nbsp;</td>
+  <td
+    style="
+      width: 25%;
+      border-left: 1px solid #194c5f;
+      border-right: 1px solid #194c5f;
+      background-color: #252e3a;
+      border-bottom: 1px solid #194c5f;
+    "
+  >&nbsp;</td>
+</tr>

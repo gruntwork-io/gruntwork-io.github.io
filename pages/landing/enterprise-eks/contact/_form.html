@@ -27,6 +27,18 @@
       <div class="form-group">
         <div class="row">
           <div class="col-xs-12 col-md-4">
+            <label>Which plan are you interested in?</label>
+          </div>
+          <div class="col-xs-12 col-md-8">
+            {% include_relative _input-radio.html name="interested-plan" id="plan-standard" value="Standard" %}
+            {% include_relative _input-radio.html name="interested-plan" id="plan-enterprise" value="Enterprise" %}
+            {% include_relative _input-hidden.html id="user-utc-timezone-offset" %}
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-xs-12 col-md-4">
             <label>Which features are you interested in?</label>
           </div>
           <div class="col-xs-12 col-md-2">
