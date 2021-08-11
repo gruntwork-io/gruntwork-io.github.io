@@ -1,0 +1,41 @@
+<style>
+    #heroku-comparison.table tr:nth-child(odd) td:last-child {
+      background-color: rgb(31, 59, 82);
+    }
+    #heroku-comparison.table tr:nth-child(even) td:last-child {
+      background-color: rgb(23, 51, 77);
+    }
+  </style>
+  <div class="table-responsive">
+    <table class="table table-striped" id="heroku-comparison">
+      <thead>
+      <tr>
+        <th></th>
+        <th class="text-center">Heroku</th>
+        <th class="text-center">Migrate to AWS manually</th>
+        <th class="text-center">Migrate to AWS with Gruntwork</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for row in site.data.heroku-concept-mapping %} {% capture id %}{{
+        row.requirement | replace: " ", "_" | replace: ")", "_" | replace:
+      "(", "_" }}" class="table-clickable-row" data-toggle="modal"
+      data-target="#modal-{{ row.name | replace: " ", "_" | replace: "(",
+      "_" | replace: ")", "_" }}{% endcapture %}
+      <tr>
+        <td style="width: 25%; color: white;">{{ row.item }}</td>
+        <td style="text-align: center;">
+          {{ row.heroku }}
+        </td>
+        <td style="text-align: center;">
+          {{ row.diy }}
+        </td>
+        <td style="text-align: center;">
+          {{ row.gruntwork }}
+        </td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  
