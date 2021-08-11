@@ -42,7 +42,8 @@
         <label>Which plan are you interested in?</label>
       </div>
       <div class="col-xs-12 col-md-8">
-        {% include_relative _input-radio.html name="interested-plan" id="plan-basic" value="Basic" checked=true %}
+        {% include_relative _input-radio.html name="interested-plan" id="plan-free" value="Free" checked=true %}
+        {% include_relative _input-radio.html name="interested-plan" id="plan-pro" value="Pro" %}
         {% include_relative _input-radio.html name="interested-plan" id="plan-enterprise" value="Enterprise" %}
       </div>
     </div>
@@ -82,5 +83,10 @@
 <script type="application/javascript">
   const urlParams = new URLSearchParams(window.location.search);
   const selection = urlParams.get('selection');
-  document.getElementById('_selection').value = selection;
+  if (selection) {
+    const radio = document.getElementById('plan-' + selection);
+    if (radio) {
+      radio.checked = true;
+    }
+  }
 </script>
