@@ -3,7 +3,7 @@ layout: landing-patcher
 type: landing-patcher
 slug: how-it-works
 
-alternate_cta_link: /hipaa-compliance-on-aws/pricing
+alternate_cta_link: /patcher/pricing
 
 title: How it Works
 excerpt: Build your apps on top of reference applications for your favorite languages and frameworks (e.g., Ruby on Rails, Express.js, Spring Boot) that are HIPAA compliant and follow cloud-native best practices out of the box.
@@ -104,8 +104,51 @@ pricing:
   <div id="how-it-works" class="section section-dark">
     <!-- Nav pills -->
     <div class="col-md-12 text-center">
-      <img src="/assets/img/landing-page-patcher/patcher-how-it-works.png" alt="Patcher: How It Works" width="940" height="265" /><br />
-      <img src="/assets/img/landing-page-patcher/patcher-how-it-works.png" alt="Patcher: How It Works" width="940" height="265" />
+      <ul class="nav nav-pills center-pills" role="tablist">
+        <li role="presentation" class="active">
+          <a
+            href="#"
+            data-target="#maintainer-workflow"
+            aria-controls="maintainer-workflow"
+            role="tab"
+            data-toggle="tab"
+            >Maintainer Workflow</a
+          >
+        </li>
+        <li role="presentation">
+          <a
+            href="#"
+            data-target="#user-workflow"
+            aria-controls="user-workflow"
+            role="tab"
+            data-toggle="tab"
+            >User Workflow</a
+          >
+        </li>
+      </ul>
+    </div>
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <!-- Maintainer Workflow tab -->
+      <div role="tabpanel" class="tab-pane active" id="maintainer-workflow">
+        <div class="container">
+          <h1 style="padding-bottom: 40px">
+            Library Maintainer Workflow
+          </h1>
+          {% include_relative _how-it-works.html %}
+        </div>
+      </div>
+      <!-- User Workflow tab -->
+      <div role="tabpanel" class="tab-pane" id="user-workflow">
+        <div id="how-it-works" class="section-dark">
+          <div class="container">
+            <h1 style="padding-bottom: 40px">
+              Library User Workflow
+            </h1>
+            {% include_relative _user-how-it-works.html %}
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <div class="section section-dark">
