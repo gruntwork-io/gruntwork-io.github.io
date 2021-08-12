@@ -5,6 +5,16 @@
     #heroku-comparison.table tr:nth-child(even) td:last-child {
       background-color: rgb(23, 51, 77);
     }
+    code {
+      background: #6d6d6d;
+      color: #e0e0e0;
+    }
+    ol {
+      padding-left: 15px;
+    }
+    ol li {
+      margin: 10px 0;
+    }
   </style>
   <div class="table-responsive">
     <table class="table table-striped" id="heroku-comparison">
@@ -12,8 +22,8 @@
       <tr>
         <th></th>
         <th class="text-center">Heroku</th>
-        <th class="text-center">Migrate to AWS manually</th>
-        <th class="text-center">Migrate to AWS with Gruntwork</th>
+        <th class="text-center">AWS</th>
+        <th class="text-center">AWS with Gruntwork</th>
       </tr>
       </thead>
       <tbody>
@@ -24,14 +34,26 @@
       "_" | replace: ")", "_" }}{% endcapture %}
       <tr>
         <td style="width: 25%; color: white;">{{ row.item }}</td>
-        <td style="text-align: center;">
-          {{ row.heroku }}
+        <td style="text-align: left;">
+          <ol>
+          {% for hlist in row.heroku %}
+            <li>{{ hlist }}</li>
+          {% endfor %}
+          </ol>
         </td>
-        <td style="text-align: center;">
-          {{ row.diy }}
+        <td style="text-align: left;">
+          <ol>
+          {% for dlist in row.diy %}
+            <li>{{ dlist }}</li>
+          {% endfor %}
+          </ol>
         </td>
-        <td style="text-align: center;">
-          {{ row.gruntwork }}
+        <td style="text-align: left;">
+          <ol>
+          {% for glist in row.gruntwork %}
+            <li>{{ glist }}</li>
+          {% endfor %}
+          </ol>
         </td>
       </tr>
       {% endfor %}
