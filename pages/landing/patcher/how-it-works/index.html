@@ -47,38 +47,62 @@ footer:
     <ul class="check-list check-white" style="text-align: left; display: inline-block;"><li><span class="help-text light" title="" data-toggle="tooltip" data-original-title="You’ll be the first to gain access to the solution once it’s ready"> Pre-release HIPAA-Compliant Infrastructure </span> </li><li><span class="help-text light" title="" data-toggle="tooltip" data-original-title="Early adopters will receive the solution at a major discount!"> Early adopter discount</span> </li><li><span class="help-text light" title="" data-toggle="tooltip" data-original-title="We’ll work with you to ensure the solution meets your organization’s requirements"> Influence the product direction</span> </li><li><span class="help-text light" title="" data-toggle="tooltip" data-original-title="We’ll go through the audit with you, implementing any technical changes indicated by the auditor"> HITECH audit support</span> </li></ul>
   cta: Request early access
 
-infra_how_it_works:
-  - heading: End-to-end, opinionated architecture for AWS
+maintainer_how_it_works:
+  - heading: Update the code for your library
     image: /assets/img/hipaa/infrastructure-hipaa.png
     image_side: right
     body: |
-      The Reference Architecture is an opinionated, battle-tested, best-practices way to assemble the code from the <a href="/infrastructure-as-code-library"/>Infrastructure as Code Library</a>) into an end-to-end tech stack that includes just about everything you need: server cluster, load balancer, database, cache, network topology, monitoring, alerting, CI/CD, secrets management, VPN, and more (check out the <a href="/devops-checklist/">Production Readiness Checklist</a> to see what it takes to go to prod).
+      Make changes to your library the usual way: create a branch, make some changes, and open a pull request.
 
-  - heading: Customizable
-    image: /assets/img/hipaa/hipaa-sample-app.png
+  - heading: Run tests against all users of your library
+    image: /assets/img/hipaa/infrastructure-hipaa.png
     image_side: left
     body: |
-      You can choose from a variety of compute services, databases, VPNs, and more to customize the Reference Architecture to your exact specifications and technological preferences.
+      Patcher discovers all users of your library within your company, runs their automated tests with your updated code, and gives you a report if those tests passed. That way, you know how your changes affect your downstream users before merging!
 
-  - heading: Fully defined as code using Terraform, Docker, Packer
-    tab_code_preview: site.data.hipaa-landing-page-tabs-ref-arch-code
+  - heading: Create a patch file
+    image: /assets/img/hipaa/hipaa-sample-app.png
     image_side: right
     body: |
-      You keep and can modify 100% of the code to support any use case you might have.
+      If you are making backwards incompatible changes, you can create a Patch file to automatically upgrade the code of your library's users. Patch files can perform text transformations (e.g., add a new input variable) as well as execute custom scripts (e.g., run some CLI tools).
 
-  - heading: HIPAA-compliant out of the box
+  - heading: Run tests against your patch
+    tab_code_preview: site.data.hipaa-landing-page-tabs-ref-arch-code
+    image_side: left
+    body: |
+      You can use <code>patcher plan</code> and <code>patcher apply</code> to test your patch against a repo. Patcher will also run your patch against all users of your library in a temporary branch and run their tests, so you can see check if both your code changes and patch are working.
+
+  - heading: Merge and release
     image: /assets/img/hipaa/grunty-audit.png
     image_width: 350px
-    image_side: left
-    body: |
-      We'll have our infrastructure and applications certified by a third party auditor to ensure HIPAA compliance, and pass all the best practices on to you.
-
-  - heading: Gruntwork deploys it into your AWS accounts and gives you all of the code to manage it, in about 1 day
-    image: /assets/img/hipaa/stay-up-to-date.png
-    image_width: 500px
     image_side: right
     body: |
-      Instead of spending months (or years) to re-invent the wheel, let us handle the Gruntwork for you, so you can focus on your core deliverables
+      Merge and release as usual: e.g., create a new Git tag for the new version of your library, or push your new versioned artifact (e.g., <code>.jar</code>) to Artifactory.
+
+user_how_it_works:
+  - heading: Install Patcher
+    image: /assets/img/hipaa/infrastructure-hipaa.png
+    image_side: right
+    body: |
+      It's a GitHub App.
+
+  - heading: Patcher auto discovers your dependencies
+    image: /assets/img/hipaa/infrastructure-hipaa.png
+    image_side: left
+    body: |
+      It does this automatically. You can also help it along with manual hints.
+
+  - heading: Patcher patches your code and opens a PR
+    image: /assets/img/hipaa/hipaa-sample-app.png
+    image_side: right
+    body: |
+      When a maintain releases new code, Patcher automatically opens a PR to update you to the new version. If the new version included a patch, Patcher executes the Patch too, and the updated code is part of the PR.
+
+  - heading: You review and merge
+    tab_code_preview: site.data.hipaa-landing-page-tabs-ref-arch-code
+    image_side: left
+    body: |
+      You see the code changes and test results in the Patch and can safely merge when you're happy.
 
 pricing:
   - title: Lite
@@ -135,7 +159,7 @@ pricing:
           <h1 style="padding-bottom: 40px">
             Library Maintainer Workflow
           </h1>
-          {% include_relative _how-it-works.html %}
+          {% include_relative _maintainer-how-it-works.html %}
         </div>
       </div>
       <!-- User Workflow tab -->
