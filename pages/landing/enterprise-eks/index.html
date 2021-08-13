@@ -210,8 +210,8 @@ how_it_works:
         src: /assets/img/logos-technologies/logo-datadog-white.png
 
   - heading: "Step 7: Stay up to date"
-    image: /assets/img/landing-heroku-page/grunty-free-step-5.png
-    image_width: 250px
+    image: /assets/img/hipaa/stay-up-to-date.png
+    image_link_to_full: true
     image_side: right
     body: |
       All the modules and code is commercially supported and maintained. We push versioned updates to keep the
@@ -252,18 +252,17 @@ conclusion:
   <div id="how-it-works" class="section section-dark">
     <div class="container">
       {% include_relative _how-it-works.html %}
-    </div>
-  </div>
-  <div id="conclusion" class="section section-dark">
-    <div class="row row-call-to-action">
-      <div class="col-xs-12 text-center">
-        <h2 style="padding-top: 30px" class="h1 no-anchor">{{ page.conclusion.heading }}</h2>
-        <p style="margin-top: -30px">{{ page.conclusion.body }}</p>
-        <p>
-          <a {% if page.alternate_cta_link %} href="{{ page.alternate_cta_link }}" {% else %}
-            href="{{ page.permalink }}pricing" {% endif %}class="btn btn-info" role="button" ga-on="click"
-            ga-event-category="{{ page.path | slugify }}" ga-event-action="conclusion-cta">{{ page.conclusion.cta }}</a>
-        </p>
+
+      <div class="row row-call-to-action">
+        <div class="col-xs-12 text-center">
+          <h2 style="padding-top: 30px" class="h1 no-anchor">{{ page.conclusion.heading }}</h2>
+          <p style="margin-top: -30px">{{ page.conclusion.body }}</p>
+          <p>
+            <a {% if page.alternate_cta_link %} href="{{ page.alternate_cta_link }}" {% else %}
+              href="{{ page.permalink }}pricing" {% endif %}class="btn btn-info" role="button" ga-on="click"
+              ga-event-category="{{ page.path | slugify }}" ga-event-action="conclusion-cta">{{ page.conclusion.cta }}</a>
+          </p>
+        </div>
       </div>
     </div>
   </div>
