@@ -26,10 +26,10 @@
       {% include_relative _input-text.html id="contact-company" label="Company" required=true placeholder="Acme, Inc." %}
       <div class="form-group">
         <div class="row">
-          <div class="col-xs-12 col-md-4">
+          <div class="col-xs-12 col-md-3">
             <label>Which plan are you interested in?</label>
           </div>
-          <div class="col-xs-12 col-md-8">
+          <div class="col-xs-12 col-md-9">
             {% include_relative _input-radio.html name="interested-plan" id="plan-standard" value="Standard" %}
             {% include_relative _input-radio.html name="interested-plan" id="plan-enterprise" value="Enterprise" %}
             {% include_relative _input-hidden.html id="user-utc-timezone-offset" %}
@@ -41,41 +41,109 @@
           <div class="col-xs-12 col-md-4">
             <label>Which features are you interested in?</label>
           </div>
-          <div class="col-xs-12 col-md-2">
-            {% include_relative _input-checkbox.html name="interested-feature" id="cis-benchmark" value="CIS" %}
-            {% include_relative _input-checkbox.html name="interested-feature" id="istio" value="Istio" %}
-            {% include_relative _input-checkbox.html name="interested-feature" id="consul-connect" value="Consul" %}
-            {% include_relative _input-checkbox.html name="interested-feature" id="aws-app-mesh" value="App Mesh" %}
-            {% include_relative _input-checkbox.html name="interested-feature" id="lens" value="Lens" %}
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-xs-12 col-md-3">
+            <label>Service Mesh</label>
           </div>
-          <div class="col-xs-12 col-md-2">
-            {% include_relative _input-checkbox.html name="interested-feature" id="flux" value="Flux" %}
-            {% include_relative _input-checkbox.html name="interested-feature" id="argo" value="Argo" %}
-            {% include_relative _input-checkbox.html name="interested-feature" id="harbor" value="Harbor" %}
-            {% include_relative _input-checkbox.html name="interested-feature" id="opa" value="OPA" %}
-            {% include_relative _input-checkbox.html name="interested-feature" id="patcher" value="GW Patcher" %}
+          <div class="col-xs-12 col-md-3">
+            {% include_relative _input-checkbox.html name="interested-feature-service-mesh" id="istio" value="Istio" %}
           </div>
-          <div class="col-xs-12 col-md-2">
-            {% include_relative _input-checkbox.html name="interested-feature" id="prometheus" value="Prometheus" %}
-            {% include_relative _input-checkbox.html name="interested-feature" id="datadog" value="Datadog" %}
-            {% include_relative _input-checkbox.html name="interested-feature" id="cloudwatch" value="CloudWatch" %}
-            {% include_relative _input-checkbox.html name="interested-feature" id="elastic" value="Elastic Stack" %}
+          <div class="col-xs-12 col-md-3">
+            {% include_relative _input-checkbox.html name="interested-feature-service-mesh" id="consul-connect" value="Consul Connect" %}
           </div>
-          <div class="col-xs-12 col-md-2">
-            {% include_relative _input-checkbox.html name="interested-feature" id="spring-sample-app" value="Spring app" %}
-            {% include_relative _input-checkbox.html name="interested-feature" id="rails-sample-app" value="Rails app" %}
-            {% include_relative _input-checkbox.html name="interested-feature" id="django-sample-app" value="Django app" %}
-            {% include_relative _input-checkbox.html name="interested-feature" id="nodejs-sample-app" value="Node.js app" %}
-            {% include_relative _input-hidden.html id="user-utc-timezone-offset" %}
+          <div class="col-xs-12 col-md-3">
+            {% include_relative _input-checkbox.html name="interested-feature-service-mesh" id="aws-app-mesh" value="AWS App Mesh" %}
           </div>
         </div>
       </div>
       <div class="form-group">
         <div class="row">
-          <div class="col-xs-12 col-md-4">
+          <div class="col-xs-12 col-md-3">
+            <label>CI/CD</label>
+          </div>
+          <div class="col-xs-12 col-md-3">
+            {% include_relative _input-checkbox.html name="interested-feature-cicd" id="argo" value="Argo CD" %}
+          </div>
+          <div class="col-xs-12 col-md-3">
+            {% include_relative _input-checkbox.html name="interested-feature-cicd" id="flux" value="Flux" %}
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-xs-12 col-md-3">
+            <label>Self-service Dashboard</label>
+          </div>
+          <div class="col-xs-12 col-md-3">
+            {% include_relative _input-checkbox.html name="interested-feature-self-service" id="argo-dash" value="Argo Dashboard" %}
+          </div>
+          <div class="col-xs-12 col-md-3">
+            {% include_relative _input-checkbox.html name="interested-feature-self-service" id="flux-web" value="Flux Web UI" %}
+          </div>
+          <div class="col-xs-12 col-md-3">
+            {% include_relative _input-checkbox.html name="interested-feature-self-service" id="lens" value="Lens" %}
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-xs-12 col-md-3">
+            <label>Monitoring</label>
+          </div>
+          <div class="col-xs-12 col-md-3">
+            {% include_relative _input-checkbox.html name="interested-feature-monitoring" id="cloudwatch" value="CloudWatch" %}
+            {% include_relative _input-checkbox.html name="interested-feature-monitoring" id="prometheus" value="Prometheus / Grafana" %}
+          </div>
+          <div class="col-xs-12 col-md-3">
+            {% include_relative _input-checkbox.html name="interested-feature-monitoring" id="datadog" value="Datadog" %}
+          </div>
+          <div class="col-xs-12 col-md-3">
+            {% include_relative _input-checkbox.html name="interested-feature-monitoring" id="elastic" value="Elastic Stack" %}
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-xs-12 col-md-3">
+            <label>App languages / frameworks</label>
+          </div>
+          <div class="col-xs-12 col-md-3">
+            {% include_relative _input-checkbox.html name="interested-feature-app" id="spring-sample-app" value="Spring app" %}
+            {% include_relative _input-checkbox.html name="interested-feature-app" id="rails-sample-app" value="Rails app" %}
+          </div>
+          <div class="col-xs-12 col-md-3">
+            {% include_relative _input-checkbox.html name="interested-feature-app" id="django-sample-app" value="Django app" %}
+          </div>
+          <div class="col-xs-12 col-md-3">
+            {% include_relative _input-checkbox.html name="interested-feature-app" id="nodejs-sample-app" value="Node.js app" %}
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-xs-12 col-md-3">
+            <label>Security / Compliance</label>
+          </div>
+          <div class="col-xs-12 col-md-3">
+            {% include_relative _input-checkbox.html name="interested-feature-security" id="cis-benchmark" value="CIS Benchmark" %}
+          </div>
+          <div class="col-xs-12 col-md-3">
+            {% include_relative _input-checkbox.html name="interested-feature-security" id="harbor" value="Harbor Registry" %}
+          </div>
+          <div class="col-xs-12 col-md-3">
+            {% include_relative _input-checkbox.html name="interested-feature-security" id="opa" value="Open Policy Agent" %}
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-xs-12 col-md-3">
             <label for="contact-message">Any comments or questions?</label>
           </div>
-          <div class="col-xs-12 col-md-8">
+          <div class="col-xs-12 col-md-9">
             <textarea
               id="contact-message"
               name="contact-message"
