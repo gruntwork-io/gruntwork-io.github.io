@@ -260,7 +260,7 @@ conclusion:
         <p style="margin-top: -30px">{{ page.conclusion.body }}</p>
         <p>
           <a {% if page.alternate_cta_link %} href="{{ page.alternate_cta_link }}" {% else %}
-            href="{{ page.permalink }}pricing/contact" {% endif %}class="btn btn-info" role="button" ga-on="click"
+            href="{{ page.permalink }}pricing" {% endif %}class="btn btn-info" role="button" ga-on="click"
             ga-event-category="{{ page.path | slugify }}" ga-event-action="conclusion-cta">{{ page.conclusion.cta }}</a>
         </p>
       </div>
