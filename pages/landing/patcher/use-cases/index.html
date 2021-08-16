@@ -36,8 +36,12 @@ use_cases:
     image: https://upload.wikimedia.org/wikipedia/de/thumb/e/e1/Java-Logo.svg/1200px-Java-Logo.svg.png
     image_width: 200px
     body: |
-      Use Patcher to automate updates of internal dependencies. Let's say an internal team is working on a <code>security.jar</code> library that is used by hundreds of microservices within your company. After a new major version of <code>security.jar</code> has been released, you can use Patcher to conduct updates to other code bases that depend on <code>security.jar</code>. A <i>Patch File</i> in this case would bump the version of <code>security.jar</code>, as well as perform any other necessary code transformations in the code bases that depend on it.
-
+      <ol>
+        <li>Let's say you are the maintainer of a <code>security.jar</code> library that is used by 300 microservices (300 other teams) within your company.</li>
+        <li>When you open a pull request with some changes to <code>security.jar</code>, Patcher automatically finds all the services that depends on <code>security.jar</code>, runs their tests with your updates, and shows you the results, so you know if you made breaking changes.</li>
+        <li>If you did make breaking changes, you can create a <i>Patch File</i> to patch those services, and Patcher will show you the results of both applying your Patch File and executing the tests of each service.</li>
+        <li>Once all tests are passing, you merge, release a new version of <code>security.jar</code>, and Patcher opens pull requests against all those services to update them to the new version.</li>
+      </ol>
   - heading: "Use case 4: Update to React 17.0 automatically"
     image: data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9Ii0xMS41IC0xMC4yMzE3NCAyMyAyMC40NjM0OCI+CiAgPHRpdGxlPlJlYWN0IExvZ288L3RpdGxlPgogIDxjaXJjbGUgY3g9IjAiIGN5PSIwIiByPSIyLjA1IiBmaWxsPSIjNjFkYWZiIi8+CiAgPGcgc3Ryb2tlPSIjNjFkYWZiIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiPgogICAgPGVsbGlwc2Ugcng9IjExIiByeT0iNC4yIi8+CiAgICA8ZWxsaXBzZSByeD0iMTEiIHJ5PSI0LjIiIHRyYW5zZm9ybT0icm90YXRlKDYwKSIvPgogICAgPGVsbGlwc2Ugcng9IjExIiByeT0iNC4yIiB0cmFuc2Zvcm09InJvdGF0ZSgxMjApIi8+CiAgPC9nPgo8L3N2Zz4K
     image_side: left
