@@ -21,7 +21,20 @@ use_cases:
         <li>You can use off-the-shelf Patch Files created by Gruntwork (e.g. we offer Terraform upgrade patches such as <code>tf-13-to-14.patch</code>, <code>tf-14-to-15.patch</code>, etc) or create your own Patch Files!</li>
       </ul>
 
-  - heading: "Use case 2: Update to React 17.0 automatically"
+  - heading: "Use case 2: Update to Ruby on Rails 2.3.16/3.0.20 automatically"
+    image: https://rubyonrails.org/images/rails-logo.svg
+    image_width: 379px
+    image_side: left
+    body: |
+      Use Patcher to patch your code against security vulnerabilities. A few years ago, Ruby on Rails had a <a href="https://www.cvedetails.com/cve/CVE-2013-0333/">serious security vulnerability</a> that allowed remote attackers to execute arbitrary code, conduct SQL injection attacks, or bypass authentication. In addition to updating to the new version, a fix for it required changes to the code. By leveraging Patcher's <i>Patch Files</i>, you can automate critical updates such as these.
+
+  - heading: "Use case 3: Update to a new version of an internal utility"
+    image: https://upload.wikimedia.org/wikipedia/de/thumb/e/e1/Java-Logo.svg/1200px-Java-Logo.svg.png
+    image_width: 200px
+    body: |
+      Use Patcher to automate updates of internal dependencies. Let's say an internal team is working on a <code>security.jar</code> library that is used by hundreds of microservices within your company. After a new major version of <code>security.jar</code> has been released, you can use Patcher to conduct updates to other code bases that depend on <code>security.jar</code>. A <i>Patch File</i> in this case would bump the version of <code>security.jar</code>, as well as perform any other necessary code transformations in the code bases that depend on it.
+
+  - heading: "Use case 4: Update to React 17.0 automatically"
     image: data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9Ii0xMS41IC0xMC4yMzE3NCAyMyAyMC40NjM0OCI+CiAgPHRpdGxlPlJlYWN0IExvZ288L3RpdGxlPgogIDxjaXJjbGUgY3g9IjAiIGN5PSIwIiByPSIyLjA1IiBmaWxsPSIjNjFkYWZiIi8+CiAgPGcgc3Ryb2tlPSIjNjFkYWZiIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiPgogICAgPGVsbGlwc2Ugcng9IjExIiByeT0iNC4yIi8+CiAgICA8ZWxsaXBzZSByeD0iMTEiIHJ5PSI0LjIiIHRyYW5zZm9ybT0icm90YXRlKDYwKSIvPgogICAgPGVsbGlwc2Ugcng9IjExIiByeT0iNC4yIiB0cmFuc2Zvcm09InJvdGF0ZSgxMjApIi8+CiAgPC9nPgo8L3N2Zz4K
     image_side: left
     image_width: 379px
@@ -30,20 +43,6 @@ use_cases:
         <li><a href="https://reactjs.org/blog/2020/08/10/react-v17-rc.html">React 17.0</a> is a major release that had a number of breaking changes. As an example, one of the breaking changes in this release is that returning <code>undefined</code> from <code>forwardRef</code> and <code>memo</code> components is an error and you should return <code>null</code> instead.</li>
         <li>Use Patcher to update your code to React 17.0, by applying a <i>Patch File</i> that, among other things, ensures that <code>forwardRef</code> and <code>memo</code> components never return <code>undefined</code>.</li>
       </ul>
-
-  - heading: "Use case 3: Update to Ruby on Rails 2.3.16/3.0.20 automatically"
-    image: https://rubyonrails.org/images/rails-logo.svg
-    image_width: 379px
-    body: |
-      Use Patcher to patch your code against security vulnerabilities. A few years ago, Ruby on Rails had a <a href="https://www.cvedetails.com/cve/CVE-2013-0333/">serious security vulnerability</a> that allowed remote attackers to execute arbitrary code, conduct SQL injection attacks, or bypass authentication. In addition to updating to the new version, a fix for it required changes to the code. By leveraging Patcher's <i>Patch Files</i>, you can automate critical updates such as these.
-
-  - heading: "Use case 4: Update to a new version of an internal utility"
-    image: https://upload.wikimedia.org/wikipedia/de/thumb/e/e1/Java-Logo.svg/1200px-Java-Logo.svg.png
-    image_width: 200px
-    image_side: left
-    body: |
-      Use Patcher to automate updates of internal dependencies. Let's say an internal team is working on a <code>security.jar</code> library that is used by hundreds of microservices within your company. After a new major version of <code>security.jar</code> has been released, you can use Patcher to conduct updates to other code bases that depend on <code>security.jar</code>. A <i>Patch File</i> in this case would bump the version of <code>security.jar</code>, as well as perform any other necessary code transformations in the code bases that depend on it.
-
 
 footer:
   heading: The infrastructure you've always wanted
