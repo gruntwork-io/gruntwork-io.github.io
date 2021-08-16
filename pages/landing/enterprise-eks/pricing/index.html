@@ -19,34 +19,34 @@ categories:
       - name: Core services
         description: Suite of core Kubernetes applications every EKS cluster should have, including AWS LoadBalancer controller, external-dns, cluster-autoscaler, and more.
         plans: ["Standard", "Enterprise"]
-      - name: Basic CI/CD
+      - name: Standard CI/CD
         description: Support for setting up an infrastructure CI/CD pipeline using traditional CI services (e.g., Jenkins, CircleCI, GitLab CI, etc).
         plans: ["Standard", "Enterprise"]
-      - name: Basic monitoring
+      - name: Standard monitoring
         description: Support for metric and log aggregation to AWS CloudWatch.
         plans: ["Standard", "Enterprise"]
-      - name: Basic deployment models
+      - name: Standard deployment models
         description: Support for rolling deployments where a configurable number of service Pods are replaced at a time.
         plans: ["Standard", "Enterprise"]
-      - name: Basic networking
+      - name: Standard networking
         description: Support for AWS VPC based networking for Kubernetes Pods.
         plans: ["Standard", "Enterprise"]
-      - name: Basic auto scaling
+      - name: Standard auto scaling
         description: Support for EKS worker node auto scaling throught the Kubernetes cluster-autoscaler.
         plans: ["Standard", "Enterprise"]
-      - name: Advanced CI/CD
+      - name: Enterprise CI/CD
         description: Support for CI/CD workflows using Kubernetes native services such as Argo CD and Flux.
         plans: ["Enterprise"]
-      - name: Advanced monitoring
+      - name: Enterprise monitoring
         description: Support for metric and log aggregation through various 3rd party and in-cluster options, such as DataDog, Prometheus, Grafana, Elastic Stack, etc.
         plans: ["Enterprise"]
-      - name: Advanced deployment models
+      - name: Enterprise deployment models
         description: Support for wide range of deployment models including canary, blue/green, automatic rollbacks, etc.
         plans: ["Enterprise"]
-      - name: Advanced networking
+      - name: Enterprise networking
         description: Support for wide range of Pod networking options including Calico and Service Mesh.
         plans: ["Enterprise"]
-      - name: Advanced auto scaling
+      - name: Enterprise auto scaling
         description: Support for configuring and managing vertical and horizontal Pod auto scaling. Customized cluster auto-scaling based on server metrics.
         plans: ["Enterprise"]
       - name: Self-service UI
@@ -66,10 +66,10 @@ categories:
       - name: Container Security Scanning
         description: Security scanning for container images through AWS ECR.
         plans: ["Standard", "Enterprise"]
-      - name: Basic encryption
+      - name: Standard encryption
         description: Support for end to end encryption through self-signed certificates managed with in-cluster (through cert-manager) and out-of-cluster (through CLI tools) management.
         plans: ["Standard", "Enterprise"]
-      - name: Advanced encryption
+      - name: Enterprise encryption
         description: Support for end to end encryption with mutual TLS auth through service meshes.
         plans: ["Enterprise"]
       - name: Service communication ACLs
