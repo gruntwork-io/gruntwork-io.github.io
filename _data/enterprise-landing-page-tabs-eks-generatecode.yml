@@ -40,7 +40,7 @@
         # Since CIS is enabled, source from the CIS compliant
         # service catalog.
         source =
-          "github.com/gruntwork-io/cis-service-catalog//eks-cluster"
+          "github.com/gruntwork-io/service-catalog//eks-cluster"
         version = "v0.51.0"
 
         cluster_name = "my-prod-cluster"
@@ -50,7 +50,6 @@
           "prod-asg" = {
             min_size   = 2
             max_size   = 4
-            subnet_ids = dependency.vpc.outputs.private_app_subnet_ids
             tags       = local.default_tags
           }
         }
@@ -62,7 +61,7 @@
 
       module "eks_core_services" {
         source =
-          "github.com/gruntwork-io/cis-service-catalog//core-services"
+          "github.com/gruntwork-io/service-catalog//core-services"
         version = "v0.51.0"
 
         eks_cluster_arn = module.eks_cluster.eks_cluster_arn
