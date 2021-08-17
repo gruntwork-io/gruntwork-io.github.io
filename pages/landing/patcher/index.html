@@ -2,6 +2,8 @@
 layout: landing
 type: landing
 slug: index-page
+custom_js: prism
+prism_css: /assets/css/prism-landing-zone.css
 
 extra_nav_links:
   - name: Use Cases
@@ -56,35 +58,35 @@ how_it_works:
 
   - heading: Maintainers release new versions and patches
     precode: |
-      <figure><figcaption>terraform-to-14.patch</figcaption>
+      <figure><figcaption>terraform-to-12.patch</figcaption>
         <pre>
           <code class="language-yml">
-              code_transformations:
-                # Set the required_version parameter in terraform { ... } blocks to 0.14
-                  - update_required_version_to_tf_14
-                # Update all Gruntwork modules to versions that work with Terraform 0.14
-                - update_module_versions
-                # Update the CI vuild to use Terraform 0.14
-                - update_ci_to_tf_14
-                # Update Terratest to the version that works with Terraform 0.14
-                - update_terratest_to_tf_14
-              custom_scripts:
-                # Replace version parameters in provider blocks with required_provider blocks
-                - replace_provider_versions_with_required_providers
-                # Run Terraform format
-                - terraform_fmt
-                # Run Terraform validate
-                - terraform_validate
+      code_transformations:
+        # Set the required_version parameter in TF { ... } blocks to 0.14
+        - update_required_version_to_tf_14
+        # Update all Gruntwork modules to versions that work with TF 0.14
+        - update_module_versions
+        # Update the CI build to use Terraform 0.14
+        - update_ci_to_tf_14
+        # Update Terratest to the version that works with TF 0.14
+        - update_terratest_to_tf_14
+      custom_scripts:
+        # Replace version parameters in provider blocks with
+        # required_provider blocks
+        - replace_provider_versions_with_required_providers
+        # Run Terraform format
+        - terraform_fmt
+        # Run Terraform validate
+        - terraform_validate
           </code>
         </pre>
       </figure>
-    image_width: 418px
     image_side: right
     body: |
       As the maintainer of a dependency, you release new versions as usual (e.g., via a new Git tag), but if you are making a breaking change, you can now also create <em>patch files</em> to automatically update your users' code to handle the backwards incompatibilities.
 
   - heading: Patcher automatically patches your code and opens a pull request
-    image: https://s6.gifyu.com/images/tf92e8ec56f233ce68.gif
+    image: /assets/img/landing-page-patcher/terraform-12-pr.png
     image_side: left
     body: |
       Patcher automatically updates you to the new version and runs the maintainer's patches to update your code in case of backwards incompatible changes. All patches are run in a secure, sandboxed environment, so your code is always kept safe.
