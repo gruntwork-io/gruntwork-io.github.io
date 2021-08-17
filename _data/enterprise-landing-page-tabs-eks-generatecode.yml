@@ -1,17 +1,39 @@
 - id: reposcreenshot
-  title: Infrastructure Code
+  title: Example generated code
   content: |
-    <div class="screenshot">
-      <a href="/assets/img/landing-page-enterprise/infrastructure-live-screenshot.png"
-         title="Click to see the full size image"
-         target="_blank"
-      >
-        <img src="/assets/img/landing-page-enterprise/infrastructure-live-screenshot.png" />
-        <div class="img-overlay">
-          <i class="fa fa-search fa-3x" aria-hidden="true"></i>
-        </div>
-      </a>
-    </div>
+    <figure>
+      <pre>
+      <code class="language-treeview">infrastructure-live/
+      |-- README.md
+      |-- prod/
+      |   |-- global/
+      |   |   |-- account-baseline/
+      |   |   `-- route53/
+      |   `-- us-west-2/
+      |       |-- networking/
+      |       |   |-- alb/
+      |       |   `-- vpc/
+      |       `-- services/
+      |           |-- eks-cluster/
+      |           |-- eks-core-services/
+      |           |-- k8s-backend-app/
+      |           `-- k8s-frontend-app/
+      `-- stage/
+          |-- global/
+          |   |-- account-baseline/
+          |   `-- route53/
+          `-- us-west-2/
+              |-- networking/
+              |   |-- alb/
+              |   `-- vpc/
+              `-- services/
+                  |-- eks-cluster/
+                  |-- eks-core-services/
+                  |-- k8s-backend-app/
+                  `-- k8s-frontend-app/
+      </code>
+      </pre>
+    </figure>
 
 - id: reporeadme
   title: README.md
