@@ -21,8 +21,11 @@
             class="navbar-brand navbar-brand-beta"
             style="padding-left: 0"
             href="{{ landing_page_base_url }}"
-            ><strong>Gruntwork</strong>&nbsp;Labs</a
-          >
+            >
+            {% if page.extra_title %} <strong> {{ page.extra_title }} </strong> &nbsp;|&nbsp; Gruntwork&nbsp;Labs
+            {% else %} <strong>Gruntwork</strong>&nbsp;Labs
+            {% endif %}
+          </a>
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2" style="padding: 0">
           <ul class="nav navbar-nav navbar-right">
