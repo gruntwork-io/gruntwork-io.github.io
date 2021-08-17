@@ -39,42 +39,35 @@
       <div class="form-group">
         <div class="row">
           <div class="col-xs-12 col-md-4">
-            <label>Which features are you interested in?</label>
+            <label style="padding-top: 0;">Service Mesh</label>
+          </div>
+          <div class="col-xs-12 col-md-8">
+            {% include_relative _input-checkbox.html name="interested-feature-service-mesh" id="istio" value="Istio" width="145px" %}
+            {% include_relative _input-checkbox.html name="interested-feature-service-mesh" id="consul-connect" value="Consul Connect" width="145px" %}
+            {% include_relative _input-checkbox.html name="interested-feature-service-mesh" id="aws-app-mesh" value="AWS App Mesh" width="160px" %}
           </div>
         </div>
       </div>
       <div class="form-group">
         <div class="row">
           <div class="col-xs-12 col-md-4">
-            <label>Service Mesh</label>
+            <label style="padding-top: 0;">CI/CD</label>
           </div>
           <div class="col-xs-12 col-md-8">
-            {% include_relative _input-checkbox.html name="interested-feature-service-mesh" id="istio" value="Istio" %}
-            {% include_relative _input-checkbox.html name="interested-feature-service-mesh" id="consul-connect" value="Consul Connect" %}
-            {% include_relative _input-checkbox.html name="interested-feature-service-mesh" id="aws-app-mesh" value="AWS App Mesh" %}
+            {% include_relative _input-checkbox.html name="interested-feature-cicd" id="argo" value="Argo CD" width="145px" %}
+            {% include_relative _input-checkbox.html name="interested-feature-cicd" id="flux" value="Flux" width="145px" %}
           </div>
         </div>
       </div>
       <div class="form-group">
         <div class="row">
           <div class="col-xs-12 col-md-4">
-            <label>CI/CD</label>
+            <label style="padding-top: 0;">Self-service Dashboard</label>
           </div>
           <div class="col-xs-12 col-md-8">
-            {% include_relative _input-checkbox.html name="interested-feature-cicd" id="argo" value="Argo CD" %}
-            {% include_relative _input-checkbox.html name="interested-feature-cicd" id="flux" value="Flux" %}
-          </div>
-        </div>
-      </div>
-      <div class="form-group">
-        <div class="row">
-          <div class="col-xs-12 col-md-4">
-            <label>Self-service Dashboard</label>
-          </div>
-          <div class="col-xs-12 col-md-8">
-            {% include_relative _input-checkbox.html name="interested-feature-self-service" id="argo-dash" value="Argo Dashboard" %}
-            {% include_relative _input-checkbox.html name="interested-feature-self-service" id="flux-web" value="Flux Web UI" %}
-            {% include_relative _input-checkbox.html name="interested-feature-self-service" id="lens" value="Lens" %}
+            {% include_relative _input-checkbox.html name="interested-feature-self-service" id="argo-dash" value="Argo CD" width="145px" %}
+            {% include_relative _input-checkbox.html name="interested-feature-self-service" id="flux-web" value="Flux Web UI" width="145px" %}
+            {% include_relative _input-checkbox.html name="interested-feature-self-service" id="lens" value="Lens" width="145px" %}
           </div>
         </div>
       </div>
@@ -84,10 +77,10 @@
             <label>Monitoring</label>
           </div>
           <div class="col-xs-12 col-md-8">
-            {% include_relative _input-checkbox.html name="interested-feature-monitoring" id="cloudwatch" value="CloudWatch" %}
-            {% include_relative _input-checkbox.html name="interested-feature-monitoring" id="prometheus" value="Prometheus / Grafana" %}
-            {% include_relative _input-checkbox.html name="interested-feature-monitoring" id="datadog" value="Datadog" %}
-            {% include_relative _input-checkbox.html name="interested-feature-monitoring" id="elastic" value="Elastic Stack" %}
+            {% include_relative _input-checkbox.html name="interested-feature-monitoring" id="cloudwatch" value="CloudWatch" width="145px" %}
+            {% include_relative _input-checkbox.html name="interested-feature-monitoring" id="prometheus" value="Prometheus" width="145px" %}
+            {% include_relative _input-checkbox.html name="interested-feature-monitoring" id="datadog" value="Datadog" width="145px" %}
+            {% include_relative _input-checkbox.html name="interested-feature-monitoring" id="elastic" value="Elastic Stack" width="145px" %}
           </div>
         </div>
       </div>
@@ -97,10 +90,10 @@
             <label>App languages / frameworks</label>
           </div>
           <div class="col-xs-12 col-md-8">
-            {% include_relative _input-checkbox.html name="interested-feature-app" id="spring-sample-app" value="Spring app" %}
-            {% include_relative _input-checkbox.html name="interested-feature-app" id="rails-sample-app" value="Rails app" %}
-            {% include_relative _input-checkbox.html name="interested-feature-app" id="django-sample-app" value="Django app" %}
-            {% include_relative _input-checkbox.html name="interested-feature-app" id="nodejs-sample-app" value="Node.js app" %}
+            {% include_relative _input-checkbox.html name="interested-feature-app" id="spring-sample-app" value="Spring boot" width="145px" %}
+            {% include_relative _input-checkbox.html name="interested-feature-app" id="rails-sample-app" value="Rails app" width="145px" %}
+            {% include_relative _input-checkbox.html name="interested-feature-app" id="django-sample-app" value="Django app" width="145px" %}
+            {% include_relative _input-checkbox.html name="interested-feature-app" id="nodejs-sample-app" value="Node.js app" width="145px" %}
           </div>
         </div>
       </div>
@@ -110,9 +103,9 @@
             <label>Security / Compliance</label>
           </div>
           <div class="col-xs-12 col-md-8">
-            {% include_relative _input-checkbox.html name="interested-feature-security" id="cis-benchmark" value="CIS Benchmark" %}
-            {% include_relative _input-checkbox.html name="interested-feature-security" id="harbor" value="Harbor Registry" %}
-            {% include_relative _input-checkbox.html name="interested-feature-security" id="opa" value="Open Policy Agent" %}
+            {% include_relative _input-checkbox.html name="interested-feature-security" id="cis-benchmark" value="CIS Benchmark" width="145px" %}
+            {% include_relative _input-checkbox.html name="interested-feature-security" id="harbor" value="Harbor Registry" width="145px" %}
+            {% include_relative _input-checkbox.html name="interested-feature-security" id="opa" value="Open Policy Agent" width="160px" %}
           </div>
         </div>
       </div>
