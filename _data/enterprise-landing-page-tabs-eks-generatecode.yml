@@ -1,14 +1,11 @@
 - id: reposcreenshot
-  title: Example generated code
+  title: File structure
   content: |
     <figure>
       <pre>
       <code class="language-treeview">infrastructure-live/
       |-- README.md
       |-- prod/
-      |   |-- global/
-      |   |   |-- account-baseline/
-      |   |   `-- route53/
       |   `-- us-west-2/
       |       |-- networking/
       |       |   |-- alb/
@@ -16,12 +13,8 @@
       |       `-- services/
       |           |-- eks-cluster/
       |           |-- eks-core-services/
-      |           |-- k8s-backend-app/
-      |           `-- k8s-frontend-app/
+      |           `-- sample-app/
       `-- stage/
-          |-- global/
-          |   |-- account-baseline/
-          |   `-- route53/
           `-- us-west-2/
               |-- networking/
               |   |-- alb/
@@ -29,38 +22,18 @@
               `-- services/
                   |-- eks-cluster/
                   |-- eks-core-services/
-                  |-- k8s-backend-app/
-                  `-- k8s-frontend-app/
-      </code>
-      </pre>
+                  `-- sample-app/</code></pre>
     </figure>
 
-- id: reporeadme
-  title: README.md
-  content: |
-    <div class="screenshot">
-      <a href="/assets/img/landing-page-enterprise/infrastructure-live-readme.png"
-         title="Click to see the full size image"
-         target="_blank"
-      >
-        <img src="/assets/img/landing-page-enterprise/infrastructure-live-readme.png" />
-        <div class="img-overlay">
-          <i class="fa fa-search fa-3x" aria-hidden="true"></i>
-        </div>
-      </a>
-    </div>
-
 - id: cluster-deploy-code
-  title: main.tf
+  title: eks-cluster/main.tf
   content: |
-    <figure><figcaption>prod/us-west-2/services/eks_cluster/main.tf</figcaption>
+    <figure><figcaption>prod/us-west-2/services/eks-cluster/main.tf</figcaption>
       <pre>
       <code class="language-hcl">
-      # Example snippet from one of many Terraform files you get
+      # Example snippet from Terraform code to deploy an EKS cluster
 
       module "eks_cluster" {
-        # Since CIS is enabled, source from the CIS compliant
-        # service catalog.
         source =
           "github.com/gruntwork-io/service-catalog//eks-cluster"
         version = "v0.51.0"
@@ -110,6 +83,71 @@
         #       For dev, this will be set to gruntwork-dev.com
         external_dns_route53_hosted_zone_id_filters =
           ["gruntwork.io"]
+      }
+      </code>
+      </pre>
+      <figure>
+
+- id: app-deploy-code
+  title: sample-app/main.tf
+  content: |
+    <figure><figcaption>prod/us-west-2/services/sample-app/main.tf</figcaption>
+      <pre>
+      <code class="language-hcl">
+      # Example snippet from Terraform code to deploy an app
+
+      resource "helm_release" "application" {
+        name       = var.application_name
+        repository = "https://helmcharts.gruntwork.io"
+        chart      = "k8s-service"
+        version    = "v0.1.7"
+        namespace  = var.namespace
+
+        values = [
+          yamlencode(
+            merge(
+              local.helm_chart_input,
+              var.override_chart_inputs,
+            ),
+          ),
+        ]
+      }
+
+      locals {
+        helm_chart_input = {
+          applicationName = var.application_name
+
+          containerImage = {
+            repository = var.container_image["repository"]
+            tag        = var.container_image["tag"]
+            pullPolicy = var.container_image["pull_policy"]
+          }
+        }
+
+        containerPorts = {
+          http = {
+            port     = var.container_port
+            protocol = var.container_protocol
+          }
+          liveness = {
+            port     = var.liveness_probe_port
+            protocol = "TCP"
+          }
+          readiness = {
+            port     = var.readiness_probe_port
+            protocol = "TCP"
+          }
+        }
+
+        replicaCount = 3
+
+        horizontalPodAutoscaler = {
+          enabled              = true
+          minReplicas          = 2
+          maxReplicas          = 10
+          avgCpuUtilization    = 90
+          avgMemoryUtilization = 85
+        }
       }
       </code>
       </pre>
