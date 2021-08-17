@@ -1,0 +1,78 @@
+<style>
+  #why-gruntwork.table tr:nth-child(odd) td:last-child {
+    background-color: rgb(31, 59, 82);
+  }
+  #why-gruntwork.table tr:nth-child(even) td:last-child {
+    background-color: rgb(23, 51, 77);
+  }
+</style>
+<div class="table-responsive">
+  <table class="table table-striped" id="why-gruntwork">
+    <thead>
+      <tr>
+        <th style="width: 30%"></th>
+        <th style="width: 14%" class="text-center">kops</th>
+        <th style="width: 14%" class="text-center">Rancher</th>
+        <th style="width: 14%" class="text-center">EKS</th>
+        <th style="width: 30%" class="text-center">EKS with Gruntwork</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for category in page.why_gruntwork %}
+      <tr>
+        <td style="text-align: left;">
+          <h3 class="margin-bottom-none">{{ category.title }}</h3>
+        </td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+      {% for feature in category.features %}
+        {% capture id %}{{ feature.requirement | replace: " ", "_" | replace: ")", "_" | replace: "(", "_" }}" class="table-clickable-row" data-toggle="modal" data-target="#modal-{{ feature.name | replace: " ", "_" | replace: "(", "_" | replace: ")", "_" }}{% endcapture %}
+        <tr>
+          <td style="width: 25%; color: white;">
+            <span class="help-text light" title="{{ feature.description }}" data-toggle="tooltip">{{ feature.name }}</span>
+          </td>
+          <td style="text-align: center;">
+            {% if feature.kops == "no" %}
+              <i class="fa fa-times" style="color: #f92e64" aria-hidden="true"></i>
+            {% elsif feature.kops == "yes" %}
+              <i class="fa fa-check" style="color: #48bb78" aria-hidden="true"></i>
+            {% else %}
+              {{ feature.kops }}
+            {% endif %}
+          </td>
+          <td style="text-align: center;">
+            {% if feature.rancher == "no" %}
+              <i class="fa fa-times" style="color: #f92e64" aria-hidden="true"></i>
+            {% elsif feature.rancher == "yes" %}
+              <i class="fa fa-check" style="color: #48bb78" aria-hidden="true"></i>
+            {% else %}
+              {{ feature.rancher }}
+            {% endif %}
+          </td>
+          <td style="text-align: center;">
+            {% if feature.eks == "no" %}
+              <i class="fa fa-times" style="color: #f92e64" aria-hidden="true"></i>
+            {% elsif feature.eks == "yes" %}
+              <i class="fa fa-check" style="color: #48bb78" aria-hidden="true"></i>
+            {% else %}
+              {{ feature.eks }}
+            {% endif %}
+          </td>
+          <td style="text-align: center;">
+            {% if feature.gruntwork == "no" %}
+              <i class="fa fa-times" style="color: #f92e64" aria-hidden="true"></i>
+            {% elsif feature.gruntwork == "yes" %}
+              <i class="fa fa-check" style="color: #48bb78" aria-hidden="true"></i>
+            {% else %}
+              {{ feature.gruntwork }}
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
