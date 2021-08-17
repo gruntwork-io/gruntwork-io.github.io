@@ -49,26 +49,48 @@ how_it_works:
       It takes just a few clicks to add Patcher to your GitHub repos. GitLab and BitBucket support is coming soon. You can get started completely for free.
 
   - heading: Patcher discovers your dependencies automatically
-    image: /assets/img/landing-page-patcher/patcher-cli.gif
+    tab_block: site.data.patcher-landing-page-tabs-dependencies-list
     image_side: left
     body: |
       Patcher will automatically discover dependencies for popular languages and tools such as JavaScript, Ruby, Java, Python, Go, Terraform, and Docker. You can also add special comments to your code to help Patcher discover dependencies in non-standard locations (e.g., in a Bash script).
 
   - heading: Maintainers release new versions and patches
-    image: /assets/img/infrastructure-cube-icons/infrastructure-expert-support.png
+    precode: |
+      <figure><figcaption>terraform-to-14.patch</figcaption>
+        <pre>
+          <code class="language-yml">
+              code_transformations:
+                # Set the required_version parameter in terraform { ... } blocks to 0.14
+                  - update_required_version_to_tf_14
+                # Update all Gruntwork modules to versions that work with Terraform 0.14
+                - update_module_versions
+                # Update the CI vuild to use Terraform 0.14
+                - update_ci_to_tf_14
+                # Update Terratest to the version that works with Terraform 0.14
+                - update_terratest_to_tf_14
+              custom_scripts:
+                # Replace version parameters in provider blocks with required_provider blocks
+                - replace_provider_versions_with_required_providers
+                # Run Terraform format
+                - terraform_fmt
+                # Run Terraform validate
+                - terraform_validate
+          </code>
+        </pre>
+      </figure>
     image_width: 418px
     image_side: right
     body: |
       As the maintainer of a dependency, you release new versions as usual (e.g., via a new Git tag), but if you are making a breaking change, you can now also create <em>patch files</em> to automatically update your users' code to handle the backwards incompatibilities.
 
   - heading: Patcher automatically patches your code and opens a pull request
-    image: /assets/img/infrastructure-cube-icons/infrastructure-design-your-stack-grunty.png
+    image: https://s6.gifyu.com/images/tf92e8ec56f233ce68.gif
     image_side: left
     body: |
       Patcher automatically updates you to the new version and runs the maintainer's patches to update your code in case of backwards incompatible changes. All patches are run in a secure, sandboxed environment, so your code is always kept safe.
 
   - heading: You review and merge
-    image: /assets/img/infrastructure-cube-icons/infrastructure-expert-support.png
+    image: /assets/img/landing-page-patcher/review-pr.png
     image_width: 418px
     image_side: right
     body: |
