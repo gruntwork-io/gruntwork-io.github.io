@@ -25,6 +25,59 @@
                   `-- sample-app/</code></pre>
     </figure>
 
+- id: vpc-deploy-code
+  title: vpc/main.tf
+  content: |
+    <figure><figcaption>prod/us-west-2/networking/vpc/main.tf</figcaption>
+      <pre>
+      <code class="language-hcl">
+      # Example snippet from Terraform code to deploy a VPC
+      # If you already have a VPC, this step will be skipped
+
+      module "vpc" {
+        source =
+          "github.com/gruntwork-io/terraform-aws-vpc//vpc-app"
+
+        vpc_name         = "prod-vpc"
+        cidr_block       = "10.0.0.0/16"
+        num_nat_gateways = 3
+
+        # EKS requires your VPCs/subnets to be tagged a specific way
+        vpc_tags             = module.tags.vpc_tags
+        public_subnet_tags   = module.tags.public_tags
+        private_subnet_tags  = module.tags.private_tags
+      }
+
+      module "tags" {
+        source =
+          "github.com/gruntwork-io/terraform-aws-eks//eks-vpc-tags"
+
+        eks_cluster_names = var.eks_cluster_names
+      }
+
+      module "vpc_network_acls" {
+        source =
+          "github.com/gruntwork-io/terraform-aws-vpc//network-acls"
+
+        vpc_id             = module.vpc.vpc_id
+        public_subnet_ids  = module.vpc.public_subnet_ids
+        private_subnet_ids = module.vpc.private_subnet_ids
+      }
+
+      module "vpc_flow_logs" {
+        source
+          = "github.com/gruntwork-io/terraform-aws-vpc/flow-logs"
+
+        vpc_id         = module.vpc.vpc_id
+        log_group_name = "${module.vpc.vpc_name}-flow-logs"
+        kms_key_users  = var.kms_key_user_iam_arns
+        kms_key_arn    = var.kms_key_arn
+        traffic_type   = var.flow_logs_traffic_type
+      }
+      </code>
+      </pre>
+      <figure>
+
 - id: cluster-deploy-code
   title: eks-cluster/main.tf
   content: |
@@ -83,71 +136,6 @@
         #       For dev, this will be set to gruntwork-dev.com
         external_dns_route53_hosted_zone_id_filters =
           ["gruntwork.io"]
-      }
-      </code>
-      </pre>
-      <figure>
-
-- id: app-deploy-code
-  title: sample-app/main.tf
-  content: |
-    <figure><figcaption>prod/us-west-2/services/sample-app/main.tf</figcaption>
-      <pre>
-      <code class="language-hcl">
-      # Example snippet from Terraform code to deploy an app
-
-      resource "helm_release" "application" {
-        name       = var.application_name
-        repository = "https://helmcharts.gruntwork.io"
-        chart      = "k8s-service"
-        version    = "v0.1.7"
-        namespace  = var.namespace
-
-        values = [
-          yamlencode(
-            merge(
-              local.helm_chart_input,
-              var.override_chart_inputs,
-            ),
-          ),
-        ]
-      }
-
-      locals {
-        helm_chart_input = {
-          applicationName = var.application_name
-
-          containerImage = {
-            repository = var.container_image["repository"]
-            tag        = var.container_image["tag"]
-            pullPolicy = var.container_image["pull_policy"]
-          }
-        }
-
-        containerPorts = {
-          http = {
-            port     = var.container_port
-            protocol = var.container_protocol
-          }
-          liveness = {
-            port     = var.liveness_probe_port
-            protocol = "TCP"
-          }
-          readiness = {
-            port     = var.readiness_probe_port
-            protocol = "TCP"
-          }
-        }
-
-        replicaCount = 3
-
-        horizontalPodAutoscaler = {
-          enabled              = true
-          minReplicas          = 2
-          maxReplicas          = 10
-          avgCpuUtilization    = 90
-          avgMemoryUtilization = 85
-        }
       }
       </code>
       </pre>
