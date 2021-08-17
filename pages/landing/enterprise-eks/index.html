@@ -23,60 +23,61 @@ how_it_works:
     precode: |
       <figure><figcaption>eks_configuration.yml</figcaption>
         <pre>
-            <code class="language-yml">
-            # Use this file to configure your EKS cluster.
-            # Gruntwork will generate your Terraform code from just this
-            # file!
+        <code class="language-yml">
+        # Use this file to configure your EKS cluster.
+        # Gruntwork will generate your Terraform code from just this
+        # file!
 
-            # Configure CIS Benchmark compliance
-            cis:
-              enable_pod_security_policies: true
-              enable_network_security_policies: true
-              enable_eks_cluster_hardening: true
+        # Configure CIS Benchmark compliance
+        cis:
+          enable_pod_security_policies: true
+          enable_network_security_policies: true
+          enable_eks_cluster_hardening: true
 
-            # Choose from istio, consul-connect, aws-app-mesh
-            service_mesh: "istio"
+        # Choose from istio, consul-connect, aws-app-mesh
+        service_mesh: "istio"
 
-            # Choose from flux or argocd
-            cicd: "argocd"
+        # Choose from flux or argocd
+        cicd: "argocd"
 
-            # Choose from argocd or lens
-            self_service: "argocd"
+        # Choose from argocd or lens
+        self_service: "argocd"
 
-            # Choose from prometheus, datadog, cloudwatch
-            metric_aggregation: "prometheus"
+        # Choose from prometheus, datadog, cloudwatch
+        metric_aggregation: "prometheus"
 
-            # Choose from elastic, datadog, cloudwatch
-            log_aggregation: "elastic"
+        # Choose from elastic, datadog, cloudwatch
+        log_aggregation: "elastic"
 
-            # Configure auto scaling
-            cluster_autoscaler:
-              enabled: true
-              min: 2
-              max: 4
+        # Configure auto scaling
+        cluster_autoscaler:
+          enabled: true
+          min: 2
+          max: 4
 
-            # Enable harbor as a trusted registry
-            harbor:
-              enabled: true
+        # Enable harbor as a trusted registry
+        harbor:
+          enabled: true
 
-            # Enable Open Policy Agent rules to enforce security & compliance baselines
-            opa:
-              enable_kubernetes_rules: true
-              enable_terraform_rules: true
+        # Enable Open Policy Agent rules to enforce
+        # security & compliance baselines
+        opa:
+          enable_kubernetes_rules: true
+          enable_terraform_rules: true
 
-            # Enable a controller for one-way encrypted secrets.
-            sealed_secrets:
-              enabled: true
+        # Enable a controller for one-way encrypted secrets.
+        sealed_secrets:
+          enabled: true
 
-            # Allow managing domain names in your K8S manifests
-            external_dns:
-              enabled: true
-              domains:
-                - env: "dev"
-                  domain: "your-dev-domain.com"
-                - env: "prod"
-                  domain: "your-prod-domain.com"
-            </code>
+        # Allow managing domain names in your K8S manifests
+        external_dns:
+          enabled: true
+          domains:
+            - env: "dev"
+              domain: "your-dev-domain.com"
+            - env: "prod"
+              domain: "your-prod-domain.com"
+        </code>
         </pre>
       </figure>
     image_side: right
@@ -166,8 +167,7 @@ how_it_works:
         src: /assets/img/logos-technologies/logo-express.png
 
   - heading: "Step 5: Deploy your apps"
-    image: /assets/img/landing-page-enterprise/argocd-create.png
-    image_link_to_full: true
+    image: /assets/img/landing-page-enterprise/argocd-create.gif
     image_caption: Connect your repository to Argo CD to deploy.
     image_side: right
     body: |
@@ -209,8 +209,8 @@ how_it_works:
         src: /assets/img/logos-technologies/logo-datadog-white.png
 
   - heading: "Step 7: Stay up to date"
-    image: /assets/img/landing-heroku-page/grunty-free-step-5.png
-    image_width: 250px
+    image: /assets/img/hipaa/stay-up-to-date.png
+    image_link_to_full: true
     image_side: right
     body: |
       All the modules and code is commercially supported and maintained. We push versioned updates to keep the
@@ -251,18 +251,17 @@ conclusion:
   <div id="how-it-works" class="section section-dark">
     <div class="container">
       {% include_relative _how-it-works.html %}
-    </div>
-  </div>
-  <div id="conclusion" class="section section-dark">
-    <div class="row row-call-to-action">
-      <div class="col-xs-12 text-center">
-        <h2 style="padding-top: 30px" class="h1 no-anchor">{{ page.conclusion.heading }}</h2>
-        <p style="margin-top: -30px">{{ page.conclusion.body }}</p>
-        <p>
-          <a {% if page.alternate_cta_link %} href="{{ page.alternate_cta_link }}" {% else %}
-            href="{{ page.permalink }}pricing/contact" {% endif %}class="btn btn-info" role="button" ga-on="click"
-            ga-event-category="{{ page.path | slugify }}" ga-event-action="conclusion-cta">{{ page.conclusion.cta }}</a>
-        </p>
+
+      <div class="row row-call-to-action">
+        <div class="col-xs-12 text-center">
+          <h2 style="padding-top: 30px" class="h1 no-anchor">{{ page.conclusion.heading }}</h2>
+          <p style="margin-top: -30px">{{ page.conclusion.body }}</p>
+          <p>
+            <a {% if page.alternate_cta_link %} href="{{ page.alternate_cta_link }}" {% else %}
+              href="{{ page.permalink }}pricing" {% endif %}class="btn btn-info" role="button" ga-on="click"
+              ga-event-category="{{ page.path | slugify }}" ga-event-action="conclusion-cta">{{ page.conclusion.cta }}</a>
+          </p>
+        </div>
       </div>
     </div>
   </div>
