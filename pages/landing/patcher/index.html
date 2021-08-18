@@ -43,12 +43,12 @@ hero:
     name: PHP
 
 how_it_works:
-  - heading: Install the Patcher GitHub App
+  - heading: Install the Patcher App
     image: /assets/img/landing-page-patcher/github-step-1.png
     image_width: 379px
     image_side: right
     body: |
-      It takes just a few clicks to add Patcher to your GitHub repos. GitLab and BitBucket support is coming soon. You can get started completely for free.
+      It takes just a few clicks to install Patcher in GitHub, BitBucket or GitLab. You can get started completely for free.
 
   - heading: Patcher discovers your dependencies automatically
     tab_block: site.data.patcher-landing-page-tabs-dependencies-list
@@ -58,22 +58,21 @@ how_it_works:
 
   - heading: Maintainers release new versions and patches
     precode: |
-      <figure><figcaption>terraform-to-12.patch</figcaption>
+      <figure><figcaption>tf-13-to-14.patch</figcaption>
         <pre>
           <code class="language-yml">
+      # This is an example Patch file to update from
+      # Terraform 0.13 to 0.14
       code_transformations:
-        # Set the required_version parameter in TF { ... } blocks to 0.12
-        - update_required_version_to_tf_12
-        # Update all Gruntwork modules to versions that work with TF 0.12
+        # Update Terratest and Go modules to the latest
+        - run_go_mod_tidy
+        # Add .terraform.lock.hcl to .gitignore
+        - add_lock_to_gitignore
+        # Update all Gruntwork modules
         - update_module_versions
-        # Update the CI build to use Terraform 0.12
-        - update_ci_to_tf_12
-        # Update Terratest to the version that works with TF 0.12
-        - update_terratest_to_tf_12
-      custom_scripts:
-        # Replace version parameters in provider blocks with
-        # required_provider blocks
+        # Add required_providers block
         - replace_provider_versions_with_required_providers
+      custom_scripts:
         # Run Terraform format
         - terraform_fmt
         # Run Terraform validate
