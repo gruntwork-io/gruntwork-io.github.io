@@ -62,14 +62,14 @@ how_it_works:
         <pre>
           <code class="language-yml">
       code_transformations:
-        # Set the required_version parameter in TF { ... } blocks to 0.14
-        - update_required_version_to_tf_14
-        # Update all Gruntwork modules to versions that work with TF 0.14
+        # Set the required_version parameter in TF { ... } blocks to 0.12
+        - update_required_version_to_tf_12
+        # Update all Gruntwork modules to versions that work with TF 0.12
         - update_module_versions
-        # Update the CI build to use Terraform 0.14
-        - update_ci_to_tf_14
-        # Update Terratest to the version that works with TF 0.14
-        - update_terratest_to_tf_14
+        # Update the CI build to use Terraform 0.12
+        - update_ci_to_tf_12
+        # Update Terratest to the version that works with TF 0.12
+        - update_terratest_to_tf_12
       custom_scripts:
         # Replace version parameters in provider blocks with
         # required_provider blocks
