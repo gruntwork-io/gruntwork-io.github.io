@@ -23,7 +23,7 @@ use_cases:
         image: "https://s6.gifyu.com/images/tf92e8ec56f233ce68.gif"
       - id: patch
         title: tf-13-to-14.patch
-        include: _example-patch.html
+        include: tf-13-to-14-patch-example.html
     body: |
       <ul>
         <li>Use Patcher to update your Terraform code from an older version (e.g. 0.11) all the way up to the latest version (e.g. 1.0) automatically.</li>
@@ -48,15 +48,20 @@ use_cases:
 
   - heading: |
       <div style="font-size: 18px; color: #CCC">Example #3</div>
-      <div>Keep everyone on the latest version of an internal Java library</div>
-    image: https://upload.wikimedia.org/wikipedia/de/thumb/e/e1/Java-Logo.svg/1200px-Java-Logo.svg.png
-    image_width: 200px
+      <div>Keep all microservices patched with the latest internal Java library</div>
+    tab_block:
+      - id: upgrade-test
+        title: Example upgrade tests
+        image: /assets/img/logos-patcher/patcher-upgrade-test.png
+      - id: java-library-patch
+        title: Example patch file
+        include: java-library-patch-example.html
     body: |
       <ol>
-        <li>Let's say you are the maintainer of a <code>security.jar</code> library that is used by 300 microservices (300 other teams) within your company.</li>
-        <li>When you open a pull request with some changes to <code>security.jar</code>, Patcher automatically finds all the services that depends on <code>security.jar</code>, runs their tests with your updates, and shows you the results, so you know if you made breaking changes.</li>
-        <li>If you did make breaking changes, you can create a <i>Patch File</i> to patch those services, and Patcher will show you the results of both applying your Patch File and executing the tests of each service.</li>
-        <li>Once all tests are passing, you merge, release a new version of <code>security.jar</code>, and Patcher opens pull requests against all those services to update them to the new version.</li>
+        <li>You make a change to <code>security.jar</code>, a library used by many microservices within your company, and open a pull request.</li>
+        <li>Patcher automatically finds all those services and runs their tests with your updates (<em>Upgrade Tests</em>), so you know if any of your changes were breaking.</li>
+        <li>If you did make breaking changes, you can create a <i>Patch File</i> to patch those services, and Patcher will run Upgrade Tests with your updated code and Patch File.</li>
+        <li>When you release a new version of <code>security.jar</code>, Patcher will automatically update each service to use it, including running your Patch File.</li>
       </ol>
 
 footer:
