@@ -2962,3 +2962,10 @@ input[type=number]::-webkit-outer-spin-button {
 .center-pills {
   display: inline-block;
 }
+
+// This is a fix for https://github.com/gruntwork-io/gruntwork-io.github.io/issues/573. For some reason, when we have
+// the table-responsive class on tables, and those tables have some interior borders, we get an unnecessary horizontal
+// scrollbar. For some crazy reason, adding a transparent 1px border to the table somehow removes that scrollbar.
+.table-responsive-border-fix {
+  border: 1px solid transparent;
+}
