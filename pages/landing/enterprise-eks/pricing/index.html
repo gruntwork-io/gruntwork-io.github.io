@@ -3,8 +3,12 @@ layout: landing
 type: landing
 slug: index-page
 
-title: Amazon EKS for Enterprise Early Access
-excerpt: Sign up now for early access to Amazon EKS for Enterprise! Early access subscribers will receive exclusive benefits and a significantly reduced subscription price.
+extra_nav_links:
+  - name: Why Gruntwork
+    url: /eks-for-enterprise/#why-gruntwork
+
+title: Pick a plan
+excerpt: Pick the plan just right for your team.
 permalink: /eks-for-enterprise/pricing/
 
 categories:
@@ -19,35 +23,35 @@ categories:
       - name: Core services
         description: Suite of core Kubernetes applications every EKS cluster should have, including AWS LoadBalancer controller, external-dns, cluster-autoscaler, and more.
         plans: ["Standard", "Enterprise"]
-      - name: CI/CD
+      - name: Standard CI/CD
         description: Support for setting up an infrastructure CI/CD pipeline using traditional CI services (e.g., Jenkins, CircleCI, GitLab CI, etc).
         plans: ["Standard", "Enterprise"]
-      - name: Basic monitoring
+      - name: Standard monitoring
         description: Support for metric and log aggregation to AWS CloudWatch.
         plans: ["Standard", "Enterprise"]
-      - name: Basic deployment models
+      - name: Standard deployment models
         description: Support for rolling deployments where a configurable number of service Pods are replaced at a time.
         plans: ["Standard", "Enterprise"]
-      - name: Basic networking
+      - name: Standard networking
         description: Support for AWS VPC based networking for Kubernetes Pods.
         plans: ["Standard", "Enterprise"]
-      - name: Cluster auto scaling
+      - name: Standard auto scaling
         description: Support for EKS worker node auto scaling throught the Kubernetes cluster-autoscaler.
         plans: ["Standard", "Enterprise"]
-      - name: K8s native CI/CD
+      - name: Enterprise CI/CD
         description: Support for CI/CD workflows using Kubernetes native services such as Argo CD and Flux.
         plans: ["Enterprise"]
-      - name: Advanced monitoring
+      - name: Enterprise monitoring
         description: Support for metric and log aggregation through various 3rd party and in-cluster options, such as DataDog, Prometheus, Grafana, Elastic Stack, etc.
         plans: ["Enterprise"]
-      - name: Advanced deployment models
+      - name: Enterprise deployment models
         description: Support for wide range of deployment models including canary, blue/green, automatic rollbacks, etc.
         plans: ["Enterprise"]
-      - name: Advanced networking
+      - name: Enterprise networking
         description: Support for wide range of Pod networking options including Calico and Service Mesh.
         plans: ["Enterprise"]
-      - name: Pod auto scaling
-        description: Support for configuring and managing vertical and horizontal Pod auto scaling.
+      - name: Enterprise auto scaling
+        description: Support for configuring and managing vertical and horizontal Pod auto scaling. Customized cluster auto-scaling based on server metrics.
         plans: ["Enterprise"]
       - name: Self-service UI
         description: Friendly developer interface for managing and deploying application services on to the EKS cluster using a self-service dashboard such as Argo CD and Lens.
@@ -66,10 +70,10 @@ categories:
       - name: Container Security Scanning
         description: Security scanning for container images through AWS ECR.
         plans: ["Standard", "Enterprise"]
-      - name: Basic encryption
+      - name: Standard encryption
         description: Support for end to end encryption through self-signed certificates managed with in-cluster (through cert-manager) and out-of-cluster (through CLI tools) management.
         plans: ["Standard", "Enterprise"]
-      - name: Advanced encryption
+      - name: Enterprise encryption
         description: Support for end to end encryption with mutual TLS auth through service meshes.
         plans: ["Enterprise"]
       - name: Service communication ACLs
@@ -163,6 +167,12 @@ faq:
       </p>
       <p>
         Note that if you cancel in the first 30 days, you lose the license to the code in the Infrastructure as Code Library, so you must stop using it and delete any references to it; on the other hand, if you do stick with the annual subscription, and cancel after at least one year, you can keep using all the code you had been using up to that point.
+      </p>
+
+  - question: What if I am already a Gruntwork customer?
+    answer: |
+      <p>
+        If you are already a subscriber to Gruntwork for AWS, then you currently have access to "Gruntwork Standard" EKS features. The "Gruntwork Enterprise" EKS features are available as an upgrade / replacement for your current subscription. If you're interested in upgrading, please use the contact form to request early access, and be sure to mention that you are a current subscriber!
       </p>
 
   - question: What happens to my code if I cancel my subscription?

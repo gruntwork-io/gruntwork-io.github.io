@@ -3,6 +3,10 @@ layout: landing
 type: landing
 slug: index-page
 
+extra_nav_links:
+  - name: Why Gruntwork
+    url: /eks-for-enterprise/#why-gruntwork
+
 title: Amazon EKS for the enterprise. In about a day.
 permalink: /eks-for-enterprise/
 custom_js:
@@ -23,60 +27,61 @@ how_it_works:
     precode: |
       <figure><figcaption>eks_configuration.yml</figcaption>
         <pre>
-            <code class="language-yml">
-            # Use this file to configure your EKS cluster.
-            # Gruntwork will generate your Terraform code from just this
-            # file!
+        <code class="language-yml">
+        # Use this file to configure your EKS cluster.
+        # Gruntwork will generate your Terraform code from just this
+        # file!
 
-            # Configure CIS Benchmark compliance
-            cis:
-              enable_pod_security_policies: true
-              enable_network_security_policies: true
-              enable_eks_cluster_hardening: true
+        # Configure CIS Benchmark compliance
+        cis:
+          enable_pod_security_policies: true
+          enable_network_security_policies: true
+          enable_eks_cluster_hardening: true
 
-            # Choose from istio, consul-connect, aws-app-mesh
-            service_mesh: "istio"
+        # Choose from istio, consul-connect, aws-app-mesh
+        service_mesh: "istio"
 
-            # Choose from flux or argocd
-            cicd: "argocd"
+        # Choose from flux or argocd
+        cicd: "argocd"
 
-            # Choose from argocd or lens
-            self_service: "argocd"
+        # Choose from argocd or lens
+        self_service: "argocd"
 
-            # Choose from prometheus, datadog, cloudwatch
-            metric_aggregation: "prometheus"
+        # Choose from prometheus, datadog, cloudwatch
+        metric_aggregation: "prometheus"
 
-            # Choose from elastic, datadog, cloudwatch
-            log_aggregation: "elastic"
+        # Choose from elastic, datadog, cloudwatch
+        log_aggregation: "elastic"
 
-            # Configure auto scaling
-            cluster_autoscaler:
-              enabled: true
-              min: 2
-              max: 4
+        # Configure auto scaling
+        cluster_autoscaler:
+          enabled: true
+          min: 2
+          max: 4
 
-            # Enable harbor as a trusted registry
-            harbor:
-              enabled: true
+        # Enable harbor as a trusted registry
+        harbor:
+          enabled: true
 
-            # Enable Open Policy Agent rules to enforce security & compliance baselines
-            opa:
-              enable_kubernetes_rules: true
-              enable_terraform_rules: true
+        # Enable Open Policy Agent rules to enforce
+        # security & compliance baselines
+        opa:
+          enable_kubernetes_rules: true
+          enable_terraform_rules: true
 
-            # Enable a controller for one-way encrypted secrets.
-            sealed_secrets:
-              enabled: true
+        # Enable a controller for one-way encrypted secrets.
+        sealed_secrets:
+          enabled: true
 
-            # Allow managing domain names in your K8S manifests
-            external_dns:
-              enabled: true
-              domains:
-                - env: "dev"
-                  domain: "your-dev-domain.com"
-                - env: "prod"
-                  domain: "your-prod-domain.com"
-            </code>
+        # Allow managing domain names in your K8S manifests
+        external_dns:
+          enabled: true
+          domains:
+            - env: "dev"
+              domain: "your-dev-domain.com"
+            - env: "prod"
+              domain: "your-prod-domain.com"
+        </code>
         </pre>
       </figure>
     image_side: right
@@ -119,8 +124,7 @@ how_it_works:
         src: /assets/img/landing-heroku-page/bitbucket-icon.png
 
   - heading: "Step 3: Deploy your EKS cluster"
-    image: /assets/img/landing-page-enterprise/tfc-screenshot.png
-    image_link_to_full: true
+    image: /assets/img/landing-page-enterprise/tfc-plan-apply.gif
     image_caption: Deploy generated code in the browser using Terraform Cloud / Enterprise.
     image_side: right
     body: |
@@ -166,8 +170,7 @@ how_it_works:
         src: /assets/img/logos-technologies/logo-express.png
 
   - heading: "Step 5: Deploy your apps"
-    image: /assets/img/landing-page-enterprise/argocd-create.png
-    image_link_to_full: true
+    image: /assets/img/landing-page-enterprise/argocd-create.gif
     image_caption: Connect your repository to Argo CD to deploy.
     image_side: right
     body: |
@@ -209,8 +212,7 @@ how_it_works:
         src: /assets/img/logos-technologies/logo-datadog-white.png
 
   - heading: "Step 7: Stay up to date"
-    image: /assets/img/landing-heroku-page/grunty-free-step-5.png
-    image_width: 250px
+    image: /assets/img/landing-page-enterprise/dependency-update.png
     image_side: right
     body: |
       All the modules and code is commercially supported and maintained. We push versioned updates to keep the
@@ -220,6 +222,182 @@ how_it_works:
           <li>Regularly update to the latest Kubernetes version</li>
           <li>Maintain compliance across CIS benchmark versions</li>
       </ul>
+
+why_gruntwork:
+  - title: Cluster
+    features:
+      - name: "Fully-managed control plane"
+        description: "Provides a Kubernetes control plane that is operated and maintained by a 3rd party as a service (e.g., by AWS)"
+        kops: "no"
+        rancher: "yes"
+        eks: "yes"
+        gruntwork: "yes"
+      - name: "Self-managed control plane"
+        description: "Provides a Kubernetes control plane that your team is responsible for operating and maintaining yourself"
+        kops: "yes"
+        rancher: "yes"
+        eks: "no"
+        gruntwork: "no"
+      - name: "Fully-managed worker nodes"
+        description: "Provides Kubernetes worker nodes that are operated and maintained by a 3rd party as a service (e.g., by AWS)"
+        kops: "no"
+        rancher: "yes"
+        eks: "yes"
+        gruntwork: "yes"
+      - name: "Self-managed worker nodes"
+        description: "Provides Kubernetes worker nodes that your team is responsible for operating and maintaining yourself"
+        kops: "yes"
+        rancher: "yes"
+        eks: "yes"
+        gruntwork: "yes"
+      - name: "Service mesh"
+        description: "Provides a service mesh such as Istio, Consul Connect, or AWS App Mesh out-of-the-box."
+        kops: "no"
+        rancher: "no"
+        eks: "no"
+        gruntwork: "yes"
+  - title: Cluster management
+    features:
+      - name: "Manage everything as code"
+        description: "You can manage your Kubernetes cluster as code using tools such as Terraform or CloudFormation."
+        kops: "yes"
+        rancher: "no"
+        eks: "yes"
+        gruntwork: "yes"
+      - name: "Node auto scaling"
+        description: "Supports automatically scaling the number of worker nodes up and down in response to load, out-of-the-box."
+        kops: "no"
+        rancher: "yes"
+        eks: "no"
+        gruntwork: "yes"
+      - name: "CI / CD for infrastructure"
+        description: "Includes a CI / CD pipeline for rolling out changes to infrastructure, including the Kubernetes cluster itself, out-of-the-box."
+        kops: "no"
+        rancher: "no"
+        eks: "no"
+        gruntwork: "yes"
+      - name: "Cluster monitoring"
+        description: "Cluster metrics, dashboards, and log aggregation are available out-of-the-box."
+        kops: "no"
+        rancher: "yes"
+        eks: "yes"
+        gruntwork: "yes"
+  - title: App management
+    features:
+      - name: "Rolling deployment"
+        description: "Supports rolling deployment for apps out-of-the-box"
+        kops: "yes"
+        rancher: "yes"
+        eks: "yes"
+        gruntwork: "yes"
+      - name: "Blue-green deployment"
+        description: "Supports blue-green deployment for apps out-of-the-box."
+        kops: "no"
+        rancher: "no"
+        eks: "no"
+        gruntwork: "yes"
+      - name: "CI / CD pipeline for apps"
+        description: "Supports a CI / CD pipeline for rolling out changes to apps out-of-the-box."
+        kops: "no"
+        rancher: "yes"
+        eks: "no"
+        gruntwork: "yes"
+      - name: "Self-service UI"
+        description: "Includes a web UI for managing apps, nodes, logs, and metrics out-of-the-box."
+        kops: "no"
+        rancher: "yes"
+        eks: "no"
+        gruntwork: "yes"
+      - name: "Pod auto scaling"
+        description: "Supports automatically scaling the number of pods up and down in response to load, out-of-the-box."
+        kops: "no"
+        rancher: "yes"
+        eks: "no"
+        gruntwork: "yes"
+      - name: "App monitoring"
+        description: "App metrics, dashboards, and log aggregation are available out-of-the-box."
+        kops: "no"
+        rancher: "yes"
+        eks: "no"
+        gruntwork: "yes"
+  - title: Security
+    features:
+      - name: "Server hardening"
+        description: "All servers (worker nodes) are implement security best practices out-of-the-box, including OS hardening, SSH key management, fail2ban, NTP, and more."
+        kops: "no"
+        rancher: "no"
+        eks: "no"
+        gruntwork: "yes"
+      - name: "Sealed secrets"
+        description: "Manage Kubernetes secrets as code by sealing them in your repositories with AWS KMS encryption."
+        kops: "no"
+        rancher: "no"
+        eks: "no"
+        gruntwork: "yes"
+      - name: "End-to-end encryption"
+        description: "All data is encrypted on disk and in-transit (e.g., service-to-service communication), out-of-the-box."
+        kops: "no"
+        rancher: "no"
+        eks: "no"
+        gruntwork: "yes"
+      - name: "Service communication ACLs"
+        description: "All communication between services is tightly controlled via service mesh ACLs, out-of-the-box."
+        kops: "no"
+        rancher: "no"
+        eks: "no"
+        gruntwork: "yes"
+      - name: "Network security policies"
+        description: "Best-practice network security policies are installed, out-of-the-box."
+        kops: "no"
+        rancher: "no"
+        eks: "no"
+        gruntwork: "yes"
+      - name: "Pod security policies"
+        description: "Best-practice pod security policies are installed, out-of-the-box."
+        kops: "no"
+        rancher: "yes"
+        eks: "no"
+        gruntwork: "yes"
+      - name: "OPA policies"
+        description: "Support for enforcing organization governance and compliance through Open Policy Agent is available out-of-the-box."
+        kops: "no"
+        rancher: "no"
+        eks: "no"
+        gruntwork: "yes"
+  - title: Compliance
+    features:
+      - name: "AWS Well Architected"
+        description: "The Kubernetes cluster follows AWS guidelines and latest industry best practices."
+        kops: "yes"
+        rancher: "yes"
+        eks: "yes"
+        gruntwork: "yes"
+      - name: "CIS AWS Foundations Benchmark"
+        description: "The Kubernetes cluster is compliant with the CIS AWS Foundations Benchmark, out-of-the-box. The CIS AWS Foundations Benchmark is an objective, consensus-driven guideline for establishing secure infrastructure on AWS."
+        kops: "no"
+        rancher: "no"
+        eks: "no"
+        gruntwork: "yes"
+      - name: "CIS EKS Benchmark"
+        description: "The Kubernetes cluster is compliant the CIS EKS Benchmark, out-of-the-box. The CIS EKS Benchmark is an objective, consensus-driven guideline for establishing a secure EKS cluster."
+        kops: "no"
+        rancher: "yes"
+        eks: "no"
+        gruntwork: "yes"
+  - title: Target environments
+    features:
+      - name: "Multi-cloud and hybrid cloud"
+        description: "Supports running Kubernetes clusters across multiple clouds (e.g., AWS, GCP, Azure) and on-prem."
+        kops: "yes"
+        rancher: "yes"
+        eks: "no"
+        gruntwork: "no"
+      - name: "AWS and cloud native"
+        description: "Runs Kubernetes in AWS using AWS-native and cloud-native best practices and services."
+        kops: "no"
+        rancher: "no"
+        eks: "yes"
+        gruntwork: "yes"
 
 
 conclusion:
@@ -253,23 +431,28 @@ conclusion:
       {% include_relative _how-it-works.html %}
     </div>
   </div>
-  <div id="conclusion" class="section section-dark">
-    <div class="row row-call-to-action">
-      <div class="col-xs-12 text-center">
-        <h2 style="padding-top: 30px" class="h1 no-anchor">{{ page.conclusion.heading }}</h2>
-        <p style="margin-top: -30px">{{ page.conclusion.body }}</p>
-        <p>
-          <a {% if page.alternate_cta_link %} href="{{ page.alternate_cta_link }}" {% else %}
-            href="{{ page.permalink }}pricing/contact" {% endif %}class="btn btn-info" role="button" ga-on="click"
-            ga-event-category="{{ page.path | slugify }}" ga-event-action="conclusion-cta">{{ page.conclusion.cta }}</a>
-        </p>
-      </div>
-    </div>
-  </div>
   <div class="section section-blue">
     <div class="container">
       <div class="row row-community">
         {% include_relative _social-proof.html %}
+      </div>
+    </div>
+  </div>
+  <div class="section dark">
+    <div class="container">
+      <div class="row">
+        {% include_relative _comparison.html %}
+      </div>
+      <div class="row row-call-to-action">
+        <div class="col-xs-12 text-center">
+          <h2 style="padding-top: 30px" class="h1 no-anchor">{{ page.conclusion.heading }}</h2>
+          <p style="margin-top: -30px">{{ page.conclusion.body }}</p>
+          <p>
+            <a {% if page.alternate_cta_link %} href="{{ page.alternate_cta_link }}" {% else %}
+               href="{{ page.permalink }}pricing" {% endif %}class="btn btn-info" role="button" ga-on="click"
+               ga-event-category="{{ page.path | slugify }}" ga-event-action="conclusion-cta">{{ page.conclusion.cta }}</a>
+          </p>
+        </div>
       </div>
     </div>
   </div>

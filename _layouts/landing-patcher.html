@@ -3,7 +3,7 @@
     <head>
         {% include head.html %}
     </head>
-    <body>
+    <body{% if page.slug %} class="{{ page.slug }}{% if page.slug != 'index-page' and page.slug !='how-it-works' and page.slug != 'guides' %} sub-page{% endif %}" {% endif %}>
         {% include landing-navbar-patcher.html %}
         {{ content }}
         {% include scripts.html %}

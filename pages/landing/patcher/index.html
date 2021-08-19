@@ -1,14 +1,21 @@
 ---
-layout: landing
+layout: landing-patcher
 type: landing
 slug: index-page
+custom_js: prism
+prism_css: /assets/css/prism-landing-zone.css
 
-title: "Keep your code up to date, even with breaking changes."
+extra_nav_links:
+  - name: Use Cases
+    url: /patcher/use-cases/
+
+title: "Patcher | Gruntwork"
+title_text: Keep your code up to date, even with breaking changes.
 excerpt: Patcher automatically creates pull requests to keep your dependencies up to date, updating not only the version numbers, but also patching your code to handle backwards incompatible changes.
 permalink: /patcher/
 
 hero:
-  image: /assets/img/infrastructure-cube-icons/infrastructure-in-a-day.png
+  image: /assets/img/landing-page-patcher/patcher.png
   cta: Request early access
   logos:
   - logo: /assets/img/logos-patcher/python.png
@@ -37,34 +44,34 @@ hero:
     name: PHP
 
 how_it_works:
-  - heading: Install the Patcher GitHub App
-    image: /assets/img/infrastructure-cube-icons/infrastructure-design-your-stack.png
+  - heading: Install the Patcher App
+    image: /assets/img/landing-page-patcher/github-step-1.png
     image_width: 379px
     image_side: right
     body: |
-      It takes just a few clicks to add Patcher to your GitHub repos. GitLab and BitBucket support is coming soon. You can get started completely for free.
+      It takes just a few clicks to install Patcher in GitHub, BitBucket or GitLab. You can get started completely for free.
 
   - heading: Patcher discovers your dependencies automatically
-    image: /assets/img/infrastructure-cube-icons/infrastructure-design-your-stack-grunty.png
+    tab_block: site.data.patcher-landing-page-tabs-dependencies-list
     image_side: left
     body: |
       Patcher will automatically discover dependencies for popular languages and tools such as JavaScript, Ruby, Java, Python, Go, Terraform, and Docker. You can also add special comments to your code to help Patcher discover dependencies in non-standard locations (e.g., in a Bash script).
 
   - heading: Maintainers release new versions and patches
-    image: /assets/img/infrastructure-cube-icons/infrastructure-expert-support.png
-    image_width: 418px
+    include_code: tf-13-to-14-patch-example.html
+    include_code_caption: tf-13-to-14.patch
     image_side: right
     body: |
       As the maintainer of a dependency, you release new versions as usual (e.g., via a new Git tag), but if you are making a breaking change, you can now also create <em>patch files</em> to automatically update your users' code to handle the backwards incompatibilities.
 
   - heading: Patcher automatically patches your code and opens a pull request
-    image: /assets/img/infrastructure-cube-icons/infrastructure-design-your-stack-grunty.png
+    image: /assets/img/landing-page-patcher/terraform-12-pr.png
     image_side: left
     body: |
       Patcher automatically updates you to the new version and runs the maintainer's patches to update your code in case of backwards incompatible changes. All patches are run in a secure, sandboxed environment, so your code is always kept safe.
 
   - heading: You review and merge
-    image: /assets/img/infrastructure-cube-icons/infrastructure-expert-support.png
+    image: /assets/img/landing-page-patcher/review-pr.png
     image_width: 418px
     image_side: right
     body: |
@@ -120,9 +127,6 @@ features:
   - title: Configurable
     description: "Specify how often to open pull requests: immediately after new releases, daily, weekly, etc."
     icon: /assets/img/landing-zone-features/features-3@3x.png
-
-comparison:
-  - title:
 
 footer:
   heading: Make breaking changes a thing of the past
