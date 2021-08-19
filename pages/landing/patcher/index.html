@@ -58,29 +58,8 @@ how_it_works:
       Patcher will automatically discover dependencies for popular languages and tools such as JavaScript, Ruby, Java, Python, Go, Terraform, and Docker. You can also add special comments to your code to help Patcher discover dependencies in non-standard locations (e.g., in a Bash script).
 
   - heading: Maintainers release new versions and patches
-    precode: |
-      <figure><figcaption>tf-13-to-14.patch</figcaption>
-        <pre>
-          <code class="language-yml">
-      # This is an example Patch file to update from
-      # Terraform 0.13 to 0.14
-      code_transformations:
-        # Update Terratest and Go modules to the latest
-        - run_go_mod_tidy
-        # Add .terraform.lock.hcl to .gitignore
-        - add_lock_to_gitignore
-        # Update all Gruntwork modules
-        - update_module_versions
-        # Add required_providers block
-        - replace_provider_versions_with_required_providers
-      custom_scripts:
-        # Run Terraform format
-        - terraform_fmt
-        # Run Terraform validate
-        - terraform_validate
-          </code>
-        </pre>
-      </figure>
+    include_code: _example-patch.html
+    include_code_caption: tf-13-to-14.patch
     image_side: right
     body: |
       As the maintainer of a dependency, you release new versions as usual (e.g., via a new Git tag), but if you are making a breaking change, you can now also create <em>patch files</em> to automatically update your users' code to handle the backwards incompatibilities.
