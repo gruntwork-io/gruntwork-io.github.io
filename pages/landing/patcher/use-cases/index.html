@@ -2,6 +2,8 @@
 layout: landing
 type: landing
 slug: index-page
+custom_js: prism
+prism_css: /assets/css/prism-landing-zone.css
 
 extra_nav_links:
   - name: Use Cases
@@ -16,10 +18,10 @@ use_cases:
     tab_block:
       - id: pr
         title: Example Pull Request
-        content: "https://s6.gifyu.com/images/tf92e8ec56f233ce68.gif"
+        image: "https://s6.gifyu.com/images/tf92e8ec56f233ce68.gif"
       - id: patch
-        title: tf-14-to-15.patch
-        content: "https://i.imgur.com/mxEkeHw.png"
+        title: tf-13-to-14.patch
+        include: _example-patch.html
     body: |
       <ul>
         <li>Use Patcher to update your Terraform code from an older version (e.g. 0.11) all the way up to the latest version (e.g. 1.0) automatically.</li>
@@ -32,7 +34,7 @@ use_cases:
     tab_block:
       - id: rails-pr
         title: Example Pull Request
-        content: /assets/img/logos-patcher/patch-rails-vulnerability.png
+        image: /assets/img/logos-patcher/patch-rails-vulnerability.png
     body: |
       <ul>
         <li>Ruby on Rails has had several severe vulnerabilities with YAML parsing (e.g., <a href="https://www.rapid7.com/blog/post/2013/01/09/serialization-mischief-in-ruby-land-cve-2013-0156/">CVE-2013-0156</a>) that allowed remote attackers to execute arbitrary code, conduct SQL injection attacks, or bypass authentication.</li>

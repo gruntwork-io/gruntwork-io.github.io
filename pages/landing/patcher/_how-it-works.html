@@ -5,9 +5,12 @@
 </div>
 {% for item in page.how_it_works %}
   <div class="row">
-    {% if item.precode %}
+    {% if item.include_code %}
       <div class="item_precode row-image-content {% if item.image_side == "left" %}col-xs-12 col-sm-7 col-md-6 col-diagram{% else %}col-xs-10 col-xs-offset-1 col-sm-5 col-sm-push-7 col-sm-offset-0 col-md-6 col-md-push-6 col-diagram{% endif %}">
-        {{ item.precode }}
+        <figure>
+          <figcaption>{{ item.include_code_caption }}</figcaption>
+          {% include {{ item.include_code }} %}
+        </figure>
       </div>
     {% endif %}
   {% if item.tab_block %}
