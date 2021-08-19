@@ -1,4 +1,4 @@
-<div>
+<div style="float: left; width: {{ include.width }};">
   <input id="{{ include.id }}" name="{{ include.name }}" type="checkbox" value="{{ include.value }}"{% if include.checked %} checked{% endif %}>
   <label for="{{ include.id }}">
     {{ include.value }}
