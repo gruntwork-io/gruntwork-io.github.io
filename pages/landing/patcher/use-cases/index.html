@@ -13,7 +13,13 @@ permalink: /patcher/use-cases/
 
 use_cases:
   - heading: "Use case 1: Update to Terraform 1.0 automatically"
-    tab_block: site.data.patcher-landing-page-tabs-terraform-upgrade
+    tab_block:
+      - id: pr
+        title: Example Pull Request
+        content: "https://s6.gifyu.com/images/tf92e8ec56f233ce68.gif"
+      - id: patch
+        title: tf-14-to-15.patch
+        content: "https://i.imgur.com/mxEkeHw.png"
     body: |
       <ul>
         <li>Use Patcher to update your Terraform code from an older version (e.g. 0.11) all the way up to the latest version (e.g. 1.0) automatically.</li>
@@ -22,12 +28,14 @@ use_cases:
       </ul>
 
   - heading: "Use case 2: Automatically patch a severe security vulnerability in Ruby on Rails"
-    image: https://rubyonrails.org/images/rails-logo.svg
-    image_width: 379px
     image_side: left
+    tab_block:
+      - id: rails-pr
+        title: Example Pull Request
+        content: /assets/img/logos-patcher/patch-rails-vulnerability.png
     body: |
       <ul>
-        <li>In <a href="https://github.com/advisories/GHSA-xgr2-v94m-rc9g">CVE-2013-0333</a>, a severe security vulnerability was found in Ruby on Rails that allowed remote attackers to execute arbitrary code, conduct SQL injection attacks, or bypass authentication.</li>
+        <li>Ruby on Rails has had several severe vulnerabilities with YAML parsing (e.g., <a href="https://www.rapid7.com/blog/post/2013/01/09/serialization-mischief-in-ruby-land-cve-2013-0156/">CVE-2013-0156</a>) that allowed remote attackers to execute arbitrary code, conduct SQL injection attacks, or bypass authentication.</li>
         <li>You can use Patcher to automatically update your Rails app to fix this vulnerability.</li>
         <li>Patcher can not only update you to the new version of Ruby on Rails, but also make the necessary changes to your app code to ensure the vulnerability is fully fixed.</li>
       </ul>
