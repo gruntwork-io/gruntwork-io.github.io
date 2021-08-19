@@ -19,7 +19,7 @@
     {% assign tab_data = site.data.enterprise-landing-page-tabs-eks-app-monitor %}
     {% endcase %}
 
-      <div class="row-image-content {% if item.image_side == "left" %}col-xs-8 col-xs-offset-2 col-sm-5 col-sm-offset-0 col-md-6 col-diagram hidden-print{% else %}col-xs-10 col-xs-offset-1 col-sm-5 col-sm-push-7 col-sm-offset-0 col-md-6 col-md-push-6 col-diagram{% endif %}">
+      <div class="item_precode_code row-image-content {% if item.image_side == "left" %}col-xs-12 col-sm-7 col-md-6 col-description{% else %}col-xs-12 col-sm-7 col-sm-pull-5 col-md-6 col-md-push-6 col-description{% endif %}">
         <div class="tab_block">
           {% for tab in tab_data %}
           <div class="tab">
