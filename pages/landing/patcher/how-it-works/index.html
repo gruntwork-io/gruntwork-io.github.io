@@ -15,13 +15,6 @@ permalink: /patcher/how-it-works/
 custom_js:
   - prism
 prism_css: /assets/css/prism-landing-zone.css
-hero:
-  image: /assets/img/infrastructure-cube-icons/infrastructure-in-a-day.png
-  cta: Request early access
-  logos:
-    - /assets/img/logos-technologies/partner_logo_aws.png
-    - /assets/img/logos-compliance/cis.png
-    - /assets/img/logos-compliance/hipaa.png
 
 how_it_works:
   - heading: Use your favorite languages
@@ -45,10 +38,10 @@ how_it_works:
       The apps are designed to work seamlessly in our <a href="/reference-architecture">Reference Architecture.</a>
 
 footer:
-  heading: Go live with Gruntwork HIPAA Cloud!
+  heading: Keep your code always up to date with Patcher!
   body: |
-    Request early access to receive exclusive benefits and discounts!
-    <ul class="check-list check-white" style="text-align: left; display: inline-block;"><li><span class="help-text light" title="" data-toggle="tooltip" data-original-title="You’ll be the first to gain access to the solution once it’s ready"> Pre-release HIPAA-Compliant Infrastructure </span> </li><li><span class="help-text light" title="" data-toggle="tooltip" data-original-title="Early adopters will receive the solution at a major discount!"> Early adopter discount</span> </li><li><span class="help-text light" title="" data-toggle="tooltip" data-original-title="We’ll work with you to ensure the solution meets your organization’s requirements"> Influence the product direction</span> </li><li><span class="help-text light" title="" data-toggle="tooltip" data-original-title="We’ll go through the audit with you, implementing any technical changes indicated by the auditor"> HITECH audit support</span> </li></ul>
+    Request early access to join the waitlist!
+    <ul class="check-list check-white" style="text-align: left; display: inline-block;"><li><span class="help-text light" title="" data-toggle="tooltip" data-original-title="You’ll be the first to gain access to the solution once it’s ready"> Patcher </span> </li><li><span class="help-text light" title="" data-toggle="tooltip" data-original-title="The first 25 repos are for free for existing Gruntwork subscribers!"> Great if you're already a Gruntwork Subscriber</span> </li><li><span class="help-text light" title="" data-toggle="tooltip" data-original-title="We’ll work with you to ensure the solution meets your organization’s requirements"> Influence the product direction</span> </li>
   cta: Request early access
 
 maintainer_how_it_works:
@@ -65,19 +58,41 @@ maintainer_how_it_works:
       Patcher discovers all users of your library within your company, runs their automated tests with your updated code, and gives you a report if those tests passed. That way, you know how your changes affect your downstream users before merging!
 
   - heading: Create a patch file
-    image: /assets/img/hipaa/hipaa-sample-app.png
+    precode: |
+      <figure><figcaption>tf-13-to-14.patch</figcaption>
+        <pre>
+            <code class="language-yml">
+              # This is an example Patch file to update from
+              # Terraform 0.13 to 0.14
+              code_transformations:
+                # Update Terratest and Go modules to the latest
+                - run_go_mod_tidy
+                # Add .terraform.lock.hcl to .gitignore
+                - add_lock_to_gitignore
+                # Update all Gruntwork modules
+                - update_module_versions
+                # Add required_providers block
+                - replace_provider_versions_with_required_providers
+              custom_scripts:
+                # Run Terraform format
+                - terraform_fmt
+                # Run Terraform validate
+                - terraform_validate
+            </code>
+          </pre>
+      </figure>
     image_side: right
     body: |
       If you are making backwards incompatible changes, you can create a Patch file to automatically upgrade the code of your library's users. Patch files can perform text transformations (e.g., add a new input variable) as well as execute custom scripts (e.g., run some CLI tools).
 
   - heading: Run tests against your patch
-    tab_code_preview: site.data.hipaa-landing-page-tabs-ref-arch-code
+    image: /assets/img/landing-page-patcher/example-patcher-upgrade-test.png
     image_side: left
     body: |
       You can use <code>patcher plan</code> and <code>patcher apply</code> to test your patch against a repo. Patcher will also run your patch against all users of your library in a temporary branch and run their tests, so you can see check if both your code changes and patch are working.
 
   - heading: Merge and release
-    image: /assets/img/hipaa/grunty-audit.png
+    image: /assets/img/landing-page-patcher/review-pr.png
     image_width: 350px
     image_side: right
     body: |
