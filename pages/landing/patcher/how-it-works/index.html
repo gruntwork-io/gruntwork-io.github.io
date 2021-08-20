@@ -81,7 +81,7 @@ maintainer_how_it_works:
             </code>
           </pre>
       </figure>
-    image_side: right
+    image_side: left
     body: |
       If you are making backwards incompatible changes, you can create a Patch file to automatically upgrade the code of your library's users. Patch files can perform text transformations (e.g., add a new input variable) as well as execute custom scripts (e.g., run some CLI tools).
 
@@ -92,7 +92,7 @@ maintainer_how_it_works:
       You can use <code>patcher plan</code> and <code>patcher apply</code> to test your patch against a repo. Patcher will also run your patch against all users of your library in a temporary branch and run their tests, so you can see check if both your code changes and patch are working.
 
   - heading: Merge and release
-    image: /assets/img/landing-page-patcher/review-pr.png
+    image: /assets/img/landing-page-patcher/release.png
     image_width: 350px
     image_side: right
     body: |
@@ -175,9 +175,7 @@ pricing:
       <!-- Maintainer Workflow tab -->
       <div role="tabpanel" class="tab-pane active" id="maintainer-workflow">
         <div class="container">
-          <h1 style="padding-bottom: 40px">
-            Library Maintainer Workflow
-          </h1>
+          <h1 style="padding-bottom: 40px">Library Maintainer Workflow</h1>
           {% include_relative _maintainer-how-it-works.html %}
         </div>
       </div>
@@ -185,9 +183,7 @@ pricing:
       <div role="tabpanel" class="tab-pane" id="user-workflow">
         <div id="how-it-works" class="section-dark">
           <div class="container">
-            <h1 style="padding-bottom: 40px">
-              Library User Workflow
-            </h1>
+            <h1 style="padding-bottom: 40px">Library User Workflow</h1>
             {% include_relative _user-how-it-works.html %}
           </div>
         </div>
