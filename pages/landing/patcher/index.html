@@ -18,30 +18,30 @@ hero:
   image: /assets/img/landing-page-patcher/patcher.png
   cta: Request early access
   logos:
-  - logo: /assets/img/logos-patcher/python.png
-    name: Python
-  - logo: /assets/img/logos-patcher/javascript.png
-    name: JavaScript
-  - logo: /assets/img/logos-patcher/ruby.png
-    name: Ruby
-  - logo: /assets/img/logos-patcher/helm.png
-    name: Helm
-  - logo: /assets/img/logos-patcher/terraform.png
-    name: Terraform
-  - logo: /assets/img/logos-patcher/terragrunt.png
-    name: Terragrunt
-  - logo: /assets/img/logos-patcher/docker.png
-    name: Docker
-  - logo: /assets/img/logos-patcher/golang.png
-    name: Go
-  - logo: /assets/img/logos-patcher/rust.png
-    name: Rust
-  - logo: /assets/img/logos-patcher/c-sharp.png
-    name: C#
-  - logo: /assets/img/logos-patcher/java.png
-    name: Java
-  - logo: /assets/img/logos-patcher/php.png
-    name: PHP
+    - logo: /assets/img/logos-patcher/python.png
+      name: Python
+    - logo: /assets/img/logos-patcher/javascript.png
+      name: JavaScript
+    - logo: /assets/img/logos-patcher/ruby.png
+      name: Ruby
+    - logo: /assets/img/logos-patcher/helm.png
+      name: Helm
+    - logo: /assets/img/logos-patcher/terraform.png
+      name: Terraform
+    - logo: /assets/img/logos-patcher/terragrunt.png
+      name: Terragrunt
+    - logo: /assets/img/logos-patcher/docker.png
+      name: Docker
+    - logo: /assets/img/logos-patcher/golang.png
+      name: Go
+    - logo: /assets/img/logos-patcher/rust.png
+      name: Rust
+    - logo: /assets/img/logos-patcher/c-sharp.png
+      name: C#
+    - logo: /assets/img/logos-patcher/java.png
+      name: Java
+    - logo: /assets/img/logos-patcher/php.png
+      name: PHP
 
 how_it_works:
   - heading: Install the Patcher App
@@ -53,6 +53,7 @@ how_it_works:
 
   - heading: Patcher discovers your dependencies automatically
     tab_block: site.data.patcher-landing-page-tabs-dependencies-list
+    feature: true
     image_side: left
     body: |
       Patcher will automatically discover dependencies for popular languages and tools such as JavaScript, Ruby, Java, Python, Go, Terraform, and Docker. You can also add special comments to your code to help Patcher discover dependencies in non-standard locations (e.g., in a Bash script).
@@ -137,34 +138,24 @@ footer:
 <div class="main">
   <div class="section section-hero">
     <div class="container">
-      <div class="row">
-        {% include_relative _hero.html %}
-      </div>
+      <div class="row">{% include_relative _hero.html %}</div>
     </div>
   </div>
   <div class="section section-blue section-sub-hero">
     <div class="container">
-      <div class="row">
-        {% include_relative _sub-hero.html %}
-      </div>
+      <div class="row">{% include_relative _sub-hero.html %}</div>
     </div>
   </div>
   <div id="how-it-works" class="section section-dark">
-    <div class="container">
-      {% include_relative _how-it-works.html %}
-    </div>
+    <div class="container">{% include_relative _how-it-works.html %}</div>
   </div>
   <div class="section section-blue">
     <div class="container">
-      <div class="row row-community">
-        {% include_relative _features.html %}
-      </div>
+      <div class="row row-community">{% include_relative _features.html %}</div>
     </div>
   </div>
   <div id="why-patcher" class="section section-dark">
-    <div class="container">
-      {% include_relative _why-patcher.html %}
-    </div>
+    <div class="container">{% include_relative _why-patcher.html %}</div>
   </div>
   <div class="section section-blue">
     <div class="container">
