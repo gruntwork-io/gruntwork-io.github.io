@@ -9,7 +9,7 @@
       </div>
     {% endif %}
   {% if item.tab_block %}
-  <div class="row-image-content {% if item.image_side == "left" %}col-xs-8 col-xs-offset-2 col-sm-5 col-sm-offset-0 col-md-6 col-diagram hidden-print{% else %}col-xs-10 col-xs-offset-1 col-sm-5 col-sm-push-7 col-sm-offset-0 col-md-6 col-md-push-6 col-diagram{% endif %}">
+  <div class="row-image-content {% if item.feature  %}{% elsif item.image_side == "left" %}col-xs-8 col-xs-offset-2 col-sm-5 col-sm-offset-0 col-md-6 col-diagram hidden-print{% else %}col-xs-10 col-xs-offset-1 col-sm-5 col-sm-push-7 col-sm-offset-0 col-md-6 col-md-push-6 col-diagram{% endif %}">
     <div class="tab_block">
       {% for tab in site.data.patcher-landing-page-tabs-dependencies-list %}
       <div class="tab">
@@ -17,7 +17,7 @@
       </div>
       {% endfor %}
     </div>
-    <div class="tab_content">
+    <div style="{% if item.feature %}height:100%{% endif %}" class="tab_content">
       {% for tab in site.data.patcher-landing-page-tabs-dependencies-list %}
       <div id="{{tab.id}}" class="{% if forloop.first %}first_tabcontent tabcontent{% else %}tabcontent{% endif %}">
         <img src="{{tab.content}}"/>
@@ -29,13 +29,17 @@
     <div class="{% if item.image_side == "left" %}col-xs-8 col-xs-offset-2 col-sm-5 col-sm-offset-0 col-md-6 col-diagram hidden-print{% else %}col-xs-10 col-xs-offset-1 col-sm-5 col-sm-push-7 col-sm-offset-0 col-md-6 col-md-push-6 col-diagram{% endif %}">
       <img src="{{ item.image }}" width="{{ item.image_width }}" style="margin-left: 3px;"/>
     </div>
-    <div class="{% if item.image_side == "left" %}col-xs-12 col-sm-7 col-md-6 col-description{% else %}col-xs-12 col-sm-7 col-sm-pull-5 col-md-6 col-md-pull-6 col-description{% endif %}">
+    <div style="{% if item.feature %}margin-top: 100px;{% endif %}" class="{% if item.feature %}{% elsif item.image_side == "left" %}col-xs-12 col-sm-7 col-md-6 col-description{% else %}col-xs-12 col-sm-7 col-sm-pull-5 col-md-6 col-md-pull-6 col-description{% endif %}">
       <h2>{{ item.heading }}</h2>
       <p>{{ item.body }}</p>
     </div>
   </div>
 {% endfor %}
-
+<div class="row">
+	<h2>You review and merge</h2>
+	<p>You review the pull request, check if your automated tests have passed, and if everything looks good, you can merge, safely and easily keeping all your dependencies up to date.</p>
+<img src="/assets/img/landing-page-patcher/pr-checks.png" />
+	</div>
 <style>
   .tab_content {
     padding: 20px;
