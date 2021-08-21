@@ -27,7 +27,7 @@
   </div>
   {% endif %}
     <div class="{% if item.image_side == "left" %}col-xs-8 col-xs-offset-2 col-sm-5 col-sm-offset-0 col-md-6 col-diagram hidden-print{% else %}col-xs-10 col-xs-offset-1 col-sm-5 col-sm-push-7 col-sm-offset-0 col-md-6 col-md-push-6 col-diagram{% endif %}">
-      <img src="{{ item.image }}" width="{{ item.image_width }}" style="margin-left: 3px;"/>
+      <img src="{{ item.image }}" class="row_image_content" width="{{ item.image_width }}" style="margin-left: 3px; max-width: 450px;"/>
     </div>
     <div style="{% if item.feature %}margin-top: 100px;{% endif %}" class="{% if item.feature %}{% elsif item.image_side == "left" %}col-xs-12 col-sm-7 col-md-6 col-description{% else %}col-xs-12 col-sm-7 col-sm-pull-5 col-md-6 col-md-pull-6 col-description{% endif %}">
       <h2>{{ item.heading }}</h2>
@@ -41,6 +41,11 @@
 <img src="/assets/img/landing-page-patcher/pr-checks.png" />
 	</div>
 <style>
+  .tab_content, .tab_code_content {
+    border: 1px solid #194c5f;
+    border-radius: 0 0 4px 4px;
+  }
+
   .tab_content {
     padding: 20px;
     height: 350px;
@@ -51,6 +56,11 @@
     width: 100%;
     display: inline-table;
     max-width: 500px;
+    border: 1px solid #194c5f;
+    border-bottom: none;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+
   }
 
   .tab {
@@ -61,6 +71,7 @@
     border-collapse: collapse;
     border: 1px solid #194c5f;
     border-top: none;
+    border-bottom: none;
   }
 
   .tab.code:first-child, .tab:first-child, .tab.code:last-child, .tab:last-child {
@@ -100,14 +111,19 @@
     background-color: #06a2ff !important;
   }
 
-  .row .item_precode {
+  .row .item_precode_code, .item_precode {
     position: relative;
+  }
+
+  .item_precode_code figure {
+    border: 1px solid #194c5f;
+    border-radius: 4px;
   }
 
   figcaption {
     font-size: 14px;
   }
-  .row .item_precode figcaption {
+  .row .item_precode figcaption, .row .item_precode_code figcaption {
     position: absolute;
     top: -15px;
     background-color: #ee4f5d;
@@ -138,10 +154,15 @@
     margin: 0;
   }
 
-  .row_image_content:last-child {
-    border: none;
+  .row:last-of-type .row_image_content {
+    /*border: none;*/
+    margin-bottom: 50px;
   }
 
+  .item_precode figure {
+    border: 1px solid #194c5f;
+    border-radius: 4px;
+  }
 </style>
 
 <script>
