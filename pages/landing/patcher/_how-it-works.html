@@ -9,7 +9,13 @@
       </div>
     {% endif %}
   {% if item.tab_block %}
-  <div class="row-image-content {% if item.feature  %}{% elsif item.image_side == "left" %}col-xs-8 col-xs-offset-2 col-sm-5 col-sm-offset-0 col-md-6 col-diagram hidden-print{% else %}col-xs-10 col-xs-offset-1 col-sm-5 col-sm-push-7 col-sm-offset-0 col-md-6 col-md-push-6 col-diagram{% endif %}">
+  {% if item.feature %}
+    <div style="margin-top: 100px;" class="">
+      <h2>{{ item.heading }}</h2>
+      <p>{{ item.body }}</p>
+    </div>
+    {% endif %}
+<div class="row-image-content {% if item.feature  %}{% elsif item.image_side == "left" %}col-xs-8 col-xs-offset-2 col-sm-5 col-sm-offset-0 col-md-6 col-diagram hidden-print{% else %}col-xs-10 col-xs-offset-1 col-sm-5 col-sm-push-7 col-sm-offset-0 col-md-6 col-md-push-6 col-diagram{% endif %}">
     <div class="tab_block">
       {% for tab in site.data.patcher-landing-page-tabs-dependencies-list %}
       <div class="tab">
@@ -29,10 +35,12 @@
     <div class="{% if item.image_side == "left" %}col-xs-8 col-xs-offset-2 col-sm-5 col-sm-offset-0 col-md-6 col-diagram hidden-print{% else %}col-xs-10 col-xs-offset-1 col-sm-5 col-sm-push-7 col-sm-offset-0 col-md-6 col-md-push-6 col-diagram{% endif %}">
       <img src="{{ item.image }}" class="row_image_content" width="{{ item.image_width }}" style="margin-left: 3px; max-width: 450px;"/>
     </div>
+    {% if item.feature != true %}
     <div style="{% if item.feature %}margin-top: 100px;{% endif %}" class="{% if item.feature %}{% elsif item.image_side == "left" %}col-xs-12 col-sm-7 col-md-6 col-description{% else %}col-xs-12 col-sm-7 col-sm-pull-5 col-md-6 col-md-pull-6 col-description{% endif %}">
       <h2>{{ item.heading }}</h2>
       <p>{{ item.body }}</p>
     </div>
+    {% endif %}
   </div>
 {% endfor %}
 <div class="row">
