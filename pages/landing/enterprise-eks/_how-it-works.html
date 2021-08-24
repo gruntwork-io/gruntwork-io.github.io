@@ -62,7 +62,10 @@
       </div>
     {% endif %}
       <div class="{% if item.image_side == "left" %}col-xs-12 col-sm-7 col-md-6 col-description{% else %}col-xs-12 col-sm-7 col-sm-pull-5 col-md-6 col-md-pull-6 col-description{% endif %}">
-        <h2>{{ item.heading }}</h2>
+        <h2>
+            <div class="step">Step #{{ forloop.index + 1 }}</div>
+            <div>{{ item.heading }}</div>
+        </h2>
         <p>{{ item.body }}</p>
         <div>
           {% for logo in item.logos %}
@@ -208,6 +211,11 @@
     height: 100%;
     top: 0;
     left: 0;
+  }
+
+  .step {
+    font-size: 18px;
+    color: #CCC;
   }
 
   .img-overlay .fa {
