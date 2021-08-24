@@ -111,17 +111,17 @@ user_how_it_works:
     body: |
       Patcher discovers dependencies for popular languages and tools such as JavaScript, Ruby, Java, Python, Go, Terraform and Docker. You can also add special comments to your code to help Patcher discover dependencies in non-standard locations (e.g., in a Bash script).
 
-  - heading: Patcher patches your code and opens a PR
+  - heading: Patcher automatically patches your code and opens a pull request
     image: /assets/img/landing-page-patcher/terraform-12-pr.png
     image_side: right
     body: |
-      When a maintain releases new code, Patcher automatically opens a PR to update you to the new version. If the new version included a patch, Patcher executes the Patch too, and the updated code is part of the PR.
+      Patcher updates you to the new version and runs the maintainer's patches to update your code in case of backwards incompatible changes. All patches are run in a secure, sandboxed environment, so your code is always kept safe.
 
   - heading: You review and merge
     image: /assets/img/landing-page-patcher/large-review-pr.png
     image_side: left
     body: |
-      You see the code changes and test results in the Patch and can safely merge when you're happy.
+      You review the pull request, check if your automated tests have passed, and if everything looks good, you can merge, safely and easily keeping all your dependencies up to date.
 
 pricing:
   - title: Lite
