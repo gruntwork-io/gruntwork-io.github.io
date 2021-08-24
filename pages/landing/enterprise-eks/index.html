@@ -23,205 +23,207 @@ hero:
   - /assets/img/logos-technologies/partner_logo_terraform.png
 
 how_it_works:
-  - heading: "Configure your EKS cluster"
-    precode: |
-      <figure><figcaption>eks_configuration.yml</figcaption>
-        <pre>
-        <code class="language-yml">
-        # Use this file to configure your EKS cluster.
-        # Gruntwork will generate your Terraform code from just this
-        # file!
+  ops_experience:
+    - heading: "Configure your EKS cluster"
+      precode: |
+        <figure><figcaption>eks_configuration.yml</figcaption>
+          <pre>
+          <code class="language-yml">
+          # Use this file to configure your EKS cluster.
+          # Gruntwork will generate your Terraform code from just this
+          # file!
 
-        # Configure CIS Benchmark compliance
-        cis:
-          enable_pod_security_policies: true
-          enable_network_security_policies: true
-          enable_eks_cluster_hardening: true
+          # Configure CIS Benchmark compliance
+          cis:
+            enable_pod_security_policies: true
+            enable_network_security_policies: true
+            enable_eks_cluster_hardening: true
 
-        # Choose from istio, consul-connect, aws-app-mesh
-        service_mesh: "istio"
+          # Choose from istio, consul-connect, aws-app-mesh
+          service_mesh: "istio"
 
-        # Choose from flux or argocd
-        cicd: "argocd"
+          # Choose from flux or argocd
+          cicd: "argocd"
 
-        # Choose from argocd or lens
-        self_service: "argocd"
+          # Choose from argocd or lens
+          self_service: "argocd"
 
-        # Choose from prometheus, datadog, cloudwatch
-        metric_aggregation: "prometheus"
+          # Choose from prometheus, datadog, cloudwatch
+          metric_aggregation: "prometheus"
 
-        # Choose from elastic, datadog, cloudwatch
-        log_aggregation: "elastic"
+          # Choose from elastic, datadog, cloudwatch
+          log_aggregation: "elastic"
 
-        # Configure auto scaling
-        cluster_autoscaler:
-          enabled: true
-          min: 2
-          max: 4
+          # Configure auto scaling
+          cluster_autoscaler:
+            enabled: true
+            min: 2
+            max: 4
 
-        # Enable harbor as a trusted registry
-        harbor:
-          enabled: true
+          # Enable harbor as a trusted registry
+          harbor:
+            enabled: true
 
-        # Enable Open Policy Agent rules to enforce
-        # security & compliance baselines
-        opa:
-          enable_kubernetes_rules: true
-          enable_terraform_rules: true
+          # Enable Open Policy Agent rules to enforce
+          # security & compliance baselines
+          opa:
+            enable_kubernetes_rules: true
+            enable_terraform_rules: true
 
-        # Enable a controller for one-way encrypted secrets.
-        sealed_secrets:
-          enabled: true
+          # Enable a controller for one-way encrypted secrets.
+          sealed_secrets:
+            enabled: true
 
-        # Allow managing domain names in your K8S manifests
-        external_dns:
-          enabled: true
-          domains:
-            - env: "dev"
-              domain: "your-dev-domain.com"
-            - env: "prod"
-              domain: "your-prod-domain.com"
-        </code>
-        </pre>
-      </figure>
-    image_side: right
-    body: |
-      Pick and choose the technologies that you want included in your custom EKS cluster. We support a wide range of
-      popular configurations that include:
-      <ul>
-          <li>Service meshes (Istio, Consul Connect, AWS App Mesh)</li>
-          <li>K8S-native CI/CD (Argo CD, Flux)</li>
-          <li>Self-service UI (Argo CD Dashboard, Lens)</li>
-          <li>Metrics (Prometheus, Datadog, CloudWatch)
-          <li>Log Aggregation (Elastic Stack, Datadog, CloudWatch)</li>
-          <li>Cluster Autoscaler, Sealed Secrets, OPA, & more!</li>
-      </ul>
-      On top of that, all our enterprise-grade EKS clusters are hardened to meet 100% of the
-      <a href="https://aws.amazon.com/blogs/containers/introducing-cis-amazon-eks-benchmark/">CIS Amazon EKS Benchmark</a>
-      requirements, regardless of the chosen technologies.
-    logos:
-      - title: CIS
-        src: /assets/img/logos-compliance/cis-benchmark.png
-      - title: Istio
-        src: /assets/img/logos-technologies/logo-istio.svg
-      - title: Argo CD
-        src: /assets/img/logos-technologies/logo-argo.png
-      - title: Flux
-        src: /assets/img/logos-technologies/logo-flux.png
+          # Allow managing domain names in your K8S manifests
+          external_dns:
+            enabled: true
+            domains:
+              - env: "dev"
+                domain: "your-dev-domain.com"
+              - env: "prod"
+                domain: "your-prod-domain.com"
+          </code>
+          </pre>
+        </figure>
+      image_side: right
+      body: |
+        Pick and choose the technologies that you want included in your custom EKS cluster. We support a wide range of
+        popular configurations that include:
+        <ul>
+            <li>Service meshes (Istio, Consul Connect, AWS App Mesh)</li>
+            <li>K8S-native CI/CD (Argo CD, Flux)</li>
+            <li>Self-service UI (Argo CD Dashboard, Lens)</li>
+            <li>Metrics (Prometheus, Datadog, CloudWatch)
+            <li>Log Aggregation (Elastic Stack, Datadog, CloudWatch)</li>
+            <li>Cluster Autoscaler, Sealed Secrets, OPA, & more!</li>
+        </ul>
+        On top of that, all our enterprise-grade EKS clusters are hardened to meet 100% of the
+        <a href="https://aws.amazon.com/blogs/containers/introducing-cis-amazon-eks-benchmark/">CIS Amazon EKS Benchmark</a>
+        requirements, regardless of the chosen technologies.
+      logos:
+        - title: CIS
+          src: /assets/img/logos-compliance/cis-benchmark.png
+        - title: Istio
+          src: /assets/img/logos-technologies/logo-istio.svg
+        - title: Argo CD
+          src: /assets/img/logos-technologies/logo-argo.png
+        - title: Flux
+          src: /assets/img/logos-technologies/logo-flux.png
 
-  - heading: "Generate code and customize it to your needs"
-    tab_code_preview: eks-generatecode
-    image_side: left
-    body: |
-      Gruntwork takes your requested configuration, generates Terraform code for deploying your EKS cluster, and opens a pull request in a
-      Git repo of your choice (we support GitHub, GitLab, and BitBucket). The code you get has been proven in production at hundreds of companies, is commercially supported and maintained by Gruntwork, and is 100% yours: use it as-is or customize it as much as you want.
-    logos:
-      - title: GitHub
-        src: /assets/img/landing-heroku-page/github-icon.png
-      - title: GitLab
-        src: /assets/img/landing-heroku-page/gitlab-icon.png
-      - title: BitBucket
-        src: /assets/img/landing-heroku-page/bitbucket-icon.png
+    - heading: "Generate code and customize it to your needs"
+      tab_code_preview: eks-generatecode
+      image_side: left
+      body: |
+        Gruntwork takes your requested configuration, generates Terraform code for deploying your EKS cluster, and opens a pull request in a
+        Git repo of your choice (we support GitHub, GitLab, and BitBucket). The code you get has been proven in production at hundreds of companies, is commercially supported and maintained by Gruntwork, and is 100% yours: use it as-is or customize it as much as you want.
+      logos:
+        - title: GitHub
+          src: /assets/img/landing-heroku-page/github-icon.png
+        - title: GitLab
+          src: /assets/img/landing-heroku-page/gitlab-icon.png
+        - title: BitBucket
+          src: /assets/img/landing-heroku-page/bitbucket-icon.png
 
-  - heading: "Deploy your EKS cluster into your AWS account"
-    image: /assets/img/landing-page-enterprise/tfc-plan-apply.gif
-    image_caption: Deploy generated code in the browser using Terraform Cloud / Enterprise.
-    image_side: right
-    body: |
-      Deploy your EKS cluster into your AWS account using one of the supported deployment tools:
-      <ul>
-          <li>Gruntwork Pipelines</li>
-          <li>Terraform Cloud</li>
-          <li>Terraform Enterprise</li>
-          <li>Terraform CLI</li>
-          <li>Terragrunt CLI</li>
-      </ul>
-    logos:
-      - title: Terraform
-        src: /assets/img/landing-heroku-page/terraform-icon.png
-      - title: TFC/TFE
-        src: /assets/img/logos-technologies/icon-hashicorp.png
-      - title: Terragrunt
-        src: /assets/img/logos-technologies/terragrunt.png
+    - heading: "Deploy your EKS cluster into your AWS account"
+      image: /assets/img/landing-page-enterprise/tfc-plan-apply.gif
+      image_caption: Deploy generated code in the browser using Terraform Cloud / Enterprise.
+      image_side: right
+      body: |
+        Deploy your EKS cluster into your AWS account using one of the supported deployment tools:
+        <ul>
+            <li>Gruntwork Pipelines</li>
+            <li>Terraform Cloud</li>
+            <li>Terraform Enterprise</li>
+            <li>Terraform CLI</li>
+            <li>Terragrunt CLI</li>
+        </ul>
+      logos:
+        - title: Terraform
+          src: /assets/img/landing-heroku-page/terraform-icon.png
+        - title: TFC/TFE
+          src: /assets/img/logos-technologies/icon-hashicorp.png
+        - title: Terragrunt
+          src: /assets/img/logos-technologies/terragrunt.png
 
-  - heading: "Configure your apps"
-    image: /assets/img/landing-page-enterprise/sample-app-clip.gif
-    image_side: left
-    body: |
-      Use Gruntwork tools to optimize your enterprise apps for EKS, including
-      cloud-native and K8S-native best practices for packaging, monitoring, logging, service discovery, secrets management, schema
-      migrations, and more. We support common enterprise languages and frameworks:
-      <ul>
-          <li>Java: Spring Boot, Quarkus</li>
-          <li>Ruby: Ruby on Rails, Sinatra</li>
-          <li>Python: Django, Flask</li>
-          <li>Node.js: Express.js, Next.js</li>
-      </ul>
-      Or use our enterprise-grade reference applications as a template to implement the optimizations for any language
-      and framework we don't support.
-    logos:
-      - title: Spring Boot
-        src: /assets/img/logos-technologies/logo-spring-boot.svg
-      - title: Rails
-        src: /assets/img/logos-technologies/logo-rails.png
-      - title: Django
-        src: /assets/img/logos-technologies/logo-django.png
-      - title: Express
-        src: /assets/img/logos-technologies/logo-express.png
+  dev_experience:
+    - heading: "Configure your apps"
+      image: /assets/img/landing-page-enterprise/sample-app-clip.gif
+      image_side: left
+      body: |
+        Use Gruntwork tools to optimize your enterprise apps for EKS, including
+        cloud-native and K8S-native best practices for packaging, monitoring, logging, service discovery, secrets management, schema
+        migrations, and more. We support common enterprise languages and frameworks:
+        <ul>
+            <li>Java: Spring Boot, Quarkus</li>
+            <li>Ruby: Ruby on Rails, Sinatra</li>
+            <li>Python: Django, Flask</li>
+            <li>Node.js: Express.js, Next.js</li>
+        </ul>
+        Or use our enterprise-grade reference applications as a template to implement the optimizations for any language
+        and framework we don't support.
+      logos:
+        - title: Spring Boot
+          src: /assets/img/logos-technologies/logo-spring-boot.svg
+        - title: Rails
+          src: /assets/img/logos-technologies/logo-rails.png
+        - title: Django
+          src: /assets/img/logos-technologies/logo-django.png
+        - title: Express
+          src: /assets/img/logos-technologies/logo-express.png
 
-  - heading: "Deploy your apps"
-    image: /assets/img/landing-page-enterprise/argocd-create.gif
-    image_caption: Connect your repository to Argo CD to deploy.
-    image_side: right
-    body: |
-      Connect your Git repo to the CI/CD system (e.g., Argo CD) to automatically register, migrate, and deploy your apps
-      using a friendly UI. Gruntwork Enterprise EKS supports various deployment strategies out of the box:
-      <ul>
-          <li>Canary</li>
-          <li>Blue/Green</li>
-          <li>Automatic rollbacks</li>
-          <li>Security scans</li>
-          <li>CI/CD workflows</li>
-          <li>GitOps workflows</li>
-      </ul>
-      Regardless of deployment strategy and configuration, enforce your organization governance policies on artifacts
-      using Open Policy Agent and Harbor.
-    logos:
-      - title: Argo CD
-        src: /assets/img/logos-technologies/logo-argo.png
-      - title: Lens
-        src: /assets/img/logos-technologies/logo-lens.png
-      - title: Harbor
-        src: /assets/img/logos-technologies/logo-harbor.png
-      - title: Open Policy Agent
-        src: /assets/img/logos-technologies/logo-opa.png
+    - heading: "Deploy your apps"
+      image: /assets/img/landing-page-enterprise/argocd-create.gif
+      image_caption: Connect your repository to Argo CD to deploy.
+      image_side: right
+      body: |
+        Connect your Git repo to the CI/CD system (e.g., Argo CD) to automatically register, migrate, and deploy your apps
+        using a friendly UI. Gruntwork Enterprise EKS supports various deployment strategies out of the box:
+        <ul>
+            <li>Canary</li>
+            <li>Blue/Green</li>
+            <li>Automatic rollbacks</li>
+            <li>Security scans</li>
+            <li>CI/CD workflows</li>
+            <li>GitOps workflows</li>
+        </ul>
+        Regardless of deployment strategy and configuration, enforce your organization governance policies on artifacts
+        using Open Policy Agent and Harbor.
+      logos:
+        - title: Argo CD
+          src: /assets/img/logos-technologies/logo-argo.png
+        - title: Lens
+          src: /assets/img/logos-technologies/logo-lens.png
+        - title: Harbor
+          src: /assets/img/logos-technologies/logo-harbor.png
+        - title: Open Policy Agent
+          src: /assets/img/logos-technologies/logo-opa.png
 
-  - heading: "Manage your apps"
-    tab_code_preview: eks-app-monitor
-    image_side: left
-    body: |
-      Use your chosen self-service dashboard to track deployment progress, review error messages, and troubleshoot
-      errors in a powerful web UI.  Use observability tools to monitor your apps, including dashboards for container
-      metrics, cluster data, one-click access to containers, and multiple options for centralized logging.
-    logos:
-      - title: Prometheus
-        src: /assets/img/logos-technologies/logo-prometheus.png
-      - title: Elastic Stack
-        src: /assets/img/logos-technologies/logo-elastic.png
-      - title: Datadog
-        src: /assets/img/logos-technologies/logo-datadog-white.png
+    - heading: "Manage your apps"
+      tab_code_preview: eks-app-monitor
+      image_side: left
+      body: |
+        Use your chosen self-service dashboard to track deployment progress, review error messages, and troubleshoot
+        errors in a powerful web UI.  Use observability tools to monitor your apps, including dashboards for container
+        metrics, cluster data, one-click access to containers, and multiple options for centralized logging.
+      logos:
+        - title: Prometheus
+          src: /assets/img/logos-technologies/logo-prometheus.png
+        - title: Elastic Stack
+          src: /assets/img/logos-technologies/logo-elastic.png
+        - title: Datadog
+          src: /assets/img/logos-technologies/logo-datadog-white.png
 
-  - heading: "Stay up to date"
-    image: /assets/img/landing-page-enterprise/dependency-update.png
-    image_side: right
-    body: |
-      All the modules and code is commercially supported and maintained. We push versioned updates to keep the
-      infrastructure up to date:
-      <ul>
-          <li>Stay compatible across tool versions (Terraform, Terragrunt, kubectl, helm, etc)</li>
-          <li>Regularly update to the latest Kubernetes version</li>
-          <li>Maintain compliance across CIS benchmark versions</li>
-      </ul>
+    - heading: "Stay up to date"
+      image: /assets/img/landing-page-enterprise/dependency-update.png
+      image_side: right
+      body: |
+        All the modules and code is commercially supported and maintained. We push versioned updates to keep the
+        infrastructure up to date:
+        <ul>
+            <li>Stay compatible across tool versions (Terraform, Terragrunt, kubectl, helm, etc)</li>
+            <li>Regularly update to the latest Kubernetes version</li>
+            <li>Maintain compliance across CIS benchmark versions</li>
+        </ul>
 
 why_gruntwork:
   - title: Cluster

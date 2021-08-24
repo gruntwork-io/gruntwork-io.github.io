@@ -1,0 +1,61 @@
+{% comment %}
+This janky conditional assign exists because we can't do inception within jekyll tags or data (import other data
+references within a data list). Therefore, we use a switch case mapping that converts the string to the relevant
+data list.
+{% endcomment %}
+{% case item.tab_code_preview %}
+{% when "eks-generatecode" %}
+{% assign tab_data = site.data.enterprise-landing-page-tabs-eks-generatecode %}
+{% when "eks-app-monitor" %}
+{% assign tab_data = site.data.enterprise-landing-page-tabs-eks-app-monitor %}
+{% endcase %}
+
+{% if item.precode %}
+  <div class="item_precode_code row-image-content {% if item.image_side == "left" %}col-xs-12 col-sm-7 col-md-6 col-description{% else %}col-xs-12 col-sm-7 col-sm-pull-5 col-md-6 col-md-push-6 col-description{% endif %}">
+    {{ item.precode }}
+  </div>
+{% endif %}
+{% if item.tab_code_preview %}
+
+  <div class="item_precode_code row-image-content {% if item.image_side == "left" %}col-xs-12 col-sm-7 col-md-6 col-description{% else %}col-xs-12 col-sm-7 col-sm-pull-5 col-md-6 col-md-push-6 col-description{% endif %}">
+    <div class="tab_block">
+      {% for tab in tab_data %}
+      <div class="tab">
+        <button class="{% if forloop.first %}active tablinks_code{% else %}tablinks_code{% endif %}" onclick="openTab(event, '{{item.tab_code_preview}}', '{{tab.id}}')">{{ tab.title }}</button>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="tab_code_content">
+      {% for tab in tab_data %}
+      <div id="{{tab.id}}" class="item_precode tabcontent_code {% if forloop.first %}first_tabcontent_code{% endif %} tabcontent_{{item.tab_code_preview}}">
+          {{ tab.content }}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}
+{% if item.image %}
+  <div class="{% if item.image_side == "left" %}col-xs-8 col-xs-offset-2 col-sm-5 col-sm-offset-0 col-md-6 col-diagram hidden-print{% else %}col-xs-10 col-xs-offset-1 col-sm-5 col-sm-push-7 col-sm-offset-0 col-md-6 col-md-push-6 col-diagram{% endif %}">
+    {% if item.image_link_to_full %}
+    <div class="screenshot">
+      <a href="{{ item.image }}"
+         title="Click to see the full size image"
+         target="_blank"
+      >
+        <img src="{{ item.image }}" class="row_image_content" width="{{ item.image_width }}"/>
+        <div class="img-overlay">
+          <i class="fa fa-search fa-3x" aria-hidden="true"></i>
+        </div>
+      </a>
+      {% if item.image_caption %}
+      <small class="text-muted caption">{{ item.image_caption }}</small>
+      {% endif %}
+    </div>
+    {% else %}
+    <img src="{{ item.image }}" class="row_image_content" width="{{ item.image_width }}"/>
+    {% if item.image_caption %}
+    <small class="text-muted caption">{{ item.image_caption }}</small>
+    {% endif %}
+    {% endif %}
+  </div>
+{% endif %}
