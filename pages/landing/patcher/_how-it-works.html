@@ -26,7 +26,7 @@
     <div style="{% if item.feature %}height:100%{% endif %}" class="tab_content">
       {% for tab in site.data.patcher-landing-page-tabs-dependencies-list %}
       <div id="{{tab.id}}" class="{% if forloop.first %}first_tabcontent tabcontent{% else %}tabcontent{% endif %}">
-	      <img class="{% if item.feature %}popout{% endif %}" src="{{tab.content}}"/ onclick="{% if item.feature %}popOutContent(event){% endif %}"/>
+	      <img class="{% if item.popout %}popout{% endif %}" src="{{tab.content}}"/ onclick="{% if item.popout %}popOutContent(event){% endif %}"/>
       </div>
       {% endfor %}
     </div>
@@ -199,7 +199,15 @@
 
   function popOutContent(evt) {
 	  setupPopouts()
+	  $(evt.currentTarget).parents(".tab_content").css("height", "100%")
 	  $(evt.currentTarget).parents(".row-image-content").width("1200px")
+	  // Reflow the paired description so that it is legible beneath the pop out content
+	  $(evt.currentTarget).parents().find(".col-description").eq(1)
+		  .removeClass("col-sm-7")
+		  .addClass("col-sm-12")
+	 	  .removeClass("col-md-6")
+	  	  .addClass("col-md-12")
+
   }
 
 </script>
