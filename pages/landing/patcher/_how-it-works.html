@@ -10,12 +10,12 @@
     {% endif %}
   {% if item.tab_block %}
   {% if item.feature %}
-    <div style="margin-top: 100px;" class="">
-      <h2>{{ item.heading }}</h2>
-      <p>{{ item.body }}</p>
-    </div>
-    {% endif %}
-<div class="row-image-content {% if item.feature  %}{% elsif item.image_side == "left" %}col-xs-8 col-xs-offset-2 col-sm-5 col-sm-offset-0 col-md-6 col-diagram hidden-print{% else %}col-xs-10 col-xs-offset-1 col-sm-5 col-sm-push-7 col-sm-offset-0 col-md-6 col-md-push-6 col-diagram{% endif %}">
+  <div style="margin-top: 100px;" class="">
+	  <h2>{{ item.heading }}</h2>
+	  <p>{{ item.body }}</p>
+  </div>
+  {% endif %}
+  <div class="row-image-content {% if item.feature %}{% endif %}{% if item.image_side == "left" %}col-xs-8 col-xs-offset-2 col-sm-5 col-sm-offset-0 col-md-6 col-diagram hidden-print{% else %}col-xs-10 col-xs-offset-1 col-sm-5 col-sm-push-7 col-sm-offset-0 col-md-6 col-md-push-6 col-diagram{% endif %}">
     <div class="tab_block">
       {% for tab in site.data.patcher-landing-page-tabs-dependencies-list %}
       <div class="tab">
@@ -26,7 +26,7 @@
     <div style="{% if item.feature %}height:100%{% endif %}" class="tab_content">
       {% for tab in site.data.patcher-landing-page-tabs-dependencies-list %}
       <div id="{{tab.id}}" class="{% if forloop.first %}first_tabcontent tabcontent{% else %}tabcontent{% endif %}">
-        <img src="{{tab.content}}"/>
+	      <img class="{% if item.feature %}popout{% endif %}" src="{{tab.content}}"/ onclick="{% if item.feature %}popOutContent(event){% endif %}"/>
       </div>
       {% endfor %}
     </div>
@@ -36,9 +36,9 @@
       <img src="{{ item.image }}" class="row_image_content" width="{{ item.image_width }}" style="margin-left: 3px; max-width: 450px;"/>
     </div>
     {% if item.feature != true %}
-    <div style="{% if item.feature %}margin-top: 100px;{% endif %}" class="{% if item.feature %}{% elsif item.image_side == "left" %}col-xs-12 col-sm-7 col-md-6 col-description{% else %}col-xs-12 col-sm-7 col-sm-pull-5 col-md-6 col-md-pull-6 col-description{% endif %}">
-      <h2>{{ item.heading }}</h2>
-      <p>{{ item.body }}</p>
+    <div class="{% if item.feature %}{% elsif item.image_side == "left" %}col-xs-12 col-sm-7 col-md-6 col-description{% else %}col-xs-12 col-sm-7 col-sm-pull-5 col-md-6 col-md-pull-6 col-description{% endif %}">
+	    <h2 style="{% if item.feature %}margin-top:100px;{% endif %}">{{ item.heading }}</h2>
+      <p>{{ item.body }} this</p>
     </div>
     {% endif %}
   </div>
@@ -187,4 +187,24 @@
     $('#' + tabName).show();
     $(evt.currentTarget).addClass('active'); // mark the current tab as active
   }
+
+  function renderAssetPath(extension) {
+	  return `${window.location.protocol}//${window.location.host}/assets/img/landing-page-patcher/${extension}`
+  }
+
+  function setupPopouts() {
+  $("img.popout").each(function( index ) {
+	    if ($(this).attr("src").includes("patcher-ui-play")) {
+		    $(this).attr("src", renderAssetPath("patcher-pr.gif"))
+	    } else {
+		    $(this).attr("src", renderAssetPath("patcher-cli.gif"))
+	    }
+    })
+  }
+
+  function popOutContent(evt) {
+	  setupPopouts()
+	  $(evt.currentTarget).parents(".row-image-content").width("1200px")
+  }
+
 </script>
