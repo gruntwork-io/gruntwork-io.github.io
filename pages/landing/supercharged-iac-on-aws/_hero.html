@@ -1,0 +1,34 @@
+<div class="col-xs-12 col-sm-3 col-md-3 hidden-xs hidden-print">
+  <img
+    class="floating-img-infrastructure-in-a-day"
+    src="{{ page.hero.image }}"
+    style="width: 220px;"
+  />
+</div>
+<div class="col-xs-12 col-sm-9 col-md-8 col-md-offset-1">
+  <h1 style="margin-bottom: 15px; font-size: 64px; font-weight: bold;">
+    {{ page.title }}
+  </h1>
+  <p class="clearfix hidden-print" style="font-size: 24px">
+    {{ page.excerpt }}
+  </p>
+  <div class="clearfix hidden-print">
+    <ul class="check-list" style="display: inline-block; text-align: left; margin-top: 10px; margin-bottom: 0">
+    {% for item in page.hero.checklist %}
+    <li>{{ item }}</li>
+    {% endfor %}
+    </ul>
+  </div>
+  <div>
+    <p class="hidden-print" style="margin-top: 30px;">
+      <a
+        href="{{ page.permalink }}pricing/"
+        class="btn get-a-demo"
+        role="button"
+        ga-on="click"
+        ga-event-category="{{ page.path | slugify }}"
+        ga-event-action="hero-cta"
+      >{{ page.hero.cta }}</a>
+    </p>
+  </div>
+</div>
