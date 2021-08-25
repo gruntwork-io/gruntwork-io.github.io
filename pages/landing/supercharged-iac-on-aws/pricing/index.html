@@ -1,0 +1,275 @@
+---
+layout: landing
+type: landing
+slug: index-page
+
+title: Pick a plan
+excerpt: Pick the plan just right for your team.
+permalink: /supercharged-iac-on-aws/pricing/
+
+categories:
+  - title: Compute
+    features:
+      - name: Fargate
+        description: Deploy your apps onto AWS Fargate, a serverless compute engine for containers.
+        plans: ["Lite", "Pro", "Enterprise"]
+      - name: Lambda
+        description: Deploy your apps onto AWS Lambda, a serverless compute engine for functions.
+        plans: ["Lite", "Pro", "Enterprise"]
+      - name: EKS (Kubernetes)
+        description: Deploy your apps onto Amazon Elastic Kubernetes Service (EKS).
+        plans: ["Pro", "Enterprise"]
+      - name: ECS
+        description: Deploy your apps onto Amazon Elastic Container Service.
+        plans: ["Pro", "Enterprise"]
+      - name: EC2
+        description: Deploy your apps onto EC2 Instances and Auto Scaling Groups.
+        plans: ["Pro", "Enterprise"]
+  - title: Data Storage
+    features:
+      - name: RDS Aurora Serverless
+        description: Store data in Aurora Serverless, an on-demand, auto scaling relational database with PostgreSQL and MySQL compatibility.
+        plans: ["Lite", "Pro", "Enterprise"]
+      - name: ECR
+        description: Store your Docker images in Amazon Elastic Container Registry (ECR).
+        plans: ["Lite", "Pro", "Enterprise"]
+      - name: RDS
+        description: Store data in Amazon's Relational Database Service (RDS), which supports PostgreSQL, MySQL, SQL Server, MariaDB, Oracle, and Amazon Aurora.
+        plans: ["Pro", "Enterprise"]
+      - name: ElastiCache
+        description: Use ElastiCache as a key-value store, with support for Redis and Memcached.
+        plans: ["Pro", "Enterprise"]
+      - name: Elasticsearch
+        description: Use Amazon Elasticsearch to store logs and index text data.
+        plans: ["Pro", "Enterprise"]
+      - name: S3
+        description: Store files and objects in Amazon's Simple Storage Service (S3).
+        plans: ["Pro", "Enterprise"]
+      - name: EFS
+        description: Use Amazon's Elastic File System (EFS) as a network attached, shared file store (like NFS).
+        plans: ["Pro", "Enterprise"]
+      - name: SQS
+        description: Use Amazon Simple Queue Service (SQS) as a message queue.
+        plans: ["Pro", "Enterprise"]
+      - name: SNS
+        description: Use Amazon Simple Notification Service (SNS) as a pub/sub messaging system.
+        plans: ["Pro", "Enterprise"]
+      - name: Kinesis
+        description: Stream data through Amazon Kinesis.
+        plans: ["Pro", "Enterprise"]
+  - title: Networking
+    features:
+      - name: ALB
+        description: Distribute traffic across your apps using the Application Load Balancer (ALB). Supports HTTP, HTTPS, and WebSockets.
+        plans: ["Lite", "Pro", "Enterprise"]
+      - name: API Gateway
+        description: Expose APIs and build fully serverless apps using API Gateway.
+        plans: ["Lite", "Pro", "Enterprise"]
+      - name: Default VPC
+        description: Deploy all your AWS resources into the default Virtual Private Cloud (VPC).
+        plans: ["Lite", "Pro", "Enterprise"]
+      - name: Custom VPC
+        description: Deploy all your AWS resources into a custom Virtual Private Cloud (VPC), which gives you a more secure, locked-down, logically isolated network.
+        plans: ["Pro", "Enterprise"]
+      - name: VPN
+        description: Connect to your VPCs via a Virtual Private Network (VPN) powered by OpenVPN.
+        plans: ["Pro", "Enterprise"]
+      - name: SSH
+        description: Connect to your EC2 instances over SSH. Use IAM Groups to manage access.
+        plans: ["Pro", "Enterprise"]
+      - name: NLB
+        description: Distribute traffic across your apps using the Network Load Balancer (NLB). Supports TCP.
+        plans: ["Pro", "Enterprise"]
+      - name: CloudFront
+        description: Deploy CloudFront as a Content Delivery Network (CDN).
+        plans: ["Pro", "Enterprise"]
+      - name: Service Mesh
+        description: Deploy a Service Mesh such as Istio or Consul Connect to manage service discovery, service-to-service encryption, authentication, and authorization, traffic load balancing, access controls, rate limits, and more.
+        plans: ["Enterprise"]
+  - title: CI / CD
+    features:
+      - name: CodeDeploy
+        description: Use Amazon CodeDeploy as your CI / CD server.
+        plans: ["Lite", "Pro", "Enterprise"]
+      - name: CircleCi
+        description: Use CircleCi as your CI / CD server.
+        plans: ["Pro", "Enterprise"]
+      - name: Jenkins
+        description: Use Jenkins as your CI / CD server.
+        plans: ["Pro", "Enterprise"]
+      - name: GitLab
+        description: Use GitLab as your CI / CD server.
+        plans: ["Pro", "Enterprise"]
+  - title: Monitoring
+    features:
+      - name: CloudWatch
+        description: Use Amazon CloudWatch to track metrics, create dashboards, aggregate log data, and configure alerts.
+        plans: ["Lite", "Pro", "Enterprise"]
+      - name: DataDog
+        description: Use DataDog to track metrics, create dashboards, aggregate log data, and configure alerts.
+        plans: ["Pro", "Enterprise"]
+      - name: Prometheus and Grafana
+        description: Use Prometheus and Grafana to track metrics and create dashboards
+        plans: ["Enterprise"]
+  - title: Landing Zone
+    features:
+      - name: CloudTrail
+        description: Configure CloudTrail for audit logging across all your AWS accounts
+        plans: ["Lite", "Pro", "Enterprise"]
+      - name: Single AWS Account
+        description: Run all your workloads in a single AWS account
+        plans: ["Lite", "Pro", "Enterprise"]
+      - name: Multiple AWS accounts
+        description: Use AWS Organizations to set up and manage multiple AWS accounts
+        plans: ["Pro", "Enterprise"]
+      - name: AWS Config
+        description: Configure AWS Config to audit and record configurations across all your AWS accounts
+        plans: ["Pro", "Enterprise"]
+      - name: Amazon GuardDuty
+        description: Configure Amazon GuardDuty to automatically detect threats to your AWS accounts
+        plans: ["Pro", "Enterprise"]
+      - name: Amazon Macie
+        description: Configure Amazon Macie to automatically protect sensitive data in your AWS accounts
+        plans: ["Enterprise"]
+      - name: SCPs
+        description: Configure Service Control Policies (SCPs) as guard rails across all your AWS accounts.
+        plans: ["Enterprise"]
+  - title: Auth
+    features:
+      - name: IAM Users, Groups, Roles
+        description: Use IAM Users, Groups, and Roles to manage authentication and authorization for your AWS accounts
+        plans: ["Lite", "Pro", "Enterprise"]
+      - name: ADFS, Google, Okta (SSO)
+        description: Use AWS Single Sign On (SSO) to manage authentication and authorization for your AWS accounts with an existing identity provider, such as ADFS, Google, or Okta
+        plans: ["Enterprise"]
+  - title: Compliance
+    features:
+      - name: End-to-end encryption
+        description: Encrypt all traffic in transit and at rest
+        plans: ["Lite", "Pro", "Enterprise"]
+      - name: Secrets Management
+        description: Store secrets securely in AWS Secrets Manager
+        plans: ["Lite", "Pro", "Enterprise"]
+      - name: Server hardening
+        description: Install server hardening tools such as fail2ban, ip-lockdown, auto-update, and anti-virus to protect your EC2 instances
+        plans: ["Pro", "Enterprise"]
+      - name: CIS Compliance
+        description: Deploy infrastructure that is compliant out-of-the-box with the CIS AWS Foundations Benchmark.
+        plans: ["Enterprise"]
+  - title: Support
+    features:
+      - name: Documentation
+        description: Use Gruntwork's deployment guides and reference documentation to get up and running
+        plans: ["Lite", "Pro", "Enterprise"]
+      - name: DevOps Training Library
+        description: Learn DevOps fundamentals through a series of video courses
+        plans: ["Lite", "Pro", "Enterprise"]
+      - name: Community Support
+        description: Get help from the Gruntwork community in an online Discussion Forum
+        plans: ["Lite", "Pro", "Enterprise"]
+      - name: Enterprise Support
+        description: Get help directly from the Gruntwork team in a shared Slack channel with a strict SLA on response times.
+        plans: ["Enterprise"]
+      - name: Prioritized Bug Fixes
+        description: Get a guaranteed SLA on bug fixes.
+        plans: ["Enterprise"]
+  - title: Limits
+    features:
+      - name: Apps
+        description: The number of apps you can migrate and deploy on this plan
+        values:
+          Lite: 1
+          Pro: 5
+          Enterprise: Unlimited
+      - name: Users
+        description: The number of users you can have on this plan. A user is a human or machine that accesses the Gruntwork code repos, training materials, or support services.
+        values:
+          Lite: 1
+          Pro: 10
+          Enterprise: Unlimited
+
+pricing:
+  - title: Lite
+    description: For solo devs, solopreneuers, and personal projects.
+    price: Free
+    image: /assets/img/grunty-free@2x.png
+    image_styles: "max-width: 150px; margin-top: 18px"
+
+  - title: Pro
+    description: For startups and small businesses planning on running a few apps.
+    price: "795"
+    image: /assets/img/grunty-pro@2x.png
+    image_styles: "max-width: 150px; margin-top: 18px"
+
+  - title: Enterprise
+    description: For larger businesses and enterprises looking to run many apps.
+    price: Contact Us
+    image: /assets/img/grunty-enterprise-heroku@2x.png
+    image_styles: "max-width: 150px; margin-top: 18px"
+
+faq:
+  - question: What sort of AWS bill should I expect?
+    answer: |
+      <p>
+        Your AWS bill depends on a number of factors: which services you use, the instance types you pick, how much load you're dealing with, etc. That said, assuming you have access to the AWS Free Tier, here's a ballpark range for what your AWS bill will be if you deploy an app using infrastructure from the following subscription option:
+      </p>
+      <ul>
+        <li><strong>Gruntwork Lite</strong>: $0 / month</li>
+        <li><strong>Gruntwork Pro</strong>: $500 / month and up</li>
+        <li><strong>Gruntwork Pro</strong>: $2,000 / month and up</li>
+      </ul>
+
+  - question: Is an annual subscription required?
+    answer: |
+      <p>
+        Gruntwork Pro and Gruntwork Enterprise require an annual subscription, though we can bill you either annually or monthly. Why an annual subscription? We give you access to all the code to run your infrastructure on day 1, and we let you keep that code even if you cancel. If we didn't have the annual subscription requirement, customers could sign up for one day, get access to all the code, and cancel immediately.
+        </p>
+      <p>
+        However, we offer a 30-day money back guarantee, so if for any reason you're not happy after signing up, we'll let you out of the annual subscription and refund 100% of your money in the first 30 days.
+      </p>
+
+  - question: What if I want to cancel my Gruntwork Subscription?
+    answer: |
+      <p>
+        We offer a 30-day money-back guarantee. You can try out Gruntwork Pro or Gruntwork Enterprise, and if you're not happy for any reason, you can cancel within the first 30 days, and we'll let you out of the annual subscription and refund 100% of your money.
+      </p>
+      <p>
+        Note that if you cancel in the first 30 days, you lose the license to the code in the Infrastructure as Code Library, so you must stop using it and delete any references to it; on the other hand, if you do stick with the annual subscription, and cancel after at least one year, you can keep using all the code you had been using up to that point.
+      </p>
+
+  - question: What happens to my code if I cancel my subscription?
+    answer: |
+      <p>
+        If you cancel within the first 30 days, we'll refund 100% of your money and let you out of the annual subscription, but you lose the license to the code in the Infrastructure as Code Library, so you must stop using it and delete all copies of the code.
+      </p>
+      <p>
+        If, however, you remain a subscriber for at least 12 months, the license allows you to fork and modify the code and create derivative works as much as you want, and even if you cancel your subscription, you can keep using all the code you had been using up to that point. We recommend that prior to canceling, you make copies of all the repos in the Infrastructure as Code Library into your own version control system. After you cancel your Gruntwork Subscription, you'll no longer have access to the customer portal UI, or any of the updates, additions, and fixes we make to the Infrastructure as Code Library, support from the Gruntwork team, security alerts, and any other subscription benefits. However, your infrastructure will continue to work just fine and you'll still have all the code you had been using up to that point.
+      </p>
+
+  - question: How does the private beta work?
+    answer: |
+      <p>
+        We are currently testing this product out on an invite-only basis with select customers. If you're interested in joining the beta, please request access, and we'll get in touch when the product is available to you!
+      </p>
+
+  - question: What's a user?
+    answer: |
+      <p>
+        A user is any human or machine that makes use of Gruntwork's services, including using the Gruntwork Customer
+        Portal, accessing code from the Infrastructure as Code Library, or submitting requests to support.
+      </p>
+---
+
+<div class="main page-pricing">
+  <div class="section page-pricing-header">
+    {% include_relative _hero.html %}
+  </div>
+  <div class="section-dark">
+    <div class="container">
+      {% include_relative _plans.html %}
+      {% include_relative _need-help.html %}
+      {% include_relative _benefits.html %}
+      {% include_relative _faq.html %}
+    </div>
+  </div>
+</div>
