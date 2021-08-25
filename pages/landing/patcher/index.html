@@ -52,9 +52,9 @@ how_it_works:
       Get Patcher up and running with just a few clicks. Start completely for free. You can find the app in GitHub, BitBucket or GitLab.
 
   - heading: Patcher discovers your dependencies automatically
+    popout: true
     tab_block: true
     tab_block_data_source: site.data.patcher-landing-page-tabs-dependencies-list
-    feature: true
     image_side: left
     body: |
       Patcher discovers dependencies for popular languages and tools such as JavaScript, Ruby, Java, Python, Go, Terraform, and Docker. You can also add special comments to your code to help Patcher discover dependencies in non-standard locations (e.g., in a Bash script).
@@ -72,6 +72,11 @@ how_it_works:
     body: |
       Patcher updates you to the new version and runs the maintainer's patches to update your code in case of backwards incompatible changes. All patches are run in a secure, sandboxed environment, so your code is always kept safe.
 
+  - heading: You review and merge
+    image: /assets/img/landing-page-patcher/pr-checks.png
+    image_side: right
+    body: |
+      You review the pull request, check if your automated tests have passed, and if everything looks good, you can merge, safely and easily keeping all your dependencies up to date.
 supported:
   - logo: /assets/img/logos-patcher/python.png
     name: Python
