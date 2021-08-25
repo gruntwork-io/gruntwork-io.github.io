@@ -5,7 +5,7 @@
         {{ item.precode }}
       </div>
     {% endif %}
-        {% if item.tab_block %}
+    {% if item.tab_block %}
       <div id="infra-code-viewer" class="row-image-content {% if item.image_side == "left" %}col-xs-8 col-xs-offset-2 col-sm-5 col-sm-offset-0 col-md-6 col-diagram hidden-print{% else %}col-xs-10 col-xs-offset-1 col-sm-5 col-sm-push-7 col-sm-offset-0 col-md-6 col-md-push-6 col-diagram{% endif %}">
         <div class="tab_block">
           {% for tab in site.data.hipaa-landing-page-tabs-images %}
@@ -41,21 +41,21 @@
         </div>
       </div>
     {% endif %}
-      {% if item.image %}
-        <div class="{% if item.image_side == "left" %}col-xs-8 col-xs-offset-2 col-sm-5 col-sm-offset-0 col-md-6 col-diagram hidden-print{% else %}col-xs-10 col-xs-offset-1 col-sm-5 col-sm-push-7 col-sm-offset-0 col-md-6 col-md-push-6 col-diagram{% endif %}">
-          <img src="{{ item.image }}" class="row_image_content" width="{{ item.image_width }}"/>
+    {% if item.image %}
+      <div class="{% if item.image_side == "left" %}col-xs-8 col-xs-offset-2 col-sm-5 col-sm-offset-0 col-md-6 col-diagram hidden-print{% else %}col-xs-10 col-xs-offset-1 col-sm-5 col-sm-push-7 col-sm-offset-0 col-md-6 col-md-push-6 col-diagram{% endif %}">
+        <img src="{{ item.image }}" class="row_image_content" width="{{ item.image_width }}"/>
+      </div>
+    {% endif %}
+    <div class="{% if item.image_side == "left" %}col-xs-12 col-sm-7 col-md-6 col-description{% else %}col-xs-12 col-sm-7 col-sm-pull-5 col-md-6 col-md-pull-6 col-description{% endif %}">
+      <h2>{{ item.heading }}</h2>
+      <p>{{ item.body }}</p>
+      {% if item.icon_row %}
+        <div class="list-group">
+          {% for icon in item.icon_row %}
+          <img src="/assets/img/landing-page-hipaa/{{ icon }}.png">
+          {% endfor %}
         </div>
-      {% endif %}
-      <div class="{% if item.image_side == "left" %}col-xs-12 col-sm-7 col-md-6 col-description{% else %}col-xs-12 col-sm-7 col-sm-pull-5 col-md-6 col-md-pull-6 col-description{% endif %}">
-        <h2>{{ item.heading }}</h2>
-        <p>{{ item.body }}</p>
-      	{% if item.icon_row %}
-	<div class="list-group">
-		{% for icon in item.icon_row %}
-		<img src="/assets/img/landing-page-hipaa/{{ icon }}.png">
-		{% endfor %}
-	</div>
     	{% endif %}
-</div>
     </div>
+  </div>
 {% endfor %}
