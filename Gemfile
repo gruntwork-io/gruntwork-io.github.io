@@ -16,3 +16,5 @@ Encoding.default_external = Encoding::UTF_8
 
 # https://github.com/jekyll/github-metadata — used to obtain git sha
 gem "jekyll-github-metadata", "~> 2.13"
+
+gem "webrick", "~> 1.7"
