@@ -23,14 +23,14 @@ hero:
   - /assets/img/logos-technologies/partner_logo_terraform.png
 
 how_it_works:
-  - heading: "STEP 1: Select your use case"
+  - heading: "1. Select your use case"
     image: /assets/img/landing-page-supercharge/select-use-case.png
     image_side: right
     image_width: 450px
     body: |
       We've already implemented best-practices Terraform code for common use cases in AWS across hundreds of battle-tested Terraform modules.f
 
-  - heading: "STEP 2: Be guided, step by step"
+  - heading: "2. Be guided, step by step"
     image: /assets/img/landing-page-supercharge/step-by-step.png
     image_side: left
     image_width: 450px
@@ -38,14 +38,15 @@ how_it_works:
       Once you select your use case, we'll lay out the steps you need to complete it. Already completed a step? Just skip it and use your existing code.
 
 how_it_works_continued:
-  - heading: "STEP 4: Open PRs in your IaC repo"
+  - heading: |
+      4. Open PRs in <i>your&nbsp;</i> IaC repo
     image: /assets/img/landing-page-supercharge/submit-github-pr.png
     image_side: left
     image_width: 450px
     body: |
       Inspect the code you generated and merge it to your codebase. All PRs come with detailed docs explaining what we've done and any relevant concepts.
 
-  - heading: "STEP 5: Deploy any way you want"
+  - heading: "5. Deploy any way you want"
     tab_block:
       - id: laptop
         title: Your Laptop
@@ -61,14 +62,14 @@ how_it_works_continued:
     body: |
       Call <code>terraform apply</code> on the newly merged code using your favorite Terraform pipeline solution such as Terraform Cloud / Enterprise, your favorite CI tool, or just your laptop.
 
-  - heading: "STEP 6: Validate & understand your changes"
+  - heading: "6. Validate & understand your changes"
     image: /assets/img/landing-page-supercharge/validate-your-changes.png
     image_side: left
     image_width: 450px
     body: |
      Be confident that everything works as expected. After each prod deployment, view a summary of automated test results, plus targeted AWS console links to inspect and understand the infrastructure you just deployed.
 
-  - heading: "STEP 7: Stay up-to-date automatically with Terraform pull requests"
+  - heading: "7. Stay up-to-date easily with Terraform PRs"
     image: /assets/img/landing-page-supercharge/stay-up-to-date.png
     image_side: right
     image_width: 450px
@@ -221,6 +222,15 @@ footer:
     padding: 0.5em 3em;
     font-size: 24px;
     border-radius: 50vh;
+  }
+
+  h2 {
+    font-weight: bold;
+    font-size: 64px;
+  }
+
+  .zig-zag p {
+    font-size: 24px;
   }
 </style>
 
