@@ -10,7 +10,7 @@
     {% endif %}
     {% if item.tab_block %}
       {% if item.feature %}
-        <div style="margin-top: 100px;" class="">
+        <div style="margin-top: 100px;">
           <h2>{{ item.heading }}</h2>
           <p>{{ item.body }}</p>
         </div>
@@ -40,7 +40,7 @@
     {% if item.feature != true %}
       <div class="{% if item.feature %}{% elsif item.image_side == "left" %}col-xs-12 col-sm-7 col-md-6 col-description{% else %}col-xs-12 col-sm-7 col-sm-pull-5 col-md-6 col-md-pull-6 col-description{% endif %}">
         <h2 style="{% if item.feature %}margin-top:100px;{% endif %}">{{ item.heading }}</h2>
-        <p>{{ item.body }} this</p>
+        <p>{{ item.body }}</p>
       </div>
     {% endif %}
   </div>
