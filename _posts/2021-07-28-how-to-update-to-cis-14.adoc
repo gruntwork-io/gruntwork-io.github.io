@@ -119,7 +119,7 @@ compatible with CIS AWS v1.3.0:
 
 === Step 2: Manual steps
 
-==== 1. Enable MFA Delete
+==== Enable MFA Delete
 
 Enabling MFA Delete in your bucket adds another layer of security by requiring MFA in any request to delete a version or change the versioning state of the bucket.
 
@@ -145,12 +145,127 @@ aws s3api put-bucket-versioning --region <REGION> --bucket <BUCKET NAME> --versi
 
 We also create a script to help you enable MFA Delete in all buckets from a single account at once.
 
-==== 2. Enable Amazon Macie
+[[macie_manual_steps]]
+==== Configure Amazon Macie
+===== Configure bucket to store sensitive data discovery results
+To deploy the Macie module and configure it for CIS compliance, certain manual steps are needed. Namely, configuring the
+S3 bucket to be a repository for the sensitive data discovery results is
+link:https://github.com/hashicorp/terraform-provider-aws/issues/19856[currently not supported] in the terraform AWS
+provider, so you'll need to do it manually. After `terraform apply` on the module, you need to run the following manual steps:
 
-TODO: our customers might have their own in house solution, so in this case they don't need to enable macie. ADD A NOTE FOR THAT
-TODO: Ana
+1. Log into the AWS console and for every region, repeat the steps 2 to 9.
+1. Go to the Amazon Macie service.
+1. In the left pane, under Settings, click on "Discovery results".
+1. Click on "Configure now" to configure an S3 bucket for long-term retention of sensitive data discovery results.
+1. Choose "Existing bucket".
+1. Under "Choose a bucket", select your bucket. This can be either one you already have, or the one that the `macie` module created. You will use the same bucket for every region.
+1. Under "KMS encryption" choose "Select a key from your account".
+1. Under "KMS key alias" select your KMS key. This can be either one you had already have, or the one that the `macie` module created. You will use the same key for every region.
+1. Click "Save".
 
-Macie is a new AWS resource and isn't still possible to automate the whole flow with Terraform.
+Once the above issue in the terraform AWS provider has been resolved, we will
+link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/issues/205[update the Gruntwork macie module]
+so that it completely automates all the steps of configuring Amazon Macie, and no manual steps will be required any longer.
+
+===== Manually maintain buckets to analyze in the `buckets_to_analyze` variable
+When creating a Macie classification job, you need to specify a list of buckets that should be analyzed. Typically,
+you'll want to analyze all the buckets in the region. However, the terraform AWS provider does not support specifying
+all the buckets in a region - it requires that an explicit list of buckets be provided (see related bug
+link:https://github.com/hashicorp/terraform-provider-aws/issues/20044[here]). Therefore, you'll need to maintain an
+explicit list of buckets per region, namely in the variable `buckets_to_analyze`. Please read the
+link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/blob/master/modules/security/macie/variables.tf#L21-L30[documentation]
+for this variable in order to understand how to structure the list of buckets per region. Once the above issue in the
+terraform AWS provider has been resolved, we will
+link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/issues/204[update the Gruntwork macie module]
+to add support for specifying all buckets in a region.
+
+=== Step 3: Deploy new modules
+
+==== Deploy the Macie module (recommendation 2.1.4)
+The new CIS AWS v1.4 recommendation 2.1.4 requires that all data in Amazon S3 be discovered, classified and secured.
+One way to achieve this is the by leveraging the link:https://aws.amazon.com/macie/[Amazon Macie] service.
+Amazon Macie is a fully managed data security and  data privacy service that uses machine learning and pattern matching
+to discover and protect your sensitive data in AWS. To help you achieve this recommendation, we have created a dedicated
+link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/modules/security/macie[`macie` service]
+in our CIS service catalog.
+
+NOTE: Manual steps required! After deploying the `macie` module as described below, make sure you perform the manual steps
+outlined in the <<macie_manual_steps>> section.
+
+To deploy the new `macie` module, create a wrapper module such as this:
+
+.main.tf
+[source,hcl]
+----
+module "macie" {
+  source = "git::git@github.com:gruntwork-io/terraform-aws-cis-service-catalog.git//modules/security/macie?ref=v0.27.0"
+
+  providers = {
+    aws              = aws.default
+    aws.eu_central_1 = aws.eu_central_1
+    aws.eu_west_1    = aws.eu_west_1
+    # ... more providers
+  }
+
+  buckets_to_analyze = {
+    "eu-central-1" : ["my-bucket-in-eu-central-1"],
+    "eu-west-1" : ["my-bucket-in-eu-west-1"]
+  }
+
+  # ... more configuration parameters
+}
+----
+
+Since `macie` is a multi-region module that uses the new provider-based multi-region approach, you'll also need to provide
+a `providers.tf` file, such as this:
 
 
+.providers.tf
+[source,hcl]
+----
+# Default provider
+provider "aws" {
+  region = var.aws_region
+  alias  = "default"
+}
 
+# Configure a provider for each region
+provider "aws" {
+  region = "eu-central-1"
+  alias  = "eu_central_1"
+
+  # Skip credential validation and account ID retrieval for disabled or restricted regions
+  skip_credentials_validation = contains(coalesce(var.opt_in_regions, []), "eu-central-1") ? false : true
+  skip_requesting_account_id  = contains(coalesce(var.opt_in_regions, []), "eu-central-1") ? false : true
+}
+
+provider "aws" {
+  region = "eu-west-1"
+  alias  = "eu_west_1"
+
+  # Skip credential validation and account ID retrieval for disabled or restricted regions
+  skip_credentials_validation = contains(coalesce(var.opt_in_regions, []), "eu-west-1") ? false : true
+  skip_requesting_account_id  = contains(coalesce(var.opt_in_regions, []), "eu-west-1") ? false : true
+}
+
+# ... more provider configurations
+----
+
+You'll also need to make sure you're providing a value for the `opt_in_regions` variable in your `variables.tf` file:
+.variables.tf
+[source,hcl]
+----
+variable "opt_in_regions" {
+  description = "Creates resources in the specified regions. This variable must NOT be set to null or empty. Otherwise, we won't know which regions to use and authenticate to, and may use some not enabled in your AWS account (e.g., GovCloud, China, etc). To get the list of regions enabled in your AWS account, you can use the AWS CLI: aws ec2 describe-regions."
+  type        = list(string)
+  default     = ["eu-central-1", "eu-west-1"]
+}
+
+# ... more variables
+----
+
+For a fully functioning example, see the
+link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/examples/for-learning-and-testing/security/macie[relevant example code in the CIS service catalog repo].
+
+For more information about the new multi-region approach, see the
+link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/releases/tag/v0.25.0[release notes of the relevant release of the CIS service catalog].
