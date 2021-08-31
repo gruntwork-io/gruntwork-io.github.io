@@ -65,7 +65,7 @@ These are the new recommendations introduced in version 1.4.0 of the Benchmark:
 ===== Updated recommendations
 Version 1.4.0 updated a recommendation, it only affects the IAM password policy:
 
-- 1.12: Ensure credentials unused for 45 days or greater are disabled. The previous recommendation required credentials older than 90 days to be disabled.
+- 1.12: Ensure credentials unused for 45 days or greater are disabled. The previous recommendation required credentials older than 90 days to be disabled. In addition, we also fixed a bug that was expiring all IAM passwords after 90 days regardless of whether they were used or not.
 
 ==== New Gruntwork modules vs. existing modules
 To achieve compliance with the new version of the Framework, we created one new module in the
