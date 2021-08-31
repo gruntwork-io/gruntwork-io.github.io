@@ -25,12 +25,14 @@ endif::[]
 
 == Intro
 
-This guide will walk you through how to update from version 1.3.0 to version 1.4.0 of the CIS AWS Foundations Benchmark.
-If your infrastructure is already compliant with the Benchmark's version 1.3.0, and you are looking to upgrade to v1.4.0,
-this guide is for you. If you are starting to work on compliance with this benchmark from scratch, check out our
+This guide will walk you through the process of updating version 1.3.0 to version 1.4.0 of the CIS AWS Foundations Benchmark.
+If your infrastructure is already compliant with v1.3.0, and you are looking to upgrade to v1.4.0,
+then this guide is for you. Alternatively, if you are starting from scratch, check out our
 https://gruntwork.io/guides/compliance/how-to-achieve-cis-benchmark-compliance/[How to achieve compliance with the CIS AWS Foundations Benchmark]
-guide instead. If your infrastructure is compliant with the Benchmark's version 1.2.0, check out our guide
-https://gruntwork.io/guides/upgrades/how-to-update-to-cis-13/[How to update to CIS AWS version 1.3.0].
+guide instead.
+
+=== Previous versions of this guide
+- https://gruntwork.io/guides/upgrades/how-to-update-to-cis-13/[How to update to CIS AWS version 1.3.0]
 
 === What you'll learn in this guide
 
@@ -40,9 +42,10 @@ This guide consists of two main sections:
 An overview of the CIS AWS Foundations Benchmark v1.4.0 and why it is important to update your code for compatibility.
 
 <<deployment_walkthrough>>::
-The steps you need to take to update your code to be compliant with CIS AWS v1.4.0. It includes a
+The steps you need to take to update your code to be compliant with v1.4.0. It includes a
 <<compatibility_table,version compatibility table>> you can use as a reference to know which Gruntwork Repo version
-tag is compatible with CIS AWS v1.4.0, as well as the manuals step you need to perform to achieve said compliance.
+tag is compatible along with the manual steps you need to perform to achieve compliance with version v1.4.0 of the CIS
+AWS Foundations Benchmark.
 
 
 [[core_concepts]]
@@ -53,45 +56,38 @@ tag is compatible with CIS AWS v1.4.0, as well as the manuals step you need to p
 
 ==== Changes in recommendations
 Changes in recommendations (both additions and removals) are listed below. You can think of these as a "diff"
-between versions 1.2.0 and 1.3.0.
+between versions 1.3.0 and 1.4.0.
 
 ===== New recommendations
-These are the new recommendations introduced in version 1.4.0 of the Benchmark:
+These are the new recommendations introduced in version 1.4.0 of the benchmark:
 
 - 2.1.3: Ensure MFA Delete is enabled on S3 buckets
 - 2.1.4: Ensure all data in Amazon S3 has been discovered, classified and secured when required
 - 2.3.1: Ensure that encryption is enabled for RDS Instances
 
 ===== Updated recommendations
-Version 1.4.0 updated a recommendation, it only affects the IAM password policy:
+Version 1.4.0 also updated a recommendation. It only affects the IAM password policy:
 
 - 1.12: Ensure credentials unused for 45 days or greater are disabled. The previous recommendation required credentials older than 90 days to be disabled. In addition, we also fixed a bug that was expiring all IAM passwords after 90 days regardless of whether they were used or not.
 
 ==== New Gruntwork modules vs. existing modules
-To achieve compliance with the new version of the Framework, we created one new module in the
-Gruntwork's Infrastructure as Code Library, and updated a bunch of existing modules. Recommendation 2.1.3
-required creating a new module; the rest of the recommendations were achieved by updating existing modules.
+To achieve compliance with the new version of the benchmark, we created one new module in the
+Gruntwork's Infrastructure as Code Library, and updated a bunch of existing modules. Recommendation 2.1.4
+required creating a new module whereas the rest of the recommendations were achieved by updating existing modules.
 
 To ensure compliance with version 1.4.0 of the CIS AWS Foundations Benchmark, you'll need to follow all the
-instructions in the <<deployment_walkthrough>> section of this guide; precisely, follow Steps 1 and 2 to ensure that
+instructions in the <<deployment_walkthrough>> section below; precisely, follow Steps 1 and 2 to ensure that
 the existing modules get updated to their CIS AWS v1.4.0 compliant versions and follow Step 3 to ensure that you install and
 configure the newly created modules.
 
 [[deployment_walkthrough]]
 == Deployment walkthrough
 
-[NOTE]
-====
-Please follow the steps below to upgrade from version 1.2.0 to version 1.3.0 of the Benchmark. To see examples of what the relevant code
-changes look like, please refer to these pull requests in the Acme CIS Reference Architecture:
-
-* https://github.com/gruntwork-io/cis-infrastructure-modules-acme/pull/6[cis-infrastructure-modules-acme]
-* https://github.com/gruntwork-io/cis-infrastructure-live-acme/pull/8[cis-infrastructure-live-acme]
-====
 === Step 1: Update references to the Gruntwork Infrastructure as Code Library
 
 To update to the CIS AWS Foundations Benchmark v1.4.0, you need to update your references to the Gruntwork
-Infrastructure as Code Library to use compatible versions. We (Gruntwork) have reviewed and updated all the library modules for compatibility with the new version of the Benchmark. As a customer, you need to update to
+Infrastructure as Code Library to use compatible versions. We (Gruntwork) have reviewed and updated all the library
+modules for compatibility with the new version of the benchmark. As a customer, you need to update to
 the proper versions of the Gruntwork library to pick up the fixes/changes made to be compatible. Refer to
 https://gruntwork.io/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library/#updating[the
 "Updating" section of "How to use the Gruntwork Infrastructure as Code Library"] for instructions on how to update the
@@ -115,8 +111,8 @@ compatible with CIS AWS v1.3.0:
 |Gruntwork Repo |Minimum version with CIS AWS v1.4.0 support |Corresponding CIS AWS v1.4.0 recommendations
 
 |terraform-aws-security
-|https://github.com/gruntwork-io/terraform-aws-security/releases/tag/v0.44.6[v0.44.6]
-|1.20, 1.21, 2.1.1, 2.1.2, 3.10, 3.11
+|https://github.com/gruntwork-io/terraform-aws-security/releases/tag/v0.54.0[v0.54.0]
+|1.12, 2.1.3, 2.1.4, 2.3.1
 
 |===
 
@@ -129,11 +125,12 @@ Enabling MFA Delete in your bucket adds another layer of security by requiring M
 
 The attribute `mfa_delete` is only used by Terraform to https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket#mfa_delete[reflect the current state of the bucket]. It is not possible to create a bucket if the `mfa_delete` is `true`, because it needs to be activated https://docs.aws.amazon.com/AmazonS3/latest/userguide/MultiFactorAuthenticationDelete.html[using AWS CLI or the API].
 
-To make this change [**you need to use the root user of the account**](https://docs.aws.amazon.com/general/latest/gr/root-vs-iam.html#aws_tasks-that-require-root) that owns the bucket, and MFA needs to be enabled.
+To make this change https://docs.aws.amazon.com/general/latest/gr/root-vs-iam.html#aws_tasks-that-require-root[**you need to use the root user of the account**] that owns the bucket, and MFA needs to be enabled.
 
-**Note:** We do not recommend you to have access keys for the root user, so remember to delete them after you finish this.
+**Note:** We do not recommend having active AWS access keys for the root user, so remember to delete them when you finish this step.
 
 In order to enable MFA Delete, you need to:
+
 1. Create a bucket with `mfa_delete=false`.
 1. https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html#id_root-user_manage_add-key[Create access keys for the root user]
 1. https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html#id_root-user_manage_mfa[Configure MFA for the root user]
@@ -148,7 +145,7 @@ aws s3api put-bucket-versioning --region <REGION> --bucket <BUCKET NAME> --versi
 
 We also create a script to help you enable MFA Delete in all buckets from a single account at once.
 
-==== 2. Enable Macie
+==== 2. Enable Amazon Macie
 
 TODO: our customers might have their own in house solution, so in this case they don't need to enable macie. ADD A NOTE FOR THAT
 
