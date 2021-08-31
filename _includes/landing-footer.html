@@ -1,5 +1,5 @@
 <footer class="footer hidden-print">
-  <div class="section section-footer-content">
+  <div class="section section-footer-content {% if page.footer.blue %}section-hero{% endif %}" {% if page.footer.blue %}style="margin-top:0"{% endif %}>
     <div class="container">
       {% if page.footer %}
       <div class="row row-call-to-action">
@@ -32,7 +32,7 @@
       {% endif %}
     </div>
   </div>
-  <div class="section section-footer-copyright">
+  <div class="section section-footer-copyright {% if page.footer.blue %}section-blue{% endif %}">
     <div class="container">
       <div class="row">
         <div class="col-xs-12 text-center">

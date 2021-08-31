@@ -23,29 +23,37 @@ hero:
   - /assets/img/logos-technologies/partner_logo_terraform.png
 
 how_it_works:
-  - heading: "STEP 1: Select your use case"
+  - heading: "1. Select your core use case"
     image: /assets/img/landing-page-supercharge/select-use-case.png
     image_side: right
     image_width: 450px
     body: |
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+      We’ve already implemented best-practices Terraform code for common use cases in AWS across hundreds of battle-tested Terraform modules.
 
-  - heading: "STEP 2: Be guided, step by step"
+  - heading: "2. Configure your infrastructure, step by step"
     image: /assets/img/landing-page-supercharge/step-by-step.png
     image_side: left
     image_width: 450px
     body: |
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+      Once you select your use case, we’ll lay out the steps you need to complete it. Already completed a step? Just skip it and use your existing code.
 
 how_it_works_continued:
-  - heading: "STEP 4: Open PRs in your IaC repo"
-    image: /assets/img/landing-page-supercharge/open-a-pr.png
+  - heading: |
+      4. Open PRs in <i>your&nbsp;</i> IaC repo
+    image: /assets/img/landing-page-supercharge/submit-github-pr.png
     image_side: left
     image_width: 450px
     body: |
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+      Inspect the code you generated and merge it to your codebase. All PRs come with detailed docs explaining what we’ve done and any relevant concepts.
+    logos:
+      - title: GitHub
+        src: /assets/img/landing-heroku-page/github-icon.png
+      - title: GitLab
+        src: /assets/img/landing-heroku-page/gitlab-icon.png
+      - title: BitBucket
+        src: /assets/img/landing-heroku-page/bitbucket-icon.png
 
-  - heading: "STEP 5: Deploy any way you want"
+  - heading: "5. Deploy any way you want"
     tab_block:
       - id: laptop
         title: Your Laptop
@@ -59,90 +67,92 @@ how_it_works_continued:
     image_side: right
     image_width: 450px
     body: |
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+      Call <code>terraform apply</code> on the newly merged code using your favorite Terraform pipeline solution such as Terraform Cloud / Enterprise, your favorite CI tool, or just your laptop.
+    logos:
+      - title: CircleCi
+        src: /assets/img/landing-heroku-page/circleci-icon.png
+      - title: Jenkins
+        src: /assets/img/landing-heroku-page/jenkins-icon.png
+      - title: GitLab
+        src: /assets/img/landing-heroku-page/gitlab-icon.png
+      - title: Terraform Cloud
+        src: /assets/img/landing-heroku-page/terraform-icon.png
 
-  - heading: "STEP 6: Validate & understand your changes"
+  - heading: "6. Validate & understand your changes"
     image: /assets/img/landing-page-supercharge/validate-your-changes.png
     image_side: left
     image_width: 450px
     body: |
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+     Be confident that everything works as expected. After each prod deployment, view a summary of automated test results, plus targeted AWS console links to inspect and understand the infrastructure you just deployed.
 
-  - heading: "STEP 7: Stay up-to-date automatically with Terraform pull requests"
+  - heading: "7. Stay up-to-date easily via Terraform pull requests"
     image: /assets/img/landing-page-supercharge/stay-up-to-date.png
     image_side: right
     image_width: 450px
     body: |
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+      Stay completely up-to-date with the latest compliance requirements, security patches, and AWS/DevOps best practices when we release them using <a href="/patcher">Gruntwork Patcher</a>.
 
 features:
-  - title: Built-in Best Practices
+  - title: Built-in best practices
     features:
-      - title: Update dependency versions
-        description: Patcher automatically updates you to the latest versions of dependencies
-        icon: '<i class="fa fa-refresh fa-3x" aria-hidden="true"></i>'
+      - title: Modeled on the Well-Architected Framework
+        description: We carefully review the AWS Well-Architected Framework when implementing all architectures.
+        icon: /assets/img/landing-page-supercharge/feature-icons/well-architected.png
 
-      - title: Handle breaking changes
-        description: Patcher can also patch your code to handle backwards incompatible changes
-        icon: '<i class="fa fa-bolt fa-3x" aria-hidden="true"></i>'
+      - title: Code that looks like humans wrote it
+        description: We wrote all Terraform and other code templates by hand to maximize readability and reuse.
+        icon: /assets/img/landing-page-supercharge/feature-icons/human-code.png
 
-      - title: Simple to install
-        description: Patcher is an app for Github, BitBucket and GitLab, so install takes just a few clicks
-        icon: '<i class="fa fa-plus-circle fa-3x" aria-hidden="true"></i>'
-  - title: Learn as You Go
+      - title: Well-documented and commented
+        description: All code is thoroughly documented and comes with extensive comments.
+        icon: /assets/img/landing-page-supercharge/feature-icons/commented-code.png
+  - title: Learn as you go
     features:
-      - title: Pull request driven
-        description: All updates are submitted as pull requests, so you can review and run tests before merging
-        icon: '<i class="fa fa-code fa-3x" aria-hidden="true"></i>'
+      - title: Get help choosing the right tech with selection guides
+        description: RDS or Aurora? Making technology decisions in AWS can be hard, so we wrote comprehensive guides to help you choose.
+        icon: /assets/img/landing-page-supercharge/feature-icons/guides.png
 
-      - title: Stay secure
-        description: Automatically stay up to date with security patches
-        icon: '<i class="fa fa-shield fa-3x" aria-hidden="true"></i>'
+      - title: Learn AWS, DevOps and Terraform foundations
+        description: Deploying an AWS resource requires more than just Terraform code. Use Gruntwork Academy to learn the foundations you need to know before provisioning.
+        icon: /assets/img/landing-page-supercharge/feature-icons/academy.png
 
-      - title: Configurable
-        description: "Specify how often to open pull requests: immediately after new releases, daily, weekly, etc."
-        icon: '<i class="fa fa-sliders fa-3x" aria-hidden="true"></i>'
-  - title: Join a Community
+      - title: Get live support when you need it
+        description: It's only a matter of time before you need help. When you do, Gruntwork engineers are subject matter experts in the use cases we support.
+        icon: /assets/img/landing-page-supercharge/feature-icons/support.png
+  - title: Join a community
     features:
-      - title: Pull request driven
-        description: All updates are submitted as pull requests, so you can review and run tests before merging
-        icon: '<i class="fa fa-code fa-3x" aria-hidden="true"></i>'
+      - title: See the tech decisions other teams make
+        description: When selecting a technology, you can see what other Gruntwork customers selected to guide your decision.
+        icon: /assets/img/landing-page-supercharge/feature-icons/stats.png
 
-      - title: Stay secure
-        description: Automatically stay up to date with security patches
-        icon: '<i class="fa fa-shield fa-3x" aria-hidden="true"></i>'
+      - title: We maintain the code so you don’t have to
+        description: It's our job to keep all our Terraform code up to date with AWS, DevOps, and Terraform best practices.
+        icon: /assets/img/landing-page-supercharge/feature-icons/maintained.png
 
-      - title: Configurable
-        description: "Specify how often to open pull requests: immediately after new releases, daily, weekly, etc."
-        icon: '<i class="fa fa-sliders fa-3x" aria-hidden="true"></i>'
+      - title: Leverage our Gruntwork partners
+        description: Are we missing a tech you want? Gruntwork partners are AWS consulting shops who know AWS, Terraform, and Gruntwork, and can help you customize your code as needed.
+        icon: /assets/img/landing-page-supercharge/feature-icons/partners.png
 
 tech_table:
   - title: Network Access Control
     tools:
-      - title: Tool
-        logo: /assets/img/landing-page-supercharge/logo-foo.png
+      - title: Bastion Host
 
-      - title: Tool
-        logo: /assets/img/landing-page-supercharge/logo-foo.png
+      - title: OpenVPN
 
-      - title: Tool
-        logo: /assets/img/landing-page-supercharge/logo-foo.png
+      - title: Teleport
 
       - title: #left blank to padd row
 
   - title: App Runtime
     tools:
       - title: EC2 / ACG
-        logo: /assets/img/landing-page-supercharge/logo-foo.png
 
       - title: ECS
-        logo: /assets/img/landing-page-supercharge/logo-foo.png
 
       - title: EKS (K8s)
-        logo: /assets/img/landing-page-supercharge/logo-foo.png
 
       - title: Serverless
-        logo: /assets/img/landing-page-supercharge/logo-foo.png        
 
   - title: Data Storage
     tools:
@@ -160,11 +170,9 @@ tech_table:
 
   - title: Secrets Management
     tools:
-      - title: AWS Secrets
-        logo: /assets/img/landing-page-supercharge/logo-foo.png
+      - title: AWS Secrets Manager
 
       - title: HashiCorp Vault
-        logo: /assets/img/landing-page-supercharge/logo-foo.png
 
       - title: #left blank to padd row
 
@@ -172,7 +180,7 @@ tech_table:
 
   - title: Logging & Monitoring
     tools:
-      - title: CloudWatch
+      - title: CloudWatch Logs
         logo: /assets/img/landing-page-supercharge/logo-foo.png
 
       - title: DataDog
@@ -196,18 +204,51 @@ tech_table:
       - title: GitLab
         logo: /assets/img/landing-page-supercharge/logo-foo.png
 
-  - title: and more…
+  - title: ...and more!
 
 footer:
-  heading: The infrastructure you’ve always wanted
+  heading: A better way to go live on AWS
   body: |
-    <ul class="check-list" style="display: inline-block; text-align: left; margin-top: 10px; margin-bottom: 0">
-      <li>The seamless experience you expect from Heroku.</li>
-      <li>The control and scalability you expect from AWS.</li>
-      <li>The production-grade code you expect from Gruntwork.</li>
+    <ul class="check-list purple-checks" style="display: inline-block; text-align: left; margin: 30px;">
+      <li>Write your Terraform code in record time.</li>
+      <li>Deploy production-grade architecture.</li>
+      <li>Learn as you go.</li>
     </ul>
-  cta: Request early access!
+  blue: true
+  cta: |
+    Request early access!
 ---
+
+<style>
+  .check-list.black-checks li:before {
+    color: #1D252F;
+  }
+  .check-list.blue-checks li:before {
+    color: rgb(31, 59, 82);
+  }
+  .check-list.purple-checks li:before {
+    color: #5849A6;
+  }
+  .check-list.white-checks li:before {
+    color: #FFF;
+  }
+
+  .section-footer-content .btn-info {
+    background: #5849A6;
+    padding: 0.5em 3em;
+    font-size: 24px;
+    border-radius: 50vh;
+  }
+
+  h2 {
+    font-weight: bold;
+    font-size: 48px;
+  }
+
+  .zig-zag p {
+    font-size: 24px;
+  }
+</style>
 
 <div class="main">
   <div class="section section-hero">

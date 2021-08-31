@@ -1,5 +1,5 @@
 {% for item in include.blocks %}
-  <div class="row">
+  <div class="row zig-zag">
     {% if item.precode %}
       <div class="item_precode_code row-image-content {% if item.image_side == "left" %}col-xs-12 col-sm-7 col-md-6 col-description{% else %}col-xs-12 col-sm-7 col-sm-pull-5 col-md-6 col-md-pull-6 col-description{% endif %}">
         {{ item.precode }}
@@ -172,9 +172,10 @@
 
   .row_image_content {
     border: 1px solid #194c5f;
-    border-radius: 4px;
+    border-radius: 8px;
     border-collapse: collapse;
     padding: 0;
+    box-shadow: 0px 10px 30px black;
   }
 
   pre {
