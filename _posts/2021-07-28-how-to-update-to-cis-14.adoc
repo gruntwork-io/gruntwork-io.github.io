@@ -5,7 +5,7 @@ image: /assets/img/guides/refresh_icon.png
 excerpt: Learn how to update to version 1.4.0 of the CIS AWS Foundations Benchmark
 tags: ["aws", "security", "compliance"]
 cloud: ["aws"]
-redirect_from: /static/guides/upgrades/how-to-update-to-cis-14/
+redirect_from: /static/guides/upgrades/how-to-update-to-cis-1.4/
 ---
 :page-type: guide
 :page-layout: post
@@ -52,7 +52,7 @@ AWS Foundations Benchmark.
 == Core Concepts
 
 === Background
-
+Version 1.4.0 of the CIS AWS Foundations Benchmark was released in May of 2021. You can refer to the CIS website where you can download the latest version of the Benchmark (as well as all the previous versions). The latest version introduces a few new recommendations, and also recommends updates to several previous configurations. This guide will walk you through implementing these using Gruntwork’s Infrastructure as Code Library so that your AWS infrastructure is fully compliant with version 1.4.0 of the framework.
 
 ==== Changes in recommendations
 Changes in recommendations (both additions and removals) are listed below. You can think of these as a "diff"
@@ -68,7 +68,7 @@ These are the new recommendations introduced in version 1.4.0 of the benchmark:
 ===== Updated recommendations
 Version 1.4.0 also updated a recommendation. It only affects the IAM password policy:
 
-- 1.12: Ensure credentials unused for 45 days or greater are disabled. The previous recommendation required credentials older than 90 days to be disabled. 
+- 1.12: Ensure credentials unused for 45 days or greater are disabled. The previous recommendation required credentials older than 90 days to be disabled.
 
 ==== New Gruntwork modules vs. existing modules
 To achieve compliance with the new version of the benchmark, we created one new module in the
@@ -269,3 +269,11 @@ link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/mast
 
 For more information about the new multi-region approach, see the
 link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/releases/tag/v0.25.0[release notes of the relevant release of the CIS service catalog].
+
+
+== Finally
+And that's all, fellow Gruntworkers.
+
+This guide is meant to help you get your AWS infrastructure from CIS 1.3.0 to CIS 1.4.0 using our dedicated and up-to-date modules. While we try to automate as much as possible, some of the steps still need to be manual. We hope that the guide above clearly details what needs to be done, and how.
+
+If you've got any feedback or you think something's missing from the guide, please get in touch via link:https://github.com/gruntwork-io/gruntwork-io.github.io[Github], or our link:https://gruntwork.io/contact[dedicated Contact Us page].
