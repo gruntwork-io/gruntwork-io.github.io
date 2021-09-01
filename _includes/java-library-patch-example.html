@@ -1,0 +1,10 @@
+<pre><code class="language-yml">
+# This is an example Patch file to update services
+# using security.jar with new parameters
+code_transformations:
+  # Update all users to the new auth method
+  - update_to_new_auth_method
+custom_scripts:
+  # Error out on improper auth method usage
+  - detect_deprecated_auth_method
+</code></pre>

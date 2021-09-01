@@ -1,0 +1,194 @@
+---
+layout: landing-patcher
+type: landing-patcher
+slug: how-it-works
+
+extra_nav_links:
+  - name: Use Cases
+    url: /patcher/use-cases/
+
+alternate_cta_link: /patcher/pricing
+
+title: How it Works
+excerpt: Build your apps on top of reference applications for your favorite languages and frameworks (e.g., Ruby on Rails, Express.js, Spring Boot) that are HIPAA compliant and follow cloud-native best practices out of the box.
+permalink: /patcher/how-it-works/
+custom_js:
+  - prism
+prism_css: /assets/css/prism-landing-zone.css
+
+how_it_works:
+  - heading: Use your favorite languages
+    tab_code_preview: site.data.hipaa-landing-page-tabs-code
+    icon_row:
+      - nodejs
+      - java
+      - gem
+    image_side: right
+    tab_block:
+    body: |
+      Reference applications for common languages and frameworks such as Node.js/Express, Java/Spring, and Ruby/Rails. <br><br>
+      The reference apps show how to implement common HIPAA compliance requirements, such as encryption at rest, encryption in transit, secrets management, server hardening, and much more.<br>
+      <br>The reference applications also show how to implement cloud-native best practices, such as service discovery, schema migrations, application configuration, packaging, and much       more.
+
+  - heading: Run compliant apps in compliant Infrastructure
+    image: /assets/img/hipaa/infrastructure-hipaa.png
+    image_width: 350px
+    image_side: left
+    body: |
+      The apps are designed to work seamlessly in our <a href="/reference-architecture">Reference Architecture.</a>
+
+footer:
+  heading: Keep your code always up to date with Patcher!
+  body: |
+    Request early access to join the waitlist!
+    <ul class="check-list check-white" style="text-align: left; display: inline-block;"><li><span class="help-text light" title="" data-toggle="tooltip" data-original-title="You’ll be the first to gain access to the solution once it’s ready"> Patcher </span> </li><li><span class="help-text light" title="" data-toggle="tooltip" data-original-title="The first 25 repos are for free for existing Gruntwork subscribers!"> Great if you're already a Gruntwork Subscriber</span> </li><li><span class="help-text light" title="" data-toggle="tooltip" data-original-title="We’ll work with you to ensure the solution meets your organization’s requirements"> Influence the product direction</span> </li>
+  cta: Request early access
+
+maintainer_how_it_works:
+  - heading: Update the code for your library
+    image: /assets/img/landing-page-patcher/update-your-code.png
+    image_side: right
+    body: |
+      Make changes to your library the usual way: create a branch, make some changes, and open a pull request.
+
+  - heading: Run tests against all users of your library
+    image: /assets/img/landing-page-patcher/example-patcher-upgrade-test.png
+    image_side: left
+    body: |
+      Patcher discovers all users of your library within your company, runs their automated tests with your updated code, and gives you a report if those tests passed. That way, you know how your changes affect your downstream users before merging!
+
+  - heading: Create a patch file
+    precode: |
+      <figure><figcaption>tf-13-to-14.patch</figcaption>
+        <pre>
+            <code class="language-yml">
+              # This is an example Patch file to update from
+              # Terraform 0.13 to 0.14
+              code_transformations:
+                # Update Terratest and Go modules to the latest
+                - run_go_mod_tidy
+                # Add .terraform.lock.hcl to .gitignore
+                - add_lock_to_gitignore
+                # Update all Gruntwork modules
+                - update_module_versions
+                # Add required_providers block
+                - replace_provider_versions_with_required_providers
+              custom_scripts:
+                # Run Terraform format
+                - terraform_fmt
+                # Run Terraform validate
+                - terraform_validate
+            </code>
+          </pre>
+      </figure>
+    image_side: right
+    body: |
+      If you are making backwards incompatible changes, you can create a Patch file to automatically upgrade the code of your library's users. Patch files can perform text transformations (e.g., add a new input variable) as well as execute custom scripts (e.g., run some CLI tools).
+
+  - heading: Run tests against your patch
+    image: /assets/img/landing-page-patcher/example-patcher-upgrade-test.png
+    image_side: left
+    body: |
+      You can use <code>patcher plan</code> and <code>patcher apply</code> to test your patch against a repo. Patcher will also run your patch against all users of your library in a temporary branch and run their tests, so you can see check if both your code changes and patch are working.
+
+  - heading: Merge and release
+    image: /assets/img/landing-page-patcher/release.png
+    image_width: 350px
+    image_side: right
+    body: |
+      Merge and release as usual: e.g., create a new Git tag for the new version of your library, or push your new versioned artifact (e.g., <code>.jar</code>) to Artifactory.
+
+user_how_it_works:
+  - heading: Install the Patcher App
+    image: /assets/img/landing-page-patcher/github-step-1.png
+    image_side: right
+    body: |
+      Get Patcher up and running with just a few clicks. Start completely for free. You can find the app in GitHub, BitBucket, or GitLab.
+
+  - heading: Patcher discovers your dependencies automatically
+    image: /assets/img/landing-page-patcher/patcher-ui-tf.png
+    image_side: left
+    body: |
+      Patcher discovers dependencies for popular languages and tools such as JavaScript, Ruby, Java, Python, Go, Terraform and Docker. You can also add special comments to your code to help Patcher discover dependencies in non-standard locations (e.g., in a Bash script).
+
+  - heading: Patcher patches your code and opens a PR
+    image: /assets/img/landing-page-patcher/update-your-code.png
+    image_side: right
+    body: |
+      Patcher updates you to the new version and runs the maintainer's patches to update your code in case of backwards incompatible changes. All patches are run in a secure, sandboxed environment, so your code is always kept safe.
+
+  - heading: You review and merge
+    image: /assets/img/landing-page-patcher/pr-checks.png
+    image_side: left
+    body: |
+      You review the pull request, check if your automated tests have passed, and if everything looks good, you can merge, safely and easily keeping all your dependencies up to date.
+
+pricing:
+  - title: Lite
+    description: For solo devs, solopreneuers, and personal projects.
+    price: Free
+    image: /assets/img/grunty-free@2x.png
+    image_styles: "max-width: 150px; margin-top: 18px"
+
+  - title: Pro
+    description: For startups and small businesses planning on running a few apps.
+    price: "795"
+    image: /assets/img/grunty-pro@2x.png
+    image_styles: "max-width: 150px; margin-top: 18px"
+
+  - title: Enterprise
+    description: For larger businesses and enterprises looking to run many apps.
+    price: Contact Us
+    image: /assets/img/grunty-enterprise-heroku@2x.png
+    image_styles: "max-width: 150px; margin-top: 18px"
+---
+
+<div class="main">
+  <div id="how-it-works" class="section section-dark">
+    <!-- Nav pills -->
+    <div class="col-md-12 text-center">
+      <ul class="nav nav-pills center-pills" role="tablist">
+        <li role="presentation" class="active">
+          <a
+            href="#"
+            data-target="#maintainer-workflow"
+            aria-controls="maintainer-workflow"
+            role="tab"
+            data-toggle="tab"
+            >Maintainer Workflow</a
+          >
+        </li>
+        <li role="presentation">
+          <a
+            href="#"
+            data-target="#user-workflow"
+            aria-controls="user-workflow"
+            role="tab"
+            data-toggle="tab"
+            >User Workflow</a
+          >
+        </li>
+      </ul>
+    </div>
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <!-- Maintainer Workflow tab -->
+      <div role="tabpanel" class="tab-pane active" id="maintainer-workflow">
+        <div style="margin-top: 130px" class="container">
+          {% include_relative _maintainer-how-it-works.html %}
+        </div>
+      </div>
+      <!-- User Workflow tab -->
+      <div role="tabpanel" class="tab-pane" id="user-workflow">
+        <div id="how-it-works" class="section-dark">
+          <div style="margin-top: 130px" class="container">
+            {% include_relative _user-how-it-works.html %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="section section-dark">
+    {% include_relative _code-viewer-css-js.html %}
+  </div>
+</div>

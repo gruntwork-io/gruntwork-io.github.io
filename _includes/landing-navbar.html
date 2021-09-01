@@ -23,8 +23,8 @@
             ><strong>Gruntwork</strong>&nbsp;Labs</a
           >
         </div>
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
-          <ul class="nav navbar-nav navbar-right">
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2" style="padding: 0">
+          <ul class="nav navbar-nav navbar-right" style="margin: 0; padding: 0 10px;">
             <li>
               <a
                 href="{{ landing_page_base_url }}#how-it-works"
@@ -45,7 +45,32 @@
               >
             </li>
 
-            {% endfor %} {% endif %}
+            {% endfor %} {% endif %} {% if page.products_dropdown_links %}
+            <li class="dropdown">
+              <a
+                href="#"
+                class="dropdown-toggle"
+                data-toggle="dropdown"
+                role="button"
+                aria-expanded="false"
+                >Products <i class="fa fa-caret-down" aria-hidden="true"></i
+              ></a>
+              <ul class="dropdown-menu dropdown-menu-left" role="menu">
+                {% for link in page.products_dropdown_links %}
+                <li>
+                  <a
+                    href="{{ link.url }}"
+                    ga-on="click"
+                    ga-event-category="nav-{{ page.path | slugify }}"
+                    ga-event-action="{{ link.name | slugify }}"
+                    >{{ link.name }}</a
+                  >
+                </li>
+                {% endfor %}
+              </ul>
+              {% endif %}
+            </li>
+
             <li>
               <a
                 href="{{ landing_page_base_url }}/pricing"

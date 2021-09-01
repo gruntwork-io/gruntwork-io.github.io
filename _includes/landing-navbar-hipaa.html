@@ -1,0 +1,103 @@
+<header class="header">
+  <nav class="navbar navbar-default">
+    <div class="section" style="padding: 0">
+      <div class="container">
+        <div class="navbar-header">
+          <button
+            type="button"
+            class="navbar-toggle collapsed"
+            data-toggle="collapse"
+            data-target="#bs-example-navbar-collapse-2"
+            aria-expanded="false"
+          >
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          {% assign landing_page_base_url = page.url | split: "/" | slice: 1,1 |
+          join: "" | prepend: "/" %}
+          <a
+            class="navbar-brand navbar-brand-beta"
+            href="{{ landing_page_base_url }}"
+            ><strong>Gruntwork</strong>&nbsp;Labs</a
+          >
+        </div>
+        <div
+          class="collapse navbar-collapse"
+          id="bs-example-navbar-collapse-2"
+          style="padding: 0"
+        >
+          <ul class="nav navbar-nav navbar-right" style="margin: 0; padding: 0 10px;">
+            <li>
+              <a
+                href="{{ landing_page_base_url }}#how-it-works"
+                ga-on="click"
+                ga-event-category="nav-{{ page.path | slugify }}"
+                ga-event-action="hipaa-how-it-works"
+                >How it Works</a
+              >
+            </li>
+            <li>
+              <a
+                href="{{ landing_page_base_url }}/why-gruntwork"
+                ga-on="click"
+                ga-event-category="nav-{{ page.path | slugify }}"
+                ga-event-action="hipaa-why-gruntwork"
+                >Why Gruntwork?</a
+              >
+            </li>
+            <li class="dropdown">
+              <a
+                href="#"
+                class="dropdown-toggle"
+                data-toggle="dropdown"
+                role="button"
+                aria-expanded="false"
+                >Technical Details<i
+                  class="fa fa-caret-down"
+                  aria-hidden="true"
+                ></i
+              ></a>
+              <ul class="dropdown-menu dropdown-menu-left" role="menu">
+                <li>
+                  <a
+                    href="{{ landing_page_base_url }}/technical-details/#reference-infra"
+                    ga-on="click"
+                    ga-event-category="nav-{{ page.path | slugify }}"
+                    ga-event-action="hipaa-reference-architecture"
+                    >Reference Architecture</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="{{ landing_page_base_url }}/technical-details"
+                    ga-on="click"
+                    ga-event-category="nav-{{ page.path | slugify }}"
+                    ga-event-action="hipaa-reference-apps"
+                    >Reference Applications</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a
+                href="{{ landing_page_base_url }}/pricing"
+                ga-on="click"
+                ga-event-category="nav-{{ page.path | slugify }}"
+                ga-event-action="pricing"
+                >Pricing</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<style>
+  /* Override hover color fading behavior */
+  ul.nav.nav-pills.center-pills > li > a:hover {
+    color: #13cfe7;
+  }
+</style>

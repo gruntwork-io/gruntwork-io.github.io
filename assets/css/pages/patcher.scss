@@ -1,0 +1,91 @@
+.row-patcherlanguages {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 15px;
+
+    .lang-logo {
+      text-align: center;
+
+      img {
+        width: auto;
+        height: 25px;
+      }
+    }
+  
+    // GCP, Kubernetes & Terraform Logo
+    // :nth-child(2),
+    // :nth-child(4),
+    // :nth-child(5){
+    //   img {
+    //     height: 52px;
+    //   }
+    // }
+  
+    // :nth-child(2) {
+    //   img {
+    //     margin-bottom: -2px;
+    //   }
+    // }
+  
+    // #cis-badge {
+    //   display: flex;
+    //   flex-direction: column;
+    //   border: 1px solid white;
+    //   border-radius: 4px;
+    //   padding: 0px 17px 5px 5px;
+  
+    //   p {
+    //     margin-bottom: -4px;
+    //     margin-left: 3px;
+    //   }
+  
+    //   img {
+    //     height: 25px;
+    //   }
+    // }
+  
+    .break {
+      display: none;
+    }
+  
+    @media (min-width: $screen-md-min) {
+      margin: 25px 0;
+    }
+  
+    @media (max-width: $screen-sm-max) {
+      width: 107%;
+    }
+  
+    @media (max-width: $screen-xs-max) {
+      margin: unset;
+      width: unset;
+      flex-wrap: wrap;
+      justify-content: center;
+  
+      div {
+        width: 120px;
+        margin-bottom: 30px;
+  
+        img {
+          display: block;
+          margin: 0 auto;
+        }
+      }
+  
+      // Terraform & Kubernetes Logo
+    //   :nth-child(4),
+    //   :nth-child(5) {
+    //     img {
+    //       height: 58px;
+    //     }
+    //   }
+  
+      .break {
+        margin: 0;
+        display: initial;
+        flex-basis: 100%;
+        height: 0;
+      }
+    }
+  }

@@ -1,71 +1,79 @@
 ---
-layout: landing
-type: landing
+layout: landing-hipaa
+type: landing-hipaa
 slug: index-page
 
-title: Pricing
-excerpt: Configure the plan just right for your team.
+title: Gruntwork HIPAA Early Access Program
+excerpt: Sign up now for early access to our HIPAA-compliant infrastructure and reference applications! Early access subscribers will receive exclusive benefits and a reduced subscription price.
 permalink: /hipaa-compliance-on-aws/pricing/
 redirect_from: /hipaa-cloud-compliance/pricing/
 
 extra_nav_links:
+  - name: Why Gruntwork?
+    url: /hipaa-compliance-on-aws/why-gruntwork
   - name: Gruntwork HIPAA
     url: /hipaa-compliance-on-aws
-  - name: Bootstrap your app
-    url: /hipaa-compliance-on-aws/bootstrap-your-app
+
+products_dropdown_links:
+  - name: HIPAA-compliant Reference Architecture
+    url: /hipaa-compliance-on-aws/technical-details#reference-infra
+  - name: HIPAA-compliant Reference Applications
+    url: /hipaa-compliance-on-aws/technical-details
+
+categories:
+  - title: Product
+    features:
+      - name: Reference Applications
+        description: HIPAA-compliant reference applications that show you exactly how to instrument cloud-native best practices
+        plans: ["Standard", "Early Access"]
+      - name: Reference Architecture
+        description: An opinionated, HIPAA-compliant end-to-end tech stack built on top of the infrastructure as code library that we deploy into your AWS accounts in about a day
+        plans: ["Standard", "Early Access"]
+      - name: IaC Library
+        description: A collection of over 300,000 lines of reusable, battle-tested, production-ready infrastructure code for AWS
+        plans: ["Standard", "Early Access"]
+      - name: DevOps Training Library
+        description: A collection of training video courses that teach you DevOps
+        plans: ["Standard", "Early Access"]
+  - title: Support
+    features:
+      - name: Community forum
+        description: Access to a community Slack channel where Gruntwork customers can ask for assistance from other community members and Gruntwork engineers
+        plans: ["Standard", "Early Access"]
+      - name: Private shared Slack Channel
+        description: A dedicated Slack channel for fast, private access to support from Gruntwork engineers
+        plans: ["Early Access"]
+      - name: SLA on response times
+        description: Gruntwork will provide SLAs to guarantee you the fastest support possible
+        plans: ["Early Access"]
+  - title: Audit
+    features:
+      - name: HIPAA compliance audit assistance
+        description: Gruntwork will go through a HIPAA audit with you, fixing anything that the auditors might find
+        plans: ["Early Access"]
+      - name: Prioritized bug fixes
+        description: Gruntwork engineers will prioritize your bug fixes
+        plans: ["Early Access"]
 
 pricing:
-  - title: Gruntwork HIPAA Early Access
-    description:
-      Early access subscribers will receive a CIS staging environment when invited<br>
-      and a fully HIPAA-compliant production infrastructure when it’s ready.
+  - title: Standard
+    description: Sign up when Gruntwork HIPAA Compliance is generally available (GA)
+    users: "Up to 10 users"
+    user_pricing: "$299 / user / month"
+    disabled_price: "9,950"
+    disabled_flat_price: "9,900"
+    image_styles: "max-width: 150px; margin-top: 18px"
+
+  - title: Early Access
+    description: Sign up for early access to Gruntwork HIPAA Compliance now!
+    users: "Up to 10 users"
+    user_pricing: "$199 / user / month"
     price: "5,950"
-    strike_price: "9,950"
-    flat_fee: "0"
-    strike_flat_fee: "9,900"
-    image: /assets/img/logos-compliance/hipaa.png
-    image_styles: "max-width: 130px"
-    exclusive_features:
-      - name: Early access to the code
-        description: Deploy dev and stage infrastructure today and start building your application. HIPAA compliance coming soon!
-      - name: Discount pricing
-        description: Lock in a reduced rate for your subscription, in perpetuity!
-      - name: No up-front fee
-        description: Skip the up front cost completely.
-      - name: Direct support
-        description: Get a higher level of support from our team of experts at no extra cost.
-      - name: HITRUST CSF assessment assistance
-        description: We’ll work with you throughout your audit process and make any security changes required.
-    features:
-      - name: HIPAA-compliant reference architecture
-        description: Assessed by qualified 3rd parties for peace of mind.
-      - name: HIPAA-compliant sample applications
-        description: World-class sample applications that you can easily extend.
-      - name: Infrastructure as Code Library
-        description: Access our entire library to augment and extend your reference architecture.
-      - name: Gruntwork customer support
-        description: Gruntwork engineers can answer your technical questions and help you resolve problems if they come up.
-      - name: IaC video learning library
-        description: Our training library is a collection of video courses to help you learn Terraform, Terragrunt, and more.
-      - name: HITRUST CSF audit assistance
-        description: After your architecture is deployed, Gruntwork will work with you and your HITRUST assessor to help your infrastructure achieve the HITRUST certification.
-      - name: Landing Zone
-        description: Set up secure AWS baselines for your AWS accounts, with centralized logging, cross-account access, encryption by default, and more.
-      - name: CI/CD Pipelines
-        description: Streamline your infrastructure as code deployments through a repeatable CI/CD pipeline.
+    flat_price: "0"
+    image: /assets/img/grunty-hipaa@2x.png
+    image_styles: "max-width: 150px; margin-top: 18px"
 
 faq:
-  - question: What sort of AWS bill should I expect?
-    answer: |
-      <p>
-        Your AWS bill depends on a number of factors: which services you use, the instance types you pick, how much load you're dealing with, etc. That said, assuming you have access to the AWS Free Tier, here's a ballpark range for what your AWS bill will be if you deploy an app using infrastructure from the following subscription option:
-      </p>
-      <ul>
-        <li><strong>Gruntwork Lite</strong>: $0 / month</li>
-        <li><strong>Gruntwork Pro</strong>: $500 / month and up</li>
-        <li><strong>Gruntwork Enterprise</strong>: $2,000 / month and up</li>
-      </ul>
-
   - question: Is an annual subscription required?
     answer: |
       <p>
@@ -74,6 +82,13 @@ faq:
       <p>
         However, we offer a 30-day money back guarantee, so if for any reason you're not happy after signing up, we'll let you out of the annual subscription and refund 100% of your money in the first 30 days.
       </p>
+  - question: How does early access work?
+    answer: |
+      <p>Early access subscribers to Gruntwork HIPAA will get the full benefit of the Gruntwork CIS offering available today, in addition to direct HIPAA-compliance audit support and the lowest overall cost for the HIPAA-compliance Reference Architecture.</p><p>It can be helpful to think of this program as occuring in 3 distinct phases:</p><ul><li><b>Phase 1: CIS Deployment.</b> Early access subscribers will receive the CIS Reference Architecture on day 1, which is compliant with the CIS AWS Foundations Benchmark out-of-the-box. You can use this immediately to set up your pre-prod environments in AWS.</li><li><b>Phase 2: Gruntwork completes HIPAA-compliance.</b> The Gruntwork team works to implement the final changes to make the Reference Architecture and Reference Applications 100% HIPAA-compliant. See <a href="/hipaa-compliance-on-aws/technical-details/#supported-infrastructure-features">this table for the work we'll be doing.</a> As an early access subscriber, you'll get access to each change as soon as it's available in the form of a versioned release. Also, as soon as all the HIPAA work is complete, Gruntwork will deploy a HIPAA-compliant prod environment for you at no extra charge.</li><li><b>Phase 3: Audit assistance.</b> As you go through a HIPAA-compliance audit with a third-party, Gruntwork will provide assistance, and quickly fix any issues the auditor identifies.</li></ul>
+
+  - question: What are the benefits of early access?
+    answer: |
+      <p>Early access subscribers will realize the most benefits from this program: <ul><li><b>Fastest way to get HIPAA-compliance.</b> All early access subscribers receive a complete CIS Reference Architecture as a starting point. All that remains to achieve 100% compliance are the final pieces Gruntwork will be implementing as part of this program.</li><li><b>Discounted pricing.</b> Early access subscribers receive a 50% discount on the subscription price, and can sign up with no up-front fee!</li><li><b>Extra support.</b> You'll be able to chat with the Gruntwork team via a private, shared Slack channel to get help with questions, troubleshooting, design, bugs, and any other issues you hit on your journey toward compliance.</li><li><b>Audit assistance.</b> For early access subscribers only, Gruntwork will go through the HIPAA compliance audit alongside of your team, fixing any issues that arise and implementing any missing features.</li></ul></p>
 
   - question: What if I want to cancel my Gruntwork Subscription?
     answer: |
@@ -108,6 +123,9 @@ faq:
 ---
 
 <div class="main page-pricing">
+  <div class="section page-pricing-header">
+    {% include_relative _hero.html %}
+  </div>
   <div class="section-dark">
     <div class="container">
       {% include_relative _plans.html %} {% include_relative _need-help.html %}

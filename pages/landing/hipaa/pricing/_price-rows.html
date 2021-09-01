@@ -1,0 +1,127 @@
+<tr>
+  <td style="width: 25%">&nbsp;</td>
+  {% for pricing in page.pricing %}
+  <td
+    style="
+      width: 25%;
+      border-left: 1px solid #194c5f;
+      border-right: 1px solid #194c5f;
+      background-color: #252e3a;
+    "
+    class="text-center"
+  >
+    <hr />
+    {% if pricing.price == "Contact Us" %}
+    <p class="h1 enterprise-h1">Contact Us</p>
+    {% elsif pricing.price == "Free" %}
+    <p class="h1 enterprise-h1">Free</p>
+    {% elsif pricing.disabled_price %}
+    <p class="big-price-disabled"><span>$</span>{{ pricing.disabled_price }}</p>
+    <p class="help-block-disabled" style="margin-top: -9px">/ month</p>
+    {% if pricing.disabled_flat_price %}
+    <p class="medium-price-disabled">
+      <span>+ $</span>{{ pricing.disabled_flat_price }}
+      <span class="help-block-disabled">flat fee</span>
+    </p>
+    {% endif %} {% else %}
+    <p class="big-price"><span>$</span>{{ pricing.price }}</p>
+    <p class="help-block" style="margin-top: -9px">/ month</p>
+    {% if pricing.flat_price %}
+    <p class="medium-price">
+      <span>+ $</span>{{ pricing.flat_price }}
+      <span style="font-size: 16px;">flat fee</span>
+    </p>
+    {% endif %}{% endif %}
+  </td>
+  {% endfor %}
+</tr>
+<tr>
+  <td style="width: 25%">&nbsp;</td>
+  {% for pricing in page.pricing %}
+  <td
+    style="width: 25%; border-left: 1px solid #194c5f; border-right: 1px solid #194c5f; background-color: #252e3a;{% if include.bottom_border %} border-bottom: 1px solid #194c5f{% endif %}"
+    class="text-center"
+  >
+    {% if pricing.price == "Contact Us" %}
+    <p>
+      <a
+        class="btn btn-primary"
+        href="/hipaa-compliance-on-aws/contact/?selection={{ pricing.title | slugify }}"
+        ga-on="click"
+        ga-event-category="{{ page.path | slugify }}"
+        ga-event-action="select-cta"
+        >Contact Us</a
+      >
+    </p>
+    <p class="text-muted small">
+      <em>
+        Currently in private beta.<br />
+        Annual subscription.
+      </em>
+    </p>
+    {% elsif pricing.price == "Free" %}
+    <p>
+      <a
+        id="pricing-cta-aws"
+        class="btn btn-info pricing-ctas"
+        href="/hipaa-compliance-on-aws/contact/?selection={{ pricing.title | slugify }}"
+        ga-on="click"
+        ga-event-category="{{ page.path | slugify }}"
+        ga-event-action="select-cta"
+        >Request Access</a
+      >
+    </p>
+    <p class="text-muted small">
+      <em> Currently in private beta. </em>
+    </p>
+    {% elsif pricing.disabled_price %}
+    <p>
+      <a
+        id="pricing-cta-aws"
+        class="btn btn-light pricing-ctas disabled"
+        style="color: #b0afaf"
+        href="/hipaa-compliance-on-aws/contact/?selection={{ pricing.title | slugify }}"
+        ga-on="click"
+        ga-event-category="{{ page.path | slugify }}"
+        ga-event-action="select-cta"
+        >Not yet available</a
+      >
+    </p>
+    {% if pricing.users %}
+    <p class="help-block-disabled">{{ pricing.users }}</p>
+    {% endif %} {% if pricing.user_pricing %}
+    <p class="help-block-disabled">{{ pricing.user_pricing }}</p>
+    {% endif %}
+    <p class="text-muted small">
+      <em>
+        Currently in development.<br />
+        Annual subscription.
+      </em>
+    </p>
+    {% else %}
+    <p>
+      <a
+        id="pricing-cta-aws"
+        class="btn btn-info pricing-ctas"
+        href="/hipaa-compliance-on-aws/contact/?selection={{ pricing.title | slugify }}"
+        ga-on="click"
+        ga-event-category="{{ page.path | slugify }}"
+        ga-event-action="select-cta"
+        >Request Access</a
+      >
+    </p>
+    {% if pricing.users %}
+    <p class="help-block">{{ pricing.users }}</p>
+    {% endif %} {% if pricing.user_pricing %}
+    <p class="help-block">{{ pricing.user_pricing }}</p>
+    {% endif %}
+    <p class="text-muted small">
+      <em>
+        Currently in private beta.<br />
+        Annual subscription.
+      </em>
+    </p>
+    {% endif %}
+  </td>
+  {% endfor %}
+</tr>

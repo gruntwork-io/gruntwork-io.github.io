@@ -1,18 +1,14 @@
 ---
-layout: landing
+layout: landing-hipaa
 type: landing
 slug: index-page
-
-extra_nav_links:
-  - name: Why Gruntwork?
-    url: /hipaa-compliance-on-aws/why-gruntwork
-  - name: Bootstrap your app
-    url: /hipaa-compliance-on-aws/bootstrap-your-app
+custom_js: prism
+prism_css: /assets/css/prism-landing-zone.css
 
 title: The fastest way to launch HIPAA-compliant apps on AWS
-excerpt: Build your apps on top of HIPAA-compliant application templates. Deploy your apps onto battle-tested AWS architectures that have been certified via third party auditors.
+excerpt: Build your apps on top of HIPAA-compliant reference applications. Deploy your apps onto battle-tested AWS architectures that have been certified via third party auditors.
 permalink: /hipaa-compliance-on-aws/
-redirect_from: 
+redirect_from:
   - /hipaa-cloud-compliance/
   - /hipaa-compliance/
 alternate_cta_link: /hipaa-compliance-on-aws/pricing
@@ -30,13 +26,13 @@ how_it_works:
     image: /assets/img/hipaa/infrastructure-hipaa.png
     image_side: right
     body: |
-      Deploy an off-the-shelf, production-grade AWS Architecture that is HIPAA compliant out-of-the-box. The architecture includes: <ul><li>Multi-account Landing Zone</li><li>Networking (VPCs, VPN, SSH, DNS)</li> <li>Orchestration (EKS, ECS, EC2)</li><li>Data Storage (RDS, ElastiCache, ElasticSearch)</li><li>CI / CD (CircleCI, Jenkins, GitLab)</li><li>Monitoring (CloudWatch, CloudTrail, AWS Config)</li><li>End-to-end encryption (TLS, secrets management)</li><li>And much more (<a href="/hipaa-compliance-on-aws/bootstrap-your-app">see the full list of features</a>)</li></ul>
+      Deploy an off-the-shelf, production-grade AWS Architecture that is HIPAA compliant out-of-the-box. The architecture includes: <ul><li>Multi-account Landing Zone</li><li>Networking (VPCs, VPN, SSH, DNS)</li> <li>Orchestration (EKS, ECS, EC2)</li><li>Data Storage (RDS, ElastiCache, ElasticSearch)</li><li>CI / CD (CircleCI, Jenkins, GitLab)</li><li>Monitoring (CloudWatch, CloudTrail, AWS Config)</li><li>End-to-end encryption (TLS, secrets management)</li><li>And much more (<a href="/hipaa-compliance-on-aws/technical-details#reference-infra">see the full list of features</a>)</li></ul>
 
-  - heading: Step 2. Bootstrap your app with our HIPAA-compliant templates
+  - heading: Step 2. Bootstrap your app with our HIPAA-compliant reference applications
     image: /assets/img/hipaa/hipaa-sample-app.png
     image_side: left
     body: |
-      Build on top of application templates for a variety of languages and frameworks (e.g., Node.js/Express, Java/Spring, Ruby/Rails) that show you how to build HIPAA compliant and cloud-native apps, including how to do service discovery, secrets management, schema migrations, encryption, server hardening, and much more (<a href="/hipaa-compliance-on-aws/bootstrap-your-app/">see full list of features here</a>).
+      Build on top of reference applications for a variety of languages and frameworks (e.g., Node.js/Express, Java/Spring, Ruby/Rails) that show you how to build HIPAA compliant and cloud-native apps, including how to do service discovery, secrets management, schema migrations, encryption, server hardening, and much more (<a href="/hipaa-compliance-on-aws/technical-details/">see full list of features here</a>).
 
   - heading: Step 3. Work with us to define requirements that meet your needs
     image: /assets/img/hipaa/hipaa-chat.png
@@ -58,6 +54,33 @@ how_it_works:
     body: |
       The tools we all rely on (AWS, Terraform, Kubernetes, Docker), DevOps best practices, and auditor expectations are constantly changing. To help you remain HIPAA compliant, we offer commercial support and maintenance for our app and infrastructure code, all of which is semantically versioned, so you can stay completely up-to-date with the latest compliance requirements, security patches, and AWS/DevOps best practices via simple version number bumps.
 
+  - heading: Step 6. Verify all future code changes against Open Policy Agent (OPA) policies
+    precode: |
+      <figure><figcaption>Ensure all images come from a trusted registry</figcaption>
+           <pre>
+            <code class="language-python">
+              package kubernetes.admission
+
+              deny[msg] {
+                  input.request.kind.kind == "Pod"
+                  some i
+                  image := input.request.object.spec.containers[i].image
+                  not startswith(image, "gruntwork.io")
+                  msg := sprintf("image '%v' comes from untrusted registry", [image])
+              }
+             </code>
+          </pre> 
+       </figure>
+    image_side: left
+    body: |
+      Gruntwork's HIPAA Architecture comes with a CI/CD pipeline that runs your code against a library of OPA policies to validate that every commit remains in compliance with HIPAA requirements.
+
+  - heading: Step 7. Ensure ongoing compliance with scanning tools
+    image: /assets/img/hipaa/aws-security-hub-green.png
+    image_width: 500px
+    image_side: right
+    body: |
+      Gruntwork's HIPAA Reference Architecture is configured out-of-the-box to work with compliance scanning tools, so you have continuous monitoring and alerts on your compliance status.
 footer:
   heading: Go live with Gruntwork HIPAA
   body: |
@@ -100,12 +123,27 @@ footer:
   </div>
   <div class="section">
     <div class="container">
-      <h1>Compliance in progress</h1>
+      <h1>Gruntwork Early Access Program</h1>
       <p>
-        Our existing CIS compliant infrastructure is trusted by thousands of
-        developers and is a big step towards HIPAA compliance. From this
-        starting point, we're actively working on the rest of the HIPAA
-        requirements.
+        The Gruntwork Early Access Program (EAP) is the fastest way for you to
+        achieve HIPAA compliance on AWS. Over the last 5 years, Gruntwork has
+        helped hundreds of companies and thousands of developers go to prod on
+        AWS, including achieving
+        <a href="/achieve-compliance/">CIS Compliance</a>, and we are now
+        actively developing our HIPAA compliance on top of that foundation.
+      </p>
+      <p>
+        If you join the EAP, we'll deploy a CIS Compliant pre-prod environment
+        for you on day 1 and a HIPAA-compliant prod environment for you as soon
+        as it's available, plus a number of other
+        <a href="/hipaa-compliance-on-aws/pricing/"
+          >exclusive early-access benefits</a
+        >, including audit assistance and prioritized bug fixes.
+      </p>
+      <p>
+        See the table below for all the HIPAA requirements you'll meet with
+        Gruntwork today, out of the box, as well as those that are currently in
+        progress.
       </p>
       <div class="row row-community" id="hipaaDetails">
         {% include_relative _hipaa-details-table.html %}

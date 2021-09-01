@@ -1,0 +1,89 @@
+---
+layout: landing-patcher
+type: landing-patcher
+slug: pricing
+
+extra_nav_links:
+  - name: Use Cases
+    url: /patcher/use-cases/
+
+title: Pick a plan
+excerpt: Pick the plan just right for your team.
+permalink: /patcher/pricing/
+
+categories:
+  - title: Code management
+    features:
+    - name: Version number bumps
+      description: Bump to the latest versions all your dependencies.
+      plans: ["Free", "Pro", "Enterprise"]
+    - name: Code updates
+      description: Get all your code updated (only text transformations including mentions of the version numbers in code, comments or scripts).
+      plans: ["Free", "Pro", "Enterprise"]
+    - name: Public repos
+      description: Keep your public respository dependencies up to date.
+      plans: ["Free", "Pro","Enterprise"]
+    - name: Private repos
+      description: Keep your private respository dependencies up to date.
+      plans: ["Pro", "Enterprise"]
+  - title: Workflows
+    features:
+    - name: Promotion workflow
+      description: Promote your updates safely from one branch or environment to another, mimicking your release workflow.
+      plans: ["Pro", "Enterprise"]
+    - name: Internal dependency updates
+      description: Create a workflow to help you update the internal dependencies in a way that follows your usual software development flow.
+      plans: ["Pro", "Enterprise"]
+  - title: A Web UI
+    features:
+    - name: Dashboard
+      description: See all your repos, dependencies and available updates.
+      plans: ["Pro", "Enterprise"]
+    - name: Update directly via the UI
+      description: Control each of your repositories and dependencies, and apply updates directly with a click using the UI.
+      plans: ["Pro", "Enterprise"]
+    - name: Manage your Patcher updates
+      description: Choose if the Patcher updates are applied and merged automatically under certain conditions, or you get to review all updates and approve.
+      plans: ["Enterprise"]
+  - title: Custom scripts
+    features:
+    - name: Custom scripts
+      description: Execute custom scripts (e.g., update Terraform state, or a single 'go mod tidy') before or after your Patcher updates.
+      plans: ["Pro", "Enterprise"]
+  - title: Security
+    features:
+    - name: Remote agents
+      description: Run Patcher updates yourself directly in your AWS account without giving us access to your code.
+      plans: ["Enterprise"]
+
+pricing:
+  - title: Free
+    description: Free for public repos and open-source projects.
+    price: "Free"
+    image: /assets/img/grunty-free@2x.png
+    image_styles: "max-width: 130px"
+
+  - title: Pro
+    description: For teams operating up to 25 repos in any organisation account.
+    price: 49
+    image: /assets/img/grunty-pro@2x.png
+    image_styles: "max-width: 130px"
+
+  - title: Enterprise
+    description: All of Patcher's features and full control over the workflow for every repo in a any organisation account.
+    price: Contact Us
+    image: /assets/img/grunty-enterprise-heroku@2x.png
+    image_styles: "max-width: 130px; margin-top: 24px"
+---
+
+<div class="main page-pricing">
+  <div class="section page-pricing-header">
+      {% include_relative _hero.html %}
+  </div>
+  <div class="section-dark">
+    <div class="container">
+      {% include_relative _plans.html %}
+      {% include_relative _need-help.html %}
+    </div>
+  </div>
+</div>

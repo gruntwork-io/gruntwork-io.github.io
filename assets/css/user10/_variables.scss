@@ -1,0 +1,60 @@
+//
+// Variable additions to enhance Bootstraps core variables
+// ==================================================
+// ==================================================
+// These are NOT intended to be edited on a site by site basis.
+
+//
+// Colors
+// ==================================================
+
+// From the Google Material set of UI colors - https://www.materialui.co/colors
+$color-red:                                 #f44336; // Red 500
+$color-pink:                                #E91E63; // Pink 500
+$color-purple:                              #9C27B0; // Purple 500
+$color-deep-purple:                         #673AB7; // Deep Purple 500
+$color-indigo:                              #3F51B5; // Indigo 500
+$color-blue:                                #2196F3; // Blue 500
+$color-light-blue:                          #03A9F4; // Light Blue 500
+$color-cyan:                                #00BCD4; // Cyan 500
+$color-teal:                                #009688; // Teal 500
+$color-green:                               #4CAF50; // Green 500
+$color-light-green:                         #8BC34A; // Light Green 500
+$color-lime:                                #CDDC39; // Lime 500
+$color-yellow:                              #FFEB3B; // Yellow 500
+$color-amber:                               #FFC107; // Amber 500
+$color-orange:                              #FF9800; // Orange 500
+$color-deep-orange:                         #FF5722; // Deep Orange 500
+$color-brown:                               #795548; // Brown 500
+
+$color-bg:                                  #fff;
+$color-bg-light:                            lighten($color-bg, 5%);
+$color-bg-dark:                             darken($color-bg, 5%);
+$color-bg-grayscale:                        desaturate($color-bg, 100%);
+$color-bg-inverse:                          scale-color($color-bg-grayscale, $saturation: -100%);
+
+$white-overlay-light:                       rgba(#fff, 5%/100.0%);
+$white-overlay-medium:                      rgba(#fff, 10%/100.0%);
+$white-overlay-default:                     rgba(#fff, 17.5%/100.0%);
+$white-overlay-heavy:                       rgba(#fff, 25%/100.0%);
+
+$black-overlay-light:                       rgba(#000, 5%/100.0%);
+$black-overlay-medium:                      rgba(#000, 10%/100.0%);
+$black-overlay-default:                     rgba(#000, 17.5%/100.0%);
+$black-overlay-heavy:                       rgba(#000, 25%/100.0%);
+
+$color-transparent-lightest:                rgba($color-bg-inverse, 3%/100.0%);
+$color-transparent-lighter:                 rgba($color-bg-inverse, 6%/100.0%);
+$color-transparent-light:                   rgba($color-bg-inverse, 10%/100.0%);
+$color-transparent:                         rgba($color-bg-inverse, 14%/100.0%);
+$color-transparent-dark:                    rgba($color-bg-inverse, 18%/100.0%);
+$color-transparent-darker:                  rgba($color-bg-inverse, 22%/100.0%);
+$color-transparent-darkest:                 rgba($color-bg-inverse, 27%/100.0%);
+
+$gray-base:                                 #000;
+$gray-darker:                               lighten($gray-base, 13%); // #222
+$gray-dark:                                 lighten($gray-base, 25%);   // #404040
+$gray:                                      lighten($gray-base, 33%); // #555
+$gray-light:                                lighten($gray-base, 46%); // #777
+$gray-lighter:                              lighten($gray-base, 90%);   // #e6e6e6
+$gray-lightest:                             lighten($gray-base, 97%);   // #f7f7f7

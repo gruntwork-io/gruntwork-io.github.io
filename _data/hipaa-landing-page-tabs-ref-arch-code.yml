@@ -1,0 +1,165 @@
+- id: infra-terraform
+  title: Terraform
+  content: |
+    <figure>
+      <pre>
+      <code class="language-hcl">
+        module "fargate_service" {
+          source  = "github.com/gruntwork-io/service-catalog//ecs-service"
+          version = "v0.51.0"
+
+          service_name          = "my-heroku-app"
+          launch_type           = "FARGATE"
+          ecs_cluster_arn       = module.fargate_cluster.arn
+
+          task_cpu                = 256
+          task_memory             = 512
+          desired_number_of_tasks = 3
+
+          container_definitions = [
+            {
+              name         = "my-heroku-app"
+              image        = "https://123456789012.dkr.ecr.us-east-1.amazonaws.com/my-heroku-app:v1"
+              essential    = true
+              portMappings = [
+                {
+                  "hostPort"      = 3000
+                  "containerPort" = 3000
+                  "protocol"      = "tcp"
+                }
+              ]
+            }
+          ]
+
+          domain_name = "example.your-domain.com"
+        }
+
+        module "fargate_cluster" {
+          source  = "github.com/gruntwork-io/service-catalog//ecs-fargate-cluster"
+          version = "v0.51.0"
+
+          cluster_name = "my-fargate-cluster"
+        }
+      </code>
+      </pre>
+- id: infra-docker
+  title: Docker
+  content: |
+    <figure>
+      <pre>
+      <code class="language-docker">
+      FROM ubuntu:20.04
+      
+      ARG TLS_SCRIPTS_MODULE_INSTALL_PATH
+
+      # Copies the contents of /usr/local/bin from Build Phase 1, but does not contain the secret GitHub personal access token
+      COPY --from=with-secrets "$TLS_SCRIPTS_MODULE_INSTALL_PATH/tls-scripts/*.sh" /usr/local/bin/
+
+      # Install Node.js
+      RUN apt-get update && \
+          DEBIAN_FRONTEND=noninteractive apt-get -y upgrade && \
+          apt-get install -y curl ca-certificates jq python3-pip && \
+          curl -sL https://deb.nodesource.com/setup_12.x | bash - && \
+          apt-get install -y nodejs && \
+          rm -rf /var/lib/apt/lists/*
+
+      # Install Flyway
+      ENV FLYWAY_VERSION 6.3.0
+      ENV PATH ${PATH}:/flyway-${FLYWAY_VERSION}
+      RUN curl -O https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/${FLYWAY_VERSION}/flyway-commandline-${FLYWAY_VERSION}-linux-x64.tar.gz && \
+          tar -xvzf flyway-commandline-${FLYWAY_VERSION}-linux-x64.tar.gz && \
+          rm flyway-commandline-${FLYWAY_VERSION}-linux-x64.tar.gz
+
+      # Install nodemon so that node will restart upon file system changes when used in dev
+      RUN npm install -g nodemon
+
+      # Install the AWS CLI. Note that it installs in a ~/.local folder, so we add a symlink to make it visible on PATH.
+      RUN pip3 install awscli --upgrade --user && \
+          ln -s ~/.local/bin/aws /usr/local/bin/aws
+
+      # Source code should be in the /usr/src/app folder
+      RUN mkdir -p /usr/src/app
+      WORKDIR /usr/src/app
+
+      # Copy just package.json in so we can run npm install and have it cached by Docker. Note that we put the package.json
+      # in a folder _above_ the app folder. This way, if you bind-mount app from your host OS, you won't blow away the
+      # node_modules folder. We also add the .bin folder in node_modules to PATH so all the executables installed via NPM
+      # are available.
+      COPY package.json package.json
+      COPY package-lock.json package-lock.json
+      RUN npm install
+      ENV PATH ${PATH}:/usr/src/node_modules/.bin
+
+      # Copy the rest of the code
+      COPY bin bin
+      COPY tls tls
+      COPY config config
+      COPY sql sql
+      COPY app app
+
+      # Run npm start to boot the app
+      EXPOSE 8080 8443
+      CMD ["npm", "start"]
+      </code>
+      </pre>
+      <figure>
+- id: infra-packer
+  title: Packer
+  content: |
+    <figure>
+      <pre>
+      <code class="language-json">
+      /*************************************
+      * Packer configurations to create AMIs
+      **************************************/
+      {
+        "variables": {
+          "service_catalog_ref": null,
+          "version_tag": null,
+          "aws_region": "us-east-1",
+          "ami_name": "eks-workers",
+          "github_auth_token": "{{env `GITHUB_OAUTH_TOKEN`}}",
+          "encrypt_boot": "true",
+          "vpc_filter_key": "isDefault",
+          "vpc_filter_value": "true",
+          "vpc_subnet_filter_key": "default-for-az",
+          "vpc_subnet_filter_value": "true",
+          "gruntwork_installer_version": "v0.0.36",
+          "kubernetes_version": "1.20",
+          "enable_ssh_grunt": "true",
+          "ssh_interface": "public_ip",
+          "associate_public_ip_address": "true"
+        },
+         "vpc_filter": {
+            "filters": {
+              "{{user `vpc_filter_key`}}": "{{user `vpc_filter_value`}}"
+            }
+          },
+          "subnet_filter": {
+            "filters": {
+              "{{user `vpc_subnet_filter_key`}}": "{{user `vpc_subnet_filter_value`}}"
+            },
+            "most_free": "true"
+          },
+        }],
+        "provisioners": [{
+          "type": "shell",
+          "inline": [
+            "sudo yum update -y && sudo yum install -y aws-cli unzip perl-Digest-SHA jq",
+            "curl -Ls https://raw.githubusercontent.com/gruntwork-io/gruntwork-installer/master/bootstrap-gruntwork-installer.sh | bash /dev/stdin --version {{user `gruntwork_installer_version`}}",
+            "gruntwork-install --module-name services/eks-workers --repo https://github.com/gruntwork-io/terraform-aws-service-catalog --tag {{user `service_catalog_ref`}}"
+          ],
+          "environment_vars": [
+            "GITHUB_OAUTH_TOKEN={{user `github_auth_token`}}",
+            "terraform_aws_eks_version={{user `terraform_aws_eks_version`}}",
+            "module_security_version={{user `module_security_version`}}",
+            "module_ec2_baseline_branch={{user `module_ec2_baseline_branch`}}",
+            "enable_cloudwatch_metrics={{user `enable_cloudwatch_metrics`}}",
+            "enable_cloudwatch_log_aggregation={{user `enable_cloudwatch_log_aggregation`}}"
+          ],
+          "pause_before": "30s"
+        }]
+      }
+      </code>
+      </pre>
+      <figure>
