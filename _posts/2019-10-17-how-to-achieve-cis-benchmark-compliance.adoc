@@ -29,8 +29,9 @@ link:https://www.cisecurity.org/benchmark/amazon_web_services/[CIS AWS Foundatio
 you can launch infrastructure that is compliant with the Benchmark recommendations, and you'll be set to retain a
 compliant state over time because all of the infrastructure is defined as code. This guide targets version 1.4.0 of the Benchmark.
 
-NOTE: Previously, we supported version 1.3.0 of the Benchmark. If you are looking to upgrade from v1.3.0 to v1.4.0,
-please follow link:/guides/upgrades/how-to-update-to-cis-14/[the upgrade guide] instead.
+NOTE: Previously, we supported version 1.3.0 and 1.2.0 of the Benchmark. If you are looking to upgrade from an older version please follow these in order:
+* from v1.2.0 to v.1.3.0, please follow link:/guides/upgrades/how-to-update-to-cis-13/[the upgrade guide];
+* from v1.3.0 to v1.4.0, please follow link:/guides/upgrades/how-to-update-to-cis-14/[the upgrade guide].
 
 image:/assets/img/guides/cis-compliance/cis-account-architecture.png[CIS Benchmark Architecture]
 
@@ -62,8 +63,11 @@ This guide consists of five main sections:
   A reference table that maps each Benchmark recommendation to the corresponding section in the deployment
 walkthrough.
 
-
 Feel free to read the guide from start to finish or skip around to whatever part interests you!
+
+NOTE: This guide has been last updated on 6th September 2021, and it covers CIS 1.4.0 Benchmark recommendations. We aim to keep
+it up to date with our infrastructure-as-code modules with the latest CIS Benchmark that has been released.
+If you need to access older versions, please get in touch with us.
 
 [[core_concepts]]
 == Core concepts
@@ -567,9 +571,22 @@ resource "aws_db_instance" "your_primary_db" {
 }
 ----
 
-[[configure_s3_data]]
-==== Configure your S3 Data
+[[protect_your_s3_data]]
+==== Protect your S3 Data
 The CIS 1.4.0 Benchmark recommend a few additional steps to ensure your data is secured and accessible. The two recommendations relate both to S3 and prescribe that the MFA Delete is enabled on all S3 buckets in your accounts (2.1.3) and that all data in your S3 buckets is classified, discoverable and secured using Amazon Macie. You'll be able to find more details on how to enable these in link:/guides/upgrades/how-to-update-to-cis-14/[the migration guide to CIS 1.4.0].
+
+[[macie_manual_steps]]
+===== Configure Amazon Macie (recommendation 2.1.4)
+The new CIS AWS v1.4.0 recommendation 2.1.4 requires that all data in Amazon S3 be discovered, classified and secured.
+One way to achieve this is the by leveraging the link:https://aws.amazon.com/macie/[Amazon Macie] service.
+Amazon Macie is a fully managed data security and  data privacy service that uses machine learning and pattern matching
+to discover and protect your sensitive data in AWS. To help you achieve this recommendation, we have created a dedicated
+link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/modules/security/macie[`macie` service]
+in our CIS service catalog.
+
+NOTE: This is not the full list of steps needed to configure Amazon Macie for your account. To follow the steps necessary
+to configure it according to the CIS 1.4.0 Benchmark, please follow the Macie section in the
+link:/guides/upgrades/how-to-update-to-cis-14/[the migration guide to CIS 1.4.0], or the deployment guide section in this guide.
 
 === Logging
 In the Logging section, the Benchmark recommendations target the following services:
