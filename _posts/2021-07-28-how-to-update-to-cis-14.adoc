@@ -77,7 +77,7 @@ required creating a new module whereas the rest of the recommendations were achi
 
 To ensure compliance with version 1.4.0 of the CIS AWS Foundations Benchmark, you'll need to follow all the
 instructions in the <<deployment_walkthrough>> section below; precisely, follow Steps 1 and 2 to ensure that
-the existing modules get updated to their CIS AWS v1.4.0 compliant versions and follow Step 3 to ensure that you install and
+the existing modules get updated to their CIS AWS v1.4.0 compliant versions and follow Step 3 to ensure that you deploy and
 configure the newly created modules.
 
 [[deployment_walkthrough]]
@@ -135,9 +135,12 @@ In order to enable MFA Delete, you need to:
 1. https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html#id_root-user_manage_add-key[Create access keys for the root user]
 1. https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html#id_root-user_manage_mfa[Configure MFA for the root user]
 1. Using the root user, call the AWS CLI to enable MFA Delete. If you are using `aws-vault`, it is necessary to use the `--no-session` flag.
-```
++
+[source,bash]
+----
 aws s3api put-bucket-versioning --region <REGION> --bucket <BUCKET NAME> --versioning-configuration Status=Enabled,MFADelete=Enabled --mfa "arn:aws:iam::<ACCOUNT ID>:mfa/root-account-mfa-device <MFA CODE>"
-```
+----
++
 1. Set `mfa_delete=true`
 1. Remove any Lifecycle Rule that the bucket might contain (the default is `{}`, in the AWS Config and Cloudtrail modules, you need to set `s3_enable_lifecycle_rules=false`).
 1. Run `terraform apply`.
@@ -274,6 +277,6 @@ link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/releases/
 == Finally
 And that's all, fellow Gruntworkers.
 
-This guide is meant to help you get your AWS infrastructure from CIS 1.3.0 to CIS 1.4.0 using our dedicated and up-to-date modules. While we try to automate as much as possible, some of the steps still need to be manual. We hope that the guide above clearly details what needs to be done, and how.
+This guide is meant to help you get your AWS infrastructure from CIS 1.3.0 to CIS 1.4.0 using our dedicated and up-to-date modules. While we try to automate as much as possible, some of the steps are still manual. We hope that the guide above clearly details what needs to be done, and how.
 
-If you've got any feedback or you think something's missing from the guide, please get in touch via link:https://github.com/gruntwork-io/gruntwork-io.github.io[Github], or our link:https://gruntwork.io/contact[dedicated Contact Us page].
+If you've got any feedback or you think something's missing from the guide, please get in touch via link:https://github.com/gruntwork-io/gruntwork-io.github.io[Github], or our dedicated link:https://gruntwork.io/contact[Contact Us] page.
