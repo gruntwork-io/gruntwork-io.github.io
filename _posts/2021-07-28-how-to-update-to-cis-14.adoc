@@ -112,10 +112,10 @@ compatible with CIS AWS v1.4.0:
 
 |terraform-aws-security
 |https://github.com/gruntwork-io/terraform-aws-security/releases/tag/v0.54.0[v0.54.0]
-|1.12, 2.1.3, 2.1.4, 2.3.1
+|1.12, 2.1.3, 2.1.5
 |terraform-aws-cis-service-catalog
 |https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/releases/tag/v0.27.0[v0.27.0]
-|TODO
+|2.1.4, 4.1
 
 |===
 
@@ -213,7 +213,7 @@ link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/releases/
 
 === Step 3: Manual steps
 
-==== Enable MFA Delete
+==== Enable MFA Delete (recommendation 2.1.3)
 
 Enabling MFA Delete in your bucket adds another layer of security by requiring MFA in any request to delete a version or change the versioning state of the bucket.
 
@@ -264,8 +264,10 @@ aws-vault exec root-prod -- ./mfa-delete.sh --account-id 226486542153
 
 
 [[macie_manual_steps]]
-==== Configure Amazon Macie
+==== Configure Amazon Macie (recommendation 2.1.4)
+
 ===== Configure bucket to store sensitive data discovery results
+
 To deploy the Macie module and configure it for CIS compliance, certain manual steps are needed. Namely, configuring the
 S3 bucket to be a repository for the sensitive data discovery results is
 link:https://github.com/hashicorp/terraform-provider-aws/issues/19856[currently not supported] in the terraform AWS
