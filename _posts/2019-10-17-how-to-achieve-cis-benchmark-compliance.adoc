@@ -122,9 +122,9 @@ this section discuss particular IAM configurations, such as the configuration of
 of various groups and roles, and the configuration of multi-factor authentication (MFA) devices.
 
 ==== Storage
-_Number of recommendations: 3_
+_Number of recommendations: 7_
 
-This section was added originally in the previous CIS version (1.3.0), and now in 1.4.0 the recommendations are enhancements and updates to the use of AWS's storage capabilities. The relevant services for this section are link:https://aws.amazon.com/s3/[S3], link:https://aws.amazon.com/ec2/[EC2] and link:https://aws.amazon.com/rds/[RDS]. The recommendations in this section pertain to in-transit and at-rest encryption, as well as access control to the resources.
+This section was added originally in the previous CIS version (1.3.0), and now in 1.4.0 the recommendations are enhancements and updates to the use of AWS's storage capabilities. The relevant services for this section are link:https://aws.amazon.com/s3/[S3], link:https://aws.amazon.com/ec2/[EC2] and link:https://aws.amazon.com/rds/[RDS]. The recommendations in this section pertain to in-transit and at-rest encryption, access control to the resources, and handling sensitive data.
 
 ==== Logging
 _Number of recommendations: 11_
@@ -571,9 +571,12 @@ resource "aws_db_instance" "your_primary_db" {
 }
 ----
 
-[[secure_your_s3_data]]
-==== Secure your S3 Data
-The CIS 1.4.0 Benchmark recommend a few additional steps to ensure your data is secured and accessible. The two recommendations relate both to S3 and prescribe that the MFA Delete is enabled on all S3 buckets in your accounts (2.1.3) and that all data in your S3 buckets is classified, discoverable and secured using Amazon Macie. You'll be able to find more details on how to enable these in link:/guides/upgrades/how-to-update-to-cis-14/[the migration guide to CIS 1.4.0].
+[[protect_your_s3_data]]
+==== Protect your S3 Data
+The CIS 1.4.0 Benchmark recommends a few additional steps to ensure your data is secured and accessible. There are two new recommendations that relate to S3:
+
+* 2.1.3 prescribes that the MFA Delete is enabled on all S3 buckets in your accounts
+* 2.1.4 recommends that all data in your S3 buckets be classified, discovered and secured
 
 [[macie_manual_steps]]
 ===== Configure Amazon Macie (recommendation 2.1.4)
