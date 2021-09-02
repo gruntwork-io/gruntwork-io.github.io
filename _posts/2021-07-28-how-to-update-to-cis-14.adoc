@@ -144,9 +144,11 @@ aws s3api put-bucket-versioning --region <REGION> --bucket <BUCKET NAME> --versi
 1. Set `mfa_delete=true`
 1. Remove any Lifecycle Rule that the bucket might contain (the default is `{}`, in the AWS Config and Cloudtrail modules, you need to set `s3_enable_lifecycle_rules=false`).
 1. Run `terraform apply`.
-1. If there are no left S3 buckets to enable MFA Delete, delete the access keys for the root user, but NOT the MFA.
+1. If there are no S3 buckets remaining to enable MFA Delete, delete the access keys for the root user, but be sure to **leave MFA enabled**.
 
-We also create a script to help you enable MFA Delete in all buckets from a single account at once.
+We also created a script to help you enable MFA Delete in all buckets from a single account at once.
+
+**TODO - add link to the script and instructions**
 
 [[macie_manual_steps]]
 ==== Configure Amazon Macie
@@ -154,7 +156,7 @@ We also create a script to help you enable MFA Delete in all buckets from a sing
 To deploy the Macie module and configure it for CIS compliance, certain manual steps are needed. Namely, configuring the
 S3 bucket to be a repository for the sensitive data discovery results is
 link:https://github.com/hashicorp/terraform-provider-aws/issues/19856[currently not supported] in the terraform AWS
-provider, so you'll need to do it manually. After `terraform apply` on the module, you need to run the following manual steps:
+provider, so you'll need to do it manually. After deploying the module using `terraform apply`, you need to run the following manual steps:
 
 1. Log into the AWS console and for every region, repeat the steps 2 to 9.
 1. Go to the Amazon Macie service.
@@ -166,7 +168,7 @@ provider, so you'll need to do it manually. After `terraform apply` on the modul
 1. Under "KMS key alias" select your KMS key. This can be either one you had already have, or the one that the `macie` module created. You will use the same key for every region.
 1. Click "Save".
 
-Once the above issue in the terraform AWS provider has been resolved, we will
+Once the above issue in the Terraform AWS provider has been resolved, we will
 link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/issues/205[update the Gruntwork macie module]
 so that it completely automates all the steps of configuring Amazon Macie, and no manual steps will be required any longer.
 
