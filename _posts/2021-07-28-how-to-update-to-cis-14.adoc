@@ -119,94 +119,7 @@ compatible with CIS AWS v1.4.0:
 
 |===
 
-
-=== Step 2: Manual steps
-
-==== Enable MFA Delete
-
-Enabling MFA Delete in your bucket adds another layer of security by requiring MFA in any request to delete a version or change the versioning state of the bucket.
-
-The attribute `mfa_delete` is only used by Terraform to https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket#mfa_delete[reflect the current state of the bucket]. It is not possible to create a bucket if the `mfa_delete` is `true`, because it needs to be activated https://docs.aws.amazon.com/AmazonS3/latest/userguide/MultiFactorAuthenticationDelete.html[using AWS CLI or the API].
-
-To make this change https://docs.aws.amazon.com/general/latest/gr/root-vs-iam.html#aws_tasks-that-require-root[**you need to use the root user of the account**] that owns the bucket, and MFA needs to be enabled.
-
-[.exceptional]
-IMPORTANT: We do not recommend having active AWS access keys for the root user, so remember to delete them when you finish this step.
-
-In order to enable MFA Delete, you need to:
-
-1. https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html#id_root-user_manage_add-key[Create access keys for the root user]
-1. https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html#id_root-user_manage_mfa[Configure MFA for the root user]
-1. Create a bucket with `mfa_delete=false`.
-1. Using the root user, call the AWS CLI to enable MFA Delete. If you are using `aws-vault`, it is necessary to use the `--no-session` flag.
-+
-[source,bash]
-----
-aws s3api put-bucket-versioning --region <REGION> \
-    --bucket <BUCKET NAME> \
-    --versioning-configuration Status=Enabled,MFADelete=Enabled \
-    --mfa "arn:aws:iam::<ACCOUNT ID>:mfa/root-account-mfa-device <MFA CODE>"
-----
-+
-1. Set `mfa_delete=true` in your Terraform code
-1. Remove any Lifecycle Rule that the bucket might contain (for the `aws-config-bucket` and `cloudtrail-bucket` modules, enabling `mfa_delete` will already disable the lifecycle rules).
-1. Run `terraform apply`.
-1. If there are no S3 buckets remaining to enable MFA Delete, delete the access keys for the root user, but be sure to **leave MFA enabled**.
-
-We also created a script to help you enable MFA Delete in all buckets from a single account at once.
-
-**TODO - add link to the script and instructions**
-
-===== Using mfa-delete.sh
-
-If you want to enable MFA Delete to _all_ your buckets at once, you can use the script at https://github.com/gruntwork-io/terraform-aws-security/tree/master/modules/private-s3-bucket[terraform-aws-security/private-s3-bucket/mfa-delete-script]. You need to use the access keys for the root user and the root MFA code.
-
-Usage:
-```
-aws-vault exec <PROFILE> --no-session -- ./mfa-delete.sh --account-id <ACCOUNT ID>
-```
-
-Example:
-```
-aws-vault exec root-prod -- ./mfa-delete.sh --account-id 226486542153
-```
-
-
-[[macie_manual_steps]]
-==== Configure Amazon Macie
-===== Configure bucket to store sensitive data discovery results
-To deploy the Macie module and configure it for CIS compliance, certain manual steps are needed. Namely, configuring the
-S3 bucket to be a repository for the sensitive data discovery results is
-link:https://github.com/hashicorp/terraform-provider-aws/issues/19856[currently not supported] in the terraform AWS
-provider, so you'll need to do it manually. After deploying the module using `terraform apply`, you need to run the following manual steps:
-
-1. Log into the AWS console and for every region, repeat the steps 2 to 9.
-1. Go to the Amazon Macie service.
-1. In the left pane, under Settings, click on "Discovery results".
-1. Click on "Configure now" to configure an S3 bucket for long-term retention of sensitive data discovery results.
-1. Choose "Existing bucket".
-1. Under "Choose a bucket", select your bucket. This can be either one you already have, or the one that the `macie` module created. You will use the same bucket for every region.
-1. Under "KMS encryption" choose "Select a key from your account".
-1. Under "KMS key alias" select your KMS key. This can be either one you had already have, or the one that the `macie` module created. You will use the same key for every region.
-1. Click "Save".
-
-Once the above issue in the Terraform AWS provider has been resolved, we will
-link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/issues/205[update the Gruntwork macie module]
-so that it completely automates all the steps of configuring Amazon Macie, and no manual steps will be required any longer.
-
-===== Manually maintain buckets to analyze in the `buckets_to_analyze` variable
-When creating a Macie classification job, you need to specify a list of buckets that should be analyzed. Typically,
-you'll want to analyze all the buckets in the region. However, the terraform AWS provider does not support specifying
-all the buckets in a region - it requires that an explicit list of buckets be provided (see related bug
-link:https://github.com/hashicorp/terraform-provider-aws/issues/20044[here]). Therefore, you'll need to maintain an
-explicit list of buckets per region, namely in the variable `buckets_to_analyze`. Please read the
-link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/blob/master/modules/security/macie/variables.tf#L21-L30[documentation]
-for this variable in order to understand how to structure the list of buckets per region. Once the above issue in the
-terraform AWS provider has been resolved, we will
-link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/issues/204[update the Gruntwork macie module]
-to add support for specifying all buckets in a region.
-
-=== Step 3: Deploy new modules
+=== Step 2: Deploy the new module
 
 ==== Deploy the Macie module (recommendation 2.1.4)
 The new CIS AWS v1.4 recommendation 2.1.4 requires that all data in Amazon S3 be discovered, classified and secured.
@@ -296,6 +209,93 @@ link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/mast
 
 For more information about the new multi-region approach, see the
 link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/releases/tag/v0.25.0[release notes of the relevant release of the CIS service catalog].
+
+
+=== Step 3: Manual steps
+
+==== Enable MFA Delete
+
+Enabling MFA Delete in your bucket adds another layer of security by requiring MFA in any request to delete a version or change the versioning state of the bucket.
+
+The attribute `mfa_delete` is only used by Terraform to https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket#mfa_delete[reflect the current state of the bucket]. It is not possible to create a bucket if the `mfa_delete` is `true`, because it needs to be activated https://docs.aws.amazon.com/AmazonS3/latest/userguide/MultiFactorAuthenticationDelete.html[using AWS CLI or the API].
+
+To make this change https://docs.aws.amazon.com/general/latest/gr/root-vs-iam.html#aws_tasks-that-require-root[**you need to use the root user of the account**] that owns the bucket, and MFA needs to be enabled.
+
+[.exceptional]
+IMPORTANT: We do not recommend having active AWS access keys for the root user, so remember to delete them when you finish this step.
+
+In order to enable MFA Delete, you need to:
+
+1. https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html#id_root-user_manage_add-key[Create access keys for the root user]
+1. https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html#id_root-user_manage_mfa[Configure MFA for the root user]
+1. Create a bucket with `mfa_delete=false`.
+1. Using the root user, call the AWS CLI to enable MFA Delete. If you are using `aws-vault`, it is necessary to use the `--no-session` flag.
++
+[source,bash]
+----
+aws s3api put-bucket-versioning --region <REGION> \
+    --bucket <BUCKET NAME> \
+    --versioning-configuration Status=Enabled,MFADelete=Enabled \
+    --mfa "arn:aws:iam::<ACCOUNT ID>:mfa/root-account-mfa-device <MFA CODE>"
+----
++
+1. Set `mfa_delete=true` in your Terraform code
+1. Remove any Lifecycle Rule that the bucket might contain (for the `aws-config-bucket` and `cloudtrail-bucket` modules, enabling `mfa_delete` will already disable the lifecycle rules).
+1. Run `terraform apply`.
+1. If there are no S3 buckets remaining to enable MFA Delete, delete the access keys for the root user, but be sure to **leave MFA enabled**.
+
+We also created a script to help you enable MFA Delete in all buckets from a single account at once.
+
+**TODO - add link to the script and instructions**
+
+===== Using mfa-delete.sh
+
+If you want to enable MFA Delete to _all_ your buckets at once, you can use the script at https://github.com/gruntwork-io/terraform-aws-security/tree/master/modules/private-s3-bucket[terraform-aws-security/private-s3-bucket/mfa-delete-script]. You need to use the access keys for the root user and the root MFA code.
+
+Usage:
+```
+aws-vault exec <PROFILE> --no-session -- ./mfa-delete.sh --account-id <ACCOUNT ID>
+```
+
+Example:
+```
+aws-vault exec root-prod -- ./mfa-delete.sh --account-id 226486542153
+```
+
+
+[[macie_manual_steps]]
+==== Configure Amazon Macie
+===== Configure bucket to store sensitive data discovery results
+To deploy the Macie module and configure it for CIS compliance, certain manual steps are needed. Namely, configuring the
+S3 bucket to be a repository for the sensitive data discovery results is
+link:https://github.com/hashicorp/terraform-provider-aws/issues/19856[currently not supported] in the terraform AWS
+provider, so you'll need to do it manually. After deploying the module using `terraform apply`, you need to run the following manual steps:
+
+1. Log into the AWS console and for every region, repeat the steps 2 to 9.
+1. Go to the Amazon Macie service.
+1. In the left pane, under Settings, click on "Discovery results".
+1. Click on "Configure now" to configure an S3 bucket for long-term retention of sensitive data discovery results.
+1. Choose "Existing bucket".
+1. Under "Choose a bucket", select your bucket. This can be either one you already have, or the one that the `macie` module created. You will use the same bucket for every region.
+1. Under "KMS encryption" choose "Select a key from your account".
+1. Under "KMS key alias" select your KMS key. This can be either one you had already have, or the one that the `macie` module created. You will use the same key for every region.
+1. Click "Save".
+
+Once the above issue in the Terraform AWS provider has been resolved, we will
+link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/issues/205[update the Gruntwork macie module]
+so that it completely automates all the steps of configuring Amazon Macie, and no manual steps will be required any longer.
+
+===== Manually maintain buckets to analyze in the `buckets_to_analyze` variable
+When creating a Macie classification job, you need to specify a list of buckets that should be analyzed. Typically,
+you'll want to analyze all the buckets in the region. However, the terraform AWS provider does not support specifying
+all the buckets in a region - it requires that an explicit list of buckets be provided (see related bug
+link:https://github.com/hashicorp/terraform-provider-aws/issues/20044[here]). Therefore, you'll need to maintain an
+explicit list of buckets per region, namely in the variable `buckets_to_analyze`. Please read the
+link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/blob/master/modules/security/macie/variables.tf#L21-L30[documentation]
+for this variable in order to understand how to structure the list of buckets per region. Once the above issue in the
+terraform AWS provider has been resolved, we will
+link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/issues/204[update the Gruntwork macie module]
+to add support for specifying all buckets in a region.
 
 
 == Finally
