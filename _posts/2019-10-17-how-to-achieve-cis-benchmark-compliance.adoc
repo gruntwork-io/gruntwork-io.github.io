@@ -27,10 +27,10 @@ endif::[]
 This is a complete guide to help you achieve compliance with the
 link:https://www.cisecurity.org/benchmark/amazon_web_services/[CIS AWS Foundations Benchmark]. By following this guide,
 you can launch infrastructure that is compliant with the Benchmark recommendations, and you'll be set to retain a
-compliant state over time because all of the infrastructure is defined as code. This guide targets version 1.3.0 of the Benchmark.
+compliant state over time because all of the infrastructure is defined as code. This guide targets version 1.4.0 of the Benchmark.
 
-NOTE: Previously, we supported version 1.2.0 of the Benchmark. If you are looking to upgrade from v1.2.0 to v1.3.0,
-please follow link:/guides/upgrades/how-to-update-to-cis-13/[the upgrade guide] instead.
+NOTE: Previously, we supported version 1.3.0 of the Benchmark. If you are looking to upgrade from v1.3.0 to v1.4.0,
+please follow link:/guides/upgrades/how-to-update-to-cis-14/[the upgrade guide] instead.
 
 image:/assets/img/guides/cis-compliance/cis-account-architecture.png[CIS Benchmark Architecture]
 
@@ -100,7 +100,7 @@ day-to-day usage.
 
 Each recommendation is also linked to a corresponding link:https://www.cisecurity.org/controls/[CIS Control]. The
 controls are distinct from the Benchmark. They're described by CIS as "a prioritized set of actions that collectively
-form a defense-in-depth set of best practices that mitigate the most common attacks against systems and networks."
+form a defense-in-depth set of best practices that mitigate the most common attacks against systems and networks".
 Organizations seeking to implement a comprehensive security program or framework can use the controls to measure their
 progress and prioritize security efforts. The Foundations Benchmark is just one of several guidelines that can help
 reach the bar set by the CIS Controls. Refer to the Benchmark document directly to view how the recommendations map to
@@ -109,7 +109,7 @@ controls.
 === Recommendation sections
 
 ==== Identity and Access Management
-_Number of recommendations: 22_
+_Number of recommendations: 21_
 
 The recommendations in this section involve the use of identity, accounts, authentication, and authorization.
 On AWS, most identity and access control related concerns are managed using the
@@ -120,9 +120,7 @@ of various groups and roles, and the configuration of multi-factor authenticatio
 ==== Storage
 _Number of recommendations: 3_
 
-This section was added in the version 1.3.0 and involves the use of storage capabilities of AWS. The relevant
-services for this section are link:https://aws.amazon.com/s3/[S3] and link:https://aws.amazon.com/ec2/[EC2]. The
-recommendations in this section pertain to in-transit and at-rest encryption.
+This section was added originally in the previous CIS version (1.3.0), and now in 1.4.0 the recommendations are enhancements and updates to the use of AWS's storage capabilities. The relevant services for this section are link:https://aws.amazon.com/s3/[S3], link:https://aws.amazon.com/ec2/[EC2] and link:https://aws.amazon.com/rds/[RDS]. The recommendations in this section pertain to in-transit and at-rest encryption, as well as access control to the resources.
 
 ==== Logging
 _Number of recommendations: 11_
@@ -134,11 +132,11 @@ several of them:
 * link:https://docs.aws.amazon.com/config/latest/developerguide/WhatIsConfig.html[AWS Config] records and evaluates resource configurations
 * link:https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html[VPC Flow Logs] capture network traffic information
   in VPCs
+* link:https://docs.aws.amazon.com/kms/latest/developerguide/overview.html[AWS KMS] lets you handle keys to encrypt and decrypt your data
 
 AWS has several other logging related features that are not covered directly by the Benchmark. For example,
 the primary log ingestion and query service, link:https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/WhatIsCloudWatchLogs.html[Amazon CloudWatch
-Logs], is integrated with many other AWS services. The Benchmark does not contain any recommendations
-specifically for CloudWatch Logs, though many recommendations do make mention of it.
+Logs], is integrated with many other AWS services. The Benchmark recommends that CloudTrail is integratd with CloudWatch Logs. Within the Gruntwork modules we've setup CloudWatch with all the integrated services such as AWS Config, CloudTrail and S3.
 
 ==== Monitoring
 _Number of recommendations: 15_
@@ -147,6 +145,8 @@ Monitoring is an overloaded term in the industry. In the context of the AWS Foun
 monitoring section is exclusively about monitoring for specific API calls using the CloudTrail service paired
 with link:https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/MonitoringLogData.html[CloudWatch Logs
 filter metrics]. Each recommendation in this section spells out a specific filter and an associated alarm.
+
+Metric filter-related recommendations in this section are dependent on the Ensure CloudTrail is enabled in all regions and Ensure CloudTrail trails are integrated with CloudWatch Logs recommendation in the "Logging" section.
 
 ==== Networking
 _Number of recommendations: 4_
@@ -177,13 +177,15 @@ edition of Terraform Up & Running].
 The first section of the Benchmark centers on Identity and Access Management, including the following:
 
 * Avoiding usage of the "root" account
-* Requiring MFA for IAM users
+* Requiring MFA for IAM users and the root account
 * Setting a specific password policy
 * Disabling administrative permissions
 * Limiting the use of API access keys
 * Using IAM roles
 * Removing expired SSL/TLS certificates
 * Enabling IAM Access Analyzer
+* Using AWS Organizations or identity federation to manage multi-account environments
+
 
 In the subsequent sections, we'll review the recommendations and discuss how to implement them using Terraform resources and data sources.
 
@@ -198,8 +200,8 @@ Perhaps the most robust and secure method for authenticating to AWS is to use
 link:https://aws.amazon.com/identity/saml/[federated SAML authentication] with an identity provider (IdP) like Okta,
 Google, or Active Directory. In this configuration, users authenticate to the IdP and assume IAM roles to obtain
 permissions in AWS. All user management is handled in the IdP, where you can assign roles to users according to their
-needs. If you use this approach, several of the Benchmark recommendations, including recommendations 1.10,
-1.15, and 1.11, are not applicable (assuming you have no IAM users at all).
+needs. If you use this approach, recommendation 1.21 from the Benchmark is the one relevant to you. However, several of
+other recommendations including 1.10, 1.15, and 1.11, are not applicable (assuming you have no IAM users at all).
 
 Configuring SAML is a multi-step process that is outside the scope of this guide. Familiarize yourself with the
 process by reviewing the link:https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_create_saml.html[AWS
@@ -453,7 +455,7 @@ to see how this module is used from the Landing Zone account baselines and is de
 
 [[iam_access_analyzer]]
 ==== IAM Access Analyzer
-As of version 1.3.0, the CIS recommendations stipulate that the AWS IAM Access Analyzer service is enabled across all active regions in a given
+In both versions 1.3.0 and 1.4.0, the CIS recommendations stipulate that the AWS IAM Access Analyzer service is enabled across all active regions in a given
 AWS Account or Organization.
 
 To achieve this compliance requirement, enable the IAM Access Analyzer service for every AWS region you have enabled in
@@ -552,12 +554,29 @@ resource "aws_ebs_encryption_by_default" "ebs_encryption" {
 }
 ----
 
+[[configure_rds_encryption]]
+==== Configure RDS Encryption
+To comply with recommendation 2.3.1, if you use RDS it must be configured with link:http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Overview.Encryption.html[RDS encryption] for all instances and in all of the enabled AWS regions within your AWS Account(s). You can set to `true` the Terraform `storage_encrypted` attribute for an RDS instance to implement the recommendation.
+
+For example:
+
+[source,hcl]
+----
+resource "aws_db_instance" "your_primary_db" {
+  storage_encrypted = true
+}
+----
+
+[[configure_s3_data]]
+==== Configure your S3 Data
+The CIS 1.4.0 Benchmark recommend a few additional steps to ensure your data is secured and accessible. The two recommendations relate both to S3 and prescribe that the MFA Delete is enabled on all S3 buckets in your accounts (2.1.3) and that all data in your S3 buckets is classified, discoverable and secured using Amazon Macie. You'll be able to find more details on how to enable these in link:/guides/upgrades/how-to-update-to-cis-14/[the migration guide to CIS 1.4.0].
+
 === Logging
 In the Logging section, the Benchmark recommendations target the following services:
 
 * link:https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-user-guide.html[AWS CloudTrail]
 * link:https://docs.aws.amazon.com/config/latest/developerguide/WhatIsConfig.html[AWS Config]
-* link:https://docs.aws.amazon.com/kms/latest/developerguide/rotate-keys.html[KMS key rotation]
+* link:https://docs.aws.amazon.com/kms/latest/developerguide/rotate-keys.html[KMS Key rotation]
 * link:https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html[VPC Flow Logs]
 
 We'll cover each of them in turn.
