@@ -1075,7 +1075,7 @@ repo, setting the `ref` param to the version you require:
 [source,hcl]
 ----
 terraform {
-  source = "git::git@github.com/gruntwork-io/terraform-aws-cis-service-catalog//modules/landingzone/account-baseline-root?ref=v0.22.0"
+  source = "git::git@github.com:gruntwork-io/terraform-aws-cis-service-catalog.git//modules/landingzone/account-baseline-root?ref=v0.22.0"
 
   # This module deploys some resources (e.g., AWS Config) across all AWS regions, each of which needs its own provider,
   # which in Terraform means a separate process. To avoid all these processes thrashing the CPU, which leads to network
@@ -1569,7 +1569,7 @@ repo, setting the `ref` param to the version you require:
 [source,hcl]
 ----
 terraform {
-  source = "git::git@github.com/gruntwork-io/terraform-aws-cis-service-catalog//modules/landingzone/account-baseline-app?ref=v0.22.0"
+  source = "git::git@github.com:gruntwork-io/terraform-aws-cis-service-catalog.git//modules/landingzone/account-baseline-app?ref=v0.22.0"
 
   # This module deploys some resources (e.g., AWS Config) across all AWS regions, each of which needs its own provider,
   # which in Terraform means a separate process. To avoid all these processes thrashing the CPU, which leads to network
@@ -1773,7 +1773,7 @@ repo, setting the `ref` param to the version you require:
 [source,hcl]
 ----
 terraform {
-  source = "git::git@github.com/gruntwork-io/terraform-aws-cis-service-catalog//modules/landingzone/account-baseline-security?ref=v0.22.0"
+  source = "git::git@github.com:gruntwork-io/terraform-aws-cis-service-catalog.git//modules/landingzone/account-baseline-security?ref=v0.22.0"
 
   # This module deploys some resources (e.g., AWS Config) across all AWS regions, each of which needs its own provider,
   # which in Terraform means a separate process. To avoid all these processes thrashing the CPU, which leads to network
@@ -1808,8 +1808,32 @@ locals {
 
   # A local for convenient access to the security account root ARN.
   security_account_root_arn = "arn:aws:iam::${local.accounts.security}:root"
+
+  # This input will be generated for you with the Ref Arch or you can set it to have data like shown in the example below:
+  # cross_account_groups = try(
+  #   yamldecode(
+  #     templatefile(
+  #       "cross_account_groups.yml",
+  #         {
+  #           accounts = local.accounts
+  #         },
+  #       ),
+  #     ),
+  #   {},
+  # )
+  # Where `cross_account_groups.yml` looks like:
+  # cross_account_groups:
+  #   - group_name: "_account.${name}-full-access"
+  #     iam_role_arns:
+  #     - "arn:aws:iam::${id}:role/allow-full-access-from-other-accounts"
+  cross_account_groups = []
+
 }
 input = {
+  # You might need to provide these separately, or reference/import a file containing the values
+  #account_id =
+  #aws_region =
+
   # Prefix all resources with this name
   name_prefix = "<SOME_UNIQUE_IDENTIFIER>-security"
 
@@ -1856,7 +1880,7 @@ input = {
   ##################################
 
   # Create groups that allow IAM users in this account to assume roles in your other AWS accounts.
-  iam_groups_for_cross_account_access = local.cross_account_groups.cross_account_groups
+  iam_groups_for_cross_account_access = local.cross_account_groups
 
   # Allow these accounts to have read access to IAM groups and the public SSH keys of users in the group.
   allow_ssh_grunt_access_from_other_account_arns = [
@@ -2015,7 +2039,7 @@ repo, setting the `ref` param to the version you require:
 [source,hcl]
 ----
 terraform {
-  source = "git::git@github.com/gruntwork-io/terraform-aws-cis-service-catalog//modules/landingzone/account-baseline-app?ref=v0.22.0"
+  source = "git::git@github.com:gruntwork-io/terraform-aws-cis-service-catalog.git//modules/landingzone/account-baseline-app?ref=v0.22.0"
 
   # This module deploys some resources (e.g., AWS Config) across all AWS regions, each of which needs its own provider,
   # which in Terraform means a separate process. To avoid all these processes thrashing the CPU, which leads to network
