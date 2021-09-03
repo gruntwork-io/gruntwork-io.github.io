@@ -1809,24 +1809,13 @@ locals {
   # A local for convenient access to the security account root ARN.
   security_account_root_arn = "arn:aws:iam::${local.accounts.security}:root"
 
-  # This input will be generated for you with the Ref Arch or you can set it to have data like shown in the example below:
-  # cross_account_groups = try(
-  #   yamldecode(
-  #     templatefile(
-  #       "cross_account_groups.yml",
-  #         {
-  #           accounts = local.accounts
-  #         },
-  #       ),
-  #     ),
-  #   {},
-  # )
-  # Where `cross_account_groups.yml` looks like:
-  # cross_account_groups:
-  #   - group_name: "_account.${name}-full-access"
-  #     iam_role_arns:
-  #     - "arn:aws:iam::${id}:role/allow-full-access-from-other-accounts"
-  cross_account_groups = []
+  # This input will be generated for you with the Ref Arch or you can set it yourself too
+  cross_account_groups = [
+    {
+      group_name    = "_account.stage-full-access",
+      iam_role_arns = ["arn:aws:iam::${locals.accounts.stage}:role/allow-full-access-from-other-accounts"]
+    }
+  ]
 
 }
 input = {
