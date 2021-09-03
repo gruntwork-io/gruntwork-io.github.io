@@ -477,7 +477,7 @@ This lets you identify unintended access to these resources and data by external
 The findings from the IAM Access Analyzer can be found in the AWS web console, and can be archived or resolved.
 Please visit the link:https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-findings.html[AWS guidance on how to do so].
 
-[[manual_steps]]
+[[manual_steps_iam]]
 ==== Manual steps
 A few of the recommendations in the IAM section are not achievable via API and require a one-time manual configuration.
 Perform the steps in this section manually.
@@ -601,6 +601,10 @@ Enabling MFA Delete in your bucket adds another layer of security by requiring M
 The attribute `mfa_delete` is only used by Terraform to https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket#mfa_delete[reflect the current state of the bucket]. It is not possible to create a bucket if the `mfa_delete` is `true`, because it needs to be activated https://docs.aws.amazon.com/AmazonS3/latest/userguide/MultiFactorAuthenticationDelete.html[using AWS CLI or the API].
 
 To make this change https://docs.aws.amazon.com/general/latest/gr/root-vs-iam.html#aws_tasks-that-require-root[**you need to use the root user of the account**] that owns the bucket, and MFA needs to be enabled.
+
+[[manual_steps_storage]]
+==== Manual steps
+TODO: Add manual steps for macie
 
 === Logging
 In the Logging section, the Benchmark recommendations target the following services:
@@ -1012,7 +1016,7 @@ Configure the `account-baseline-root` for the root account
 [.exceptional]
 IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork Compliance subscriber# to access the Gruntwork Infrastructure as Code Library and the https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/[CIS AWS Foundations Benchmark modules].
 
-First, let's set consider the repository structure that is recommended by this guide. It is available for your reference in the "/examples/for-production" section in the https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/examples/for-production[`terraform-aws-cis-service-catalog` repository]. Consider the following directory structure for your `infrastructure-live` repository. It showcases the configuration files for your local variables.
+First, let's consider the repository structure that is recommended by this guide. It is available for your reference in the `/examples/for-production` folder of the https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/examples/for-production[`terraform-aws-cis-service-catalog` repository]. Consider the following directory structure for your `infrastructure-live` repository. It showcases the configuration files for your local variables.
 
 ----
 .
@@ -1051,7 +1055,7 @@ locals {
 
 You'll need to create these files to be able to follow the code examples following. For examples on what to put in each of these files, refer to the https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/examples/for-production[`terraform-aws-cis-service-catalog` repository]. Each of the `terragrunt.hcl` files will use the above `locals` configuration to help you avoid repetition. Note that the examples below won't show this in the interest of clarity.
 
-Next, we'll configure the `account-baseline-root` with settings needed for creating all the child accounts - AWS Organizations, IAM Roles, IAM Users, IAM Groups, IAM Password Policies, Amazon GuardDuty, AWS CloudTrail, AWS Config and Security Hub.
+Next, we'll configure the `account-baseline-root` with settings needed for creating all the child accounts - AWS Organizations, IAM Roles, IAM Users, IAM Groups, IAM Password Policies, Amazon GuardDuty, AWS CloudTrail, AWS Config, Security Hub and Amazon Macie.
 
 We'll be using the `landingzone/account-baseline-root` module from https://github.com/gruntwork-io/terraform-aws-cis-service-catalog[terraform-aws-cis-service-catalog].
 
@@ -1217,7 +1221,7 @@ advantage of the fact that https://gmail.googleblog.com/2008/03/2-hidden-ways-to
 address, `root-accounts@acme.com`.
 
 . **Mark one of the child accounts as a logs account**. We set `is_logs_account = true` on one of the child accounts
-to indicate it is the logs account where we will aggregate AWS Config, CloudTrail, IAM Access Analyzer and Security Hub data from all the other accounts.
+to indicate it is the logs account where we will aggregate AWS Config, CloudTrail, IAM Access Analyzer, Security Hub and Amazon Macie data from all the other accounts.
 The `account-baseline-root` module will automatically create an S3 bucket for AWS Config and an S3 bucket and KMS CMK
 = for CloudTrail in this account and configure the root account to send all the AWS Config and CloudTrail data to these
 S3 buckets. Later on, you'll configure all the other accounts to send their data to these S3 buckets too.
@@ -1283,7 +1287,7 @@ You should get JSON output with information about your IAM user:
 You're now almost ready to deploy the `account-baseline` module in the root account. But first, you may need to import
 some existing resources.
 
-=== Import existing resources from the root account into Terraform state
+===== Import existing resources from the root account into Terraform state
 
 Before applying the security baseline to the root account, we need to import any existing resources—including the IAM
 user you created manually earlier—into Terraform state, so that Terraform manages those existing resources instead of
@@ -1414,7 +1418,7 @@ rm -rf .terragrunt-cache
 ----
 
 [[apply_account_baseline_root]]
-==== Apply the `account-baseline-root` baseline to the root account
+===== Apply the `account-baseline-root` baseline to the root account
 
 You're now ready to apply the security baseline to the root account. You should be authenticated as the same IAM user
 in the root account as in the previous two sections. To apply the security baseline, you run `terragrunt apply`:
@@ -1550,8 +1554,8 @@ those root users again.
 [[apply_account_baseline_logs]]
 ==== Apply the `account-baseline-app` to the logs account
 
-The next step is to configure the **logs** account, which is used to aggregate AWS Config and CloudTrail data from all the
-other accountss.
+The next step is to configure the **logs** account, which is used to aggregate AWS Config, CloudTrail, IAM Access Analyzer,
+Security Hub and Amazon Macie data from all the other accounts.
 
 Create a `terragrunt.hcl` file in `infrastructure-live` under the file path `logs/_global/account-baseline`:
 
@@ -1673,7 +1677,11 @@ inputs = {
   # A role that allows access to support only.
   allow_support_access_from_other_account_arns = [local.security_account_root_arn]
 
+  # Join this account to the root account's Security Hub
   security_hub_associate_to_master_account_id = local.accounts.root
+
+  # Join this account to the root account's Amazon Macie
+  macie_administrator_account_id = local.accounts.root
 }
 ----
 
@@ -1909,7 +1917,11 @@ input = {
     }
   }
 
+  # Join this account to the root account's Security Hub
   security_hub_associate_to_master_account_id = local.accounts.root
+
+  # Join this account to the root account's Amazon Macie
+  macie_administrator_account_id = local.accounts.root
 }
 ----
 
@@ -1936,7 +1948,9 @@ user and encrypt it with that user’s PGP key from Keybase (see below for how t
 
 . **Create a function to cleanup expired TLS certificates**. We've setup a lambda function to monitor your SSL/TLS certificates and clean them up when they've expired. This is enforced by CIS requirement 1.19.
 
-. **Enable Security Hub**. We've enabled Security Hub across all enabled regions. For this feature to work, the `master` Security Hub account (usually the Account that has the AWS Organizations, in this case `root`) will have to invite the `members` accounts, and the `members` accounts also have to accept the invitation. This is currently done programmatically, not via `terraform`.
+. **Enable Security Hub**. We've enabled Security Hub across all enabled regions. For this feature to work, the `administrator` Security Hub account (usually the Account that has the AWS Organizations, in this case `root`) will have to invite the `member` accounts, and the `member` accounts also have to accept the invitation.
+
+. **Enable Amazon Macie**. We've enabled Amazon Macie across all enabled regions. For this feature to work, the `administrator` Amazon Macie account (usually the Account that has the AWS Organizations, in this case `root`) will have to invite the `member` accounts, and the `member` accounts also have to accept the invitation.
 
 Configure your Terraform backend:
 
@@ -2144,7 +2158,11 @@ inputs = {
     }
   }
 
+  # Join this account to the root account's Security Hub
   security_hub_associate_to_master_account_id = local.accounts.root
+
+  # Join this account to the root account's Amazon Macie
+  macie_administrator_account_id = local.accounts.root
 }
 ----
 
@@ -2294,13 +2312,20 @@ a minimum.
 
 [[s3_buckets_deployment]]
 **S3 Buckets**
+
 To make sure your S3 buckets are compliant with the benchmark, use the
 link:https://github.com/gruntwork-io/terraform-aws-security/tree/master/modules/private-s3-bucket[`private-s3-bucket` module]
 to create and manage all of your S3 buckets. This module blocks public access and enforces encryption by default. Note
 that all Gruntwork modules that create S3 buckets use this module under the hood.
 
-You can either use the `private-s3-bucket` module in your own modules, or, if you wish to deploy a standalone S3 bucket, use the https://github.com/gruntwork-io/terraform-aws-service-catalog/blob/master/modules/data-stores/s3-bucket/[`s3-bucket` service]
+You can either use the `private-s3-bucket` module in your own modules, or, if you wish to deploy a standalone S3 bucket,
+use the https://github.com/gruntwork-io/terraform-aws-service-catalog/blob/master/modules/data-stores/s3-bucket/[`s3-bucket` service]
 from the Gruntwork Service Catalog.
+
+To ensure that all the data in your S3 buckets has been discovered, classified and secured, use the
+link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/modules/security/macie[`macie` module]
+to monitor all your S3 buckets. Note that all the Gruntwork account baseline modules include the `macie` module under
+the hood.
 
 [[maintain_compliance_logging]]
 **Maintaining compliance by following Logging best practices**
@@ -2500,7 +2525,7 @@ sections above.
 1.4;<<configure_security_hub>>;Use the Gruntwork Security Hub module to enable AWS Security Hub to ensure you are notified if the root user has access keys set
 1.5;<<root_mfa>>;Manually configure MFA for the root user
 1.6;<<root_mfa>>;Use a Yubikey (or other hardware MFA) for the root user
-1.7;<<manual_steps>>;Take manual steps to complete this recommendation
+1.7;<<manual_steps_iam>>;Take manual steps to complete this recommendation
 1.8-9;<<apply_account_baseline_security>>;Use the `account-baseline-security` module to set up the IAM password policy
 1.10;<<configure_authentication>>;Configure authentication using SAML or IAM
 1.11;<<apply_account_baseline_security>>;Use the `account-baseline-security` module to create users
