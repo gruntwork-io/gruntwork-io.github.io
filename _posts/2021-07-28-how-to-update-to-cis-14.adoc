@@ -119,6 +119,22 @@ compatible with CIS AWS v1.4.0:
 
 |===
 
+==== Updating the Account Baseline modules
+
+The account baseline modules had two breaking updates between versions v0.22.0 and v0.27.0:
+
+1. https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/releases/tag/v0.23.0[v0.23.0]: Refactored the
+SecurityHub module, to remove a Python script that managed invitation between the AWS accounts. It's necessary to run a
+state migration to manage the invitation with Terraform.
+2. https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/releases/tag/v0.25.0[v0.25.0]: Update the codebase
+to new multi-region approach. In https://github.com/gruntwork-io/terraform-aws-security/releases/tag/v0.51.0[v0.51.0] of
+`terraform-aws-security`, we refactored how we build multi-region modules—that
+is, those modules that deploy resources across every single AWS region, such as `aws-config-multi-region`—to no longer
+create nested provider blocks, and instead, have users pass in providers via the providers map.
+
+Refer to the Migration guide section to understand how to update run the manual steps. The rest of this guide will help
+you on how to update your modules with the CIS v1.4 features.
+
 === Step 2: Deploy the new module
 
 ==== Deploy the Macie module (recommendation 2.1.4)
