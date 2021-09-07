@@ -208,6 +208,7 @@ provider "aws" {
 ----
 
 You'll also need to make sure you're providing a value for the `opt_in_regions` variable in your `variables.tf` file:
+
 .variables.tf
 [source,hcl]
 ----
@@ -262,21 +263,21 @@ aws s3api put-bucket-versioning --region <REGION> \
 
 We also created a script to help you enable MFA Delete in all buckets from a single account at once.
 
-**TODO - add link to the script and instructions**
-
 ===== Using mfa-delete.sh
 
 If you want to enable MFA Delete to _all_ your buckets at once, you can use the script at https://github.com/gruntwork-io/terraform-aws-security/tree/master/modules/private-s3-bucket[terraform-aws-security/private-s3-bucket/mfa-delete-script]. You need to use the access keys for the root user and the root MFA code.
 
 Usage:
-```
+[source,bash]
+----
 aws-vault exec <PROFILE> --no-session -- ./mfa-delete.sh --account-id <ACCOUNT ID>
-```
+----
 
 Example:
-```
+[source,bash]
+----
 aws-vault exec root-prod -- ./mfa-delete.sh --account-id 226486542153
-```
+----
 
 
 [[macie_manual_steps]]
