@@ -295,9 +295,9 @@ provider, so you'll need to do it manually. After deploying the module using `te
 1. In the left pane, under Settings, click on "Discovery results".
 1. Click on "Configure now" to configure an S3 bucket for long-term retention of sensitive data discovery results.
 1. Choose "Existing bucket".
-1. Under "Choose a bucket", select your bucket. This can be either one you already have, or the one that the `macie` module created. You will use the same bucket for every region.
+1. Under "Choose a bucket", select your bucket. This can be either one you already have, or the one that the `macie` module created (if you set the `create_macie_bucket` variable to `true`). You will use the same bucket for every region.
 1. Under "KMS encryption" choose "Select a key from your account".
-1. Under "KMS key alias" select your KMS key. This can be either one you had already have, or the one that the `macie` module created. You will use the same key for every region.
+1. Under "KMS key alias" select your KMS key. This can be either one you already have, or the one that the `macie` module created (if you set the `create_kms_key` variable to `true`). You will use the same key for every region.
 1. Click "Save".
 
 Once the above issue in the Terraform AWS provider has been resolved, we will
