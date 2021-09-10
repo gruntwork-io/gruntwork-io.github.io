@@ -279,18 +279,20 @@ Example:
 aws-vault exec root-prod -- ./mfa-delete.sh --account-id 226486542153
 ----
 
-
 [[macie_manual_steps]]
 ==== Configure Amazon Macie (recommendation 2.1.4)
 
+When configuring Macie for each region, you'll need to specify a few things:
+ * the S3 bucket to be a repository for the sensitive data discovery results;
+ * the KMS key that the data in that bucket will be encrypted with;
+ * and the S3 bucket(s) that you'll need Macie to analyze for you.
+
+Below, we'll cover in a few steps how to configure the above resources for Macie. These steps are manual, because at the time of developing this module and releasing the Gruntwork Service Catalog for CIS Benchmark 1.4.0, some of these configurations are link:https://github.com/hashicorp/terraform-provider-aws/issues/19856[currently not supported] in the terraform AWS provider.
+
 ===== Configure bucket to store sensitive data discovery results
+Once you've applied the Macie module using `terraform` or `terragrunt`, you need to do the following manual steps:
 
-To deploy the Macie module and configure it for CIS compliance, certain manual steps are needed. Namely, configuring the
-S3 bucket to be a repository for the sensitive data discovery results is
-link:https://github.com/hashicorp/terraform-provider-aws/issues/19856[currently not supported] in the terraform AWS
-provider, so you'll need to do it manually. After deploying the module using `terraform apply`, you need to run the following manual steps:
-
-1. Log into the AWS console and for every region, repeat the steps 2 to 9.
+1. Log into the AWS console and for every region where you have enabled Macie, repeat the steps 2 to 9.
 1. Go to the Amazon Macie service.
 1. In the left pane, under Settings, click on "Discovery results".
 1. Click on "Configure now" to configure an S3 bucket for long-term retention of sensitive data discovery results.
@@ -300,14 +302,12 @@ provider, so you'll need to do it manually. After deploying the module using `te
 1. Under "KMS key alias" select your KMS key. This can be either one you already have, or the one that the `macie` module created (if you set the `create_kms_key` variable to `true`). You will use the same key for every region.
 1. Click "Save".
 
-Once the above issue in the Terraform AWS provider has been resolved, we will
-link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/issues/205[update the Gruntwork macie module]
+Once Terraform AWS provider supports the above configurations, we will
+link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/issues/205[update the Gruntwork Macie module]
 so that it completely automates all the steps of configuring Amazon Macie, and no manual steps will be required any longer.
 
 ===== Manually maintain buckets to analyze in the `buckets_to_analyze` variable
-When creating a Macie classification job, you need to specify a list of buckets that should be analyzed. Typically,
-you'll want to analyze all the buckets in the region. However, the terraform AWS provider does not support specifying
-all the buckets in a region - it requires that an explicit list of buckets be provided (see related bug
+To set up Macie to analyze the desired S3 buckets, you'll need to create a **Macie classification job**, Typically, you'll want it to analyze all the buckets in the region. However, the terraform AWS provider does not support specifying all the buckets in a region - it requires that an explicit list of buckets be provided (see related bug
 link:https://github.com/hashicorp/terraform-provider-aws/issues/20044[here]). Therefore, you'll need to maintain an
 explicit list of buckets per region, namely in the variable `buckets_to_analyze`. Please read the
 link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/blob/master/modules/security/macie/variables.tf#L21-L30[documentation]
@@ -315,7 +315,6 @@ for this variable in order to understand how to structure the list of buckets pe
 terraform AWS provider has been resolved, we will
 link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/issues/204[update the Gruntwork macie module]
 to add support for specifying all buckets in a region.
-
 
 == Finally
 And that's all, fellow Gruntworkers.
