@@ -1822,19 +1822,54 @@ locals {
   # This input will be generated for you with the Ref Arch or you can set it yourself too
   cross_account_groups = [
     {
-      group_name    = "_account.stage-full-access",
-      iam_role_arns = ["arn:aws:iam::${locals.accounts.stage}:role/allow-full-access-from-other-accounts"]
+      group_name    = "${local.accounts.logs}-billing-only-access",
+      iam_role_arns = ["arn:aws:iam::${local.accounts.logs}:role/allow-billing-only-access-from-other-accounts"]
+    },
+    {
+      group_name    = "${local.accounts.logs}-read-only-access",
+      iam_role_arns = ["arn:aws:iam::${local.accounts.logs}:role/allow-read-only-access-from-other-accounts"]
+    },
+    {
+      group_name    = "${local.accounts.logs}-support-access",
+      iam_role_arns = ["arn:aws:iam::${local.accounts.logs}:role/allow-support-access-from-other-accounts"]
     }
   ]
 
+  # The following locals are used for constructing multi region provider configurations for the underlying module.
+  # A list of all AWS regions
+  all_aws_regions = [
+    "af-south-1",
+    "ap-east-1",
+    "ap-northeast-1",
+    ...,
+  ]
+
+  # Creates resources in the specified regions. The best practice is to enable multiregion modules in all enabled
+  # regions in your AWS account. To get the list of regions enabled in your AWS account, you can use the AWS CLI: aws
+  # ec2 describe-regions.
+  opt_in_regions = [
+    "eu-north-1",
+    "ap-south-1",
+    "eu-west-3",
+    ...,
+  ]
 }
 input = {
   # You might need to provide these separately, or reference/import a file containing the values
-  #account_id =
-  #aws_region =
+  # account_id =
+  # aws_region =
 
   # Prefix all resources with this name
   name_prefix = "<SOME_UNIQUE_IDENTIFIER>-security"
+
+  # Provide the opt_in_regions for all multi-region modules
+  config_opt_in_regions              = local.opt_in_regions
+  guardduty_opt_in_regions           = local.opt_in_regions
+  kms_cmk_opt_in_regions             = local.opt_in_regions
+  ebs_opt_in_regions                 = local.opt_in_regions
+  iam_access_analyzer_opt_in_regions = local.opt_in_regions
+  macie_opt_in_regions               = local.opt_in_regions
+  security_hub_opt_in_regions        = local.opt_in_regions
 
   ################################
   # Parameters for AWS Config
@@ -1900,17 +1935,22 @@ input = {
     "iam:GetRolePolicy",
   ]
 
+  # Create the IAM groups according to the CIS 1.4.0 Benchmark recommendations
+  should_create_iam_group_user_self_mgmt = true
+  should_create_iam_group_billing = true
+  should_create_iam_group_read_only = true
+
   # IAM users
   users = {
     alice = {
-      groups               = ["user-self-mgmt", "ssh-sudo-users"]
+      groups               = ["${local.accounts.logs}-billing-only-access"]
       pgp_key              = "keybase:alice_on_keybase"
       create_login_profile = true
       create_access_keys   = false
     }
 
     bob = {
-      groups               = ["user-self-mgmt", "_account.prod-read-only"]
+      groups               = ["${local.accounts.logs}-read-only-access"]
       pgp_key              = "keybase:bob_on_keybase"
       create_login_profile = true
       create_access_keys   = false
@@ -1922,6 +1962,16 @@ input = {
 
   # Join this account to the root account's Amazon Macie
   macie_administrator_account_id = local.accounts.root
+
+  # Use the following variables if you want to set up an example configuration.
+  create_macie_bucket = true
+  macie_bucket_name = "macie-bucket-example-cis-guide"
+  macie_create_kms_key = true
+  macie_kms_key_name = "macie_kms_key_example_cis_guide"
+  macie_kms_key_users = ["arn:aws:iam::${local.accounts.security}:root","arn:aws:iam::${local.accounts.security}:user/alice", "arn:aws:iam::${local.accounts.security}:user/bob"]
+  macie_buckets_to_analyze = {
+    "eu-west-1" : ["PROVIDE_YOUR_OWN_BUCKETS_TO_ANALYZE_HERE"],
+  }
 }
 ----
 
