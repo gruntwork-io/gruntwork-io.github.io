@@ -121,22 +121,22 @@ compatible with CIS AWS v1.4.0:
 === Step 2: Update the Account Baseline modules
 
 Next, you will need to update the account baseline (landing zone) modules to the version compatible
-with v1.4 of the CIS AWS Foundations Benchmark. We strongly recommend upgrading direct to at least v0.27.0,
+with v1.4.0 of the CIS AWS Foundations Benchmark. We strongly recommend upgrading straight to at least v0.27.0,
 instead of each minor version incrementally. This saves a lot of time due to the performance enhancements in
-recent versions of the account baseline modules and you can still complete the require migration steps before
+recent versions of the account baseline modules and you can still complete the required migration steps before
 running Terraform/Terragrunt `apply`.
 
 NOTE: This guide assumes you are using at least v0.22.0 of the CIS Service Catalog repo.
 
-The account baseline modules had two breaking updates between versions v0.22.0 and v0.27.0. We must manually run
+The account baseline modules had three breaking changes between versions v0.22.0 and v0.27.0. We must manually run
 these migration steps before updating the module versions.
 
 1. https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/releases/tag/v0.23.0[v0.23.0]: Refactored the
-SecurityHub module, to remove a Python script that managed invitation between the AWS accounts. It's necessary to run a
-state migration to manage the invitation with Terraform.
-2. https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/releases/tag/v0.24.0[v0.24.0]: This release introduces MFA Delete. You will need to follow the migration guide to ensure all S3 buckets are properly secured. Note: typically you will not need to run this step on AWS root accounts as they typically don't contain S3 buckets. Ensure you migrate the logs, security, shared and all app accounts.
-2. https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/releases/tag/v0.25.0[v0.25.0]: Update the codebase
-to new multi-region approach. In https://github.com/gruntwork-io/terraform-aws-security/releases/tag/v0.51.0[v0.51.0] of
+SecurityHub module to remove a Python script that managed invitations between the AWS accounts. It's necessary to run a
+state migration to manage the invitations with Terraform.
+2. https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/releases/tag/v0.24.0[v0.24.0]: This release introduces MFA Delete. You will need to follow the migration guide to ensure all S3 buckets are properly secured. Note: It is unlikely you will need to perform this step on the AWS root account as they typically don't contain S3 buckets. Please ensure you migrate all other AWS accounts.
+3. https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/releases/tag/v0.25.0[v0.25.0]: Update the codebase
+to a new multi-region approach. In https://github.com/gruntwork-io/terraform-aws-security/releases/tag/v0.51.0[v0.51.0] of
 `terraform-aws-security`, we refactored how we build multi-region modules—that
 is, those modules that deploy resources across every single AWS region, such as `aws-config-multi-region`—to no longer
 create nested provider blocks, and instead, have users pass in providers via the providers map.
@@ -145,7 +145,7 @@ Additionally, earlier versions of the account baseline modules did not set the f
 that they exist. Here is https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/blob/v0.27.0/examples/for-production/infrastructure-live/logs/_global/account-baseline/terragrunt.hcl#L281[an example] of what you might set the values to for the prod account.
 
  - `var.config_central_account_id`
- - `var.security_hub_associate_to_master_account_id`: This variable is typically set to the logs account id. e.g: `security_hub_associate_to_master_account_id = local.accounts.logs`.
+ - `var.security_hub_associate_to_master_account_id`
  - `var.config_opt_in_regions`
  - `var.guardduty_opt_in_regions`
  - `var.kms_cmk_opt_in_regions`
@@ -162,10 +162,10 @@ Once you have completed the above migration steps, it is time to update each bas
 git::git@github.com:gruntwork-io/terraform-aws-cis-service-catalog.git//modules/landingzone/account-baseline-root?ref=v0.27.0
 ----
 
-NOTE: Be sure to do this for each AWS account and account baseline module.
-
 Now execute Terraform/Terragrunt `apply`. It should take approximately ~30 minutes to apply the account baseline
 modules. If you encouter any issues then please check out the <<known_issues>> section.
+
+NOTE: Be sure to do this for each AWS account and account baseline module.
 
 In addition to the above breaking changes, you'll need to configure the account baseline modules to include the newly
 created module for link:https://aws.amazon.com/macie/[Amazon Macie]. Amazon Macie satisfies the new 2.1.4 benchmark recommendation that requires all data
@@ -183,7 +183,7 @@ baseline module configurations:
 [source,hcl]
 ----
 inputs {
-  # ... previously existing inputs ...
+  # ... previous inputs ...
 
   # Configures Amazon Macie
   create_macie_bucket      = true
@@ -204,7 +204,7 @@ inputs {
 [source,hcl]
 ----
 inputs {
-  # ... previously existing inputs ...
+  # ... previous inputs ...
 
   # Configures Amazon Macie
   create_macie_bucket      = true
@@ -226,7 +226,7 @@ inputs {
 [source,hcl]
 ----
 inputs {
-  # ... previously existing inputs ...
+  # ... previous inputs ...
 
   # Configures Amazon Macie
   create_macie_bucket      = true
@@ -335,9 +335,10 @@ terraform AWS provider has been resolved, we will
 link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/issues/204[update the Gruntwork macie module]
 to add support for specifying all buckets in a region.
 
+[[known_issues]]
 ==== Known Issues
 
-You may encouter the following issues when trying to upgrade to v0.27.0 of the AWS CIS Service Catalog.
+You may encounter the following issues when trying to upgrade to v0.27.0 of the AWS CIS Service Catalog.
 
 ===== Cloudtrail KMS Key Error
 
@@ -347,7 +348,7 @@ with module.cloudtrail.module.cloudtrail.data.aws_kms_key.by_loose_id[0],
 on .terraform/modules/cloudtrail.cloudtrail/modules/cloudtrail/main.tf line 40, in data "aws_kms_key" "by_loose_id":
 ----
 
-Solution: Please ensure `var.cloudtrail_kms_key_arn_is_alias` is set to `false` in each account baseline.
+Please ensure `var.cloudtrail_kms_key_arn_is_alias` is set to `false` in each account baseline.
 
 ===== AWS Config Rules
 
@@ -356,7 +357,7 @@ Solution: Please ensure `var.cloudtrail_kms_key_arn_is_alias` is set to `false` 
 Error: Error creating AWSConfig rule: Failed to create AWSConfig rule: InvalidParameterValueException: The sourceIdentifier VPC_SG_OPEN_ONLY_TO_AUTHORIZED_PORTS is invalid. Please refer to the documentation for a list of valid sourceIdentifiers that can be used when AWS is the Owner.
 ----
 
-You may be using a region that doesn't properly support AWS Config (e.g: `ap-northeast-3` Osaka). Please ensure this region is not enabled or remove it from your opt-in regions.
+You may be using a region that doesn't properly support AWS Config (e.g: `ap-northeast-3` Osaka). Please ensure this region is disabled or remove it from your opt-in regions.
 
 == Finally
 And that's all, fellow Gruntworkers.
