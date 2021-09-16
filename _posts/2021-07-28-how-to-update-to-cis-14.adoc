@@ -25,10 +25,9 @@ endif::[]
 
 == Intro
 
-This guide will walk you through the process of updating version 1.3.0 to version 1.4.0 of the CIS AWS Foundations Benchmark.
-If your infrastructure is already compliant with v1.3.0, and you are looking to upgrade to v1.4.0,
-then this guide is for you. Alternatively, if you are starting from scratch, check out our
-https://gruntwork.io/guides/compliance/how-to-achieve-cis-benchmark-compliance/[How to achieve compliance with the CIS AWS Foundations Benchmark]
+This guide will walk you through the process of updating version 1.3.0 to version 1.4.0 of our CIS AWS Foundations
+Benchmark solution. We assume you are using the landing zone modules provided in our CIS service catalog, however,
+if you are starting from scratch, check out our https://gruntwork.io/guides/compliance/how-to-achieve-cis-benchmark-compliance/[How to achieve compliance with the CIS AWS Foundations Benchmark]
 guide instead.
 
 === Previous versions of this guide
@@ -44,15 +43,15 @@ An overview of the CIS AWS Foundations Benchmark v1.4.0 and why it is important 
 <<deployment_walkthrough>>::
 The steps you need to take to update your code to be compliant with v1.4.0. It includes a
 <<compatibility_table,version compatibility table>> you can use as a reference to know which Gruntwork Repo version
-tag is compatible along with the manual steps you need to perform to achieve compliance with version 1.4.0 of the CIS
-AWS Foundations Benchmark.
+tag is compatible along with the deployment steps you need to perform to achieve compliance with version 1.4.0 of the
+CIS AWS Foundations Benchmark.
 
 
 [[core_concepts]]
 == Core Concepts
 
 === Background
-Version 1.4.0 of the CIS AWS Foundations Benchmark was released in May of 2021. You can refer to the https://www.cisecurity.org/benchmark/amazon_web_services/[CIS website] where you can download the latest version of the Benchmark (as well as all the previous versions). The latest version introduces a few new recommendations, and also updates one recommendation. This guide will walk you through implementing these using Gruntwork’s Infrastructure as Code Library so that your AWS infrastructure is fully compliant with version 1.4.0 of the framework.
+Version 1.4.0 of the CIS AWS Foundations Benchmark was released in May of 2021. You can refer to the https://www.cisecurity.org/benchmark/amazon_web_services/[CIS website] where you can download the latest version of the Benchmark (as well as all the previous versions). The latest version introduces a few new recommendations, and also updates one recommendation.
 
 ==== Changes in recommendations
 Changes in recommendations (both additions and removals) are listed below. You can think of these as a "diff"
@@ -121,23 +120,57 @@ compatible with CIS AWS v1.4.0:
 
 === Step 2: Update the Account Baseline modules
 
-The account baseline modules had two breaking updates between versions v0.22.0 and v0.27.0:
+Next, you will need to update the account baseline (landing zone) modules to the version compatible
+with v1.4 of the CIS AWS Foundations Benchmark. We strongly recommend upgrading direct to at least v0.27.0,
+instead of each minor version incrementally. This saves a lot of time due to the performance enhancements in
+recent versions of the account baseline modules and you can still complete the require migration steps before
+running Terraform/Terragrunt `apply`.
+
+NOTE: This guide assumes you are using at least v0.22.0 of the CIS Service Catalog repo.
+
+The account baseline modules had two breaking updates between versions v0.22.0 and v0.27.0. We must manually run
+these migration steps before updating the module versions.
 
 1. https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/releases/tag/v0.23.0[v0.23.0]: Refactored the
 SecurityHub module, to remove a Python script that managed invitation between the AWS accounts. It's necessary to run a
 state migration to manage the invitation with Terraform.
+2. https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/releases/tag/v0.24.0[v0.24.0]: This release introduces MFA Delete. You will need to follow the migration guide to ensure all S3 buckets are properly secured. Note: typically you will not need to run this step on AWS root accounts as they typically don't contain S3 buckets. Ensure you migrate the logs, security, shared and all app accounts.
 2. https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/releases/tag/v0.25.0[v0.25.0]: Update the codebase
 to new multi-region approach. In https://github.com/gruntwork-io/terraform-aws-security/releases/tag/v0.51.0[v0.51.0] of
 `terraform-aws-security`, we refactored how we build multi-region modules—that
 is, those modules that deploy resources across every single AWS region, such as `aws-config-multi-region`—to no longer
 create nested provider blocks, and instead, have users pass in providers via the providers map.
 
+Additionally, earlier versions of the account baseline modules did not set the following variables, so please ensure
+that they exist. Here is https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/blob/v0.27.0/examples/for-production/infrastructure-live/logs/_global/account-baseline/terragrunt.hcl#L281[an example] of what you might set the values to for the prod account.
+
+ - `var.config_central_account_id`
+ - `var.security_hub_associate_to_master_account_id`: This variable is typically set to the logs account id. e.g: `security_hub_associate_to_master_account_id = local.accounts.logs`.
+ - `var.config_opt_in_regions`
+ - `var.guardduty_opt_in_regions`
+ - `var.kms_cmk_opt_in_regions`
+ - `var.iam_access_analyzer_opt_in_regions`
+ - `var.ebs_opt_in_regions`
+ - `var.security_hub_opt_in_regions`
+ - `var.macie_opt_in_regions`
+
+Once you have completed the above migration steps, it is time to update each baseline module to at least version https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/releases/tag/v0.27.0[v0.27.0] and run Terraform/Terragrunt apply. Typically this is done using the `source` parameter:
+
+.infrastructure-live/root/_global/account-baseline/terragrunt.hcl
+[source,hcl]
+----
+git::git@github.com:gruntwork-io/terraform-aws-cis-service-catalog.git//modules/landingzone/account-baseline-root?ref=v0.27.0
+----
+
+NOTE: Be sure to do this for each AWS account and account baseline module.
+
+Now execute Terraform/Terragrunt `apply`. It should take approximately ~30 minutes to apply the account baseline
+modules. If you encouter any issues then please check out the <<known_issues>> section.
+
 In addition to the above breaking changes, you'll need to configure the account baseline modules to include the newly
-created module for Amazon Macie. The new CIS AWS v1.4 recommendation 2.1.4 requires that all data in Amazon S3 be discovered, classified and secured.
-One way to achieve this is the by leveraging the link:https://aws.amazon.com/macie/[Amazon Macie] service.
-Amazon Macie is a fully managed data security and  data privacy service that uses machine learning and pattern matching
-to discover and protect your sensitive data in AWS. To help you achieve this recommendation, we have created a dedicated
-link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/modules/security/macie[`macie` service]
+created module for link:https://aws.amazon.com/macie/[Amazon Macie]. Amazon Macie satisfies the new 2.1.4 benchmark recommendation that requires all data
+in Amazon S3 be discovered, classified and secured. We have created a dedicated
+link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/modules/security/macie[`macie` module]
 in our CIS service catalog.
 
 NOTE: Manual steps required! After updating the account baseline modules as described below, make sure you perform the manual steps
@@ -301,6 +334,29 @@ for this variable in order to understand how to structure the list of buckets pe
 terraform AWS provider has been resolved, we will
 link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/issues/204[update the Gruntwork macie module]
 to add support for specifying all buckets in a region.
+
+==== Known Issues
+
+You may encouter the following issues when trying to upgrade to v0.27.0 of the AWS CIS Service Catalog.
+
+===== Cloudtrail KMS Key Error
+
+[source,bash]
+----
+with module.cloudtrail.module.cloudtrail.data.aws_kms_key.by_loose_id[0],
+on .terraform/modules/cloudtrail.cloudtrail/modules/cloudtrail/main.tf line 40, in data "aws_kms_key" "by_loose_id":
+----
+
+Solution: Please ensure `var.cloudtrail_kms_key_arn_is_alias` is set to `false` in each account baseline.
+
+===== AWS Config Rules
+
+[source,bash]
+----
+Error: Error creating AWSConfig rule: Failed to create AWSConfig rule: InvalidParameterValueException: The sourceIdentifier VPC_SG_OPEN_ONLY_TO_AUTHORIZED_PORTS is invalid. Please refer to the documentation for a list of valid sourceIdentifiers that can be used when AWS is the Owner.
+----
+
+You may be using a region that doesn't properly support AWS Config (e.g: `ap-northeast-3` Osaka). Please ensure this region is not enabled or remove it from your opt-in regions.
 
 == Finally
 And that's all, fellow Gruntworkers.
