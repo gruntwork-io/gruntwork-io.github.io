@@ -485,8 +485,8 @@ Perform the steps in this section manually.
 [[root_mfa]]
 ===== Enable MFA for the root account
 Securing the "root" user, or the first user that is created when you set up an AWS account, is one of the
-first actions you should take in any new account. Unfortunately, there is no API or automation available for
-configuring an MFA device for the root user. Follow the manual steps outlined in the
+first actions you should take in any new account. It is highly recommended that the user of this account be avoided for everyday tasks. Unfortunately, there is no API or automation available for configuring an MFA device for the
+root user. Follow the manual steps outlined in the
 link:https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html#id_root-user_manage_mfa[AWS docs]. Configuring a virtual MFA device will achieve recommendation 1.5. You can also refer to the link:https://gruntwork.io/guides/foundations/how-to-configure-production-grade-aws-account-structure/[production-grade AWS account structure guide.]
 
 For the paranoid: configure a hardware MFA device, as suggested by recommendation 1.6. We suggest using a
@@ -2654,23 +2654,26 @@ sections above.
 1.8-9;<<apply_account_baseline_security>>;Use the `account-baseline-security` module to set up the IAM password policy
 1.10;<<configure_authentication>>;Configure authentication using SAML or IAM
 1.11;<<apply_account_baseline_security>>;Use the `account-baseline-security` module to create users
-1.12;<<apply_account_baseline_root>>, <<apply_account_baseline_security>>, <<apply_account_baseline_logs>>;Use the `account-basline-*` modules to set up your accounts. This will ensure that there are no unused credentials
-1.13;<<apply_account_baseline_root>>, <<apply_account_baseline_security>>, <<apply_account_baseline_logs>>;Use the `account-basline-*` modules to set up your accounts. This will ensure that there are no extra access keys
-1.14;<<apply_account_baseline_root>>, <<apply_account_baseline_security>>, <<apply_account_baseline_logs>>;Use the `account-basline-*` modules to set up your accounts. This will ensure that there are no unused access keys
+1.12;<<apply_account_baseline_root>>, <<apply_account_baseline_security>>, <<apply_account_baseline_logs>>;Use the `account-baseline-*` modules to set up your accounts. This will ensure that there are no unused credentials
+1.13;<<apply_account_baseline_root>>, <<apply_account_baseline_security>>, <<apply_account_baseline_logs>>;Use the `account-baseline-*` modules to set up your accounts. This will ensure that there are no extra access keys
+1.14;<<apply_account_baseline_root>>, <<apply_account_baseline_security>>, <<apply_account_baseline_logs>>;Use the `account-baseline-*` modules to set up your accounts. This will ensure that there are no unused access keys
 1.15;<<apply_account_baseline_security>>;Use the `account-baseline-security` module to create users and groups
 1.16;<<apply_account_baseline_security>>;Use the `account-baseline-security` module to ensure no full-access policies are attached to any groups or users
 1.17;<<apply_account_baseline_security>>;Use the `account-baseline-security` module to create a support group
 1.18;<<iam_roles_for_instances>>;Use Gruntwork modules to ensure EC2 instances use roles for access
 1.19;<<cleanup_expired_certs>>;Use Gruntwork modules to automatically remove expired certificates from IAM
-1.20;<<s3_buckets_deployment>>;Use the `private-s3-bucket` module
-1.21;<<iam_access_analyzer>>;Use Gruntwork modules to enable IAM Access Analyzer across regions
-1.22;<<account_structure>>;Use the security AWS account as described in the Gruntwork production-grade AWS account structure
+1.20;<<iam_access_analyzer>>;Use Gruntwork modules to enable IAM Access Analyzer across regions
+1.21;<<apply_account_baseline_root>>, <<apply_account_baseline_security>>, <<apply_account_baseline_logs>>;Use the `account-baseline-*` modules to set up your accounts. This will ensure IAM users are managed centrally through the user of AWS Organizations.
 2.1.1-2.1.2;<<s3_buckets_deployment>>;Use the `private-s3-bucket` module
+2.1.3;<<s3_buckets_deployment>>;Use the `private-s3-bucket` module and follow the instructions
+2.1.4;<<apply_account_baseline_root>>, <<apply_account_baseline_security>>, <<apply_account_baseline_logs>>;Use the `account-baseline-*` modules to set up your accounts. This will ensure Amazon Macie is enabled.
+2.1.5;<<s3_buckets_deployment>>;Use the `private-s3-bucket` module
 2.2.1;<<configure_ebs_encryption>>;Use Gruntwork modules to configure AWS EBS encryption
-3.1-3.4;<<apply_account_baseline_logs>>;Use the `account-baseline-*` modules to ensure Cloudtrail is enabled and configured in all regions
+2.3.1;<<configure_rds_encryption>>;Use Gruntwork modules to configure AWS RDS encryption
+3.1-3.4;<<apply_account_baseline_logs>>;Use the `account-baseline-*` modules to ensure CloudTrail is enabled and configured in all regions
 3.5;<<apply_account_baseline_security>>;Use the `account-baseline-security` module to ensure AWS Config is enabled in all regions
-3.6;<<apply_account_baseline_logs>>;Use the `account-baseline-*` modules to ensure Cloudtrail S3 bucket has access logging enabled
-3.7;<<apply_account_baseline_logs>>;Use the `account-baseline-*` modules to ensure Cloudtrail logs are encrypted at rest using KMS CMKs
+3.6;<<apply_account_baseline_logs>>;Use the `account-baseline-*` modules to ensure CloudTrail S3 bucket has access logging enabled
+3.7;<<apply_account_baseline_logs>>;Use the `account-baseline-*` modules to ensure CloudTrail logs are encrypted at rest using KMS CMKs
 3.8;<<enable_key_rotation_for_kms>>;Use the KMS module
 3.9;<<vpc_flow_logs>>;Use the Gruntwork CIS-compliant `vpc` service to provision VPCs with flow logs enabled
 3.10-3.11;<<apply_account_baseline_logs>>;Use the `account-baseline-*` modules to ensure Object-level logging is enabled for S3 buckets for read and write events
