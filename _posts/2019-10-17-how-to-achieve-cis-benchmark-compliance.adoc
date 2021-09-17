@@ -2204,6 +2204,25 @@ locals {
 
   # A local for convenient access to the security account root ARN.
   security_account_root_arn = "arn:aws:iam::${local.accounts.security}:root"
+
+  # The following locals are used for constructing multi region provider configurations for the underlying module.
+  # A list of all AWS regions
+  all_aws_regions = [
+    "af-south-1",
+    "ap-east-1",
+    "ap-northeast-1",
+    # ... fill in the rest of the regions ...
+  ]
+
+  # Creates resources in the specified regions. The best practice is to enable multiregion modules in all enabled
+  # regions in your AWS account. To get the list of regions enabled in your AWS account, you can use the AWS CLI: aws
+  # ec2 describe-regions.
+  opt_in_regions = [
+    "eu-north-1",
+    "ap-south-1",
+    "eu-west-3",
+    # ... fill in the rest of the regions ...
+  ]
 }
 
 inputs = {
@@ -2284,8 +2303,20 @@ inputs = {
   # Join this account to the root account's Security Hub
   security_hub_associate_to_master_account_id = local.accounts.root
 
-  # Join this account to the root account's Amazon Macie
+  # Configures Amazon Macie
+  create_macie_bucket            = true
+  macie_bucket_name              = "<your-macie-bucket-name>"
+  macie_create_kms_key           = true
+  macie_kms_key_name             = "<your-macie-kms-key-name>"
+  macie_kms_key_users            = ["arn:aws:iam::${local.accounts[local.account_name]}:root"]
   macie_administrator_account_id = local.accounts.root
+  macie_opt_in_regions           = local.opt_in_regions
+
+  # The variable below for Amazon Macie needs to be manually maintained. Please ensure you change the defaults.
+  macie_buckets_to_analyze = {
+    "us-east-1": ["<FILL_IN_BUCKET_1_NAME>", "<FILL_IN_BUCKET_2_NAME>"],
+    "<another-region>": ["<FILL_IN_BUCKET_3_NAME>", "<FILL_IN_BUCKET_4_NAME>"]
+  }
 }
 ----
 
