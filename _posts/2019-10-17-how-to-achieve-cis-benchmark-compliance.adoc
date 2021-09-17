@@ -985,6 +985,8 @@ Make sure to
 https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html#id_root-user_manage_delete-key[delete the root user's access keys],
 so that the only way to login as the root user is via the web console, where MFA is required.
 
+NOTE: The one exception to this rule is when you enable the MFA delete feature as it requires access keys for the root user. Under these circumstances, we recommend creating a set of access keys solely to enable the MFA Delete feature and immediately remove them afterward.
+
 Don't use the root user again::
 In the next section, you will create an IAM user in the root account with admin permissions. Once you've created that
 IAM user, you should do everything as that IAM user, and more or less never touch the root user account again.
