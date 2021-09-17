@@ -190,12 +190,13 @@ inputs {
   macie_bucket_name        = "<your-macie-bucket-name>"
   macie_create_kms_key     = true
   macie_kms_key_name       = "<your-macie-kms-key-name>"
-  macie_kms_key_users      = ["arn:aws:iam::${local.accounts.root}:root"]
-
+  macie_kms_key_users      = ["arn:aws:iam::${local.accounts[local.account_name]}:root"]
   macie_opt_in_regions     = local.opt_in_regions
+
+  # The variable below for Amazon Macie needs to be manually maintained. Please ensure you change the defaults.
   macie_buckets_to_analyze = {
-    "us-east-1": ["<bucket-1>", "<bucket-2>"],
-    "<another-region>": ["<bucket-3>", "<bucket-4>"]
+    "us-east-1": ["<FILL_IN_BUCKET_1_NAME>", "<FILL_IN_BUCKET_2_NAME>"],
+    "<another-region>": ["<FILL_IN_BUCKET_3_NAME>", "<FILL_IN_BUCKET_4_NAME>"]
   }
 }
 ----
@@ -211,38 +212,19 @@ inputs {
   macie_bucket_name        = "<your-macie-bucket-name>"
   macie_create_kms_key     = true
   macie_kms_key_name       = "<your-macie-kms-key-name>"
-  macie_kms_key_users      = ["arn:aws:iam::${local.accounts.security}:root"]
-
+  macie_kms_key_users      = ["arn:aws:iam::${local.accounts[local.account_name]}:root"]
   macie_opt_in_regions     = local.opt_in_regions
   macie_administrator_account_id = local.accounts.root
+
+  # The variable below for Amazon Macie needs to be manually maintained. Please ensure you change the defaults.
   macie_buckets_to_analyze = {
-    "us-east-1": ["<bucket-1>", "<bucket-2>"],
-    "<another-region>": ["<bucket-3>", "<bucket-4>"]
+    "us-east-1": ["<FILL_IN_BUCKET_1_NAME>", "<FILL_IN_BUCKET_2_NAME>"],
+    "<another-region>": ["<FILL_IN_BUCKET_3_NAME>", "<FILL_IN_BUCKET_4_NAME>"]
   }
 }
 ----
 
-.infrastructure-live/prod/_global/account-baseline/terragrunt.hcl
-[source,hcl]
-----
-inputs {
-  # ... previous inputs ...
-
-  # Configures Amazon Macie
-  create_macie_bucket      = true
-  macie_bucket_name        = "<your-macie-bucket-name>"
-  macie_create_kms_key     = true
-  macie_kms_key_name       = "<your-macie-kms-key-name>"
-  macie_kms_key_users      = ["arn:aws:iam::${local.accounts.prod}:root"]
-
-  macie_opt_in_regions     = local.opt_in_regions
-  macie_administrator_account_id = local.accounts.root
-  macie_buckets_to_analyze = {
-    "us-east-1": ["<bucket-1>", "<bucket-2>"],
-    "<another-region>": ["<bucket-3>", "<bucket-4>"]
-  }
-}
-----
+NOTE: All the other child accounts (logs, stage, prod, etc) need the same configuration change as the security account above. Ensure you make that change in all the child accounts.
 
 === Step 3: Manual steps
 
