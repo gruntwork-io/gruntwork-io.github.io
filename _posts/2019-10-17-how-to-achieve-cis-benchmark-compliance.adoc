@@ -1133,6 +1133,30 @@ Set the variables for the `account-baseline-root` module in this environment in 
 .infrastructure-live/root/_global/account-baseline/terragrunt.hcl
 [source,hcl]
 ----
+# ---------------------------------------------------------------------------------------------------------------------
+# CONFIGURE A PROVIDER FOR EACH AWS REGION
+# To deploy a multi-region module, we have to configure a provider with a unique alias for each of the regions AWS
+# supports and pass all these providers to the multi-region module in a provider = { ... } block. You MUST create a
+# provider block for EVERY one of these AWS regions, but you should specify the ones to use and authenticate to (the
+# ones actually enabled in your AWS account) using opt_in_regions.
+# ---------------------------------------------------------------------------------------------------------------------
+
+generate "providers" {
+  path      = "providers.tf"
+  if_exists = "overwrite"
+  contents  = <<EOF
+%{for region in local.all_aws_regions}
+provider "aws" {
+  region = "${region}"
+  alias  = "${replace(region, "-", "_")}"
+  # Skip credential validation and account ID retrieval for disabled or restricted regions
+  skip_credentials_validation = ${contains(coalesce(local.opt_in_regions, []), region) ? "false" : "true"}
+  skip_requesting_account_id  = ${contains(coalesce(local.opt_in_regions, []), region) ? "false" : "true"}
+}
+%{endfor}
+EOF
+}
+
 locals {
   common_vars = read_terragrunt_config(find_in_parent_folders("common.hcl"))
 
@@ -1221,6 +1245,12 @@ inputs = {
   # Send Config logs to the common S3 bucket.
   config_s3_bucket_name = local.config_s3_bucket_name
 
+  # Send Config logs and events to the logs account.
+  config_central_account_id = local.accounts.logs
+
+  # This account sends logs to the Logs account.
+  config_aggregate_config_data_in_external_account = true
+
   ################################
   # Parameters for CloudTrail
   ################################
@@ -1253,6 +1283,18 @@ inputs = {
     "iam:GetRole",
     "iam:GetRolePolicy",
   ]
+
+  # Join this account to the root account's Security Hub
+  security_hub_associate_to_master_account_id = local.accounts.root
+
+  # Configure opt in regions for each multi region service based on locally configured setting.
+  config_opt_in_regions              = local.opt_in_regions
+  guardduty_opt_in_regions           = local.opt_in_regions
+  kms_cmk_opt_in_regions             = local.opt_in_regions
+  iam_access_analyzer_opt_in_regions = local.opt_in_regions
+  ebs_opt_in_regions                 = local.opt_in_regions
+  security_hub_opt_in_regions        = local.opt_in_regions
+  macie_opt_in_regions               = local.opt_in_regions
 }
 ----
 
