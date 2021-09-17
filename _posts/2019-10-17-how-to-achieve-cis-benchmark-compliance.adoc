@@ -27,10 +27,12 @@ endif::[]
 This is a complete guide to help you achieve compliance with the
 link:https://www.cisecurity.org/benchmark/amazon_web_services/[CIS AWS Foundations Benchmark]. By following this guide,
 you can launch infrastructure that is compliant with the Benchmark recommendations, and you'll be set to retain a
-compliant state over time because all of the infrastructure is defined as code. This guide targets version 1.3.0 of the Benchmark.
+compliant state over time because all of the infrastructure is defined as code. This guide targets version 1.4.0 of the Benchmark.
 
-NOTE: Previously, we supported version 1.2.0 of the Benchmark. If you are looking to upgrade from v1.2.0 to v1.3.0,
-please follow link:/guides/upgrades/how-to-update-to-cis-13/[the upgrade guide] instead.
+Previously, we supported versions 1.3.0 and 1.2.0 of the Benchmark. If you are looking to upgrade from an older version please follow these in order:
+
+* To upgrade from v1.2.0 to v1.3.0, please follow link:/guides/upgrades/how-to-update-to-cis-13/[this upgrade guide];
+* To upgrade from v1.3.0 to v1.4.0, please follow link:/guides/upgrades/how-to-update-to-cis-14/[this upgrade guide].
 
 image:/assets/img/guides/cis-compliance/cis-account-architecture.png[CIS Benchmark Architecture]
 
@@ -62,8 +64,11 @@ This guide consists of five main sections:
   A reference table that maps each Benchmark recommendation to the corresponding section in the deployment
 walkthrough.
 
-
 Feel free to read the guide from start to finish or skip around to whatever part interests you!
+
+NOTE: This guide has been last updated on 6th September 2021, and it covers CIS 1.4.0 Benchmark recommendations. We aim to keep
+it up to date with our infrastructure-as-code modules with the latest CIS Benchmark that has been released.
+If you need to access older versions, please get in touch with us.
 
 [[core_concepts]]
 == Core concepts
@@ -100,7 +105,7 @@ day-to-day usage.
 
 Each recommendation is also linked to a corresponding link:https://www.cisecurity.org/controls/[CIS Control]. The
 controls are distinct from the Benchmark. They're described by CIS as "a prioritized set of actions that collectively
-form a defense-in-depth set of best practices that mitigate the most common attacks against systems and networks."
+form a defense-in-depth set of best practices that mitigate the most common attacks against systems and networks".
 Organizations seeking to implement a comprehensive security program or framework can use the controls to measure their
 progress and prioritize security efforts. The Foundations Benchmark is just one of several guidelines that can help
 reach the bar set by the CIS Controls. Refer to the Benchmark document directly to view how the recommendations map to
@@ -109,7 +114,7 @@ controls.
 === Recommendation sections
 
 ==== Identity and Access Management
-_Number of recommendations: 22_
+_Number of recommendations: 21_
 
 The recommendations in this section involve the use of identity, accounts, authentication, and authorization.
 On AWS, most identity and access control related concerns are managed using the
@@ -118,11 +123,9 @@ this section discuss particular IAM configurations, such as the configuration of
 of various groups and roles, and the configuration of multi-factor authentication (MFA) devices.
 
 ==== Storage
-_Number of recommendations: 3_
+_Number of recommendations: 7_
 
-This section was added in the version 1.3.0 and involves the use of storage capabilities of AWS. The relevant
-services for this section are link:https://aws.amazon.com/s3/[S3] and link:https://aws.amazon.com/ec2/[EC2]. The
-recommendations in this section pertain to in-transit and at-rest encryption.
+This section was added originally in the previous CIS version (1.3.0), and now in 1.4.0 the recommendations are enhancements and updates to the use of AWS's storage capabilities. The relevant services for this section are link:https://aws.amazon.com/s3/[S3], link:https://aws.amazon.com/ec2/[EC2] and link:https://aws.amazon.com/rds/[RDS]. The recommendations in this section pertain to in-transit and at-rest encryption, access control to the resources, and handling sensitive data.
 
 ==== Logging
 _Number of recommendations: 11_
@@ -134,11 +137,11 @@ several of them:
 * link:https://docs.aws.amazon.com/config/latest/developerguide/WhatIsConfig.html[AWS Config] records and evaluates resource configurations
 * link:https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html[VPC Flow Logs] capture network traffic information
   in VPCs
+* link:https://docs.aws.amazon.com/kms/latest/developerguide/overview.html[AWS KMS] lets you handle keys to encrypt and decrypt your data
 
 AWS has several other logging related features that are not covered directly by the Benchmark. For example,
 the primary log ingestion and query service, link:https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/WhatIsCloudWatchLogs.html[Amazon CloudWatch
-Logs], is integrated with many other AWS services. The Benchmark does not contain any recommendations
-specifically for CloudWatch Logs, though many recommendations do make mention of it.
+Logs], is integrated with many other AWS services. The Benchmark recommends that CloudTrail is integratd with CloudWatch Logs. Within the Gruntwork modules we've setup CloudWatch with all the integrated services such as AWS Config, CloudTrail and S3.
 
 ==== Monitoring
 _Number of recommendations: 15_
@@ -147,6 +150,9 @@ Monitoring is an overloaded term in the industry. In the context of the AWS Foun
 monitoring section is exclusively about monitoring for specific API calls using the CloudTrail service paired
 with link:https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/MonitoringLogData.html[CloudWatch Logs
 filter metrics]. Each recommendation in this section spells out a specific filter and an associated alarm.
+
+Metric filter-related recommendations in this section are dependent on the "Ensure CloudTrail is enabled in all regions"
+and "Ensure CloudTrail trails are integrated with CloudWatch Logs" recommendation in the "Logging" section.
 
 ==== Networking
 _Number of recommendations: 4_
@@ -177,13 +183,15 @@ edition of Terraform Up & Running].
 The first section of the Benchmark centers on Identity and Access Management, including the following:
 
 * Avoiding usage of the "root" account
-* Requiring MFA for IAM users
+* Requiring MFA for IAM users and the root account
 * Setting a specific password policy
 * Disabling administrative permissions
 * Limiting the use of API access keys
 * Using IAM roles
 * Removing expired SSL/TLS certificates
 * Enabling IAM Access Analyzer
+* Using AWS Organizations or identity federation to manage multi-account environments
+
 
 In the subsequent sections, we'll review the recommendations and discuss how to implement them using Terraform resources and data sources.
 
@@ -198,8 +206,8 @@ Perhaps the most robust and secure method for authenticating to AWS is to use
 link:https://aws.amazon.com/identity/saml/[federated SAML authentication] with an identity provider (IdP) like Okta,
 Google, or Active Directory. In this configuration, users authenticate to the IdP and assume IAM roles to obtain
 permissions in AWS. All user management is handled in the IdP, where you can assign roles to users according to their
-needs. If you use this approach, several of the Benchmark recommendations, including recommendations 1.10,
-1.15, and 1.11, are not applicable (assuming you have no IAM users at all).
+needs. If you use this approach, recommendation 1.21 from the Benchmark is the one relevant to you. However, several of
+other recommendations including 1.10, 1.15, and 1.11, are not applicable (assuming you have no IAM users at all).
 
 Configuring SAML is a multi-step process that is outside the scope of this guide. Familiarize yourself with the
 process by reviewing the link:https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_create_saml.html[AWS
@@ -453,7 +461,7 @@ to see how this module is used from the Landing Zone account baselines and is de
 
 [[iam_access_analyzer]]
 ==== IAM Access Analyzer
-As of version 1.3.0, the CIS recommendations stipulate that the AWS IAM Access Analyzer service is enabled across all active regions in a given
+In both versions 1.3.0 and 1.4.0, the CIS recommendations stipulate that the AWS IAM Access Analyzer service is enabled across all active regions in a given
 AWS Account or Organization.
 
 To achieve this compliance requirement, enable the IAM Access Analyzer service for every AWS region you have enabled in
@@ -469,7 +477,7 @@ This lets you identify unintended access to these resources and data by external
 The findings from the IAM Access Analyzer can be found in the AWS web console, and can be archived or resolved.
 Please visit the link:https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-findings.html[AWS guidance on how to do so].
 
-[[manual_steps]]
+[[manual_steps_iam]]
 ==== Manual steps
 A few of the recommendations in the IAM section are not achievable via API and require a one-time manual configuration.
 Perform the steps in this section manually.
@@ -477,8 +485,8 @@ Perform the steps in this section manually.
 [[root_mfa]]
 ===== Enable MFA for the root account
 Securing the "root" user, or the first user that is created when you set up an AWS account, is one of the
-first actions you should take in any new account. Unfortunately, there is no API or automation available for
-configuring an MFA device for the root user. Follow the manual steps outlined in the
+first actions you should take in any new account. It is highly recommended that the user of this account be avoided for everyday tasks. Unfortunately, there is no API or automation available for configuring an MFA device for the
+root user. Follow the manual steps outlined in the
 link:https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html#id_root-user_manage_mfa[AWS docs]. Configuring a virtual MFA device will achieve recommendation 1.5. You can also refer to the link:https://gruntwork.io/guides/foundations/how-to-configure-production-grade-aws-account-structure/[production-grade AWS account structure guide.]
 
 For the paranoid: configure a hardware MFA device, as suggested by recommendation 1.6. We suggest using a
@@ -552,12 +560,96 @@ resource "aws_ebs_encryption_by_default" "ebs_encryption" {
 }
 ----
 
+[[configure_rds_encryption]]
+==== Configure RDS Encryption
+To comply with recommendation 2.3.1, if you use RDS it must be configured with link:http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Overview.Encryption.html[RDS encryption] for all instances and in all of the enabled AWS regions within your AWS Account(s). You can set to `true` the Terraform `storage_encrypted` attribute for an RDS instance to implement the recommendation.
+
+For example:
+
+[source,hcl]
+----
+resource "aws_db_instance" "your_primary_db" {
+  storage_encrypted = true
+}
+----
+
+[[secure_your_s3_data]]
+==== Secure your S3 Data
+The CIS 1.4.0 Benchmark recommends a few additional steps to ensure your data is secured and accessible. There are two new recommendations that relate to S3:
+
+* 2.1.3 prescribes that the MFA Delete is enabled on all S3 buckets in your accounts
+* 2.1.4 recommends that all data in your S3 buckets be classified, discovered and secured
+
+NOTE: The steps below are not the full list of actions needed to configure MFA Delete or Amazon Macie for your account. To follow the steps necessary to configure it according to the CIS 1.4.0 Benchmark, please follow the MFA Delete and Macie section in the
+link:/guides/upgrades/how-to-update-to-cis-14/[the migration guide to CIS 1.4.0], or the deployment guide section in this guide.
+
+[[configure_mfa_delete]]
+===== Enable MFA Delete (recommendation 2.1.3)
+
+Enabling MFA Delete in your bucket adds another layer of security by requiring MFA in any request to delete a version or change the versioning state of the bucket.
+
+The attribute `mfa_delete` is only used by Terraform to https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket#mfa_delete[reflect the current state of the bucket]. It is not possible to create a bucket if the `mfa_delete` is `true`, because it needs to be activated https://docs.aws.amazon.com/AmazonS3/latest/userguide/MultiFactorAuthenticationDelete.html[using AWS CLI or the API].
+
+To make this change https://docs.aws.amazon.com/general/latest/gr/root-vs-iam.html#aws_tasks-that-require-root[**you need to use the root user of the account**] that owns the bucket, and MFA needs to be enabled. Follow the manual steps below to do so:
+
+====== MFA Delete - manual steps
+[.exceptional]
+IMPORTANT: We do not recommend having active AWS access keys for the root user, so remember to delete them when you finish this step.
+
+In order to enable MFA Delete, you need to:
+
+1. https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html#id_root-user_manage_add-key[Create access keys for the root user]
+1. https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html#id_root-user_manage_mfa[Configure MFA for the root user]
+1. Create a bucket with `mfa_delete=false`.
+1. Using the root user, call the AWS CLI to enable MFA Delete. If you are using `aws-vault`, it is necessary to use the `--no-session` flag.
++
+[source,bash]
+----
+aws s3api put-bucket-versioning --region <REGION> \
+    --bucket <BUCKET NAME> \
+    --versioning-configuration Status=Enabled,MFADelete=Enabled \
+    --mfa "arn:aws:iam::<ACCOUNT ID>:mfa/root-account-mfa-device <MFA CODE>"
+----
+
+We also created a https://github.com/gruntwork-io/terraform-aws-security/tree/master/modules/private-s3-bucket/mfa-delete-script[script] to help you enable MFA Delete in all buckets from a single account at once. To learn how to run it and when, please follow the production _Deployment Walkthrough_ guide section below.
+
+[[configure_macie]]
+===== Configure Amazon Macie (recommendation 2.1.4)
+The new CIS AWS v1.4.0 recommendation 2.1.4 requires that all data in Amazon S3 be discovered, classified and secured.
+One way to achieve this is the by leveraging the link:https://aws.amazon.com/macie/[Amazon Macie] service.
+Amazon Macie is a fully managed data security and  data privacy service that uses machine learning and pattern matching
+to discover and protect your sensitive data in AWS. To help you achieve this recommendation, we have created a dedicated
+link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/modules/security/macie[`macie` service]
+in our CIS service catalog.
+
+====== AWS Macie - manual steps
+
+When configuring Macie for each region, you'll need to specify a few things:
+* the S3 bucket to be a repository for the sensitive data discovery results;
+* the KMS key that the data in that bucket will be encrypted with;
+* and the S3 bucket(s) that you'll need Macie to analyze for you. The following manual steps are not a comprehensive full setup for Macie. To configure Macie fully and understand the details, please follow
+
+1. Log into the AWS console and for every region where you have enabled Macie, repeat the steps 2 to 9.
+1. Go to the Amazon Macie service.
+1. In the left pane, under Settings, click on "Discovery results".
+1. Click on "Configure now" to configure an S3 bucket for long-term retention of sensitive data discovery results.
+1. Choose "Existing bucket".
+1. Under "Choose a bucket", select your bucket. This can be either one you already have, or the one that the `macie` module created (if you set the `create_macie_bucket` variable to `true`). You will use the same bucket for every region.
+1. Under "KMS encryption" choose "Select a key from your account".
+1. Under "KMS key alias" select your KMS key. This can be either one you already have, or the one that the `macie` module created (if you set the `create_kms_key` variable to `true`). You will use the same key for every region.
+1. Click "Save".
+
+===== Manually maintain buckets to analyze in the `buckets_to_analyze` variable
+To set up Macie to analyze the desired S3 buckets, you'll need to create a **Macie classification job**, Typically, you'll want it to analyze all the buckets in the region. However, the terraform AWS provider does not support specifying all the buckets in a region - it requires that an explicit list of buckets be provided (see related bug
+link:https://github.com/hashicorp/terraform-provider-aws/issues/20044[here]). Therefore, you'll need to maintain an
+explicit list of buckets per region, namely in the variable `buckets_to_analyze`. For more details, see the production _Deployment Walkthrough_ guide section below.
+
 === Logging
 In the Logging section, the Benchmark recommendations target the following services:
 
 * link:https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-user-guide.html[AWS CloudTrail]
 * link:https://docs.aws.amazon.com/config/latest/developerguide/WhatIsConfig.html[AWS Config]
-* link:https://docs.aws.amazon.com/kms/latest/developerguide/rotate-keys.html[KMS key rotation]
+* link:https://docs.aws.amazon.com/kms/latest/developerguide/rotate-keys.html[KMS Key rotation]
 * link:https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html[VPC Flow Logs]
 
 We'll cover each of them in turn.
@@ -893,6 +985,8 @@ Make sure to
 https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html#id_root-user_manage_delete-key[delete the root user's access keys],
 so that the only way to login as the root user is via the web console, where MFA is required.
 
+NOTE: The one exception to this rule is when you enable the MFA delete feature as it requires access keys for the root user. Under these circumstances, we recommend creating a set of access keys solely to enable the MFA Delete feature and immediately remove them afterward.
+
 Don't use the root user again::
 In the next section, you will create an IAM user in the root account with admin permissions. Once you've created that
 IAM user, you should do everything as that IAM user, and more or less never touch the root user account again.
@@ -962,7 +1056,7 @@ Configure the `account-baseline-root` for the root account
 [.exceptional]
 IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork Compliance subscriber# to access the Gruntwork Infrastructure as Code Library and the https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/[CIS AWS Foundations Benchmark modules].
 
-First, let's set consider the repository structure that is recommended by this guide. It is available for your reference in the "/examples/for-production" section in the https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/examples/for-production[`terraform-aws-cis-service-catalog` repository]. Consider the following directory structure for your `infrastructure-live` repository. It showcases the configuration files for your local variables.
+First, let's consider the repository structure that is recommended by this guide. It is available for your reference in the `/examples/for-production` folder of the https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/examples/for-production[`terraform-aws-cis-service-catalog` repository]. Consider the following directory structure for your `infrastructure-live` repository. It showcases the configuration files for your local variables.
 
 ----
 .
@@ -1001,7 +1095,7 @@ locals {
 
 You'll need to create these files to be able to follow the code examples following. For examples on what to put in each of these files, refer to the https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/examples/for-production[`terraform-aws-cis-service-catalog` repository]. Each of the `terragrunt.hcl` files will use the above `locals` configuration to help you avoid repetition. Note that the examples below won't show this in the interest of clarity.
 
-Next, we'll configure the `account-baseline-root` with settings needed for creating all the child accounts - AWS Organizations, IAM Roles, IAM Users, IAM Groups, IAM Password Policies, Amazon GuardDuty, AWS CloudTrail, AWS Config and Security Hub.
+Next, we'll configure the `account-baseline-root` with settings needed for creating all the child accounts - AWS Organizations, IAM Roles, IAM Users, IAM Groups, IAM Password Policies, Amazon GuardDuty, AWS CloudTrail, AWS Config, Security Hub and Amazon Macie.
 
 We'll be using the `landingzone/account-baseline-root` module from https://github.com/gruntwork-io/terraform-aws-cis-service-catalog[terraform-aws-cis-service-catalog].
 
@@ -1027,28 +1121,40 @@ repo, setting the `ref` param to the version you require:
 [source,hcl]
 ----
 terraform {
-  source = "git::git@github.com/gruntwork-io/terraform-aws-cis-service-catalog//modules/landingzone/account-baseline-root?ref=v0.22.0"
-
-  # This module deploys some resources (e.g., AWS Config) across all AWS regions, each of which needs its own provider,
-  # which in Terraform means a separate process. To avoid all these processes thrashing the CPU, which leads to network
-  # connectivity issues, we limit the parallelism here.
-  extra_arguments "parallelism" {
-    commands  = get_terraform_commands_that_need_parallelism()
-    arguments = ["-parallelism=2"]
-  }
+  source = "git::git@github.com:gruntwork-io/terraform-aws-cis-service-catalog.git//modules/landingzone/account-baseline-root?ref=v0.27.0"
 }
 ----
-
-[.exceptional]
-IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=2`), as shown above, with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors.
 
 Set the variables for the `account-baseline-root` module in this environment in the `inputs = { ... }` block of `terragrunt.hcl`:
 
 .infrastructure-live/root/_global/account-baseline/terragrunt.hcl
 [source,hcl]
 ----
-locals {
+# ---------------------------------------------------------------------------------------------------------------------
+# CONFIGURE A PROVIDER FOR EACH AWS REGION
+# To deploy a multi-region module, we have to configure a provider with a unique alias for each of the regions AWS
+# supports and pass all these providers to the multi-region module in a provider = { ... } block. You MUST create a
+# provider block for EVERY one of these AWS regions, but you should specify the ones to use and authenticate to (the
+# ones actually enabled in your AWS account) using opt_in_regions.
+# ---------------------------------------------------------------------------------------------------------------------
 
+generate "providers" {
+  path      = "providers.tf"
+  if_exists = "overwrite"
+  contents  = <<EOF
+%{for region in local.all_aws_regions}
+provider "aws" {
+  region = "${region}"
+  alias  = "${replace(region, "-", "_")}"
+  # Skip credential validation and account ID retrieval for disabled or restricted regions
+  skip_credentials_validation = ${contains(coalesce(local.opt_in_regions, []), region) ? "false" : "true"}
+  skip_requesting_account_id  = ${contains(coalesce(local.opt_in_regions, []), region) ? "false" : "true"}
+}
+%{endfor}
+EOF
+}
+
+locals {
   common_vars = read_terragrunt_config(find_in_parent_folders("common.hcl"))
 
   # A local for more convenient access to the accounts map.
@@ -1057,6 +1163,25 @@ locals {
   # Both buckets will be created in the logs account by account-baseline-root
   config_s3_bucket_name     = "acme-config-bucket-logs"
   cloudtrail_s3_bucket_name = "acme-cloudtrail-logs"
+
+  # The following locals are used for constructing multi region provider configurations for the underlying module.
+  # A list of all AWS regions
+  all_aws_regions = [
+    "af-south-1",
+    "ap-east-1",
+    "ap-northeast-1",
+    # ...,
+  ]
+
+  # Creates resources in the specified regions. The best practice is to enable multiregion modules in all enabled
+  # regions in your AWS account. To get the list of regions enabled in your AWS account, you can use the AWS CLI: aws
+  # ec2 describe-regions.
+  opt_in_regions = [
+    "eu-north-1",
+    "ap-south-1",
+    "eu-west-3",
+    # ...,
+  ]
 }
 
 inputs = {
@@ -1117,6 +1242,12 @@ inputs = {
   # Send Config logs to the common S3 bucket.
   config_s3_bucket_name = local.config_s3_bucket_name
 
+  # Send Config logs and events to the logs account.
+  config_central_account_id = local.accounts.logs
+
+  # This account sends logs to the Logs account.
+  config_aggregate_config_data_in_external_account = true
+
   ################################
   # Parameters for CloudTrail
   ################################
@@ -1124,8 +1255,8 @@ inputs = {
   # Send CloudTrail logs to the common S3 bucket.
   cloudtrail_s3_bucket_name = local.cloudtrail_s3_bucket_name
 
-  # The ARN is a key alias, not a key ID. This variable prevents a perpetual diff when using an alias.
-  cloudtrail_kms_key_arn_is_alias = true
+  # The ARN is a key ID. This variable prevents a perpetual diff when using an alias.
+  cloudtrail_kms_key_arn_is_alias = false
 
   ##################################
   # Cross-account IAM role permissions
@@ -1149,6 +1280,31 @@ inputs = {
     "iam:GetRole",
     "iam:GetRolePolicy",
   ]
+
+  # Join this account to the root account's Security Hub
+  security_hub_associate_to_master_account_id = local.accounts.root
+
+  # Configure opt in regions for each multi region service based on locally configured setting.
+  config_opt_in_regions              = local.opt_in_regions
+  guardduty_opt_in_regions           = local.opt_in_regions
+  kms_cmk_opt_in_regions             = local.opt_in_regions
+  iam_access_analyzer_opt_in_regions = local.opt_in_regions
+  ebs_opt_in_regions                 = local.opt_in_regions
+  security_hub_opt_in_regions        = local.opt_in_regions
+
+  # Configures Amazon Macie
+  create_macie_bucket      = true
+  macie_bucket_name        = "<your-macie-bucket-name>-root-macie-results"
+  macie_create_kms_key     = true
+  macie_kms_key_name       = "<your-macie-kms-key-name>-macie"
+  macie_kms_key_users      = ["arn:aws:iam::${local.accounts.root}:root"]
+  macie_opt_in_regions     = local.opt_in_regions
+
+  # The variable below for Amazon Macie needs to be manually maintained. Please ensure you change the defaults.
+  macie_buckets_to_analyze = {
+    "us-east-1": ["<FILL_IN_BUCKET_1_NAME>", "<FILL_IN_BUCKET_2_NAME>"],
+    "<another-region>": ["<FILL_IN_BUCKET_3_NAME>", "<FILL_IN_BUCKET_4_NAME>"]
+  }
 }
 ----
 
@@ -1167,7 +1323,7 @@ advantage of the fact that https://gmail.googleblog.com/2008/03/2-hidden-ways-to
 address, `root-accounts@acme.com`.
 
 . **Mark one of the child accounts as a logs account**. We set `is_logs_account = true` on one of the child accounts
-to indicate it is the logs account where we will aggregate AWS Config, CloudTrail, IAM Access Analyzer and Security Hub data from all the other accounts.
+to indicate it is the logs account where we will aggregate AWS Config, CloudTrail, IAM Access Analyzer, Security Hub and Amazon Macie data from all the other accounts.
 The `account-baseline-root` module will automatically create an S3 bucket for AWS Config and an S3 bucket and KMS CMK
 = for CloudTrail in this account and configure the root account to send all the AWS Config and CloudTrail data to these
 S3 buckets. Later on, you'll configure all the other accounts to send their data to these S3 buckets too.
@@ -1233,7 +1389,7 @@ You should get JSON output with information about your IAM user:
 You're now almost ready to deploy the `account-baseline` module in the root account. But first, you may need to import
 some existing resources.
 
-=== Import existing resources from the root account into Terraform state
+===== Import existing resources from the root account into Terraform state
 
 Before applying the security baseline to the root account, we need to import any existing resources—including the IAM
 user you created manually earlier—into Terraform state, so that Terraform manages those existing resources instead of
@@ -1304,28 +1460,7 @@ next to the `#` gives you the `<ADDRESS>` to use:
 # module.root_baseline.module.iam_users.aws_iam_user.user["alice"] will be created
 ----
 
-So the `<ADDRESS>` you want is `module.root_baseline.module.iam_users.aws_iam_user.user["alice"]`. Now, normally, you'd
-run `import` right away, but due two Terraform bugs, https://github.com/hashicorp/terraform/issues/13018[#13018] and
-https://github.com/hashicorp/terraform/issues/26211[#26211], `import` doesn't work on certain types of modules—namely,
-those with nested `provider` blocks that use dynamic data—and will produce an error like `unknown variable accessed:
-var.region in:`. One of these bugs has been open for over 3 years, so we built a workaround for it in Terragrunt: the
-https://terragrunt.gruntwork.io/docs/reference/cli-options/#aws-provider-patch[`aws-provider-patch` command].
-
-The idea behind the workaround is to temporarily hard-code the dynamic data in nested `provider` blocks. In particular,
-we need to temporarily hard-code some of the `region` and `role_arn` parameters of the nested `provider` blocks used by
-`account-baseline-root` as follows:
-
-[source,bash]
-----
-terragrunt aws-provider-patch \
-  --terragrunt-override-attr region="${local.aws_region}" \
-  --terragrunt-override-attr assume_role.role_arn=""
-----
-
-_Note: You can use any region you want for the `region` parameter. It's just temporary. However, `role_arn` must be set
-to an empty string or Terraform will complain._
-
-After running this command, you can finally import your IAM user:
+So the `<ADDRESS>` you want is `module.root_baseline.module.iam_users.aws_iam_user.user["alice"]`. Next, import your IAM user:
 
 [source,bash]
 ----
@@ -1354,17 +1489,8 @@ You'll now be able to manage that IAM user as code going forward!
 If you created other resources manually in the root account, you may want to `import` them too, so you can manage
 everything as code, and so that Terraform doesn't try to create any duplicate resources.
 
-Once you're done importing, you'll want to undo the `aws-provider-patch` workaround. The easiest way to do that is to
-delete the `.terraform` or `.terragrunt-cache` folders to remove any locally cached modules, as they would've been
-modified by the `aws-provider-patch` command.
-
-[source,bash]
-----
-rm -rf .terragrunt-cache
-----
-
 [[apply_account_baseline_root]]
-==== Apply the `account-baseline-root` baseline to the root account
+===== Apply the `account-baseline-root` baseline to the root account
 
 You're now ready to apply the security baseline to the root account. You should be authenticated as the same IAM user
 in the root account as in the previous two sections. To apply the security baseline, you run `terragrunt apply`:
@@ -1500,8 +1626,8 @@ those root users again.
 [[apply_account_baseline_logs]]
 ==== Apply the `account-baseline-app` to the logs account
 
-The next step is to configure the **logs** account, which is used to aggregate AWS Config and CloudTrail data from all the
-other accountss.
+The next step is to configure the **logs** account, which is used to aggregate AWS Config, CloudTrail, IAM Access Analyzer,
+Security Hub and Amazon Macie data from all the other accounts.
 
 Create a `terragrunt.hcl` file in `infrastructure-live` under the file path `logs/_global/account-baseline`:
 
@@ -1521,20 +1647,9 @@ repo, setting the `ref` param to the version you require:
 [source,hcl]
 ----
 terraform {
-  source = "git::git@github.com/gruntwork-io/terraform-aws-cis-service-catalog//modules/landingzone/account-baseline-app?ref=v0.22.0"
-
-  # This module deploys some resources (e.g., AWS Config) across all AWS regions, each of which needs its own provider,
-  # which in Terraform means a separate process. To avoid all these processes thrashing the CPU, which leads to network
-  # connectivity issues, we limit the parallelism here.
-  extra_arguments "parallelism" {
-    commands  = get_terraform_commands_that_need_parallelism()
-    arguments = ["-parallelism=2"]
-  }
+  source = "git::git@github.com:gruntwork-io/terraform-aws-cis-service-catalog.git//modules/landingzone/account-baseline-app?ref=v0.27.0"
 }
 ----
-
-[.exceptional]
-IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=2`), as shown above, with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors.
 
 Set the variables for the `account-baseline-app` module in this environment in the `inputs = { ... }` block of `terragrunt.hcl`:
 
@@ -1556,11 +1671,63 @@ locals {
 
   # A local for convenient access to the security account root ARN.
   security_account_root_arn = "arn:aws:iam::${local.accounts.security}:root"
+
+ # The following locals are used for constructing multi region provider configurations for the underlying module.
+  # A list of all AWS regions
+  all_aws_regions = [
+    "af-south-1",
+    "ap-east-1",
+    "ap-northeast-1",
+    # ...,
+  ]
+
+  # Creates resources in the specified regions. The best practice is to enable multiregion modules in all enabled
+  # regions in your AWS account. To get the list of regions enabled in your AWS account, you can use the AWS CLI: aws
+  # ec2 describe-regions.
+  opt_in_regions = [
+    "eu-north-1",
+    "ap-south-1",
+    "eu-west-3",
+    # ...,
+  ]
+}
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# CONFIGURE A PROVIDER FOR EACH AWS REGION
+# To deploy a multi-region module, we have to configure a provider with a unique alias for each of the regions AWS
+# supports and pass all these providers to the multi-region module in a provider = { ... } block. You MUST create a
+# provider block for EVERY one of these AWS regions, but you should specify the ones to use and authenticate to (the
+# ones actually enabled in your AWS account) using opt_in_regions.
+# ---------------------------------------------------------------------------------------------------------------------
+
+generate "providers" {
+  path      = "providers.tf"
+  if_exists = "overwrite"
+  contents  = <<EOF
+%{for region in local.all_aws_regions}
+provider "aws" {
+  region = "${region}"
+  alias  = "${replace(region, "-", "_")}"
+  # Skip credential validation and account ID retrieval for disabled or restricted regions
+  skip_credentials_validation = ${contains(coalesce(local.opt_in_regions, []), region) ? "false" : "true"}
+  skip_requesting_account_id  = ${contains(coalesce(local.opt_in_regions, []), region) ? "false" : "true"}
+}
+%{endfor}
+EOF
 }
 
 inputs = {
   # Prefix all resources with this name
   name_prefix = "<SOME_UNIQUE_IDENTIFIER>-logs"
+
+  # Provide the opt_in_regions for all multi-region modules
+  config_opt_in_regions              = local.opt_in_regions
+  guardduty_opt_in_regions           = local.opt_in_regions
+  kms_cmk_opt_in_regions             = local.opt_in_regions
+  ebs_opt_in_regions                 = local.opt_in_regions
+  iam_access_analyzer_opt_in_regions = local.opt_in_regions
+  security_hub_opt_in_regions        = local.opt_in_regions
 
  ################################
   # Parameters for AWS Config
@@ -1594,8 +1761,8 @@ inputs = {
     id if name != "logs"
   ]
 
-  # The ARN is a key alias, not a key ID. This variable prevents a perpetual diff when using an alias.
-  cloudtrail_kms_key_arn_is_alias = true
+  # The ARN is a key ID. This variable prevents a perpetual diff when using an alias.
+  cloudtrail_kms_key_arn_is_alias = false
 
   # By granting access to the root ARN of the Logs account, we allow administrators to further delegate to access
   # other IAM entities
@@ -1623,7 +1790,26 @@ inputs = {
   # A role that allows access to support only.
   allow_support_access_from_other_account_arns = [local.security_account_root_arn]
 
+  # Join this account to the root account's Security Hub
   security_hub_associate_to_master_account_id = local.accounts.root
+
+  # Join this account to the root account's Amazon Macie
+  macie_administrator_account_id = local.accounts.root
+
+  # Configure Amazon Macie
+  create_macie_bucket            = true
+  macie_bucket_name              = "<your-macie-bucket-name>-security-macie-results"
+  macie_create_kms_key           = true
+  macie_kms_key_name             = "<your-macie-kms-key-name>-macie"
+  macie_kms_key_users            = ["arn:aws:iam::${local.accounts.root}:root"]
+  macie_opt_in_regions           = local.opt_in_regions
+  macie_administrator_account_id = local.accounts.root
+
+  # The variable below for Amazon Macie needs to be manually maintained. Please ensure you change the defaults.
+  macie_buckets_to_analyze = {
+    "us-east-1": ["<FILL_IN_BUCKET_1_NAME>", "<FILL_IN_BUCKET_2_NAME>"],
+    "<another-region>": ["<FILL_IN_BUCKET_3_NAME>", "<FILL_IN_BUCKET_4_NAME>"]
+  }
 }
 ----
 
@@ -1725,20 +1911,9 @@ repo, setting the `ref` param to the version you require:
 [source,hcl]
 ----
 terraform {
-  source = "git::git@github.com/gruntwork-io/terraform-aws-cis-service-catalog//modules/landingzone/account-baseline-security?ref=v0.22.0"
-
-  # This module deploys some resources (e.g., AWS Config) across all AWS regions, each of which needs its own provider,
-  # which in Terraform means a separate process. To avoid all these processes thrashing the CPU, which leads to network
-  # connectivity issues, we limit the parallelism here.
-  extra_arguments "parallelism" {
-    commands  = get_terraform_commands_that_need_parallelism()
-    arguments = ["-parallelism=2"]
-  }
+  source = "git::git@github.com:gruntwork-io/terraform-aws-cis-service-catalog.git//modules/landingzone/account-baseline-security?ref=v0.27.0"
 }
 ----
-
-[.exceptional]
-IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=2`), as shown above, with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors.
 
 Set the variables for the `account-baseline-security` module in this environment in the `inputs = { ... }` block of `terragrunt.hcl`:
 
@@ -1760,10 +1935,82 @@ locals {
 
   # A local for convenient access to the security account root ARN.
   security_account_root_arn = "arn:aws:iam::${local.accounts.security}:root"
+
+  # This input will be generated for you with the Ref Arch or you can set it yourself too
+  cross_account_groups = [
+    {
+      group_name    = "${local.accounts.logs}-billing-only-access",
+      iam_role_arns = ["arn:aws:iam::${local.accounts.logs}:role/allow-billing-only-access-from-other-accounts"]
+    },
+    {
+      group_name    = "${local.accounts.logs}-read-only-access",
+      iam_role_arns = ["arn:aws:iam::${local.accounts.logs}:role/allow-read-only-access-from-other-accounts"]
+    },
+    {
+      group_name    = "${local.accounts.logs}-support-access",
+      iam_role_arns = ["arn:aws:iam::${local.accounts.logs}:role/allow-support-access-from-other-accounts"]
+    }
+  ]
+
+  # The following locals are used for constructing multi region provider configurations for the underlying module.
+  # A list of all AWS regions
+  all_aws_regions = [
+    "af-south-1",
+    "ap-east-1",
+    "ap-northeast-1",
+    # ...,
+  ]
+
+  # Creates resources in the specified regions. The best practice is to enable multiregion modules in all enabled
+  # regions in your AWS account. To get the list of regions enabled in your AWS account, you can use the AWS CLI: aws
+  # ec2 describe-regions.
+  opt_in_regions = [
+    "eu-north-1",
+    "ap-south-1",
+    "eu-west-3",
+    # ...,
+  ]
 }
+
+# ---------------------------------------------------------------------------------------------------------------------
+# CONFIGURE A PROVIDER FOR EACH AWS REGION
+# To deploy a multi-region module, we have to configure a provider with a unique alias for each of the regions AWS
+# supports and pass all these providers to the multi-region module in a provider = { ... } block. You MUST create a
+# provider block for EVERY one of these AWS regions, but you should specify the ones to use and authenticate to (the
+# ones actually enabled in your AWS account) using opt_in_regions.
+# ---------------------------------------------------------------------------------------------------------------------
+
+generate "providers" {
+  path      = "providers.tf"
+  if_exists = "overwrite"
+  contents  = <<EOF
+%{for region in local.all_aws_regions}
+provider "aws" {
+  region = "${region}"
+  alias  = "${replace(region, "-", "_")}"
+  # Skip credential validation and account ID retrieval for disabled or restricted regions
+  skip_credentials_validation = ${contains(coalesce(local.opt_in_regions, []), region) ? "false" : "true"}
+  skip_requesting_account_id  = ${contains(coalesce(local.opt_in_regions, []), region) ? "false" : "true"}
+}
+%{endfor}
+EOF
+}
+
 input = {
+  # You might need to provide these separately, or reference/import a file containing the values
+  # account_id =
+  # aws_region =
+
   # Prefix all resources with this name
   name_prefix = "<SOME_UNIQUE_IDENTIFIER>-security"
+
+  # Provide the opt_in_regions for all multi-region modules
+  config_opt_in_regions              = local.opt_in_regions
+  guardduty_opt_in_regions           = local.opt_in_regions
+  kms_cmk_opt_in_regions             = local.opt_in_regions
+  ebs_opt_in_regions                 = local.opt_in_regions
+  iam_access_analyzer_opt_in_regions = local.opt_in_regions
+  security_hub_opt_in_regions        = local.opt_in_regions
 
   ################################
   # Parameters for AWS Config
@@ -1776,9 +2023,6 @@ input = {
 
   # This account sends logs to the Logs account.
   config_aggregate_config_data_in_external_account = true
-
-  # The ID of the Logs account.
-  config_central_account_id = local.accounts.logs
 
   ################################
   # Parameters for CloudTrail
@@ -1793,8 +2037,8 @@ input = {
   # Encrypt CloudTrail logs using a common KMS key.
   cloudtrail_kms_key_arn = local.cloudtrail_kms_key_arn
 
-  # The ARN is a key alias, not a key ID. This variable prevents a perpetual diff when using an alias.
-  cloudtrail_kms_key_arn_is_alias = true
+  # The ARN is a key ID. This variable prevents a perpetual diff when using an alias.
+  cloudtrail_kms_key_arn_is_alias = false
 
   ##################################
   # Benchmark SNS alarms configuration
@@ -1808,7 +2052,7 @@ input = {
   ##################################
 
   # Create groups that allow IAM users in this account to assume roles in your other AWS accounts.
-  iam_groups_for_cross_account_access = local.cross_account_groups.cross_account_groups
+  iam_groups_for_cross_account_access = local.cross_account_groups
 
   # Allow these accounts to have read access to IAM groups and the public SSH keys of users in the group.
   allow_ssh_grunt_access_from_other_account_arns = [
@@ -1829,24 +2073,47 @@ input = {
     "iam:GetRolePolicy",
   ]
 
+  # Create the IAM groups according to the CIS 1.4.0 Benchmark recommendations
+  should_create_iam_group_user_self_mgmt = true
+  should_create_iam_group_billing = true
+  should_create_iam_group_read_only = true
+
   # IAM users
   users = {
     alice = {
-      groups               = ["user-self-mgmt", "ssh-sudo-users"]
+      groups               = ["${local.accounts.logs}-billing-only-access"]
       pgp_key              = "keybase:alice_on_keybase"
       create_login_profile = true
       create_access_keys   = false
     }
 
     bob = {
-      groups               = ["user-self-mgmt", "_account.prod-read-only"]
+      groups               = ["${local.accounts.logs}-read-only-access"]
       pgp_key              = "keybase:bob_on_keybase"
       create_login_profile = true
       create_access_keys   = false
     }
   }
 
+  # Join this account to the root account's Security Hub
   security_hub_associate_to_master_account_id = local.accounts.root
+
+  # Join this account to the root account's Amazon Macie
+
+  # Configure Amazon Macie
+  create_macie_bucket            = true
+  macie_bucket_name              = "<your-macie-bucket-name>-security-macie-results"
+  macie_create_kms_key           = true
+  macie_kms_key_name             = "<your-macie-kms-key-name>-macie"
+  macie_kms_key_users            = ["arn:aws:iam::${local.accounts.root}:root"]
+  macie_opt_in_regions           = local.opt_in_regions
+  macie_administrator_account_id = local.accounts.root
+
+  # The variable below for Amazon Macie needs to be manually maintained. Please ensure you change the defaults.
+  macie_buckets_to_analyze = {
+    "us-east-1": ["<FILL_IN_BUCKET_1_NAME>", "<FILL_IN_BUCKET_2_NAME>"],
+    "<another-region>": ["<FILL_IN_BUCKET_3_NAME>", "<FILL_IN_BUCKET_4_NAME>"]
+  }
 }
 ----
 
@@ -1873,7 +2140,9 @@ user and encrypt it with that user’s PGP key from Keybase (see below for how t
 
 . **Create a function to cleanup expired TLS certificates**. We've setup a lambda function to monitor your SSL/TLS certificates and clean them up when they've expired. This is enforced by CIS requirement 1.19.
 
-. **Enable Security Hub**. We've enabled Security Hub across all enabled regions. For this feature to work, the `master` Security Hub account (usually the Account that has the AWS Organizations, in this case `root`) will have to invite the `members` accounts, and the `members` accounts also have to accept the invitation. This is currently done programmatically, not via `terraform`.
+. **Enable Security Hub**. We've enabled Security Hub across all enabled regions. For this feature to work, the `administrator` Security Hub account (usually the Account that has the AWS Organizations, in this case `root`) will have to invite the `member` accounts, and the `member` accounts also have to accept the invitation.
+
+. **Enable Amazon Macie**. We've enabled Amazon Macie across all enabled regions. For this feature to work, the `administrator` Amazon Macie account (usually the Account that has the AWS Organizations, in this case `root`) will have to invite the `member` accounts, and the `member` accounts also have to accept the invitation.
 
 Configure your Terraform backend:
 
@@ -1967,20 +2236,9 @@ repo, setting the `ref` param to the version you require:
 [source,hcl]
 ----
 terraform {
-  source = "git::git@github.com/gruntwork-io/terraform-aws-cis-service-catalog//modules/landingzone/account-baseline-app?ref=v0.22.0"
-
-  # This module deploys some resources (e.g., AWS Config) across all AWS regions, each of which needs its own provider,
-  # which in Terraform means a separate process. To avoid all these processes thrashing the CPU, which leads to network
-  # connectivity issues, we limit the parallelism here.
-  extra_arguments "parallelism" {
-    commands  = get_terraform_commands_that_need_parallelism()
-    arguments = ["-parallelism=2"]
-  }
+  source = "git::git@github.com:gruntwork-io/terraform-aws-cis-service-catalog.git//modules/landingzone/account-baseline-app?ref=v0.27.0"
 }
 ----
-
-[.exceptional]
-IMPORTANT: We **strongly** recommend setting Terraform parallelism to a low value (e.g., `-parallelism=2`), as shown above, with the `account-baseline-xxx` modules. This is because these modules deploy multi-region resources (e.g., GuardDuty, AWS Config, etc), and for each region, Terraform spins up a separate process, so if you don't limit the parallelism, it may peg all your CPU cores and lead to network connectivity errors.
 
 Set the variables for the `account-baseline-app` module in this environment in the `inputs = { ... }` block of `terragrunt.hcl`:
 
@@ -2002,6 +2260,49 @@ locals {
 
   # A local for convenient access to the security account root ARN.
   security_account_root_arn = "arn:aws:iam::${local.accounts.security}:root"
+
+  # The following locals are used for constructing multi region provider configurations for the underlying module.
+  # A list of all AWS regions
+  all_aws_regions = [
+    "af-south-1",
+    "ap-east-1",
+    "ap-northeast-1",
+    # ...,...,
+  ]
+
+  # Creates resources in the specified regions. The best practice is to enable multiregion modules in all enabled
+  # regions in your AWS account. To get the list of regions enabled in your AWS account, you can use the AWS CLI: aws
+  # ec2 describe-regions.
+  opt_in_regions = [
+    "eu-north-1",
+    "ap-south-1",
+    "eu-west-3",
+    # ...,
+  ]
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
+# CONFIGURE A PROVIDER FOR EACH AWS REGION
+# To deploy a multi-region module, we have to configure a provider with a unique alias for each of the regions AWS
+# supports and pass all these providers to the multi-region module in a provider = { ... } block. You MUST create a
+# provider block for EVERY one of these AWS regions, but you should specify the ones to use and authenticate to (the
+# ones actually enabled in your AWS account) using opt_in_regions.
+# ---------------------------------------------------------------------------------------------------------------------
+
+generate "providers" {
+  path      = "providers.tf"
+  if_exists = "overwrite"
+  contents  = <<EOF
+%{for region in local.all_aws_regions}
+provider "aws" {
+  region = "${region}"
+  alias  = "${replace(region, "-", "_")}"
+  # Skip credential validation and account ID retrieval for disabled or restricted regions
+  skip_credentials_validation = ${contains(coalesce(local.opt_in_regions, []), region) ? "false" : "true"}
+  skip_requesting_account_id  = ${contains(coalesce(local.opt_in_regions, []), region) ? "false" : "true"}
+}
+%{endfor}
+EOF
 }
 
 inputs = {
@@ -2020,9 +2321,6 @@ inputs = {
   # This account sends logs to the Logs account.
   config_aggregate_config_data_in_external_account = true
 
-  # The ID of the Logs account.
-  config_central_account_id = local.accounts.logs
-
   ################################
   # Parameters for CloudTrail
   ################################
@@ -2033,8 +2331,9 @@ inputs = {
   # Encrypt CloudTrail logs using a common KMS key.
   cloudtrail_kms_key_arn = local.cloudtrail_kms_key_arn
 
-  # The ARN is a key alias, not a key ID. This variable prevents a perpetual diff when using an alias.
-  cloudtrail_kms_key_arn_is_alias = true
+  # The ARN is a key ID. This variable prevents a perpetual diff when using an alias.
+  cloudtrail_kms_key_arn_is_alias = false
+
   ##################################
   # Benchmark SNS alarms configuration
   ##################################
@@ -2081,7 +2380,11 @@ inputs = {
     }
   }
 
+  # Join this account to the root account's Security Hub
   security_hub_associate_to_master_account_id = local.accounts.root
+
+  # Join this account to the root account's Amazon Macie
+  macie_administrator_account_id = local.accounts.root
 }
 ----
 
@@ -2193,7 +2496,7 @@ compliance; it is a failure of the AWS audit tool. Note also that the accounts a
 the benchmark, v1.3.0; the AWS Security Hub does not support this version at the current time.
 
 [[iam_roles_for_instances]]
-**Use IAM roles for EC2 instances**
+==== Use IAM roles for EC2 instances
 All Gruntwork modules that require AWS API access use roles rather than an IAM user with static API credentials for
 authentication. For example:
 
@@ -2212,7 +2515,7 @@ Use these modules whenever possible. You should always use IAM roles in your own
 access to the AWS API. Using static API credentials should be avoided whenever possible.
 
 [[maintain_compliance_iam]]
-**Maintaining compliance by following IAM best practices**
+==== Maintaining compliance by following IAM best practices
 We conclude the IAM section with a few parting words of wisdom for maintaining compliance over time:
 
 . Do not attach any policies without requiring MFA.
@@ -2227,26 +2530,33 @@ the use of root].  Fortunately, most of these activities are rare, so usage of t
 a minimum.
 
 [[maintain_compliance_storage]]
-**Maintaining compliance by following Storage best practices**
+==== Maintaining compliance by following Storage best practices
 
 [[s3_buckets_deployment]]
-**S3 Buckets**
+==== S3 Buckets
+
 To make sure your S3 buckets are compliant with the benchmark, use the
 link:https://github.com/gruntwork-io/terraform-aws-security/tree/master/modules/private-s3-bucket[`private-s3-bucket` module]
 to create and manage all of your S3 buckets. This module blocks public access and enforces encryption by default. Note
 that all Gruntwork modules that create S3 buckets use this module under the hood.
 
-You can either use the `private-s3-bucket` module in your own modules, or, if you wish to deploy a standalone S3 bucket, use the https://github.com/gruntwork-io/terraform-aws-service-catalog/blob/master/modules/data-stores/s3-bucket/[`s3-bucket` service]
+You can either use the `private-s3-bucket` module in your own modules, or, if you wish to deploy a standalone S3 bucket,
+use the https://github.com/gruntwork-io/terraform-aws-service-catalog/blob/master/modules/data-stores/s3-bucket/[`s3-bucket` service]
 from the Gruntwork Service Catalog.
 
+To ensure that all the data in your S3 buckets has been discovered, classified and secured, use the
+link:https://github.com/gruntwork-io/terraform-aws-cis-service-catalog/tree/master/modules/security/macie[`macie` module]
+to monitor all your S3 buckets. Note that all the Gruntwork account baseline modules include the `macie` module under
+the hood.
+
 [[maintain_compliance_logging]]
-**Maintaining compliance by following Logging best practices**
+==== Maintaining compliance by following Logging best practices
 
 The logging section of the Benchmark includes configurations for CloudTrail, AWS Config, KMS keys, and VPC
 flow logs.
 
 [[enable_key_rotation_for_kms]]
-**Enable key rotation for KMS keys**
+==== Enable key rotation for KMS keys
 To make sure your KMS keys are compliant with the benchmark, use the
 link:https://github.com/gruntwork-io/terraform-aws-security/blob/master/modules/kms-master-key/README.md[`kms-master-key` module]
 to create KMS keys with key rotation enabled by default.
@@ -2419,9 +2729,12 @@ default security groups from all VPCs in all regions.
 == Next steps
 
 Congratulations! If you've made it this far, you should have achieved compliance with the CIS AWS Foundations
-Benchmark. Now it's time to confirm that your configurations are correct and you didn't miss any steps.
- +
- +
+Benchmark. This guide is meant to help you get your AWS infrastructure compliant with the latest CIS Benchmark, using our dedicated and up-to-date modules.
+
+If you've got any feedback or you think something's missing from the guide, please get in touch via link:https://github.com/gruntwork-io/gruntwork-io.github.io[Github], or our dedicated link:https://gruntwork.io/contact[Contact Us] page.
+
+Now it's time to confirm that your configurations are correct and you didn't miss any steps.
+
 
 [[traceability_matrix]]
 == Traceability matrix
@@ -2434,30 +2747,33 @@ sections above.
 1.1;<<security_questions>>;Complete the contact details on the AWS account page
 1.2;<<security_questions>>;Complete the security contact information on the AWS account page
 1.3;<<security_questions>>;Answer the security questions on the AWS account page
-1.4;<<configure_security_hub>>;Use the Gruntwork Security Hub module to enable AWS Security Hub to ensure you are notified if the root user has access keys set
+1.4;<<apply_account_baseline_root>>, <<apply_account_baseline_security>>, <<apply_account_baseline_logs>>;Use the `account-baseline-*` modules to set up your accounts. This will ensure that the Security Hub service is enabled, which will notify you if the root user has access keys set
 1.5;<<root_mfa>>;Manually configure MFA for the root user
 1.6;<<root_mfa>>;Use a Yubikey (or other hardware MFA) for the root user
-1.7;<<manual_steps>>;Take manual steps to complete this recommendation
+1.7;<<manual_steps_iam>>;Take manual steps to complete this recommendation
 1.8-9;<<apply_account_baseline_security>>;Use the `account-baseline-security` module to set up the IAM password policy
 1.10;<<configure_authentication>>;Configure authentication using SAML or IAM
 1.11;<<apply_account_baseline_security>>;Use the `account-baseline-security` module to create users
-1.12;<<apply_account_baseline_root>>, <<apply_account_baseline_security>>, <<apply_account_baseline_logs>>;Use the `account-basline-*` modules to set up your accounts. This will ensure that there are no unused credentials
-1.13;<<apply_account_baseline_root>>, <<apply_account_baseline_security>>, <<apply_account_baseline_logs>>;Use the `account-basline-*` modules to set up your accounts. This will ensure that there are no extra access keys
-1.14;<<apply_account_baseline_root>>, <<apply_account_baseline_security>>, <<apply_account_baseline_logs>>;Use the `account-basline-*` modules to set up your accounts. This will ensure that there are no unused access keys
+1.12;<<apply_account_baseline_root>>, <<apply_account_baseline_security>>, <<apply_account_baseline_logs>>;Use the `account-baseline-*` modules to set up your accounts. This will ensure that there are no unused credentials
+1.13;<<apply_account_baseline_root>>, <<apply_account_baseline_security>>, <<apply_account_baseline_logs>>;Use the `account-baseline-*` modules to set up your accounts. This will ensure that there are no extra access keys
+1.14;<<apply_account_baseline_root>>, <<apply_account_baseline_security>>, <<apply_account_baseline_logs>>;Use the `account-baseline-*` modules to set up your accounts. This will ensure that there are no unused access keys
 1.15;<<apply_account_baseline_security>>;Use the `account-baseline-security` module to create users and groups
 1.16;<<apply_account_baseline_security>>;Use the `account-baseline-security` module to ensure no full-access policies are attached to any groups or users
 1.17;<<apply_account_baseline_security>>;Use the `account-baseline-security` module to create a support group
 1.18;<<iam_roles_for_instances>>;Use Gruntwork modules to ensure EC2 instances use roles for access
 1.19;<<cleanup_expired_certs>>;Use Gruntwork modules to automatically remove expired certificates from IAM
-1.20;<<s3_buckets_deployment>>;Use the `private-s3-bucket` module
-1.21;<<iam_access_analyzer>>;Use Gruntwork modules to enable IAM Access Analyzer across regions
-1.22;<<account_structure>>;Use the security AWS account as described in the Gruntwork production-grade AWS account structure
+1.20;<<iam_access_analyzer>>;Use Gruntwork modules to enable IAM Access Analyzer across regions
+1.21;<<apply_account_baseline_root>>, <<apply_account_baseline_security>>, <<apply_account_baseline_logs>>;Use the `account-baseline-*` modules to set up your accounts. This will ensure IAM users are managed centrally through the user of AWS Organizations.
 2.1.1-2.1.2;<<s3_buckets_deployment>>;Use the `private-s3-bucket` module
+2.1.3;<<s3_buckets_deployment>>;Use the `private-s3-bucket` module and follow the instructions in the README
+2.1.4;<<apply_account_baseline_root>>, <<apply_account_baseline_security>>, <<apply_account_baseline_logs>>;Use the `account-baseline-*` modules to set up your accounts. This will ensure Amazon Macie is enabled.
+2.1.5;<<s3_buckets_deployment>>;Use the `private-s3-bucket` module
 2.2.1;<<configure_ebs_encryption>>;Use Gruntwork modules to configure AWS EBS encryption
-3.1-3.4;<<apply_account_baseline_logs>>;Use the `account-baseline-*` modules to ensure Cloudtrail is enabled and configured in all regions
+2.3.1;<<configure_rds_encryption>>;Use Gruntwork modules to configure AWS RDS encryption
+3.1-3.4;<<apply_account_baseline_logs>>;Use the `account-baseline-*` modules to ensure CloudTrail is enabled and configured in all regions
 3.5;<<apply_account_baseline_security>>;Use the `account-baseline-security` module to ensure AWS Config is enabled in all regions
-3.6;<<apply_account_baseline_logs>>;Use the `account-baseline-*` modules to ensure Cloudtrail S3 bucket has access logging enabled
-3.7;<<apply_account_baseline_logs>>;Use the `account-baseline-*` modules to ensure Cloudtrail logs are encrypted at rest using KMS CMKs
+3.6;<<apply_account_baseline_logs>>;Use the `account-baseline-*` modules to ensure CloudTrail S3 bucket has access logging enabled
+3.7;<<apply_account_baseline_logs>>;Use the `account-baseline-*` modules to ensure CloudTrail logs are encrypted at rest using KMS CMKs
 3.8;<<enable_key_rotation_for_kms>>;Use the KMS module
 3.9;<<vpc_flow_logs>>;Use the Gruntwork CIS-compliant `vpc` service to provision VPCs with flow logs enabled
 3.10-3.11;<<apply_account_baseline_logs>>;Use the `account-baseline-*` modules to ensure Object-level logging is enabled for S3 buckets for read and write events
