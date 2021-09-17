@@ -19,8 +19,8 @@
 }
 
 .checkout-help-notification {
-  width: 103%;
-  margin-left: -.8em;
+  width: calc(100% + 30px);
+  margin-left: -15px;
 }
 
 #checkout-money-back {
@@ -36,15 +36,12 @@
 
     .sub-panel {
       background-color: #1D252F;
-      line-height: 1;
+      line-height: 1.4;
 
       .addon-amount {
         font-size: 25px;
         margin-top: 15px;
         font-weight: bold;
-        @media (max-width: $screen-sm-max) {
-          margin-top: 0px;
-        }
       }
       .addon-duration {
         margin-top: -25px;
@@ -81,20 +78,11 @@
   }
 }
 
-#checkout-btn-container {
-  @media (max-width: $screen-xs-max) {
-    height: 25px;
-  }
-  @media (min-width: $screen-sm-min) {
-    height: 52px;
-  }
-}
-
 #checkout-btn-container-beta {
   @media (max-width: $screen-xs-max) {
-    height: 41px;
+    margin: 0;
   }
   @media (min-width: $screen-sm-min) {
-    height: 52px;
+    margin: 1em 0;
   }
 }

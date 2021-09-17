@@ -135,26 +135,32 @@ $(function () {
   function _updateCheckout(newOptions) {
     checkoutOptions = Object.assign({}, checkoutOptions, newOptions);
 
-    var enable_pro_support = checkoutOptions.pro_support;
-    var setup_deployment = checkoutOptions.setup_deployment;
-    var setup_compliance = checkoutOptions.setup_compliance;
+    _updateUI();
+    _updatePrice();
+    _updateCheckoutLink();
+  }
+
+  function _updateUI() {
+    var support = checkoutOptions.pro_support;
+    var refarch = checkoutOptions.setup_deployment;
+    var compliance = checkoutOptions.setup_compliance;
 
     $('.grunty-sprite').attr('data-sprite', 0);
     $('#subscription_type').val(checkoutOptions.subscription_type);
 
     // updates addon switch
-    $('[data-switch]' + '[name="pro_support"]').prop('checked', enable_pro_support);
-    $('[data-switch]' + '[name="setup_deployment"]').prop('checked', setup_deployment);
-    $('[data-switch]' + '[name="setup_compliance"]').prop('checked', setup_compliance);
+    $('[data-switch]' + '[name="pro_support"]').prop('checked', support);
+    $('[data-switch]' + '[name="setup_deployment"]').prop('checked', refarch);
+    $('[data-switch]' + '[name="setup_compliance"]').prop('checked', compliance);
 
-    if (enable_pro_support) {
+    if (support) {
       $('.grunty-sprite').attr('data-sprite', 2);
       $('#subscription-addon-1').removeClass('check-list-disabled');
     } else {
       $('#subscription-addon-1').addClass('check-list-disabled');
     }
 
-    if (setup_deployment) {
+    if (refarch) {
       $('.grunty-sprite').attr('data-sprite', 1);
 
       $('#checkout-price-addon').show();
@@ -170,7 +176,7 @@ $(function () {
       $('#subscription-addon-2').addClass('check-list-disabled');
     }
 
-    if (setup_compliance) {
+    if (compliance) {
       $('#subscription-addon-3').removeClass('check-list-disabled');
 
       // Update Refarch texts to reflect CIS selection
@@ -184,22 +190,20 @@ $(function () {
       $('#addon-text-refarch').text('Reference Architecture');
     }
 
-    if (checkoutOptions.pro_support && checkoutOptions.setup_deployment) {
+    if (support && refarch) {
       $('.grunty-sprite').attr('data-sprite', 3);
     }
-
-    _calculatePrice();
   }
 
-  function _calculatePrice() {
-    var total, subtotal, subscriptionTotal;
+  function _updatePrice() {
+    var monthlyTotal, dueNowTotal;
 
     switch (checkoutOptions.subscription_type) {
       case 'aws':
-        total = subtotal = pricing.subscriptions.aws.price.value;
+        monthlyTotal = pricing.subscriptions.aws.price.value;
         break;
       case 'gcp':
-        total = subtotal = pricing.subscriptions.gcp.price.value;
+        monthlyTotal = pricing.subscriptions.gcp.price.value;
         break;
       default: // do nothing
     }
@@ -207,86 +211,66 @@ $(function () {
     if (checkoutOptions.pro_support) {
       switch (checkoutOptions.subscription_type) {
         case 'aws':
-          total += subtotal = pricing.subscriptions.aws.pro_support_price.value;
+          monthlyTotal += pricing.subscriptions.aws.pro_support_price.value;
           break;
         case 'gcp':
-          total += subtotal = pricing.subscriptions.gcp.pro_support_price.value;
+          monthlyTotal += pricing.subscriptions.gcp.pro_support_price.value;
           break;
         default: // do nothing
       }
     }
 
-    // Only AWS supports the Ref Arch
-    if (checkoutOptions.setup_deployment) {
-      subscriptionTotal = subtotal;
-      //subtotal += 4950;
-    }
-
     // CIS Compliance is only on AWS for now
     if (checkoutOptions.setup_compliance) {
-      total += subtotal = pricing.subscriptions.aws.cis_compliance_price.value;
+      monthlyTotal += pricing.subscriptions.aws.cis_compliance_price.value;
     }
 
-    $('#subscription-price').text(total.toLocaleString());
-    $('#subscription-subtotal').text(subtotal.toLocaleString());
+    dueNowTotal = monthlyTotal;
 
-    _deferCheckout(checkoutOptions.subscription_type,
-      checkoutOptions.pro_support,
-      checkoutOptions.setup_deployment,
-      checkoutOptions.setup_compliance);
+    // Only AWS supports the Ref Arch
+    if (checkoutOptions.setup_deployment) {
+      dueNowTotal += 4950;
+      $('#due-monthly-block').show();
+    } else {
+      // only show the monthly disclaimer when it differs from due now
+      $('#due-monthly-block').hide();
+    }
+
+    $('#due-now').text(dueNowTotal.toLocaleString());
+    $('.monthly-total').text(monthlyTotal.toLocaleString());
   }
 
-  // Prevents spamming Chargebee registerAgain on every change
-  function _deferCheckout(type, support, setup, compliance) {
-    var cbInstance;
-    if (typeof timeout !== 'undefined') clearTimeout(timeout);
-    $checkout.attr('disabled', true).text('Please wait...');
+  // Update the Recurly checkout link URL
+  function _updateCheckoutLink() {
+    const type = checkoutOptions.subscription_type;
+    const support = checkoutOptions.pro_support;
+    const setup = checkoutOptions.setup_deployment;
+    const compliance = checkoutOptions.setup_compliance;
 
-    timeout = setTimeout(function () {
-      $checkout.attr('disabled', false).text('Checkout');
-      clearTimeout(timeout);
-      //_updateAttrs();
-      Chargebee.registerAgain();
-      cbInstance = Chargebee.getInstance();
+    var href = "https://gruntwork-sandbox.recurly.com/subscribe/" + type + "-monthly?";
 
-      function htmlEncode(value) {
-        if (value) {
-          return jQuery('<div />').text(value).html();
-        } else {
-          return '';
-        }
-      }
-      cbInstance.setCheckoutCallbacks(function (cart, product) {
-        var subscriptionDetails = ("Subscription type: " + type);
-        if (support) {
-          subscriptionDetails += " • Professional Support";
-        }
-        if (setup) {
-          subscriptionDetails += " • Reference Architecture";
-        }
-        if (compliance) {
-          subscriptionDetails += " • CIS";
-        }
-        //console.log(subscriptionDetails);
-        // you can define a custom callbacks based on cart object
-        var customer = {
-          cf_subscription_details: subscriptionDetails,
-          cf_website_version: "v1-static"
-        };
+    const addOns = { "users": 20 };
+    if (support) {
+      addOns["pro-support"] = 1;
+    }
+    if (setup) {
+      addOns["ref-arch"] = 1;
+    }
+    if (compliance) {
+      addOns["cis-aws-foundations"] = 1;
+    }
 
-        cart.setCustomer(customer);
+    const params = {
+      theme: "modern",
+      add_on_code: Object.keys(addOns).toString(),
+      add_on_quantity: Object.values(addOns).toString(),
+    };
 
-        return {
-          close: function () {
-            // Required to remove overflow set by the modal
-            // Same as: https://lodash.com/docs/4.17.10#debounce
-            setTimeout(function () {
-              $body.removeAttr('style');
-            }, 0);
-          }
-        }
-      });
-    }, 1250);
+    for (const key in params) {
+      href += "&" + key + "=" + params[key]
+    }
+
+    $("#recurly-checkout-btn").attr("href", href);
   }
 
   _updateCheckout();

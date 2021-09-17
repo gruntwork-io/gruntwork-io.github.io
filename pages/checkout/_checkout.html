@@ -11,7 +11,7 @@
           <span
             class="large-price visible-xs-inline large-price--mobile"
             style="white-space: nowrap;"
-            ><span>$</span><strong id="subscription-subtotal"></strong></span
+            ><span>$</span><strong class="monthly-total"></strong></span
           ><span
             class="small text-muted visible-xs-inline"
             style="white-space: nowrap;"
@@ -27,7 +27,7 @@
           >
           <div class="visible-sm-block visible-md-block visible-lg-block">
             <span class="large-price"
-              ><span>$</span><strong id="subscription-price"></strong></span
+              ><span>$</span><strong class="monthly-total"></strong></span
             >&nbsp; / month
             <p
               class="text-center"
@@ -151,23 +151,19 @@
         Annual Contract. Billed monthly.
       </p>
       <div id="checkout-btn-container-beta">
-        <p
+        <div
           class="small text-white text-bold margin-top-none text-center"
-          id="deposit-due"
           style="margin-bottom: 0"
         >
-          Deposit Due<span class="hide-on-tiny"> Today</span>: $500
-        </p>
+          <div>
+            Due<span class="hide-on-tiny"> Today</span>: $<span id="due-now">500</span>
+          </div>
+          <div id="due-monthly-block" class="hidden-xs text-muted">
+            Then just $<span class="monthly-total"></span><span class="small" style="white-space: nowrap;">&nbsp;/ month</span>
+          </div>
+        </div>
       </div>
-      <button
-        id="checkout-btn"
-        type="button"
-        class="btn btn-info btn-block btn-checkout"
-        data-cb-type="checkout"
-        data-cb-plan-id="chargebee-subscription"
-      >
-        Checkout
-      </button>
+      <a id="recurly-checkout-btn" class="btn btn-info btn-block btn-checkout" href="https://gruntwork-io.recurly.com/subscribe/foo?quantity=5">Checkout</a>
       <p>
         <a
           id="checkout-contact-btn"

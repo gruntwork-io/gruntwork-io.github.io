@@ -44,6 +44,9 @@ p + .btn {
     transform: translateY(-2px);
     box-shadow: 0 6px 9px rgba(0,0,0,.10), 0 2px 5px rgba(0,0,0,.07);
   }
+  max-width: 100%;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 .btn-link {
   box-shadow: none;
@@ -2319,10 +2322,13 @@ $play-button-height: 44px;
 }
 .checkout-panel-left {
   padding: 0px;
-  margin-right: 10px;
 
   @media (max-width: $screen-xs-max) {
     padding: 16px 8px;
+  }
+
+  @media (min-width: $screen-sm-max) {
+    margin-right: 10px;
   }
 }
 .checkout-panel-right {
