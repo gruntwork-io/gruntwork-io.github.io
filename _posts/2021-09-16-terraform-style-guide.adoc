@@ -92,7 +92,7 @@ This allows consumers of the module to quickly scan for what resources need to a
 Any nonstandard file structure should be called out in the README (e.g., if `main.tf` is split up into multiple smaller
 terraform files).
 
-==== variables.tf conventions
+==== `variables.tf` conventions
 
 Each variable block should always define a `description` and `type`, even if it is of the `string` type (the default), in that order. E.g.:
 
@@ -114,7 +114,7 @@ link:https://github.com/hashicorp/terraform/issues/22449[not supported in terraf
 When using `any` type, always use comments to describe the supported attributes.
 link:https://github.com/gruntwork-io/module-security/blob/da69690/modules/kms-master-key/variables.tf#L10[Example].
 
-==== outputs.tf conventions
+==== `outputs.tf` conventions
 
 Each output block should always define a `description`, before the `value`:
 
@@ -127,7 +127,7 @@ output "greeting" {
 ----
 
 [[main_tf_conventions]]
-==== main.tf conventions
+==== `main.tf` conventions
 
 `main.tf` should (loosely) be organized by sections that correspond to components. There is no standard on grouping, but
 as a rule of thumb each section should be focused on a specific component of the module. For example, an ECS service
@@ -186,7 +186,7 @@ Use `#` for comment strings, not `//` or `/**/`.
 
 Delimit section header comment blocks with `# ----` instead of `# \~~~~`.
 
-==== variables.tf
+==== `variables.tf`
 
 `variables.tf` files should clearly indicate required environment variables, and separate out required variables from
 optional variables (with defaults) using block comments.
@@ -225,7 +225,7 @@ variable "optional_var" {
 
 ----
 
-==== main.tf
+==== `main.tf`
 
 ===== Section comments
 
