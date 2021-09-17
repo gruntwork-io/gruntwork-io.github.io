@@ -1122,14 +1122,6 @@ repo, setting the `ref` param to the version you require:
 ----
 terraform {
   source = "git::git@github.com:gruntwork-io/terraform-aws-cis-service-catalog.git//modules/landingzone/account-baseline-root?ref=v0.27.0"
-
-  # This module deploys some resources (e.g., AWS Config) across all AWS regions, each of which needs its own provider,
-  # which in Terraform means a separate process. To avoid all these processes thrashing the CPU, which leads to network
-  # connectivity issues, we limit the parallelism here.
-  extra_arguments "parallelism" {
-    commands  = get_terraform_commands_that_need_parallelism()
-    arguments = ["-parallelism=2"]
-  }
 }
 ----
 
@@ -1142,7 +1134,6 @@ Set the variables for the `account-baseline-root` module in this environment in 
 [source,hcl]
 ----
 locals {
-
   common_vars = read_terragrunt_config(find_in_parent_folders("common.hcl"))
 
   # A local for more convenient access to the accounts map.
@@ -1151,6 +1142,25 @@ locals {
   # Both buckets will be created in the logs account by account-baseline-root
   config_s3_bucket_name     = "acme-config-bucket-logs"
   cloudtrail_s3_bucket_name = "acme-cloudtrail-logs"
+
+  # The following locals are used for constructing multi region provider configurations for the underlying module.
+  # A list of all AWS regions
+  all_aws_regions = [
+    "af-south-1",
+    "ap-east-1",
+    "ap-northeast-1",
+    ...,
+  ]
+
+  # Creates resources in the specified regions. The best practice is to enable multiregion modules in all enabled
+  # regions in your AWS account. To get the list of regions enabled in your AWS account, you can use the AWS CLI: aws
+  # ec2 describe-regions.
+  opt_in_regions = [
+    "eu-north-1",
+    "ap-south-1",
+    "eu-west-3",
+    ...,
+  ]
 }
 
 inputs = {
@@ -1616,14 +1626,6 @@ repo, setting the `ref` param to the version you require:
 ----
 terraform {
   source = "git::git@github.com:gruntwork-io/terraform-aws-cis-service-catalog.git//modules/landingzone/account-baseline-app?ref=v0.27.0"
-
-  # This module deploys some resources (e.g., AWS Config) across all AWS regions, each of which needs its own provider,
-  # which in Terraform means a separate process. To avoid all these processes thrashing the CPU, which leads to network
-  # connectivity issues, we limit the parallelism here.
-  extra_arguments "parallelism" {
-    commands  = get_terraform_commands_that_need_parallelism()
-    arguments = ["-parallelism=2"]
-  }
 }
 ----
 
@@ -1824,14 +1826,6 @@ repo, setting the `ref` param to the version you require:
 ----
 terraform {
   source = "git::git@github.com:gruntwork-io/terraform-aws-cis-service-catalog.git//modules/landingzone/account-baseline-security?ref=v0.27.0"
-
-  # This module deploys some resources (e.g., AWS Config) across all AWS regions, each of which needs its own provider,
-  # which in Terraform means a separate process. To avoid all these processes thrashing the CPU, which leads to network
-  # connectivity issues, we limit the parallelism here.
-  extra_arguments "parallelism" {
-    commands  = get_terraform_commands_that_need_parallelism()
-    arguments = ["-parallelism=2"]
-  }
 }
 ----
 
@@ -2135,14 +2129,6 @@ repo, setting the `ref` param to the version you require:
 ----
 terraform {
   source = "git::git@github.com:gruntwork-io/terraform-aws-cis-service-catalog.git//modules/landingzone/account-baseline-app?ref=v0.27.0"
-
-  # This module deploys some resources (e.g., AWS Config) across all AWS regions, each of which needs its own provider,
-  # which in Terraform means a separate process. To avoid all these processes thrashing the CPU, which leads to network
-  # connectivity issues, we limit the parallelism here.
-  extra_arguments "parallelism" {
-    commands  = get_terraform_commands_that_need_parallelism()
-    arguments = ["-parallelism=2"]
-  }
 }
 ----
 
