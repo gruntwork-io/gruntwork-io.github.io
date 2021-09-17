@@ -2496,7 +2496,7 @@ compliance; it is a failure of the AWS audit tool. Note also that the accounts a
 the benchmark, v1.3.0; the AWS Security Hub does not support this version at the current time.
 
 [[iam_roles_for_instances]]
-**Use IAM roles for EC2 instances**
+==== Use IAM roles for EC2 instances
 All Gruntwork modules that require AWS API access use roles rather than an IAM user with static API credentials for
 authentication. For example:
 
@@ -2515,7 +2515,7 @@ Use these modules whenever possible. You should always use IAM roles in your own
 access to the AWS API. Using static API credentials should be avoided whenever possible.
 
 [[maintain_compliance_iam]]
-**Maintaining compliance by following IAM best practices**
+==== Maintaining compliance by following IAM best practices
 We conclude the IAM section with a few parting words of wisdom for maintaining compliance over time:
 
 . Do not attach any policies without requiring MFA.
@@ -2530,10 +2530,10 @@ the use of root].  Fortunately, most of these activities are rare, so usage of t
 a minimum.
 
 [[maintain_compliance_storage]]
-**Maintaining compliance by following Storage best practices**
+==== Maintaining compliance by following Storage best practices
 
 [[s3_buckets_deployment]]
-**S3 Buckets**
+==== S3 Buckets
 
 To make sure your S3 buckets are compliant with the benchmark, use the
 link:https://github.com/gruntwork-io/terraform-aws-security/tree/master/modules/private-s3-bucket[`private-s3-bucket` module]
@@ -2550,13 +2550,13 @@ to monitor all your S3 buckets. Note that all the Gruntwork account baseline mod
 the hood.
 
 [[maintain_compliance_logging]]
-**Maintaining compliance by following Logging best practices**
+==== Maintaining compliance by following Logging best practices
 
 The logging section of the Benchmark includes configurations for CloudTrail, AWS Config, KMS keys, and VPC
 flow logs.
 
 [[enable_key_rotation_for_kms]]
-**Enable key rotation for KMS keys**
+==== Enable key rotation for KMS keys
 To make sure your KMS keys are compliant with the benchmark, use the
 link:https://github.com/gruntwork-io/terraform-aws-security/blob/master/modules/kms-master-key/README.md[`kms-master-key` module]
 to create KMS keys with key rotation enabled by default.
@@ -2735,8 +2735,6 @@ If you've got any feedback or you think something's missing from the guide, plea
 
 Now it's time to confirm that your configurations are correct and you didn't miss any steps.
 
- +
- +
 
 [[traceability_matrix]]
 == Traceability matrix
@@ -2749,7 +2747,7 @@ sections above.
 1.1;<<security_questions>>;Complete the contact details on the AWS account page
 1.2;<<security_questions>>;Complete the security contact information on the AWS account page
 1.3;<<security_questions>>;Answer the security questions on the AWS account page
-1.4;<<configure_security_hub>>;Use the Gruntwork Security Hub module to enable AWS Security Hub to ensure you are notified if the root user has access keys set
+1.4;<<apply_account_baseline_root>>, <<apply_account_baseline_security>>, <<apply_account_baseline_logs>>;Use the `account-baseline-*` modules to set up your accounts. This will ensure that the Security Hub service is enabled, which will notify you if the root user has access keys set
 1.5;<<root_mfa>>;Manually configure MFA for the root user
 1.6;<<root_mfa>>;Use a Yubikey (or other hardware MFA) for the root user
 1.7;<<manual_steps_iam>>;Take manual steps to complete this recommendation
@@ -2767,7 +2765,7 @@ sections above.
 1.20;<<iam_access_analyzer>>;Use Gruntwork modules to enable IAM Access Analyzer across regions
 1.21;<<apply_account_baseline_root>>, <<apply_account_baseline_security>>, <<apply_account_baseline_logs>>;Use the `account-baseline-*` modules to set up your accounts. This will ensure IAM users are managed centrally through the user of AWS Organizations.
 2.1.1-2.1.2;<<s3_buckets_deployment>>;Use the `private-s3-bucket` module
-2.1.3;<<s3_buckets_deployment>>;Use the `private-s3-bucket` module and follow the instructions
+2.1.3;<<s3_buckets_deployment>>;Use the `private-s3-bucket` module and follow the instructions in the README
 2.1.4;<<apply_account_baseline_root>>, <<apply_account_baseline_security>>, <<apply_account_baseline_logs>>;Use the `account-baseline-*` modules to set up your accounts. This will ensure Amazon Macie is enabled.
 2.1.5;<<s3_buckets_deployment>>;Use the `private-s3-bucket` module
 2.2.1;<<configure_ebs_encryption>>;Use Gruntwork modules to configure AWS EBS encryption
