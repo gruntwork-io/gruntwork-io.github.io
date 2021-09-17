@@ -1258,8 +1258,8 @@ inputs = {
   # Send CloudTrail logs to the common S3 bucket.
   cloudtrail_s3_bucket_name = local.cloudtrail_s3_bucket_name
 
-  # The ARN is a key alias, not a key ID. This variable prevents a perpetual diff when using an alias.
-  cloudtrail_kms_key_arn_is_alias = true
+  # The ARN is a key ID. This variable prevents a perpetual diff when using an alias.
+  cloudtrail_kms_key_arn_is_alias = false
 
   ##################################
   # Cross-account IAM role permissions
@@ -1745,8 +1745,8 @@ inputs = {
     id if name != "logs"
   ]
 
-  # The ARN is a key alias, not a key ID. This variable prevents a perpetual diff when using an alias.
-  cloudtrail_kms_key_arn_is_alias = true
+  # The ARN is a key ID. This variable prevents a perpetual diff when using an alias.
+  cloudtrail_kms_key_arn_is_alias = false
 
   # By granting access to the root ARN of the Logs account, we allow administrators to further delegate to access
   # other IAM entities
@@ -1985,8 +1985,8 @@ input = {
   # Encrypt CloudTrail logs using a common KMS key.
   cloudtrail_kms_key_arn = local.cloudtrail_kms_key_arn
 
-  # The ARN is a key alias, not a key ID. This variable prevents a perpetual diff when using an alias.
-  cloudtrail_kms_key_arn_is_alias = true
+  # The ARN is a key ID. This variable prevents a perpetual diff when using an alias.
+  cloudtrail_kms_key_arn_is_alias = false
 
   ##################################
   # Benchmark SNS alarms configuration
@@ -2259,8 +2259,9 @@ inputs = {
   # Encrypt CloudTrail logs using a common KMS key.
   cloudtrail_kms_key_arn = local.cloudtrail_kms_key_arn
 
-  # The ARN is a key alias, not a key ID. This variable prevents a perpetual diff when using an alias.
-  cloudtrail_kms_key_arn_is_alias = true
+  # The ARN is a key ID. This variable prevents a perpetual diff when using an alias.
+  cloudtrail_kms_key_arn_is_alias = false
+
   ##################################
   # Benchmark SNS alarms configuration
   ##################################
