@@ -1145,22 +1145,6 @@ Set the variables for the `account-baseline-root` module in this environment in 
 # ones actually enabled in your AWS account) using opt_in_regions.
 # ---------------------------------------------------------------------------------------------------------------------
 
-generate "providers" {
-  path      = "providers.tf"
-  if_exists = "overwrite"
-  contents  = <<EOF
-%{for region in local.all_aws_regions}
-provider "aws" {
-  region = "${region}"
-  alias  = "${replace(region, "-", "_")}"
-  # Skip credential validation and account ID retrieval for disabled or restricted regions
-  skip_credentials_validation = ${contains(coalesce(local.opt_in_regions, []), region) ? "false" : "true"}
-  skip_requesting_account_id  = ${contains(coalesce(local.opt_in_regions, []), region) ? "false" : "true"}
-}
-%{endfor}
-EOF
-}
-
 locals {
   common_vars = read_terragrunt_config(find_in_parent_folders("common.hcl"))
 
@@ -1189,6 +1173,22 @@ locals {
     "eu-west-3",
     # ...,
   ]
+}
+
+generate "providers" {
+  path      = "providers.tf"
+  if_exists = "overwrite"
+  contents  = <<EOF
+%{for region in local.all_aws_regions}
+provider "aws" {
+  region = "${region}"
+  alias  = "${replace(region, "-", "_")}"
+  # Skip credential validation and account ID retrieval for disabled or restricted regions
+  skip_credentials_validation = ${contains(coalesce(local.opt_in_regions, []), region) ? "false" : "true"}
+  skip_requesting_account_id  = ${contains(coalesce(local.opt_in_regions, []), region) ? "false" : "true"}
+}
+%{endfor}
+EOF
 }
 
 inputs = {
