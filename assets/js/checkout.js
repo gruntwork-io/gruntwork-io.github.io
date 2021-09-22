@@ -244,7 +244,7 @@ $(function () {
   function _updateCheckoutLink() {
     const type = checkoutOptions.subscription_type;
     const support = checkoutOptions.pro_support;
-    const setup = checkoutOptions.setup_deployment;
+    const refarch = checkoutOptions.setup_deployment;
     const compliance = checkoutOptions.setup_compliance;
 
     var href = "https://gruntwork-sandbox.recurly.com/subscribe/" + type + "-monthly?";
@@ -253,7 +253,7 @@ $(function () {
     if (support) {
       addOns["pro-support"] = 1;
     }
-    if (setup) {
+    if (refarch) {
       addOns["ref-arch"] = 1;
     }
     if (compliance) {
@@ -266,8 +266,10 @@ $(function () {
       add_on_quantity: Object.values(addOns).toString(),
     };
 
+    sep = "";
     for (const key in params) {
-      href += "&" + key + "=" + params[key]
+      href += sep + key + "=" + params[key];
+      sep = "&";
     }
 
     $("#recurly-checkout-btn").attr("href", href);
