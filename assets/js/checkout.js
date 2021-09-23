@@ -249,7 +249,10 @@ $(function () {
 
     var href = "https://gruntwork-sandbox.recurly.com/subscribe/" + type + "-monthly?";
 
-    const addOns = { "users": 20 };
+    // We'll want to pass users when we switch from using the Recurly hosted payment
+    // page to our own, at which point we can re-enable the users add-on.
+
+    const addOns = { /*"users": 20*/ };
     if (support) {
       addOns["pro-support"] = 1;
     }
