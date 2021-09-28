@@ -5,7 +5,7 @@
     background: linear-gradient(to bottom, #1a232d, #2e3b4a);
   }
 
-  // The description of under "Gruntwork for AWS" or "Gruntwork for GCP"
+  // The description of under the plan name
   .plans-heading {
     p.description {
       font-size: 1.7rem;
@@ -21,30 +21,7 @@
     }
   }
 
-  // Center the "New" badge just above the text and below the GCP logo
-  #gcp-new {
-    position: absolute;
-    left: 50%;
-    bottom: -29px;
-    transform: translateX(-50%);
-  }
-
-  // Center the "Special Pricing" badge just above the GCP price
-  #gcp-special-pricing {
-    font-size: 1.3rem;
-    margin-top: -13px;
-  }
-
-  // GCP and AWS Logos above pricing plans
-  .gw-sprite-gcp {
-    background-image: url(/assets/img/gcp-logo@2x.png);
-    background-size: 120px 100px;
-    background-position: 30px -5px;
-    background-repeat: no-repeat;
-    width: 180px;
-    height: 100px;
-  }
-
+  // AWS Logo above pricing plan
   .gw-sprite-aws {
     background-image: url(/assets/img/aws-logo@2x.png);
     background-size: 108px 100px;
@@ -56,6 +33,7 @@
 
   .enterprise-h1 {
     margin-top: 12px;
+    font-weight: bold;
   }
 
   // Pro Support
@@ -101,6 +79,7 @@
   justify-content: center;
   list-style: none;
   counter-reset: item;
+  padding: 0;
 
   li::before {
     content: counter(item) " ";

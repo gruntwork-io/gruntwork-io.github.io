@@ -23,29 +23,12 @@ $(function () {
     $('#cis-button-default').show();
   }
 
-  // Set the UI defaults for GCP selection
-  function _setGcpUIDefaults() {
-    $('#subscription-type-img').attr('data-subscription-type', 'gcp');
-
-    // Show Coming Soon text & contact us cta for refarch & cis compliance
-    $('#addon-amount-refarch').text('Coming Soon.');
-    $('#addon-amount-cis').text('Coming Soon.');
-    $('#refarch-button-gcp').show();
-    $('#cis-button-gcp').show();
-  }
-
   // Auto toggles the subscription type based on the URI
   switch ($.query.get('subscription-type')) {
     case 'aws':
       _setAwsUIDefaults();
       _updateCheckout({
         subscription_type: 'aws'
-      });
-      break;
-    case 'gcp':
-      _setGcpUIDefaults();
-      _updateCheckout({
-        subscription_type: 'gcp'
       });
       break;
     default: // do nothing
@@ -202,9 +185,6 @@ $(function () {
       case 'aws':
         monthlyTotal = pricing.subscriptions.aws.price.value;
         break;
-      case 'gcp':
-        monthlyTotal = pricing.subscriptions.gcp.price.value;
-        break;
       default: // do nothing
     }
 
@@ -212,9 +192,6 @@ $(function () {
       switch (checkoutOptions.subscription_type) {
         case 'aws':
           monthlyTotal += pricing.subscriptions.aws.pro_support_price.value;
-          break;
-        case 'gcp':
-          monthlyTotal += pricing.subscriptions.gcp.pro_support_price.value;
           break;
         default: // do nothing
       }
