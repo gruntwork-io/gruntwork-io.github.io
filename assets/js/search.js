@@ -5,12 +5,15 @@
  * make this code reuasble
  */
 (function () {
+  /**
+   * While we do not want the GCP guide to be displayed on the guides page going forward, we wish to
+   * retain the ability for the link to still work and prevent damage to Search engine rankings
+   */
+  const idOfGcpGuideToExclude = 'deploying-a-dockerized-app-on-gcp-and-gke-card';
 
   function initialEntry() {
     $('#no-matches').hide();
-    $('#no-azure-results').hide();
-    // Select AWS cloud by default on page load
-    selectCloud($('.cloud-filter #aws'));
+    $(`#${idOfGcpGuideToExclude}`).hide();
   }
 
   // Initial entry on load
@@ -65,7 +68,6 @@
 
   function initialDisplay() {
     $('#guide-listings').show();
-    $('#no-azure-results').hide();
     $('#no-matches').hide();
   }
 
@@ -93,16 +95,19 @@
    * Function that where the search is being performed from
    */
   function detectSearchEntry() {
-    return window.libraryEntries ?
+    const entries = window.libraryEntries ?
       window.libraryEntries :
       window.guideEntries;
+      console.log("LIbrary entries", entries)
+
+      return entries
   }
 
   /**
    * A naive function to slugify a string input and return a URL friendly output
    * of that string. This implementation was sourced from:
    * https://stackoverflow.com/a/1054862
-   * @param {*} stringValue 
+   * @param {*} stringValue
    */
   function naiveSlugify(stringValue) {
     return stringValue.replace(/ /g,'-').replace(/[^\w-]+/g,'')
@@ -131,8 +136,6 @@
       searchContent = entry.text || entry.title + entry.category + entry.content + entry.tags;
     } else if (type === 'tagSearch') {
       searchContent = entry.tags + entry.cloud;
-    } else if (type === 'cloudSearch') {
-      searchContent = entry.cloud;
     } else {
       searchContent = "Not Valid";
     }
@@ -170,13 +173,17 @@
 
           if (searchContent.indexOf(searchQuery) < 0) {
             matchesAll = false;
-            // TODO: there is a bug here if the id contains a `.`, as that would be interpretted as a class filter.
+            // TODO: there is a bug here if the id contains a `.`, as that would be interpreted as a class filter.
             $(`#${entry.id}`).hide();
           }
         });
 
         //Checks if results were found and displays results accordingly
         if (matchesAll) {
+          if (entry.id === idOfGcpGuideToExclude) {
+            return
+          }
+
           displayCategory(entry);
           $(`#${entry.id}`).show();
           matches++;
@@ -216,66 +223,28 @@
     filterSearchData(searchValue, 'wordSearch');
   }, 250);
 
-  function filterCloudAndTags() {
+  function filterByTags() {
     const checkedTags = $('input[type="checkbox"]:checked');
-    const selectedCloud = $('.cloud-filter .active-button').attr("id");
 
     if (checkedTags.length === 0) {
-      // Return filtered to whatever cloud is selected if no tag is checked Or all
-      // items if no cloud is selected
-      return selectedCloud ?
-        filterSearchData(selectedCloud, 'cloudSearch') :
-        showAllItems();
+      return showAllItems();
     }
+
     checkedTags
       .each(function () {
         const searchValue = $(this).val();
-        filterSearchData(searchValue + (selectedCloud ?
-          ' ' + selectedCloud :
-          ''), 'tagSearch');
+        filterSearchData(searchValue, 'tagSearch');
       });
   }
 
   /* Triggered when filter checkboxes are checked */
   $(document)
     .on('click', '.tags', function () {
-      filterCloudAndTags();
+      filterByTags();
     });
-
-  function selectCloud(filterButton) {
-    const id = filterButton.attr('id');
-
-    if (filterButton.hasClass('initialSelect') && filterButton.hasClass('active-button')) {
-      filterButton.removeClass('initialSelect');
-      filterButton.removeClass('active-button');
-      $('#guide-listings').show();
-      $('#no-azure-results').hide();
-      $('#no-matches').hide();
-    } else {
-      filterButton.addClass('active-button');
-      filterButton.addClass('initialSelect');
-      filterButton
-        .siblings()
-        .removeClass('active-button');
-
-      if (id === 'azure') {
-        $('#guide-listings').hide();
-        $('#no-azure-results').show();
-        return;
-      }
-    }
-
-    filterCloudAndTags();
-  }
 
   /* Search box on library page */
   $('#js-search-library').on("keyup", searchData);
-
-  /* Triggered on click of any cloud filtering buttons */
-  $('.cloud-filter .filter').on('click', function () {
-    const filterButton = $(this);
-    selectCloud(filterButton);
-  });
 
   /* Search box on guides page */
   $('#search-box').on("keyup", searchData);

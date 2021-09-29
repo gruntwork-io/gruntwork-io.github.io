@@ -25,7 +25,7 @@
                     <div class="card card-body">
                         <p>Tags</p>
                         <div class="tags">
-                          {% assign tags_to_capitalize = "aws,gcp,gke,eks" | split: "," %}
+                          {% assign tags_to_capitalize = "aws,eks,cicd" | split: "," %}
                           {% assign tags = "" | split: "" %}
                           {% for post in include.posts %}
                             {% assign tags = tags | concat: post.tags %}
@@ -44,16 +44,4 @@
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="cloud-filter">
-            <div class="center">
-                <div class="filter active-button" id="aws"><span class="helper"></span><img  src="/assets/img/logos-technologies/aws-logo.png" alt="aws logo"></div>
-                <div class="filter" id="gcp"><span class="helper"></span><img src="/assets/img/logos-technologies/gcp-logo.png" alt="aws logo"></div>
-                <div class="filter" id="azure"><span class="helper"></span><img src="/assets/img/logos-technologies/azure-logo.png" alt="aws logo"></div>
-            </div>
-        </div>
-    </div>
-</div>
-<div id="no-azure-results">
-    {% include no-azure-results.html %}
 </div>

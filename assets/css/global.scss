@@ -827,8 +827,7 @@ $padding-row-vertical-desktop:              60px;
     height: 48px;
   }
 
-  // GCP, Kubernetes & Terraform Logo
-  :nth-child(2),
+  // Kubernetes & Terraform Logo
   :nth-child(4),
   :nth-child(5){
     img {
@@ -2528,8 +2527,6 @@ body.checkout .section-heading .gw-icon {
 
   // subscription type variations
   &[data-subscription-type="aws"] { background: url('/assets/img/aws-logo@2x.png') no-repeat; background-size: auto 100%;}
-  &[data-subscription-type="gcp"] { background: url('/assets/img/gcp-logo@2x.png') no-repeat; background-size: auto 100%;}
-
 
   @media (max-width: $screen-xs-max) {
     display: none;
@@ -2942,15 +2939,6 @@ input[type=number]::-webkit-outer-spin-button {
 .get-a-demo:hover {
   color: $btn-getademo-color;
   background-color: #CEF1FC;
-}
-
-// Style for disabled GCP refarch slider
-.slider.round.disabled-refarch-slider {
-  cursor: not-allowed;
-
-  &::before {
-    background: white;
-  }
 }
 
 .grecaptcha-badge {
