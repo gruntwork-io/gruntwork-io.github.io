@@ -1,0 +1,152 @@
+---
+title: How to build and deploy a bastion host for your production-grade system on AWS
+categories: Networking
+image: /assets/img/guides/aws-account/aws-logo.png
+excerpt: Learn how to deploy a secure bastion host for your production system on AWS.
+tags: ["aws", "networking", "terraform"]
+cloud: ["aws"]
+redirect_from: /static/guides/networking/how-to-deploy-production-grade-bastion-host-aws/
+---
+:page-type: guide
+:page-layout: post
+
+:toc:
+:toc-placement!:
+
+// GitHub specific settings. See https://gist.github.com/dcode/0cfbf2699a1fe9b46ff04c41721dda74 for details.
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+toc::[]
+endif::[]
+
+== Intro
+
+If you were following the https://gruntwork.io/guides/networking/how-to-deploy-production-grade-vpc-aws[Gruntwork guide on how to deploy a production grade VPC on AWS], then you probably came across https://gruntwork.io/guides/networking/how-to-deploy-production-grade-vpc-aws/#bastion_host[the section talking about bastion hosts].
+
+When deploying your infrastructure in AWS or any of the other main cloud providers, you might need to keep some of those resources protected and safe from the hands of malicious external actors. Therefore, we recommend keeping your data stores and application servers in a private network (see the https://gruntwork.io/guides/networking/how-to-deploy-production-grade-vpc-aws/#multiple_subnets[production-grade VPC guide]).
+
+While this might depend on your system architecture in place, such a network design is great for limiting the impact of an eventual harmful event, and also helps you control access to the most sensitive parts of your system. To achieve this, you will need some way of determining if the incoming traffic to your private network is to be trusted or not. And one of the ways is to deploy a bastion host.
+
+The guide below will guide you through what is a bastion host, when to use it, some core concepts, and finally - what's the process of configuring a production-grade bastion host and deploying it to AWS.
+
+=== What you'll learn in this guide
+
+This guide consists of four main sections:
+
+<<core_concepts>>::
+  An overview of the core concepts you need to understand for bastion hosts and how and when to use them.
+
+<<production_grade_design>>::
+  An overview of how to configure a secure server to serve as a bastion host in a production environment. To get a
+  sense of what production-grade means, check out link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library#production_grade_infra_checklist[The production-grade infrastructure checklist].
+
+<<deployment_walkthrough>>::
+  A step-by-step guide to deploying a production-grade bastion host in AWS using code from the Gruntwork Infrastructure as Code Library.
+
+<<next_steps>>::
+  What to do once your bastion host is configured and set up.
+
+Feel free to read the guide from start to finish or skip around to whatever part interests you!
+
+[[core_concepts]]
+== Core concepts
+
+=== Networking setup overview
+Before we start getting into what a <<bastion_host>> is and how to deploy and configure one, let's take a step back and define some fundamental concepts for networks and secure communication over the internet.
+
+In both physical and virtual networks, the idea of internal and public-facing networks exist. In fact, there's as many configurations of the types of networks that can be defined, but for the purposes of illustrating the support core concepts in this guide, we'll stop at the notion of `public` and `private` networks. Public networks, as their name suggests are public to the world, and thus the Internet. That means anyone connected to the Internet, will be able to see and exchange data with the devices on that network.
+
+Private networks, on the other hand, are mostly used to restrict access to a group of devices and the data transmitted between them. Depending on the network configuration, devices _on_ the network will be able to communicate with each other, but external actors and devices will not be able to talk to the devices in that internal network. usually that can be achieved using additional network devices such as firewalls.
+
+Sometimes of course, there legitimate needs for external clients to access the private network and communicate with the devices on the private network. In those cases, solutions such as SSH, VPN, Telnet, RDP and others exist. These protocols are all ways of communication that at the very basic level allow external devices to authenticate to the internal network and communicate as if they're originally part of that network. Below we'll dive in to each separate protocol and explan briefly what they're doing and what they're best for.
+
+[[ssh_vpn_rdp]]
+==== What is the difference between SSH, VPN and RDP?
+
+
+
+[[bastion_hosts]]
+=== Bastion server
+==== What is a bastion server (host)?
+The word "bastion" was originally coined as a term in network security in 1990 by Marcus J. Ranum. Many centuries before that, the name bastion was used to describe a projecting part of a fortification, designed in such a way to offer maximum defenses from multiple angles. So the word "bastion" has been used as a security or protective term in a long time.
+
+In the technical world, the term _bastion host (or server)_ is founded on this concept too: It is a dedicated single server built and configured in a highly-secured way in order to allow only specific access to internal resources. Clients can connect to the bastion host only via SSH or VPN, and once authenticated, they can then talk to the resources that the bastion host can also talk to. In general, bastion servers can be placed in the public network with the intention of being accessible to the public subnet users or the whole Internet. In AWS, it's mostly deployed in the public subnets and is used to provide access to a private subnet from an external one (e.g. one that is accessible from the Internet). This way it helps minimize the risk of penetration to the resources launched in your private subnet within your Amazon Virtual Private Cloud (VPC). For more details, please refer to https://aws.amazon.com/blogs/security/how-to-record-ssh-sessions-established-through-a-bastion-host/[AWS's security blog].
+
+==== Why do you need a bastion host?
+
+A bastion server is considered to be one of the security best practices, especially when it comes to the cloud and AWS. It is very popular as a solution, because of the benefits it brings in comparison to the risks it helps you mitigate.
+
+To illustrate best why a bastion host is so useful from a security standpoint, let's consider this example:
+
+You have a webapp that processes some personal data. The system architecture consists of a public-facing EC2 instance, or something equivalent (in case you're using containerised solutions), and a database that is located in a private subnet and only allows traffic/access from the public EC2 instance(read https://gruntwork.io/guides/networking/how-to-deploy-production-grade-vpc-aws/#multiple_subnets[our guide on the multiple subnets for a production-grade VPC]). Now you need your developers to be able to log in the database server and run some updates. For them to be able to connect to your database, it needs to be publicly accessible, or your developers need to be somehow on the internal network.
+
+This is where a bastion host comes in extremely handy. It can be placed in your public network, where you've got access restricted for everyone but your office network and specific IP addresses. The bastion host is explicitly whitelisted in your private network and database security groups. This would allow your developers to log in only from your office network to the bastion host, and use it to access resources on the private network.
+
+Another benefit of having a bastion host in this scenario, is that you control who and when gets access to it. For example, the bastion server can be authenticated to only in certain timezones, or be turned off in most times, unless there's a live urgent issue to debug and access to the private network is indeed necessary. Once the incident is resolved, you could simply turn off the bastion host, and all access to it will be ceased. Which means in its turn, access to the private services with sensitive and highly confidential data is no longer accessible by the developers, or anyone else.
+
+In the next sections we'll cover a bit widely some of the concepts and the special settings that make up a bastion server.
+
+=== Server hardening techniques for your production-grade bastion server
+The above example assumed the bastion box is set up in a way, where it allows your developers access immediately and easily, the server itself can be turned on or off, and has access to the private resources. Let's have a look how what would the network setup look like for a bastion server, and what are the production-grade security settings for a bastion box.
+
+=== How do you access the bastion host?
+
+=== Are there alternatives to bastion servers?
+=== What is the difference between SSH, RDP and VPN?
+=== Does the bastion server need securing too?
+  - They provide entry into your private subnet.
+  - The bastion host will need to be exposed to the external world, so it needs a public IP address. This also means that it needs to be placed within the boundaries of the public subnet.
+  - To communicate with the bastion host, users will need SSH or VPN access set up. These are the most common ways a bastion server can be set up.
+
+[[how_bastion_with_ssh]]
+=== How SSH access works with a bastion host?
+
+[[bastion_alternatives]]
+== What alternatives are there to using a bastion host?
+Some of the alternatives to using a bastion host that will also work with resources in private subnets include
+https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/Connect-using-EC2-Instance-Connect.html[EC2 Instance Connect],
+which can allow you to SSH to EC2 Instances via a browser-based SSH client in the Amazon EC2 Console, and
+https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager.html[AWS Systems Manager Sessions], which
+allow you to manage and connect to EC2 Instances via a custom protocol managed by AWS.
+
+[[deployment_walkthrough]]
+== Deployment walkthrough
+
+Let's now walk through how to deploy a production-grade server that will be our bastion host, fully defined and managed as code, using the Gruntwork Infrastructure as Code Library.
+
+//TODO add your code
+
+[[pre_requisites]]
+=== Pre-requisites
+
+This walkthrough has the following pre-requisites:
+
+Gruntwork Infrastructure as Code Library::
+  This guide uses code from the https://gruntwork.io/infrastructure-as-code-library/[Gruntwork Infrastructure as Code Library], as it
+  implements most of the production-grade design for you out of the box. Make sure to read
+  link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library[How to use the Gruntwork Infrastructure as Code Library].
++
+[.exceptional]
+IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork subscriber# to access the Gruntwork Infrastructure as Code Library.
+
+Terraform::
+  This guide uses https://www.terraform.io/[Terraform] to define and manage all the infrastructure as code. If you're
+  not familiar with Terraform, check out https://blog.gruntwork.io/a-comprehensive-guide-to-terraform-b3d32832baca[A
+  Comprehensive Guide to Terraform], https://training.gruntwork.io/p/terraform[A Crash Course on Terraform], and
+  link:/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library[How to Use the Gruntwork Infrastructure as Code Library]
+
+AWS accounts::
+  This guide deploys infrastructure into one or more AWS accounts. Check out the
+  link:/guides/foundations/how-to-configure-production-grade-aws-account-structure[Production Grade AWS Account Structure] guide for instructions.
+  You will also need to be able to authenticate to these accounts on the CLI: check out
+  https://blog.gruntwork.io/a-comprehensive-guide-to-authenticating-to-aws-on-the-command-line-63656a686799[A Comprehensive Guide to Authenticating to AWS on the Command Line]
+  for instructions.
+
+[[deploy_bastion_server]]
+=== Deploy a bastion server
+
+For this part we will be deploying one of our core module https://github.com/gruntwork-io/terraform-aws-server/blob/master/modules/single-server[`single-server module`].
