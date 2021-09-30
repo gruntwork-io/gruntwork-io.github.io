@@ -1,0 +1,18 @@
+{% for grouping in page.features %}
+<h2>{{ grouping.title }}</h2>
+<div style="margin-top: 3em; display: flex; flex-wrap: wrap;">
+  {% for feature in grouping.features %}
+    <div class="col-xs-12 col-sm-6 col-md-4" style="margin-bottom:20px;">
+      <div class="row" style="display: flex; flex-wrap: wrap;">
+        <div class="col-xs-12 col-sm-3 hidden-print" style="margin: 0 0 10px 0;">
+          <img src="{{ feature.icon }}" />
+        </div>
+        <div class="col-xs-12 col-sm-9" style="line-height: 1.4;">
+          <h4 class="h4 text-bold" style="margin: 0 0 10px 0">{{ feature.title }}</h4>
+          <p>{{ feature.description }}</p>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+{% endfor %}

@@ -1,0 +1,42 @@
+<tr>
+  <th style="width: 25%">&nbsp;</th>
+  {% for pricing in page.pricing %}
+  <th style="width: 25%; padding-bottom: 0">
+    <img src="{{ pricing.image }}" style="{{ pricing.image_styles }}" />
+  </th>
+  {% endfor %}
+</tr>
+<tr>
+  <th style="width: 25%">&nbsp;</th>
+  {% for pricing in page.pricing %}
+  <th
+    style="
+      width: 25%;
+      border-top: 1px solid #194c5f;
+      border-left: 1px solid #194c5f;
+      border-right: 1px solid #194c5f;
+      background-color: #252e3a;
+    "
+  >
+    <h3 class="h2 no-anchor margin-bottom-none">{{ pricing.title }}</h3>
+  </th>
+  {% endfor %}
+</tr>
+<tr>
+  <td style="width: 25%">&nbsp;</td>
+  {% for pricing in page.pricing %}
+  <td
+    style="
+      width: 25%;
+      border-left: 1px solid #194c5f;
+      border-right: 1px solid #194c5f;
+      background-color: #252e3a;
+      font-size: 1.7rem;
+      color: #bfbfbf;
+    "
+    class="text-center"
+  >
+    {{ pricing.description }}
+  </td>
+  {% endfor %}
+</tr>

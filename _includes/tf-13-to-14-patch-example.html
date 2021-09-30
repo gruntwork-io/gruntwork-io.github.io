@@ -1,0 +1,18 @@
+<pre><code class="language-yml">
+# This is an example Patch file to update from
+# Terraform 0.13 to 0.14
+code_transformations:
+  # Update Terratest and Go modules to the latest
+  - run_go_mod_tidy
+  # Add .terraform.lock.hcl to .gitignore
+  - add_lock_to_gitignore
+  # Update all Gruntwork modules
+  - update_module_versions
+  # Add required_providers block
+  - replace_provider_versions_with_required_providers
+custom_scripts:
+  # Run Terraform format
+  - terraform_fmt
+  # Run Terraform validate
+  - terraform_validate
+</code></pre>

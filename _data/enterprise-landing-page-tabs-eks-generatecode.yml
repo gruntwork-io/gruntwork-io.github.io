@@ -1,0 +1,115 @@
+- id: cluster-deploy-code
+  title: eks-cluster/main.tf
+  content: |
+    <figure><figcaption>prod/us-west-2/services/eks-cluster/main.tf</figcaption>
+      <pre>
+      <code class="language-hcl">
+      # Example snippet from Terraform code to deploy an EKS cluster
+
+      module "eks_cluster" {
+        source =
+          "github.com/gruntwork-io/service-catalog//eks-cluster"
+        version = "v0.51.0"
+
+        cluster_name = "my-prod-cluster"
+        vpc_id       = dependency.vpc.outputs.vpc_id
+
+        managed_node_group_configurations = {
+          "prod-asg" = {
+            min_size   = 2
+            max_size   = 4
+            tags       = local.default_tags
+          }
+        }
+
+        enable_pod_security_policies     = true
+        enable_network_security_policies = true
+        enable_eks_cluster_hardening     = true
+      }
+
+      module "eks_core_services" {
+        source =
+          "github.com/gruntwork-io/service-catalog//core-services"
+        version = "v0.51.0"
+
+        eks_cluster_arn = module.eks_cluster.eks_cluster_arn
+
+        # Enable services based on form input
+        # All other services default to false, and thus
+        # are not enumerated.
+        enable_istio              = true
+        enable_argocd             = true
+        enable_prometheus         = true
+        enable_elastic            = true
+        enable_cluster_autoscaler = true
+        enable_sealed_secrets     = true
+        enable_external_dns       = true
+        enable_harbor             = true
+        enable_opa = {
+          k8s_admission_controller       = true
+          terraform_admission_controller = true
+        }
+
+        # Additional service configurations based on form input
+        # NOTE: This is configuring the prod cluster,
+        #       so only setup the prod domain.
+        #       For dev, this will be set to gruntwork-dev.com
+        external_dns_route53_hosted_zone_id_filters =
+          ["gruntwork.io"]
+      }
+      </code>
+      </pre>
+      <figure>
+
+- id: vpc-deploy-code
+  title: vpc/main.tf
+  content: |
+    <figure><figcaption>prod/us-west-2/networking/vpc/main.tf</figcaption>
+      <pre>
+      <code class="language-hcl">
+      # Example snippet from Terraform code to deploy a VPC
+      # If you already have a VPC, this step will be skipped
+
+      module "vpc" {
+        source =
+          "github.com/gruntwork-io/terraform-aws-vpc//vpc-app"
+
+        vpc_name         = "prod-vpc"
+        cidr_block       = "10.0.0.0/16"
+        num_nat_gateways = 3
+
+        # EKS requires your VPCs/subnets to be tagged a specific way
+        vpc_tags             = module.tags.vpc_tags
+        public_subnet_tags   = module.tags.public_tags
+        private_subnet_tags  = module.tags.private_tags
+      }
+
+      module "tags" {
+        source =
+          "github.com/gruntwork-io/terraform-aws-eks//eks-vpc-tags"
+
+        eks_cluster_names = var.eks_cluster_names
+      }
+
+      module "vpc_network_acls" {
+        source =
+          "github.com/gruntwork-io/terraform-aws-vpc//network-acls"
+
+        vpc_id             = module.vpc.vpc_id
+        public_subnet_ids  = module.vpc.public_subnet_ids
+        private_subnet_ids = module.vpc.private_subnet_ids
+      }
+
+      module "vpc_flow_logs" {
+        source
+          = "github.com/gruntwork-io/terraform-aws-vpc/flow-logs"
+
+        vpc_id         = module.vpc.vpc_id
+        log_group_name = "${module.vpc.vpc_name}-flow-logs"
+        kms_key_users  = var.kms_key_user_iam_arns
+        kms_key_arn    = var.kms_key_arn
+        traffic_type   = var.flow_logs_traffic_type
+      }
+      </code>
+      </pre>
+      <figure>

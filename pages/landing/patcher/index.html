@@ -1,0 +1,166 @@
+---
+layout: landing-patcher
+type: landing-patcher
+slug: index-page
+custom_js: prism
+prism_css: /assets/css/prism-landing-zone.css
+
+extra_nav_links:
+  - name: Use Cases
+    url: /patcher/use-cases/
+
+title: "Patcher | Gruntwork"
+title_text: Keep your code up to date, even with breaking changes.
+excerpt: Patcher automatically creates pull requests to keep your dependencies up to date, updating not only the version numbers, but also patching your code to handle backwards incompatible changes.
+permalink: /patcher/
+
+hero:
+  image: /assets/img/landing-page-patcher/patcher.png
+  cta: Request early access
+  logos:
+    - logo: /assets/img/logos-patcher/python.png
+      name: Python
+    - logo: /assets/img/logos-patcher/javascript.png
+      name: JavaScript
+    - logo: /assets/img/logos-patcher/ruby.png
+      name: Ruby
+    - logo: /assets/img/logos-patcher/helm.png
+      name: Helm
+    - logo: /assets/img/logos-patcher/terraform.png
+      name: Terraform
+    - logo: /assets/img/logos-patcher/terragrunt.png
+      name: Terragrunt
+    - logo: /assets/img/logos-patcher/docker.png
+      name: Docker
+    - logo: /assets/img/logos-patcher/golang.png
+      name: Go
+    - logo: /assets/img/logos-patcher/rust.png
+      name: Rust
+    - logo: /assets/img/logos-patcher/c-sharp.png
+      name: C#
+    - logo: /assets/img/logos-patcher/java.png
+      name: Java
+    - logo: /assets/img/logos-patcher/php.png
+      name: PHP
+
+how_it_works:
+  - heading: Install the Patcher App
+    image: /assets/img/landing-page-patcher/github-step-1.png
+    image_width: 379px
+    image_side: right
+    body: |
+      Get Patcher up and running with just a few clicks. Start completely for free. You can find the app in GitHub, BitBucket or GitLab.
+
+  - heading: Patcher discovers your dependencies automatically
+    popout: true
+    tab_block: true
+    tab_block_data_source: site.data.patcher-landing-page-tabs-dependencies-list
+    image_side: left
+    body: |
+      Patcher discovers dependencies for popular languages and tools such as JavaScript, Ruby, Java, Python, Go, Terraform, and Docker. You can also add special comments to your code to help Patcher discover dependencies in non-standard locations (e.g., in a Bash script).
+
+  - heading: Maintainers release new versions and patches
+    include_code: tf-13-to-14-patch-example.html
+    include_code_caption: tf-13-to-14.patch
+    image_side: right
+    body: |
+      Release breaking changes with confidence and get your users all up to date using the <em>patch files</em> to handle the backwards incompatibilities. If you're in maintenance mode, release new versions of your libraries as usual.
+
+  - heading: Patcher automatically patches your code and opens a pull request
+    image: /assets/img/logos-patcher/patch-rails-vulnerability.png
+    image_side: left
+    body: |
+      Patcher updates you to the new version and runs the maintainer's patches to update your code in case of backwards incompatible changes. All patches are run in a secure, sandboxed environment, so your code is always kept safe.
+
+  - heading: You review and merge
+    image: /assets/img/landing-page-patcher/pr-checks.png
+    image_side: right
+    body: |
+      You review the pull request, check if your automated tests have passed, and if everything looks good, you can merge, safely and easily keeping all your dependencies up to date.
+supported:
+  - logo: /assets/img/logos-patcher/python.png
+    name: Python
+  - logo: /assets/img/logos-patcher/javascript.png
+    name: JavaScript
+  - logo: /assets/img/logos-patcher/ruby.png
+    name: Ruby
+  - logo: /assets/img/logos-patcher/java.png
+    name: Java
+  - logo: /assets/img/logos-patcher/golang.png
+    name: Go
+  - logo: /assets/img/logos-patcher/c-sharp.png
+    name: C#
+  - logo: /assets/img/logos-patcher/php.png
+    name: PHP
+  - logo: /assets/img/logos-patcher/rust.png
+    name: Rust
+  - logo: /assets/img/logos-patcher/terraform.png
+    name: Terraform
+  - logo: /assets/img/logos-patcher/terragrunt.png
+    name: Terragrunt
+  - logo: /assets/img/logos-patcher/docker.png
+    name: Docker
+  - logo: /assets/img/logos-patcher/helm.png
+    name: Helm
+
+features:
+  - title: Update dependency versions
+    description: Patcher automatically updates you to the latest versions of dependencies
+    icon: '<i class="fa fa-refresh fa-3x" aria-hidden="true"></i>'
+
+  - title: Handle breaking changes
+    description: Patcher can also patch your code to handle backwards incompatible changes
+    icon: '<i class="fa fa-bolt fa-3x" aria-hidden="true"></i>'
+
+  - title: Simple to install
+    description: Patcher is an app for Github, BitBucket and GitLab, so install takes just a few clicks
+    icon: '<i class="fa fa-plus-circle fa-3x" aria-hidden="true"></i>'
+
+  - title: Pull request driven
+    description: All updates are submitted as pull requests, so you can review and run tests before merging
+    icon: '<i class="fa fa-code fa-3x" aria-hidden="true"></i>'
+
+  - title: Stay secure
+    description: Automatically stay up to date with security patches
+    icon: '<i class="fa fa-shield fa-3x" aria-hidden="true"></i>'
+
+  - title: Configurable
+    description: "Specify how often to open pull requests: immediately after new releases, daily, weekly, etc."
+    icon: '<i class="fa fa-sliders fa-3x" aria-hidden="true"></i>'
+
+footer:
+  heading: Make breaking changes a thing of the past
+  body: Stay up to date with new features and security fixes, and even breaking changes, completely automatically.
+  cta: Request early access
+---
+
+<div class="main">
+  <div class="section section-hero">
+    <div class="container">
+      <div class="row">{% include_relative _hero.html %}</div>
+    </div>
+  </div>
+  <div class="section section-blue section-sub-hero">
+    <div class="container">
+      <div class="row">{% include_relative _sub-hero.html %}</div>
+    </div>
+  </div>
+  <div id="how-it-works" class="section section-dark">
+    <div class="container">{% include_relative _how-it-works.html %}</div>
+  </div>
+  <div class="section section-blue">
+    <div class="container">
+      <div class="row row-community">{% include_relative _features.html %}</div>
+    </div>
+  </div>
+  <div id="why-patcher" class="section section-dark">
+    <div class="container">{% include_relative _why-patcher.html %}</div>
+  </div>
+  <div class="section section-blue">
+    <div class="container">
+      <div class="row row-community">
+        {% include_relative _social-proof.html %}
+      </div>
+    </div>
+  </div>
+</div>

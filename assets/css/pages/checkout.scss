@@ -1,0 +1,88 @@
+.checkout-panel-container {
+  margin-top: 7em;
+
+  @media (max-width: $screen-xs-max) {
+    margin-top: inherit;
+  }
+}
+
+.checkout-page-header {
+  text-align: center;
+  background: linear-gradient(to bottom, #1d1e1f, #2e3b4a);
+  padding-bottom: 60px;
+
+  #checkout-page-title {
+    @media (max-width: $screen-xs-max) {
+      font-size: 30px;
+    }
+  }
+}
+
+.checkout-help-notification {
+  width: calc(100% + 30px);
+  margin-left: -15px;
+}
+
+#checkout-money-back {
+  padding: 10px;
+}
+
+.checkout-panel {
+  .checkout-panel-left {
+
+    .panel-body {
+      padding-bottom: 0;
+    }
+
+    .sub-panel {
+      background-color: #1D252F;
+      line-height: 1.4;
+
+      .addon-amount {
+        font-size: 25px;
+        margin-top: 15px;
+        font-weight: bold;
+      }
+      .addon-duration {
+        margin-top: -25px;
+        color: white;
+        font-size: 14px;
+      }
+      .addon-type {
+        font-size: 35px;
+        font-weight: bold;
+        margin-bottom: -13px;
+
+        @media (max-width: $screen-xs-max) {
+          margin-bottom: inherit;
+        }
+      }
+      .addon-button {
+        padding-left: 35px;
+        padding-right: 35px;
+        margin-bottom: 20px;
+      }
+      .addon-remove-button {
+        background: linear-gradient(135deg, #ff2b67, #ff5442);
+      }
+
+      hr {
+        border: 2px solid #194c5f;
+      }
+    }
+
+    .professional-support {
+      margin-top: -5px;
+      margin-bottom: 18px;
+    }
+  }
+}
+
+#checkout-btn-container-beta {
+  @media (max-width: $screen-xs-max) {
+    margin: 0;
+  }
+  @media (min-width: $screen-sm-min) {
+    margin: 1em 0;
+  }
+}
