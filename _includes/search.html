@@ -25,7 +25,7 @@
                     <div class="card card-body">
                         <p>Tags</p>
                         <div class="tags">
-                          {% assign tags_to_capitalize = "aws,eks,cicd" | split: "," %}
+                          {% assign tags_to_capitalize = "aws,eks,ci/cd" | split: "," %}
                           {% assign tags = "" | split: "" %}
                           {% for post in include.posts %}
                             {% assign tags = tags | concat: post.tags %}

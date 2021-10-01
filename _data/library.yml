@@ -1,6 +1,4 @@
 - name: "AWS VPC"
-  clouds:
-    - AWS
   icons:
     - title: Terraform
       image: icon-terraform.png
@@ -34,8 +32,6 @@
       description: Create VPC flow logs to observe IP traffic in your VPCs.
 
 - name: "Monitoring and Alerting"
-  clouds:
-    - AWS
   icons:
     - title: Terraform
       image: icon-terraform.png
@@ -60,8 +56,6 @@
       description: Modules that add custom metrics to CloudWatch, including critical metrics not visible to the EC2 hypervisor, such as memory usage and disk space usage.
 
 - name: "EC2 Container Service (ECS)"
-  clouds:
-    - AWS
   icons:
     - title: Terraform
       image: icon-terraform.png
@@ -91,8 +85,6 @@
       description: Deploy a Docker container as a short-running ECS Task, wait for it to exit, and exit with the same exit code as the ECS Task.
 
 - name: "EC2 Kubernetes Service (EKS)"
-  clouds:
-    - AWS
   icons:
     - title: Terraform
       image: icon-terraform.png
@@ -145,8 +137,6 @@
       description: Package your application service as a docker container and deploy to Kubernetes as a Deployment. Supports replication, rolling deployment, logging, configuration values, and secrets management.
 
 - name: "Auto Scaling Group"
-  clouds:
-    - AWS
   icons:
     - title: Terraform
       image: icon-terraform.png
@@ -167,8 +157,6 @@
       description: Run a fixed-size cluster of servers, backed by ASGs, that can automatically attach EBS Volumes and ENIs, while still supporting zero-downtime deployment.
 
 - name: "AWS Load Balancer"
-  clouds:
-    - AWS
   icons:
     - title: Terraform
       image: icon-terraform.png
@@ -190,8 +178,6 @@
       description: Create a free, auto-renewing TLS certificate using AWS Certificate Manager (ACM) and automatically validate it.
 
 - name: "Lambda"
-  clouds:
-    - AWS
   icons:
     - title: Terraform
       image: icon-terraform.png
@@ -217,8 +203,6 @@
       description: This module makes it easy to deploy and manage an AWS Lambda@Edge function. Lambda@Edge gives you a way to run code on-demand in AWS Edge locations without having to manage servers.
 
 - name: "API Gateway"
-  clouds:
-    - AWS
   icons:
     - title: Terraform
       image: icon-terraform.png
@@ -372,8 +356,6 @@
       description: Deploy a Jenkins server with an ASG, EBS Volume, ALB, and Route 53 settings.
 
 - name: "Relational Database"
-  clouds:
-    - AWS
   icons:
     - title: Terraform
       image: icon-terraform.png
@@ -409,8 +391,6 @@
       description: An AWS Lambda function that runs on a scheduled basis to clean up old RDS database snapshots. Useful to ensure you aren't spending lots of money storing old snapshots you no longer need.
 
 - name: "Distributed Cache"
-  clouds:
-    - AWS
   icons:
     - title: Terraform
       image: icon-terraform.png
@@ -429,8 +409,6 @@
       description: Deploy a Memcached cluster on top of ElastiCache.
 
 - name: "Stateful Server"
-  clouds:
-    - AWS
   icons:
     - title: Terraform
       image: icon-terraform.png
@@ -458,8 +436,6 @@
       description: Attach a DNS A record in Route 53 to a server during boot. This is useful when you want a pool of domain names that remain static even as the underlying servers are replaced.
 
 - name: "AWS Static Assets"
-  clouds:
-    - AWS
   icons:
     - title: Terraform
       image: icon-terraform.png
@@ -478,8 +454,6 @@
       description: Deploy a CloudFront distribution as a CDN in front of an S3 bucket. Includes support for custom caching rules, custom domain names, and SSL.
 
 - name: "MongoDB Cluster"
-  clouds:
-    - AWS
   icons:
     - title: Terraform
       image: icon-terraform.png
@@ -509,8 +483,6 @@
       description: Configure a MongoDB replica set.
 
 - name: "Kafka"
-  clouds:
-    - AWS
   icons:
     - title: Terraform
       image: icon-terraform.png
@@ -547,8 +519,6 @@
       description: Configure and run Schema Registry.
 
 - name: "ZooKeeper"
-  clouds:
-    - AWS
   icons:
     - title: Terraform
       image: icon-terraform.png
@@ -583,8 +553,6 @@
       description: Deploy a ZooKeeper cluster using the server-group module from the AMI Cluster Infrastructure Package. Includes support for EBS Volumes for the transaction log as well as a set of ENIs to provide static IP addresses to ZooKeeper clients.
 
 - name: "ELK"
-  clouds:
-    - AWS
   icons:
     - title: Terraform
       image: icon-terraform.png
@@ -619,8 +587,6 @@
       description: Runs CollectD on an application server and ships off machine metrics to th Logstash cluster.
 
 - name: "OpenVPN Server"
-  clouds:
-    - AWS
   icons:
     - title: Terraform
       image: icon-terraform.png
@@ -650,8 +616,6 @@
       description: Deploy an OpenVPN server and configure its IAM role, security group, Elastic IP Address (EIP), S3 bucket for storage, and SQS queues.
 
 - name: "Messaging"
-  clouds:
-    - AWS
   icons:
     - title: Terraform
       image: icon-terraform.png
@@ -690,9 +654,7 @@
       image: icon-terraform.png
     - title: Bash
       image: icon-bash.png
-  aws_url: "https://github.com/hashicorp/terraform-aws-consul"
-  gcp_url: "https://github.com/hashicorp/terraform-google-consul"
-  azure_url: "https://github.com/hashicorp/terraform-azurerm-consul"
+  public_url: "https://github.com/hashicorp/terraform-aws-consul"
   type: Open Source
   description: |
     Deploy a best-practices HashiCorp Consul cluster. Includes support for automatic bootstrapping, configuring dnsmasq
@@ -714,9 +676,7 @@
       image: icon-terraform.png
     - title: Bash
       image: icon-bash.png
-  aws_url: "https://github.com/hashicorp/terraform-aws-nomad"
-  gcp_url: "https://github.com/hashicorp/terraform-google-nomad"
-  azure_url: "https://github.com/hashicorp/terraform-azurerm-nomad"
+  public_url: "https://github.com/hashicorp/terraform-aws-nomad"
   type: Open Source
   description: |
     Deploy a best-practices HashiCorp Nomad cluster. Includes support for automatic bootstrapping, automatic discovery
@@ -735,9 +695,7 @@
       image: icon-terraform.png
     - title: Bash
       image: icon-bash.png
-  aws_url: "https://github.com/hashicorp/terraform-aws-vault"
-  gcp_url: "https://github.com/hashicorp/terraform-google-vault"
-  azure_url: "https://github.com/hashicorp/terraform-azurerm-vault"
+  public_url: "https://github.com/hashicorp/terraform-aws-vault"
   type: Open Source
   description: |
     Deploy a best-practices HashiCorp Vault cluster for secrets management. Includes support for automatic
@@ -756,14 +714,12 @@
       description: Generate self-signed TLS certificates for use with Vault.
 
 - name: "Couchbase"
-  clouds:
-    - AWS
   icons:
     - title: Terraform
       image: icon-terraform.png
     - title: Bash
       image: icon-bash.png
-  aws_url: "https://github.com/gruntwork-io/terraform-aws-couchbase"
+  public_url: "https://github.com/gruntwork-io/terraform-aws-couchbase"
   type: Open Source
   description: |
     Deploy a best-practices Couchbase cluster. Includes support for automatic bootstrapping, running Sync Gateway,
@@ -786,14 +742,12 @@
       description: Deploy a Couchbase cluster on AWS using an Auto Scaling Group.
 
 - name: "Influx AWS"
-  clouds:
-    - AWS
   icons:
     - title: Terraform
       image: icon-terraform.png
     - title: Bash
       image: icon-bash.png
-  aws_url: "https://github.com/gruntwork-io/terraform-aws-influx"
+  public_url: "https://github.com/gruntwork-io/terraform-aws-influx"
   type: Open Source
   description: |
     Deploy a best-practices TICK stack (Telegraf, InfluxDB, Chronograf, Kapacitor). Includes support for automatic
@@ -847,8 +801,6 @@
     code, Packer templates, Docker images, working with AWS, executing commands over SSH, and much more.
 
 - name: "gruntkms"
-  clouds:
-    - AWS
   icons:
     - title: Go
       image: icon-go.png
@@ -860,8 +812,6 @@
     Management Service (KMS).
 
 - name: "ssh-grunt"
-  clouds:
-    - AWS
   icons:
     - title: Terraform
       image: icon-terraform.png
@@ -875,8 +825,6 @@
     ADFS, Google, Okta, etc). Developers can use their personal SSH keys to log in.
 
 - name: "aws-auth"
-  clouds:
-    - AWS
   icons:
     - title: Bash
       image: icon-bash.png
@@ -898,8 +846,6 @@
     and more.
 
 - name: "cloud-nuke"
-  clouds:
-    - AWS
   icons:
     - title: Go
       image: icon-go.png
@@ -937,8 +883,6 @@
     A collection of pre-commit hooks for Terraform, bash, Go, and more.
 
 - name: "gruntwork"
-  clouds:
-    - AWS
   icons:
     - title: Go
       image: icon-go.png
