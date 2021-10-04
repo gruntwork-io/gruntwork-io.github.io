@@ -10,19 +10,11 @@
     p.description {
       font-size: 1.7rem;
       @extend .margin-bottom-none;
-
-      // Add the position property so that #gcp-new has an element to be positioned relative to. This property has no
-      // effect on this element itself.
-      position: relative;
-
-      #aws-plan {
-        margin-top:48px;
-      }
     }
   }
 
-  // AWS Logo above pricing plan
-  .gw-sprite-aws {
+  // Logo above standard pricing plan
+  .gw-sprite-standard {
     background-image: url(/assets/img/aws-logo@2x.png);
     background-size: 108px 100px;
     background-position: 36px 0;
@@ -43,18 +35,12 @@
     }
   }
 
-  // Houston
-  .houston-features {
-    min-height: 316px;
-  }
-
-  .pricing-help-notification {
-    width: 103%;
-    margin-left: -.8em;
-  }
-
   .refarch-contact-ctas {
     margin-top: 20px;
+  }
+
+  .btn.pricing-ctas {
+    min-width: 180px;
   }
 }
 

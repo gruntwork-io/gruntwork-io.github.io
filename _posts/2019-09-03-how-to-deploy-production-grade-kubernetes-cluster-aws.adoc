@@ -217,9 +217,7 @@ When you authenticate, you authenticate as one of two types of accounts:
 User accounts::
   _https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/#user-accounts-vs-service-accounts[User accounts]_
   are used by humans or other services outside of the Kubernetes cluster. For example, an admin at your
-  company may distribute X509 certificates to your team members, or if you're using a Kubernetes service managed by your
-  cloud provider (e.g., EKS in AWS or GKE in GCP), the user accounts may be the IAM user accounts you have in that
-  cloud.
+  company may distribute X509 certificates to your team members, or if you're using a Kubernetes service managed by AWS (i.e, EKS), the user accounts may be the IAM user accounts you have in AWS.
 
 Service accounts::
   _https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/[Service accounts]_ are managed and
@@ -413,8 +411,7 @@ your Kubernetes namespace.
 //    app: example
 //----
 //+
-//Under the hood, this is implemented using different add-ons in different types of Kubernetes clusters: e.g., GKE uses a
-//https://cloud.google.com/load-balancing/docs/network/[GCP Network Load Balancer], whereas EKS can use either a
+//Under the hood, this is implemented using different add-ons in different types of Kubernetes clusters: EKS can use either a
 //https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/introduction.html[Classic Load Balancer] or
 //https://docs.aws.amazon.com/elasticloadbalancing/latest/network/introduction.html[Network Load Balancer] (see
 //https://docs.aws.amazon.com/eks/latest/userguide/load-balancing.html[EKS Load Balancing] for details). The advantage
@@ -444,8 +441,7 @@ your Kubernetes namespace.
 //----
 //+
 //Under the hood, ingress controllers are also implemented using different add-ons in different types of Kubernetes
-//clusters: for example, in GCP, the ingress controller in GKE uses the
-//https://cloud.google.com/load-balancing/docs/https/[Cloud Load Balancer], whereas in AWS, you can use
+//clusters: in AWS, you can use
 //https://github.com/kubernetes-sigs/aws-alb-ingress-controller[aws-alb-ingress-controller] to spin up an
 //https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html[Application Load Balancer (ALB)].
 //The advantage of an ingress controller is that you can share one load balancer across many services and take advantage
