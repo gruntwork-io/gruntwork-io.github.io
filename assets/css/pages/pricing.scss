@@ -3,6 +3,7 @@
   .page-pricing-header {
     text-align: center;
     background: linear-gradient(to bottom, #1a232d, #2e3b4a);
+    margin-bottom: -30px;
   }
 
   // The description of under the plan name
@@ -11,16 +12,21 @@
       font-size: 1.7rem;
       @extend .margin-bottom-none;
     }
+    h2 {
+      margin-bottom: 8px;
+      font-size: 42px;
+    }
   }
 
   // Logo above standard pricing plan
   .gw-sprite-standard {
-    background-image: url(/assets/img/aws-logo@2x.png);
-    background-size: 108px 100px;
-    background-position: 36px 0;
+    background-image: url(/assets/img/grunty-pricing.png);
+    background-size: 75%;
+    background-position: bottom center;
     background-repeat: no-repeat;
-    width: 180px;
-    height: 100px;
+    width: 250px;
+    height: 180px;
+    margin: auto;
   }
 
   .enterprise-h1 {

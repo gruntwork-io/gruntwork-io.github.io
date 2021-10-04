@@ -2221,7 +2221,7 @@ $play-button-height: 44px;
 }
 
 .gw-pricing-columns {
-  margin-top: 30px;
+  margin-top: 0;
   &__panel {
     width: 100%;
   }
@@ -2498,7 +2498,7 @@ body.checkout .section-heading .gw-icon {
 .grunty-sprite {
   position: absolute;
   top: -141px;
-  left: 167px;
+  right: 92px;
   width: 216px;
   height: 180px;
   background: url('/assets/img/grunty-sprites@2x.png') no-repeat;
@@ -2513,23 +2513,6 @@ body.checkout .section-heading .gw-icon {
 
   @media (max-width: $screen-xs-max) {
     background: none;
-  }
-}
-
-#subscription-type-img {
-  position: absolute;
-  top: -91px;
-  right: 67px;
-  width: 216px;
-  height: 132px;
-  background-size: auto 100%;
-  z-index: 1;
-
-  // subscription type variations
-  &[data-subscription-type="standard"] { background: url('/assets/img/aws-logo@2x.png') no-repeat; background-size: auto 100%;}
-
-  @media (max-width: $screen-xs-max) {
-    display: none;
   }
 }
 
