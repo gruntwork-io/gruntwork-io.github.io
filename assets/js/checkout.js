@@ -222,7 +222,7 @@ $(function () {
     const refarch = checkoutOptions.setup_deployment;
     const compliance = checkoutOptions.setup_compliance;
 
-    var href = "https://gruntwork-sandbox.recurly.com/subscribe/" + type + "-monthly?";
+    var href = "https://gruntwork.recurly.com/subscribe/" + type + "-monthly?";
 
     // We'll want to pass users when we switch from using the Recurly hosted payment
     // page to our own, at which point we can re-enable the users add-on.
