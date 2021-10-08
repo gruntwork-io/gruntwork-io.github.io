@@ -3,8 +3,8 @@ title: How to use the Gruntwork Infrastructure as Code Library
 categories: Foundations
 image: /assets/img/guides/infrastructure-as-code-library/grunty-grid.png
 excerpt: Learn about production-grade infrastructure, Terraform, Terragrunt, Packer, Docker, immutable infrastructure, versioning for infrastructure code, automated tests for infrastructure code, and more.
-tags: ["aws", "gcp", "terraform", "terragrunt"]
-cloud: ["aws", "gcp"]
+tags: ["aws", "terraform", "terragrunt"]
+cloud: ["aws"]
 redirect_from: /static/guides/foundations/how-to-use-gruntwork-infrastructure-as-code-library/
 ---
 :page-type: guide
@@ -27,7 +27,7 @@ endif::[]
 
 This guide will walk you through how to use the
 https://gruntwork.io/infrastructure-as-code-library/[Gruntwork Infrastructure as Code Library] to define and manage a production-grade
-tech stack as code on top of AWS or GCP.
+tech stack as code on top of AWS.
 
 === What is the Gruntwork Infrastructure as Code Library?
 
@@ -36,7 +36,7 @@ tech stack as code on top of AWS or GCP.
 image::/assets/img/guides/infrastructure-as-code-library/gruntwork-infrastructure-as-code-library.png[]
 
 The https://gruntwork.io/infrastructure-as-code-library/[Gruntwork Infrastructure as Code Library] is a collection of over 300,000
-lines of reusable, battle-tested, production-ready infrastructure code for AWS and GCP that lets you:
+lines of reusable, battle-tested, production-ready infrastructure code for AWS that lets you:
 
 Go to prod in days, not months::
   Most teams have the same basic infrastructure needs—e.g., Docker cluster, load balancer, database, cache, CI/CD,
@@ -53,7 +53,7 @@ Customize everything using infrastructure as code::
 Learn best practices::
   The Infrastructure as Code Library includes both thorough documentation and access to the
   https://gruntwork.io/training/[DevOps Training Library], a collection of video training courses that teach a variety
-  of DevOps topics, including infrastructure as code, Terraform, Docker, Packer, AWS, GCP, security, and more.
+  of DevOps topics, including infrastructure as code, Terraform, Docker, Packer, AWS, security, and more.
 
 Keep everything up to date::
   The Gruntwork team is constantly updating the Gruntwork Infrastructure as Code Library with the latest best practices, new features,
@@ -168,7 +168,7 @@ image::/assets/img/guides/infrastructure-as-code-library/elk-tests.png[]
 Each repo in the Gruntwork Infrastructure as Code Library contains a `test` folder that contains automated tests for the examples in
 the `examples` folder. These are mostly integration tests, which use
 https://github.com/gruntwork-io/terratest/[Terratest] under the hood to deploy the examples into real environments
-(e.g., real AWS and GCP accounts), validate that everything works, and then tear everything down.
+(e.g., real AWS accounts), validate that everything works, and then tear everything down.
 
 For example, after every commit to the ELK repo, we spin up a dozen ELK clusters, perform a variety of validation steps
 (e.g., read data, write data, access Kibana, etc.) and then tear it all down again. This is how we build confidence
@@ -216,7 +216,7 @@ What's included::
   monitoring, alerting, log aggregation, CI/CD, user management, secrets management, SSH management, VPN management, and
   much more. For a detailed walkthrough, see
   https://blog.gruntwork.io/how-to-build-an-end-to-end-production-grade-architecture-on-aws-part-1-eae8eeb41fec[How to Build an End to End Production-Grade Architecture on AWS].
-  We wire all these pieces together according to your needs, deploy everything into your AWS or GCP accounts, and give
+  We wire all these pieces together according to your needs, deploy everything into your AWS accounts, and give
   you 100% of the code—all in about one day.
 
 Opinionated code::
@@ -497,8 +497,7 @@ ELK code includes scripts you run during boot on Elasticsearch servers to bootst
 includes an `ssh-grunt` binary you can run on each server to manage SSH access to that server using IAM groups (i.e.,
 IAM users in specific IAM groups will be able to SSH to specific servers using their own usernames and SSH keys).
 
-To get these scripts and binaries onto your virtual servers (e.g., onto EC2 instances in AWS or compute instances in
-GCP), we recommend using Packer to build VM images that have these scripts and binaries installed. You'll see an
+To get these scripts and binaries onto your virtual servers (e.g., onto EC2 instances in AWS), we recommend using Packer to build VM images that have these scripts and binaries installed. You'll see an
 example of how to do this in <<how_to_use_the_catalog>>. Note that Gruntwork Infrastructure as Code Library does NOT require that
 you use Packer (e.g., you could also use Ansible or Chef to install the scripts and binaries), but the Gruntwork
 Reference Architecture does use Packer as one of its opinionated tools.
@@ -596,12 +595,12 @@ production-grade infrastructure.
 
 === Learning resources
 
-The first step is to learn! You'll need to learn about your chosen cloud (e.g., AWS or GCP), infrastructure (e.g., VPCs,
+The first step is to learn! You'll need to learn about the AWS cloud, infrastructure (e.g., VPCs,
 Kubernetes, Kafka, ELK), tools (e.g., Terraform, Docker, Packer), and DevOps practices (e.g., CI, CD). Here are some
 useful resources:
 
 . https://gruntwork.io/training/[Gruntwork DevOps Training Library]: a collection of video training courses that teach
-  a variety of DevOps topics, such as infrastructure as code, Terraform, Docker, Packer, AWS, GCP, security, and more.
+  a variety of DevOps topics, such as infrastructure as code, Terraform, Docker, Packer, AWS, security, and more.
 . https://gruntwork.io/guides/[Gruntwork Production Deployment Guides]: a collection of guides that do step-by-step
   walkthroughs of how to go to production. You're reading one now!
 . https://gruntwork.io/devops-resources/[Gruntwork DevOps Resources]: a collection of blog posts, talks, books, and
@@ -1235,7 +1234,7 @@ infrastructure-live
 Where:
 
 <account>::
-  A the top level, you have accounts (e.g., an AWS account) or projects (e.g., GCP project).
+  A the top level, you have accounts (e.g., an AWS account).
 
 <region>::
   Within each account, there will be one or more regions (e.g., in AWS, `us-east-1`, `eu-west-1`, etc). There may also
@@ -2035,8 +2034,7 @@ Just as with <<automated_tests_terraform>>, you can use https://github.com/grunt
 automated tests for your Packer template. These are typically integration tests that:
 
 . Build an artifact using Packer.
-. Deploy the artifact on top of real infrastructure (e.g., deploy the artifact onto real EC2 instances in AWS or
-  compute instances in GCP). Often, this is done by using Terraform code, passing in the artifact ID as an input
+. Deploy the artifact on top of real infrastructure (e.g., deploy the artifact onto real EC2 instances in AWS). Often, this is done by using Terraform code, passing in the artifact ID as an input
   variable.
 . Validate infrastructure works as expected.
 . Undeploy the infrastructure.
@@ -2049,7 +2047,7 @@ section for instructions on how to write and run tests written with Terratest.
 
 ===== Using Docker for faster testing
 
-Building machine images in the cloud (i.e., in AWS and GCP) can take a while, as you have to fire up a virtual server,
+Building machine images in the cloud (i.e., in AWS) can take a while, as you have to fire up a virtual server,
 run your provisioners, snapshot the server, shut it down, etc. This can add a few minutes of overhead to each
 Packer build. One way to speed it up for local testing is to add a Docker builder to your Packer template that uses
 the same base OS image. This will allow you to run the build completely locally _and_ run the resulting image
@@ -2247,7 +2245,6 @@ To be able to use your Docker images beyond a single computer, you can publish t
 popular options are:
 
 * https://aws.amazon.com/ecr/[Amazon ECR]: Recommended for AWS users.
-* https://cloud.google.com/container-registry/[Container Registry]: Recommended for GCP users.
 * https://hub.docker.com[Docker Hub]: Recommended for open source.
 
 The general workflow is:
@@ -2265,8 +2262,7 @@ highlight just the following ones:
 
 Kubernetes::
   To deploy your Docker image to Kubernetes, you'll first need to set up a Kubernetes cluster. For AWS, we recommend
-  using https://github.com/gruntwork-io/terraform-aws-eks[terraform-aws-eks] to deploy an EKS cluster; for GCP, we
-  recommend using https://github.com/gruntwork-io/terraform-google-gke[terraform-google-gke] to deploy a GKE cluster.
+  using https://github.com/gruntwork-io/terraform-aws-eks[terraform-aws-eks] to deploy an EKS cluster.
 +
 [.exceptional]
 IMPORTANT: You must be a [js-subscribe-cta]#Gruntwork subscriber# to access `terraform-aws-eks`.
@@ -2599,7 +2595,7 @@ Go binaries::
 
 Linux server scripts::
   There are a number of scripts in the Gruntwork Infrastructure as Code Library that are meant to be installed and executed on Linux
-  servers in AWS and GCP. These include `install-xxx` and `run-xxx` scripts (e.g., `install-vault`, `run-vault`,
+  servers in AWS. These include `install-xxx` and `run-xxx` scripts (e.g., `install-vault`, `run-vault`,
   `install-kafka`, `run-kafka`, `install-elasticsearch`, `run-elasticsearch`, etc.), CI / CD scripts (e.g.,
   `aws-helpers`, `build-helpers`, `circleci-helpers`, `git-helpers`, `terraform-helpers`), and server scripts (e.g.,
   `attach-eni`, `mount-ebs-volume`, `add-dns-a-record`). See <<using_scripts_binaries>> for how these scripts are meant

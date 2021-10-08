@@ -26,13 +26,6 @@ replace: " ", "_" | replace: ")", "_" | replace: "(", "_" }}{% endcapture %}
               </td>
             </tr>
             <tr>
-              <th>Supported clouds</th>
-              <td>
-                {% for cloud in package.clouds %} {% include_relative
-                _cloud-label.html cloud=cloud %} {% endfor %}
-              </td>
-            </tr>
-            <tr>
               <th>Type</th>
               <td>
                 {% include_relative _package-label.html type=package.type %}
@@ -81,21 +74,6 @@ replace: " ", "_" | replace: ")", "_" | replace: "(", "_" }}{% endcapture %}
                 <div>
                   <a href="{{ package.aws_url }}" target="_blank" rel="noopener"
                     >AWS Version</a
-                  >
-                </div>
-                {% endif %} {% if package.gcp_url %}
-                <div>
-                  <a href="{{ package.gcp_url }}" target="_blank" rel="noopener"
-                    >GCP Version</a
-                  >
-                </div>
-                {% endif %} {% if package.azure_url %}
-                <div>
-                  <a
-                    href="{{ package.azure_url }}"
-                    target="_blank"
-                    rel="noopener"
-                    >Azure Version</a
                   >
                 </div>
                 {% endif %} {% if package.public_url %}

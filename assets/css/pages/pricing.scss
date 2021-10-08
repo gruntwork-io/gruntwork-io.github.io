@@ -3,59 +3,37 @@
   .page-pricing-header {
     text-align: center;
     background: linear-gradient(to bottom, #1a232d, #2e3b4a);
+    margin-bottom: -30px;
   }
 
-  // The description of under "Gruntwork for AWS" or "Gruntwork for GCP"
+  // The description of under the plan name
   .plans-heading {
     p.description {
       font-size: 1.7rem;
       @extend .margin-bottom-none;
-
-      // Add the position property so that #gcp-new has an element to be positioned relative to. This property has no
-      // effect on this element itself.
-      position: relative;
-
-      #aws-plan {
-        margin-top:48px;
-      }
+    }
+    h2 {
+      margin-bottom: 8px;
+      font-size: 42px;
     }
   }
 
-  // Center the "New" badge just above the text and below the GCP logo
-  #gcp-new {
-    position: absolute;
-    left: 50%;
-    bottom: -29px;
-    transform: translateX(-50%);
-  }
-
-  // Center the "Special Pricing" badge just above the GCP price
-  #gcp-special-pricing {
-    font-size: 1.3rem;
-    margin-top: -13px;
-  }
-
-  // GCP and AWS Logos above pricing plans
-  .gw-sprite-gcp {
-    background-image: url(/assets/img/gcp-logo@2x.png);
-    background-size: 120px 100px;
-    background-position: 30px -5px;
+  // Logo above standard pricing plan
+  .gw-sprite-standard {
+    background-image: url(/assets/img/grunty-pricing.png);
+    background-size: 75%;
+    background-position: bottom center;
     background-repeat: no-repeat;
-    width: 180px;
-    height: 100px;
-  }
-
-  .gw-sprite-aws {
-    background-image: url(/assets/img/aws-logo@2x.png);
-    background-size: 108px 100px;
-    background-position: 36px 0;
-    background-repeat: no-repeat;
-    width: 180px;
-    height: 100px;
+    width: 250px;
+    height: 180px;
+    margin: auto;
+    z-index: 2;
+    position: relative;
   }
 
   .enterprise-h1 {
-    margin-top: 12px;
+    margin-top: 32px;
+    font-weight: bold;
   }
 
   // Pro Support
@@ -65,18 +43,12 @@
     }
   }
 
-  // Houston
-  .houston-features {
-    min-height: 316px;
-  }
-
-  .pricing-help-notification {
-    width: 103%;
-    margin-left: -.8em;
-  }
-
   .refarch-contact-ctas {
     margin-top: 20px;
+  }
+
+  .btn.pricing-ctas {
+    min-width: 180px;
   }
 }
 
@@ -101,6 +73,7 @@
   justify-content: center;
   list-style: none;
   counter-reset: item;
+  padding: 0;
 
   li::before {
     content: counter(item) " ";

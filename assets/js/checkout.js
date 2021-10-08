@@ -9,43 +9,26 @@ $(function () {
 
   // The checkout state
   var checkoutOptions = {
-    subscription_type: 'aws',
+    subscription_type: 'standard',
     pro_support: false,
     setup_deployment: false,
     setup_compliance: false,
     users: 20
   };
 
-  // Set the UI defaults for AWS selection
-  function _setAwsUIDefaults() {
-    $('#subscription-type-img').attr('data-subscription-type', 'aws');
+  // Set the UI defaults for Standard selection
+  function _setStandardUIDefaults() {
+    $('#subscription-type-img').attr('data-subscription-type', 'standard');
     $('#refarch-button-default').show();
     $('#cis-button-default').show();
   }
 
-  // Set the UI defaults for GCP selection
-  function _setGcpUIDefaults() {
-    $('#subscription-type-img').attr('data-subscription-type', 'gcp');
-
-    // Show Coming Soon text & contact us cta for refarch & cis compliance
-    $('#addon-amount-refarch').text('Coming Soon.');
-    $('#addon-amount-cis').text('Coming Soon.');
-    $('#refarch-button-gcp').show();
-    $('#cis-button-gcp').show();
-  }
-
   // Auto toggles the subscription type based on the URI
   switch ($.query.get('subscription-type')) {
-    case 'aws':
-      _setAwsUIDefaults();
+    case 'standard':
+      _setStandardUIDefaults();
       _updateCheckout({
-        subscription_type: 'aws'
-      });
-      break;
-    case 'gcp':
-      _setGcpUIDefaults();
-      _updateCheckout({
-        subscription_type: 'gcp'
+        subscription_type: 'standard'
       });
       break;
     default: // do nothing
@@ -103,7 +86,7 @@ $(function () {
     tmp["subscription_type"] = $.query.get('subscription-type');
     var actionType = $(this).data("addon-action-type");
 
-    // Process the add action and switch the addon button so user can clear thier selection
+    // Process the add action and switch the addon button so user can clear their selection
     function _handleAddAction(button) {
       tmp[button.name] = true;
       $(button).text("Remove");
@@ -199,35 +182,27 @@ $(function () {
     var monthlyTotal, dueNowTotal;
 
     switch (checkoutOptions.subscription_type) {
-      case 'aws':
-        monthlyTotal = pricing.subscriptions.aws.price.value;
-        break;
-      case 'gcp':
-        monthlyTotal = pricing.subscriptions.gcp.price.value;
+      case 'standard':
+        monthlyTotal = pricing.subscriptions.standard.price.value;
         break;
       default: // do nothing
     }
 
     if (checkoutOptions.pro_support) {
       switch (checkoutOptions.subscription_type) {
-        case 'aws':
-          monthlyTotal += pricing.subscriptions.aws.pro_support_price.value;
-          break;
-        case 'gcp':
-          monthlyTotal += pricing.subscriptions.gcp.pro_support_price.value;
+        case 'standard':
+          monthlyTotal += pricing.subscriptions.standard.pro_support_price.value;
           break;
         default: // do nothing
       }
     }
 
-    // CIS Compliance is only on AWS for now
     if (checkoutOptions.setup_compliance) {
-      monthlyTotal += pricing.subscriptions.aws.cis_compliance_price.value;
+      monthlyTotal += pricing.subscriptions.standard.cis_compliance_price.value;
     }
 
     dueNowTotal = monthlyTotal;
 
-    // Only AWS supports the Ref Arch
     if (checkoutOptions.setup_deployment) {
       dueNowTotal += 4950;
       $('#due-monthly-block').show();

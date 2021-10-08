@@ -1,6 +1,4 @@
 - name: "AWS VPC"
-  clouds:
-    - AWS
   icons:
     - title: Terraform
       image: icon-terraform.png
@@ -34,8 +32,6 @@
       description: Create VPC flow logs to observe IP traffic in your VPCs.
 
 - name: "Monitoring and Alerting"
-  clouds:
-    - AWS
   icons:
     - title: Terraform
       image: icon-terraform.png
@@ -60,8 +56,6 @@
       description: Modules that add custom metrics to CloudWatch, including critical metrics not visible to the EC2 hypervisor, such as memory usage and disk space usage.
 
 - name: "EC2 Container Service (ECS)"
-  clouds:
-    - AWS
   icons:
     - title: Terraform
       image: icon-terraform.png
@@ -91,8 +85,6 @@
       description: Deploy a Docker container as a short-running ECS Task, wait for it to exit, and exit with the same exit code as the ECS Task.
 
 - name: "EC2 Kubernetes Service (EKS)"
-  clouds:
-    - AWS
   icons:
     - title: Terraform
       image: icon-terraform.png
@@ -130,10 +122,6 @@
       description: Deploys Helm chart that installs the external-dns application into your cluster to map Ingress hostnames to Route 53 Domain records.
 
 - name: "Kubernetes Services"
-  clouds:
-    - AWS
-    - GCP
-    - Azure
   icons:
     - title: Go
       image: icon-go.png
@@ -149,8 +137,6 @@
       description: Package your application service as a docker container and deploy to Kubernetes as a Deployment. Supports replication, rolling deployment, logging, configuration values, and secrets management.
 
 - name: "Auto Scaling Group"
-  clouds:
-    - AWS
   icons:
     - title: Terraform
       image: icon-terraform.png
@@ -171,8 +157,6 @@
       description: Run a fixed-size cluster of servers, backed by ASGs, that can automatically attach EBS Volumes and ENIs, while still supporting zero-downtime deployment.
 
 - name: "AWS Load Balancer"
-  clouds:
-    - AWS
   icons:
     - title: Terraform
       image: icon-terraform.png
@@ -194,8 +178,6 @@
       description: Create a free, auto-renewing TLS certificate using AWS Certificate Manager (ACM) and automatically validate it.
 
 - name: "Lambda"
-  clouds:
-    - AWS
   icons:
     - title: Terraform
       image: icon-terraform.png
@@ -221,8 +203,6 @@
       description: This module makes it easy to deploy and manage an AWS Lambda@Edge function. Lambda@Edge gives you a way to run code on-demand in AWS Edge locations without having to manage servers.
 
 - name: "API Gateway"
-  clouds:
-    - AWS
   icons:
     - title: Terraform
       image: icon-terraform.png
@@ -243,10 +223,6 @@
       description: set the global (regional) settings required to allow API Gateway to write to CloudWatch logs.
 
 - name: "Security"
-  clouds:
-    - AWS
-    - GCP
-    - Azure
   icons:
     - title: Terraform
       image: icon-terraform.png
@@ -341,10 +317,6 @@
       description: Install ip-lockdown on your servers to automatically lock down access to specific IPs, such as locking down the EC2 metadata endpoint so only the root user can access it.
 
 - name: "Continuous Delivery"
-  clouds:
-    - AWS
-    - GCP
-    - Azure
   icons:
     - title: Terraform
       image: icon-terraform.png
@@ -384,8 +356,6 @@
       description: Deploy a Jenkins server with an ASG, EBS Volume, ALB, and Route 53 settings.
 
 - name: "Relational Database"
-  clouds:
-    - AWS
   icons:
     - title: Terraform
       image: icon-terraform.png
@@ -421,8 +391,6 @@
       description: An AWS Lambda function that runs on a scheduled basis to clean up old RDS database snapshots. Useful to ensure you aren't spending lots of money storing old snapshots you no longer need.
 
 - name: "Distributed Cache"
-  clouds:
-    - AWS
   icons:
     - title: Terraform
       image: icon-terraform.png
@@ -441,8 +409,6 @@
       description: Deploy a Memcached cluster on top of ElastiCache.
 
 - name: "Stateful Server"
-  clouds:
-    - AWS
   icons:
     - title: Terraform
       image: icon-terraform.png
@@ -470,8 +436,6 @@
       description: Attach a DNS A record in Route 53 to a server during boot. This is useful when you want a pool of domain names that remain static even as the underlying servers are replaced.
 
 - name: "AWS Static Assets"
-  clouds:
-    - AWS
   icons:
     - title: Terraform
       image: icon-terraform.png
@@ -490,8 +454,6 @@
       description: Deploy a CloudFront distribution as a CDN in front of an S3 bucket. Includes support for custom caching rules, custom domain names, and SSL.
 
 - name: "MongoDB Cluster"
-  clouds:
-    - AWS
   icons:
     - title: Terraform
       image: icon-terraform.png
@@ -521,8 +483,6 @@
       description: Configure a MongoDB replica set.
 
 - name: "Kafka"
-  clouds:
-    - AWS
   icons:
     - title: Terraform
       image: icon-terraform.png
@@ -559,8 +519,6 @@
       description: Configure and run Schema Registry.
 
 - name: "ZooKeeper"
-  clouds:
-    - AWS
   icons:
     - title: Terraform
       image: icon-terraform.png
@@ -595,8 +553,6 @@
       description: Deploy a ZooKeeper cluster using the server-group module from the AMI Cluster Infrastructure Package. Includes support for EBS Volumes for the transaction log as well as a set of ENIs to provide static IP addresses to ZooKeeper clients.
 
 - name: "ELK"
-  clouds:
-    - AWS
   icons:
     - title: Terraform
       image: icon-terraform.png
@@ -631,8 +587,6 @@
       description: Runs CollectD on an application server and ships off machine metrics to th Logstash cluster.
 
 - name: "OpenVPN Server"
-  clouds:
-    - AWS
   icons:
     - title: Terraform
       image: icon-terraform.png
@@ -662,8 +616,6 @@
       description: Deploy an OpenVPN server and configure its IAM role, security group, Elastic IP Address (EIP), S3 bucket for storage, and SQS queues.
 
 - name: "Messaging"
-  clouds:
-    - AWS
   icons:
     - title: Terraform
       image: icon-terraform.png
@@ -685,100 +637,7 @@
       blurb: create a Kinesis stream
       description: Create a Kinesis stream and configure its sharding settings.
 
-- name: "Google Kubernetes Engine (GKE)"
-  clouds:
-    - GCP
-  icons:
-    - title: Terraform
-      image: icon-terraform.png
-  public_url: "https://github.com/gruntwork-io/terraform-google-gke"
-  type: Open Source
-  description: |
-    Terraform modules for running a Kubernetes cluster on Google Cloud Platform (GCP) using Google Kubernetes Engine
-    (GKE).
-  submodules:
-    - name: gke-cluster
-      blurb: deploy a GKE cluster
-      description: Deploy a GKE cluster to run a managed Kubernetes Control Plane. Supports autoscaling, StackDriver monitoring, private and public access.
-    - name: gke-service-account
-      blurb: configure a GCP service account
-      description: Configure a GCP Service Account that can be used with a GKE cluster. This can be used to allow applications Pods running on your GKE workers to access other GCP services.
-
-- name: "GCP VPC"
-  clouds:
-    - GCP
-  icons:
-    - title: Terraform
-      image: icon-terraform.png
-  public_url: "https://github.com/gruntwork-io/terraform-google-network"
-  type: Open Source
-  description: |
-    Create a best-practices Virtual Private Cloud (VPC) on GCP. Includes multiple subnet tiers, firewall rules,
-    NAT gateways, and VPC peering.
-  submodules:
-    - name: vpc-network
-      blurb: deploy a VPC
-      description: Launch a secure VPC network on GCP. Supports "access tiers", a pair of subnetwork and network tags. By defining an appropriate subnetwork and tag for an instance, you'll ensure that traffic to and from the instance is properly restricted.
-    - name: network-peering
-      blurb: peer VPCs
-      description: Configure peering connections between your networks, allowing you to limit access between environments and reduce the risk of production workloads being compromised.
-    - name: network-firewall
-      blurb: configure firewall rules for a VPC
-      description: Configures the firewall rules expected by the vpc-network module.
-
-- name: "Google Cloud SQL"
-  clouds:
-    - GCP
-  icons:
-    - title: Terraform
-      image: icon-terraform.png
-  public_url: "https://github.com/gruntwork-io/terraform-google-sql"
-  type: Open Source
-  description: |
-    Run relational databases such as MySQL and PostgreSQL on Google Cloud Platform (GCP) using Cloud SQL.
-  submodules:
-    - name: cloud-sql
-      blurb: deploy MySQL or PostgreSQL
-      description: Deploy a Cloud SQL MySQL or PostgreSQL database. Supports automated backups, private and public access, autoresizing of disks, TLS, HA, and read replicas.
-
-- name: "GCP Static Assets"
-  clouds:
-    - GCP
-  icons:
-    - title: Terraform
-      image: icon-terraform.png
-  public_url: "https://github.com/gruntwork-io/terraform-google-static-assets"
-  type: Open Source
-  description: |
-    Manage static assets (CSS, JS, images) on GCP using Google Cloud Storage and HTTP Load Balancers.
-  submodules:
-    - name: cloud-storage-static-website
-      blurb: deploy a website in a GCS bucket
-      description: Deploy a GCS bucket to host static content as a website. Supports assigning a custom domain to host the content under.
-    - name: http-load-balancer-website
-      blurb: deploy a load balancer for a GCS bucket
-      description: Deploy a GCS bucket to host static content and serve using Google Cloud Load Balancing. Supports configuring SSL/TLS with a custom domain name.
-
-- name: "Google Cloud Load Balancer"
-  clouds:
-    - GCP
-  icons:
-    - title: Terraform
-      image: icon-terraform.png
-  public_url: "https://github.com/gruntwork-io/terraform-google-load-balancer"
-  type: Open Source
-  description: |
-    Perform load balancing on GCP using Google Cloud Load Balancer, with support for HTTP, HTTPs, and global forwarding
-    rules.
-  submodules:
-    - name: http-load-balancer
-      blurb: deploy an HTTP(s) Cloud Load Balancer
-      description: Deploy an HTTP(S) Cloud Load Balancer using global forwarding rules. Supports balancing HTTP and HTTPS traffic across multiple backend instances, across multiple regions.
-
 - name: "kubergrunt"
-  clouds:
-    - AWS
-    - GCP
   icons:
     - title: Go
       image: icon-go.png
@@ -790,18 +649,12 @@
     clusters, managing Helm, and generating and securely storing TLS certificates.
 
 - name: "Consul"
-  clouds:
-    - AWS
-    - GCP
-    - Azure
   icons:
     - title: Terraform
       image: icon-terraform.png
     - title: Bash
       image: icon-bash.png
-  aws_url: "https://github.com/hashicorp/terraform-aws-consul"
-  gcp_url: "https://github.com/hashicorp/terraform-google-consul"
-  azure_url: "https://github.com/hashicorp/terraform-azurerm-consul"
+  public_url: "https://github.com/hashicorp/terraform-aws-consul"
   type: Open Source
   description: |
     Deploy a best-practices HashiCorp Consul cluster. Includes support for automatic bootstrapping, configuring dnsmasq
@@ -816,23 +669,14 @@
     - name: run-consul
       blurb: configure and run Consul
       description: Run Consul and automatically bootstrap the cluster.
-    - name: consul-cluster
-      blurb: deploy a Consul cluster
-      description: Deploy a Consul cluster on GCP using a Managed Instance Group.
 
 - name: "Nomad"
-  clouds:
-    - AWS
-    - GCP
-    - Azure
   icons:
     - title: Terraform
       image: icon-terraform.png
     - title: Bash
       image: icon-bash.png
-  aws_url: "https://github.com/hashicorp/terraform-aws-nomad"
-  gcp_url: "https://github.com/hashicorp/terraform-google-nomad"
-  azure_url: "https://github.com/hashicorp/terraform-azurerm-nomad"
+  public_url: "https://github.com/hashicorp/terraform-aws-nomad"
   type: Open Source
   description: |
     Deploy a best-practices HashiCorp Nomad cluster. Includes support for automatic bootstrapping, automatic discovery
@@ -844,23 +688,14 @@
     - name: run-nomad
       blurb: configure and run Nomad
       description: Run Nomad and automatically connect to a Consul cluster.
-    - name: nomad-cluster
-      blurb: deploy a Nomad cluster
-      description: Deploy a Nomad cluster on GCP using a Managed Instance Group.
 
 - name: "Vault"
-  clouds:
-    - AWS
-    - GCP
-    - Azure
   icons:
     - title: Terraform
       image: icon-terraform.png
     - title: Bash
       image: icon-bash.png
-  aws_url: "https://github.com/hashicorp/terraform-aws-vault"
-  gcp_url: "https://github.com/hashicorp/terraform-google-vault"
-  azure_url: "https://github.com/hashicorp/terraform-azurerm-vault"
+  public_url: "https://github.com/hashicorp/terraform-aws-vault"
   type: Open Source
   description: |
     Deploy a best-practices HashiCorp Vault cluster for secrets management. Includes support for automatic
@@ -877,19 +712,14 @@
     - name: private-tls-cert
       blurb: generate a self-signed TLS cert
       description: Generate self-signed TLS certificates for use with Vault.
-    - name: vault-cluster
-      blurb: deploy a Vault cluster
-      description: Deploy a Vault cluster on GCP using a Managed Instance Group.
 
 - name: "Couchbase"
-  clouds:
-    - AWS
   icons:
     - title: Terraform
       image: icon-terraform.png
     - title: Bash
       image: icon-bash.png
-  aws_url: "https://github.com/gruntwork-io/terraform-aws-couchbase"
+  public_url: "https://github.com/gruntwork-io/terraform-aws-couchbase"
   type: Open Source
   description: |
     Deploy a best-practices Couchbase cluster. Includes support for automatic bootstrapping, running Sync Gateway,
@@ -912,14 +742,12 @@
       description: Deploy a Couchbase cluster on AWS using an Auto Scaling Group.
 
 - name: "Influx AWS"
-  clouds:
-    - AWS
   icons:
     - title: Terraform
       image: icon-terraform.png
     - title: Bash
       image: icon-bash.png
-  aws_url: "https://github.com/gruntwork-io/terraform-aws-influx"
+  public_url: "https://github.com/gruntwork-io/terraform-aws-influx"
   type: Open Source
   description: |
     Deploy a best-practices TICK stack (Telegraf, InfluxDB, Chronograf, Kapacitor). Includes support for automatic
@@ -960,10 +788,6 @@
       description: configure and run Telegraf
 
 - name: "Terratest"
-  clouds:
-    - AWS
-    - GCP
-    - Azure
   icons:
     - title: Terraform
       image: icon-terraform.png
@@ -977,8 +801,6 @@
     code, Packer templates, Docker images, working with AWS, executing commands over SSH, and much more.
 
 - name: "gruntkms"
-  clouds:
-    - AWS
   icons:
     - title: Go
       image: icon-go.png
@@ -990,8 +812,6 @@
     Management Service (KMS).
 
 - name: "ssh-grunt"
-  clouds:
-    - AWS
   icons:
     - title: Terraform
       image: icon-terraform.png
@@ -1005,8 +825,6 @@
     ADFS, Google, Okta, etc). Developers can use their personal SSH keys to log in.
 
 - name: "aws-auth"
-  clouds:
-    - AWS
   icons:
     - title: Bash
       image: icon-bash.png
@@ -1018,10 +836,6 @@
     authentication (MFA), or when you want to assume an IAM Role in another AWS account.
 
 - name: "bash-commons"
-  clouds:
-    - AWS
-    - GCP
-    - Azure
   icons:
     - title: Bash
       image: icon-bash.png
@@ -1032,8 +846,6 @@
     and more.
 
 - name: "cloud-nuke"
-  clouds:
-    - AWS
   icons:
     - title: Go
       image: icon-go.png
@@ -1043,10 +855,6 @@
     A tool for cleaning up your cloud accounts by nuking (deleting) all resources within it.
 
 - name: "gruntwork-installer"
-  clouds:
-    - AWS
-    - GCP
-    - Azure
   icons:
     - title: Bash
       image: icon-bash.png
@@ -1056,10 +864,6 @@
     A simple, lightweight package manager for installing Gruntwork modules.
 
 - name: "fetch"
-  clouds:
-    - AWS
-    - GCP
-    - Azure
   icons:
     - title: Go
       image: icon-go.png
@@ -1070,10 +874,6 @@
     of public and private GitHub repos.
 
 - name: "pre-commit"
-  clouds:
-    - AWS
-    - GCP
-    - Azure
   icons:
     - title: Bash
       image: icon-bash.png
@@ -1083,8 +883,6 @@
     A collection of pre-commit hooks for Terraform, bash, Go, and more.
 
 - name: "gruntwork"
-  clouds:
-    - AWS
   icons:
     - title: Go
       image: icon-go.png
@@ -1096,10 +894,6 @@
     Architecture.
 
 - name: "package-terraform-utilities"
-  clouds:
-    - AWS
-    - GCP
-    - Azure
   icons:
     - title: Terraform
       image: icon-terraform.png
@@ -1126,57 +920,3 @@
     - name: run-pex-as-resource
       blurb: run a Python (pex) script as a data source
       description: Run a python script with dependencies packaged together as a local-exec provisioner on a null resource in a portable way.
-
-- name: "Influx GCP"
-  clouds:
-    - GCP
-  icons:
-    - title: Terraform
-      image: icon-terraform.png
-    - title: Bash
-      image: icon-bash.png
-  gcp_url: "https://github.com/gruntwork-io/terraform-google-influx"
-  type: Open Source
-  description: |
-    Deploy a best-practices TICK stack (Telegraf, InfluxDB, Chronograf, Kapacitor) in Google Cloud Platform. Includes support for automatic
-    bootstrapping, automatic node discovery, and automatic recovery of failed servers.
-  submodules:
-    - name: external-firewall
-      blurb: control external traffic into servers
-      description: control external traffic into servers
-    - name: influxdb-commons
-      blurb: common bash scripts for bootstrapping the servers
-      description: common bash scripts for bootstrapping the servers
-    - name: install-chronograf
-      blurb: install Chronograf on a Linux server
-      description: install Chronograf on a Linux server
-    - name: install-influxdb
-      blurb: install InfluxDB on a Linux server
-      description: install InfluxDB on a Linux server
-    - name: install-kapacitor
-      blurb: install Kapacitor on a Linux server
-      description: install Kapacitor on a Linux server
-    - name: install-telegraf
-      blurb: install Telegraf on a Linux server
-      description: install Telegraf on a Linux server
-    - name: run-chronograf
-      blurb: configure and run Chronograf
-      description: configure and run Chronograf
-    - name: run-influxdb
-      blurb: configure and run InfluxDB
-      description: configure and run InfluxDB
-    - name: run-kapacitor
-      blurb: configure and run Kapacitor
-      description: configure and run Kapacitor
-    - name: run-telegraf
-      blurb: configure and run Telegraf
-      description: configure and run Telegraf
-    - name: service-account-firewall-rules
-      blurb: define firewall rules used to control internal traffic across instances
-      description: define firewall rules used to control internal traffic across instances
-    - name: tick-instance-group
-      blurb: create Managed Instance Groups for InfluxDB, Kapacitor and Chronograf
-      description: create Managed Instance Groups for InfluxDB, Kapacitor and Chronograf
-    - name: tick-service-account
-      blurb: create a GCP service account for use with your TICK cluster
-      description: create a GCP service account for use with your TICK cluster

@@ -436,50 +436,6 @@ body .guides .guides-section-white {
   }
 }
 
-//No azure filter
-.no-azure-results {
-  display: none;
-
-  h2 {
-    color: $guides-font;
-    font-size: 30px;
-    line-height: normal;
-    letter-spacing: 0.84px;
-    margin-bottom: 8px;
-    margin-top: 91px;
-
-    &:hover > a.anchorjs-link {
-      color: #ffffff;
-      text-decoration: none;
-      display: none;
-    }
-  }
-
-  p {
-    font-size: 20px;
-    opacity: 0.7;
-    line-height: 1.5;
-    letter-spacing: 0.56px;
-    color: #000000;
-    margin-bottom: 24px;
-  }
-
-  .btn {
-    border-radius: 23.5px;
-    background-image: linear-gradient(to bottom, #5bcde7, #569cea);
-    color: white;
-
-    &:hover,
-    &:active {
-      outline: none;
-      transform: none;
-      box-shadow: none;
-      border-radius: 23.5px;
-      background-image: linear-gradient(to bottom, #5bcde7, #569cea);
-    }
-  }
-}
-
 //Filter styles
 #tags-filter {
   display: flex;
@@ -512,17 +468,17 @@ body .guides .guides-section-white {
   margin: 16px;
 
   .card {
-    padding: 30px 109px;
+    padding: 30px 30px;
     border-radius: 8px;
     background-color: #f5f9fa;
     min-height: 193px;
-    max-height: 193px;
 
     .tags {
       display: flex;
       flex-wrap: wrap;
+      justify-content: space-between;
       flex-direction: column;
-      max-height: 133px;
+      max-height: 210px;
     }
 
     .checkbox {
