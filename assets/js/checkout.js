@@ -16,7 +16,7 @@ $(function () {
     users: 20
   };
 
-  // Set the UI defaults for Standard selection
+  // Set the UI defaults for Standard AWS selection
   function _setStandardUIDefaults() {
     $('#subscription-type-img').attr('data-subscription-type', 'standard');
     $('#refarch-button-default').show();
@@ -222,7 +222,7 @@ $(function () {
     const refarch = checkoutOptions.setup_deployment;
     const compliance = checkoutOptions.setup_compliance;
 
-    var href = "https://gruntwork.recurly.com/subscribe/" + type + "-monthly?";
+    var href = "https://gruntwork.recurly.com/subscribe/aws-monthly?";
 
     // We'll want to pass users when we switch from using the Recurly hosted payment
     // page to our own, at which point we can re-enable the users add-on.
