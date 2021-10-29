@@ -1,0 +1,33 @@
+<div id="error-message"></div>
+<!-- add new link for the formbucket (GCP) -->
+<form id="contact-form" method="post" target="_blank" action="">
+  <input type="hidden" name="_subject" id="_subject" value="New inquiry from {{ site.url }}" />
+  <input type="hidden" name="_viewing" id="_viewing" value="v1-static" />
+  <input type="hidden" name="_next" id="_next" value="{{ site.url }}/thanks/" />
+  <input type="hidden" name="hello_gruntwork" value="" />
+  <input type="text" name="_gotcha" style="display:none" />
+  {% include_relative _input-text.html id="contact-name" label="Name"
+  required=true placeholder="Jon Doe" %} {% include_relative _input-text.html
+  id="contact-email" label="Email" required=true placeholder="jon@acme.com"
+  type="email" %} {% include_relative _input-text.html id="contact-company"
+  label="Company" required=true placeholder="Acme, Inc." %}
+
+  <div class="form-group">
+    <div class="row">
+      <div class="col-xs-12 col-md-4">
+        <label for="contact-message">How can we help?</label>
+      </div>
+      <div class="col-xs-12 col-md-8">
+        <textarea id="contact-message" name="contact-message" class="form-control" rows="3" required="required"
+          placeholder="Enter a message"></textarea>
+      </div>
+    </div>
+  </div>
+  <div class="text-center">
+    <br />
+    <button type="submit" id="submit-button" class="btn btn-primary" ga-on="click" ga-event-category="contact"
+      ga-event-action="submit">
+      Submit
+    </button>
+  </div>
+</form>
