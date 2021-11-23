@@ -227,15 +227,15 @@ $(function () {
     // We'll want to pass users when we switch from using the Recurly hosted payment
     // page to our own, at which point we can re-enable the users add-on.
 
-    const addOns = { /*"users": 20*/ };
+    const addOns = { "users-monthly": 20 };
     if (support) {
-      addOns["pro-support"] = 1;
+      addOns["pro-support-monthly"] = 1;
     }
     if (refarch) {
       addOns["ref-arch"] = 1;
     }
     if (compliance) {
-      addOns["cis-aws-foundations"] = 1;
+      addOns["cis-aws-foundations-monthly"] = 1;
     }
 
     const params = {
