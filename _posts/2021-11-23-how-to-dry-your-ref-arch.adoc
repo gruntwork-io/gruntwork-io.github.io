@@ -51,24 +51,25 @@ This guide consists of two main sections:
 === Background
 
 Terragrunt https://github.com/gruntwork-io/terragrunt/releases/tag/v0.32.0[v0.32.0] introduced the feature of multiple
-include blocks, which allowed you to have different tiers of common configuration. Before this change, you were only
-limited to a single set of included configuration, which was typically used for project level configuration that
+`include` blocks, which allowed you to have different tiers of common configuration. Before this change, you were
+limited to only a single set of included configuration, which was typically used for project level configuration that
 affected all modules in your project (e.g., the remote state configuration). This was limiting because oftentimes you
 had additional tiers of common configuration, such as at the component level. For example, the configuration for a
 database typically does not differ much between environments, with the only differences being to the storage and
-instance size.
+instance size. Yet each environment ends up having the same configuration copied with only these minor
+differences between them.
 
 This limitation led to a lot of duplication in component configuration across the Reference Architecture. Overtime, the
 difference between environments typically widen, especially at the application level, but for common infrastructure such
-as VPCs and Databases, it was rare for the environment level deviation to be significant. This made it difficult to
-manage the individual components across updates, as you needed to reflect the same changes in every environment, rather
+as VPCs and Databases, the environment level deviation is rarely significant. This makes it difficult to
+manage the individual components across updates, as you need to reflect the same changes in every environment, rather
 than making the change in one place.
 
-Multiple include blocks allow you to extract common configuration across the different environments for a particular
+Multiple `include` blocks allow you to extract common configuration across the different environments for a particular
 component. This common configuration is then imported to be combined with the project level configuration to manage that
 component.
 
-To learn more about the multiple include feature, including a use case walkthrough, refer to
+To learn more about the multiple `include` feature, including a use case walkthrough, refer to
 https://terragrunt.gruntwork.io/docs/features/keep-your-terragrunt-architecture-dry/[the official Terragrunt documentation].
 
 
@@ -78,7 +79,7 @@ https://terragrunt.gruntwork.io/docs/features/keep-your-terragrunt-architecture-
 
 In this guide, we will walk through how you can leverage the multiple includes feature to consolidate common configuration
 files for each component. The steps in this guide are intended to be generic so that they can apply to any component in
-the Refernece Architecture. This allows you to incrementally roll out your changes instead of updating all components at
+the Reference Architecture. This allows you to incrementally roll out your changes instead of updating all components at
 once.
 
 You can checkout the latest
@@ -86,14 +87,15 @@ https://github.com/gruntwork-io/terraform-aws-service-catalog/tree/master/exampl
 example] of the Service Catalog to see what the DRY Reference Architecture looks like, and what we are aiming for. In
 particular, the DRY version breaks down the common configuration into two tiers:
 
-- **Root `terragrunt.hcl`**: Contains configurations that are common to all accounts and environments, such as the
+- **Root `terragrunt.hcl`**: Configurations common to all accounts and environments, such as the
   remote state and provider configuration.
-- **One or more envcommon configuration**: Contains configurations that are common to the component across environments.
+- **One or more envcommon configurations**: Configurations common to the component across environments.
   Typically, this configuration will also contain all the `dependency` definitions. These configurations are all stored
   in the `_envcommon` folder.
 
-Each live configuration for the components will merge these configurations together to get the final setup using
-`include` blocks. For example, the app VPC configuration has the following `include` blocks:
+Each live child configuration for the components merges these configurations together to get the final setup using
+`include` blocks. For example, the child app VPC configuration ends up with the following `include` blocks,
+combining both the `root` and `envcommon` includes:
 
 [source,hcl]
 ----
@@ -173,7 +175,7 @@ you won't be making changes to the underlying behavior of the Terraform code or 
 will be no need for rolling out the changes with `apply`, or performing any state migrations to avoid backward
 incompatibilities.
 
-Given that, the order in which the components are updated do not matter. You can update the components in whatever order
+Given that, the order in which the components are updated does not matter. You can update the components in whatever order
 you would like.
 
 
@@ -223,7 +225,7 @@ using `diff` to identify the differences. For each other Terragrunt configuratio
 reference point to identify differences.
 
 For example, if we were updating the `vpc` component, we can choose `dev/us-west-2/dev/networking/vpc` as the reference
-point and run the `diff` utility against it:
+point and run the `diff` utility between it and the other environments:
 
 ----
 diff dev/us-west-2/dev/networking/vpc stage/us-west-2/stage/networking/vpc
@@ -346,7 +348,7 @@ dependency "vpc" {
 }
 ----
 
-. For each `locals`, check if the local variable is used in the configuration. If you find no references for the given
+. For each variable in `locals`, check if the local variable is used in the configuration. If you find no references for the given
 local, remove it from the block.
 
 At this point, you should have a Terragrunt configuration file in the `_envcommon` folder that only includes the
@@ -366,9 +368,9 @@ rendered. The output of `render-json` is different from the one generated with `
 effective Terragrunt configuration, with all expressions evaluated. We will use this to sanity check the refactored
 version.
 . Remove all the blocks, attributes, and input keys you identified in <<step_2>>.
-. For each remaining `locals`, check if the local variable is used in the configuration. If you find no references for
+. For each remaining variable in `locals`, check if the local variable is used in the configuration. If you find no references for
 the given local, remove it from the block.
-. Add an include block to import the common configuration for the component. To do this, you will want to use the
+. Add an `include` block to import the common configuration for the component. To do this, you will want to use the
 relative path from the root Terragrunt configuration:
 
 +
@@ -414,11 +416,11 @@ moved to the common component configuration.
 
 
 [[further_steps]]
-==== (Optional) Further DRY configuration
+==== (Optional) Even DRYer configuration
 
 This guide takes a conservative approach to refactoring the Terragrunt configurations. However, there are additional
 Terragrunt features that can be leveraged to further DRY your configuration. Note that these features requires a bit
-more planning and thinking than a step by step tutorial can offer, and thus we can not provide a step by step tutorial
+more planning and thinking than a step by step tutorial can offer, and thus we cannot provide a step by step tutorial
 as we offered above. Instead, we will describe the feature that Terragrunt offers with an example, and you can use that
 as a guide to identify further blocks and attributes that can be moved to the common component configuration.
 
@@ -510,7 +512,7 @@ DRY up the config.
 
 
 [[expose_include]]
-===== Expose include
+===== Expose `include`
 
 Terragrunt offers the ability to reference values defined in parent configurations through exposed includes. This
 feature is enabled when the `expose = true` attribute is set on the `include` block. Exposed `include` blocks allow the
@@ -566,8 +568,8 @@ dependency "vpc" {
 }
 
 inputs = {
-  # This input variable is not defined in the underlying Terraform module. We use _ to decrease the likelihood of
-  # accidentally using a defined variable here.
+  # This input variable is not defined in the underlying Terraform module. We use _ 
+  # to decrease the likelihood of accidentally using a defined variable here.
   _vpc_id = dependency.vpc.outputs.vpc_id
 }
 ----
