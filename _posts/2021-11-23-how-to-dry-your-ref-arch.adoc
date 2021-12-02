@@ -69,6 +69,10 @@ Multiple `include` blocks allow you to extract common configuration across the d
 component. This common configuration is then imported to be combined with the project level configuration to manage that
 component.
 
+Using these features, we can dramatically reduce duplication in the Terragrunt code in the Gruntwork Reference
+Architecture, https://github.com/gruntwork-io/terraform-aws-service-catalog/pull/1060[cutting down the footprint by
+48.5%].
+
 To learn more about the multiple `include` feature, including a use case walkthrough, refer to
 https://terragrunt.gruntwork.io/docs/features/keep-your-terragrunt-architecture-dry/[the official Terragrunt documentation].
 
