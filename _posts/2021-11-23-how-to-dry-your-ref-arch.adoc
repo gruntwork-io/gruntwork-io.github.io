@@ -553,7 +553,7 @@ Note that the availability of values is subject to the
 https://terragrunt.gruntwork.io/docs/etting-started/configuration/#configuration-parsing-order[configuration parsing
 order] of Terragrunt.
 This means that you won't be able to reference later stage values in early stage blocks, like accessing parent `inputs`
-in `locals`.
+in `locals` or trying to reference a `dependency` in `locals`.
 
 You can work around some of this limitation by packing values in `inputs`. Terragrunt passes inputs to Terraform in a
 way that Terraform ignores input values that do not correspond to an existing variable in the module. For example, if
@@ -568,7 +568,7 @@ dependency "vpc" {
 }
 
 inputs = {
-  # This input variable is not defined in the underlying Terraform module. We use _ 
+  # This input variable is not defined in the underlying Terraform module. We use _
   # to decrease the likelihood of accidentally using a defined variable here.
   _vpc_id = dependency.vpc.outputs.vpc_id
 }
