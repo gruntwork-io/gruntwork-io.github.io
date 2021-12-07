@@ -59,7 +59,7 @@ database typically does not differ much between environments, with the only diff
 instance size. Yet each environment ends up having the same configuration copied with only these minor
 differences between them.
 
-This limitation led to a lot of duplication in component configuration across the Reference Architecture. Overtime, the
+This limitation led to a lot of duplication in component configuration across the Reference Architecture. Over time, the
 difference between environments typically widen, especially at the application level, but for common infrastructure such
 as VPCs and Databases, the environment level deviation is rarely significant. This makes it difficult to
 manage the individual components across updates, as you need to reflect the same changes in every environment, rather
@@ -156,7 +156,7 @@ Once you identify the component that you want to update, take an inventory of th
 deploy that component across your environments. We will use this inventory to identify the common configuration across
 all the deployments.
 
-Example:
+Example inventory:
 
 * `vpc`
 ** `dev/us-west-2/dev/networking/vpc`
