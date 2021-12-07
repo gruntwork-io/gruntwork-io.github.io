@@ -48,6 +48,7 @@ This guide consists of two main sections:
 [[core_concepts]]
 == Core Concepts
 
+[[background]]
 === Background
 
 Terragrunt https://github.com/gruntwork-io/terragrunt/releases/tag/v0.32.0[v0.32.0] introduced the feature of multiple
@@ -72,6 +73,12 @@ component.
 Using these features, we can dramatically reduce duplication in the Terragrunt code in the Gruntwork Reference
 Architecture, https://github.com/gruntwork-io/terraform-aws-service-catalog/pull/1060[cutting down the footprint by
 48.5%].
+
+The best part about these features is that you can take advantage of them with changes that will be isolated to
+Terragrunt configuration files (syntactic changes vs semantic changes). This means that you won't be making changes to
+the underlying behavior of the Terraform code or how Terraform is called. As such, there will be no need for rolling out
+the changes with `apply`, or performing any state migrations to avoid backward incompatibilities, making it a relatively
+low risk change.
 
 To learn more about the multiple `include` feature, including a use case walkthrough, refer to
 https://terragrunt.gruntwork.io/docs/features/keep-your-terragrunt-architecture-dry/[the official Terragrunt documentation].
@@ -174,13 +181,9 @@ Example inventory:
 ** `logs/us-west-2/mgmt/ecs-deploy-runner`
 ** `security/us-west-2/mgmt/ecs-deploy-runner`
 
-The changes will be isolated to Terragrunt configuration files (syntactic changes vs semantic changes). This means that
-you won't be making changes to the underlying behavior of the Terraform code or how Terraform is called. As such, there
-will be no need for rolling out the changes with `apply`, or performing any state migrations to avoid backward
-incompatibilities.
-
-Given that, the order in which the components are updated does not matter. You can update the components in whatever order
-you would like.
+As mentioned in the <<background>>, the changes will be isolated to Terragrunt configuration files (syntactic changes vs
+semantic changes) and there will be no need to roll out the changes using `terraform`. Given that, the order in which
+the components are updated does not matter. You can update the components in whatever order you would like.
 
 
 [[step_2]]
