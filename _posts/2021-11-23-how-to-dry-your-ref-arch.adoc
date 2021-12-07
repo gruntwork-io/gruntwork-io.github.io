@@ -566,7 +566,7 @@ terraform {
 ----
 
 Note that the availability of values is subject to the
-https://terragrunt.gruntwork.io/docs/etting-started/configuration/#configuration-parsing-order[configuration parsing
+https://terragrunt.gruntwork.io/docs/getting-started/configuration/#configuration-parsing-order[configuration parsing
 order] of Terragrunt.
 This means that you won't be able to reference later stage values in early stage blocks, like accessing parent `inputs`
 in a child configuration's `locals` block, or referencing a parent `dependency` output in a child configuration's
