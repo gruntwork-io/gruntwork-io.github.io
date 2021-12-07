@@ -197,23 +197,28 @@ The reason we only need to run the diff utility against a single reference point
 configurations that are common across ALL environments. Therefore, a difference in a single comparison is enough to rule
 out that configuration as a common config.
 
-Start off by choosing a reference config and generating an initial set of candidate common configurations:
+Start off by choosing a reference config and generating an initial set of candidate common configurations. This
+reference point will be used to create a starting point for the list of blocks and attributes that can be common across
+all deployments of the component. As we compare with each other configuration, we will find the blocks and attributes
+that are different across the environments, and hence cross off from the list so that we end up with the list of blocks
+and attributes that are common across ALL environments.
+
+To construct this initial list, follow these steps:
 
 . Choose one of the Terragrunt configurations as your reference point. This can be arbitrary, but we recommend using `dev` as the reference point.
-. Note all the top level blocks and attributes in the reference configuration. For example, in the file https://github.com/gruntwork-io/terraform-aws-service-catalog/blob/6ca162dd1a8d8d6b7cf05e6a22bc4ac7bf01215f/examples/for-production/infrastructure-live/dev/us-west-2/dev/networking/vpc/terragrunt.hcl[dev/us-west-2/dev/networking/vpc/terragrunt.hcl], the list would be:
-** `terraform`
-** `include`
-** `locals`
-** `inputs`
-. Also note all the top level keys in the `inputs` attribute in the reference configuration. In the same file, the list would be:
-** `vpc_name`
-** `num_nat_gateways`
-** `cidr_block`
-** `kms_key_user_iam_arns`
-** `eks_cluster_names`
-** `tag_for_use_with_eks`
-. Cross off the `include` block, as Terragrunt does not support nested include blocks.
-. Similarly, cross off the `locals` block. It will be difficult to identify which locals need to be replicated just by looking at the diff, so we will copy over all the locals initially and cull the list using a different heuristic.
+. Note all the top level blocks and attributes in the reference configuration, except for the `include` block.  Terragrunt currently doesn't support nested `include` blocks, so we can't have the `include` block in the common file (note that this list will ultimately be the list of blocks and attributes that go in the common file).
+** For example, in the file https://github.com/gruntwork-io/terraform-aws-service-catalog/blob/6ca162dd1a8d8d6b7cf05e6a22bc4ac7bf01215f/examples/for-production/infrastructure-live/dev/us-west-2/dev/networking/vpc/terragrunt.hcl[dev/us-west-2/dev/networking/vpc/terragrunt.hcl], the list would be:
+*** `terraform`
+*** `locals`
+*** `inputs`
+. Next, note all the top level keys in the `inputs` attribute in the reference configuration. `inputs` need special treatment because it will contain a mix of items that are common and different across environments, so to maximize the DRY potential, we need to look at each `input` element separately.
+** In the same example file, the list would be:
+*** `vpc_name`
+*** `num_nat_gateways`
+*** `cidr_block`
+*** `kms_key_user_iam_arns`
+*** `eks_cluster_names`
+*** `tag_for_use_with_eks`
 
 Once you have the candidate configurations, you will want to run through a diff utility to cross off any that are
 identified as different across environments.
@@ -240,8 +245,12 @@ diff dev/us-west-2/dev/networking/vpc prod/us-west-2/prod/networking/vpc
 ----
 
 Once you have the diff, cross off any blocks, attributes, and input keys from the initial list that are different based
-on the output. Note that you should mark off the block/attribute if any sub block or nested attribute is different. Pay
-careful attention to nested attributes, as the diff may only show differences at a sub level.
+on the output, except for `locals`. `locals` blocks are not inherited across the `include` chain, so it is hard to keep
+track of which `locals` will be necessary in the parent and child configurations. Therefore, always copy over all
+`locals`. We will use a different heuristic to cull down the `locals` to only those that are in use.
+
+Note that you should mark off the block/attribute if any sub block or nested attribute is different. Pay careful
+attention to nested attributes, as the diff may only show differences at a sub level.
 
 
 [[use_json]]
@@ -284,8 +293,8 @@ first diff represents a difference in the `Title` attribute of the movie object 
 ----
 
 Like with `diff`, cross off any blocks, attributes, and input keys from the initial list that are different based
-on the output. In the `jd` output, this would be the first element in each `@` entry, or the second element of each `@`
-list that has `input` as the first element.
+on the output, except for `locals`. In the `jd` output, this would be the first element in each `@` entry, or the second
+element of each `@` list that has `input` as the first element.
 
 
 [[step_3]]
