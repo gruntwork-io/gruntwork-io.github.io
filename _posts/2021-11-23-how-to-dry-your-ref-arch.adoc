@@ -569,12 +569,17 @@ Note that the availability of values is subject to the
 https://terragrunt.gruntwork.io/docs/etting-started/configuration/#configuration-parsing-order[configuration parsing
 order] of Terragrunt.
 This means that you won't be able to reference later stage values in early stage blocks, like accessing parent `inputs`
-in `locals` or trying to reference a `dependency` in `locals`.
+in a child configuration's `locals` block, or referencing a parent `dependency` output in a child configuration's
+`locals`.
 
-You can work around some of this limitation by packing values in `inputs`. Terragrunt passes inputs to Terraform in a
-way that Terraform ignores input values that do not correspond to an existing variable in the module. For example, if
-you want to expose a reference variable that uses `dependency` blocks, you can create a private input value in the
-parent configuration that references the `dependency`, and access it using exposed `include`:
+You can work around some of this limitation by packing values in the parent configuration's `inputs`. Terragrunt passes
+inputs to Terraform in a way that Terraform ignores input values that do not correspond to an existing variable in the
+module.
+
+
+For example, let's say you want to expose a reference variable in the parent configuration that uses `dependency`
+blocks so that you can access it in the child configuration. To do this, you can create a private input value in the
+parent configuration that references the `dependency`, e.g.:
 
 .common component configuration
 [source,hcl]
@@ -584,11 +589,15 @@ dependency "vpc" {
 }
 
 inputs = {
-  # This input variable is not defined in the underlying Terraform module. We use _
-  # to decrease the likelihood of accidentally using a defined variable here.
+  # This input variable is for convenience only and is not defined in the underlying Terraform module.
+  # We use _ to mark it as "private" and decrease the likelihood of accidentally using a defined variable here.
   _vpc_id = dependency.vpc.outputs.vpc_id
 }
 ----
+
+You can then access the `_vpc_id` input variable in the child configuration by using an exposed `include` block (under
+the reference, `include.PARENT.inputs._vpc_id`, like so:
+
 
 .dev configuration
 [source,hcl]
@@ -604,3 +613,10 @@ inputs = {
   }
 }
 ----
+
+Note that since the `dependency` reference is in the `inputs` attribute, you can only reference it in the child
+configuration's `inputs` attribute. You can not configure a `locals` block in the child that accesses the parent
+`inputs` attribute.
+
+However, in this way, you can bind references in the parent configuration that are then exposed in the child for use in
+the `inputs` attribute even if it references `dependency` blocks.
