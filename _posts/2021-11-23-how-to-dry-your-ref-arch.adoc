@@ -615,7 +615,7 @@ inputs = {
 ----
 
 Note that since the `dependency` reference is in the `inputs` attribute, you can only reference it in the child
-configuration's `inputs` attribute. You can not configure a `locals` block in the child that accesses the parent
+configuration's `inputs` attribute. You cannot configure a `locals` block in the child that accesses the parent
 `inputs` attribute.
 
 However, in this way, you can bind references in the parent configuration that are then exposed in the child for use in
