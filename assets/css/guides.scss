@@ -49,26 +49,6 @@ $guides-primary-color: #06a6fd;
   outline-color: #fff;
 }
 
-.guides-outline {
-  padding: 0;
-
-  a {
-    color: #999999;
-  }
-
-  a:active,
-  a:hover {
-    text-decoration: none;
-    color: $guides-primary-color;
-  }
-
-  ul {
-    font-size: 16px;
-    font-weight: bold;
-    letter-spacing: -0.2px;
-  }
-}
-
 //Styles for listings page
 .col-md-2-5 {
   position: relative;
@@ -96,204 +76,7 @@ $guides-primary-color: #06a6fd;
   box-shadow: none;
 }
 
-#toc {
-  &.fixed {
-    width: inherit;
-    padding-right: 16px !important;
-  }
-
-  @extend .guides-outline;
-
-  .section-nav,
-  .sectlevel1 {
-    @media (max-width: $screen-sm-max) {
-      @include remove-visibility;
-    }
-
-    display: block;
-    z-index: 2;
-    padding: 1em;
-    overflow-y: auto;
-    max-height: 100vh;
-    overflow-wrap: break-word;
-
-    & li {
-      list-style-type: none;
-      &:hover {
-        cursor: pointer;
-      }
-
-      & ul {
-        display: none;
-      }
-    }
-  }
-
-  .sectlevel2 {
-    padding-left: 20px !important;
-
-    li {
-      line-height: 16px;
-      margin-bottom: 8px;
-    }
-  }
-
-  a.selected,
-  a:hover,
-  a:active {
-    color: $guides-primary-color;
-    text-decoration: none;
-
-    &:before {
-      content: "";
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: $guides-primary-color;
-      display: inline-block;
-      margin: 1px -3px;
-      position: relative;
-      left: -8px;
-    }
-  }
-}
-
-body .guides .guides-section-white {
-  font-family: $guides-font-family;
-  color: $guides-font;
-}
-
-.guide-listing {
-  .category-head {
-    font-size: 30px;
-    font-weight: 600;
-    line-height: normal;
-    letter-spacing: 0.84px;
-    color: $guides-font;
-    margin-top: 40px;
-    margin-bottom: 11px;
-
-    &:first-of-type {
-      margin-top: 1em;
-    }
-
-    &:hover > a.anchorjs-link {
-      text-decoration: none;
-      display: none;
-    }
-  }
-
-  .card {
-    color: $guides-font;
-    cursor: pointer;
-    min-height: 100px;
-    overflow: hidden;
-    position: relative;
-
-    & .card-title {
-      margin-top: 0;
-      margin-bottom: 2px;
-      font-size: 20px;
-      letter-spacing: 0.56px;
-
-      &:hover > a.anchorjs-link {
-        color: #ffffff;
-        text-decoration: none;
-        display: none;
-      }
-    }
-
-    a {
-      text-decoration: none;
-    }
-
-    & .card-body {
-      padding: 16px 30px 16px 10px;
-    }
-
-    & .img-inner {
-      position: absolute;
-      top: 50%;
-      -ms-transform: translateY(-50%);
-      transform: translateY(-50%);
-    }
-
-    img {
-      max-width: 100%;
-      display: block;
-      margin: auto auto;
-      padding: 11px 20px 11px 30px;
-      max-height: 85px;
-    }
-
-    & p {
-      font-size: 13px;
-      font-weight: inherit;
-      line-height: 1.5;
-      letter-spacing: 0.34px;
-      margin: 0;
-    }
-
-    & h6,
-    & h5,
-    & h4,
-    & h3,
-    & h2,
-    & a {
-      color: $guides-font;
-    }
-
-    & code {
-      color: #c7254e !important;
-    }
-  }
-
-  .guide-card {
-    margin-bottom: 10px;
-    border: solid 1px #dedede;
-    border-radius: 8px;
-    transition: 0.2s all ease;
-  }
-
-  .float-right {
-    float: right;
-  }
-
-  .card-shadow:hover {
-    -webkit-box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.1);
-    /* Safari, Android, iOS */
-    -moz-box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.1);
-    /* Firefox */
-    box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.1);
-    border: none;
-    transform: scale(1.1) translateZ(0);
-  }
-}
-
 //Hero
-.guides .section-hero {
-  @extend .section-bg-blue;
-  background: url("../img/bg-header-squares.png") center bottom no-repeat,
-    linear-gradient($brand-primary, #06a2ff);
-
-  .container {
-    margin-bottom: 20px;
-  }
-
-  h1 {
-    font-size: 40px;
-    letter-spacing: 1.13px;
-    margin-bottom: 11px;
-  }
-
-  p {
-    font-size: 20px;
-    font-weight: inherit;
-    line-height: 1.5;
-    letter-spacing: 0.56px;
-  }
-}
-
 .section-hero-blue {
   height: 409px;
   color: #fff;
@@ -370,22 +153,6 @@ body .guides .guides-section-white {
       @include no-transform;
     }
   }
-}
-
-.guides-input-box::-webkit-input-placeholder {
-  @include guides-input-placeholder;
-}
-
-.guides-input-box::-moz-placeholder {
-  @include guides-input-placeholder;
-}
-
-.guides-input-box::-ms-placeholder {
-  @include guides-input-placeholder;
-}
-
-.guides-input-box::placeholder {
-  @include guides-input-placeholder;
 }
 
 //Cloud filter styles
@@ -624,10 +391,6 @@ body .guides .guides-section-white {
 }
 
 @media (max-width: $screen-md-max) {
-  .guides .section-hero {
-    padding-top: 0;
-  }
-
   .filter-options .card {
     padding: 20px 40px;
   }
@@ -636,33 +399,12 @@ body .guides .guides-section-white {
     display: none !important;
   }
 
-  .guide-listing .card-shadow {
-    &:hover,
-    &:active {
-      transform: scale(1.05) translateZ(0);
-    }
-
-    .card img {
-      padding: 11px;
-    }
-  }
-
   .breadcrumb {
     margin-bottom: 0;
   }
 }
 
 @media only screen and (max-width: $screen-xs-max) {
-  .guides .section-hero {
-    h1 {
-      font-size: 29px;
-    }
-
-    p {
-      font-size: 14px;
-    }
-  }
-
   .post-detail {
     h1 {
       font-size: 29px;
@@ -697,16 +439,6 @@ body .guides .guides-section-white {
     justify-content: center;
   }
 
-  .guide-listing {
-    .category-head {
-      font-size: 20px;
-    }
-
-    .card .card-title {
-      font-size: 16px;
-    }
-  }
-
   .card-shadow:hover {
     -webkit-box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.1);
     /* Safari, Android, iOS */
@@ -714,18 +446,6 @@ body .guides .guides-section-white {
     /* Firefox */
     box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.1);
     border: none;
-  }
-
-  .guides-newsletter {
-    padding: 0 !important;
-
-    label {
-      font-size: 22px !important;
-    }
-
-    p {
-      font-size: 16px;
-    }
   }
 
   .section-hero-blue {
@@ -739,7 +459,6 @@ body .guides .guides-section-white {
   }
 }
 
-.guides-newsletter,
 .no-results {
   padding: 5em 6em;
   font-size: 16px;
@@ -748,30 +467,6 @@ body .guides .guides-section-white {
 
   .modal-box {
     padding-bottom: 3em;
-  }
-
-  & .guides-input-box {
-    background-color: #f5f9fa;
-    border: none;
-    border-top-left-radius: 20px;
-    border-bottom-left-radius: 20px;
-    font-size: 16px;
-    color: black;
-    height: 42px;
-    z-index: 1;
-    overflow: hidden;
-    padding-right: 16px;
-    box-shadow: none;
-    width: 60%;
-
-    &:hover,
-    &:active,
-    &:focus {
-      border: 1px solid #07a7fc;
-      z-index: 1 !important;
-      padding: 12px;
-      @include no-transform;
-    }
   }
 
   & label {
@@ -857,61 +552,6 @@ body .guides .guides-section-white {
       outline: none;
       @include no-transform;
     }
-  }
-}
-
-.guides-cta-card {
-  @media (max-width: $screen-md-min) {
-    @include remove-visibility;
-  }
-
-  background-color: white;
-  color: black;
-  box-shadow: 3px 4px #c5c2c2;
-  border-radius: 5px;
-  padding: 0 24px 0;
-  margin-top: 10px;
-
-  & p {
-    color: black;
-    font-size: 14px;
-    margin-top: -20%;
-  }
-
-  & .deploy {
-    margin-top: 6%;
-    width: 100%;
-    border-radius: 6px;
-    font-size: 14px;
-    background-color: $guides-primary-color;
-    color: white !important;
-  }
-
-  & .dismiss-cta {
-    color: $guides-primary-color;
-
-    &:hover,
-    &:focus {
-      text-decoration: none;
-      @include no-transform;
-    }
-  }
-
-  & img {
-    max-width: 100%;
-  }
-}
-
-.guides-section-white {
-  background-color: #fff;
-  position: relative;
-  color: $guides-font;
-  padding: 20px 25px 0 25px;
-  font-family: $guides-font-family;
-  min-height: 400px;
-
-  .container-fluid {
-    max-width: 1200px;
   }
 }
 
