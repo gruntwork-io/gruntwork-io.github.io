@@ -1,8 +1,7 @@
 /**
  * Javascript specially for the search bad and filters used in the
- * IaC Library page and the deployment guides page.
- * Please note that since we will be moving to a Saas app, we will need to
- * make this code reuasble
+ * IaC Library page. Please note that since we will be moving to a SaaS app,
+ * we will need to make this code reuasble.
  */
 (function () {
   /**
@@ -245,8 +244,5 @@
 
   /* Search box on library page */
   $('#js-search-library').on("keyup", searchData);
-
-  /* Search box on guides page */
-  $('#search-box').on("keyup", searchData);
 
 }());
