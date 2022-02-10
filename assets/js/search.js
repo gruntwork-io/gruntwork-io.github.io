@@ -1,19 +1,12 @@
 /**
  * Javascript specially for the search bad and filters used in the
- * IaC Library page and the deployment guides page.
- * Please note that since we will be moving to a Saas app, we will need to
- * make this code reuasble
+ * IaC Library page. Please note that since we will be moving to a SaaS app,
+ * we will need to make this code reuasble.
  */
 (function () {
-  /**
-   * While we do not want the GCP guide to be displayed on the guides page going forward, we wish to
-   * retain the ability for the link to still work and prevent damage to Search engine rankings
-   */
-  const idOfGcpGuideToExclude = 'deploying-a-dockerized-app-on-gcp-and-gke-card';
 
   function initialEntry() {
     $('#no-matches').hide();
-    $(`#${idOfGcpGuideToExclude}`).hide();
   }
 
   // Initial entry on load
@@ -61,13 +54,11 @@
    * Function to display all items on the page
    */
   function showAllItems() {
-    $('.guide-card').show();
     $('.category-head').show();
     $('.categories ul li').show();
   }
 
   function initialDisplay() {
-    $('#guide-listings').show();
     $('#no-matches').hide();
   }
 
@@ -75,7 +66,6 @@
    * Function to hide items on the page
    */
   function hideItems() {
-    $('.guide-card').hide();
     $('.category-head').hide();
     $('.categories ul li').hide();
   }
@@ -143,8 +133,8 @@
   }
 
   /**
-   * A function to search the Deployment guides.
-   * To show/hide the proper elements based on the results.
+   * A function to search the library data and
+   * show/hide the proper elements based on the results.
    * @type {Function}
    */
   function filterSearchData(searchValue, type) {
@@ -152,10 +142,6 @@
     let submoduleMatches = 0;
 
     const searchEntry = detectSearchEntry();
-
-    if ($('.guide-card').length !== 0) {
-      initialDisplay();
-    }
 
     if (searchValue && searchValue.length > 0) {
       const searchQueries = searchValue.toLowerCase().split(" ");
@@ -180,10 +166,6 @@
 
         //Checks if results were found and displays results accordingly
         if (matchesAll) {
-          if (entry.id === idOfGcpGuideToExclude) {
-            return
-          }
-
           displayCategory(entry);
           $(`#${entry.id}`).show();
           matches++;
@@ -245,8 +227,5 @@
 
   /* Search box on library page */
   $('#js-search-library').on("keyup", searchData);
-
-  /* Search box on guides page */
-  $('#search-box').on("keyup", searchData);
 
 }());
