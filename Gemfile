@@ -7,7 +7,7 @@ group :jekyll_plugins do
   gem 'jekyll-paginate', '1.1.0'
   gem 'jekyll-asciidoc'
   gem 'jekyll-toc'
-  gem 'nokogiri', '1.12.2' # Addresssing security issue in earlier versions of this library
+  gem 'nokogiri', '1.13.2' # Addresssing security issue in earlier versions of this library
   gem 'jekyll-feed'
 end
 
