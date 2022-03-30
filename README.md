@@ -54,7 +54,7 @@ You'll know this is happening when you look at the `STDOUT` of your `docker-comp
 
 ```
 web_1  |       Regenerating: 1 file(s) changed at 2021-07-21 14:31:08
-web_1  |                     _data/hipaa-landing-page-tabs-compliant-code.yml
+web_1  |                     _data/website-terms.yml
 web_1  |        Jekyll Feed: Generating feed for posts
 web_1  |                     ...done in 58.507850014 seconds.
 ```
