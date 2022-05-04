@@ -38,7 +38,6 @@ references:
         curl -O https://bootstrap.pypa.io/get-pip.py
         sudo python3.7 get-pip.py
         sudo python3.7 -m pip install --upgrade pip setuptools wheel
-        sudo python3.7 -m pip install pipenv
 
   install_jdk: &install-jdk
     run:
@@ -136,10 +135,10 @@ workflows:
   version: 2
   each_commit:
     jobs:
-      - deploy-to-stage:
-          filters:
-            branches:
-              only: master
+      - deploy-to-stage
+        # filters:
+        #   branches:
+        #     only: master
       - deploy-to-prod:
           filters:
             tags:
