@@ -136,10 +136,10 @@ workflows:
   version: 2
   each_commit:
     jobs:
-      - deploy-to-stage
-        # filters:
-        #   branches:
-        #     only: master
+      - deploy-to-stage:
+          filters:
+            branches:
+              only: master
       - deploy-to-prod:
           filters:
             tags:
