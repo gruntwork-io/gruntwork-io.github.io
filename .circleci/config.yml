@@ -22,13 +22,23 @@ references:
   ######################################################################################################################
   # Build steps
   ######################################################################################################################
+  install_python: &install-python
+    run:
+      name: install python 3.7
+      command: |
+        sudo add-apt-repository --yes ppa:deadsnakes/ppa
+        sudo apt-get update
+        sudo apt-get install python3.7
+
   install_pip: &install-pip
     run:
       name: install pip
       command: |
         set +o pipefail
         curl -O https://bootstrap.pypa.io/get-pip.py
-        sudo python3 get-pip.py
+        sudo python3.7 get-pip.py
+        sudo python3.7 -m pip install --upgrade pip setuptools wheel
+        sudo python3.7 -m pip install pipenv
 
   install_jdk: &install-jdk
     run:
@@ -90,6 +100,7 @@ jobs:
       - checkout
       - setup_remote_docker:
           docker_layer_caching: true
+      - *install-python
       - *install-pip
       - *install-jdk
       - awscli/install
@@ -106,6 +117,7 @@ jobs:
       - checkout
       - setup_remote_docker:
           docker_layer_caching: true
+      - *install-python
       - *install-pip
       - *install-jdk
       - awscli/install
