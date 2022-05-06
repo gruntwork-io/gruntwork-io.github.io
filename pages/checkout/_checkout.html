@@ -10,11 +10,11 @@
         <div class="checkout-price text-center" data-checkout-total="default">
           <span
             class="large-price visible-xs-inline large-price--mobile"
-            style="white-space: nowrap;"
+            style="white-space: nowrap"
             ><span>$</span><strong class="monthly-total"></strong></span
           ><span
             class="small text-muted visible-xs-inline"
-            style="white-space: nowrap;"
+            style="white-space: nowrap"
           >
             / month</span
           >
@@ -32,7 +32,7 @@
             <p
               class="text-center"
               id="checkout-price-addon"
-              style="display: none;"
+              style="display: none"
             >
               <span class="large-price large-price-sub"
                 ><span>+$</span>4,950</span
@@ -43,7 +43,7 @@
         <div
           class="checkout-price-enterprise"
           data-checkout-total="enterprise"
-          style="display: none;"
+          style="display: none"
         >
           <h5
             class="h1 large-price large-price--mobile large-price-sub text-center margin-top-none"
@@ -98,7 +98,7 @@
                   >Up to 20 Users</span
                 >
               </li>
-              <li id="subscription-unlimited-users" style="display:none">
+              <li id="subscription-unlimited-users" style="display: none">
                 <span
                   class="help-text light"
                   title="Your subscription supports unlimited users."
@@ -156,25 +156,39 @@
           style="margin-bottom: 0"
         >
           <div>
-            Due<span class="hide-on-tiny"> Today</span>: $<span id="due-now">500</span>
+            Due<span class="hide-on-tiny"> Today</span>: $<span id="due-now"
+              >500</span
+            >
           </div>
           <div id="due-monthly-block" class="hidden-xs text-muted">
-            Then just $<span class="monthly-total"></span><span class="small" style="white-space: nowrap;">&nbsp;/ month</span>
+            Then just $<span class="monthly-total"></span
+            ><span class="small" style="white-space: nowrap"
+              >&nbsp;/ month</span
+            >
           </div>
         </div>
       </div>
-      <a id="recurly-checkout-btn" class="btn btn-info btn-block btn-checkout" href="https://gruntwork.recurly.com/subscribe/aws-monthly?theme=modern">Checkout</a>
+      <form href="https://localhost:3000/checkout">
+        <input type="hidden" name="cart" value="" />
+        <button
+          type="submit"
+          id="checkout-btn"
+          class="btn btn-info btn-block btn-checkout"
+        >
+          Checkout
+        </button>
+      </form>
       <p>
         <a
           id="checkout-contact-btn"
           class="btn btn-primary btn-block"
           href="/contact/"
-          style="display: none;"
+          style="display: none"
           >Contact Us</a
         >
       </p>
       <p
-        style="font-size:85%;"
+        style="font-size: 85%"
         class="text-muted text-center margin-bottom-none visible-sm-block visible-md-block visible-lg-block"
       >
         View our
@@ -197,7 +211,7 @@
             data-toggle="tooltip"
             data-html="true"
             data-original-title="If you're not happy for any reason, we'll refund 100% of your money within the first 30 days.<br><u>Click the icon for more information</u> <i class='fa fa-caret-down'></i>"
-            style="font-size: 22px;margin-left: 16px;"
+            style="font-size: 22px; margin-left: 16px"
           ></i
         ></a>
       </h3>
