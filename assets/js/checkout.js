@@ -76,7 +76,13 @@ $(function () {
     _addToCart("standard_subscription");
 
     // Auto toggles addons based on the URI
-    const addons = $.query.get("addon").split(",");
+    const rawAddons = $.query.get("addon");
+
+    if (!rawAddons || rawAddons === "") {
+      return;
+    }
+
+    const addons = rawAddons.split(",");
     for (const addon of addons) {
       const addonKey = addon.replace("-", "_");
       $('.addon-button[name="' + addonKey + '"]').click();
