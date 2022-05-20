@@ -49,7 +49,6 @@ $(function () {
   }
 
   function _updateCart() {
-    console.log(cart);
     $("input[name='cart']").val(JSON.stringify(cart));
     _updateQueryStringFromCart();
   }
@@ -64,8 +63,15 @@ $(function () {
         addons.push(addon);
       }
     }
-    const query = "?subscription-type=standard&addon=" + addons.join(",");
-    window.history.replaceState(null, "", window.location.pathname + query);
+
+    const searchParams = new URLSearchParams();
+    searchParams.append("subscription-type", "standard");
+    searchParams.append("addon", addons.join(","));
+    const query = "?" + searchParams.toString();
+    const updatedUrl = window.location.pathname + query;
+
+    window.history.replaceState(null, "", updatedUrl);
+    $("input[name='editUrl']").val(updatedUrl);
   }
 
   function _setDefaults() {
