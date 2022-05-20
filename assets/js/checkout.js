@@ -71,7 +71,7 @@ $(function () {
     const updatedUrl = window.location.pathname + query;
 
     window.history.replaceState(null, "", updatedUrl);
-    $("input[name='editUrl']").val(updatedUrl);
+    $("input[name='editUrl']").val(window.location.href);
   }
 
   function _setDefaults() {
