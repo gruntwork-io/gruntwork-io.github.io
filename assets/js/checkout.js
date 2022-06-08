@@ -4,10 +4,6 @@
  * @docs: https://stripe.com/docs/payments/elements
  */
 $(function () {
-  var timeout,
-    $checkout = $('[data-cb-type="checkout"]');
-  var $body = $("body");
-
   // The checkout state
   var checkoutOptions = {
     subscription_type: "standard",
@@ -18,63 +14,51 @@ $(function () {
     users: 20,
   };
 
-  // Map from addon key to product ID.
+  // Map from product ID to button name.
   // Note these are currently all Stripe TEST product Ids and need to be updated to
   // the live strip product IDs
-  const products = {
-    standard_subscription: "price_1Jx2ZMDJ1uFWlBkUavLabx8m",
-    pro_support: "price_1Ju8buDJ1uFWlBkU0QALdhIM",
-    setup_deployment: "price_1Ju8iYDJ1uFWlBkUxBFauxac",
-    setup_compliance: "price_1Ju8akDJ1uFWlBkUGsewsTJU",
+
+  const productToButtonNameMap = {
+    price_1Jx2ZMDJ1uFWlBkUavLabx8m: "standard_subscription",
+    price_1Ju8buDJ1uFWlBkU0QALdhIM: "pro_support",
+    price_1Ju8iYDJ1uFWlBkUxBFauxac: "setup_deployment",
+    price_1Ju8akDJ1uFWlBkUGsewsTJU: "setup_compliance",
   };
 
-  // List of selected product IDs.
   // Note: This is currently set to the default user product price in Stripe's TEST area.
-  const usersProduct = {
+  const defaultUsersProduct = {
     priceId: "price_1L5vxaDJ1uFWlBkUegR295gi",
     quantity: 20,
   };
 
-  var cart = [usersProduct];
+  const defaultSubscription = {
+    priceId: "price_1Jx2ZMDJ1uFWlBkUavLabx8m",
+    quantity: 1,
+  };
 
-  function _addToCart(addon) {
-    const productID = products[addon];
-    if (!cart.includes(productID)) {
-      cart.push({ priceId: productID, quantity: 1 });
+  var cart = [];
+
+  function _addToCart(productId, quantity = 1) {
+    if (!cart.find((item) => item.priceId === productId)) {
+      cart.push({ priceId: productId, quantity });
       _updateCart();
     }
   }
 
-  function _removeFromCart(addon) {
-    const productID = products[addon];
-    cart = cart.filter((item) => item !== productID);
-    _updateCart();
-  }
-
-  function _emptyCart() {
-    cart = [usersProduct];
+  function _removeFromCart(productId) {
+    cart = cart.filter((item) => item.priceId !== productId);
     _updateCart();
   }
 
   function _updateCart() {
-    $("input[name='cart']").val(JSON.stringify(cart));
-    _updateQueryStringFromCart();
-  }
+    const serializedCart = JSON.stringify(cart);
 
-  function _updateQueryStringFromCart() {
-    const addons = [];
-    for (product of cart) {
-      const addon = Object.keys(products).find(
-        (key) => products[key] === product
-      );
-      if (addon && addon != "standard_subscription") {
-        addons.push(addon);
-      }
-    }
+    const base64EncodedCart = btoa(serializedCart);
+
+    $("input[name='cart']").val(base64EncodedCart);
 
     const searchParams = new URLSearchParams();
-    searchParams.append("subscription-type", "standard");
-    searchParams.append("addon", addons.join(","));
+    searchParams.append("cart", base64EncodedCart);
     const query = "?" + searchParams.toString();
     const updatedUrl = window.location.pathname + query;
 
@@ -87,42 +71,44 @@ $(function () {
     $("#subscription-type-img").attr("data-subscription-type", "standard");
     $("#refarch-button-default").show();
     $("#cis-button-default").show();
-    _addToCart("standard_subscription");
 
     // Auto toggles addons based on the URI
-    const rawAddons = $.query.get("addon");
+    const rawCart = atob($.query.get("cart"));
 
-    if (!rawAddons || rawAddons === "") {
-      return;
+    if (rawCart) {
+      const products = JSON.parse(rawCart);
+      for (const product of products) {
+        const buttonName = productToButtonNameMap[product.priceId];
+
+        if (buttonName) {
+          $('.addon-button[name="' + buttonName + '"]').click();
+        }
+      }
     }
 
-    const addons = rawAddons.split(",");
-    for (const addon of addons) {
-      const addonKey = addon.replace("-", "_");
-      $('.addon-button[name="' + addonKey + '"]').click();
-      _updateCheckout({ [addonKey]: true });
-      _addToCart(addonKey);
-    }
+    _addToCart(defaultSubscription.priceId);
+    _addToCart(defaultUsersProduct.priceId, defaultUsersProduct.quantity);
   }
 
   // Listen to Addon button clicks
   $(".addon-button").on("click", function () {
-    var tmp = {};
-    tmp["subscription_type"] = $.query.get("subscription-type");
+    var updateCheckoutOptions = {};
+
     var actionType = $(this).data("addon-action-type");
+    var productId = $(this).data("product-id");
 
     // Process the add action and switch the addon button so user can clear their selection
     function _handleAddAction(button) {
-      tmp[button.name] = true;
+      updateCheckoutOptions[button.name] = true;
       $(button).text("Remove");
       $(button).addClass("addon-remove-button");
       $(button).data("addon-action-type", "Remove");
-      _addToCart(button.name);
+      _addToCart(productId);
     }
 
     // Process the remove action and switch the addon button so user can make a selection
     function _handleRemoveAction(button) {
-      tmp[button.name] = false;
+      updateCheckoutOptions[button.name] = false;
       $(button)
         .text("Add to Subscription ")
         .append(
@@ -130,7 +116,7 @@ $(function () {
         );
       $(button).removeClass("addon-remove-button");
       $(button).data("addon-action-type", "Add");
-      _removeFromCart(button.name);
+      _removeFromCart(productId);
     }
 
     switch (actionType) {
@@ -142,7 +128,7 @@ $(function () {
         break;
       default: // Do nothing
     }
-    _updateCheckout(tmp);
+    _updateCheckout(updateCheckoutOptions);
   });
 
   // Ensure we can assign to an object
