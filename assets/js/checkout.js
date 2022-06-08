@@ -18,7 +18,9 @@ $(function () {
     users: 20,
   };
 
-  // Map from addon key to product ID
+  // Map from addon key to product ID.
+  // Note these are currently all Stripe TEST product Ids and need to be updated to
+  // the live strip product IDs
   const products = {
     standard_subscription: "price_1Jx2ZMDJ1uFWlBkUavLabx8m",
     pro_support: "price_1Ju8buDJ1uFWlBkU0QALdhIM",
@@ -26,13 +28,19 @@ $(function () {
     setup_compliance: "price_1Ju8akDJ1uFWlBkUGsewsTJU",
   };
 
-  // List of selected product IDs
-  var cart = [];
+  // List of selected product IDs.
+  // Note: This is currently set to the default user product price in Stripe's TEST area.
+  const usersProduct = {
+    priceId: "price_1L5vxaDJ1uFWlBkUegR295gi",
+    quantity: 20,
+  };
+
+  var cart = [usersProduct];
 
   function _addToCart(addon) {
     const productID = products[addon];
     if (!cart.includes(productID)) {
-      cart.push(productID);
+      cart.push({ priceId: productID, quantity: 1 });
       _updateCart();
     }
   }
@@ -44,7 +52,7 @@ $(function () {
   }
 
   function _emptyCart() {
-    cart = [];
+    cart = [usersProduct];
     _updateCart();
   }
 
