@@ -648,34 +648,6 @@
     Terraform, Helm, and Kubectl for managing a Kubernetes Cluster. It includes support for authenticating to EKS
     clusters, managing Helm, and generating and securely storing TLS certificates.
 
-- name: "Couchbase"
-  icons:
-    - title: Terraform
-      image: icon-terraform.png
-    - title: Bash
-      image: icon-bash.png
-  public_url: "https://github.com/gruntwork-io/terraform-aws-couchbase"
-  type: Open Source
-  description: |
-    Deploy a best-practices Couchbase cluster. Includes support for automatic bootstrapping, running Sync Gateway,
-    Web Console UI, cross-region replication, and automatic recovery of failed servers.
-  submodules:
-    - name: install-couchbase-server
-      blurb: install Couchbase on a Linux server
-      description: Install Couchbase and its dependencies on a Linux server.
-    - name: install-sync-gateway
-      blurb: install Sync Gateway on a Linux server
-      description: Install Sync Gateway and its dependencies on a Linux server.
-    - name: run-couchbase-server
-      blurb: configure and run Couchbase
-      description: Configure and run Couchbase.
-    - name: run-sync-gateway
-      blurb: configure and run Sync Gateway
-      description: Configure and start Sync Gateway.
-    - name: couchbase-cluster
-      blurb: deploy a Couchbase cluster
-      description: Deploy a Couchbase cluster on AWS using an Auto Scaling Group.
-
 - name: "Influx AWS"
   icons:
     - title: Terraform
