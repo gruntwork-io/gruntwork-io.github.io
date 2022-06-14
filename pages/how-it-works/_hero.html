@@ -1,15 +1,20 @@
 <div class="container">
   <div class="row">
-    <div class="col-sm-3 hidden-xs hidden-print">
-      <img class="grunty-grid" src="/assets/img/grunty-grid.png" />
-    </div>
-    <div class="col-sm-1"></div>
     <div class="col-xs-12 col-sm-8">
       <h1>How it Works</h1>
-      <p class="lead">
-        {{ page.excerpt }}
-      </p>
-      <p class="hidden-print" style="margin-top: 30px;">
+      <p class="lead">{{ page.excerpt }}</p>
+    </div>
+    <div class="col-xs-12" style="margin-top: 30px">
+      <div class="video-container">
+        <iframe
+          src="https://www.youtube.com/embed/AZu82LiWbek"
+          title="YouTube video player"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        ></iframe>
+      </div>
+      <p class="hidden-print" style="margin-top: 30px">
         <a
           href="/contact"
           class="btn get-a-demo"
