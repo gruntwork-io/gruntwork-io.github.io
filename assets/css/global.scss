@@ -1243,6 +1243,11 @@ $padding-section-vertical-desktop: 60px;
   }
 }
 
+.how-it-works h1 {
+  margin-bottom: 15px;
+  font-size: 32px;
+}
+
 .section-bg-blue {
   color: #fff;
   @extend .gradient-primary, .gradient-vertical;
@@ -1261,6 +1266,15 @@ $padding-section-vertical-desktop: 60px;
     .grunty-grid {
       left: 55px;
     }
+  }
+}
+
+.how-it-works .section-hero {
+  @extend .section-bg-blue;
+  background: linear-gradient($brand-primary, #06a2ff);
+  border-bottom: 2px solid white;
+  @media (max-width: $screen-sm-max) {
+    margin-top: -5px;
   }
 }
 
@@ -1607,6 +1621,7 @@ footer {
   overflow: hidden;
   width: 100%;
   padding-top: 56.25%; /* 16:9 Aspect Ratio */
+  margin-bottom: 2em;
 }
 
 .video-container iframe {
