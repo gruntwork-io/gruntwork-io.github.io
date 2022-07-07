@@ -19,34 +19,34 @@ $(function () {
   // the live strip product IDs
 
   const productToButtonNameMap = {
-    price_1Jx2ZMDJ1uFWlBkUavLabx8m: "standard_subscription",
-    price_1Ju8buDJ1uFWlBkU0QALdhIM: "pro_support",
-    price_1Ju8iYDJ1uFWlBkUxBFauxac: "setup_deployment",
-    price_1Ju8akDJ1uFWlBkUGsewsTJU: "setup_compliance",
+    prod_KZH5PYGPzdh5nu: "standard_subscription",
+    prod_KZHA5WMpiNsnOs: "pro_support",
+    prod_KZHHUK5LUuYRFl: "setup_deployment",
+    prod_KZH9VxdizHvbqI: "setup_compliance",
   };
 
   // Note: This is currently set to the default user product price in Stripe's TEST area.
   const defaultUsersProduct = {
-    priceId: "price_1L5vxaDJ1uFWlBkUegR295gi",
+    productId: "prod_KZH7Hb6FqIPOcl",
     quantity: 20,
   };
 
   const defaultSubscription = {
-    priceId: "price_1Jx2ZMDJ1uFWlBkUavLabx8m",
+    productId: "prod_KZH5PYGPzdh5nu",
     quantity: 1,
   };
 
   var cart = [];
 
   function _addToCart(productId, quantity = 1) {
-    if (!cart.find((item) => item.priceId === productId)) {
-      cart.push({ priceId: productId, quantity });
+    if (!cart.find((item) => item.productId === productId)) {
+      cart.push({ productId, quantity });
       _updateCart();
     }
   }
 
   function _removeFromCart(productId) {
-    cart = cart.filter((item) => item.priceId !== productId);
+    cart = cart.filter((item) => item.productId !== productId);
     _updateCart();
   }
 
@@ -78,7 +78,7 @@ $(function () {
     if (rawCart) {
       const products = JSON.parse(rawCart);
       for (const product of products) {
-        const buttonName = productToButtonNameMap[product.priceId];
+        const buttonName = productToButtonNameMap[product.productId];
 
         if (buttonName) {
           $('.addon-button[name="' + buttonName + '"]').click();
@@ -86,8 +86,8 @@ $(function () {
       }
     }
 
-    _addToCart(defaultSubscription.priceId);
-    _addToCart(defaultUsersProduct.priceId, defaultUsersProduct.quantity);
+    _addToCart(defaultSubscription.productId);
+    _addToCart(defaultUsersProduct.productId, defaultUsersProduct.quantity);
   }
 
   // Listen to Addon button clicks
