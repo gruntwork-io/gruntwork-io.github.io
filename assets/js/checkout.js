@@ -19,20 +19,20 @@ $(function () {
   // the live strip product IDs
 
   const productToButtonNameMap = {
-    prod_KZH5PYGPzdh5nu: "standard_subscription",
-    prod_KZHA5WMpiNsnOs: "pro_support",
-    prod_KZHHUK5LUuYRFl: "setup_deployment",
-    prod_KZH9VxdizHvbqI: "setup_compliance",
+    prod_KoYQEu6on7Pmwi: "standard_subscription",
+    prod_FpWhWaePaAvZ4q: "pro_support",
+    prod_KoYHGWV1pdG2Bv: "setup_deployment",
+    prod_KoYXgbgz6RIfvN: "setup_compliance",
   };
 
   // Note: This is currently set to the default user product price in Stripe's TEST area.
   const defaultUsersProduct = {
-    productId: "prod_KZH7Hb6FqIPOcl",
+    productId: "prod_KoYJ9bAynPjS3I",
     quantity: 20,
   };
 
   const defaultSubscription = {
-    productId: "prod_KZH5PYGPzdh5nu",
+    productId: "prod_KoYQEu6on7Pmwi",
     quantity: 1,
   };
 
