@@ -15,9 +15,6 @@ $(function () {
   };
 
   // Map from product ID to button name.
-  // Note these are currently all Stripe TEST product Ids and need to be updated to
-  // the live strip product IDs
-
   const productToButtonNameMap = {
     prod_KoYQEu6on7Pmwi: "standard_subscription",
     prod_FpWhWaePaAvZ4q: "pro_support",
@@ -25,7 +22,6 @@ $(function () {
     prod_KoYXgbgz6RIfvN: "setup_compliance",
   };
 
-  // Note: This is currently set to the default user product price in Stripe's TEST area.
   const defaultUsersProduct = {
     productId: "prod_KoYJ9bAynPjS3I",
     quantity: 20,
