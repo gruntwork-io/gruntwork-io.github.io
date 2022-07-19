@@ -1,5 +1,6 @@
 <script>
   window.pricing = {{ site.data.pricing | jsonify }}
+  window.products = {{ site.data.products | jsonify }}
 </script>
 <script src="{{ site.assets_base_url }}js/main.js"></script>
 {% if page.custom_js %} {% for js_file in page.custom_js %}
