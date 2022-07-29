@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Payment Incomplete
-excerpt: We were unable to process your payment. Please ensure you've entered your payment information correctly, or reach out to <a href="mailto:sales@gruntwork.io">sales@gruntwork.io</a> if you need assistance.
+excerpt: We were unable to create your subscription.
 permalink: /payment-incomplete/
 ---
 
@@ -9,18 +9,22 @@ permalink: /payment-incomplete/
   <div class="section section-hero">
     <div class="container">
       <div class="row">
-        <div class="col-xs-12 text-center">
+        <div class="col-xs-offset-2 col-xs-8 text-center">
           <h1>{{ page.title }}</h1>
-          <p>{{ page.excerpt }}</p>
+          <p><b>{{ page.excerpt }}</b></p>
           <p>
-            <a
-              href="#"
-              onclick="window.history.back()"
-              class="btn btn-info"
-              role="button"
-              >Go Back</a
-            >
+            Please ensure you've entered your payment information correctly, or
+            reach out to
+            <a href="mailto:sales@gruntwork.io">sales@gruntwork.io</a> if you
+            need assistance.
           </p>
+          <a
+            href="#"
+            onclick="window.history.back()"
+            class="btn btn-info"
+            role="button"
+            >Back to checkout</a
+          >
         </div>
       </div>
     </div>

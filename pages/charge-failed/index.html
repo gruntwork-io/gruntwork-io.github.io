@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Payment Incomplete
-excerpt: We were unable to process your payment. A member of the Gruntwork sales team will reach out soon to coordinate payment and activate your subscription.
+excerpt: We were unable to create your subscription.
 permalink: /charge-failed/
 ---
 
@@ -9,14 +9,16 @@ permalink: /charge-failed/
   <div class="section section-hero">
     <div class="container">
       <div class="row">
-        <div class="col-xs-12 text-center">
+        <div class="col-xs-offset-2 col-xs-8 text-center">
           <h1>{{ page.title }}</h1>
-          <p>{{ page.excerpt }}</p>
+          <p><b>{{ page.excerpt }}</b></p>
           <p>
-            <a href="/" class="btn btn-info" role="button"
-              >Go to the Gruntwork home page</a
-            >
+            A member of the Gruntwork sales team will reach out soon to
+            coordinate payment and activate your subscription.
           </p>
+          <a href="/" class="btn btn-info" role="button"
+            >Go to the Gruntwork home page</a
+          >
         </div>
       </div>
     </div>
