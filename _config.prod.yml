@@ -1,2 +1,23 @@
 # Website settings
 enable_hotjar: true
+
+# Production environment Developer Portal URL
+developer_portal_url: https://app.gruntwork.io
+
+# Production environment product config for the pricing and checkout pages
+products:
+  AWS:
+    key: standard_subscription
+    stripeProductId: prod_KoYQEu6on7Pmwi
+  ProSupport:
+    key: pro_support
+    stripeProductId: prod_FpWhWaePaAvZ4q
+  RefArch:
+    key: setup_deployment
+    stripeProductId: prod_KoYHGWV1pdG2Bv
+  CIS:
+    key: setup_compliance
+    stripeProductId: prod_KoYXgbgz6RIfvN
+  Users:
+    key: standard_users
+    stripeProductId: prod_KoYJ9bAynPjS3I

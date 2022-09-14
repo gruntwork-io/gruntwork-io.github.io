@@ -13,7 +13,7 @@ The fastest way to launch this site is to use [Docker](https://www.docker.com/).
 1. `docker-compose up`
 1. Go to `http://localhost:4000` to test
 
-The default Docker compose configuration supports hot-reloading of your local environemnt, meaning that as you edit files to change markup, text, images, etc, your local development server will pick up these changes and reload the latest version of the site for you. This makes it quick and convenient to develop on the site locally.
+The default Docker compose configuration supports hot-reloading of your local environment, meaning that as you edit files to change markup, text, images, etc, your local development server will pick up these changes and reload the latest version of the site for you. This makes it quick and convenient to develop on the site locally.
 
 ## Manual quick start
 
@@ -73,7 +73,7 @@ group :jekyll_plugins do
   gem 'less', '2.6.0'
   gem 'jekyll-asciidoc'
   gem 'jekyll-toc'
-  gem 'nokogiri', '1.11.0.rc4' # Addresssing security issue in earlier versions of this library
+  gem 'nokogiri', '1.11.0.rc4' # Addressing security issue in earlier versions of this library
 #  gem 'jekyll-feed'
 end
 ```
