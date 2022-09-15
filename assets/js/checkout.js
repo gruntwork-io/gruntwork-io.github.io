@@ -75,11 +75,8 @@ $(function () {
     // Auto toggles addons based on the URI
     const rawCart = atob($.query.get("cart"));
 
-    console.log("rawCart", rawCart);
-
     if (rawCart) {
       const products = JSON.parse(rawCart);
-      console.log("products", products);
       for (const product of products) {
         const buttonName = productToButtonNameMap[product.productId];
 
