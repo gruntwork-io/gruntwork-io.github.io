@@ -14,7 +14,7 @@
       description: Launch a VPC meant to house applications and production code. This module creates the VPC, 3 "tiers" of subnets (public, private app, private persistence) across all Availability Zones, route tables, routing rules, Internet gateways, and NAT gateways.
     - name: vpc-mgmt
       blurb: launch a mgmt VPC
-      description: Launch a VPC meant to house internal tools (e.g. Jenkins, VPN server). This module creates the VPC, 2 "tiers" of subnets (public, private), route tables, routing rules, Internet gateways, and NAT gateways.
+      description: Launch a VPC meant to house internal tools (e.g. VPN server). This module creates the VPC, 2 "tiers" of subnets (public, private), route tables, routing rules, Internet gateways, and NAT gateways.
     - name: vpc-app-network-acls
       blurb: add NACLs to the app VPC
       description: Add a default set of Network ACLs to a VPC created using the vpc-app module that strictly control what inbound and outbound network traffic is allowed in each subnet of that VPC.
@@ -326,8 +326,7 @@
   subscriber_url: "https://github.com/gruntwork-io/module-ci"
   type: Subscriber-Only
   description: |
-    A collection of scripts and Terraform code that implement common CI and build pipeline tasks including running
-    Jenkins, configuring CircleCi, building a Docker image, building a Packer image, updating Terraform code, pushing
+    A collection of scripts and Terraform code that implement common CI and build pipeline tasks including configuring CircleCi, building a Docker image, building a Packer image, updating Terraform code, pushing
     to git, sharing or making AMIs public, and configuring the build environment.
   submodules:
     - name: aws-helpers
@@ -348,12 +347,6 @@
     - name: ec2-backup
       blurb: backup an EC2 instance on a schedule
       description: Run a Lambda function to make scheduled backups of EC2 Instances.
-    - name: install-jenkins
-      blurb: install Jenkins
-      description: Install Jenkins on a Linux server.
-    - name: jenkins-server
-      blurb: deploy Jenkins
-      description: Deploy a Jenkins server with an ASG, EBS Volume, ALB, and Route 53 settings.
 
 - name: "Relational Database"
   icons:
@@ -418,7 +411,7 @@
   subscriber_url: "https://github.com/gruntwork-io/module-server"
   type: Subscriber-Only
   description: |
-    Set up a best-practices deployment of a single, stateful server on top of AWS, such as Jenkins or WordPress. Supports
+    Set up a best-practices deployment of a single, stateful server on top of AWS, such as WordPress. Supports
     EBS volume re-attachment, and a scheduled Lambda job to backup the Instance on a cron schedule. Includes alarm if
     backup jobs fail.
   submodules:

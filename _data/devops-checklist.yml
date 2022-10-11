@@ -6,7 +6,7 @@
         <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html" target="_blank">Amazon Machine Images (AMIs)</a>
         using a tool such as <a href="https://www.packer.io/" target="_blank">Packer</a>. Although we recommend Docker
         for all stateless apps (see below), we recommend directly using AMIs and EC2 Instances for all stateful apps,
-        such as any data store (MySQL, MongoDB, Kafka), and app that writes to its local disk (e.g., WordPress, Jenkins).
+        such as any data store (MySQL, MongoDB, Kafka), and app that writes to its local disk (e.g., WordPress).
 
     - title: Deploy AMIs using Auto Scaling Groups
       description: |
@@ -360,8 +360,7 @@
       description: |
         Set up a server to automatically run builds, static analysis, automated tests, etc. after every commit. You can
         use a hosted system such as <a href="https://circleci.com/" target="_blank">CircleCI</a> or
-        <a href="https://travis-ci.org/" target="_blank">Travis CI</a>, or run your a build server yourself with a tool
-        such as <a href="https://jenkins.io/" target="_blank">Jenkins</a>.
+        <a href="https://travis-ci.org/" target="_blank">Travis CI</a>.
 
 - category: Continuous Delivery
   items:
