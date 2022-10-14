@@ -2,13 +2,12 @@
   description: |
     <p>Customize your architecture and complete a few setup steps:</p>
     <ul>
-      <li>Create several AWS accounts (logs, security, shared, dev, stage, and prod)</li>
+      <li>Create six AWS accounts (logs, security, shared, dev, stage, and prod)</li>
       <li>Choose a region</li>
-      <li>Set up domains in DNS</li>
-      <li>Run services on Docker using EKS (Kubernetes) or ECS, or directly on EC2 Instances using ASGs</li>
+      <li>Set up domains (TLDs) in DNS</li>
+      <li>Run services on Docker using EKS (Kubernetes) or ECS</li>
       <li>PostgreSQL, MySQL, SQL Server, Aurora, or other relational database</li>
       <li>Redis or Memcached</li>
-      <li>CircleCI or Github Actions</li>
       <li>Bastion Host or OpenVPN</li>
       <li>Static content storage and serving</li>
       <li>Serverless functions</li>
@@ -21,7 +20,7 @@
     <p>
       We generate the architecture using Terragrunt, Terraform, Bash, Python and Go. We deploy the resources to your
       AWS accounts. We validate the configuration, then we push the code to your git repository. For AWS, this
-      takes about one day.
+      takes a few days.
     </p>
 
 - title: Learn how to use it
