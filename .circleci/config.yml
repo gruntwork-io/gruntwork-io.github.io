@@ -137,10 +137,14 @@ workflows:
   each_commit:
     jobs:
       - deploy-to-stage:
+          context:
+            - Gruntwork Platform CI
           filters:
             branches:
               only: master
       - deploy-to-prod:
+          context:
+            - Gruntwork Platform CI
           filters:
             tags:
               only: /^v.*/
