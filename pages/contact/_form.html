@@ -18,27 +18,7 @@
   {% include_relative _input-text.html id="contact-name" label="Name"
   required=true placeholder="Jon Doe" %} {% include_relative _input-text.html
   id="contact-email" label="Email" required=true placeholder="jon@acme.com"
-  type="email" %} {% include_relative _input-text.html id="contact-company"
-  label="Company" required=true placeholder="Acme, Inc." %}
-  <div class="form-group">
-    <div class="row">
-      <div class="col-xs-12 col-md-4">
-        <label>Which products are you interested in?</label>
-      </div>
-      <div class="col-xs-12 col-md-8">
-        {% include_relative _input-check.html id="interested-subscription"
-        label="Gruntwork Subscription" small_text="Includes access to:
-        Infrastructure as Code Library, DevOps Training Library" %} {%
-        include_relative _input-check.html id="interested-pro-support"
-        label="Pro Support" %} {% include_relative _input-check.html
-        id="interested-ref-arch" label="Reference Architecture" %} {%
-        include_relative _input-check.html id="interested-cis-compliance"
-        label="CIS compliance" small_text="Achieve compliance with the CIS AWS
-        Foundations Benchmark" %} {% include_relative _input-hidden.html
-        id="user-utc-timezone-offset" %}
-      </div>
-    </div>
-  </div>
+  type="email" %}
   <div class="form-group">
     <div class="row">
       <div class="col-xs-12 col-md-4">
@@ -61,12 +41,12 @@
     <button
       type="submit"
       id="submit-button"
-      class="btn btn-primary"
+      class="col-xs-12 btn btn-primary"
       ga-on="click"
       ga-event-category="contact"
       ga-event-action="submit"
     >
-      Submit
+      Book a Demo
     </button>
   </div>
 </form>
