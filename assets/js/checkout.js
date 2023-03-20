@@ -97,8 +97,6 @@ $(function () {
     var productId = $(this).data("product-id");
     var productKey = this.name;
 
-    console.log(`checkbox clikced with id ${productId} and key ${productKey}`);
-
     if (this.checked) {
       updateCheckoutOptions[productKey] = true;
       _addToCart(productId);
@@ -163,8 +161,6 @@ $(function () {
     if (checkoutOptions.setup_compliance) {
       monthlyTotal += pricing.subscriptions.standard.cis_compliance_price.value;
     }
-
-    console.log(`monthlyTotal = ${monthlyTotal}, setup_deployment = ${checkoutOptions.setup_deployment}`);
 
     if (checkoutOptions.setup_deployment) {
       $('#js-one-time-total').show();
