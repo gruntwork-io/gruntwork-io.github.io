@@ -1,0 +1,94 @@
+<div>
+  <h3>Add-ons</h3>
+  <table id="add-ons-table" class="table table-condensed text-white">
+    <tbody>
+      <tr>
+        <td>
+          <input
+            type="checkbox"
+            id="add-on-reference-architecture-{{ include.base_id }}"
+            name="{{site.products.RefArch.key}}"
+            {% if include.already_included %}disabled="disabled" checked="checked"{% endif %}
+            class="addon-checkbox"
+            data-product-id="{{site.products.RefArch.stripeProductId}}"
+          >
+        </td>
+        <td>
+          <label
+            for="add-on-reference-architecture"
+            class="help-text light"
+            title="An opinionated, best-practices, end-to-end tech stack that we customize to your needs, deploy into your AWS accounts, and give you 100% of the code."
+            data-toggle="tooltip"
+          >
+            Reference Architecture
+          </label>
+        </td>
+        <td>
+          {% if include.already_included %}
+            included
+          {% else %}
+            +$<strong>4,950</strong> one-time
+          {% endif %}
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <input
+            type="checkbox"
+            id="add-on-pro-support-{{ include.base_id }}"
+            name="{{site.products.ProSupport.key}}"
+            {% if include.already_included %}disabled="disabled" checked="checked"{% endif %}
+            class="addon-checkbox"
+            data-product-id="{{site.products.ProSupport.stripeProductId}}"
+          >
+        </td>
+        <td>
+          <label
+            for="add-on-pro-support"
+            class="help-text light"
+            title="Get support via email or a private Slack channel, with an SLA of 2 business days."
+            data-toggle="tooltip"
+          >
+            Professional Support
+          </label>
+        </td>
+        <td>
+          {% if include.already_included %}
+            included
+          {% else %}
+            +$<strong>1,950</strong> / month
+          {% endif %}
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <input
+            type="checkbox"
+            id="add-on-compliance-{{ include.base_id }}"
+            name="{{site.products.CIS.key}}"
+            {% if include.already_included %}disabled="disabled" checked="checked"{% endif %}
+            class="addon-checkbox"
+            data-product-id="{{site.products.CIS.stripeProductId}}"
+          >
+        </td>
+        <td>
+          <label
+            for="add-on-compliance"
+            class="help-text light"
+            title="Achieve and maintain compliance with the CIS AWS Foundations Benchmark. Add the Reference Architecture to get an end-to-end, production-grade architecture in your own AWS environment, fully managed as code - all in about a day!"
+            data-toggle="tooltip"
+          >
+            Compliance
+          </label>
+        </td>
+        <td>
+          {% if include.already_included %}
+            included
+          {% else %}
+            +$<strong>1,250</strong> / month
+          {% endif %}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

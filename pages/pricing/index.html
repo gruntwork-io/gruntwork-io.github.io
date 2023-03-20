@@ -3,9 +3,13 @@ layout: default
 title: Become a Gruntwork Subscriber
 excerpt: Choose the plan just right for your team.
 permalink: /pricing/
-redirect_from: /pricing-beta/
+redirect_from:
+  - /pricing-beta/
+  - /checkout/
 slug: pricing
 footer_heading: Ready to hand off the Gruntwork?
+custom_js:
+  - checkout
 ---
 
 <div class="main page-pricing">
@@ -14,8 +18,9 @@ footer_heading: Ready to hand off the Gruntwork?
   </div>
   <div class="section section-dark">
     <div class="container">
-      {% include_relative _plans.html %} {% include_relative _pricing-faqs.html
-      %} {% include_relative _support.html %}
+      {% include_relative _plans.html %}
+      {% include_relative _pricing-faqs.html %}
+      {% include_relative _support.html %}
     </div>
   </div>
 </div>

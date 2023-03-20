@@ -78,10 +78,10 @@ $(function () {
     if (rawCart) {
       const products = JSON.parse(rawCart);
       for (const product of products) {
-        const buttonName = productToButtonNameMap[product.productId];
+        const checkboxName = productToButtonNameMap[product.productId];
 
-        if (buttonName) {
-          $('.addon-button[name="' + buttonName + '"]').click();
+        if (checkboxName) {
+          $('.addon-checkbox[name="' + checkboxName + '"]').checked = true;
         }
       }
     }
@@ -91,43 +91,22 @@ $(function () {
   }
 
   // Listen to Addon button clicks
-  $(".addon-button").on("click", function () {
+  $(".addon-checkbox").on("change", function () {
     var updateCheckoutOptions = {};
 
-    var actionType = $(this).data("addon-action-type");
     var productId = $(this).data("product-id");
+    var productKey = this.name;
 
-    // Process the add action and switch the addon button so user can clear their selection
-    function _handleAddAction(button) {
-      updateCheckoutOptions[button.name] = true;
-      $(button).text("Remove");
-      $(button).addClass("addon-remove-button");
-      $(button).data("addon-action-type", "Remove");
+    console.log(`checkbox clikced with id ${productId} and key ${productKey}`);
+
+    if (this.checked) {
+      updateCheckoutOptions[productKey] = true;
       _addToCart(productId);
-    }
-
-    // Process the remove action and switch the addon button so user can make a selection
-    function _handleRemoveAction(button) {
-      updateCheckoutOptions[button.name] = false;
-      $(button)
-        .text("Add to Subscription ")
-        .append(
-          "<i class='fa fa-angle-double-right fa-lg' aria-hidden='true'></i>"
-        );
-      $(button).removeClass("addon-remove-button");
-      $(button).data("addon-action-type", "Add");
+    } else {
+      updateCheckoutOptions[productKey] = false;
       _removeFromCart(productId);
     }
 
-    switch (actionType) {
-      case "Add":
-        _handleAddAction(this);
-        break;
-      case "Remove":
-        _handleRemoveAction(this);
-        break;
-      default: // Do nothing
-    }
     _updateCheckout(updateCheckoutOptions);
   });
 
@@ -158,70 +137,11 @@ $(function () {
   function _updateCheckout(newOptions) {
     checkoutOptions = Object.assign({}, checkoutOptions, newOptions);
 
-    _updateUI();
     _updatePrice();
   }
 
-  function _updateUI() {
-    var support = checkoutOptions.pro_support;
-    var refarch = checkoutOptions.setup_deployment;
-    var compliance = checkoutOptions.setup_compliance;
-
-    $(".grunty-sprite").attr("data-sprite", 0);
-    $("#subscription_type").val(checkoutOptions.subscription_type);
-
-    // updates addon switch
-    $("[data-switch]" + '[name="pro_support"]').prop("checked", support);
-    $("[data-switch]" + '[name="setup_deployment"]').prop("checked", refarch);
-    $("[data-switch]" + '[name="setup_compliance"]').prop(
-      "checked",
-      compliance
-    );
-
-    if (support) {
-      $(".grunty-sprite").attr("data-sprite", 2);
-      $("#subscription-addon-1").removeClass("check-list-disabled");
-    } else {
-      $("#subscription-addon-1").addClass("check-list-disabled");
-    }
-
-    if (refarch) {
-      $(".grunty-sprite").attr("data-sprite", 1);
-
-      $("#checkout-price-addon").show();
-      $("#checkout-price-addon--mobile").show().css("display", "block");
-      $(".checkout-price-view").addClass("move-up");
-
-      $("#subscription-addon-2").removeClass("check-list-disabled");
-    } else {
-      $("#checkout-price-addon").hide();
-      $("#checkout-price-addon--mobile").hide();
-      $(".checkout-price-view").removeClass("move-up");
-
-      $("#subscription-addon-2").addClass("check-list-disabled");
-    }
-
-    if (compliance) {
-      $("#subscription-addon-3").removeClass("check-list-disabled");
-
-      // Update Refarch texts to reflect CIS selection
-      $("#subscription-addon-3-text").text("CIS Reference Architecture");
-      $("#addon-text-refarch").text("CIS Reference Architecture");
-    } else {
-      $("#subscription-addon-3").addClass("check-list-disabled");
-
-      // Update Refarch texts to reflect CIS selection removal
-      $("#subscription-addon-3-text").text("Reference Architecture");
-      $("#addon-text-refarch").text("Reference Architecture");
-    }
-
-    if (support && refarch) {
-      $(".grunty-sprite").attr("data-sprite", 3);
-    }
-  }
-
   function _updatePrice() {
-    var monthlyTotal, dueNowTotal;
+    var monthlyTotal;
 
     switch (checkoutOptions.subscription_type) {
       case "standard":
@@ -244,18 +164,15 @@ $(function () {
       monthlyTotal += pricing.subscriptions.standard.cis_compliance_price.value;
     }
 
-    dueNowTotal = monthlyTotal;
+    console.log(`monthlyTotal = ${monthlyTotal}, setup_deployment = ${checkoutOptions.setup_deployment}`);
 
     if (checkoutOptions.setup_deployment) {
-      dueNowTotal += 4950;
-      $("#due-monthly-block").show();
+      $('#js-one-time-total').show();
     } else {
-      // only show the monthly disclaimer when it differs from due now
-      $("#due-monthly-block").hide();
+      $("#js-one-time-total").hide();
     }
 
-    $("#due-now").text(dueNowTotal.toLocaleString());
-    $(".monthly-total").text(monthlyTotal.toLocaleString());
+    $("#js-monthly-total").text(monthlyTotal.toLocaleString());
   }
 
   _setDefaults();

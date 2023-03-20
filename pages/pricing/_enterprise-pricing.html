@@ -9,22 +9,9 @@
         Ideal for larger companies.
       </p>
     </div>
-    <hr />
-    <div class="flex flex-middle flex-column text-center">
-      <div data-mh="plans-pricing-top" style="height:150px">
-        <p class="h1 enterprise-h1">Contact Us</p>
-        <p class="help-block"></p>
-      </div>
-      <div data-mh="plans-pricing-bottom" style="height:100px">
-        <p><a class="btn btn-primary pricing-ctas" href="/contact/">Contact Us</a></p>
-        <p class="text-muted small">
-          <em>Annual contract, billed annually</em>
-        </p>
-      </div>
-    </div>
-    <hr />
-    <div data-mh="plans-features">
-      <ul class="check-list text-white">
+    <hr>
+    <div class="flex flex-middle flex-column" data-mh="plans-features">
+      <ul class="check-list text-white" style="height: 250px">
         <li>
           <span
             class="help-text light"
@@ -93,6 +80,29 @@
           >
         </li>
       </ul>
+    </div>
+    <hr>
+    {% include_relative _add-ons.html already_included=true base_id="enterprise" %}
+    <hr>
+    <div class="flex flex-middle flex-column text-center">
+      <div data-mh="plans-pricing-top">
+        <p class="help-block" style="margin-top:-9px; margin-bottom: unset;">Starting at</p>
+        <p class="big-price"><span>$</span>4<span>,</span>000</p>
+        <p class="help-block" style="margin-top:-9px;">per month</p>
+      </div>
+      <div class="text-center">
+        <p><a class="btn btn-primary pricing-ctas" href="/contact/">Contact Us</a></p>
+      </div>
+    </div>
+    <div class="text-center" data-mh="plans-pricing-bottom">
+      <p class="text-muted small">
+        <em>
+          Annual contract, billed annually.
+          <br>
+          View our
+          <span><a href="/terms/" title="Gruntwork Terms of Service" target="_blank">Terms of Service</a></span>.
+        </em>
+      </p>
     </div>
   </div>
 </div>
