@@ -18,7 +18,7 @@ $(function () {
   // Note these are currently all Stripe TEST product Ids and need to be updated to
   // the live strip product IDs
 
-  const productToButtonNameMap = {
+  const productToCheckboxNameMap = {
     [products.AWS.stripeProductId]: products.AWS.key,
     [products.ProSupport.stripeProductId]: products.ProSupport.key,
     [products.RefArch.stripeProductId]: products.RefArch.key,
@@ -78,10 +78,10 @@ $(function () {
     if (rawCart) {
       const products = JSON.parse(rawCart);
       for (const product of products) {
-        const checkboxName = productToButtonNameMap[product.productId];
+        const checkboxName = productToCheckboxNameMap[product.productId];
 
         if (checkboxName) {
-          $('.addon-checkbox[name="' + checkboxName + '"]').checked = true;
+          $('.addon-checkbox[name="' + checkboxName + '"]').prop('checked', true).trigger("change");
         }
       }
     }

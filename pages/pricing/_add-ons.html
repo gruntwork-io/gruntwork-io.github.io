@@ -7,7 +7,7 @@
           <input
             type="checkbox"
             id="add-on-reference-architecture-{{ include.base_id }}"
-            name="{{site.products.RefArch.key}}"
+            {% unless include.already_included %}name="{{site.products.RefArch.key}}"{% endunless %}
             {% if include.already_included %}disabled="disabled" checked="checked"{% endif %}
             class="addon-checkbox"
             data-product-id="{{site.products.RefArch.stripeProductId}}"
@@ -36,7 +36,7 @@
           <input
             type="checkbox"
             id="add-on-pro-support-{{ include.base_id }}"
-            name="{{site.products.ProSupport.key}}"
+            {% unless include.already_included %}name="{{site.products.ProSupport.key}}"{% endunless %}
             {% if include.already_included %}disabled="disabled" checked="checked"{% endif %}
             class="addon-checkbox"
             data-product-id="{{site.products.ProSupport.stripeProductId}}"
@@ -65,7 +65,7 @@
           <input
             type="checkbox"
             id="add-on-compliance-{{ include.base_id }}"
-            name="{{site.products.CIS.key}}"
+            {% unless include.already_included %}name="{{site.products.CIS.key}}"{% endunless %}
             {% if include.already_included %}disabled="disabled" checked="checked"{% endif %}
             class="addon-checkbox"
             data-product-id="{{site.products.CIS.stripeProductId}}"
