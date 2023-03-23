@@ -1,0 +1,94 @@
+<div>
+  <h3>Add-ons</h3>
+  <table id="add-ons-table" class="table table-condensed text-white">
+    <tbody>
+      <tr>
+        <td>
+          <input
+            type="checkbox"
+            id="add-on-reference-architecture-{{ include.base_id }}"
+            {% unless include.already_included %}name="{{site.products.RefArch.key}}"{% endunless %}
+            {% if include.already_included %}disabled="disabled" checked="checked"{% endif %}
+            class="addon-checkbox"
+            data-product-id="{{site.products.RefArch.stripeProductId}}"
+          >
+        </td>
+        <td>
+          <label
+            for="add-on-reference-architecture"
+            class="help-text light"
+            title="Get an opinionated, best-practices, end-to-end tech stack, customized to your needs, 100% defined as code, deployed into your AWS accounts—all in about a day!"
+            data-toggle="tooltip"
+          >
+            Reference Architecture
+          </label>
+        </td>
+        <td>
+          {% if include.already_included %}
+            included
+          {% else %}
+            +$<strong>4,950</strong> one-time
+          {% endif %}
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <input
+            type="checkbox"
+            id="add-on-pro-support-{{ include.base_id }}"
+            {% unless include.already_included %}name="{{site.products.ProSupport.key}}"{% endunless %}
+            {% if include.already_included %}disabled="disabled" checked="checked"{% endif %}
+            class="addon-checkbox"
+            data-product-id="{{site.products.ProSupport.stripeProductId}}"
+          >
+        </td>
+        <td>
+          <label
+            for="add-on-pro-support"
+            class="help-text light"
+            title="Get support via email or a private Slack channel, with an SLA of 2 business days."
+            data-toggle="tooltip"
+          >
+            Professional Support
+          </label>
+        </td>
+        <td>
+          {% if include.already_included %}
+            included
+          {% else %}
+            +$<strong>1,950</strong> / month
+          {% endif %}
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <input
+            type="checkbox"
+            id="add-on-compliance-{{ include.base_id }}"
+            {% unless include.already_included %}name="{{site.products.CIS.key}}"{% endunless %}
+            {% if include.already_included %}disabled="disabled" checked="checked"{% endif %}
+            class="addon-checkbox"
+            data-product-id="{{site.products.CIS.stripeProductId}}"
+          >
+        </td>
+        <td>
+          <label
+            for="add-on-compliance"
+            class="help-text light"
+            title="Get access to our CIS Service Catalog, where all the modules are compliant with the CIS AWS Foundations Benchmark. If you pick this and the Reference Architecture add-on, the entire Reference Architecture will be compliant with the CIS AWS Foundations Benchmark!"
+            data-toggle="tooltip"
+          >
+            CIS Compliance Package
+          </label>
+        </td>
+        <td>
+          {% if include.already_included %}
+            included
+          {% else %}
+            +$<strong>1,250</strong> / month
+          {% endif %}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
