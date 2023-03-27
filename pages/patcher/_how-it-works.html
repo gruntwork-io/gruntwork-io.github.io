@@ -1,0 +1,44 @@
+<div class="row row-page-header how-it-works-section">
+    <div class="col-xs-12">
+        <h2>How it Works</h2>
+    </div>
+    {% for category in site.data.patcher-how-it-works-march %} {% for item in
+    category.items %}
+    <div class="col-xs-12">
+        <div style="width: 100%">
+            <div>
+                <img class="patcher-icon-user" src="/assets/img/patcher/step-{{ item.step-image }}-march.png" />
+                <h3 style="margin-top: 0px">{{ item.title }}</h3>
+            </div>
+            <div class="asciinema-wrapper-col">
+                <div class="bar">
+                    <div class="circles-box">
+                        <div class="circle"></div>
+                        <div class="circle"></div>
+                        <div class="circle"></div>
+                    </div>
+                </div>
+                <img class="" src="" />
+            </div>
+            <div class="col-wrapper">
+                <div class="col">
+                    <div class="title">
+                        <img class="patcher-icon" src="/assets/img/patcher/with-patcher-icon@3x.png" />
+                        <h4 style="color: #03C5E7">With Patcher</h4>
+                    </div>
+                    <p class="patcher-text">{{item.with-patcher}}
+
+                    </p>
+                </div>
+                <div class="col">
+                    <div class="title">
+                        <img class="patcher-icon" src="/assets/img/patcher/close-icon@3x.png" />
+                        <h4>Without Patcher</h4>
+                    </div>
+                    <p>{{item.without-patcher}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %} {% endfor %}
+</div>
