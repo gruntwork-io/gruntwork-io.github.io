@@ -2,54 +2,132 @@
   <div class="gw-pricing-columns__panel panel-body">
     <div class="plans-heading text-center" data-mh="plans-heading">
       <h2 class="no-anchor margin-top-none">Standard</h2>
-      <p class="description" id="standard-plan">Run production-grade infra on AWS.<br>Ideal for individual teams.</p>
+      <p class="description" id="standard-plan">
+        Run production-grade infra on AWS.<br />Ideal for individual teams.
+      </p>
     </div>
-    <hr>
-    <div class="flex flex-middle flex-column text-center">
-      <div data-mh="plans-pricing-top" style="height:150px">
-        <p class="help-block" style="margin-top:-9px; margin-bottom: unset;">Starting at</p>
-        <p class="big-price"><span>$</span>795</p>
-        <p class="help-block" style="margin-top:-9px;">per month</p>
-      </div>
-      <div data-mh="plans-pricing-bottom" style="height:100px">
-        <p><a id="pricing-cta-standard" class="btn btn-info pricing-ctas"
-            href="{{ site.data.pricing.subscriptions.standard.checkout_url }}">Customize Plan</a></p>
-        <p class="text-muted small"><em>Annual contract, billed monthly.</em></p>
-      </div>
-    </div>
-    <hr>
-    <div data-mh="plans-features">
-      <ul class="check-list text-white">
-        <li><span class="help-text light"
+    <hr />
+    <div class="flex flex-middle flex-column" data-mh="plans-features">
+      <ul class="check-list text-white" style="height: 250px">
+        <li>
+          <span
+            class="help-text light"
             title="Get support from both Gruntwork engineers and fellow customers on running production-grade infrastructure in AWS."
-            data-toggle="tooltip">Support for AWS</span></li>
-        <li><span class="help-text light"
+            data-toggle="tooltip"
+            >Support for AWS</span
+          >
+        </li>
+        <li>
+          <span
+            class="help-text light"
             title="Gain access to 350,000+ lines of reusable, battle-tested, production-ready infrastructure code."
-            data-toggle="tooltip">250+ Subscriber-Only Modules</span></li>
-        <li><span class="help-text light"
+            data-toggle="tooltip"
+            >250+ Subscriber-Only Modules</span
+          >
+        </li>
+        <li>
+          <span
+            class="help-text light"
             title="A user is a human or machine that accesses the Gruntwork code repos, training materials, or support services. For more than 20 users, see Gruntwork Enterprise."
-            data-toggle="tooltip">Up to 20 Users</span></li>
-        <li><span class="help-text light"
+            data-toggle="tooltip"
+            >Up to 20 Users</span
+          >
+        </li>
+        <li>
+          <span
+            class="help-text light"
             title="Learn DevOps fundamentals with our online video courses designed specially for aspiring DevOps Engineers."
-            data-toggle="tooltip">DevOps Training Library &amp; Docs</span></li>
-        <li><span class="help-text light"
+            data-toggle="tooltip"
+            >DevOps Training Library &amp; Docs</span
+          >
+        </li>
+        <li>
+          <span
+            class="help-text light"
             title="Our Knowledge Base and Community Support Slack workspace is included with all subscriptions. For faster response times, support via email, and private Slack chat, see Pro Support."
-            data-toggle="tooltip">Community Support</span></li>
-        <li><span class="help-text light" style="cursor: pointer;"><a class="patcher-link" href="/patcher"
-              style="color: white;">Patcher</a></span><label
-            style="display: inline-flex; align-items: center; margin-bottom: 0">
-            <div style="
-            background: linear-gradient(
-              101.84deg,
-              #fe3162 2.31%,
-              #ff4f47 98.56%
-            );
-            margin-left: 12px;
-          " class="label-beta label-small">
+            data-toggle="tooltip"
+            >Community Support</span
+          >
+        </li>
+        <li>
+          <span class="help-text light" style="cursor: pointer"
+            ><a class="patcher-link" href="/patcher" style="color: white"
+              >Patcher</a
+            ></span
+          ><label
+            style="display: inline-flex; align-items: center; margin-bottom: 0"
+          >
+            <div
+              style="
+                background: linear-gradient(
+                  101.84deg,
+                  #fe3162 2.31%,
+                  #ff4f47 98.56%
+                );
+                margin-left: 12px;
+              "
+              class="label-beta label-small"
+            >
               BETA
             </div>
-          </label></li>
+          </label>
+        </li>
       </ul>
+    </div>
+    <hr />
+    {% include_relative _add-ons.html base_id="standard" %}
+    <hr />
+    <div class="flex flex-middle flex-column text-center">
+      <div data-mh="plans-pricing-top">
+        <p class="help-block" style="margin-top: -9px; margin-bottom: unset">
+          &nbsp;
+        </p>
+        <p class="big-price">
+          <span>$</span><strong id="js-monthly-total">795</strong>
+        </p>
+        <p class="help-block" style="margin-top: -9px">per month</p>
+        <div id="js-one-time-total" style="display: none">
+          <p class="text-center" style="">
+            <span class="large-price large-price-sub"
+              ><span>+$</span>4,950</span
+            >
+          </p>
+          <p class="help-block" style="margin-top: -9px">one time</p>
+        </div>
+      </div>
+      <div class="text-center">
+        <form
+          action="{{ site.developer_portal_url }}/checkout"
+          style="margin-bottom: 15px"
+        >
+          <input type="hidden" name="cart" value="" />
+          <input type="hidden" name="editUrl" value="" />
+          <button
+            type="submit"
+            id="checkout-btn"
+            class="btn btn-info btn-checkout"
+          >
+            Checkout
+          </button>
+        </form>
+      </div>
+    </div>
+    <div class="text-center" data-mh="plans-pricing-bottom">
+      <p class="text-muted small">
+        <em>
+          Annual contract, billed monthly.
+          <br />
+          View our
+          <span
+            ><a
+              href="/terms/"
+              title="Gruntwork Terms of Service"
+              target="_blank"
+              >Terms of Service</a
+            ></span
+          >.
+        </em>
+      </p>
     </div>
   </div>
 </div>
