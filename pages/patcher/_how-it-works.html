@@ -14,7 +14,7 @@
         <h3 style="margin-top: 0px">{{ item.title }}</h3>
       </div>
       <img
-        class=""
+        class="screen-img"
         src="/assets/img/patcher/patcher-player-cast-{{ item.step-image }}.png"
       />
       <div class="col-wrapper">
@@ -43,3 +43,38 @@
   </div>
   {% endfor %} {% endfor %}
 </div>
+{% for category in site.data.patcher-how-it-works %} {% for item in
+category.items %}
+<div class="popup-screen">
+  <div class="close-popup-btn">
+    <img src="/assets/img/patcher/close-btn-icon.png" />
+  </div>
+  <img
+    class="screen"
+    src="/assets/img/patcher/patcher-player-cast-{{ item.step-image }}.png"
+  />
+</div>
+{% endfor %} {% endfor %}
+
+<script>
+  let screenMdMin = 992;
+  var screenImages = document.querySelectorAll(".screen-img");
+  var popups = document.querySelectorAll(".popup-screen");
+  var closeBtns = document.querySelectorAll(".close-popup-btn");
+
+  screenImages.forEach((screenImage, index) => {
+    if (window.innerWidth < screenMdMin) {
+      screenImage.addEventListener("click", function () {
+        popups[index].classList.add("popup-screen-active");
+      });
+    }
+  });
+
+  closeBtns.forEach((closeBtn, index) => {
+    if (window.innerWidth < screenMdMin) {
+      closeBtn.addEventListener("click", function () {
+        popups[index].classList.remove("popup-screen-active");
+      });
+    }
+  });
+</script>

@@ -1,4 +1,5 @@
 .patcher {
+
   // Hero styles for the patcher page
   .section-hero {
     padding-top: 90px;
@@ -16,10 +17,12 @@
   .floating-img-patcher {
     position: absolute;
     right: 0;
+    max-height: 505px;
 
     @media (max-width: $screen-md-max) {
       left: 50%;
       transform: translate(-50%);
+      max-height: 380px;
     }
   }
 
@@ -62,6 +65,7 @@
       tr {
         &:first-child {
           td {
+
             &:nth-child(2),
             &:nth-child(3) {
               border-top: 1px solid $input-border;
@@ -71,6 +75,7 @@
 
         &:last-child {
           td {
+
             &:nth-child(2),
             &:nth-child(3) {
               border-bottom: 1px solid $input-border;
@@ -79,6 +84,7 @@
         }
 
         td {
+
           &:nth-child(2),
           &:nth-child(3) {
             border-left: 1px solid $input-border;
@@ -122,7 +128,7 @@
     }
   }
 
-  .info-icon:hover + .patcher-tooltip {
+  .info-icon:hover+.patcher-tooltip {
     visibility: visible;
     opacity: 100%;
   }
@@ -189,13 +195,11 @@
     }
 
     .progress-bar {
-      background: linear-gradient(
-        133.39deg,
-        #13cfe7 -33.78%,
-        #07a5fe 86.8%,
-        #06a2ff 86.8%,
-        #07a5fe 86.8%
-      );
+      background: linear-gradient(133.39deg,
+          #13cfe7 -33.78%,
+          #07a5fe 86.8%,
+          #06a2ff 86.8%,
+          #07a5fe 86.8%);
       height: 10px;
       width: 72%;
       position: absolute;
@@ -244,44 +248,36 @@
 
       // Firefox
       &::-moz-range-progress {
-        background-color: linear-gradient(
-          133.39deg,
-          #13cfe7 -33.78%,
-          #07a5fe 86.8%,
-          #06a2ff 86.8%,
-          #07a5fe 86.8%
-        );
+        background-color: linear-gradient(133.39deg,
+            #13cfe7 -33.78%,
+            #07a5fe 86.8%,
+            #06a2ff 86.8%,
+            #07a5fe 86.8%);
       }
 
       &::-moz-range-track {
-        background-color: linear-gradient(
-          133.39deg,
-          #13cfe7 -33.78%,
-          #07a5fe 86.8%,
-          #06a2ff 86.8%,
-          #07a5fe 86.8%
-        );
+        background-color: linear-gradient(133.39deg,
+            #13cfe7 -33.78%,
+            #07a5fe 86.8%,
+            #06a2ff 86.8%,
+            #07a5fe 86.8%);
       }
 
       // IE
       &::-ms-fill-lower {
-        background-color: linear-gradient(
-          133.39deg,
-          #13cfe7 -33.78%,
-          #07a5fe 86.8%,
-          #06a2ff 86.8%,
-          #07a5fe 86.8%
-        );
+        background-color: linear-gradient(133.39deg,
+            #13cfe7 -33.78%,
+            #07a5fe 86.8%,
+            #06a2ff 86.8%,
+            #07a5fe 86.8%);
       }
 
       &::-ms-fill-upper {
-        background-color: linear-gradient(
-          133.39deg,
-          #13cfe7 -33.78%,
-          #07a5fe 86.8%,
-          #06a2ff 86.8%,
-          #07a5fe 86.8%
-        );
+        background-color: linear-gradient(133.39deg,
+            #13cfe7 -33.78%,
+            #07a5fe 86.8%,
+            #06a2ff 86.8%,
+            #07a5fe 86.8%);
       }
     }
   }
@@ -310,7 +306,7 @@
     }
   }
 
-  input:not(:active) + .slider-number {
+  input:not(:active)+.slider-number {
     opacity: 100%;
     margin-top: 0;
     pointer-events: none;
@@ -422,6 +418,7 @@
       visibility: visible !important;
       opacity: 100% !important;
       transition: all 0.5s;
+
       @media (max-width: $screen-md-min) {
         height: 100vh !important;
         top: 0;
@@ -555,7 +552,8 @@
     }
   }
 
-  .video-wrapper {
+  .video-wrapper,
+  .popup-screen {
     visibility: hidden;
     opacity: 0;
     height: 0;
@@ -563,7 +561,8 @@
     cursor: pointer;
   }
 
-  .video-wrapper-active {
+  .video-wrapper-active,
+  .popup-screen-active {
     visibility: visible;
     opacity: 100%;
     transition: all 0.5s;
@@ -588,6 +587,30 @@
       position: absolute;
       top: 20px;
       right: 40px;
+      padding: 0;
+      border: none;
+      cursor: pointer;
+    }
+  }
+
+  .popup-screen-active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .screen {
+      rotate: 90deg;
+      width: 75vh;
+      height: 100vw;
+      min-height: 100vw;
+      max-width: none;
+      object-fit: contain;
+    }
+
+    .close-popup-btn {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
       padding: 0;
       border: none;
       cursor: pointer;
