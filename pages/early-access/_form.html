@@ -1,0 +1,34 @@
+<div id="error-message"></div>
+<form id="contact-form" method="post" target="_blank"
+  action="https://api.formbucket.com/f/buk_7iB8j7vEJPW9ad2ClJwFfm5M">
+  <input type="hidden" name="_subject" id="_subject" value="New inquiry from {{ site.url }}" />
+  <input type="hidden" name="_viewing" id="_viewing" value="v1-static" />
+  <input type="hidden" name="_next" id="_next" value="{{ site.url }}/great-news/" />
+  <input type="hidden" name="hello_gruntwork" value="" />
+  <input type="text" name="_gotcha" style="display: none" />
+  {% include_relative _input-text.html id="contact-name" label="Name"
+  required=true placeholder="Jon Doe" %} {% include_relative _input-text.html
+  id="contact-email" label="Company email" required=true placeholder="jon@acme.com"
+  type="email" %}
+  <div class="form-group">
+    <div class="row">
+      <div class="col-xs-12 col-md-4">
+        <label for="contact-message" style="white-space: nowrap;">What are you interested in?</label>
+      </div>
+      <div class="col-xs-12 col-md-8">
+        {% include_relative _input-check.html id="upgarde" label="Automatically
+        upgrading EKS to Kubernetes 1.25" %} {% include_relative
+        _input-check.html id="modules" label="Using Patcher with my own
+        modules"%} {% include_relative _input-check.html id="tbd" label="[TBD we
+        are still discussing the question???]" %}
+      </div>
+    </div>
+  </div>
+  <div class="text-center">
+    <br />
+    <button type="submit" id="submit-button" class="btn btn-primary" ga-on="click" ga-event-category="early-access"
+      ga-event-action="submit" href="/great-news">
+      Submit
+    </button>
+  </div>
+</form>

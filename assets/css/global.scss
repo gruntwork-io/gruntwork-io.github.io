@@ -486,6 +486,27 @@ footer hr {
   }
 }
 
+.label-beta {
+  margin-left: 4px;
+  border-radius: 3.5px;
+  background: linear-gradient(101.84deg, #fe3162 2.31%, #ff4f47 98.56%);
+  font-size: 15px;
+  line-height: 19px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 700;
+  padding: 4px 8px;
+  width: max-content;
+  text-transform: uppercase;
+}
+.label-small {
+  padding: 2.85px 5.71px;
+  font-size: 10.69px;
+  line-height: 13px;
+  background: rgba(50, 52, 53, 0.34);
+}
+
 //
 // Links
 // ==================================================
@@ -589,6 +610,13 @@ a.caret-right {
       margin-right: 0;
     }
   }
+  @media (min-width: 1150px) {
+    width: 1120px;
+    .navbar-header {
+      margin-right: 1em;
+      transition: margin 0.2s ease-out;
+    }
+  }
   @media (min-width: 1400px) {
     width: 1280px;
     .navbar-header {
@@ -613,6 +641,27 @@ a.caret-right {
     padding-right: 20px;
     padding-left: 20px;
   }
+}
+
+//patcher link styles
+.navbar-left > li:nth-child(3) {
+  @media (max-width: 1159px) {
+    display: none;
+  }
+}
+
+.dropdown-menu > li > .beta-link-dropdown {
+  @media (min-width: 1160px) {
+    display: none;
+  }
+  display: inline-flex;
+  align-items: flex-end;
+  width: 100%;
+}
+
+.beta-link {
+  display: inline-flex !important;
+  align-items: flex-end;
 }
 
 // Navbar button styles
