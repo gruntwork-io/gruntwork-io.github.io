@@ -318,6 +318,7 @@ label {
 
 .form-control {
   border-width: 2px;
+  border-radius: 4px;
 }
 
 .radio label,
@@ -486,6 +487,27 @@ footer hr {
   }
 }
 
+.label-beta {
+  margin-left: 4px;
+  border-radius: 3.5px;
+  background: linear-gradient(101.84deg, #fe3162 2.31%, #ff4f47 98.56%);
+  font-size: 15px;
+  line-height: 19px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 700;
+  padding: 4px 8px;
+  width: max-content;
+  text-transform: uppercase;
+}
+.label-small {
+  padding: 2.85px 5.71px;
+  font-size: 10.69px;
+  line-height: 13px;
+  background: rgba(50, 52, 53, 0.34);
+}
+
 //
 // Links
 // ==================================================
@@ -589,6 +611,13 @@ a.caret-right {
       margin-right: 0;
     }
   }
+  @media (min-width: 1150px) {
+    width: 1120px;
+    .navbar-header {
+      margin-right: 1em;
+      transition: margin 0.2s ease-out;
+    }
+  }
   @media (min-width: 1400px) {
     width: 1280px;
     .navbar-header {
@@ -613,6 +642,27 @@ a.caret-right {
     padding-right: 20px;
     padding-left: 20px;
   }
+}
+
+//patcher link styles
+.navbar-left > li:nth-child(3) {
+  @media (max-width: 1159px) {
+    display: none;
+  }
+}
+
+.dropdown-menu > li > .beta-link-dropdown {
+  @media (min-width: 1160px) {
+    display: none;
+  }
+  display: inline-flex;
+  align-items: flex-end;
+  width: 100%;
+}
+
+.beta-link {
+  display: inline-flex !important;
+  align-items: flex-end;
 }
 
 // Navbar button styles
@@ -1886,12 +1936,13 @@ code {
   height: 17px;
   left: 0;
   margin-left: -20px;
-  border: 2px solid #194c5f;
+  border: 2px solid #284B5D;
   border-radius: 0;
   background-color: #242e3b;
   -webkit-transition: border 0.15s ease-in-out, color 0.15s ease-in-out;
   -o-transition: border 0.15s ease-in-out, color 0.15s ease-in-out;
   transition: border 0.15s ease-in-out, color 0.15s ease-in-out;
+  border-radius: 3px;
 }
 .checkbox label::after {
   display: inline-block;
@@ -1901,10 +1952,12 @@ code {
   left: 0;
   top: 0;
   margin-left: -20px;
-  padding-left: 3px;
-  padding-top: 1px;
+  padding-left: 2px;
   font-size: 11px;
-  color: $brand-success;
+  color: white;
+  background-color: $btn-getademo-color;
+  border: solid 1px $btn-getademo-color;
+  border-radius: 3px;
   line-height: 1.4;
 }
 .checkbox input[type="checkbox"],
@@ -1915,8 +1968,6 @@ code {
 }
 .checkbox input[type="checkbox"]:focus + label::before,
 .checkbox input[type="radio"]:focus + label::before {
-  outline: thin dotted;
-  outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
 }
 .checkbox input[type="checkbox"]:checked + label::after,
@@ -2218,6 +2269,59 @@ input[type="radio"] .styled:checked + label::after {
     padding-left: 7px;
     padding-top: 5px;
   }
+}
+
+// Patcher form styles
+.radios-container {
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: nowrap;
+  @media (max-width: $screen-md-max) {
+    flex-wrap: wrap;
+  }
+}
+
+.radios-container li {
+  float: left;
+  margin: 0 8px 0 0;
+  min-width: 80px;
+  max-width: 80px;
+  height: 40px;
+  position: relative;
+}
+
+.radios-container label,
+.radios-container input {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.radios-container input[type="radio"] {
+  opacity: 0.01;
+  z-index: 100;
+}
+
+.radios-container input[type="radio"]:checked+label,
+.Checked+label {
+  background: linear-gradient(133.39deg, #13CFE7 -33.78%, #07A5FE 86.8%, #06A2FF 86.8%, #07A5FE 86.8%);
+  color: #FFFFFF;
+}
+
+.radios-container label {
+  background: #262E3A;
+  color: #90959E;
+  cursor: pointer;
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  line-height: 100%;
 }
 
 ////// Youtube video

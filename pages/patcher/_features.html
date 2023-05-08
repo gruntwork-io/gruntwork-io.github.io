@@ -1,0 +1,21 @@
+<div class="row row-page-header">
+  <div class="col-xs-12">
+    <h2>Gruntwork Library is built for Patcher</h2>
+    <p style="padding-bottom: 38px">
+      Deploy on top of production-grade infrastructure and always stay up to
+      date with the latest releases, best practices, security patches, and new
+      tooling versions.
+    </p>
+    {% for feature in site.data.patcher-features %}
+    <div class="row row-features-group" style="margin-bottom: 45px">
+      <div class="col-xs-4 col-sm-2 col-md-2">
+        <img class="feature-image" src="{{ feature.icon }}" alt="feature-icon" />
+      </div>
+      <div class="col-xs-12 col-sm-10 col-md-10">
+        <h3 style="margin-top: 0px">{{ feature.title }}</h3>
+        <p>{{ feature.description }}</p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
