@@ -7,33 +7,21 @@
   <div class="col-xs-12">
     <div style="width: 100%">
       <div>
-        <img
-          class="patcher-icon-user"
-          src="/assets/img/patcher/step-{{ item.step-image }}.png"
-        />
+        <img class="patcher-icon-user" src="/assets/img/patcher/step-{{ item.step-image }}.png" />
         <h3 style="margin-top: 0px">{{ item.title }}</h3>
       </div>
-      <img
-        class="screen-img"
-        src="/assets/img/patcher/patcher-player-cast-{{ item.step-image }}.png"
-      />
+      <img class="screen-img" src="/assets/img/patcher/patcher-player-cast-{{ item.step-image }}.png" />
       <div class="col-wrapper">
         <div class="col">
           <div class="title">
-            <img
-              class="patcher-icon"
-              src="/assets/img/patcher/with-patcher-icon@3x.png"
-            />
+            <img class="patcher-icon" src="/assets/img/patcher/with-patcher-icon@3x.png" />
             <h4 style="color: #03c5e7">With Patcher</h4>
           </div>
           <p class="patcher-text">{{item.with-patcher}}</p>
         </div>
         <div class="col">
           <div class="title">
-            <img
-              class="patcher-icon"
-              src="/assets/img/patcher/close-icon@3x.png"
-            />
+            <img class="patcher-icon" src="/assets/img/patcher/close-icon@3x.png" />
             <h4>Without Patcher</h4>
           </div>
           <p>{{item.without-patcher}}</p>
@@ -49,32 +37,31 @@ category.items %}
   <div class="close-popup-btn">
     <img src="/assets/img/patcher/close-btn-icon.png" />
   </div>
-  <img
-    class="screen"
-    src="/assets/img/patcher/patcher-player-cast-{{ item.step-image }}.png"
-  />
+  <img class="screen" src="/assets/img/patcher/patcher-player-cast-{{ item.step-image }}.png" />
 </div>
 {% endfor %} {% endfor %}
 
 <script>
-  let screenMdMin = 992;
-  var screenImages = document.querySelectorAll(".screen-img");
-  var popups = document.querySelectorAll(".popup-screen");
-  var closeBtns = document.querySelectorAll(".close-popup-btn");
+  window.onload = (event) => {
+    let screenMdMin = 992;
+    var screenImages = document.querySelectorAll(".screen-img");
+    var popups = document.querySelectorAll(".popup-screen");
+    var closeBtns = document.querySelectorAll(".close-popup-btn");
 
-  screenImages.forEach((screenImage, index) => {
-    if (window.innerWidth < screenMdMin) {
-      screenImage.addEventListener("click", function () {
-        popups[index].classList.add("popup-screen-active");
-      });
-    }
-  });
+    screenImages.forEach((screenImage, index) => {
+      if (window.innerWidth < screenMdMin) {
+        screenImage.addEventListener("click", function () {
+          popups[index].classList.add("popup-screen-active");
+        });
+      }
+    });
 
-  closeBtns.forEach((closeBtn, index) => {
-    if (window.innerWidth < screenMdMin) {
-      closeBtn.addEventListener("click", function () {
-        popups[index].classList.remove("popup-screen-active");
-      });
-    }
-  });
+    closeBtns.forEach((closeBtn, index) => {
+      if (window.innerWidth < screenMdMin) {
+        closeBtn.addEventListener("click", function () {
+          popups[index].classList.remove("popup-screen-active");
+        });
+      }
+    });
+  };
 </script>

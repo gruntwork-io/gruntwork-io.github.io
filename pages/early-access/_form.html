@@ -9,8 +9,7 @@
 
   {% include_relative _input-text.html id="contact-name" label="Name" required=true placeholder="Jon Doe" %}
   {% include_relative _input-text.html id="contact-email" label="Company Email Adress" required=true
-  placeholder="jon@acme.com"
-  type="email" %}
+  placeholder="jon@acme.com" type="email" %}
 
   <div class="form-group">
     <div class="row">
@@ -139,9 +138,7 @@
         {% include_relative _input-check.html name="system-control" value="GitLab"%}
         {% include_relative _input-check.html name="system-control" value="BitBucket" %}
         {% include_relative _input-check.html name="system-control" value="AWS CodeCommit" %}
-        {% include_relative _input-check-other.html id="qi-other" name="system-control" value="Other"
-        id-2="cs-other-txt"
-        placeholder="Please list other version control system" %}
+        {% include_relative _input-check-other.html name="system-control" id="qi-other" value="Other" id-2="cs-other-txt" placeholder="Please list other version control system" %}
       </div>
     </div>
   </div>
@@ -153,10 +150,10 @@
           updates?</label>
       </div>
       <div class="col-xs-12 question">
-        {% include_relative _input-check.html name="ci-system" id="ci-github-actions" value="GitHub Actions" %}
-        {% include_relative _input-check.html name="ci-system" id="ci-circleci" value="CircleCI"%}
-        {% include_relative _input-check.html name="ci-system" id="ci-gitlab" value="GitLab" %}
-        {% include_relative _input-check.html name="ci-system" id="ci-azure" value="Azure DevOps" %}
+        {% include_relative _input-check.html name="ci-system" value="GitHub Actions" %}
+        {% include_relative _input-check.html name="ci-system" value="CircleCI"%}
+        {% include_relative _input-check.html name="ci-system" value="GitLab" %}
+        {% include_relative _input-check.html name="ci-system" value="Azure DevOps" %}
         {% include_relative _input-check.html name="ci-system" id="ci-not" value="We don't use CI to deploy infra
         changes" %}
         {% include_relative _input-check-other.html name="ci-system" id="ci-other" value="Other" id-2="ci-other-txt"
@@ -171,10 +168,10 @@
         <label for="clouds-message" style="white-space: nowrap;">Which clouds do you use?</label>
       </div>
       <div class="col-xs-12 question">
-        {% include_relative _input-check.html name="cloud" id="cloud-aws" value="AWS" %}
-        {% include_relative _input-check.html name="cloud" id="cloud-azure" value="Azure"%}
-        {% include_relative _input-check.html name="cloud" id="cloud-gcp" value="GCP" %}
-        {% include_relative _input-check.html name="cloud" id="cloud-own" value="We run our own data center" %}
+        {% include_relative _input-check.html name="cloud" value="AWS" %}
+        {% include_relative _input-check.html name="cloud" value="Azure"%}
+        {% include_relative _input-check.html name="cloud" value="GCP" %}
+        {% include_relative _input-check.html name="cloud" value="We run our own data center" %}
         {% include_relative _input-check-other.html name="cloud" id="cloud-other" value="Other"
         id-2="cloud-other-txt"
         placeholder="Please list other version control system" %}
@@ -198,7 +195,7 @@
   <div class="form-group">
     <div class="row">
       <div class="col-xs-12 col-md-8">
-        <label for="additional-message">Anything else you'd like to share with us? </label>
+        <label for="additional-message">Anything else you'd like to share with us? (optional)</label>
       </div>
       <div class="col-xs-12 col-md-8">
         <textarea id="additional-message" name="additional-message" class="form-control" rows="3"
