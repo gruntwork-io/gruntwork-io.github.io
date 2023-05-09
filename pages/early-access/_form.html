@@ -8,7 +8,8 @@
   <input type="text" name="_gotcha" style="display: none" />
 
   {% include_relative _input-text.html id="contact-name" label="Name" required=true placeholder="Jon Doe" %}
-  {% include_relative _input-text.html id="contact-email" label="Company Email Adress" required=true
+  {% include_relative _input-text.html id="contact-title" label="Title" required=true placeholder="title" %}
+  {% include_relative _input-text.html id="contact-email" label="Company Email Address" required=true
   placeholder="jon@acme.com" type="email" %}
 
   <div class="form-group">
@@ -138,7 +139,8 @@
         {% include_relative _input-check.html name="system-control" value="GitLab"%}
         {% include_relative _input-check.html name="system-control" value="BitBucket" %}
         {% include_relative _input-check.html name="system-control" value="AWS CodeCommit" %}
-        {% include_relative _input-check-other.html name="system-control" id="qi-other" value="Other" id-2="cs-other-txt" placeholder="Please list other version control system" %}
+        {% include_relative _input-check-other.html name="system-control" id="qi-other" value="Other"
+        id-2="cs-other-txt" placeholder="Please list other version control system" %}
       </div>
     </div>
   </div>
