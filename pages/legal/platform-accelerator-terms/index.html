@@ -1,0 +1,41 @@
+---
+layout: default
+title: Platform Accelerator Terms
+modified_date: April 18, 2023
+permalink: /legal/platform-accelerator-terms/
+redirect_from: /platform-accelerator-terms/
+slug: platform-accelerator-terms
+---
+
+<div class="main page-platform-accelerator-terms">
+    <div class="section">
+
+        <div class="container">
+            <div class="row">
+              <div style="border: 1px solid #194c5f; background-color: #242e3b; padding: 15px 20px; margin-bottom:20px; font-style: italic;">
+                <h3 style="margin:0 auto 10px 0;">Why do we have these terms?</h3>
+                <p style="margin:0;">Gruntwork customers often find value in working with a Gruntwork partner to help them further customize or more deeply understand the Gruntwork product. These terms were designed by Gruntwork to serve as a fair contract between a Gruntwork customer and Gruntwork partner. To make these terms effective, you'll need to sign an SOW with a Gruntwork Partner that references these terms, and in that SOW you can mutually customize or override any terms you want.</p>
+              </div>
+
+              <div class="col-xs-12">
+                  <h1>{{ page.title }}</h1>
+                  <p><em>Last Updated: {{ page.modified_date }}</em></p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-12">
+                  {% for answer in site.data.platform-accelerator-terms %} {% if answer.question !=
+                  nil %}
+                  <h2>{{ answer.question }}</h2>
+                  {% endif %} {% for step in answer.items %} {% if step.title != nil %}
+                  <h3>{{ step.title }}</h3>
+                  {% endif %}
+                  <div>
+                  {{ step.ans }}
+                  </div>
+                  {% endfor %} {% endfor %}
+              </div>
+            </div>
+        </div>
+        </div>
+</div>

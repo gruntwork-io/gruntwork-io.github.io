@@ -138,13 +138,15 @@ workflows:
     jobs:
       - deploy-to-stage:
           context:
-            - Gruntwork Platform CI
+            - SLACK__WEBHOOK__team-platform
+            - AWS__DOGFOOD_SECURITY__gruntwork-website-ci
           filters:
             branches:
               only: master
       - deploy-to-prod:
           context:
-            - Gruntwork Platform CI
+            - SLACK__WEBHOOK__team-platform
+            - AWS__DOGFOOD_SECURITY__gruntwork-website-ci
           filters:
             tags:
               only: /^v.*/
