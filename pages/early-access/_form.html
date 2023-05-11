@@ -1,0 +1,220 @@
+<div id="error-message"></div>
+<form id="contact-form" action="https://formbucket.com/f/buk_9chBl2SXmZlBOuFKtkVXGiPT" method="post" target="_blank">
+  <input type="hidden" name="_subject" id="_subject" value="New inquiry from {{ site.url }}" />
+  <input type="hidden" name="_viewing" id="_viewing" value="v1-static" />
+  <input type="hidden" name="_next" id="_next" value="{{ site.url }}/great-news/" />
+  <input type="hidden" name="hello_gruntwork" value="" />
+  <input type="text" name="__bucket_trap__" style="display: none">
+  <input type="text" name="_gotcha" style="display: none" />
+
+  {% include_relative _input-text.html id="contact-name" label="Name" required=true placeholder="Jon Doe" %}
+  {% include_relative _input-text.html id="contact-title" label="Title" required=true placeholder="title" %}
+  {% include_relative _input-text.html id="contact-company" label="Company" required=true placeholder="company" %}
+  {% include_relative _input-text.html id="contact-email" label="Company Email Address" required=true
+  placeholder="jon@acme.com" type="email" %}
+
+  <div class="form-group">
+    <div class="row">
+      <div class="col-xs-12">
+        <label for="subscriber" style="white-space: nowrap;margin-bottom: 0px;">Are you a Gruntwork subscriber?</label>
+        <p style="font-size: 14px;margin-top: 0px;font-style: italic;">(Patcher BETA is open to everyone, regardless of
+          your subscription status.)</p>
+      </div>
+      <div class="col-xs-12">
+        <ul class="radios-container">
+          <li>
+            <input type="radio" id="subscriber-yes" name="subscriber" value="yes" checked />
+            <label for="subscriber-yes">Yes</label>
+          </li>
+          <li>
+            <input type="radio" id="subscriber-no" name="subscriber" value="no" />
+            <label for="subscriber-no">No</label>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="row">
+      <div class="col-xs-12 col-md-8">
+        <label for="devops">How many DevOps engineers are employed at your
+          organization?</label>
+      </div>
+      <div class="col-xs-12">
+        <ul class="radios-container">
+          <li>
+            <input type="radio" id="devops-none" name="devops_engineers" value="none" />
+            <label for="devops-none">none</label>
+          </li>
+          <li>
+            <input type="radio" id="devops-1" name="devops_engineers" value="1" checked />
+            <label for="devops-1">1</label>
+          </li>
+          <li>
+            <input type="radio" id="devops-2" name="devops_engineers" value="2" />
+            <label for="devops-2">2</label>
+          </li>
+          <li>
+            <input type="radio" id="devops-3" name="devops_engineers" value="3-5" />
+            <label for="devops-3">3-5</label>
+          </li>
+          <li>
+            <input type="radio" id="devops-4" name="devops_engineers" value="6-10" />
+            <label for="devops-4">6-10</label>
+          </li>
+          <li>
+            <input type="radio" id="devops-5" name="devops_engineers" value="11-25" />
+            <label for="devops-5">11-25</label>
+          </li>
+          <li>
+            <input type="radio" id="devops-6" name="devops_engineers" value="25+" />
+            <label for="devops-6">25+</label>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="row">
+      <div class="col-lg-9 col-xs-12">
+        <label for="software-engineers">What is the approximate total number of software engineers in your
+          organization?</label>
+      </div>
+      <div class="col-xs-12">
+        <ul class="radios-container">
+          <li>
+            <input type="radio" id="software-engineers-1" name="software_engineers" value="none" />
+            <label for="software-engineers-1">none</label>
+          </li>
+          <li>
+            <input type="radio" id="software-engineers-2" name="software_engineers" value="1-10" checked />
+            <label for="software-engineers-2">1-10</label>
+          </li>
+          <li>
+            <input type="radio" id="software-engineers-3" name="software_engineers" value="11-25" />
+            <label for="software-engineers-3">11-25</label>
+          </li>
+          <li>
+            <input type="radio" id="software-engineers-4" name="software_engineers" value="26-50" />
+            <label for="software-engineers-4">26-50</label>
+          </li>
+          <li>
+            <input type="radio" id="software-engineers-5" name="software_engineers" value="51-100" />
+            <label for="software-engineers-5">51-100</label>
+          </li>
+          <li>
+            <input type="radio" id="software-engineers-6" name="software_engineers" value="101-500" />
+            <label for="software-engineers-6">101-500</label>
+          </li>
+          <li>
+            <input type="radio" id="software-engineers-7" name="software_engineers" value="500+" />
+            <label for="software-engineers-7">500+</label>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="row">
+      <div class="col-xs-12 col-md-12">
+        <label for="why-patcher">Why are you interested in Patcher?</label>
+      </div>
+      <div class="col-xs-12 col-md-8">
+        <textarea id="why-patcher" name="why-patcher" class="form-control" rows="3"
+          placeholder="Please write down why do you want to use Patcher..." required="required"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="row">
+      <div class="col-xs-12 col-md-4">
+        <label for="control-system-message" style="white-space: nowrap;">Which version control system (VCS) do you
+          use?</label>
+      </div>
+      <div class="col-xs-12 question">
+        {% include_relative _input-check.html name="vcs" value="GitHub" %}
+        {% include_relative _input-check.html name="vcs" value="GitLab"%}
+        {% include_relative _input-check.html name="vcs" value="BitBucket" %}
+        {% include_relative _input-check.html name="vcs" value="AWS CodeCommit" %}
+        {% include_relative _input-check-other.html name="vcs" id="qi-other" value="Other"
+        id-2="cs-other-txt" placeholder="Please list other version control system" %}
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="row">
+      <div class="col-xs-12 col-md-4">
+        <label for="ci-system-message" style="white-space: nowrap;">Which CI system do you use to deploy infrastructure
+          updates?</label>
+      </div>
+      <div class="col-xs-12 question">
+        {% include_relative _input-check.html name="ci-system" value="GitHub Actions" %}
+        {% include_relative _input-check.html name="ci-system" value="CircleCI"%}
+        {% include_relative _input-check.html name="ci-system" value="GitLab" %}
+        {% include_relative _input-check.html name="ci-system" value="Azure DevOps" %}
+        {% include_relative _input-check.html name="ci-system" id="ci-not" value="None" %}
+        {% include_relative _input-check-other.html name="ci-system" id="ci-other" value="Other" id-2="ci-other-txt"
+        placeholder="Please list other version control system" %}
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="row">
+      <div class="col-xs-12 col-md-4">
+        <label for="clouds-message" style="white-space: nowrap;">Which clouds do you use?</label>
+      </div>
+      <div class="col-xs-12 question">
+        {% include_relative _input-check.html name="cloud" value="AWS" %}
+        {% include_relative _input-check.html name="cloud" value="Azure"%}
+        {% include_relative _input-check.html name="cloud" value="GCP" %}
+        {% include_relative _input-check.html name="cloud" value="AliCloud" %}
+        {% include_relative _input-check.html name="cloud" value="OracleCloud" %}
+        {% include_relative _input-check.html name="cloud" value="Customer Data Center (On-Prem)" %}
+        {% include_relative _input-check-other.html name="cloud" id="cloud-other" value="Other"
+        id-2="cloud-other-txt"
+        placeholder="Please list other version control system" %}
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="row">
+      <div class="col-xs-12 col-md-8">
+        <label for="other-option-message">If Patcher were not available, what would you use instead to solve your
+          current problem?</label>
+      </div>
+      <div class="col-xs-12 col-md-8">
+        <textarea id="other-option-message" name="instead-of-Patcher" class="form-control" rows="3"
+          placeholder="Please, enter your answer" required="required"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="row">
+      <div class="col-xs-12 col-md-8">
+        <label for="additional-message">Anything else you'd like to share with us? (optional)</label>
+      </div>
+      <div class="col-xs-12 col-md-8">
+        <textarea id="additional-message" name="additional-message" class="form-control" rows="3"
+          placeholder="Please, enter your answer"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12 col-md-8" style="text-align: center;">
+      <button type="submit" id="submit-button" class="col-xs-8 btn btn-primary" ga-on="click"
+        ga-event-category="early-access" ga-event-action="submit">
+        Submit
+      </button>
+    </div>
+  </div>
+
+</form>
