@@ -9,6 +9,7 @@
 
   {% include_relative _input-text.html id="contact-name" label="Name" required=true placeholder="Jon Doe" %}
   {% include_relative _input-text.html id="contact-title" label="Title" required=true placeholder="title" %}
+  {% include_relative _input-text.html id="contact-company" label="Company" required=true placeholder="company" %}
   {% include_relative _input-text.html id="contact-email" label="Company Email Address" required=true
   placeholder="jon@acme.com" type="email" %}
 
@@ -43,31 +44,31 @@
       <div class="col-xs-12">
         <ul class="radios-container">
           <li>
-            <input type="radio" id="devops-none" name="devops" value="none" />
+            <input type="radio" id="devops-none" name="devops_engineers" value="none" />
             <label for="devops-none">none</label>
           </li>
           <li>
-            <input type="radio" id="devops-1" name="devops" value="1" checked />
+            <input type="radio" id="devops-1" name="devops_engineers" value="1" checked />
             <label for="devops-1">1</label>
           </li>
           <li>
-            <input type="radio" id="devops-2" name="devops" value="2" />
+            <input type="radio" id="devops-2" name="devops_engineers" value="2" />
             <label for="devops-2">2</label>
           </li>
           <li>
-            <input type="radio" id="devops-3" name="devops" value="3-5" />
+            <input type="radio" id="devops-3" name="devops_engineers" value="3-5" />
             <label for="devops-3">3-5</label>
           </li>
           <li>
-            <input type="radio" id="devops-4" name="devops" value="6-10" />
+            <input type="radio" id="devops-4" name="devops_engineers" value="6-10" />
             <label for="devops-4">6-10</label>
           </li>
           <li>
-            <input type="radio" id="devops-5" name="devops" value="11-25" />
+            <input type="radio" id="devops-5" name="devops_engineers" value="11-25" />
             <label for="devops-5">11-25</label>
           </li>
           <li>
-            <input type="radio" id="devops-6" name="devops" value="25+" />
+            <input type="radio" id="devops-6" name="devops_engineers" value="25+" />
             <label for="devops-6">25+</label>
           </li>
         </ul>
@@ -84,31 +85,31 @@
       <div class="col-xs-12">
         <ul class="radios-container">
           <li>
-            <input type="radio" id="software-engineers-1" name="software-engineers" value="none" />
+            <input type="radio" id="software-engineers-1" name="software_engineers" value="none" />
             <label for="software-engineers-1">none</label>
           </li>
           <li>
-            <input type="radio" id="software-engineers-2" name="software-engineers" value="1-10" checked />
+            <input type="radio" id="software-engineers-2" name="software_engineers" value="1-10" checked />
             <label for="software-engineers-2">1-10</label>
           </li>
           <li>
-            <input type="radio" id="software-engineers-3" name="software-engineers" value="11-25" />
+            <input type="radio" id="software-engineers-3" name="software_engineers" value="11-25" />
             <label for="software-engineers-3">11-25</label>
           </li>
           <li>
-            <input type="radio" id="software-engineers-4" name="software-engineers" value="26-50" />
+            <input type="radio" id="software-engineers-4" name="software_engineers" value="26-50" />
             <label for="software-engineers-4">26-50</label>
           </li>
           <li>
-            <input type="radio" id="software-engineers-5" name="software-engineers" value="51-100" />
+            <input type="radio" id="software-engineers-5" name="software_engineers" value="51-100" />
             <label for="software-engineers-5">51-100</label>
           </li>
           <li>
-            <input type="radio" id="software-engineers-6" name="software-engineers" value="101-500" />
+            <input type="radio" id="software-engineers-6" name="software_engineers" value="101-500" />
             <label for="software-engineers-6">101-500</label>
           </li>
           <li>
-            <input type="radio" id="software-engineers-7" name="software-engineers" value="500+" />
+            <input type="radio" id="software-engineers-7" name="software_engineers" value="500+" />
             <label for="software-engineers-7">500+</label>
           </li>
         </ul>
@@ -135,11 +136,11 @@
           use?</label>
       </div>
       <div class="col-xs-12 question">
-        {% include_relative _input-check.html name="system-control" value="GitHub" %}
-        {% include_relative _input-check.html name="system-control" value="GitLab"%}
-        {% include_relative _input-check.html name="system-control" value="BitBucket" %}
-        {% include_relative _input-check.html name="system-control" value="AWS CodeCommit" %}
-        {% include_relative _input-check-other.html name="system-control" id="qi-other" value="Other"
+        {% include_relative _input-check.html name="vcs" value="GitHub" %}
+        {% include_relative _input-check.html name="vcs" value="GitLab"%}
+        {% include_relative _input-check.html name="vcs" value="BitBucket" %}
+        {% include_relative _input-check.html name="vcs" value="AWS CodeCommit" %}
+        {% include_relative _input-check-other.html name="vcs" id="qi-other" value="Other"
         id-2="cs-other-txt" placeholder="Please list other version control system" %}
       </div>
     </div>
@@ -156,8 +157,7 @@
         {% include_relative _input-check.html name="ci-system" value="CircleCI"%}
         {% include_relative _input-check.html name="ci-system" value="GitLab" %}
         {% include_relative _input-check.html name="ci-system" value="Azure DevOps" %}
-        {% include_relative _input-check.html name="ci-system" id="ci-not" value="We don't use CI to deploy infra
-        changes" %}
+        {% include_relative _input-check.html name="ci-system" id="ci-not" value="None" %}
         {% include_relative _input-check-other.html name="ci-system" id="ci-other" value="Other" id-2="ci-other-txt"
         placeholder="Please list other version control system" %}
       </div>
@@ -173,7 +173,9 @@
         {% include_relative _input-check.html name="cloud" value="AWS" %}
         {% include_relative _input-check.html name="cloud" value="Azure"%}
         {% include_relative _input-check.html name="cloud" value="GCP" %}
-        {% include_relative _input-check.html name="cloud" value="We run our own data center" %}
+        {% include_relative _input-check.html name="cloud" value="AliCloud" %}
+        {% include_relative _input-check.html name="cloud" value="OracleCloud" %}
+        {% include_relative _input-check.html name="cloud" value="Customer Data Center (On-Prem)" %}
         {% include_relative _input-check-other.html name="cloud" id="cloud-other" value="Other"
         id-2="cloud-other-txt"
         placeholder="Please list other version control system" %}
