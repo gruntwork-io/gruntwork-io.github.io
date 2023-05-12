@@ -8543,6 +8543,13 @@ $(function () {
       }
     });
 
+    $(".question").each(function() {
+      if ($(this).find("input:checked").length == 0) {
+        showInputError(this);
+        isValid = false;
+      }
+    });
+
     return isValid;
   };
 

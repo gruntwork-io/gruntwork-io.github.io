@@ -41,6 +41,16 @@
             <ul class="dropdown-menu dropdown-menu-left" role="menu">
               <li>
                 <a
+                  class="beta-link-dropdown"
+                  href="/patcher/"
+                  ga-event-category="nav-{{ page.path | slugify }}"
+                  ga-event-action="patcher"
+                  >Patcher
+                  <label class="label-beta label-small">BETA</label>
+                </a>
+              </li>
+              <li>
+                <a
                   href="/infrastructure-as-code-library/"
                   ga-on="click"
                   ga-event-category="nav-{{ page.path | slugify }}"
@@ -97,6 +107,16 @@
                 >
               </li>
             </ul>
+          </li>
+          <li>
+            <a
+              class="beta-link"
+              href="/patcher/"
+              ga-event-category="nav-{{ page.path | slugify }}"
+              ga-event-action="patcher"
+              >Patcher
+              <label class="label-beta label-small">BETA</label>
+            </a>
           </li>
           <li>
             <a
