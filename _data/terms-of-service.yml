@@ -43,21 +43,51 @@
         <br /><br />
         An Authorized User is a human or machine user that accesses our private repos, training materials, or support services. Email <a rel="internal" href="mailto:support@gruntwork.io" title="Email Gruntwork Support">support@gruntwork.io</a> to add/remove users.
 
-    - title: 3. Additional Terms for the Services
+    - title: 3. Gruntwork Support
       legalese: |
-        <p>If you use the Gruntwork Subscription, you also agree to the <a href="#gruntwork-subscription" title="Gruntwork Subscription Terms">Gruntwork Subscription Terms</a>.</p>
-        <p>If you use the Support Tiers, you also agree to the <a href="#support" title="Support Terms">Support Terms</a>.</p>
-        <p>If you use the Reference Architecture, you also agree to the <a href="#reference-architecture" title="Reference Architecture Terms">Reference Architecture Terms</a>.</p>
-        <p>If you use CIS Compliance, you also agree to the <a href="#compliance" title="CIS Compliance Terms">CIS Compliance Terms</a>.</p>
-        <p>If you purchase the Platform Accelerator, you will need to sign a separate statement of work with a third-party Gruntwork partner. Gruntwork streamlines this process by maintaining a "standard" set of terms to govern the relationship between a Gruntwork customer and Gruntwork partner in our <a href="/platform-accelerator-terms/">Platform Accelerator Terms</a>.</p>
-        <p>You must have a current and valid Gruntwork Subscription in order to use the Support Tiers, Reference Architecture, or CIS Compliance services.</p>
+        <p><strong>3.1. Ticket-Based Support.</strong> Authorized Users may submit support requests by emailing support@gruntwork.io or by using online helpdesk software specified by Gruntwork.</p>
+        <p><strong>3.2 Chat-based Support.</strong> Authorized Users may optionally submit support requests via a shared channel on a chat system such as Slack, which shall be private to you and Gruntwork and not accessible by other Gruntwork customers.</p>
+        <p><strong>3.3. Service Level Agreement.</strong> Gruntwork shall make a good-faith effort to respond to support request as soon as possible, but for the first 3 requests per day or first 15 requests per month, whichever occurs first, Gruntwork shall respond no later than:</p>
+        <table style="width: 100%; border-collapse: collapse; margin-bottom:14px;">
+          <tr>
+            <td style="width: 50%; border: dotted 1px gray; padding: 10px;">If you purchased neither Pro Support nor Enterprise Support</td>
+            <td style="width: 50%; border: dotted 1px gray; padding: 10px;">No SLA</td>
+          </tr>
+          <tr>
+            <td style="width: 50%; border: dotted 1px gray; padding: 10px;">If you purchased Pro Support</td>
+            <td style="width: 50%; border: dotted 1px gray; padding: 10px;">Two business days after the support request was received by Gruntwork</td>
+          </tr>
+          <tr>
+            <td style="width: 50%; border: dotted 1px gray; padding: 10px;">If you purchased Enterprise Support Next-Day SLA</td>
+            <td style="width: 50%; border: dotted 1px gray; padding: 10px;">The next business day after the support request was received by Gruntwork</td>
+          </tr>
+          <tr>
+            <td style="width: 50%; border: dotted 1px gray; padding: 10px;">If you purchased Enterprise Support Same-Day SLA</td>
+            <td style="width: 50%; border: dotted 1px gray; padding: 10px;">Four business hours after the support request was received by Gruntwork, unless the request was received after 2:00pm Pacific Time, in which case Gruntwork will respond no later than 10:00am Pacific Time.</td>
+          </tr>
+        </table>
+        <p><strong>3.4. Prioritized Bug Fixes.</strong> If your purchased Enterprise Support Next-Day or Enterprise Support Same-Day, when a support request identifies a bug in any Gruntwork Service, provided that the bug can be systematically reproduced by Gruntwork, Gruntwork will begin work to fix the bug within two (2) business days of receiving the support request, subject to our availability per Sections 3.5 and 3.6 below.</p>
+        <p><strong>3.5. Availability.</strong> Gruntwork business hours are from 9:00am - 5:00pm Pacific Time, Monday through Friday. From time to time, for example on national holidays, no Gruntwork personnel may be available to handle support requests. In such case, Gruntwork will notify you of such days via the Newsletter. Gruntwork hereby agrees that it will limit business days on which no Gruntwork personnel are available to no more than fifteen (15) days per year.</p>
+        <p><strong>3.6. No Emergency Support.</strong> GRUNTWORK DOES NOT WARRANT THAT ITS PERSONNEL WILL BE AVAILABLE ON SHORT NOTICE IN THE EVENT OF AN EMERGENCY. HANDLING AN INFRASTRUCTURE EMERGENCY SHALL REMAIN YOUR SOLE RESPONSIBILITY.</p>
       plain: |
-        Our individual services each have their own supplemental terms. Scroll down or click on the relevant link to see them. <br/><br/>
-        Per <a href="#5-2-termination-by-either-party-for-convenience">Section 5.2</a>, you can cancel individual services without canceling other services, but you must have an active Gruntwork Subscription to receive any services.
+        Get support by email, chat, or helpdesk. See the table for SLAs. Gruntwork support is not intended to help you resolve emergencies.
 
-    - title: 4. Compensation and Invoicing
+    - title: 4. CIS AWS Foundations Benchmark
       legalese: |
-        <p><strong>4.1. Pricing.</strong> IIn consideration for the Services, you will pay Gruntwork the fees for each of the Services you have selected as set forth in your GSA (the “Fees”). Gruntwork may change the Fees charged for Services, from time to time, by submitting all changes to you in writing at least sixty (60) days prior to any Renewal Term (defined below). All price changes will take effect as of the beginning of the Renewal Term. If you do not agree with a price change, you have the right to reject the change by terminating these Terms in accordance with <a href="#5-2-termination-by-either-party-for-convenience" title="Section 5.2">Section 5.2 below.</a></p>
+        <p><strong>4.1. Updates to CIS Compliance.</strong> Within one (1) calendar quarter after the calendar quarter in which the Center for Internet Security (“CIS”) releases a new version of the CIS AWS Foundations Benchmark (the “Benchmark”), Gruntwork shall commence work on updating the library modules that implement the Benchmark to be compliant with as many of the requirements of the updated Benchmark as is possible, provided that any such updates may not be “fully” compliant with the updated Benchmark, as further described in Section 4.2 below. Accordingly, Gruntwork will, from time to time, release new versions, features, bug fixes, security patches, automated tests, documentation, and other improvements (collectively, “CIS Compliance Updates”). You are responsible for deploying any CIS Compliance Updates when they become available.</p>
+      plain: |
+        When CIS releases new guidelines, begin work on the new update within three months.
+
+    - title:
+      legalese: |
+        <p><strong>4.2. Compliance with CIS AWS Foundations Benchmark.</strong> Select library modules have been certified by CIS for compliance with the CIS AWS Foundations Benchmark. Notwithstanding the foregoing, the library modules do not guarantee compliance with every requirement under the Benchmark, including, without limitation, requirements that by their nature must be implemented or enforced by you or your team. As a result, the modules only ensure compliance with as many requirements of the Benchmark as possible. Therefore, in order to achieve “full” compliance with the Benchmark, you will need to independently implement and enforce certain requirements of the Benchmark.</p>
+        <p><strong>4.3. Disclaimer of Warranties.</strong> In addition to the disclaimer of warranties in the Terms, Gruntwork will have no responsibility or liability of any kind arising or resulting from your failure to (a) comply with the Benchmark (or any updates thereto); (b) adequately validate compliance with the requirements of the Benchmark; or (c) independently implement and enforce certain requirements of the Benchmark.</p>
+      plain: |
+        We’ll take responsibility for our CIS Modules being certified by CIS, but we cannot guarantee compliance with every CIS AWS Foundations Benchmark requirement because, by their nature, some requirements must be implemented by you.
+
+    - title: 5. Compensation and Invoicing
+      legalese: |
+        <p>5.1. Pricing. In consideration for the Services, you will pay Gruntwork the fees for each of the Services you have selected as set forth in your Order Form (the “Fees”). Gruntwork may change the Fees charged for Services, from time to time, by submitting all changes to you in writing at least sixty (60) days prior to any “Renewal Term” (defined below). All price changes will take effect as of the beginning of the “Renewal Term”. If you do not agree with a price change, you have the right to reject the change by terminating these Terms in accordance with Section 6.2 below.</a></p>
       plain: |
         You’ll pay the pricing published at <a target="_blank" rel="internal" href="/pricing/" title="Gruntwork Pricing">https://gruntwork.io/pricing</a> or in the contract you signed with us. <br/> <br/>
         It’s rare, but we might change our prices at some point. If we do, we’ll notify you in advance; the changes won’t take effect until your annual renewal date; and
@@ -71,13 +101,13 @@
 
     - title:
       legalese: |
-        <p><strong>4.3. Billing.</strong> If Gruntwork approves your order, on the Approval Date, Gruntwork will automatically charge you in advance the Fees owed for one (1) month of Services and any one-time Fees. Thereafter, Gruntwork will charge you the Fees owed for each subsequent month on the anniversary of your Approval Date. All payments are to be made by credit card. Alternatively, upon your request and Gruntwork's written acceptance, Gruntwork will invoice you in advance for one (1) year of service, and you will make payment on such invoice via ACH or wire transfer within fifteen (15) days of your receipt of the invoice. </p>
+        <p><strong>4.3. Billing.</strong> If Gruntwork approves your order, on the Approval Date, Gruntwork will automatically charge you in advance the Fees owed for one (1) month of Services and any one-time Fees. Thereafter, Gruntwork will charge you the Fees owed for each subsequent month on the anniversary of your Approval Date. All payments are to be made by credit card. Alternatively, upon your request and Gruntwork's written acceptance, Gruntwork will invoice you in advance for one (1) year of service, and you will make payment on such invoice via ACH or wire transfer within fifteen (15) days of your receipt of the invoice.</p>
       plain: |
         Once we approve your order, we'll charge your credit card for the first month of service plus any one-time fees. After that, we'll bill you once a month. You can always ask us to invoice you and bill you via ACH or international wire transfer.
 
     - title:
       legalese: |
-        <p><strong>4.4. Late Payments.</strong> Late payments will be subject to a 1.5% fee per month, or the highest amount permitted by law, whichever is lower. You agree to pay for all costs incurred in the collection of past-due amounts owed to Gruntwork, including any legal fees.</p>
+        <p><strong>4.4. Late Payments.</strong> Late payments will be subject to a 1.5% fee per month, or the highest amount permitted by law, whichever is lower. You will pay for all costs incurred in the collection of past-due amounts owed to Gruntwork, including any legal fees.</p>
       plain: |
         If you’re late with your payments, you’ll owe us a 1.5% late fee and plus any costs to collect from you.
 
@@ -87,26 +117,25 @@
       plain: |
         If it turns out we owe taxes on your purchase, you agree to pay all applicable taxes.
 
-    - title: 5. Term and Termination
+    - title: 6. Term and Termination
       legalese: |
-        <p><strong>5.1. Auto-Renewing Terms of 12 Months.</strong> Subject to either Party’s right to terminate pursuant to this Section 5, these Terms, including the terms of any Service for which you have subscribed, will become effective on your Acceptance Date and continue in effect for 12 months (the “Minimum Term”); and, thereafter, these Terms, including the terms of any Service for which you have subscribed, will renew automatically for additional 12-month periods (each, a “Renewal Term”).</p>
+        <p><strong>6.1. Auto-Renewing Terms of 12 Months.</strong> Subject to either Party’s right to terminate pursuant to this Section 6, these Terms, including the terms of any Service for which you have subscribed, will become effective on your Approval Date and continue in effect for 12 months (the “Initial Term”); and, thereafter, these Terms, including the terms of any Service for which you have subscribed, will renew automatically for additional 12-month periods (each, a “Renewal Term”).</p>
       plain: |
         The services require an annual subscription. Your subscription will renew every 12 months.
 
     - title:
       legalese: |
-        <p><strong>5.2. Termination by Either Party for Convenience.</strong>
-        <p><strong>5.2.1. </strong>Subject to <a href="#5-6-effects-of-suspension-or-termination" title="Section 5.6">Section 5.6</a>, you may terminate these Terms in their entirety, or the terms of a specific Service, as of the next Renewal Date by giving at least thirty (30) days’ prior written notice to Gruntwork of such termination. Upon receipt of a termination notice, any outstanding balances due to Gruntwork for the remainder of the Minimum Term or Renewal Term, as applicable, will be due in full within fifteen (15) days. For example, if you terminate your use of the Gruntwork Subscription 3 months into a 12-month Minimum Term or Renewal Term and you have paid Fees for the 3 months, you will immediately owe Gruntwork an amount equal to the Fees for the remaining 9 months of the Minimum Term or Renewal Term, as applicable. Gruntwork will continue to provide the Services for the remainder of the then-current Minimum Term or Renewal Term, as applicable, provided Gruntwork has not terminated or suspended the Terms or your Services for cause pursuant to Sections <a href="#5-3-termination-for-cause-by-either-party" title="Section 5.3"> 5.3 </a>or
-        <a href="#5-4-termination-for-cause-by-gruntwork" title="Section 5.4">5.4</a> below. </p>
-        <p><strong>5.2.2. </strong>Subject to <a href="#5-7-post-termination-license" title="Section 5.7">Section 5.7</a>, Gruntwork may terminate these Terms in their entirety, or the terms of a specific Service, by giving you thirty (30) days’ prior written notice of such termination (a) as of the next Renewal Date or (b) in the event Gruntwork discontinues all or part of a specific Service.</p>
+        <p><strong>6.2. Termination by Either Party for Convenience.</strong>
+        <p><strong>6.2.1. Termination by You.</strong> Subject to Section 6.5, you may terminate these Terms in their entirety, or the terms of a specific Service, as of the next Renewal Date by giving at least thirty (30) days’ prior written notice to Gruntwork of such termination. Gruntwork will continue to provide the Services for the remainder of the then-current Initial Term or Renewal Term, as applicable, provided Gruntwork has not terminated or suspended the Terms or your Services for cause pursuant to Sections 6.3 or 6.4 below.</p>
+        <p><strong>6.2.2. Termination by Gruntwork.</strong> Subject to Section 6.6, Gruntwork may terminate these Terms in their entirety, or the terms of a specific Service, by giving you thirty (30) days’ prior written notice of such termination (a) as of the next Renewal Date or (b) in the event Gruntwork discontinues all or part of a specific Service.</p>
       plain: |
         If you want to cancel, just let us know at least 30 days before your contract renews. If you cancel in the middle of your subscription period, you’ll owe us the remaining amount for the entire subscription period. Of course, you'll also have access to the service for the remainder of the period.
         <br/><br/>
-        Per <a href="#5-7-post-termination-license" title='Section 5.7.'>Section 5.7</a>, after your subscription ends, you can still use the code!
+        Per Section 6.7, after your subscription ends, you can still use the code!
     - title:
       legalese: |
-        <p><strong>5.3. Termination for Cause by Either Party.</strong> Either Gruntwork or you may terminate these Terms in their entirety, or the terms of any specific Service, at any time upon the material breach of these Terms or any published policy applicable to the Services by the other Party (or an Authorized User) with at least fourteen (14) days' prior written notice to the other Party, provided that the material breach has not been cured prior to the end of the notice period. Any such termination must clearly identify these Terms.</p>
-        <p><strong>5.4. Termination for Cause by Gruntwork.</strong> Notwithstanding anything stated to the contrary in these Terms, you will be in default of these Terms, including, without limitation, any terms applicable to specific Services, if:<br/>
+        <p><strong>6.3. Termination for Cause by Either Party.</strong> Either Gruntwork or you may terminate these Terms in their entirety, or the terms of any specific Service, at any time upon the material breach of these Terms or any published policy applicable to the Services by the other Party (or an Authorized User) with at least fourteen (14) days' prior written notice to the other Party, provided that the material breach has not been cured prior to the end of the notice period. Any such termination must clearly identify these Terms.</p>
+        <p><strong>6.4. Termination for Cause by Gruntwork.</strong> Notwithstanding anything stated to the contrary in these Terms, you will be in default of these Terms, including, without limitation, any terms applicable to specific Services, if:<br/>
           (a) you fail to timely pay any amount owed to us or our Affiliates; <br>
           (b) you are or become subject to any proceeding under the Bankruptcy Code or similar laws; <br/>
           (c) we, in our sole discretion and in good faith, believe you have breached your warranty set forth in <a href="#15-use-of-services-to-compete">Section 15</a> (Use of Services to Compete); or <br/>
@@ -119,20 +148,22 @@
         If either of us fails to live up to these terms, we have to let the other one know, and if the problem isn’t fixed within 30 days, the agreement between us will terminate. Under certain very specific circumstances, we can suspend or terminate your account immediately.
     - title:
       legalese: |
-        <p><strong>5.5. Trial Period.</strong> You are entitled to a 30-day trial period (the “Trial Period”). If you use the Gruntwork Subscription and: (a) do not register for the Reference Architecture, the Trial Period will begin on the date you receive access to the Library Repos (as defined in  below); or (b) do register for the Reference Architecture, the Trial Period will begin on the date Gruntwork commits to deploying your Reference Architecture. Notwithstanding anything stated to the contrary in these Terms, if you terminate your Gruntwork Subscription during the Trial Period, (a) Gruntwork will refund you all Fees for all Services; (b) you will not be subject to the Minimum Term; (c) you must immediately cease use of all Services; and (d) the License set forth in <a href="#6-intellectual-property-rights" title="Intellectual Property Rights">Section 6</a> will terminate immediately.</p>
+        <p><strong>6.5. Trial Period.</strong> You are entitled to a 30-day trial period (the “Trial Period”). If you use the Gruntwork Subscription and: (a) do not register for the Reference Architecture, the Trial Period will begin on the date you receive access to the Library Repos (as defined in  below); or (b) do register for the Reference Architecture, the Trial Period will begin on the date Gruntwork commits to deploying your Reference Architecture. Notwithstanding anything stated to the contrary in these Terms, if you terminate your Gruntwork Subscription during the Trial Period, (a) Gruntwork will refund you all Fees for all Services; (b) you will not be subject to the Minimum Term; (c) you must immediately cease use of all Services; and (d) the License set forth in <a href="#6-intellectual-property-rights" title="Intellectual Property Rights">Section 6</a> will terminate immediately.</p>
       plain: |
         If you cancel within the first 30 days, we’ll refund 100% of your money and let you out of your annual subscription, but you lose the license to all our code and must delete all copies of it.
     - title:
       legalese: |
-        <p><strong>5.6. Effects of Suspension or Termination.</strong> If, at any time, any of the Services or the Terms (or any portion hereof) are suspended or terminated for any reason (other than by you during the Trial Period), you will not be entitled to a refund of any amounts paid, to the fullest extent permitted by law. Notwithstanding anything stated to the contrary, all Sections of these Terms that either explicitly or by their nature must remain in effect after termination of the Terms, shall survive termination.</p>
+        <p><strong>6.6. Effects of Suspension or Termination.</strong> If, at any time, any of the Services or the Terms (or any portion hereof) are suspended or terminated for any reason (other than by you during the Trial Period), you will not be entitled to a refund of any amounts paid, to the fullest extent permitted by law. Notwithstanding anything stated to the contrary, all Sections of these Terms that either explicitly or by their nature must remain in effect after termination of the Terms, shall survive termination.</p>
       plain: |
         Unless you cancel during the <a href="#5-5-trial-period" title="Trial Period">Trial Period</a> or Gruntwork fails to live up to these terms, you will need to pay for the entire annual subscription.
     - title:
       legalese: |
-        <p><strong>5.7. Post-Termination License.</strong> If, at any time, all or any portion of the Terms or your Services are terminated (other than by you during the Trial Period or by Gruntwork for cause pursuant to <a href="#5-2-termination-by-either-party-for-convenience" title='Section 5.2'>Section 5.2</a> or <a href="#5-3-termination-for-cause-by-either-party" title="Section 5.3"> Section 5.3 </a> of the General Terms), the License (defined below) will remain in effect for (x) all of your forks or clones of the Gruntwork source code repositories and CIS Modules (defined below) as of the termination date, and (y) any Reference Architecture (including, any source code repositories) created by Gruntwork specifically for you. Gruntwork recommends that, prior to the termination date, you clone any Gruntwork source code repositories and update your infrastructure code to remove all references to any private Gruntwork source code repositories.</p>
+        <p><strong>6.7. Post-Termination License.</strong> If, at any time, all or any portion of the Terms or your Services are terminated (other than by you during the Trial Period or by Gruntwork for cause pursuant to Section 6.2 or Section 6.3, the License (defined below) will remain in effect for (x) all of your forks or clones of the Gruntwork source code repositories and CIS Modules (defined below) as of the termination date, and (y) any Reference Architecture (including, any source code repositories) created by Gruntwork specifically for you. Gruntwork recommends that, prior to the termination date, you clone any Gruntwork source code repositories and update your infrastructure code to remove all references to any private Gruntwork source code repositories.</p>
       plain: |
-        If you stick with the annual subscription for at least one year, even if you cancel, you can keep using all the code you had access to at the time of cancellation at no additional cost. <br/> <br/>
+        If you stick with the annual subscription for at least one term, even if you cancel, you can keep using all the code you had access to at the time of cancellation at no additional cost. <br/> <br/>
         We recommend that before termination, you clone any Gruntwork repos and update your infrastructure code to remove all references to private Gruntwork repos.
+
+XXXX RESUME WORK HERE XXXX
 
     - title: 6. Intellectual Property Rights
       legalese: |
