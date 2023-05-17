@@ -1,0 +1,152 @@
+.consulting {
+
+  // Hero styles
+  .section-hero {
+    padding-top: 90px;
+
+    @media (max-width: $screen-md-max) {
+      padding-top: 36px;
+      padding-bottom: 0px;
+
+      .col-lg-7 {
+        min-height: 225px;
+      }
+    }
+  }
+
+  .floating-img-consulting {
+    position: absolute;
+    right: 0;
+    max-height: 400px;
+    top: 47px;
+
+    @media (max-width: $screen-md-max) {
+      top: 0px;
+      left: 50%;
+      transform: translate(-50%);
+      max-height: 270px;
+    }
+  }
+
+  //Consulting previous work section
+  .feature-box {
+    margin-bottom: 22px;
+    background: #2B3745;
+    border: 1px solid #194C5F;
+    display: flex;
+    align-items: center;
+    padding-right: 20px;
+    height: 180px;
+    border-radius: 6px;
+
+    @media (max-width: $screen-md-max) {
+      height: auto;
+      padding: 15px 10px;
+      flex-direction: column;
+      padding-right: 10px;
+      align-items: flex-start;
+      justify-content: left;
+    }
+
+    .feature-image {
+      max-height: 130px;
+      width: auto;
+    }
+  }
+
+  //Testimonials
+  .testimonial-consulting {
+    .row-testimonial {
+      display: flex;
+      align-items: center;
+
+      @media (max-width: $screen-md-max) {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    .col-headshot {
+      @media (max-width: $screen-md-max) {
+        display: none;
+      }
+    }
+
+    .img-txt-box {
+      display: flex;
+      align-items: center;
+
+      br {
+        display: none;
+
+        @media (max-width: $screen-md-max) {
+          display: block;
+        }
+      }
+    }
+
+    .headshot-mobile {
+      display: none;
+
+      @media (max-width: $screen-md-max) {
+        margin-right: 20px;
+        display: flex;
+      }
+    }
+
+    .testimonial-txt {
+      font-size: 25px;
+
+      @media (max-width: $screen-md-max) {
+        font-size: 20px;
+      }
+    }
+  }
+
+  //Early access section
+  .early-access-section {
+    background-color: rgba(3, 197, 231, 0.1);
+    padding: 40px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    margin-top: 100px;
+
+    .decoration-icon {
+      position: absolute;
+      top: 0;
+      transform: translateY(-50%);
+      max-height: 47px;
+    }
+
+    .header-early-access {
+      font-size: 46px;
+      line-height: 126%;
+      margin: 0 0 24px;
+      display: inline-flex;
+      align-items: flex-end;
+      text-align: center;
+      position: relative;
+
+      @media (max-width: $screen-sm-min) {
+        font-size: 32px;
+        text-align: center;
+      }
+
+      br {
+        display: none;
+
+        @media (max-width: $screen-sm-min) {
+          display: block;
+        }
+      }
+    }
+
+    p {
+      color: #FFFFFF;
+      max-width: 550px;
+      text-align: center;
+    }
+  }
+}

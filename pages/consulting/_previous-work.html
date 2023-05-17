@@ -1,0 +1,20 @@
+<div class="row row-page-header" style="margin-bottom: 60px;">
+  <div class="col-xs-12">
+    <h2>Our Previous Work</h2>
+    <p style="padding-bottom: 20px; max-width: 580px;">
+      Gruntwork is a 100% bootstrapped company, where we built nearly all of products through consulting engagements.
+      Here are just a few examples of our past consulting work.
+    </p>
+    {% for feature in site.data.consulting-previous-work %}
+    <div class="col-xs-12 feature-box">
+      <div class="col-md-3 col-sm-12 ">
+        <img class="feature-image" src="{{ feature.icon }}" alt="feature-icon" />
+      </div>
+      <div class="col-xs-12">
+        <h3 style="margin-top: 0px; margin-bottom: 12px;">{{ feature.title }}</h3>
+        <p style="margin-bottom: 0;">{{ feature.description }}</p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
