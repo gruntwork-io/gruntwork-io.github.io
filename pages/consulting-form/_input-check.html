@@ -1,7 +1,10 @@
 <div class="checkbox">
-  <input name="{{ include.name }}" id="{{ include.value }}" type="checkbox" value="{{ include.value }}"
-    class="form-check-input">
-  <label for="{{ include.value }}" class="form-check-label">
-    {{ include.value }}
+  <input id="{{ include.id }}" name="{{ include.id }}" type="checkbox" value="true">
+  <label for="{{ include.id }}">
+    {{ include.label }}
+    {% if include.small_text %}
+    <br>
+    <small style="font-size: 12px; display: block; margin-bottom: 10px">{{ include.small_text }}</small>
+    {% endif %}
   </label>
 </div>

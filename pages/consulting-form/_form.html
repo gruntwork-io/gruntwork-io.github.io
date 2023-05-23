@@ -1,70 +1,41 @@
 <div id="error-message"></div>
-<form id="contact-form" action="https://formbucket.com/f/buk_9chBl2SXmZlBOuFKtkVXGiPT" method="post" target="_blank">
+<form id="contact-form" method="post" target="_blank"
+  action="https://api.formbucket.com/f/buk_7iB8j7vEJPW9ad2ClJwFfm5M">
   <input type="hidden" name="_subject" id="_subject" value="New inquiry from {{ site.url }}" />
   <input type="hidden" name="_viewing" id="_viewing" value="v1-static" />
-  <input type="hidden" name="_next" id="_next" value="{{ site.url }}/great-news/" />
+  <input type="hidden" name="_next" id="_next" value="{{ site.url }}/thanks/" />
   <input type="hidden" name="hello_gruntwork" value="" />
-  <input type="text" name="__bucket_trap__" style="display: none">
-  <input type="text" name="_gotcha" style="display: none" />
-
-  {% include_relative _input-text.html id="contact-name" label="Name" required=true placeholder="Jon Doe" %}
-  {% include_relative _input-text.html id="contact-company" label="Company" required=true placeholder="company" %}
-
-  <div class="form-group">
-    <div class="row">
-      <div class="col-xs-12">
-        <label for="subscriber" style="white-space: nowrap;margin-bottom: 0px;">Are you a Gruntwork subscriber?</label>
-      </div>
-      <div class="col-xs-12">
-        <ul class="radios-container">
-          <li>
-            <input type="radio" id="subscriber-yes" name="subscriber" value="yes" checked />
-            <label for="subscriber-yes">Yes</label>
-          </li>
-          <li>
-            <input type="radio" id="subscriber-no" name="subscriber" value="no" />
-            <label for="subscriber-no">No</label>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
+  <input type="text" name="_gotcha" style="display:none" />
+  {% include_relative _input-text.html id="contact-name" label="Name"
+  required=true placeholder="Jon Doe" %} {% include_relative _input-text.html
+  id="contact-email" label="Email" required=true placeholder="jon@acme.com"
+  type="email" %}
   <div class="form-group">
     <div class="row">
       <div class="col-xs-12 col-md-4">
-        <label for="clouds-message" style="white-space: nowrap;">How can we help you?</label>
+        <label for="contact-message">How can we help?</label>
       </div>
-      <div class="col-xs-12 question">
-        {% include_relative _input-check.html name="help" value="DevOps" %}
-        {% include_relative _input-check.html name="help" value="IaC" %}
-        {% include_relative _input-check.html name="help" value="AWS" %}
-        {% include_relative _input-check-other.html name="help" id="help-other" value="Other"
-        id-2="help-other-txt" placeholder="Please, enter your answer" %}
+      <div class="col-xs-12 col-md-8">
+        <textarea id="contact-message" name="contact-message" class="form-control" rows="3" required="required"
+          placeholder="Enter a message"></textarea>
       </div>
     </div>
   </div>
-
-
   <div class="form-group">
     <div class="row">
-      <div class="col-xs-12 col-md-8">
-        <label for="additional-message">Anything else you'd like to share with us? (optional)</label>
+      <div class="col-xs-12 col-md-4">
+        <label for="contact-message"></label>
       </div>
       <div class="col-xs-12 col-md-8">
-        <textarea id="additional-message" name="additional-message" class="form-control" rows="3"
-          placeholder="Please, enter your answer"></textarea>
+        <div class="text-center" style="text-align:right;display: block;">
+          <br>
+          <button type="submit" id="submit-button" class="col-xs-8 btn btn-primary" ga-on="click"
+            ga-event-category="contact" ga-event-action="submit" style="
+">
+            Book a Demo
+          </button>
+        </div>
       </div>
     </div>
   </div>
-
-  <div class="row">
-    <div class="col-xs-12 col-md-8" style="text-align: center;">
-      <button type="submit" id="submit-button" class="col-xs-8 btn btn-primary" ga-on="click"
-        ga-event-category="early-access" ga-event-action="submit">
-        Submit
-      </button>
-    </div>
-  </div>
-
 </form>
