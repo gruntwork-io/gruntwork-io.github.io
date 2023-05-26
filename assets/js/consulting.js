@@ -1,16 +1,16 @@
 
-   (function($) {
-  $(window).scroll(function() {
+(function ($) {
+  $(window).scroll(function () {
     // get the scroll position of the document + half the window height
 
 
     var scrollTop = $(document).scrollTop() + ($(window).height() / 2);
 
-    
+
     var positions = [];
 
     // push each of the items we want to check against to an array with their position and selector
-    $('.box').each(function() {
+    $('.box').each(function () {
       $(this).removeClass("active");
       positions.push({
         position: $(this).offset().top,
@@ -24,7 +24,7 @@
     var classList = $(".active").attr("class")
     var classArr = classList.split(/\s+/);
 
-    $('.box').each(function() {
+    $('.box').each(function () {
       if ($(this).hasClass(classArr[1]) && !$(this).hasClass('active')) {
         $(this).addClass('active');
       }
@@ -71,13 +71,12 @@
       $('.square-5').removeClass('active');
     }
     else if ($('.box-5').hasClass('active')) {
-        $('.square-1').removeClass('active');
-        $('.square-2').removeClass('active');
-        $('.square-3').removeClass('active');
-        $('.square-4').removeClass('active');
-        $('.square-5').addClass('active');
-      }
+      $('.square-1').removeClass('active');
+      $('.square-2').removeClass('active');
+      $('.square-3').removeClass('active');
+      $('.square-4').removeClass('active');
+      $('.square-5').addClass('active');
+    }
   }
 })(window.jQuery);
 
- 
