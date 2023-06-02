@@ -172,7 +172,7 @@
         opacity: 0;
         transform: translateY(20px);
         overflow: hidden;
-        transition: all ease 0.6s;
+        transition: all 0.5s ease;
       }
 
       .comparison-col-1,
@@ -212,6 +212,7 @@
 
           svg {
             transition: all ease 0.6s;
+            transform: rotate(180deg);
           }
         }
       }
@@ -247,7 +248,7 @@
       .comparison-col-4 {
         .txt-box {
           svg {
-            transform: rotate(180deg);
+            transform: rotate(0deg);
           }
         }
       }
@@ -531,7 +532,6 @@
       }
 
       .flip-card-inner:hover .flip-card-front {
-        //transform: rotateY(180deg);
         opacity: 0;
         z-index: 1;
 
@@ -541,7 +541,6 @@
       }
 
       .flip-card-inner:hover .flip-card-back {
-        //transform: rotateY(180deg);
         opacity: 100%;
         z-index: 3;
 

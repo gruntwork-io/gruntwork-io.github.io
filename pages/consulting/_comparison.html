@@ -164,10 +164,15 @@
     const boxes = document.querySelectorAll('.comparison-box');
     boxes.forEach(box => {
       box.addEventListener('click', () => {
+        const isActive = box.classList.contains('active');
+
         boxes.forEach(box => {
           box.classList.remove('active');
         });
-        box.classList.add('active');
+
+        if (!isActive) {
+          box.classList.add('active');
+        }
       });
     });
   };

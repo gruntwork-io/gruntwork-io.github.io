@@ -45,38 +45,9 @@
   }
 
   function check() {
-    if ($('.box-1').hasClass('active')) {
-      $('.square-1').addClass('active');
-      $('.square-2').removeClass('active');
-      $('.square-3').removeClass('active');
-      $('.square-4').removeClass('active');
-      $('.square-5').removeClass('active');
-    } else if ($('.box-2').hasClass('active')) {
-      $('.square-1').removeClass('active');
-      $('.square-2').addClass('active');
-      $('.square-3').removeClass('active');
-      $('.square-4').removeClass('active');
-      $('.square-5').removeClass('active');
-    } else if ($('.box-3').hasClass('active')) {
-      $('.square-1').removeClass('active');
-      $('.square-2').removeClass('active');
-      $('.square-3').addClass('active');
-      $('.square-4').removeClass('active');
-      $('.square-5').removeClass('active');
-    } else if ($('.box-4').hasClass('active')) {
-      $('.square-1').removeClass('active');
-      $('.square-2').removeClass('active');
-      $('.square-3').removeClass('active');
-      $('.square-4').addClass('active');
-      $('.square-5').removeClass('active');
-    }
-    else if ($('.box-5').hasClass('active')) {
-      $('.square-1').removeClass('active');
-      $('.square-2').removeClass('active');
-      $('.square-3').removeClass('active');
-      $('.square-4').removeClass('active');
-      $('.square-5').addClass('active');
-    }
+    var activeBox = $('.active');
+
+    $('.square').removeClass('active');
+    $('.square-' + activeBox.data('box')).addClass('active');
   }
 })(window.jQuery);
-
