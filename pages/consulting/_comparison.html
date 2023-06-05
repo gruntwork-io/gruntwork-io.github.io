@@ -1,0 +1,179 @@
+<div class="row row-page-header" style="margin-bottom: 60px;">
+  <div class="col-xs-12">
+    <h2 style="margin-bottom: 40px">How we're different from traditional consulting</h2>
+    <div class="comparison-table comparison-table-desktop">
+      <div class="comparison-row-1">
+        <div class="comparison-col-1"></div>
+        <div class="comparison-col-2">
+          <div class="highlited-col">
+            Traditional Consulting
+          </div>
+        </div>
+        <div class="comparison-col-3">
+          <div class="highlited-col">
+            Gruntwork Consulting
+          </div>
+        </div>
+        <div class="comparison-col-4">
+        </div>
+      </div>
+      {% for feature in site.data.consulting %}
+      {% if forloop.index == 1 %}
+      <div class="comparison-box active">
+        <div class="comparison-col-1" style="font-weight: 700;">{{ feature.title }}</div>
+        <div class="comparison-col-2">
+          <div class="txt-box">
+            <p class="p-title">{{feature.traditional_consulting_title}}</p>
+            <p class="p-txt" style="color: #BFBFBF;">{{feature.traditional_consulting_description}}</p>
+          </div>
+        </div>
+        <div class="comparison-col-3">
+          <div class="txt-box">
+            <p class="p-title">{{feature.gruntwork_consulting_title}}</p>
+            <p class="p-txt" style="color: #BFBFBF;">{{feature.gruntwork_consulting_description}}</p>
+          </div>
+        </div>
+        <div class="comparison-col-4">
+          <div class="txt-box"><svg width="15" height="8" viewBox="0 0 15 8" fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+              <path d="M13.5 7.13965L7.5 1.13965L1.5 7.13965" stroke="#BFBFBF" stroke-width="1.5" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+      {% if forloop.index >= 2 %}
+      <div class="comparison-box">
+        <div class="comparison-col-1" style="font-weight: 700;">{{ feature.title }}</div>
+        <div></div>
+        <div class="comparison-col-2">
+          <div class="txt-box">
+            <p class="p-title">{{feature.traditional_consulting_title}}</p>
+            <p class="p-txt" style="color: #BFBFBF;">{{feature.traditional_consulting_description}}</p>
+          </div>
+        </div>
+        <div class="comparison-col-3">
+          <div class="txt-box">
+            <p class="p-title">{{feature.gruntwork_consulting_title}}</p>
+            <p class="p-txt" style="color: #BFBFBF;">{{feature.gruntwork_consulting_description}}</p>
+          </div>
+        </div>
+        <div class="comparison-col-4">
+          <div class="txt-box"><svg width="15" height="8" viewBox="0 0 15 8" fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+              <path d="M13.5 7.13965L7.5 1.13965L1.5 7.13965" stroke="#BFBFBF" stroke-width="1.5" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="comparison-table comparison-table-mobile">
+      {% for feature in site.data.consulting %}
+      {% if forloop.index == 1 %}
+      <div class="comparison-box active">
+        <div class="row-1" style="font-weight: 700;">
+          <p style="margin:0px">{{ feature.title }}</p>
+          <div class="arrow-box"><svg width="15" height="8" viewBox="0 0 15 8" fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+              <path d="M13.5 7.13965L7.5 1.13965L1.5 7.13965" stroke="#BFBFBF" stroke-width="1.5" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg></div>
+        </div>
+        <div class="mobile-txt">
+          <div class="comparison-row-1">
+            <div class="comparison-col-2">
+              <div class="highlited-col">
+                Traditional Consulting
+              </div>
+            </div>
+          </div>
+          <div class="comparison-col-2">
+            <div class="txt-box">
+              <p class="p-title">{{ feature.traditional_consulting_title }}</p>
+              <p class="p-txt" style="color: #BFBFBF;">{{ feature.traditional_consulting_description }}</p>
+            </div>
+          </div>
+          <div class="comparison-row-1">
+            <div class="comparison-col-3">
+              <div class="highlited-col">
+                Gruntwork Consulting
+              </div>
+            </div>
+          </div>
+          <div class="comparison-col-3">
+            <div class="txt-box">
+              <p class="p-title">{{ feature.gruntwork_consulting_title }}</p>
+              <p class="p-txt" style="color: #BFBFBF;">{{ feature.gruntwork_consulting_description }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+      {% if forloop.index >= 2 %}
+      <div class="comparison-box">
+        <div class="row-1" style="font-weight: 700;">
+          <p style="margin:0px">{{ feature.title }}</p>
+          <div class="arrow-box"><svg width="15" height="8" viewBox="0 0 15 8" fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+              <path d="M13.5 7.13965L7.5 1.13965L1.5 7.13965" stroke="#BFBFBF" stroke-width="1.5" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg></div>
+        </div>
+        <div class="mobile-txt">
+          <div class="comparison-row-1">
+            <div class="comparison-col-2">
+              <div class="highlited-col">
+                Traditional Consulting
+              </div>
+            </div>
+          </div>
+          <div class="comparison-col-2">
+            <div class="txt-box">
+              <p class="p-title">{{feature.traditional_consulting_title}}</p>
+              <p class="p-txt" style="color: #BFBFBF;">{{feature.traditional_consulting_description}}</p>
+            </div>
+          </div>
+          <div class="comparison-row-1">
+            <div class="comparison-col-3">
+              <div class="highlited-col">
+                Gruntwork Consulting
+              </div>
+            </div>
+          </div>
+          <div class="comparison-col-3">
+            <div class="txt-box">
+              <p class="p-title">{{feature.gruntwork_consulting_title}}</p>
+              <p class="p-txt" style="color: #BFBFBF;">{{feature.traditional_consulting_description}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<script>
+  window.onload = (event) => {
+    const boxes = document.querySelectorAll('.comparison-box');
+    boxes.forEach(box => {
+      box.addEventListener('click', () => {
+        const isActive = box.classList.contains('active');
+
+        boxes.forEach(box => {
+          box.classList.remove('active');
+        });
+
+        if (!isActive) {
+          box.classList.add('active');
+        }
+      });
+    });
+  };
+</script>

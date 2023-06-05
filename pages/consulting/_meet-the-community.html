@@ -1,0 +1,39 @@
+<div class="row row-page-header testimonial-consulting" style="margin-bottom: 60px;">
+  <div class="col-xs-12">
+    <h2>Meet the Community</h2>
+    <p style="padding-bottom: 20px;">
+      It has been our privilege to work with software teams of all sizes.
+    </p>
+    <div class="row row-testimonial">
+      <div class="col-xs-12 col-sm-3 col-md-2 col-headshot">
+        <img src="/assets/img/headshots/headshot-erem-boto.jpg" height="146" />
+      </div>
+      <div class="col-xs-12 col-sm-9 col-md-10 col-testimonial">
+        <img src="/assets/img/logos-clients/logo-instrumental.png" alt="Instrumental Logo" title="Instumental logo"
+          height="80" />
+        <br />
+        <p class="testimonial-txt" style="color: #BFBFBF">&ldquo;It was fantastic to see how Gruntwork delivered our
+          awesome AWS + Terraform infrastructure on time and well under budget.&rdquo;</p>
+        <p class="text-white img-txt-box"> <img class="headshot-mobile"
+            src="/assets/img/headshots/headshot-erem-boto.jpg" height="80" />
+          Erem Boto, </br> Senior Software Engineer</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-10 col-xs-offset-1 col-sm-12 col-sm-offset-0" style="margin-top: 40px;">
+    <div class="row thumbnail-group thumbnail-group-clients">
+      {% for customer in site.data.customers limit:18 %}
+      <div class="col-xs-6 col-sm-3 col-md-2">
+        <div class="thumbnail">
+          <img src="{{ customer.logo }}" alt="{{ customer.name }}" width="119px" />
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <p style="margin-top: 40px;">
+      <a href="/customers/" ga-on="click" ga-event-category="home-customers" ga-event-action="see-their-results">See
+        their
+        results <i class="fa fa-fw fa-caret-right"></i></a>
+    </p>
+  </div>
+</div>
