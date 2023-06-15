@@ -8626,49 +8626,51 @@ $(function () {
 
 /* Consulting page */
 (function ($) {
-  $(window).scroll(function () {
-    var scrollTop = $(document).scrollTop() + $(window).height() / 2;
-    var positions = [];
-    $(".box-consulting").each(function () {
-      $(this).removeClass("active");
-      positions.push({
-        position: $(this).offset().top,
-        element: $(this),
+  if ($("body.consulting").length) {
+    $(window).scroll(function () {
+      var scrollTop = $(document).scrollTop() + $(window).height() / 2;
+      var positions = [];
+      $(".box-consulting").each(function () {
+        $(this).removeClass("active");
+        positions.push({
+          position: $(this).offset().top,
+          element: $(this),
+        });
       });
+      var getClosest = closest(positions, scrollTop);
+      getClosest.addClass("active"); // the element closest to the middle of the screen
+
+      var classList = $(".active").attr("class");
+      var classArr = classList.split(/\s+/);
+
+      $(".box-consulting").each(function () {
+        if ($(this).hasClass(classArr[1]) && !$(this).hasClass("active")) {
+          $(this).addClass("active");
+        }
+      });
+
+      check();
     });
-    var getClosest = closest(positions, scrollTop);
-    getClosest.addClass("active"); // the element closest to the middle of the screen
 
-    var classList = $(".active").attr("class");
-    var classArr = classList.split(/\s+/);
-
-    $(".box-consulting").each(function () {
-      if ($(this).hasClass(classArr[1]) && !$(this).hasClass("active")) {
-        $(this).addClass("active");
+    function closest(array, number) {
+      var num = 0;
+      for (var i = array.length - 1; i >= 0; i--) {
+        if (
+          Math.abs(number - array[i].position) <
+          Math.abs(number - array[num].position)
+        ) {
+          num = i;
+        }
       }
-    });
-
-    check();
-  });
-
-  function closest(array, number) {
-    var num = 0;
-    for (var i = array.length - 1; i >= 0; i--) {
-      if (
-        Math.abs(number - array[i].position) <
-        Math.abs(number - array[num].position)
-      ) {
-        num = i;
-      }
+      return array[num].element;
     }
-    return array[num].element;
-  }
 
-  function check() {
-    var activeBox = $(".active");
+    function check() {
+      var activeBox = $(".active");
 
-    $(".square").removeClass("active");
-    $(".square-" + activeBox.data("box")).addClass("active");
+      $(".square").removeClass("active");
+      $(".square-" + activeBox.data("box")).addClass("active");
+    }
   }
 })(window.jQuery);
 
