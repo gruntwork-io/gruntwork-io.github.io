@@ -5,8 +5,8 @@
   description_assets: "/assets/img/landing-zone-features/landing-zone-chart@3x.png"
   description_assets_mobile: "/assets/img/landing-zone-features/landing-zone-chart-mobile@3x.png"
 
-- title: Quickly create new AWS accounts
-  description: Gruntwork Landing Zone includes an opinionated way to create a new AWS account as part of your AWS Organization using just three lines of code, plus a Terraform apply.
+- title: Quickly create new AWS accounts with Terraform
+  description: "Gruntwork Landing Zone includes an opinionated way to create a new AWS account as part of your AWS Organization using just a few lines of Terraform code:"
   url: "/assets/img/landing-zone-features/features-1@3x.png"
   precode: |
     <figure><figcaption>Variables.tf</figcaption>
@@ -29,26 +29,41 @@
     <figure>
 
 
-- title: Apply a best-practices security baseline to each AWS account
-  description: We define security baselines for the "root", "security", and "app" AWS accounts that include best-practices configurations for AWS CloudTrail, AWS Config, AWS Config rules, AWS IAM user password policies, cross-account access, Amazon GuardDuty, and more.
-  url: "/assets/img/landing-zone-features/features-2@3x.png"
+- title: Alternatively, create AWS accounts with Control Tower (Gruntwork Enterprise only)
+  description: |
+    <p>Alternatively, Gruntwork Enterprise customers can use the Gruntwork Landing Zone Control Tower Integration to create accounts using AWS Control Tower:</p>
+    <img src="/assets/img/landing-zone-features/landing-zone-dashboard-aws.png"/>
+    <p>Gruntwork Landing Zone will detect the new account and automatically apply a best-practices security baseline to it using Terraform, as described in the next section.</p>
+  url: "/assets/img/landing-zone-features/features-3@3x.png"
 
-- title: 100% Terraform-native
-  description: Manage your accounts and security baselines as Terraform code. Update to the latest Gruntwork Landing Zone baselines or make AWS Organization changes such as setting AWS Config Rules with simple changes to Terraform code.
+- title: Apply a best-practices security baseline to each AWS account
+  description: Automatically apply security baselines, defined in Terraform, to all your accounts. Whether you create the accounts using Terraform or Control Tower, this ensures that all of your accounts are properly configured with AWS CloudTrail, AWS Config, AWS Config rules, Amazon GuardDuty, Macie, IAM roles, IAM Access Analyzer, VPCs, and more.
   url: "/assets/img/landing-zone-features/features-4@3x.png"
 
-- title: Customize your AWS account baseline
-  description: Extend or customize your AWS account baselines by adding or removing any set of services you want directly in the Terraform code.
+- title: Customize your AWS account baselines
+  description: You get 100% of the Terraform code for the security baselines, so you can extend or customize them any way you want, ensuring that every one of your accounts meets your company’s requirements.
   url: "/assets/img/landing-zone-features/features-5@3x.png"
 
-- title: Automate account creation
-  description: Because Gruntwork Landing Zone is 100% Terraform-native, you can create new accounts as part of any pipeline that runs Terraform code. For a production-ready example, see Gruntwork Pipelines.
-  url: "/assets/img/landing-zone-features/features-6@3x.png"
-
 - title: Keep your code up to date automatically
-  description: With <a href="/patcher">Patcher</a>, streamline your account baseline updates, even when they involve breaking changes.
+  description: With <a href="/patcher">Patcher</a>, keep your account baseline up to date automatically with the latest best practices, compliance requirements, AWS releases, Terraform releases, etc—even when those releases involve breaking changes.
   url: "/assets/img/landing-zone-features/features-8@3x.png"
 
-- title: Available off the shelf
-  description: Gruntwork Landing Zone is pre-written, commercially supported, production-grade code that is available right now. No consulting engagement needed.
+- title: "Control Tower Integration: the best of both worlds (Enterprise only)"
+  description: |
+    <p>With the Gruntwork Landing Zone Control Tower Integration, you get the best of both worlds.</p>
+    <p>You get to use Control Tower to:</p>
+    <ul>
+      <li>See all your accounts and OUs</li>
+      <li>Create new accounts</li>
+      <li>Ensure those accounts have CloudTrail, AWS Config, and AWS Identity Center (SSO) setup</li>
+      <li>Apply controls and guard rails (SCPs, AWS Config Rules) to your accounts</li>
+      <li>See which accounts and resources are non-compliant with your controls and guard rails</li>
+    </ul>
+    <p>And you get to use Terraform modules to:</p>
+    <ul>
+      <li>Fill in security baseline features not supported by Control Tower: e.g., GuardDuty, Macie, IAM Access Analyzer, etc.</li>
+      <li>Customize the baseline applied to each account by updating the Terraform modules however you want.</li>
+      <li>Integrate accounts created with Control Tower with the rest of your Terraform-managed infrastructure.</li>
+      <li>Stay up to date automatically using Patcher.</li>
+    </ul>
   url: "/assets/img/landing-zone-features/features-7@3x.png"
