@@ -2,19 +2,178 @@
 
   .page-pricing-header {
     text-align: center;
-    background: linear-gradient(to bottom, #1a232d, #2e3b4a);
     margin-bottom: -30px;
   }
 
-  // The description of under the plan name
-  .plans-heading {
-    p.description {
-      font-size: 1.7rem;
-      @extend .margin-bottom-none;
+  .grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    .grid-item-center {
+      display: grid;
+      align-items: center;
+      justify-content: center;
+      vertical-align: middle;
     }
+  }
+
+  .pricing-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .plans-heading {
+    padding: 0 12px;
     h2 {
-      margin-bottom: 8px;
+      margin-bottom: 18px;
       font-size: 42px;
+    }
+  }
+
+  .plans-features {
+    ul {
+      padding: 0;
+      margin: 0;
+      position: relative;
+      .sticky-li {
+        position: sticky;
+        top: 0;
+        background-color: #1d252e;
+      }
+
+      li {
+        padding: 12px 16px;
+        border-radius: 6px;
+        &:nth-child(even) {
+          background: #222932;
+        }
+
+        .badge {
+          background-color: #2B3745;
+          border-radius: 5px;
+          padding: 4px 8px;
+          color: #bfbfbf;
+          font-weight: 400;
+        }
+      }
+    }
+
+    hr {
+      margin: 0;
+      border-color: #1A4C60;
+      &.with-margin {
+        margin: 18px 0 12px;
+      }
+    }
+
+    .pricing-checkbox-wrapper {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: left;
+      input {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        width: 17px; /* Adjust the size of the checkbox */
+        height: 17px; /* Adjust the size of the checkbox */
+        border: 1px solid #284B5D; /* Default border color */
+        border-radius: 3px;
+        outline: none;
+        margin-right: 12px;
+        position: relative;
+
+        &::before {
+          content: "";
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 10px; /* Adjust the size of the custom checkmark */
+          height: 10px; /* Adjust the size of the custom checkmark */
+          background-image: url("/assets/img/custom-checkmark.svg"); /* Replace with the path to your custom checkmark image */
+          background-repeat: no-repeat;
+          background-position: center;
+          background-size: cover;
+          opacity: 0;
+        }
+
+        &:checked {
+          background-color: #03C5E7;
+          border-color: #03C5E7;
+
+          &::before {
+            opacity: 1;
+          }
+        }
+      }
+
+      @media screen and (min-width: 768px) {
+        min-width: 170px;
+      }
+    }
+
+    .pricing-checkbox-wrapper-auto {
+      @media screen and (min-width: 768px) {
+        min-width: auto;
+      }
+    }
+  }
+
+  .pricing-help-notification {
+    margin: 80px 0;
+  }
+
+  .popular-badge {
+    position: absolute;
+    right: -24px;
+    top: -8px;
+    padding: 4px 8px;
+    line-height: normal;
+    font-weight: 700;
+    border: 1px solid #1A4C60;
+    border-radius: 4px;
+  }
+
+  .gw-pricing {
+    .gw-pricing-heading {
+      font-size: 36px;
+    }
+  }
+
+  .pricing-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px;
+    background-color: #222932;
+    border-radius: 6px;
+    &.pricing-card-with-image {
+      flex-direction: row;
+      align-items: stretch;
+      @media screen and (max-width: 628px) {
+        flex-direction: column;
+      }
+
+      .pricing-card-image {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 34px;
+        padding: 88px 44px;
+        border-radius: 10px;
+        background: #1C2129;
+        img {
+          object-fit: contain;
+        }
+
+        @media screen and (max-width: 628px) {
+          width: 100%;
+          margin-right: 0;
+        }
+      }
     }
   }
 
@@ -29,11 +188,6 @@
     margin: auto;
     z-index: 2;
     position: relative;
-  }
-
-  .enterprise-h1 {
-    margin-top: 32px;
-    font-weight: bold;
   }
 
   // Pro Support
