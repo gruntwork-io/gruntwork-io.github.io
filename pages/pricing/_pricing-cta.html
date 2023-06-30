@@ -1,56 +1,67 @@
 <ul>
-  <li class="grid-container" style="padding: 0;">
-    <div></div>
+  <li class="grid-container pricing-card-wrapper" style="padding: 0;">
+    <div class="empty-grid-col"></div>
     <div class="pricing-card" style="margin-right: 10px;">
       <div class="flex flex-middle flex-column text-center">
-        <div data-mh="plans-pricing-top" style="margin-bottom: 10px;">
-          <div class="pricing-row">
-            <p class="help-block" style="margin-top: -9px; margin-bottom: unset">
-              &nbsp;
-            </p>
-            <p class="medium-price">
-              <span>$</span><strong id="js-monthly-total">795</strong>
-            </p>
-            <p class="help-block" style="margin-bottom: 9px; margin-left: 4px;">/ per month</p>
-          </div>
-          <div id="js-one-time-total" class="pricing-row">
-            <p class="text-center medium-price">
-              <span>+$</span>4,950
-            </p>
-            <p class="help-block" style="margin-bottom: 9px; margin-left: 4px;">/ one time</p>
-          </div>
+        <div class="hide-above-screen-sm">
+          <p class="medium-price" style="margin-bottom: 6px;">Standard</p>
         </div>
-        <div class="text-center">
-          <form
-            action="{{ site.developer_portal_url }}/checkout"
-            style="margin-bottom: 15px"
-          >
-            <input type="hidden" name="cart" value="" />
-            <input type="hidden" name="editUrl" value="" />
-            <button
-              type="submit"
-              id="checkout-btn"
-              class="btn btn-info btn-checkout"
+        <div class="row-reverse-mobile">
+          <div data-mh="plans-pricing-top" style="margin-bottom: 10px;">
+              <div class="pricing-row hide-on-screen-sm">
+                <p class="help-block" style="margin-top: -9px; margin-bottom: unset">
+                  &nbsp;
+                </p>
+                <p class="medium-price">
+                  <span>$</span><strong id="js-monthly-total">795</strong>
+                </p>
+                <p class="help-block" style="margin-left: 4px;">/ per month</p>
+              </div>
+              <div id="js-one-time-total" class="pricing-row">
+                <p class="text-center medium-price">
+                  <span>+$</span>4,950
+                </p>
+                <p class="help-block" style="margin-left: 4px;">/ one time</p>
+              </div>
+          </div>
+          <div class="text-center">
+            <form
+              action="{{ site.developer_portal_url }}/checkout"
             >
-              Checkout
-            </button>
-          </form>
+              <input type="hidden" name="cart" value="" />
+              <input type="hidden" name="editUrl" value="" />
+              <button
+                type="submit"
+                id="checkout-btn"
+                class="btn btn-info btn-checkout"
+              >
+                <span class="hide-on-screen-sm">Checkout</span>
+                <span class="pricing-row hide-above-screen-sm">
+                  <p class="medium-price">
+                    <span>$</span><strong id="js-monthly-total">795</strong>
+                  </p>
+                  <p class="help-block" style="margin-left: 4px;">/ per month</p>
+                </span>
+              </button>
+            </form>
+          </div>
         </div>
       </div>
       <div class="text-center" data-mh="plans-pricing-bottom">
-        <p class="text-muted small" style="margin: 0;">
+        <p class="text-muted small annual-contract-p" style="margin: 0;">
           <em>
             Annual contract, billed monthly.
-            <br />
-            View our
-            <span
-              ><a
-                href="/terms/"
-                title="Gruntwork Terms of Service"
-                target="_blank"
-                >Terms of Service</a
-              ></span
-            >.
+            <span>
+              View our
+              <span
+                ><a
+                  href="/terms/"
+                  title="Gruntwork Terms of Service"
+                  target="_blank"
+                  >Terms of Service</a
+                ></span
+              >.
+            </span>
           </em>
         </p>
       </div>
@@ -58,19 +69,31 @@
     <div class="pricing-card" style="margin-left: 10px;">
       <div class="flex flex-middle flex-column text-center">
         <div data-mh="plans-pricing-top" style="margin-bottom: 10px;">
-          <p class="medium-price light">Contact Us</p>
+          <p class="medium-price hide-on-screen-sm">Contact Us</p>
+          <div class="flex hide-above-screen-sm" style="align-items: center; justify-content: center;">
+            <p class="medium-price" style="margin-bottom: 6px; margin-right: 6px;">Enterprise</p>
+            <span class="popular-badge">POPULAR</span>
+          </div>
         </div>
       </div>
-      <div class="text-center" data-mh="plans-pricing-bottom">
+      <div class="text-center flex-middle" data-mh="plans-pricing-bottom">
         <div class="text-center">
           <p><a class="btn btn-primary pricing-ctas" href="/contact/">Contact Us</a></p>
         </div>
-        <p class="text-muted small" style="margin: 0;">
+        <p class="text-muted small annual-contract-p" style="margin: 0;">
           <em>
             Annual contract, billed annually.
-            <br>
-            View our
-            <span><a href="/terms/" title="Gruntwork Terms of Service" target="_blank">Terms of Service</a></span>.
+            <span>
+              View our
+              <span
+                ><a
+                  href="/terms/"
+                  title="Gruntwork Terms of Service"
+                  target="_blank"
+                  >Terms of Service</a
+                ></span
+              >.
+            </span>
           </em>
         </p>
       </div>

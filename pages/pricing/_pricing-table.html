@@ -1,13 +1,13 @@
-<div class="pricing-table">
+<div class="pricing-table" style="margin-top: 40px;">
   <div class="gw-pricing">
     <div class="plans-heading grid-container" data-mh="plans-heading">
       <div></div>
-      <div class="text-center">
+      <div class="text-center list-price-heading">
         <h2 class="no-anchor margin-top-none gw-pricing-heading">Standard</h2>
       </div>
-      <div class="text-center" style="position: relative;">
-        <h2 class="no-anchor margin-top-none gw-pricing-heading">Enterprise</h2>
+      <div class="text-center list-price-heading" style="position: relative;">
         <span class="popular-badge">POPULAR</span>
+        <h2 class="no-anchor margin-top-none gw-pricing-heading">Enterprise</h2>
       </div>
     </div>
     <div class="plans-features" data-mh="plans-features">
@@ -25,9 +25,10 @@
       {% include_relative _pricing-add-ons.html %}
       <hr class="with-margin" />
       {% include_relative _pricing.html %}
-      <div style="margin: 16px 0;">
-        {% include_relative _pricing-cta.html %}
-      </div>
+      
     </div>
+  </div>
+  <div style="margin: 16px 0;">
+    {% include_relative _pricing-cta.html %}
   </div>
 </div>

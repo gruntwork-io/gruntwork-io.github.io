@@ -1,36 +1,6 @@
 .page-pricing {
 
-  .page-pricing-header {
-    text-align: center;
-    margin-bottom: -30px;
-  }
-
-  .grid-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    .grid-item-center {
-      display: grid;
-      align-items: center;
-      justify-content: center;
-      vertical-align: middle;
-    }
-  }
-
-  .pricing-row {
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-  }
-
-  .plans-heading {
-    padding: 0 12px;
-    h2 {
-      margin-bottom: 18px;
-      font-size: 42px;
-    }
-  }
-
-  .plans-features {
+  .pricing-table {
     ul {
       padding: 0;
       margin: 0;
@@ -57,7 +27,119 @@
         }
       }
     }
+  }
 
+  .page-pricing-header {
+    text-align: center;
+    margin-bottom: -30px;
+  }
+
+  .grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    .grid-item-center {
+      display: grid;
+      align-items: center;
+      justify-content: center;
+      vertical-align: middle;
+    }
+
+    label {
+      color: #bfbfbf;
+      margin-bottom: 0;
+    }
+
+    &.grid-vertical-center {
+      align-items: center;
+      vertical-align: middle;
+    }
+
+    @media screen and (max-width: $screen-md) {
+      .light {
+        font-size: 16px;
+      }
+      
+      &.pricing-card-wrapper {
+        grid-template-columns: 1fr 1fr;
+        .empty-grid-col {
+          display: none;
+        }
+      }
+    }
+
+    @media screen and (max-width: $screen-sm) {
+      grid-template-columns: 1fr 1.15fr .85fr;
+      .light {
+        font-size: 14px;
+        line-height: 20px;
+      }
+    }
+
+    @media screen and (max-width: 590px) {
+      &.pricing-card-wrapper {
+        grid-template-columns: 1fr;
+        .empty-grid-col {
+          display: none;
+        }
+
+        .pricing-card {
+          margin-bottom: 16px;
+          .small {
+            font-size: 12px;
+          }
+
+          .flex-middle {
+            width: 100%;
+            justify-content: stretch;
+          }
+          
+          form, button, .btn {
+            width: 100%;
+            max-width: 100%;
+          }
+        }
+      }
+    }
+  }
+
+  .pricing-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    .help-block {
+      margin-bottom: 9px;
+
+      @media screen and (max-width: $screen-sm) {
+        margin-bottom: 7px;
+      }
+    
+      @media screen and (max-width: 590px) {
+        margin-bottom: 5px;
+      }
+    }
+  }
+
+  .plans-heading {
+    padding: 0 12px;
+    h2 {
+      margin-bottom: 18px;
+      font-size: 36px;
+
+      @media screen and (max-width: $screen-md) {
+        font-size: 24px;
+      }
+
+      @media screen and (max-width: $screen-sm) {
+        font-size: 20px;
+      }
+
+      @media screen and (max-width: $screen-xs) {
+        font-size: 16px;
+      }
+    }
+  }
+
+  .plans-features {
     hr {
       margin: 0;
       border-color: #1A4C60;
@@ -108,20 +190,49 @@
         }
       }
 
-      @media screen and (min-width: 768px) {
+      @media screen and (min-width: $screen-sm) {
         min-width: 170px;
+      }
+
+      @media screen and (max-width: 628px) {
+        min-width: auto;
+        flex-direction: column;
+        input {
+          margin-right: 0;
+          margin-bottom: 4px;
+        }
       }
     }
 
     .pricing-checkbox-wrapper-auto {
-      @media screen and (min-width: 768px) {
+      @media screen and (min-width: $screen-sm) {
         min-width: auto;
+      }
+    }
+  }
+
+  .gw-pricing {
+    position: relative;
+
+    @media screen and (max-width: $screen-sm) {
+      .plans-heading {
+        background-color: #1d252e;
+        position: sticky;
+        top: -26px;
+        z-index: 1;
       }
     }
   }
 
   .pricing-help-notification {
     margin: 80px 0;
+  }
+
+  .list-price-heading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
   }
 
   .popular-badge {
@@ -133,11 +244,16 @@
     font-weight: 700;
     border: 1px solid #1A4C60;
     border-radius: 4px;
-  }
 
-  .gw-pricing {
-    .gw-pricing-heading {
-      font-size: 36px;
+    @media screen and (max-width: $screen-md) {
+      font-size: 16px;
+      right: -32px;
+    }
+
+    @media screen and (max-width: $screen-sm) {
+      position: static;
+      font-size: 14px;
+      margin-bottom: 10px;
     }
   }
 
@@ -152,8 +268,10 @@
     &.pricing-card-with-image {
       flex-direction: row;
       align-items: stretch;
-      @media screen and (max-width: 628px) {
+      @media screen and (max-width: $screen-sm) {
         flex-direction: column;
+        padding: 16px;
+        border: 1px solid #1A4C60;
       }
 
       .pricing-card-image {
@@ -169,10 +287,48 @@
           object-fit: contain;
         }
 
-        @media screen and (max-width: 628px) {
-          width: 100%;
+        @media screen and (max-width: $screen-sm) {
+          width: 100px;
+          padding: 0;
+          background-color: transparent;
           margin-right: 0;
         }
+      }
+    }
+
+    .row-reverse-mobile {
+      display: flex;
+      flex-direction: column;
+    }
+
+    form {
+      margin-bottom: 15px;
+    }
+
+    .annual-contract-p {
+      max-width: 30ch;
+    }
+
+    @media screen and (max-width: $screen-sm) {
+      .annual-contract-p {
+        max-width: 28ch;
+      }
+    }
+
+    @media screen and (max-width: 590px) {
+      margin-right: 0!important; // Needs to override element style
+      margin-left: 0!important; // Needs to override element style
+
+      .annual-contract-p {
+        max-width: 100%;
+      }
+
+      form {
+        margin-bottom: 6px;
+      }
+
+      .row-reverse-mobile {
+        flex-direction: column-reverse;
       }
     }
   }
@@ -203,6 +359,31 @@
 
   .btn.pricing-ctas {
     min-width: 180px;
+  }
+
+  @media screen and (max-width: $screen-sm) {
+    .plans-wrapper {
+      padding: 0;
+    }
+    .medium-price {
+      font-size: 24px;
+    }
+  }
+
+  @media screen and (min-width: 590px) {
+    .hide-above-screen-sm {
+      display: none;
+    }
+  }
+
+  @media screen and (max-width: 590px) {
+    .medium-price {
+      font-size: 18px;
+    }
+
+    .hide-on-screen-sm {
+      display: none;
+    }
   }
 }
 
