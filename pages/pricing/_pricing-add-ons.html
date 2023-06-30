@@ -1,0 +1,115 @@
+<ul>
+  <li class="grid-container text-bold text-white">
+    <span
+      class="light"
+      title=""
+      data-toggle="tooltip"
+      >Add-ons</span
+    >
+  </li>
+  <li class="grid-container grid-vertical-center">
+    <label
+      for="add-on-reference-architecture"
+      class="light"
+      title="Get an opinionated, best-practices, end-to-end tech stack, customized to your needs, 100% defined as code, deployed into your AWS accounts—all in about a day!"
+      data-toggle="tooltip"
+      >Reference Architecture</label
+    >
+    <div class="text-center grid-item-center">
+      <div class="pricing-checkbox-wrapper">
+        <input
+          type="checkbox"
+          id="add-on-reference-architecture-standard"
+          {% unless include.already_included %}name="{{site.products.RefArch.key}}"{% endunless %}
+          class="addon-checkbox"
+          data-product-id="{{site.products.RefArch.stripeProductId}}"
+        >
+        <span class="light">+$<strong>4,950</strong> one-time</span>
+      </div>
+    </div>
+    <div class="text-center grid-item-center">
+      <div class="pricing-checkbox-wrapper pricing-checkbox-wrapper-auto">
+        <input
+          type="checkbox"
+          id="add-on-reference-architecture-enterprise"
+          {% unless include.already_included %}name="{{site.products.RefArch.key}}"{% endunless %}
+          disabled="disabled" 
+          checked="checked"
+          class="addon-checkbox"
+          data-product-id="{{site.products.RefArch.stripeProductId}}"
+        >
+        <span class="light">included</span>
+      </div>
+    </div>
+  </li>
+  <li class="grid-container grid-vertical-center">
+    <label
+      for="add-on-pro-support"
+      class="light"
+      title="Get support via email or a private Slack channel, with an SLA of 2 business days."
+      data-toggle="tooltip"
+      >Professional Support</label
+    >
+    <div class="text-center grid-item-center">
+      <div class="pricing-checkbox-wrapper">
+        <input
+          type="checkbox"
+          id="add-on-pro-support-standard"
+          {% unless include.already_included %}name="{{site.products.ProSupport.key}}"{% endunless %}
+          class="addon-checkbox"
+          data-product-id="{{site.products.ProSupport.stripeProductId}}"
+        >
+        <span class="light">+$<strong>1,950</strong> / month</span>
+      </div>
+    </div>
+    <div class="text-center grid-item-center">
+      <div class="pricing-checkbox-wrapper pricing-checkbox-wrapper-auto">
+        <input
+          type="checkbox"
+          id="add-on-pro-support-enterprise"
+          {% unless include.already_included %}name="{{site.products.ProSupport.key}}"{% endunless %}
+          disabled="disabled" 
+          checked="checked"
+          class="addon-checkbox"
+          data-product-id="{{site.products.ProSupport.stripeProductId}}"
+        >
+        <span class="light">included</span>
+      </div>
+    </div>
+  </li>
+  <li class="grid-container grid-vertical-center">
+    <label
+      class="light"
+      for="add-on-compliance"
+      title="Get access to our CIS Service Catalog, where all the modules are compliant with the CIS AWS Foundations Benchmark. If you pick this and the Reference Architecture add-on, the entire Reference Architecture will be compliant with the CIS AWS Foundations Benchmark!"
+      data-toggle="tooltip"
+      >CIS Compliance Package</label
+    >
+    <div class="text-center grid-item-center">
+      <div class="pricing-checkbox-wrapper">
+        <input
+          type="checkbox"
+          id="add-on-compliance-standard"
+          {% unless include.already_included %}name="{{site.products.CIS.key}}"{% endunless %}
+          class="addon-checkbox"
+          data-product-id="{{site.products.CIS.stripeProductId}}"
+        >
+        <span class="light">+$<strong>1,250</strong> / month</span>
+      </div>
+    </div>
+    <div class="text-center grid-item-center">
+      <div class="pricing-checkbox-wrapper pricing-checkbox-wrapper-auto">
+        <input
+          type="checkbox"
+          id="add-on-compliance-enterprise"
+          {% unless include.already_included %}name="{{site.products.CIS.key}}"{% endunless %}
+          disabled="disabled" 
+          checked="checked"
+          class="addon-checkbox"
+          data-product-id="{{site.products.CIS.stripeProductId}}"
+        >
+        <span class="light">included</span>
+      </div>
+    </div>
+  </li>
+</ul>
