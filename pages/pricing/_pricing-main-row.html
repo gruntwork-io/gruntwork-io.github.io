@@ -1,0 +1,60 @@
+{% for mainRow in site.data.pricing-table %}
+
+<ul>
+  <li class="grid-container text-bold text-white" style="position: relative;">
+    <span class="light">{% if mainRow.tooltip.size > 1 %}<div class="table-tooltip">{{mainRow.tooltip}}</div>{% endif
+      %}{{ mainRow.title }}</span>
+  </li>
+  {% for rows in mainRow.rows %}
+  <li class="grid-container highlight" style="position: relative;">
+    <span class="light"> {% if rows.tooltip.size > 1 %}<div class="table-tooltip">{{rows.tooltip}}</div>{% endif %}
+      {{ rows.row }} </span>
+    {% if rows.standard == 'yes' %}
+    <div class="text-center grid-item-center">
+      <img src="/assets/img/pricing-include.svg" alt="including" />
+    </div>
+    {% endif %}
+    {% if rows.standard == 'no' %}
+    <div class="text-center grid-item-center">
+      <img src="/assets/img/pricing-not-include.svg" alt="not_including" />
+    </div>
+    {% endif %}
+    {% if rows.enterprise == 'yes' %}
+    <div class="text-center grid-item-center">
+      <img src="/assets/img/pricing-include.svg" alt="including" />
+    </div>
+    {% endif %}
+    {% if rows.enterprise == 'no' %}
+    <div class="text-center grid-item-center">
+      <img src="/assets/img/pricing-not-include.svg" alt="not_including" />
+    </div>
+    {% endif %}
+    {% if rows.enterprise == 'available' %}
+    <div class="text-center grid-item-center">
+      <span class="light">Available</span>
+    </div>
+    {% endif %}
+  </li>
+  {% endfor %}
+</ul>
+<hr class="with-margin" />
+{% endfor %}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const containers = document.getElementsByClassName('grid-container');
+
+    for (let i = 0; i < containers.length; i++) {
+      const container = containers[i];
+      const tooltip = container.querySelector('.table-tooltip');
+
+      container.addEventListener('mouseenter', function () {
+        tooltip.style.display = 'block';
+      });
+
+      container.addEventListener('mouseleave', function () {
+        tooltip.style.display = 'none';
+      });
+    }
+  });
+</script>
