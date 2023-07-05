@@ -449,3 +449,55 @@
 #add-ons-table td {
   padding: 0px 15px;
 }
+
+.table-tooltip {
+  z-index: 90;
+  min-width: 200px;
+  display: none;
+  position: absolute;
+  bottom: 120%;
+  left: 30%;
+  transform: translateX(-50%);
+  font-size: $font-size-small;
+  border-radius: 8px;
+  transition: all ease;
+  @media screen and (max-width: $screen-sm)  {
+    font-size: 14px;
+    left: 70%;
+    min-width: 150px;
+  }
+
+  &::after {
+    content: url(/assets/img/vector-tooltip.png);
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    @media screen and (max-width: $screen-sm)  {
+      bottom: -10px;
+    }
+  }
+}
+
+span.light {
+  position: relative;
+}
+
+.grid-container {
+  position: relative;
+  margin-bottom: 1px;
+}
+
+.highlight {
+  border: transparent 1px solid;
+}
+
+.grid-container.highlight:hover {
+  border: #1A4C60 1px solid;
+  transition: all ease;
+}
+
+.grid-container.highlight:hover span{
+  transition: all ease;
+  color: white;
+}
