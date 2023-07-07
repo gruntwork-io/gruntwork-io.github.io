@@ -2,35 +2,35 @@
   tooltip: tooltip text
   rows:
     - row: 'Terraform account baselines'
-      tooltip: tooltip text
+      tooltip: Automatically apply security baselines, defined in Terraform, to all your AWS accounts, ensuring that all of your accounts are properly configured with AWS CloudTrail, AWS Config, AWS Config rules, Amazon GuardDuty, Macie, IAM roles, IAM Access Analyzer, VPCs, and more.
       standard: 'yes'
       enterprise: 'yes'
     - row: 'Monitoring: CloudTrail, AWS Config'
-      tooltip: 
+      tooltip: Configure monitoring and audit logging for all your AWS accounts using CloudTrail and AWS Config.
       standard: 'yes'
       enterprise: 'yes'
     - row: 'Networking: VPCs, subnets, etc'
-      tooltip: 
+      tooltip: Set up best-practice networking infrastructure for all of your AWS accounts, including VPCs, subnets, route tables, Internet Gateways, NAT Gateways, VPC endpoints, NACLs, and more.
       standard: 'yes'
       enterprise: 'yes'
     - row: 'Scanning: GuardDuty, Macie'
-      tooltip: 
+      tooltip: Configure security scanning for all your AWS accounts using GuardDuty and Macie.
       standard: 'yes'
       enterprise: 'yes'
     - row: 'IAM: users, roles, groups'
-      tooltip: 
+      tooltip: Use IAM users, roles, and groups for authentication and authorization in your AWS accounts.
       standard: 'yes'
       enterprise: 'yes'
     - row: 'Control Tower integration'
-      tooltip: 
+      tooltip: Use Control Tower to create and manage your AWS accounts, OUs, and controls, while under the hood, managing everything as code using Terraform.
       standard: 'no'
       enterprise: 'yes'
     - row: 'AWS Identity Center (SSO)'
-      tooltip: 
+      tooltip: Use Single Sign On (SSO) with an existing Identity Provider (e.g., Active Directory, Google, Okta) for authentication and authorization in your AWS accounts.
       standard: 'no'
       enterprise: 'yes'
     - row: 'Guard Rails: SCPs, Config Rules'
-      tooltip: 
+      tooltip: Configure guard rails for all your AWS accounts using Service Control Policies (SCPs) and AWS Config Rules.
       standard: 'no'
       enterprise: 'yes'
 
@@ -38,22 +38,22 @@
   tooltip: 
   rows:
     - row: 'Secure, isolated workers'
-      tooltip: 
+      tooltip: Instead of directly giving your CI server admin-level permissions needed to launch arbitrary infrastructure, Gruntwork Pipelines enables a secure infrastructure pipeline by granting the sensitive permissions solely to an isolated worker that exposes a limited, locked down interface.
       standard: 'yes'
       enterprise: 'yes'
     - row: '<span class="badge light" style="margin-right: 4px;">Plan</span>
         <span class="light" style="margin-right: 4px;">and</span>
         <span class="badge light" style="margin-right: 4px;">apply</span>
         workflows'
-      tooltip: 
+      tooltip: Automatically run terraform/terragrunt 'plan' on PRs and 'apply' on merge.
       standard: 'yes'
       enterprise: 'yes'
     - row: 'Approval workflows'
-      tooltip: 
+      tooltip: Automatically require approvals for terraform/terragrunt 'plan' output before an 'apply' is allowed. Includes Slack integration for a ChatOps driven approach.
       standard: 'yes'
       enterprise: 'yes'
     - row: 'Promotion workflows'
-      tooltip: 
+      tooltip: Automatically promote releases across your environments: e.g., dev -> stage -> prod.
       standard: 'no'
       enterprise: 'yes'
 
@@ -67,15 +67,15 @@
   tooltip: 
   rows:
     - row: 'CLI-driven updates'
-      tooltip: 
+      tooltip: Use the patcher CLI to automatically update your Terraform and Terragrunt dependencies.
       standard: 'yes'
       enterprise: 'yes'
-    - row: 'CLI-driven updates'
-      tooltip: 
+    - row: 'Patch breaking changes'
+      tooltip: When a new release contains breaking changes, Patcher can automatically apply patches from the maintainer to transform your code to work around the backward compatibility.
       standard: 'yes'
       enterprise: 'yes'
     - row: 'Automated (PR-driven) updates'
-      tooltip: 
+      tooltip: When new releases come out, get automated pull-requests to update you to the new version.
       standard: 'no'
       enterprise: 'yes'
 
@@ -83,23 +83,23 @@
   tooltip: 
   rows:
     - row: 'Orchestration: ECS, EKS, EC2, ASG'
-      tooltip: 
+      tooltip: Reusable, battle-tested Terraform modules for deploying application workloads on top of ECS, EKS, EC2, and ASGs.
       standard: 'yes'
       enterprise: 'yes'
     - row: 'Data stores: RDS, ElastiCache, S3'
-      tooltip: 
+      tooltip: Reusable, battle-tested Terraform modules for deploying data stores such as RDS, ElastiCache, and S3.
       standard: 'yes'
       enterprise: 'yes'
     - row: 'Analytics: Elasticsearch, Kafka'
-      tooltip: 
+      tooltip: Reusable, battle-tested Terraform modules for deploying analytics, search, and streaming tools such as Elasticsearch, Kafka, and Kinesis.
       standard: 'yes'
       enterprise: 'yes'
     - row: 'Serverless: Lambda, API Gateway'
-      tooltip: 
+      tooltip: Reusable, battle-tested Terraform modules for deploying serverless workloads on top of Lambda and API Gateway.
       standard: 'yes'
       enterprise: 'yes'
-    - row: 'Self-hosting (repo copier)'
-      tooltip: 
+    - row: 'Self-hosting (repo-copier)'
+      tooltip: Use the repo-copier CLI tool to copy all the Terraform code to your own version control system, including updating all internal cross-references and authentication details.
       standard: 'no'
       enterprise: 'yes'
 
@@ -108,22 +108,18 @@
   tooltip: 
   rows:
     - row: 'Community support'
-      tooltip: 
+      tooltip: Get support from the Gruntwork team and other Gruntwork customers via the <a href="https://github.com/orgs/gruntwork-io/discussions">Gruntwork Knowledge Base</a>.
       standard: 'yes'
       enterprise: 'yes'
     - row: 'Enterprise support'
-      tooltip: 
+      tooltip: Get support via email, a private shared Slack channel, and scheduled video calls directly from the Gruntwork team. Includes SLAs on response times.
       standard: 'no'
       enterprise: 'yes'
     - row: 'Guided onboarding'
-      tooltip: 
+      tooltip: Get hands-on help, onboarding, and guidance from the Gruntwork team in setting up your DevOps Foundations.
       standard: 'no'
       enterprise: 'yes'
     - row: 'Consulting'
-      tooltip: 
+      tooltip: Gruntwork works directly with your team to build world-class infrastructure, which we then support & maintain on an ongoing basis.
       standard: 'yes'
       enterprise: 'yes'
-    - row: 'Self-hosting (repo copier)'
-      tooltip: 
-      standard: 'no'
-      enterprise: 'available'
