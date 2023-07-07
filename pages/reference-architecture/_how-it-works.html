@@ -4,7 +4,7 @@
   </div>
 </div>
 {% for step in site.data.initial-setup-how-it-works %}
-<div class="row row-how-it-works">
+<div class="row row-how-it-works row-how-it-works-reference-architecture">
   <div
     class="col-xs-8 col-xs-offset-2 col-sm-3 col-sm-offset-0 col-md-2 col-diagram hidden-print"
   >
@@ -16,7 +16,7 @@
   </div>
   <div class="col-xs-12 col-sm-9 col-md-10 col-explanation">
     <h3>
-      {{ step.title }}{% if forloop.index == 5 %}
+      {{ step.title }}{% if forloop.index == 6 %}
       <label
         style="
           display: inline-flex;

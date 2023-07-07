@@ -1,64 +1,47 @@
-- title: You need to run your infrastructure on AWS
+- title: Set up your DevOps foundations
   description: |
-    You're launching a new app. You're migrating to the cloud. You're going through a DevOps transformation. And
-    this time, you're going to "do it right." But there's a problem. Actually, 1,001 problems: you need to figure out how to
-    run app servers, databases, load balancers, CDNs, continuous integration, automated deployment, monitoring, alerting,
-    log aggregation, secrets management, SSH access, VPN access, DNS, TLS, and so on. And you just don't have the time or
-    expertise to do it all.
+    The Gruntwork team deploys a <a href="/reference-architecture/">Reference Architecture</a> for you, setting you up with all the foundational pieces you need to get started with AWS and Terraform, including:
+    <ul>
+    <li>AWS multi-account structure: <a href="/landing-zone-for-aws/">Gruntwork Landing Zone.</a></li>
+    <li>Network topology: VPCs, subnets, route tables, VPN, etc.</li>
+    <li>CI / CD: <a href="/pipelines/">Gruntwork Pipelines.</a></li>
+    <li>Auth: AWS Identity Center (SSO), IAM roles, OIDC, etc. </li>
+    <li>Guard rails: SCPs, AWS Config Rules, etc.</li>
+    <li>Monitoring: CloudTrail, GuardDuty, Macie, etc. </li>
+    <li>Compliance: <a href="/achieve-compliance/">Gruntwork Compliance.</a></li>
+    </ul>
 
-- title: Try out the Infrastructure as Code library
+- title: Deploy the rest of your infrastructure
   description: |
-    Fortunately, there's a solution: the Gruntwork <a href="/infrastructure-as-code-library/">Infrastructure as Code Library</a>
-    (IaC Library) is a collection of reusable infrastructure code written in Terraform, Go, Bash, and Python that
-    solves these 1,001 problems. Instead of reinventing the wheel, you can leverage 5+ years and 350,000+ lines of
-    battle-tested code, including pre-built solutions for Kubernetes, MySQL, Postgres, Redis, OpenVPN, Lambda,
-    CloudWatch, Kafka, ELK, and more, all of which have been proven in production at
-    <a href="/customers/">hundreds of companies</a>. To get an idea of how the library works before signing up, try out
-    our <a href="/infrastructure-as-code-library/#open-source">open source modules</a> and check out
-    <a href="https://blog.gruntwork.io/5-lessons-learned-from-writing-over-300-000-lines-of-infrastructure-code-36ba7fadeac1" title="5 Lessons Learned From Writing Over 300,000 Lines of Infrastructure Code" target="_blank">5 Lessons Learned From Writing Over 300,000 Lines of Infrastructure Code</a>.
-    And if you sign up and you're not happy for any reason, we'll refund your money within the first 30 days.
+    Use the <a href="/infrastructure-as-code-library">Infrastructure as Code Library</a> (IaC Library) to deploy the rest of your infrastructure, (leveraging the accounts and CI / CD pipeline from the previous step). The IaC Library is a collection of reusable infrastructure code written in Terraform, Go, Bash, and Python that has been proven in production at <a href="/customers/">hundreds of companies.</a> It includes pre-built solutions for:
+    <ul>
+      <li>Orchestration: EKS, ECS, EC2, ASGs, etc.</li>
+      <li>Data stores: MySQL, Postgres, Aurora, Redis, S3, etc.</li>
+      <li>Serverless: Lambda, API Gateway, etc.</li>
+      <li>Search and analytics: Elasticsearch, Kafka, Kinesis, etc.</li>
+    </ul>
 
 - title: Deploy an end-to-end architecture
   description: |
-    You can assemble all the code from the IaC Library yourself by <a href="https://docs.gruntwork.io/library/overview/">following our docs</a>
-    or you can have the Gruntwork team assemble a
-    <a href="/reference-architecture/">Reference Architecture</a> for you. The Reference Architecture is an opinionated,
-    battle-tested, end-to-end tech stack that includes just about everything you need, including: server cluster, load
-    balancer, database, cache, network topology, monitoring, alerting, CI/CD, secrets management, VPN, and more. We
-    customize the Reference Architecture to your needs, give you 100% of the code, and deploy it into your AWS account in about a day.
+    Get <a href="/support"/>support</a> and <a href="/consulting">consulting</a> for the IaC Library and Reference Architecture. We wrote the <a href="https://www.terraformupandrunning.com/" target="_blank">book on Terraform</a> and the <a href="https://www.airpair.com/aws/posts/building-a-scalable-web-app-on-amazon-web-services-p1" target="_blank">definitive guide to AWS</a>, so you’re in good hands.
+    <ul>
+    <li><a href="/support">Support:</a> Get help with questions, troubleshooting, and design via our knowledge base, Slack, email, or phone/video calls.</li>
+    <li><a href="/consulting">Consulting:</a> If you need more hands-on help, work directly with the Gruntwork team to adopt the IaC Library and Reference Architecture to your needs.</li>
+    </ul>
 
-- title: Learn Terraform, Docker, Packer, AWS, and DevOps
+- title: Achieve compliance
   description: |
-    Gruntwork Subscribers also get access to the <a href="/training/">DevOps Training Library</a>, which
-    is a collection of video courses that teach you everything you need to know to use the Iac Library and Reference
-    Architecture, including Terraform, Docker, Packer, AWS, security, scalability, high availability, and more.
+    <a href="/achieve-compliance/">Gruntwork Compliance</a> modules are certified compliant by the Center for Internet Security (CIS), so all your infrastructure is compliant out-of-the-box.
+    <ul>
+      <li>Modules that meet CIS AWS Foundations Benchmark requirements out-of-the-box.</li>
+      <li>Controls and guard rails (SCPs, AWS Config Rules) to prevent or alert about non-compliant behavior.</li>
+    </ul>
 
-- title: Get ongoing maintenance and updates
+- title: Stay up to date
   description: |
-    At Gruntwork, we provide ongoing maintenance and updates for all the code in the IaC Library and Reference
-    Architecture. We regularly add new modules and every time Terraform comes out with a new version, AWS releases new services, or a security vulnerability
-    is announced, we update our code, release a new version, and announce it in our
-    <a href="https://blog.gruntwork.io/tagged/gruntwork-newsletter" target="_blank">newsletter</a>. As a Subscriber,
-    you get better infrastructure just by bumping a version number in your code!
-
-- title: Keep your code up to date automatically
-  description: |
-    With <a href="/patcher">Patcher</a>, streamline updates to your Terraform modules, even when they involve breaking changes.
-
-- title: Get expert support
-  description: |
-    Gruntwork also provides commercial support for the IaC Library and Reference Architecture. Every time you have a
-    question, need help troubleshooting, or want design feedback, you can reach out to us via our Knowledge Base, our community Slack
-    channel, a private, shared Slack channel, email, or phone/video calls.
-
-- title: Apply for Gruntwork Consulting
-  description: |
-    If you need more hands-on help, you can work directly with the Gruntwork team through our consulting offering.
-    We can work together to help you adapt the Reference Architecture to your needs, create new modules, update existing modules to fit your needs, meet a compliance standard, and so on.
-     <a href="/consulting/">See Gruntwork Consulting</a> for the details.
-
-- title: Become a DevOps superhero
-  description: |
-    At Gruntwork, our goal is to make it 10x easier for you to understand, build, and deploy software. <a href="/contact/">
-    Join the Gruntwork community</a> and become your team's hero, using your superpowers to do in hours
-    what used to take months. Focus on your product and let us take care of the gruntwork!
+    Gruntwork provides commercial maintenance for all the code in the IaC Library and Reference Architecture, and you can use <a href="/patcher/">Patcher</a> (BETA) to automatically update your code to our latest releases—even when the new releases involve breaking changes.
+    <ul>
+      <li>Gruntwork regularly updates the IaC Library to the latest best practices, CIS benchmark versions, Terraform releases, EKS releases, etc., and releases new versions.</li>
+      <li>Pull in new versions automatically using <a href="/patcher">Patcher</a> (BETA), including patching breaking changes automatically.</li>
+      <li>Use <a href="/pipelines/">Gruntwork Pipelines</a> to automatically promote updates across environments.</li>
+    </ul>

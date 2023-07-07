@@ -1,12 +1,7 @@
-<div class="row row-page-header">
-  <div class="col-xs-12">
-    <div class="gw-sprite-standard"></div>
-    <div class="gw-pricing-columns row row-collapse row-equalize-col-height row-panels row-panels-sm">
-      {% include_relative _standard-pricing.html %}
-      {% include_relative _enterprise-pricing.html %}
-    </div>
+<div class="row">
+  <div class="col-xs-12 plans-wrapper">
+    {% include_relative _pricing-table.html %}
+    {% include_relative _need-help.html %}
+    {% include_relative _aws-marketplace.html %}
   </div>
 </div>
-
-{% include_relative _need-help.html %}
-{% include_relative _terms.html %}

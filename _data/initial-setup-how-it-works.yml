@@ -1,41 +1,66 @@
 - title: Choose your architecture options
   description: |
-    <p>Customize your architecture and complete a few setup steps:</p>
+    <p>You can customize the following aspects of your architecture:</p>
+    <b>AWS accounts:</b>
     <ul>
-      <li>Create six AWS accounts (logs, security, shared, dev, stage, and prod)</li>
-      <li>Choose a region</li>
-      <li>Set up domains (TLDs) in DNS</li>
-      <li>Run services on Docker using EKS (Kubernetes) or ECS</li>
-      <li>PostgreSQL, MySQL, SQL Server, Aurora, or other relational database</li>
-      <li>Redis or Memcached</li>
-      <li>Bastion Host or OpenVPN</li>
-      <li>Static content storage and serving</li>
-      <li>Serverless functions</li>
-      <li>DNS, TLS</li>
-      <li>Monitoring, Alerting, Log Aggregation</li>
+      <li>Default: logs, security, shared, dev, stage, and prod</li>
+      <li>Primary region</li>
+    </ul>
+    <b>Account vending:</b>
+    <ul>
+      <li>Pure Terraform</li>
+      <li>Control Tower Integration (Gruntwork Enterprise only)</li>
+    </ul>
+    <b>Controls and guard rails:</b>
+    <ul>
+      <li>GuardDuty, Macie, IAM Access Analyzer</li>
+      <li>SCPs, AWS Config Rules (Gruntwork Enterprise only)</li>
+    </ul>
+    <b>Authentication:</b>
+    <ul>
+      <li>IAM users, IAM roles, OIDC</li>
+      <li>AWS Identity Center / SSO (Gruntwork Enterprise only)</li>
+    </ul>
+    <b>CI server:</b>
+    <ul>
+      <li>GitHub Actions</li>
+      <li>GitLab</li>
+      <li>CircleCI</li>
+    </ul>
+    <b>Networking:</b>
+    <ul>
+      <li>VPC: subnets, route tables, IGW, NAT, NACLs.</li>
+      <li>Network entrypoint: VPN or bastion host.</li>
+    </ul>
+    <b>Example configuration of apps and data stores:</b>
+    <ul>
+      <li>Orchestration: EKS, EKS Fargate, ECS, or none</li>
+      <li>Database: PostgreSQL, MySQL, SQL Server, Aurora, or none</li>
+      <li>Cache: Redis, Memcached, or none</li>
     </ul>
 
-- title: We build your architecture
+- title: Gruntwork deploys your architecture
   description: |
     <p>
-      We generate the architecture using Terragrunt, Terraform, Bash, Python and Go. We deploy the resources to your
-      AWS accounts. We validate the configuration, then we push the code to your git repository. For AWS, this
-      takes about a day.
+      We generate the architecture using Terragrunt, Terraform, Bash, Python and Go. We deploy the resources to your AWS accounts. We validate the configuration, then we push the code to your git repository.
     </p>
 
 - title: Learn how to use it
   description: |
     <p>
-      Use our <a href="/training/">DevOps Training Library</a> to learn how to use your new architecture with a series of
-      micro-videos that do an in-depth walkthrough of all the most common uses cases. Need to learn Terraform, Docker,
-      or Packer? We have courses on those, too!
+      Use <a href="https://docs.gruntwork.io/" target="_blank">Gruntwork Docs</a> and the <a href="/training/">DevOps Training Library</a> to learn how to use your new architecture.
+    </p>
+
+- title: Get guided onboarding (Gruntwork Enterprise only)
+  description: |
+    <p>
+    Work with the Gruntwork team directly to help you get started with your architecture.
     </p>
 
 - title: Get support
   description: |
     <p>
-      If you run into a snag, ask a question on our community support channel via Slack.
-      Or sign up for <a href="/support/">Professional Support</a> to chat directly with Gruntwork engineers via a private shared Slack channel or email, and guarantee a timely response.
+      If you run into a snag, ask a question on our community support channel via Slack. Or sign up for <a href="/support/">Pro or Enterprise Support</a> to chat directly with Gruntwork engineers via a private shared Slack channel or email, and guarantee a timely response.
     </p>
 
 - title: Keep your code up to date automatically
