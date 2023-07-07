@@ -1,12 +1,12 @@
 {% for mainRow in site.data.pricing-table %}
 <ul>
   <li class="grid-container text-bold text-white" style="position: relative;">
-    <span class="light" style="display: flex;">{% if mainRow.tooltip.size > 1 %}<div class="table-tooltip">{{mainRow.tooltip}}</div>{% endif
+    <span class="light" style="display: flex; flex-wrap: wrap; align-items: center">{% if mainRow.tooltip.size > 1 %}<div class="table-tooltip">{{mainRow.tooltip}}</div>{% endif
       %}{{ mainRow.title }}</span>
   </li>
   {% for rows in mainRow.rows %}
   <li class="grid-container highlight" style="position: relative;">
-    <span class="light"> {% if rows.tooltip.size > 1 %}<div class="table-tooltip">{{rows.tooltip}}</div>{% endif %}
+    <span class="light" style="display: flex; flex-wrap: wrap; align-items: center;"> {% if rows.tooltip.size > 1 %}<div class="table-tooltip">{{rows.tooltip}}</div>{% endif %}
       {{ rows.row }} </span>
     {% if rows.standard == 'yes' %}
     <div class="text-center grid-item-center">

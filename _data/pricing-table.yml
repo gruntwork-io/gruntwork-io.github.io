@@ -21,7 +21,14 @@
       tooltip: Use IAM users, roles, and groups for authentication and authorization in your AWS accounts.
       standard: 'yes'
       enterprise: 'yes'
-    - row: 'Control Tower integration'
+    - row: 'Control Tower integration <label class="label-beta label-small" style="right: -10px;background: linear-gradient(
+              101.84deg,
+              #fe3162 2.31%,
+              #ff4f47 98.56%
+            );
+            margin-left: 4px;
+            max-height: 20px;
+            color:white;">Beta</label>'
       tooltip: Use Control Tower to create and manage your AWS accounts, OUs, and controls, while under the hood, managing everything as code using Terraform.
       standard: 'no'
       enterprise: 'yes'
@@ -62,7 +69,8 @@
               #fe3162 2.31%,
               #ff4f47 98.56%
             );
-            margin-left: 12px;
+            margin-left: 4px;
+            max-height: 20px;
             color:white;">Beta</label>'
   tooltip: 
   rows:
@@ -121,5 +129,5 @@
       enterprise: 'yes'
     - row: 'Consulting'
       tooltip: Gruntwork works directly with your team to build world-class infrastructure, which we then support & maintain on an ongoing basis.
-      standard: 'yes'
-      enterprise: 'yes'
+      standard: 'no'
+      enterprise: 'available'
