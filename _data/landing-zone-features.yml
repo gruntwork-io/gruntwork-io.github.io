@@ -29,7 +29,23 @@
     <figure>
 
 
-- title: Alternatively, create AWS accounts with Control Tower (Gruntwork Enterprise only)
+- title: 'Alternatively, create AWS accounts with Control Tower (Gruntwork Enterprise only)<label style="
+              display: inline-flex;
+              align-items: center;
+              position: relative;
+              top: -5px;
+            ">
+            <div style="
+                background: linear-gradient(
+                  101.84deg,
+                  #fe3162 2.31%,
+                  #ff4f47 98.56%
+                );
+                margin-left: 5px;
+              " class="label-beta">
+              BETA
+            </div>
+          </label>'
   description: |
     <p>Alternatively, Gruntwork Enterprise customers can use the Gruntwork Landing Zone Control Tower Integration to create accounts using AWS Control Tower:</p>
     <img src="/assets/img/landing-zone-features/landing-zone-dashboard-aws.png"/>
@@ -51,7 +67,7 @@
 - title: "Control Tower Integration: the best of both worlds (Enterprise only)"
   description: |
     <p>With the Gruntwork Landing Zone Control Tower Integration, you get the best of both worlds.</p>
-    <p><strong>Use Control Tower to:</strong></p>
+    <p>You get to use Control Tower to:</p>
     <ul>
       <li>See all your accounts and OUs</li>
       <li>Create new accounts</li>
@@ -59,11 +75,11 @@
       <li>Apply controls and guard rails (SCPs, AWS Config Rules) to your accounts</li>
       <li>See which accounts and resources are non-compliant with your controls and guard rails</li>
     </ul>
-    <p><strong>Use Terraform modules to:</strong></p>
+    <p>And you get to use Terraform modules to:</p>
     <ul>
-      <li>Fill in features not supported by Control Tower: e.g., GuardDuty, Macie, IAM Access Analyzer, etc.</li>
-      <li>Customize the baseline applied to each account by updating the Terraform modules.</li>
-      <li>Integrate accounts created with Control Tower with your Terraform-managed infrastructure.</li>
+      <li>Fill in security baseline features not supported by Control Tower: e.g., GuardDuty, Macie, IAM Access Analyzer, etc.</li>
+      <li>Customize the baseline applied to each account by updating the Terraform modules however you want.</li>
+      <li>Integrate accounts created with Control Tower with the rest of your Terraform-managed infrastructure.</li>
       <li>Stay up to date automatically using Patcher.</li>
     </ul>
   url: "/assets/img/landing-zone-features/features-7@3x.png"
