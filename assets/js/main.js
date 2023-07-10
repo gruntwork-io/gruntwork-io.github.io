@@ -8983,3 +8983,21 @@ function generateUUID() {
     return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
   });
 }
+
+/* Pricing page */
+$(document).ready(function () {
+  if ($('body').hasClass('pricing')) {
+    $('.grid-container').each(function () {
+      var container = $(this);
+      var tooltip = container.find('.table-tooltip');
+
+      container.on('mouseenter', function () {
+        tooltip.css('display', 'block');
+      });
+
+      container.on('mouseleave', function () {
+        tooltip.css('display', 'none');
+      });
+    });
+  }
+});
