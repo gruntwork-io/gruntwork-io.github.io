@@ -39,21 +39,3 @@
 <hr class="with-margin" />
 {% endfor %}
 
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const containers = document.getElementsByClassName('grid-container');
-
-    for (let i = 0; i < containers.length; i++) {
-      const container = containers[i];
-      const tooltip = container.querySelector('.table-tooltip');
-
-      container.addEventListener('mouseenter', function () {
-        tooltip.style.display = 'block';
-      });
-
-      container.addEventListener('mouseleave', function () {
-        tooltip.style.display = 'none';
-      });
-    }
-  });
-</script>
