@@ -9001,3 +9001,45 @@ $(document).ready(function () {
     });
   }
 });
+
+
+/* Scrollable feature for Pricing page */
+(function($) {
+  if ($("body.pricing").length) {
+    $(document).ready(function() {
+      function showPricing() {
+        $('.pricing-div').addClass('pricing-div-visible');
+        $('.pricing-card').addClass('dark');
+      }
+
+      function hidePricing() {
+        $('.pricing-div').removeClass('pricing-div-visible');
+        $('.pricing-card').removeClass('dark');
+      }
+
+      $(window).on('scroll', function() {
+        const scrollTop = $(window).scrollTop();
+        const windowHeight = $(window).height();
+
+        const $secondUl = $('.plans-features ul:nth-child(2)');
+        const secondUlPosition = $secondUl.offset().top;
+        const secondUlHeight = $secondUl.height();
+
+        const $lastUl = $('.plans-features ul:last');
+        const lastUlPosition = $lastUl.offset().top;
+        const lastUlHeight = $lastUl.height();
+
+        const threshold1 = 0.12; // Adjust this threshold as needed
+
+        if (
+          scrollTop <= secondUlPosition + secondUlHeight - windowHeight ||
+          scrollTop >= lastUlPosition + lastUlHeight - windowHeight * (1 - threshold1)
+        ) {
+          hidePricing();
+        } else {
+          showPricing();
+        }
+      });
+    });
+  }
+})(window.jQuery);

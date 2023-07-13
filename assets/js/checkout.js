@@ -163,12 +163,12 @@ $(function () {
     }
 
     if (checkoutOptions.setup_deployment) {
-      $('#js-one-time-total').show();
+      $('.js-one-time-total').show();
     } else {
-      $("#js-one-time-total").hide();
+      $(".js-one-time-total").hide();
     }
 
-    $("#js-monthly-total").text(monthlyTotal.toLocaleString());
+    $(".js-monthly-total").text(monthlyTotal.toLocaleString());
   }
 
   _setDefaults();

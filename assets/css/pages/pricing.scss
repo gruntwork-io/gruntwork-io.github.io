@@ -143,6 +143,7 @@
     hr {
       margin: 0;
       border-color: #1A4C60;
+      border-width: 1px;
       &.with-margin {
         margin: 18px 0 12px;
       }
@@ -265,6 +266,9 @@
     padding: 24px;
     background-color: #222932;
     border-radius: 6px;
+    @media screen and (max-width: $screen-sm) {
+      padding: 12px;
+    }
     &.pricing-card-with-image {
       flex-direction: row;
       align-items: stretch;
@@ -283,6 +287,7 @@
         padding: 88px 44px;
         border-radius: 10px;
         background: #1C2129;
+        max-width: 265px;
         img {
           object-fit: contain;
         }
@@ -501,3 +506,67 @@ span.light {
   transition: all ease;
   color: white;
 }
+
+.pricing-div {
+  display: none;
+  background-color: rgba(34,41,50, 0.6)  ;
+  position: sticky;
+  bottom: 100px;
+  transform: translateY(100px);
+  transition: ease;
+  backdrop-filter: blur(10px); 
+  @media screen and (max-width: $screen-md) {
+    background-color: rgba(34,41,50, 0.4)  ;
+    backdrop-filter: blur(19px);
+  }
+}
+
+.pricing-div-visible {
+  display: block !important;
+  transform: translateY(0);
+  visibility: visible;
+  bottom: 0;
+  z-index: 99;
+    .grid-container.pricing-card-wrapper {
+    @media screen and (max-width: $screen-sm) {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+  }
+    .popular-badge, .annual-contract-p {
+       @media screen and (max-width: $screen-sm) {
+        display: none;
+      }
+    }
+  }
+  .page-pricing .btn.pricing-ctas {
+    @media screen and (max-width: $screen-sm) {
+      min-width: 100px !important;
+    }
+  }
+  .btn {
+    @media screen and (max-width: $screen-sm) {
+      min-width: 100px !important;
+    }
+  }
+}
+
+.pricing-div-visible .annual-contract-p-mobile {
+  @media screen and (max-width: $screen-sm) {
+    display: block !important;
+    text-align: center;
+  }
+}
+
+.pricing-card.dark {
+  background-color: rgba(34,41,50, 0.6);
+  opacity: 100%;
+  @media screen and (max-width: $screen-md) {
+    background-color: rgba(34,41,50, 0.4);
+  }
+  @media screen and (max-width: $screen-sm) {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+  }
+}
+
