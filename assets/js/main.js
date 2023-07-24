@@ -9029,11 +9029,11 @@ $(document).ready(function () {
         const lastUlPosition = $lastUl.offset().top;
         const lastUlHeight = $lastUl.height();
 
-        const threshold1 = 0.12; // Adjust this threshold as needed
+        const threshold = 0.12; // Adjust this threshold as needed
 
         if (
           scrollTop <= secondUlPosition + secondUlHeight - windowHeight ||
-          scrollTop >= lastUlPosition + lastUlHeight - windowHeight * (1 - threshold1)
+          scrollTop >= lastUlPosition + lastUlHeight - windowHeight * (1 - threshold)
         ) {
           hidePricing();
         } else {
