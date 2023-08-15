@@ -4,6 +4,20 @@
         {% include head.html %}
     </head>
     <body{% if page.slug %} class="{{ page.slug }}{% if page.slug != 'index-page' and page.slug !='how-it-works' %} sub-page{% endif %}" {% endif %}>
+        <!--{% include banner.html
+            text="✨&nbsp;&nbsp;Looking to establish your own world-class DevOps foundations?"
+            link_url="https://blog.gruntwork.io/"
+            link_text="Learn how"
+            target="_blank"
+            has_button=true
+        %}-->
+        {% include banner.html
+            text="✨&nbsp;&nbsp;We're committed to an open source Terraform future. "
+            link_url="https://blog.gruntwork.io/the-future-of-terraform-must-be-open-ab0b9ba65bca"
+            link_text="Learn more"
+            target="_blank"
+            has_button=false
+        %}
         {% include navbar.html %}
         {{ content }}
         {% include footer.html %}
