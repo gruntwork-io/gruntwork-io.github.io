@@ -44,9 +44,7 @@ references:
     run:
       name: install jdk 8
       command: |
-        sudo apt-get install -y wget
-        wget https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/pool/main/a/adoptopenjdk-8-hotspot/adoptopenjdk-8-hotspot_8u222-b10-2_amd64.deb
-        sudo apt install ./adoptopenjdk-8-hotspot_8u222-b10-2_amd64.deb
+        sudo apt-get install temurin-8-jdk
 
   deploy_to_staging: &deploy-to-staging
     run:
