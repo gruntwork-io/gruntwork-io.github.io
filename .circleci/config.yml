@@ -47,7 +47,7 @@ references:
       name: install jdk
       command: |
         sudo apt-get update
-        sudo apt-get install -y default-jre
+        sudo apt-get install openjdk-11-jre-headless # version 11.0.14+9-0ubuntu2
         sudo rm -rf /var/lib/apt/lists/*
 
   deploy_to_staging: &deploy-to-staging
