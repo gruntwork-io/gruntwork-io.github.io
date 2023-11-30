@@ -7,10 +7,10 @@ We'll take care of the Gruntwork.
 
 ## Docker quick start
 
-The fastest way to launch this site is to use [Docker](https://www.docker.com/). You will also need to install [Docker compose](https://docs.docker.com/compose/install/).
+The fastest way to launch this site is to use [Docker](https://www.docker.com/).
 
 1. `git clone` this repo
-1. `docker-compose up`
+1. `docker compose up`
 1. Go to `http://localhost:4000` to test
 1. If you are going to be testing the checkout flow, you must login to Aperture at: https://aperture.dogfood-stage.com/.
 
