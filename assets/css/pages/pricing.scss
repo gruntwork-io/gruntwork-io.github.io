@@ -1,5 +1,4 @@
 .page-pricing {
-
   .pricing-table {
     ul {
       padding: 0;
@@ -19,7 +18,7 @@
         }
 
         .badge {
-          background-color: #2B3745;
+          background-color: #2b3745;
           border-radius: 5px;
           padding: 4px 8px;
           color: #bfbfbf;
@@ -58,7 +57,7 @@
       .light {
         font-size: 16px;
       }
-      
+
       &.pricing-card-wrapper {
         grid-template-columns: 1fr 1fr;
         .empty-grid-col {
@@ -68,7 +67,7 @@
     }
 
     @media screen and (max-width: $screen-sm) {
-      grid-template-columns: 1fr 1.15fr .85fr;
+      grid-template-columns: 1fr 1.15fr 0.85fr;
       .light {
         font-size: 14px;
         line-height: 20px;
@@ -92,8 +91,10 @@
             width: 100%;
             justify-content: stretch;
           }
-          
-          form, button, .btn {
+
+          form,
+          button,
+          .btn {
             width: 100%;
             max-width: 100%;
           }
@@ -112,7 +113,7 @@
       @media screen and (max-width: $screen-sm) {
         margin-bottom: 7px;
       }
-    
+
       @media screen and (max-width: 590px) {
         margin-bottom: 5px;
       }
@@ -121,6 +122,11 @@
 
   .plans-heading {
     padding: 0 12px;
+    z-index: 1;
+    position: sticky;
+    top: 0;
+    background: #1d252f;
+
     h2 {
       margin-bottom: 18px;
       font-size: 36px;
@@ -140,9 +146,13 @@
   }
 
   .plans-features {
+    ul {
+      overflow: hidden;
+    }
+
     hr {
       margin: 0;
-      border-color: #1A4C60;
+      border-color: #1a4c60;
       border-width: 1px;
       &.with-margin {
         margin: 18px 0 12px;
@@ -160,7 +170,7 @@
         appearance: none;
         width: 17px; /* Adjust the size of the checkbox */
         height: 17px; /* Adjust the size of the checkbox */
-        border: 1px solid #284B5D; /* Default border color */
+        border: 1px solid #284b5d; /* Default border color */
         border-radius: 3px;
         outline: none;
         margin-right: 12px;
@@ -182,8 +192,8 @@
         }
 
         &:checked {
-          background-color: #03C5E7;
-          border-color: #03C5E7;
+          background-color: #03c5e7;
+          border-color: #03c5e7;
 
           &::before {
             opacity: 1;
@@ -233,7 +243,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: center;
   }
 
   .popular-badge {
@@ -243,7 +253,7 @@
     padding: 4px 8px;
     line-height: normal;
     font-weight: 700;
-    border: 1px solid #1A4C60;
+    border: 1px solid #1a4c60;
     border-radius: 4px;
 
     @media screen and (max-width: $screen-md) {
@@ -263,7 +273,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    padding: 24px;
+    padding: 10px;
     background-color: #222932;
     border-radius: 6px;
     @media screen and (max-width: $screen-sm) {
@@ -275,7 +285,7 @@
       @media screen and (max-width: $screen-sm) {
         flex-direction: column;
         padding: 16px;
-        border: 1px solid #1A4C60;
+        border: 1px solid #1a4c60;
       }
 
       .pricing-card-image {
@@ -286,7 +296,7 @@
         margin-right: 34px;
         padding: 88px 44px;
         border-radius: 10px;
-        background: #1C2129;
+        background: #1c2129;
         max-width: 265px;
         img {
           object-fit: contain;
@@ -321,8 +331,8 @@
     }
 
     @media screen and (max-width: 590px) {
-      margin-right: 0!important; // Needs to override element style
-      margin-left: 0!important; // Needs to override element style
+      margin-right: 0 !important; // Needs to override element style
+      margin-left: 0 !important; // Needs to override element style
 
       .annual-contract-p {
         max-width: 100%;
@@ -394,11 +404,11 @@
 
 .need-help-text {
   display: inline;
-  margin-right: .7em;
+  margin-right: 0.7em;
 }
 
 .need-help-button {
-  margin-bottom: .6em;
+  margin-bottom: 0.6em;
 }
 
 @media (max-width: $screen-xs-max) {
@@ -424,10 +434,10 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    margin-right: .5em;
+    margin-right: 0.5em;
   }
   li {
-    margin: .8em;
+    margin: 0.8em;
     counter-increment: item;
     font-weight: 700;
   }
@@ -437,15 +447,16 @@
     color: #06a2ff;
     background-color: white;
   }
-  .current-step-icon, .completed-step-icon {
+  .current-step-icon,
+  .completed-step-icon {
     color: #06a2ff;
   }
   // Style for "Select Plan" step on checkout page
   .completed-step::before {
     border: none;
-    content: '\f00c';
+    content: "\f00c";
     font-family: FontAwesome;
-    font-size: .8em;
+    font-size: 0.8em;
     color: white;
     background-color: #06a2ff;
   }
@@ -466,7 +477,7 @@
   font-size: $font-size-small;
   border-radius: 8px;
   transition: all ease;
-  @media screen and (max-width: $screen-sm)  {
+  @media screen and (max-width: $screen-sm) {
     font-size: 14px;
     left: 70%;
     min-width: 150px;
@@ -478,7 +489,7 @@
     bottom: -15px;
     left: 50%;
     transform: translateX(-50%);
-    @media screen and (max-width: $screen-sm)  {
+    @media screen and (max-width: $screen-sm) {
       bottom: -10px;
     }
   }
@@ -486,6 +497,21 @@
 
 span.light {
   position: relative;
+}
+
+.light-with-line {
+  background-color: #1d252f;
+  width: max-content;
+  padding-right: 10px;
+
+  &::before {
+    content: "";
+    position: absolute;
+    height: 1px;
+    width: 100%;
+    background-color: #2a5f74;
+    z-index: -1;
+  }
 }
 
 .grid-container {
@@ -498,25 +524,25 @@ span.light {
 }
 
 .grid-container.highlight:hover {
-  border: #1A4C60 1px solid;
+  border: #1a4c60 1px solid;
   transition: all ease;
 }
 
-.grid-container.highlight:hover span{
+.grid-container.highlight:hover span {
   transition: all ease;
   color: white;
 }
 
 .pricing-div {
   display: none;
-  background-color: rgba(34,41,50, 0.6)  ;
+  background-color: rgba(34, 41, 50, 0.6);
   position: sticky;
   bottom: 100px;
   transform: translateY(100px);
   transition: ease;
-  backdrop-filter: blur(10px); 
+  backdrop-filter: blur(10px);
   @media screen and (max-width: $screen-md) {
-    background-color: rgba(34,41,50, 0.4)  ;
+    background-color: rgba(34, 41, 50, 0.4);
     backdrop-filter: blur(19px);
   }
 }
@@ -527,14 +553,15 @@ span.light {
   visibility: visible;
   bottom: 0;
   z-index: 99;
-    .grid-container.pricing-card-wrapper {
+  .grid-container.pricing-card-wrapper {
     @media screen and (max-width: $screen-sm) {
       display: flex;
       justify-content: center;
       align-items: flex-start;
-  }
-    .popular-badge, .annual-contract-p {
-       @media screen and (max-width: $screen-sm) {
+    }
+    .popular-badge,
+    .annual-contract-p {
+      @media screen and (max-width: $screen-sm) {
         display: none;
       }
     }
@@ -559,10 +586,10 @@ span.light {
 }
 
 .pricing-card.dark {
-  background-color: rgba(34,41,50, 0.6);
+  background-color: rgba(34, 41, 50, 0.6);
   opacity: 100%;
   @media screen and (max-width: $screen-md) {
-    background-color: rgba(34,41,50, 0.4);
+    background-color: rgba(34, 41, 50, 0.4);
   }
   @media screen and (max-width: $screen-sm) {
     margin-bottom: 0 !important;
@@ -570,3 +597,43 @@ span.light {
   }
 }
 
+.contract-wrapper {
+  border-radius: 4px;
+  display: flex;
+  padding: 8px;
+  justify-content: space-between;
+
+  .contract {
+    font-size: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .contract-btn {
+      margin-right: 5px;
+      width: 20px;
+      height: 20px;
+      border-radius: 100%;
+      border: 2px solid #bfbfbf;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .inside-btn {
+        display: none;
+      }
+    }
+
+    .contract-btn.active {
+      border: 2px solid #03c5e7 !important;
+
+      .inside-btn {
+        border-radius: 100%;
+        width: 12px;
+        height: 12px;
+        background-color: #03c5e7;
+        display: block;
+      }
+    }
+  }
+}

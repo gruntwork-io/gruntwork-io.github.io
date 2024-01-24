@@ -2,7 +2,7 @@
   <li class="grid-container pricing-card-wrapper" style="padding: 0;">
     <div class="empty-grid-col"></div>
     <div class="pricing-card" style="margin-right: 5px;">
-      <div class="flex flex-middle flex-column text-center">
+      <div class="flex flex-middle flex-column text-center" style="width: 100%;">
         <div class="hide-above-screen-sm">
           <p class="medium-price" style="margin-bottom: 6px;">Standard</p>
         </div>
@@ -12,59 +12,29 @@
               <p class="help-block" style="margin-top: -9px; margin-bottom: unset">
                 &nbsp;
               </p>
-              <p class="medium-price">
-                <span>$</span><strong class="js-monthly-total">795</strong>
+              <p class="annual-price">
+                <span>$</span><strong class="">24,000</strong><span>/yr</span>
+                <span>$</span><strong class="">2,000</strong><span>/mo</span>
               </p>
-              <p class="help-block" style="margin-left: 4px;">/ per month</p>
             </div>
-            <div class="pricing-row js-one-time-total"
-              style="line-height: 100%; align-items: flex-end; margin-top: 5px; margin-bottom: 15px;">
-              <p class="text-center" style="font-weight: 400; color: white; margin-bottom: 0; font-size: 25px;">
-                <span>+$</span>4,950
-              </p>
-              <p class="help-block" style="margin-left: 4px; margin-bottom: -2px;">/ one time</p>
+            <div class="contract-wrapper" style="background-color:#2B3745; width: 100%;">
+              <div class="contract" style="margin-right: 5px;">
+                <div class="contract-btn"><div class="inside-btn"></div></div> Annual Contract (-20%)
+              </div>
+              <div class="contract">
+                <div class="contract-btn active"><div class="inside-btn"></div></div> Monthly Contract</div>
             </div>
           </div>
           <div class="text-center">
-            <form 
-              action="{{ site.developer_portal_url }}/checkout"
-            >
+            <form action="{{ site.developer_portal_url }}/checkout">
               <input type="hidden" name="cart" value="" />
               <input type="hidden" name="editUrl" value="" />
-              <button 
-                type="submit" 
-                id="checkout-btn" 
-                class="btn btn-info btn-checkout"
-              >
+              <button type="submit" id="checkout-btn" class="btn btn-info btn-checkout">
                 <span class="hide-on-screen-sm">Checkout</span>
-                <span class="pricing-row hide-above-screen-sm">
-                  <p class="medium-price">
-                    <span>$</span><strong class="js-monthly-total">795</strong>
-                  </p>
-                  <p class="help-block" style="margin-left: 4px;">/ per month</p>
-                </span>
               </button>
             </form>
           </div>
         </div>
-      </div>
-      <div class="text-center" data-mh="plans-pricing-bottom">
-        <p class="text-muted small annual-contract-p" style="margin: 0; line-height: 130%;">
-          <em>
-            Annual contract, billed monthly.
-            <span>
-              View our
-              <span
-                ><a
-                  href="/terms/"
-                  title="Gruntwork Terms of Service"
-                  target="_blank"
-                  >Terms of Service</a
-                ></span
-              >.
-            </span>
-          </em>
-        </p>
       </div>
     </div>
     <div class="pricing-card" style="margin-left: 5px;">
@@ -80,22 +50,6 @@
         <div class="text-center">
           <p><a class="btn btn-primary pricing-ctas" href="/contact/">Contact Us</a></p>
         </div>
-        <p class="text-muted small annual-contract-p" style="margin: 0;line-height: 130%;">
-          <em>
-            Annual contract, billed annually.
-            <span>
-              View our
-              <span
-                ><a
-                  href="/terms/"
-                  title="Gruntwork Terms of Service"
-                  target="_blank"
-                  >Terms of Service</a
-                ></span
-              >.
-            </span>
-          </em>
-        </p>
       </div>
     </div>
   </li>
