@@ -120,6 +120,11 @@
     }
   }
 
+  .medium-price{
+    margin-top: 24px;
+    margin-bottom: 1px;
+  }
+
   .plans-heading {
     padding: 0 12px;
     z-index: 1;
@@ -145,7 +150,7 @@
     }
   }
 
-  .plans-features {
+  .plans-features, .plans-features-terragrunt {
     ul {
       overflow: hidden;
     }
@@ -267,12 +272,123 @@
       margin-bottom: 10px;
     }
   }
+  .pricing-switch-container{
+    display: flex;
+    padding: 34px;
+  }
+  .switches-container {
+    width: 480px;
+    display: flex;
+    padding: 10px 0;
+    position: relative;
+    background: #262E3A;
+    line-height: 3rem;
+    border-radius: 4px;
+    margin-left: auto;
+    margin-right: auto;
+    border: 2px solid #181D26;
+    @media screen and (max-width: $screen-sm) {
+      font-size: 14px;
+    }
+
+  }
+  .switches-container input {
+    visibility: hidden;
+    position: absolute;
+    top: 0;
+  }
+  .switches-container label {
+    width: 50%;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    cursor: pointer;
+    color: #90959E;
+  }
+  .switch-wrapper {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 50%;
+    padding: 0.15rem;
+    z-index: 3;
+    transition: transform .5s cubic-bezier(.77, 0, .175, 1);
+  }
+  .switch-btn {
+    border-radius: 2px;
+    background: #03c5e7;
+    height: 100%;
+  }
+  .switch-btn div {
+    width: 100%;
+    text-align: center;
+    opacity: 0;
+    display: block;
+    color: #fff;
+    transition: opacity .2s cubic-bezier(.77, 0, .175, 1) .125s;
+    will-change: opacity;
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 10px 0;
+  }
+
+  /* slide the switch box from right to left */
+  .switches-container input:nth-of-type(1):checked~.switch-wrapper {
+    transform: translateX(0%);
+  }
+
+  /* slide the switch box from left to right */
+  .switches-container input:nth-of-type(2):checked~.switch-wrapper {
+    transform: translateX(100%);
+  }
+
+  /* toggle the switch box labels - first checkbox:checked - show first switch div */
+  .switches-container input:nth-of-type(1):checked~.switch-wrapper .switch-btn div:nth-of-type(1) {
+    opacity: 1;
+  }
+
+  /* toggle the switch box labels - second checkbox:checked - show second switch div */
+  .switches-container input:nth-of-type(2):checked~.switch-wrapper .switch-btn div:nth-of-type(2) {
+    opacity: 1;
+  }
+
+  .pricing-contact-banner{
+    text-align: center;
+    background-color: rgba(3, 197, 231, 0.10);
+    padding: 20px 10px 30px 10px;
+    position: relative;
+    margin: 60px 0px;
+    h2{
+      font-size: 46px;
+    }
+    .banner-container{
+      margin: auto;
+      max-width: 600px;
+    }
+  }
+
+  .pricing-contact-banner::before {
+    content: "";
+    display: block;
+    position: absolute;
+    height: 55px;
+    width: 100%;
+    top: -25px;
+    z-index: 990;
+    background-image: url("../img/hr-boxes.png");
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: 80px 55px;
+  }
+  #pricingTerragrunt{
+    display: none;
+  }
 
   .pricing-card {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
     padding: 10px;
     background-color: #222932;
     border-radius: 6px;
@@ -382,6 +498,12 @@
     }
     .medium-price {
       font-size: 24px;
+      margin-top: 0;
+    }
+    .pricing-contact-banner{
+      h2{
+        font-size: 36px;
+      }
     }
   }
 
@@ -403,8 +525,8 @@
 }
 
 .need-help-text {
-  display: inline;
   margin-right: 0.7em;
+  margin-bottom: 0.7rem;
 }
 
 .need-help-button {
@@ -533,7 +655,7 @@ span.light {
   color: white;
 }
 
-.pricing-div {
+.pricing-sticky {
   display: none;
   background-color: rgba(34, 41, 50, 0.6);
   position: sticky;
@@ -545,9 +667,12 @@ span.light {
     background-color: rgba(34, 41, 50, 0.4);
     backdrop-filter: blur(19px);
   }
+  .pricing-headline, .reference-price-desktop{
+    display: none;
+  }
 }
 
-.pricing-div-visible {
+.pricing-sticky-visible {
   display: block;
   transform: translateY(0);
   visibility: visible;
@@ -577,8 +702,10 @@ span.light {
     }
   }
 }
-
-.pricing-div-visible .annual-contract-p-mobile {
+.hide-pricing-sticky{
+  display: none !important;
+}
+.pricing-sticky-visible .annual-contract-p-mobile {
   @media screen and (max-width: $screen-sm) {
     display: block !important;
     text-align: center;
@@ -597,42 +724,242 @@ span.light {
   }
 }
 
+.price-box{
+  color: #fff;
+}
+
+.year-price, .currency{
+  font-size: 44px;
+}
+
 .contract-wrapper {
   border-radius: 4px;
   display: flex;
   padding: 8px;
-  justify-content: space-between;
-
+  justify-content: space-evenly;
+  background-color: #2B3745;
   .contract {
     font-size: 12px;
     display: flex;
     justify-content: center;
     align-items: center;
-
-    .contract-btn {
-      margin-right: 5px;
-      width: 20px;
-      height: 20px;
-      border-radius: 100%;
-      border: 2px solid #bfbfbf;
+    label{
       display: flex;
       justify-content: center;
-      align-items: center;
+    }
+  }
+  .contract input[type='radio']{
+    margin: 0;
+    margin-right: 5px;
+    width: 20px;
+    height: 20px;
+    border-radius: 100%;
+    border: 2px solid #bfbfbf;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    accent-color: #2B3745;
+    appearance: none;
+  }
+  ion-radio { --border-width: 0.5px }
+  .contract input[type="radio"]:checked {
+      background-color: #03c5e7;
+      accent-color: #03c5e7;
+  }
+}
+.hide-on-desktop{
+  display: none;
+}
+.show-on-mobile{
+  display: none;
+}
 
-      .inside-btn {
+.mobile-price-btn{
+  display: none;
+}
+.contract-wrapper-mobile{
+  display: none;
+}
+.subtitle-mobile-pricing{
+  display: none;
+}
+.monthly-annual-container{
+  display: none;
+}
+.see-details-link{
+  display: none;
+}
+.pricing-price-section{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pricing-headline{
+  background-color: #2b3745;
+  width: 100%;
+  border-radius: 6px;
+  padding: 12px 0;
+  text-align: center;
+}
+.month-price-tag{
+  font-size: 12px;
+  color: #fff;
+}
+.reference-price{
+  display: none;
+}
+.additional-info-footer{
+  display: block;
+  font-size: 12px;
+  margin: 0px;
+}
+.additional-info{
+  display: none;
+}
+.price-description-mobile{
+  font-size: 12px;
+  display: block;
+  margin-bottom: 0;
+}
+.description-numbers-section{
+  margin-bottom: 8px;
+}
+@media screen and (max-width: $screen-sm) {
+  h1 {
+    font-size: 36px;
+  }
+  .lead{
+    font-size: 16px;
+  }
+  .list-price-heading{
+    h4{
+      font-size: 16px;
+    }
+  }
+  .btn-checkout{
+    margin-top: 0;
+  }
+  .pricing-card{
+    width: 100%;
+  }
+  .mobile-price-btn{
+    display: inline;
+  }
+  .contract-wrapper-mobile{
+    display: flex;
+  }
+  .medium-price{
+    margin-right: 0px !important;
+  }
+  .pricing-sticky{
+    .price-description-mobile, .additional-info, .additional-info-footer{
+      display: none;
+    }
+    .subtitle-mobile-pricing{
+      display: none;
+    }
+    .see-details-link{
+      display: block;
+      font-size: 12px;
+      text-decoration: underline;
+      font-style: italic;
+    }
+  }
+  .monthly-annual-container{
+      display: block;
+      .contract-wrapper{
+        justify-content: space-around;
+      }
+  }
+  .contract-wrapper{
+    background-color: transparent;
+  }
+}
+@media screen and (max-width: 590px) {
+.additional-info{
+  font-size: 10px;
+  display: block;
+  margin-bottom: 0;
+}
+.additional-info-footer{
+  display: none;
+}
+.hide-on-mobile{
+  display: none;
+}
+.reference-price{
+  display: block;
+}
+.pricing-headline{
+  background-color: transparent;
+  font-weight: 600;
+  font-size: 16px;
+  color: #fff;
+}
+.hide-on-desktop{
+  display: block;
+}
+.subtitle-mobile-pricing{
+  display: flex;
+  justify-content: center;
+  color: #fff;
+  font-size: 12px;
+}
+.pricing-price-section{
+  display: none;
+ }
+.pricing-sticky{
+  .pricing-headline{
+    display: block;
+  }
+  .reference-price{
+    display: none;
+  }
+  .subtitle-mobile-pricing{
+    display: none;
+  }
+  .contract-wrapper{
+    background-color: transparent;
+  }
+  .contract{
+    label{
+      .contract-picker-label{
         display: none;
       }
     }
+  }
+}
+.annual-contract-wrapper{
+  display: none;
+}
 
-    .contract-btn.active {
-      border: 2px solid #03c5e7 !important;
-
-      .inside-btn {
-        border-radius: 100%;
-        width: 12px;
-        height: 12px;
-        background-color: #03c5e7;
-        display: block;
+.description-numbers-section-enterprise{
+  display: none;
+}
+}
+@media screen and (min-width: 590px) and (max-width:760px){
+  .contract{
+    label{
+      .contract-picker-label{
+        display: none;
+      }
+    }
+  }
+}
+@media screen and (min-width: 360px) and (max-width: 590px){
+  .contract{
+    label{
+      .contract-picker-label{
+        display: inline-block;
+      }
+    }
+  }
+}
+@media screen and (max-width: 360px){
+  .contract{
+    label{
+      .contract-picker-label{
+        display: none;
       }
     }
   }

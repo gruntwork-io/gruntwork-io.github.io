@@ -1,0 +1,54 @@
+{% for mainRow in site.data.pricing-table-terragrunt %}
+<ul>
+  {% if mainRow.subtitle == 'yes' %}
+  <li class="grid-container" style="position: relative; color: #2A5F74">
+    <span class="light-with-line" style="display: flex; flex-wrap: wrap; align-items: center">
+      {{ mainRow.title }}
+    </span>
+  </li>
+  {% endif %}
+  {% if mainRow.subtitle == 'no' %}
+  <li class="grid-container text-bold text-white" style="position: relative;">
+    <span class="light" style="display: flex; flex-wrap: wrap; align-items: center">
+      {{ mainRow.title }}
+    </span>
+  </li>
+  {% endif %}
+  {% for rows in mainRow.rows %}
+  <li class="grid-container highlight" style="position: relative;">
+    <span class="light" style="display: flex; flex-wrap: wrap; align-items: center;">
+      {{ rows.row }}
+    </span>
+    {% if rows.standard == 'yes' %}
+    <div class="text-center grid-item-center">
+      <img src="/assets/img/pricing-include.svg" alt="including" />
+    </div>
+    {% elsif rows.standard == 'no' %}
+    <div class="text-center grid-item-center">
+      <img src="/assets/img/pricing-not-include.svg" alt="not including" />
+    </div>
+    {% else %}
+    <div class="text-center grid-item-center">
+      <span class="light">{{ rows.standard }}</span>
+    </div>
+    {% endif %}
+    {% if rows.enterprise == 'yes' %}
+    <div class="text-center grid-item-center">
+      <img src="/assets/img/pricing-include.svg" alt="including" />
+    </div>
+    {% elsif rows.enterprise == 'no' %}
+    <div class="text-center grid-item-center">
+      <img src="/assets/img/pricing-not-include.svg" alt="not including" />
+    </div>
+    {% else %}
+    <div class="text-center grid-item-center">
+      <span class="light">{{ rows.enterprise }}</span>
+    </div>
+    {% endif %}
+  </li>
+  {% endfor %}
+</ul>
+{% if mainRow.divider == 'yes' %}
+<hr class="with-margin" />
+{% endif %}
+{% endfor %}

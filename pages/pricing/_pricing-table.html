@@ -1,4 +1,4 @@
-<div class="pricing-table" style="margin-top: 40px;">
+<div class="pricing-table" id="gruntwork-pricing" style="margin-top: 40px;">
   <div class="gw-pricing">
     <div class="plans-heading grid-container" data-mh="plans-heading">
       <div></div>
@@ -14,7 +14,28 @@
       {% include_relative _pricing-main-row.html %}
     </div>
   </div>
+  <div id="price-cta-section"></div>
   <div style="margin: 16px 0;">
     {% include_relative _pricing-cta.html %}
+  </div>
+</div>
+<div class="pricing-table" id="terragruntsupport-pricing" style="margin-top: 40px; display: none;">
+  <div class="gw-pricing">
+    <div class="plans-heading grid-container" data-mh="plans-heading">
+      <div></div>
+      <div class="text-center list-price-heading">
+        <h4 class="no-anchor gw-pricing-heading">Team</h4>
+      </div>
+      <div class="text-center list-price-heading" style="position: relative;">
+        <h4 class="no-anchor gw-pricing-heading">Enterprise</h4>
+      </div>
+    </div>
+    <div class="plans-features-terragrunt" data-mh="plans-features-terragrunt">
+      <hr />
+      {% include_relative _pricing-main-row-terragrunt.html %}
+    </div>
+  </div>
+  <div style="margin: 16px 0;">
+    {% include_relative _pricing-cta-terragrunt.html %}
   </div>
 </div>

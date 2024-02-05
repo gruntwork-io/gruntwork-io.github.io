@@ -9008,12 +9008,12 @@ $(document).ready(function () {
   if ($("body.pricing").length) {
     $(document).ready(function() {
       function showPricing() {
-        $('.pricing-div').addClass('pricing-div-visible');
+        $('.pricing-sticky').addClass('pricing-sticky-visible');
         $('.pricing-card').addClass('dark');
       }
 
       function hidePricing() {
-        $('.pricing-div').removeClass('pricing-div-visible');
+        $('.pricing-sticky').removeClass('pricing-sticky-visible');
         $('.pricing-card').removeClass('dark');
       }
 
