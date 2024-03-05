@@ -31,7 +31,7 @@ To deploy the site:
 
 1. Create a PR with your code changes
 1. After the PR has been approved, merge it into `master`
-1. Create a new tag, incrementing the version number using semantic versioning, push the tag up to github
+1. Create a new tag, you can do this manually via git or in the subsequent step on the releases page - be sure to increment the version number using semantic versioning
 1. Go to the [releases page](/releases) and create a draft release with the relevant information (use the "Generate Release Notes" button to make your life easier)
 1. Release it
 1. The CI/CD pipeline will deploy it automatically
