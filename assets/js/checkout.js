@@ -163,14 +163,58 @@ $(function () {
     }
 
     if (checkoutOptions.setup_deployment) {
-      $('#js-one-time-total').show();
+      $('.js-one-time-total').show();
     } else {
-      $("#js-one-time-total").hide();
+      $(".js-one-time-total").hide();
     }
 
-    $("#js-monthly-total").text(monthlyTotal.toLocaleString());
+    $(".js-monthly-total").text(monthlyTotal.toLocaleString());
   }
 
   _setDefaults();
   _updateCheckout();
+
+
+  var gruntworkSubscription = {
+    billingCycle: 'annual'
+  }
+
+  var terraGruntSubscription = {
+    billingCycle: 'annual'
+  }
+
+$(document).ready(function() {
+  $('input[type=radio][name=billing-type-gruntwork]').change(function() {
+    if (this.value == 'annual') {
+      gruntworkSubscription.billingCycle = this.value;
+      $('.pricing-card-monthly').hide();
+      $('.pricing-card-annual').show();
+      $("input[name=billing-type-gruntwork][value=" + 'annual' + "]").prop('checked', true);
+  }
+    else if (this.value == 'monthly') {
+        gruntworkSubscription.billingCycle = this.value;
+        $('.pricing-card-annual').hide();
+        $('.pricing-card-monthly').show();
+        $("input[name=billing-type-gruntwork][value=" + 'monthly' + "]").prop('checked', true);
+    }
+  });
+});
+
+$(document).ready(function() {
+  $('input[type=radio][name=billing-type-terragrunt]').change(function() {
+    if (this.value == 'annual') {
+      terraGruntSubscription.billingCycle = this.value;
+      $('.pricing-card-monthly-terragrunt').hide();
+      $('.pricing-card-annual-terragrunt').show();
+      $("input[name=billing-type-terragrunt][value=" + 'annual' + "]").prop('checked', true);
+  }
+    else if (this.value == 'monthly') {
+        terraGruntSubscription.billingCycle = this.value;
+        $('.pricing-card-annual-terragrunt').hide();
+        $('.pricing-card-monthly-terragrunt').show();
+        $("input[name=billing-type-terragrunt][value=" + 'monthly' + "]").prop('checked', true);
+    }
+  });
+});
+
 });
