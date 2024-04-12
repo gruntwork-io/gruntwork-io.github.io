@@ -1,20 +1,24 @@
 - title: Initial Setup
   subtitle: 'no'
   divider: 'no'
+ 
+- title: IaC Account Foundations
+  subtitle: 'yes'
+  divider: 'no'
   rows:
-    - row: Foundational AWS multi-account setup with Control Tower
+    - row: AWS multi-account setup
       standard: 'yes'
       enterprise: 'yes'
-    - row: Gruntwork Pipelines setup
+    - row: '<span class="light" style="display: inline; flex-wrap: wrap; align-items: center"><div class="table-tooltip">Use Control Tower as a single pane of glass to see all your accounts and manage their controls.</div>Control Tower configuration<svg style="position:relative; left:3px;" width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.50439 18.021C14.1626 18.021 18.021 14.1626 18.021 9.49561C18.021 4.8374 14.1538 0.979004 9.49561 0.979004C4.8374 0.979004 0.979004 4.8374 0.979004 9.49561C0.979004 14.1626 4.84619 18.021 9.50439 18.021ZM9.50439 16.5005C5.61963 16.5005 2.5083 13.3892 2.5083 9.49561C2.5083 5.61084 5.61084 2.49072 9.49561 2.49072C13.3804 2.49072 16.5005 5.61084 16.5093 9.49561C16.5181 13.3892 13.3892 16.5005 9.50439 16.5005ZM9.43408 6.58643C10.0493 6.58643 10.5327 6.09424 10.5327 5.48779C10.5327 4.86377 10.0493 4.38037 9.43408 4.38037C8.82764 4.38037 8.33545 4.86377 8.33545 5.48779C8.33545 6.09424 8.82764 6.58643 9.43408 6.58643ZM8.03662 14.0571H11.4204C11.772 14.0571 12.0532 13.8022 12.0532 13.4419C12.0532 13.1079 11.772 12.8442 11.4204 12.8442H10.4272V8.71338C10.4272 8.24756 10.1899 7.93994 9.75928 7.93994H8.18604C7.83447 7.93994 7.56201 8.20361 7.56201 8.5376C7.56201 8.89795 7.83447 9.15283 8.18604 9.15283H9.05615V12.8442H8.03662C7.69385 12.8442 7.4126 13.1079 7.4126 13.4419C7.4126 13.8022 7.69385 14.0571 8.03662 14.0571Z" fill="#2A5F74"/></svg></span>'
       standard: 'yes'
       enterprise: 'yes'
-    - row: IaC foundations
+    - row: '<span class="light" style="display: inline; flex-wrap: wrap; align-items: center"><div class="table-tooltip">We’ll set you up with best-practice IaC folder structure and infrastructure patterns.</div>IaC foundations<svg style="position:relative; left:3px;" width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.50439 18.021C14.1626 18.021 18.021 14.1626 18.021 9.49561C18.021 4.8374 14.1538 0.979004 9.49561 0.979004C4.8374 0.979004 0.979004 4.8374 0.979004 9.49561C0.979004 14.1626 4.84619 18.021 9.50439 18.021ZM9.50439 16.5005C5.61963 16.5005 2.5083 13.3892 2.5083 9.49561C2.5083 5.61084 5.61084 2.49072 9.49561 2.49072C13.3804 2.49072 16.5005 5.61084 16.5093 9.49561C16.5181 13.3892 13.3892 16.5005 9.50439 16.5005ZM9.43408 6.58643C10.0493 6.58643 10.5327 6.09424 10.5327 5.48779C10.5327 4.86377 10.0493 4.38037 9.43408 4.38037C8.82764 4.38037 8.33545 4.86377 8.33545 5.48779C8.33545 6.09424 8.82764 6.58643 9.43408 6.58643ZM8.03662 14.0571H11.4204C11.772 14.0571 12.0532 13.8022 12.0532 13.4419C12.0532 13.1079 11.772 12.8442 11.4204 12.8442H10.4272V8.71338C10.4272 8.24756 10.1899 7.93994 9.75928 7.93994H8.18604C7.83447 7.93994 7.56201 8.20361 7.56201 8.5376C7.56201 8.89795 7.83447 9.15283 8.18604 9.15283H9.05615V12.8442H8.03662C7.69385 12.8442 7.4126 13.1079 7.4126 13.4419C7.4126 13.8022 7.69385 14.0571 8.03662 14.0571Z" fill="#2A5F74"/></svg></span>'
       standard: 'yes'
       enterprise: 'yes'
-    - row: Tagging & labeling strategy
+    - row: Tagging & labeling enforcement
       standard: 'yes'
       enterprise: 'yes'
-    - row: Account Factory for AWS
+    - row: AWS multi-account setup
       standard: 'yes'
       enterprise: 'yes'
     - row: CIS-compliant AWS account baselines
@@ -22,16 +26,60 @@
       enterprise: 'yes'
     - row: Custom Account Factory baselines
       standard: 'no'
+      enterprise: 'yes' 
+
+
+- title: Gruntwork Component Setup
+  subtitle: 'yes'
+  divider: 'no'
+  rows:
+    - row: Gruntwork Pipelines setup
+      standard: 'yes'
+      enterprise: 'yes'
+    - row: 'Gruntwork Patcher setup <div style=" background: linear-gradient( 101.84deg, #fe3162 2.31%, #ff4f47 98.56% ); margin-left: 5px; " class="label-beta"> BETA </div>'
+      standard: 'yes'
       enterprise: 'yes'
 
-- title: Network Configuration
+- title: Network configuration
   subtitle: 'yes'
   divider: 'yes'
   rows:
-    - row: AWS Transit Gateway configuration
+    - row: '<span class="light" style="display: inline; flex-wrap: wrap; align-items: center"><div class="table-tooltip">The standard network configuration provides an app VPC with multiple public & private subnet tiers including IGWs, public NGWs, and NACLs.</div>Standard secure network </br>configuration<svg style="position:relative; left:3px;" width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.50439 18.021C14.1626 18.021 18.021 14.1626 18.021 9.49561C18.021 4.8374 14.1538 0.979004 9.49561 0.979004C4.8374 0.979004 0.979004 4.8374 0.979004 9.49561C0.979004 14.1626 4.84619 18.021 9.50439 18.021ZM9.50439 16.5005C5.61963 16.5005 2.5083 13.3892 2.5083 9.49561C2.5083 5.61084 5.61084 2.49072 9.49561 2.49072C13.3804 2.49072 16.5005 5.61084 16.5093 9.49561C16.5181 13.3892 13.3892 16.5005 9.50439 16.5005ZM9.43408 6.58643C10.0493 6.58643 10.5327 6.09424 10.5327 5.48779C10.5327 4.86377 10.0493 4.38037 9.43408 4.38037C8.82764 4.38037 8.33545 4.86377 8.33545 5.48779C8.33545 6.09424 8.82764 6.58643 9.43408 6.58643ZM8.03662 14.0571H11.4204C11.772 14.0571 12.0532 13.8022 12.0532 13.4419C12.0532 13.1079 11.772 12.8442 11.4204 12.8442H10.4272V8.71338C10.4272 8.24756 10.1899 7.93994 9.75928 7.93994H8.18604C7.83447 7.93994 7.56201 8.20361 7.56201 8.5376C7.56201 8.89795 7.83447 9.15283 8.18604 9.15283H9.05615V12.8442H8.03662C7.69385 12.8442 7.4126 13.1079 7.4126 13.4419C7.4126 13.8022 7.69385 14.0571 8.03662 14.0571Z" fill="#2A5F74"/></svg></span>'
+      standard: 'yes'
+      enterprise: 'yes'
+    - row: '<span class="light" style="display: inline; flex-wrap: wrap; align-items: center"><div class="table-tooltip">Work with a Gruntwork Solutions Architect to design a network that suits your needs, with features such as an AWS Transit Gateway, inspection VPC, AWS Firewall manager, RAM networks, zero-trust networks, IPAM, IPv6, and more.</div>Custom network design<svg style="position:relative; left:3px;" width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.50439 18.021C14.1626 18.021 18.021 14.1626 18.021 9.49561C18.021 4.8374 14.1538 0.979004 9.49561 0.979004C4.8374 0.979004 0.979004 4.8374 0.979004 9.49561C0.979004 14.1626 4.84619 18.021 9.50439 18.021ZM9.50439 16.5005C5.61963 16.5005 2.5083 13.3892 2.5083 9.49561C2.5083 5.61084 5.61084 2.49072 9.49561 2.49072C13.3804 2.49072 16.5005 5.61084 16.5093 9.49561C16.5181 13.3892 13.3892 16.5005 9.50439 16.5005ZM9.43408 6.58643C10.0493 6.58643 10.5327 6.09424 10.5327 5.48779C10.5327 4.86377 10.0493 4.38037 9.43408 4.38037C8.82764 4.38037 8.33545 4.86377 8.33545 5.48779C8.33545 6.09424 8.82764 6.58643 9.43408 6.58643ZM8.03662 14.0571H11.4204C11.772 14.0571 12.0532 13.8022 12.0532 13.4419C12.0532 13.1079 11.772 12.8442 11.4204 12.8442H10.4272V8.71338C10.4272 8.24756 10.1899 7.93994 9.75928 7.93994H8.18604C7.83447 7.93994 7.56201 8.20361 7.56201 8.5376C7.56201 8.89795 7.83447 9.15283 8.18604 9.15283H9.05615V12.8442H8.03662C7.69385 12.8442 7.4126 13.1079 7.4126 13.4419C7.4126 13.8022 7.69385 14.0571 8.03662 14.0571Z" fill="#2A5F74"/></svg></span>'
       standard: 'no'
       enterprise: 'yes'
-    - row: Inspection VPC configuration
+
+- title: Account Factory
+  subtitle: 'no'
+  divider: 'yes'
+  rows:
+    - row: Vend individual AWS accounts
+      standard: 'yes'
+      enterprise: 'yes'
+    - row: Centralized account approval workflow
+      standard: 'yes'
+      enterprise: 'yes'
+    - row: CIS-compliant AWS baselines for all vended accounts
+      standard: 'yes'
+      enterprise: 'yes'
+    - row: Gruntwork Pipelines auto-configured for all vended accounts
+      standard: 'yes'
+      enterprise: 'yes'
+    - row: 'Gruntwork Patcher <div style=" background: linear-gradient( 101.84deg, #fe3162 2.31%, #ff4f47 98.56% ); margin-left: 5px; " class="label-beta"> BETA </div> auto-configured for all vended accounts'
+      standard: 'yes'
+      enterprise: 'yes'
+    - row: Promotion workflows auto-configured for all vended accounts
+      standard: 'yes'
+      enterprise: 'yes'
+    - row: '<span class="light" style="display: inline; flex-wrap: wrap; align-items: center"><div class="table-tooltip">Vend a set of accounts, such as dev/stage/prod, in a single, automated operation.</div>Multi-account vending<svg style="position:relative; left:3px;" width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.50439 18.021C14.1626 18.021 18.021 14.1626 18.021 9.49561C18.021 4.8374 14.1538 0.979004 9.49561 0.979004C4.8374 0.979004 0.979004 4.8374 0.979004 9.49561C0.979004 14.1626 4.84619 18.021 9.50439 18.021ZM9.50439 16.5005C5.61963 16.5005 2.5083 13.3892 2.5083 9.49561C2.5083 5.61084 5.61084 2.49072 9.49561 2.49072C13.3804 2.49072 16.5005 5.61084 16.5093 9.49561C16.5181 13.3892 13.3892 16.5005 9.50439 16.5005ZM9.43408 6.58643C10.0493 6.58643 10.5327 6.09424 10.5327 5.48779C10.5327 4.86377 10.0493 4.38037 9.43408 4.38037C8.82764 4.38037 8.33545 4.86377 8.33545 5.48779C8.33545 6.09424 8.82764 6.58643 9.43408 6.58643ZM8.03662 14.0571H11.4204C11.772 14.0571 12.0532 13.8022 12.0532 13.4419C12.0532 13.1079 11.772 12.8442 11.4204 12.8442H10.4272V8.71338C10.4272 8.24756 10.1899 7.93994 9.75928 7.93994H8.18604C7.83447 7.93994 7.56201 8.20361 7.56201 8.5376C7.56201 8.89795 7.83447 9.15283 8.18604 9.15283H9.05615V12.8442H8.03662C7.69385 12.8442 7.4126 13.1079 7.4126 13.4419C7.4126 13.8022 7.69385 14.0571 8.03662 14.0571Z" fill="#2A5F74"/></svg></span>'
+      standard: 'no'
+      enterprise: 'yes'
+    - row: '<span class="light" style="display: inline; flex-wrap: wrap; align-items: center"><div class="table-tooltip">Vend a separate infrastructure repository for each team/project.</div>Multi-repo vending for project/teams<svg style="position:relative; left:3px;" width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.50439 18.021C14.1626 18.021 18.021 14.1626 18.021 9.49561C18.021 4.8374 14.1538 0.979004 9.49561 0.979004C4.8374 0.979004 0.979004 4.8374 0.979004 9.49561C0.979004 14.1626 4.84619 18.021 9.50439 18.021ZM9.50439 16.5005C5.61963 16.5005 2.5083 13.3892 2.5083 9.49561C2.5083 5.61084 5.61084 2.49072 9.49561 2.49072C13.3804 2.49072 16.5005 5.61084 16.5093 9.49561C16.5181 13.3892 13.3892 16.5005 9.50439 16.5005ZM9.43408 6.58643C10.0493 6.58643 10.5327 6.09424 10.5327 5.48779C10.5327 4.86377 10.0493 4.38037 9.43408 4.38037C8.82764 4.38037 8.33545 4.86377 8.33545 5.48779C8.33545 6.09424 8.82764 6.58643 9.43408 6.58643ZM8.03662 14.0571H11.4204C11.772 14.0571 12.0532 13.8022 12.0532 13.4419C12.0532 13.1079 11.772 12.8442 11.4204 12.8442H10.4272V8.71338C10.4272 8.24756 10.1899 7.93994 9.75928 7.93994H8.18604C7.83447 7.93994 7.56201 8.20361 7.56201 8.5376C7.56201 8.89795 7.83447 9.15283 8.18604 9.15283H9.05615V12.8442H8.03662C7.69385 12.8442 7.4126 13.1079 7.4126 13.4419C7.4126 13.8022 7.69385 14.0571 8.03662 14.0571Z" fill="#2A5F74"/></svg></span>'
+      standard: 'no'
+      enterprise: 'yes'
+    - row: Customized baselines for all vended accounts
       standard: 'no'
       enterprise: 'yes'
 
@@ -39,24 +87,48 @@
   subtitle: 'no'
   divider: 'yes'
   rows:
-    - row: Runs Terragrunt plan/apply/destroy
+    - row: Pull request driven workflow
       standard: 'yes'
       enterprise: 'yes'
-    - row: Account factory support
+    - row: GitOps infrastructure deployments
       standard: 'yes'
       enterprise: 'yes'
-    - row: Team factory support
+    - row: Terragrunt plan/apply/destroy
+      standard: 'yes'
+      enterprise: 'yes'
+    - row: '<span class="light" style="display: inline; flex-wrap: wrap; align-items: center"><div class="table-tooltip">Due to licensing restrictions, we can only support Terraform 1.5.x and earlier.</div>Works with OpenTofu and Terraform<svg style="position:relative; left:3px;" width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.50439 18.021C14.1626 18.021 18.021 14.1626 18.021 9.49561C18.021 4.8374 14.1538 0.979004 9.49561 0.979004C4.8374 0.979004 0.979004 4.8374 0.979004 9.49561C0.979004 14.1626 4.84619 18.021 9.50439 18.021ZM9.50439 16.5005C5.61963 16.5005 2.5083 13.3892 2.5083 9.49561C2.5083 5.61084 5.61084 2.49072 9.49561 2.49072C13.3804 2.49072 16.5005 5.61084 16.5093 9.49561C16.5181 13.3892 13.3892 16.5005 9.50439 16.5005ZM9.43408 6.58643C10.0493 6.58643 10.5327 6.09424 10.5327 5.48779C10.5327 4.86377 10.0493 4.38037 9.43408 4.38037C8.82764 4.38037 8.33545 4.86377 8.33545 5.48779C8.33545 6.09424 8.82764 6.58643 9.43408 6.58643ZM8.03662 14.0571H11.4204C11.772 14.0571 12.0532 13.8022 12.0532 13.4419C12.0532 13.1079 11.772 12.8442 11.4204 12.8442H10.4272V8.71338C10.4272 8.24756 10.1899 7.93994 9.75928 7.93994H8.18604C7.83447 7.93994 7.56201 8.20361 7.56201 8.5376C7.56201 8.89795 7.83447 9.15283 8.18604 9.15283H9.05615V12.8442H8.03662C7.69385 12.8442 7.4126 13.1079 7.4126 13.4419C7.4126 13.8022 7.69385 14.0571 8.03662 14.0571Z" fill="#2A5F74"/></svg></span>'
+      standard: 'yes'
+      enterprise: 'yes'
+    - row: '<span class="light" style="display: inline; flex-wrap: wrap; align-items: center"><div class="table-tooltip">Access AWS with automatically managed and rotated credentials (instead of manually managed, long-lived secrets).</div>Use OIDC for AWS authentication<svg style="position:relative; left:3px;" width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.50439 18.021C14.1626 18.021 18.021 14.1626 18.021 9.49561C18.021 4.8374 14.1538 0.979004 9.49561 0.979004C4.8374 0.979004 0.979004 4.8374 0.979004 9.49561C0.979004 14.1626 4.84619 18.021 9.50439 18.021ZM9.50439 16.5005C5.61963 16.5005 2.5083 13.3892 2.5083 9.49561C2.5083 5.61084 5.61084 2.49072 9.49561 2.49072C13.3804 2.49072 16.5005 5.61084 16.5093 9.49561C16.5181 13.3892 13.3892 16.5005 9.50439 16.5005ZM9.43408 6.58643C10.0493 6.58643 10.5327 6.09424 10.5327 5.48779C10.5327 4.86377 10.0493 4.38037 9.43408 4.38037C8.82764 4.38037 8.33545 4.86377 8.33545 5.48779C8.33545 6.09424 8.82764 6.58643 9.43408 6.58643ZM8.03662 14.0571H11.4204C11.772 14.0571 12.0532 13.8022 12.0532 13.4419C12.0532 13.1079 11.772 12.8442 11.4204 12.8442H10.4272V8.71338C10.4272 8.24756 10.1899 7.93994 9.75928 7.93994H8.18604C7.83447 7.93994 7.56201 8.20361 7.56201 8.5376C7.56201 8.89795 7.83447 9.15283 8.18604 9.15283H9.05615V12.8442H8.03662C7.69385 12.8442 7.4126 13.1079 7.4126 13.4419C7.4126 13.8022 7.69385 14.0571 8.03662 14.0571Z" fill="#2A5F74"/></svg></span>'
       standard: 'no'
+      enterprise: 'no'
+    - row: '<span class="light" style="display: inline; flex-wrap: wrap; align-items: center"><div class="table-tooltip">Automatically capture the underlying user who triggered the CI/CD pipeline in the IAM role session name, so you can audit all API calls in CloudTrail.</div>Audit logging with intelligent pass-through<svg style="position:relative; left:3px;" width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.50439 18.021C14.1626 18.021 18.021 14.1626 18.021 9.49561C18.021 4.8374 14.1538 0.979004 9.49561 0.979004C4.8374 0.979004 0.979004 4.8374 0.979004 9.49561C0.979004 14.1626 4.84619 18.021 9.50439 18.021ZM9.50439 16.5005C5.61963 16.5005 2.5083 13.3892 2.5083 9.49561C2.5083 5.61084 5.61084 2.49072 9.49561 2.49072C13.3804 2.49072 16.5005 5.61084 16.5093 9.49561C16.5181 13.3892 13.3892 16.5005 9.50439 16.5005ZM9.43408 6.58643C10.0493 6.58643 10.5327 6.09424 10.5327 5.48779C10.5327 4.86377 10.0493 4.38037 9.43408 4.38037C8.82764 4.38037 8.33545 4.86377 8.33545 5.48779C8.33545 6.09424 8.82764 6.58643 9.43408 6.58643ZM8.03662 14.0571H11.4204C11.772 14.0571 12.0532 13.8022 12.0532 13.4419C12.0532 13.1079 11.772 12.8442 11.4204 12.8442H10.4272V8.71338C10.4272 8.24756 10.1899 7.93994 9.75928 7.93994H8.18604C7.83447 7.93994 7.56201 8.20361 7.56201 8.5376C7.56201 8.89795 7.83447 9.15283 8.18604 9.15283H9.05615V12.8442H8.03662C7.69385 12.8442 7.4126 13.1079 7.4126 13.4419C7.4126 13.8022 7.69385 14.0571 8.03662 14.0571Z" fill="#2A5F74"/></svg></span>'
+      standard: 'yes'
       enterprise: 'yes'
-    - row: Number of team licenses included
+    - row: '<span class="light" style="display: inline; flex-wrap: wrap; align-items: center"><div class="table-tooltip">Vend a set of accounts, such as dev/stage/prod, in a single, automated operation.</div>Multi-account vending<svg style="position:relative; left:3px;" width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.50439 18.021C14.1626 18.021 18.021 14.1626 18.021 9.49561C18.021 4.8374 14.1538 0.979004 9.49561 0.979004C4.8374 0.979004 0.979004 4.8374 0.979004 9.49561C0.979004 14.1626 4.84619 18.021 9.50439 18.021ZM9.50439 16.5005C5.61963 16.5005 2.5083 13.3892 2.5083 9.49561C2.5083 5.61084 5.61084 2.49072 9.49561 2.49072C13.3804 2.49072 16.5005 5.61084 16.5093 9.49561C16.5181 13.3892 13.3892 16.5005 9.50439 16.5005ZM9.43408 6.58643C10.0493 6.58643 10.5327 6.09424 10.5327 5.48779C10.5327 4.86377 10.0493 4.38037 9.43408 4.38037C8.82764 4.38037 8.33545 4.86377 8.33545 5.48779C8.33545 6.09424 8.82764 6.58643 9.43408 6.58643ZM8.03662 14.0571H11.4204C11.772 14.0571 12.0532 13.8022 12.0532 13.4419C12.0532 13.1079 11.772 12.8442 11.4204 12.8442H10.4272V8.71338C10.4272 8.24756 10.1899 7.93994 9.75928 7.93994H8.18604C7.83447 7.93994 7.56201 8.20361 7.56201 8.5376C7.56201 8.89795 7.83447 9.15283 8.18604 9.15283H9.05615V12.8442H8.03662C7.69385 12.8442 7.4126 13.1079 7.4126 13.4419C7.4126 13.8022 7.69385 14.0571 8.03662 14.0571Z" fill="#2A5F74"/></svg></span>'
+      standard: 'yes'
+      enterprise: 'yes'
+    - row: '<span class="light" style="display: inline; flex-wrap: wrap; align-items: center"><div class="table-tooltip">We provide a single place and tooling to vend IAM roles that give each app team the permissions they need.</div>Centralized IAM role provisioning<svg style="position:relative; left:3px;" width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.50439 18.021C14.1626 18.021 18.021 14.1626 18.021 9.49561C18.021 4.8374 14.1538 0.979004 9.49561 0.979004C4.8374 0.979004 0.979004 4.8374 0.979004 9.49561C0.979004 14.1626 4.84619 18.021 9.50439 18.021ZM9.50439 16.5005C5.61963 16.5005 2.5083 13.3892 2.5083 9.49561C2.5083 5.61084 5.61084 2.49072 9.49561 2.49072C13.3804 2.49072 16.5005 5.61084 16.5093 9.49561C16.5181 13.3892 13.3892 16.5005 9.50439 16.5005ZM9.43408 6.58643C10.0493 6.58643 10.5327 6.09424 10.5327 5.48779C10.5327 4.86377 10.0493 4.38037 9.43408 4.38037C8.82764 4.38037 8.33545 4.86377 8.33545 5.48779C8.33545 6.09424 8.82764 6.58643 9.43408 6.58643ZM8.03662 14.0571H11.4204C11.772 14.0571 12.0532 13.8022 12.0532 13.4419C12.0532 13.1079 11.772 12.8442 11.4204 12.8442H10.4272V8.71338C10.4272 8.24756 10.1899 7.93994 9.75928 7.93994H8.18604C7.83447 7.93994 7.56201 8.20361 7.56201 8.5376C7.56201 8.89795 7.83447 9.15283 8.18604 9.15283H9.05615V12.8442H8.03662C7.69385 12.8442 7.4126 13.1079 7.4126 13.4419C7.4126 13.8022 7.69385 14.0571 8.03662 14.0571Z" fill="#2A5F74"/></svg></span>'
+      standard: 'yes'
+      enterprise: 'yes'
+    - row: '<span class="light" style="display: inline; flex-wrap: wrap; align-items: center"><div class="table-tooltip">Automatically provision least-privilege IAM roles for use with OIDC, limiting each team to only the GitHub repos, AWS accounts, and AWS resources they should have access to.</div>Least-privilege OIDC roles<svg style="position:relative; left:3px;" width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.50439 18.021C14.1626 18.021 18.021 14.1626 18.021 9.49561C18.021 4.8374 14.1538 0.979004 9.49561 0.979004C4.8374 0.979004 0.979004 4.8374 0.979004 9.49561C0.979004 14.1626 4.84619 18.021 9.50439 18.021ZM9.50439 16.5005C5.61963 16.5005 2.5083 13.3892 2.5083 9.49561C2.5083 5.61084 5.61084 2.49072 9.49561 2.49072C13.3804 2.49072 16.5005 5.61084 16.5093 9.49561C16.5181 13.3892 13.3892 16.5005 9.50439 16.5005ZM9.43408 6.58643C10.0493 6.58643 10.5327 6.09424 10.5327 5.48779C10.5327 4.86377 10.0493 4.38037 9.43408 4.38037C8.82764 4.38037 8.33545 4.86377 8.33545 5.48779C8.33545 6.09424 8.82764 6.58643 9.43408 6.58643ZM8.03662 14.0571H11.4204C11.772 14.0571 12.0532 13.8022 12.0532 13.4419C12.0532 13.1079 11.772 12.8442 11.4204 12.8442H10.4272V8.71338C10.4272 8.24756 10.1899 7.93994 9.75928 7.93994H8.18604C7.83447 7.93994 7.56201 8.20361 7.56201 8.5376C7.56201 8.89795 7.83447 9.15283 8.18604 9.15283H9.05615V12.8442H8.03662C7.69385 12.8442 7.4126 13.1079 7.4126 13.4419C7.4126 13.8022 7.69385 14.0571 8.03662 14.0571Z" fill="#2A5F74"/></svg></span>'
+      standard: 'yes'
+      enterprise: 'yes'
+    - row: '<span class="light" style="display: inline; flex-wrap: wrap; align-items: center"><div class="table-tooltip">A “team” refers to a unique git repo used to manage infrastructure-as-code. Only git repos that use Gruntwork Pipelines require a team license.</div>Number of team licenses included<svg style="position:relative; left:3px;" width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.50439 18.021C14.1626 18.021 18.021 14.1626 18.021 9.49561C18.021 4.8374 14.1538 0.979004 9.49561 0.979004C4.8374 0.979004 0.979004 4.8374 0.979004 9.49561C0.979004 14.1626 4.84619 18.021 9.50439 18.021ZM9.50439 16.5005C5.61963 16.5005 2.5083 13.3892 2.5083 9.49561C2.5083 5.61084 5.61084 2.49072 9.49561 2.49072C13.3804 2.49072 16.5005 5.61084 16.5093 9.49561C16.5181 13.3892 13.3892 16.5005 9.50439 16.5005ZM9.43408 6.58643C10.0493 6.58643 10.5327 6.09424 10.5327 5.48779C10.5327 4.86377 10.0493 4.38037 9.43408 4.38037C8.82764 4.38037 8.33545 4.86377 8.33545 5.48779C8.33545 6.09424 8.82764 6.58643 9.43408 6.58643ZM8.03662 14.0571H11.4204C11.772 14.0571 12.0532 13.8022 12.0532 13.4419C12.0532 13.1079 11.772 12.8442 11.4204 12.8442H10.4272V8.71338C10.4272 8.24756 10.1899 7.93994 9.75928 7.93994H8.18604C7.83447 7.93994 7.56201 8.20361 7.56201 8.5376C7.56201 8.89795 7.83447 9.15283 8.18604 9.15283H9.05615V12.8442H8.03662C7.69385 12.8442 7.4126 13.1079 7.4126 13.4419C7.4126 13.8022 7.69385 14.0571 8.03662 14.0571Z" fill="#2A5F74"/></svg></span>'
       standard: '1'
       enterprise: '2+'
 
-- title: Patcher
+- title: 'Patcher <div style=" background: linear-gradient( 101.84deg, #fe3162 2.31%, #ff4f47 98.56% ); margin-left: 5px; " class="label-beta"> BETA </div>'
   subtitle: 'no'
   divider: 'yes'
   rows:
-    - row: Gruntwork Terraform modules
+    - row: '<span class="light" style="display: inline; flex-wrap: wrap; align-items: center"><div class="table-tooltip">Keep your infrastructure modules up to date with automatic PRs for any releases of module dependencies.</div>Automatic PRs for module dependency updates<svg style="position:relative; left:3px;" width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.50439 18.021C14.1626 18.021 18.021 14.1626 18.021 9.49561C18.021 4.8374 14.1538 0.979004 9.49561 0.979004C4.8374 0.979004 0.979004 4.8374 0.979004 9.49561C0.979004 14.1626 4.84619 18.021 9.50439 18.021ZM9.50439 16.5005C5.61963 16.5005 2.5083 13.3892 2.5083 9.49561C2.5083 5.61084 5.61084 2.49072 9.49561 2.49072C13.3804 2.49072 16.5005 5.61084 16.5093 9.49561C16.5181 13.3892 13.3892 16.5005 9.50439 16.5005ZM9.43408 6.58643C10.0493 6.58643 10.5327 6.09424 10.5327 5.48779C10.5327 4.86377 10.0493 4.38037 9.43408 4.38037C8.82764 4.38037 8.33545 4.86377 8.33545 5.48779C8.33545 6.09424 8.82764 6.58643 9.43408 6.58643ZM8.03662 14.0571H11.4204C11.772 14.0571 12.0532 13.8022 12.0532 13.4419C12.0532 13.1079 11.772 12.8442 11.4204 12.8442H10.4272V8.71338C10.4272 8.24756 10.1899 7.93994 9.75928 7.93994H8.18604C7.83447 7.93994 7.56201 8.20361 7.56201 8.5376C7.56201 8.89795 7.83447 9.15283 8.18604 9.15283H9.05615V12.8442H8.03662C7.69385 12.8442 7.4126 13.1079 7.4126 13.4419C7.4126 13.8022 7.69385 14.0571 8.03662 14.0571Z" fill="#2A5F74"/></svg></span>'
+      standard: 'yes'
+      enterprise: 'yes'
+    - row: '<span class="light" style="display: inline; flex-wrap: wrap; align-items: center"><div class="table-tooltip">Keep your live infrastructure up to date with automatic PRs for any releases of module dependencies.</div>Automatic PRs for live infrastructure updates<svg style="position:relative; left:3px;" width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.50439 18.021C14.1626 18.021 18.021 14.1626 18.021 9.49561C18.021 4.8374 14.1538 0.979004 9.49561 0.979004C4.8374 0.979004 0.979004 4.8374 0.979004 9.49561C0.979004 14.1626 4.84619 18.021 9.50439 18.021ZM9.50439 16.5005C5.61963 16.5005 2.5083 13.3892 2.5083 9.49561C2.5083 5.61084 5.61084 2.49072 9.49561 2.49072C13.3804 2.49072 16.5005 5.61084 16.5093 9.49561C16.5181 13.3892 13.3892 16.5005 9.50439 16.5005ZM9.43408 6.58643C10.0493 6.58643 10.5327 6.09424 10.5327 5.48779C10.5327 4.86377 10.0493 4.38037 9.43408 4.38037C8.82764 4.38037 8.33545 4.86377 8.33545 5.48779C8.33545 6.09424 8.82764 6.58643 9.43408 6.58643ZM8.03662 14.0571H11.4204C11.772 14.0571 12.0532 13.8022 12.0532 13.4419C12.0532 13.1079 11.772 12.8442 11.4204 12.8442H10.4272V8.71338C10.4272 8.24756 10.1899 7.93994 9.75928 7.93994H8.18604C7.83447 7.93994 7.56201 8.20361 7.56201 8.5376C7.56201 8.89795 7.83447 9.15283 8.18604 9.15283H9.05615V12.8442H8.03662C7.69385 12.8442 7.4126 13.1079 7.4126 13.4419C7.4126 13.8022 7.69385 14.0571 8.03662 14.0571Z" fill="#2A5F74"/></svg></span>'
+      standard: 'yes'
+      enterprise: 'yes'
+    - row: '<span class="light" style="display: inline; flex-wrap: wrap; align-items: center"><div class="table-tooltip">Safely and automatically propagate changes from dev to stage to prod, building confidence at each step.</div>Promote changes across </br> environments<svg style="position:relative; left:3px;" width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.50439 18.021C14.1626 18.021 18.021 14.1626 18.021 9.49561C18.021 4.8374 14.1538 0.979004 9.49561 0.979004C4.8374 0.979004 0.979004 4.8374 0.979004 9.49561C0.979004 14.1626 4.84619 18.021 9.50439 18.021ZM9.50439 16.5005C5.61963 16.5005 2.5083 13.3892 2.5083 9.49561C2.5083 5.61084 5.61084 2.49072 9.49561 2.49072C13.3804 2.49072 16.5005 5.61084 16.5093 9.49561C16.5181 13.3892 13.3892 16.5005 9.50439 16.5005ZM9.43408 6.58643C10.0493 6.58643 10.5327 6.09424 10.5327 5.48779C10.5327 4.86377 10.0493 4.38037 9.43408 4.38037C8.82764 4.38037 8.33545 4.86377 8.33545 5.48779C8.33545 6.09424 8.82764 6.58643 9.43408 6.58643ZM8.03662 14.0571H11.4204C11.772 14.0571 12.0532 13.8022 12.0532 13.4419C12.0532 13.1079 11.772 12.8442 11.4204 12.8442H10.4272V8.71338C10.4272 8.24756 10.1899 7.93994 9.75928 7.93994H8.18604C7.83447 7.93994 7.56201 8.20361 7.56201 8.5376C7.56201 8.89795 7.83447 9.15283 8.18604 9.15283H9.05615V12.8442H8.03662C7.69385 12.8442 7.4126 13.1079 7.4126 13.4419C7.4126 13.8022 7.69385 14.0571 8.03662 14.0571Z" fill="#2A5F74"/></svg></span>'
       standard: 'yes'
       enterprise: 'yes'
 
@@ -64,22 +136,22 @@
   subtitle: 'no'
   divider: 'no'
   rows:
-    - row: Library User Licenses
-      standard: '<span class="light" style="display: flex; flex-wrap: wrap; align-items: center"><div class="table-tooltip">Upgradable to a maximum of 30</div>5<svg style="position:relative; left:3px;" width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.50439 18.021C14.1626 18.021 18.021 14.1626 18.021 9.49561C18.021 4.8374 14.1538 0.979004 9.49561 0.979004C4.8374 0.979004 0.979004 4.8374 0.979004 9.49561C0.979004 14.1626 4.84619 18.021 9.50439 18.021ZM9.50439 16.5005C5.61963 16.5005 2.5083 13.3892 2.5083 9.49561C2.5083 5.61084 5.61084 2.49072 9.49561 2.49072C13.3804 2.49072 16.5005 5.61084 16.5093 9.49561C16.5181 13.3892 13.3892 16.5005 9.50439 16.5005ZM9.43408 6.58643C10.0493 6.58643 10.5327 6.09424 10.5327 5.48779C10.5327 4.86377 10.0493 4.38037 9.43408 4.38037C8.82764 4.38037 8.33545 4.86377 8.33545 5.48779C8.33545 6.09424 8.82764 6.58643 9.43408 6.58643ZM8.03662 14.0571H11.4204C11.772 14.0571 12.0532 13.8022 12.0532 13.4419C12.0532 13.1079 11.772 12.8442 11.4204 12.8442H10.4272V8.71338C10.4272 8.24756 10.1899 7.93994 9.75928 7.93994H8.18604C7.83447 7.93994 7.56201 8.20361 7.56201 8.5376C7.56201 8.89795 7.83447 9.15283 8.18604 9.15283H9.05615V12.8442H8.03662C7.69385 12.8442 7.4126 13.1079 7.4126 13.4419C7.4126 13.8022 7.69385 14.0571 8.03662 14.0571Z" fill="#2A5F74"/></svg></span>'
+    - row: Library user licenses
+      standard: '5 </br> Upgradeable to a maximum of 30'
       enterprise: '20+'
-    - row: Machine User Licenses
+    - row: Machine user licenses 
       standard: '2'
       enterprise: '4+'
-    - row: All modules commercially maintained
+    - row: Commercial maintenance for all modules
       standard: 'yes'
       enterprise: 'yes'
-    - row: All modules tested using Terratest & Terrascan
+    - row: Thoroughly tested using Terratest & Terrascan
       standard: 'yes'
       enterprise: 'yes'
-    - row: All modules compatible with Terraform, Terragrunt, & OpenTofu
+    - row: '<span class="light" style="display: inline; flex-wrap: wrap; align-items: center"><div class="table-tooltip">Due to licensing restrictions, we can only support Terraform 1.5.x and earlier.</div>Compatible with OpenTofu, Terraform, & Terragrunt<svg style="position:relative; left:3px;" width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.50439 18.021C14.1626 18.021 18.021 14.1626 18.021 9.49561C18.021 4.8374 14.1538 0.979004 9.49561 0.979004C4.8374 0.979004 0.979004 4.8374 0.979004 9.49561C0.979004 14.1626 4.84619 18.021 9.50439 18.021ZM9.50439 16.5005C5.61963 16.5005 2.5083 13.3892 2.5083 9.49561C2.5083 5.61084 5.61084 2.49072 9.49561 2.49072C13.3804 2.49072 16.5005 5.61084 16.5093 9.49561C16.5181 13.3892 13.3892 16.5005 9.50439 16.5005ZM9.43408 6.58643C10.0493 6.58643 10.5327 6.09424 10.5327 5.48779C10.5327 4.86377 10.0493 4.38037 9.43408 4.38037C8.82764 4.38037 8.33545 4.86377 8.33545 5.48779C8.33545 6.09424 8.82764 6.58643 9.43408 6.58643ZM8.03662 14.0571H11.4204C11.772 14.0571 12.0532 13.8022 12.0532 13.4419C12.0532 13.1079 11.772 12.8442 11.4204 12.8442H10.4272V8.71338C10.4272 8.24756 10.1899 7.93994 9.75928 7.93994H8.18604C7.83447 7.93994 7.56201 8.20361 7.56201 8.5376C7.56201 8.89795 7.83447 9.15283 8.18604 9.15283H9.05615V12.8442H8.03662C7.69385 12.8442 7.4126 13.1079 7.4126 13.4419C7.4126 13.8022 7.69385 14.0571 8.03662 14.0571Z" fill="#2A5F74"/></svg></span>'
       standard: 'yes'
       enterprise: 'yes'
-    - row: Self-hosted private mirror of Gruntwork
+    - row: Self-hosted private mirror of Gruntwork Library
       standard: 'no'
       enterprise: 'yes'
 
@@ -87,13 +159,13 @@
   subtitle: 'yes'
   divider: 'no'
   rows:
-    - row: CIS-compliant VPC
+    - row: '<span class="light" style="display: inline; flex-wrap: wrap; align-items: center"><div class="table-tooltip">Our VPC module is compliant with the CIS AWS Foundations Benchmark</div>CIS-compliant VPC<svg style="position:relative; left:3px;" width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.50439 18.021C14.1626 18.021 18.021 14.1626 18.021 9.49561C18.021 4.8374 14.1538 0.979004 9.49561 0.979004C4.8374 0.979004 0.979004 4.8374 0.979004 9.49561C0.979004 14.1626 4.84619 18.021 9.50439 18.021ZM9.50439 16.5005C5.61963 16.5005 2.5083 13.3892 2.5083 9.49561C2.5083 5.61084 5.61084 2.49072 9.49561 2.49072C13.3804 2.49072 16.5005 5.61084 16.5093 9.49561C16.5181 13.3892 13.3892 16.5005 9.50439 16.5005ZM9.43408 6.58643C10.0493 6.58643 10.5327 6.09424 10.5327 5.48779C10.5327 4.86377 10.0493 4.38037 9.43408 4.38037C8.82764 4.38037 8.33545 4.86377 8.33545 5.48779C8.33545 6.09424 8.82764 6.58643 9.43408 6.58643ZM8.03662 14.0571H11.4204C11.772 14.0571 12.0532 13.8022 12.0532 13.4419C12.0532 13.1079 11.772 12.8442 11.4204 12.8442H10.4272V8.71338C10.4272 8.24756 10.1899 7.93994 9.75928 7.93994H8.18604C7.83447 7.93994 7.56201 8.20361 7.56201 8.5376C7.56201 8.89795 7.83447 9.15283 8.18604 9.15283H9.05615V12.8442H8.03662C7.69385 12.8442 7.4126 13.1079 7.4126 13.4419C7.4126 13.8022 7.69385 14.0571 8.03662 14.0571Z" fill="#2A5F74"/></svg></span>'
       standard: 'yes'
       enterprise: 'yes'
-    - row: CIS-compliant Account Baseline
+    - row: '<span class="light" style="display: inline; flex-wrap: wrap; align-items: center"><div class="table-tooltip">Our account baseline module is compliant with the CIS AWS Foundations Benchmark</div>CIS-compliant Account Baseline<svg style="position:relative; left:3px;" width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.50439 18.021C14.1626 18.021 18.021 14.1626 18.021 9.49561C18.021 4.8374 14.1538 0.979004 9.49561 0.979004C4.8374 0.979004 0.979004 4.8374 0.979004 9.49561C0.979004 14.1626 4.84619 18.021 9.50439 18.021ZM9.50439 16.5005C5.61963 16.5005 2.5083 13.3892 2.5083 9.49561C2.5083 5.61084 5.61084 2.49072 9.49561 2.49072C13.3804 2.49072 16.5005 5.61084 16.5093 9.49561C16.5181 13.3892 13.3892 16.5005 9.50439 16.5005ZM9.43408 6.58643C10.0493 6.58643 10.5327 6.09424 10.5327 5.48779C10.5327 4.86377 10.0493 4.38037 9.43408 4.38037C8.82764 4.38037 8.33545 4.86377 8.33545 5.48779C8.33545 6.09424 8.82764 6.58643 9.43408 6.58643ZM8.03662 14.0571H11.4204C11.772 14.0571 12.0532 13.8022 12.0532 13.4419C12.0532 13.1079 11.772 12.8442 11.4204 12.8442H10.4272V8.71338C10.4272 8.24756 10.1899 7.93994 9.75928 7.93994H8.18604C7.83447 7.93994 7.56201 8.20361 7.56201 8.5376C7.56201 8.89795 7.83447 9.15283 8.18604 9.15283H9.05615V12.8442H8.03662C7.69385 12.8442 7.4126 13.1079 7.4126 13.4419C7.4126 13.8022 7.69385 14.0571 8.03662 14.0571Z" fill="#2A5F74"/></svg></span>'
       standard: 'yes'
       enterprise: 'yes'
-    - row: Dual Stack/IPv6
+    - row: 'Dual Stack/IPv6 <div style=" background: linear-gradient( 101.84deg, #fe3162 2.31%, #ff4f47 98.56% ); margin-left: 5px; " class="label-beta"> BETA </div>'
       standard: 'yes'
       enterprise: 'yes'
 
@@ -104,10 +176,10 @@
     - row: Robust EKS cluster support
       standard: 'yes'
       enterprise: 'yes'
-    - row: ArgoCD for EKS GitOps
+    - row: CArgoCD for EKS GitOps
       standard: 'yes'
       enterprise: 'yes'
-    - row: AWS ECS, ASG, EC2 and Lambda
+    - row: AWS ECS, ASG, EC2, and Lambda
       standard: 'yes'
       enterprise: 'yes'
     - row: Application and Network load balancing
@@ -127,32 +199,21 @@
     - row: EFS
       standard: 'yes'
       enterprise: 'yes'
+    - row: ElastiCache
+      standard: 'yes'
+      enterprise: 'yes'
     - row: MSK, SQS, SNS, Kinesis, Redshift
       standard: 'yes'
-      enterprise: 'yes'
-
-- title: Account Factory
-  subtitle: 'no'
-  divider: 'yes'
-  rows:
-    - row: Streamlined way to create single new AWS account
-      standard: 'yes'
-      enterprise: 'yes'
-    - row: Streamlined way to create new team (multiple AWS accounts)
-      standard: 'no'
-      enterprise: 'yes'
-    - row: Streamlined way to create new GitHub repos
-      standard: 'no'
       enterprise: 'yes'
 
 - title: Support
   subtitle: 'no'
   divider: 'no'
   rows:
-    - row: KodeKloud training licenses
+    - row: '<span class="light" style="display: inline; flex-wrap: wrap; align-items: center"><div class="table-tooltip">Technical contacts are members of your team that can submit support requests via email.</div>Number of technical contacts<svg style="position:relative; left:3px;" width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.50439 18.021C14.1626 18.021 18.021 14.1626 18.021 9.49561C18.021 4.8374 14.1538 0.979004 9.49561 0.979004C4.8374 0.979004 0.979004 4.8374 0.979004 9.49561C0.979004 14.1626 4.84619 18.021 9.50439 18.021ZM9.50439 16.5005C5.61963 16.5005 2.5083 13.3892 2.5083 9.49561C2.5083 5.61084 5.61084 2.49072 9.49561 2.49072C13.3804 2.49072 16.5005 5.61084 16.5093 9.49561C16.5181 13.3892 13.3892 16.5005 9.50439 16.5005ZM9.43408 6.58643C10.0493 6.58643 10.5327 6.09424 10.5327 5.48779C10.5327 4.86377 10.0493 4.38037 9.43408 4.38037C8.82764 4.38037 8.33545 4.86377 8.33545 5.48779C8.33545 6.09424 8.82764 6.58643 9.43408 6.58643ZM8.03662 14.0571H11.4204C11.772 14.0571 12.0532 13.8022 12.0532 13.4419C12.0532 13.1079 11.772 12.8442 11.4204 12.8442H10.4272V8.71338C10.4272 8.24756 10.1899 7.93994 9.75928 7.93994H8.18604C7.83447 7.93994 7.56201 8.20361 7.56201 8.5376C7.56201 8.89795 7.83447 9.15283 8.18604 9.15283H9.05615V12.8442H8.03662C7.69385 12.8442 7.4126 13.1079 7.4126 13.4419C7.4126 13.8022 7.69385 14.0571 8.03662 14.0571Z" fill="#2A5F74"/></svg></span>'
       standard: '2'
       enterprise: '5+'
-    - row: Number of Technical Contacts
+    - row: '<span class="light" style="display: inline; flex-wrap: wrap; align-items: center"><div class="table-tooltip">Gruntwork has partnered with KodeKloud to give your team access to over 75 best-in-class DevOps training courses.</div>KodeKloud training licenses<svg style="position:relative; left:3px;" width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.50439 18.021C14.1626 18.021 18.021 14.1626 18.021 9.49561C18.021 4.8374 14.1538 0.979004 9.49561 0.979004C4.8374 0.979004 0.979004 4.8374 0.979004 9.49561C0.979004 14.1626 4.84619 18.021 9.50439 18.021ZM9.50439 16.5005C5.61963 16.5005 2.5083 13.3892 2.5083 9.49561C2.5083 5.61084 5.61084 2.49072 9.49561 2.49072C13.3804 2.49072 16.5005 5.61084 16.5093 9.49561C16.5181 13.3892 13.3892 16.5005 9.50439 16.5005ZM9.43408 6.58643C10.0493 6.58643 10.5327 6.09424 10.5327 5.48779C10.5327 4.86377 10.0493 4.38037 9.43408 4.38037C8.82764 4.38037 8.33545 4.86377 8.33545 5.48779C8.33545 6.09424 8.82764 6.58643 9.43408 6.58643ZM8.03662 14.0571H11.4204C11.772 14.0571 12.0532 13.8022 12.0532 13.4419C12.0532 13.1079 11.772 12.8442 11.4204 12.8442H10.4272V8.71338C10.4272 8.24756 10.1899 7.93994 9.75928 7.93994H8.18604C7.83447 7.93994 7.56201 8.20361 7.56201 8.5376C7.56201 8.89795 7.83447 9.15283 8.18604 9.15283H9.05615V12.8442H8.03662C7.69385 12.8442 7.4126 13.1079 7.4126 13.4419C7.4126 13.8022 7.69385 14.0571 8.03662 14.0571Z" fill="#2A5F74"/></svg></span>'
       standard: '2'
       enterprise: '5+'
     - row: Basic Terragrunt support
