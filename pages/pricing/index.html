@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Become a Gruntwork Subscriber
+title: Pricing & Packaging
 excerpt: Choose the plan just right for your team.
 permalink: /pricing/
 redirect_from:
@@ -19,9 +19,46 @@ custom_js:
   <div class="section section-dark">
     <div class="container">
       {% include_relative _plans.html %}
-      {% include_relative _terms.html %}  
-      {% include_relative _pricing-faqs.html %} 
+      {% include_relative _terms.html %}
+      {% include_relative _pricing-faqs.html %}
       {% include_relative _support.html %}
     </div>
   </div>
+  <div class="pricing-sticky" id="pricing-sticky-banner">
+    <div class="container">
+      <div class="col-xs-12">
+        <div class="row">
+          {% include_relative _pricing-cta.html %}
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var pricingGruntwork = document.getElementById('gruntwork-pricing');
+    var pricingTerragrunt = document.getElementById('terragruntsupport-pricing');
+    var pricingSticky = document.getElementById('pricing-sticky-banner');
+
+    function updateSelectedPlan() {
+    var selectedPlan;
+    if (document.getElementById('switchTerragrunt').checked) {
+        selectedPlan = 'terragrunt';
+        pricingTerragrunt.style.display = 'block';
+        pricingGruntwork.style.display = 'none';
+        pricingSticky.classList.add("hide-pricing-sticky");
+
+    } else if (document.getElementById('switchGruntwork').checked) {
+        selectedPlan = 'gruntwork';
+        pricingTerragrunt.style.display = 'none';
+        pricingGruntwork.style.display = 'block';
+        pricingSticky.classList.remove("hide-pricing-sticky");
+    }
+  }
+  document.getElementById('switchTerragrunt').addEventListener('click', updateSelectedPlan);
+  document.getElementById('switchGruntwork').addEventListener('click', updateSelectedPlan);
+
+  });
+
+</script>
+

@@ -1,133 +1,239 @@
-- title: Gruntwork Landing Zone
-  tooltip: 
+- title: Initial Setup
+  subtitle: 'no'
+  divider: 'no'
+ 
+- title: IaC Account Foundations
+  subtitle: 'yes'
+  divider: 'no'
   rows:
-    - row: 'Terraform account baselines'
-      tooltip: Automatically apply security baselines, defined in Terraform, to all your AWS accounts, ensuring that all of your accounts are properly configured with AWS CloudTrail, AWS Config, AWS Config rules, Amazon GuardDuty, Macie, IAM roles, IAM Access Analyzer, VPCs, and more.
+    - row: AWS multi-account setup
       standard: 'yes'
       enterprise: 'yes'
-    - row: 'Monitoring: CloudTrail, AWS Config'
-      tooltip: Configure monitoring and audit logging for all your AWS accounts using CloudTrail and AWS Config.
+    - row: '<span class="light" style="display: inline; flex-wrap: wrap; align-items: center"><div class="table-tooltip">Use Control Tower as a single pane of glass to see all your accounts and manage their controls.</div>Control Tower configuration<svg style="position:relative; left:3px;" width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.50439 18.021C14.1626 18.021 18.021 14.1626 18.021 9.49561C18.021 4.8374 14.1538 0.979004 9.49561 0.979004C4.8374 0.979004 0.979004 4.8374 0.979004 9.49561C0.979004 14.1626 4.84619 18.021 9.50439 18.021ZM9.50439 16.5005C5.61963 16.5005 2.5083 13.3892 2.5083 9.49561C2.5083 5.61084 5.61084 2.49072 9.49561 2.49072C13.3804 2.49072 16.5005 5.61084 16.5093 9.49561C16.5181 13.3892 13.3892 16.5005 9.50439 16.5005ZM9.43408 6.58643C10.0493 6.58643 10.5327 6.09424 10.5327 5.48779C10.5327 4.86377 10.0493 4.38037 9.43408 4.38037C8.82764 4.38037 8.33545 4.86377 8.33545 5.48779C8.33545 6.09424 8.82764 6.58643 9.43408 6.58643ZM8.03662 14.0571H11.4204C11.772 14.0571 12.0532 13.8022 12.0532 13.4419C12.0532 13.1079 11.772 12.8442 11.4204 12.8442H10.4272V8.71338C10.4272 8.24756 10.1899 7.93994 9.75928 7.93994H8.18604C7.83447 7.93994 7.56201 8.20361 7.56201 8.5376C7.56201 8.89795 7.83447 9.15283 8.18604 9.15283H9.05615V12.8442H8.03662C7.69385 12.8442 7.4126 13.1079 7.4126 13.4419C7.4126 13.8022 7.69385 14.0571 8.03662 14.0571Z" fill="#2A5F74"/></svg></span>'
       standard: 'yes'
       enterprise: 'yes'
-    - row: 'Networking: VPCs, subnets, etc'
-      tooltip: Set up best-practice networking infrastructure for all of your AWS accounts, including VPCs, subnets, route tables, Internet Gateways, NAT Gateways, VPC endpoints, NACLs, and more.
+    - row: '<span class="light" style="display: inline; flex-wrap: wrap; align-items: center"><div class="table-tooltip">We’ll set you up with best-practice IaC folder structure and infrastructure patterns.</div>IaC foundations<svg style="position:relative; left:3px;" width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.50439 18.021C14.1626 18.021 18.021 14.1626 18.021 9.49561C18.021 4.8374 14.1538 0.979004 9.49561 0.979004C4.8374 0.979004 0.979004 4.8374 0.979004 9.49561C0.979004 14.1626 4.84619 18.021 9.50439 18.021ZM9.50439 16.5005C5.61963 16.5005 2.5083 13.3892 2.5083 9.49561C2.5083 5.61084 5.61084 2.49072 9.49561 2.49072C13.3804 2.49072 16.5005 5.61084 16.5093 9.49561C16.5181 13.3892 13.3892 16.5005 9.50439 16.5005ZM9.43408 6.58643C10.0493 6.58643 10.5327 6.09424 10.5327 5.48779C10.5327 4.86377 10.0493 4.38037 9.43408 4.38037C8.82764 4.38037 8.33545 4.86377 8.33545 5.48779C8.33545 6.09424 8.82764 6.58643 9.43408 6.58643ZM8.03662 14.0571H11.4204C11.772 14.0571 12.0532 13.8022 12.0532 13.4419C12.0532 13.1079 11.772 12.8442 11.4204 12.8442H10.4272V8.71338C10.4272 8.24756 10.1899 7.93994 9.75928 7.93994H8.18604C7.83447 7.93994 7.56201 8.20361 7.56201 8.5376C7.56201 8.89795 7.83447 9.15283 8.18604 9.15283H9.05615V12.8442H8.03662C7.69385 12.8442 7.4126 13.1079 7.4126 13.4419C7.4126 13.8022 7.69385 14.0571 8.03662 14.0571Z" fill="#2A5F74"/></svg></span>'
       standard: 'yes'
       enterprise: 'yes'
-    - row: 'Scanning: GuardDuty, Macie'
-      tooltip: Configure security scanning for all your AWS accounts using GuardDuty and Macie.
+    - row: Tagging & labeling enforcement
       standard: 'yes'
       enterprise: 'yes'
-    - row: 'IAM: users, roles, groups'
-      tooltip: Use IAM users, roles, and groups for authentication and authorization in your AWS accounts.
+    - row: AWS multi-account setup
       standard: 'yes'
       enterprise: 'yes'
-    - row: 'Control Tower integration <label class="label-beta label-small" style="right: -10px;background: linear-gradient(
-              101.84deg,
-              #fe3162 2.31%,
-              #ff4f47 98.56%
-            );
-            margin-left: 4px;
-            max-height: 20px;
-            color:white;">Beta</label>'
-      tooltip: Use Control Tower to create and manage your AWS accounts, OUs, and controls, while under the hood, managing everything as code using Terraform.
+    - row: CIS-compliant AWS account baselines
+      standard: 'yes'
+      enterprise: 'yes'
+    - row: Custom Account Factory baselines
       standard: 'no'
+      enterprise: 'yes' 
+
+
+- title: Gruntwork Component Setup
+  subtitle: 'yes'
+  divider: 'no'
+  rows:
+    - row: Gruntwork Pipelines setup
+      standard: 'yes'
       enterprise: 'yes'
-    - row: 'AWS Identity Center (SSO)'
-      tooltip: Use Single Sign On (SSO) with an existing Identity Provider (e.g., Active Directory, Google, Okta) for authentication and authorization in your AWS accounts.
-      standard: 'no'
+    - row: 'Gruntwork Patcher setup <div style=" background: linear-gradient( 101.84deg, #fe3162 2.31%, #ff4f47 98.56% ); margin-left: 5px; " class="label-beta"> BETA </div>'
+      standard: 'yes'
       enterprise: 'yes'
-    - row: 'Guard Rails: SCPs, Config Rules'
-      tooltip: Configure guard rails for all your AWS accounts using Service Control Policies (SCPs) and AWS Config Rules.
+
+- title: Network configuration
+  subtitle: 'yes'
+  divider: 'yes'
+  rows:
+    - row: '<span class="light" style="display: inline; flex-wrap: wrap; align-items: center"><div class="table-tooltip">The standard network configuration provides an app VPC with multiple public & private subnet tiers including IGWs, public NGWs, and NACLs.</div>Standard secure network </br>configuration<svg style="position:relative; left:3px;" width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.50439 18.021C14.1626 18.021 18.021 14.1626 18.021 9.49561C18.021 4.8374 14.1538 0.979004 9.49561 0.979004C4.8374 0.979004 0.979004 4.8374 0.979004 9.49561C0.979004 14.1626 4.84619 18.021 9.50439 18.021ZM9.50439 16.5005C5.61963 16.5005 2.5083 13.3892 2.5083 9.49561C2.5083 5.61084 5.61084 2.49072 9.49561 2.49072C13.3804 2.49072 16.5005 5.61084 16.5093 9.49561C16.5181 13.3892 13.3892 16.5005 9.50439 16.5005ZM9.43408 6.58643C10.0493 6.58643 10.5327 6.09424 10.5327 5.48779C10.5327 4.86377 10.0493 4.38037 9.43408 4.38037C8.82764 4.38037 8.33545 4.86377 8.33545 5.48779C8.33545 6.09424 8.82764 6.58643 9.43408 6.58643ZM8.03662 14.0571H11.4204C11.772 14.0571 12.0532 13.8022 12.0532 13.4419C12.0532 13.1079 11.772 12.8442 11.4204 12.8442H10.4272V8.71338C10.4272 8.24756 10.1899 7.93994 9.75928 7.93994H8.18604C7.83447 7.93994 7.56201 8.20361 7.56201 8.5376C7.56201 8.89795 7.83447 9.15283 8.18604 9.15283H9.05615V12.8442H8.03662C7.69385 12.8442 7.4126 13.1079 7.4126 13.4419C7.4126 13.8022 7.69385 14.0571 8.03662 14.0571Z" fill="#2A5F74"/></svg></span>'
+      standard: 'yes'
+      enterprise: 'yes'
+    - row: '<span class="light" style="display: inline; flex-wrap: wrap; align-items: center"><div class="table-tooltip">Work with a Gruntwork Solutions Architect to design a network that suits your needs, with features such as an AWS Transit Gateway, inspection VPC, AWS Firewall manager, RAM networks, zero-trust networks, IPAM, IPv6, and more.</div>Custom network design<svg style="position:relative; left:3px;" width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.50439 18.021C14.1626 18.021 18.021 14.1626 18.021 9.49561C18.021 4.8374 14.1538 0.979004 9.49561 0.979004C4.8374 0.979004 0.979004 4.8374 0.979004 9.49561C0.979004 14.1626 4.84619 18.021 9.50439 18.021ZM9.50439 16.5005C5.61963 16.5005 2.5083 13.3892 2.5083 9.49561C2.5083 5.61084 5.61084 2.49072 9.49561 2.49072C13.3804 2.49072 16.5005 5.61084 16.5093 9.49561C16.5181 13.3892 13.3892 16.5005 9.50439 16.5005ZM9.43408 6.58643C10.0493 6.58643 10.5327 6.09424 10.5327 5.48779C10.5327 4.86377 10.0493 4.38037 9.43408 4.38037C8.82764 4.38037 8.33545 4.86377 8.33545 5.48779C8.33545 6.09424 8.82764 6.58643 9.43408 6.58643ZM8.03662 14.0571H11.4204C11.772 14.0571 12.0532 13.8022 12.0532 13.4419C12.0532 13.1079 11.772 12.8442 11.4204 12.8442H10.4272V8.71338C10.4272 8.24756 10.1899 7.93994 9.75928 7.93994H8.18604C7.83447 7.93994 7.56201 8.20361 7.56201 8.5376C7.56201 8.89795 7.83447 9.15283 8.18604 9.15283H9.05615V12.8442H8.03662C7.69385 12.8442 7.4126 13.1079 7.4126 13.4419C7.4126 13.8022 7.69385 14.0571 8.03662 14.0571Z" fill="#2A5F74"/></svg></span>'
       standard: 'no'
       enterprise: 'yes'
 
-- title: Gruntwork Pipelines
-  tooltip: 
+- title: Account Factory
+  subtitle: 'no'
+  divider: 'yes'
   rows:
-    - row: 'Secure, isolated workers'
-      tooltip: Instead of directly giving your CI server admin-level permissions needed to launch arbitrary infrastructure, Gruntwork Pipelines enables a secure infrastructure pipeline by granting the sensitive permissions solely to an isolated worker that exposes a limited, locked down interface.
+    - row: Vend individual AWS accounts
       standard: 'yes'
       enterprise: 'yes'
-    - row: '<span class="badge light" style="margin-right: 4px;">Plan</span>
-        <span class="light" style="margin-right: 4px;">and</span>
-        <span class="badge light" style="margin-right: 4px;">apply</span>
-        workflows'
-      tooltip: Automatically run terraform/terragrunt 'plan' on PRs and 'apply' on merge.
+    - row: Centralized account approval workflow
       standard: 'yes'
       enterprise: 'yes'
-    - row: 'Approval workflows'
-      tooltip: Automatically require approvals for terraform/terragrunt 'plan' output before an 'apply' is allowed. Includes Slack integration for a ChatOps driven approach.
+    - row: CIS-compliant AWS baselines for all vended accounts
       standard: 'yes'
       enterprise: 'yes'
-    - row: 'Promotion workflows'
-      tooltip: 'Automatically promote releases across your environments: e.g., dev -> stage -> prod.'
+    - row: Gruntwork Pipelines auto-configured for all vended accounts
+      standard: 'yes'
+      enterprise: 'yes'
+    - row: 'Gruntwork Patcher <div style=" background: linear-gradient( 101.84deg, #fe3162 2.31%, #ff4f47 98.56% ); margin-left: 5px; " class="label-beta"> BETA </div> auto-configured for all vended accounts'
+      standard: 'yes'
+      enterprise: 'yes'
+    - row: Promotion workflows auto-configured for all vended accounts
+      standard: 'yes'
+      enterprise: 'yes'
+    - row: '<span class="light" style="display: inline; flex-wrap: wrap; align-items: center"><div class="table-tooltip">Vend a set of accounts, such as dev/stage/prod, in a single, automated operation.</div>Multi-account vending<svg style="position:relative; left:3px;" width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.50439 18.021C14.1626 18.021 18.021 14.1626 18.021 9.49561C18.021 4.8374 14.1538 0.979004 9.49561 0.979004C4.8374 0.979004 0.979004 4.8374 0.979004 9.49561C0.979004 14.1626 4.84619 18.021 9.50439 18.021ZM9.50439 16.5005C5.61963 16.5005 2.5083 13.3892 2.5083 9.49561C2.5083 5.61084 5.61084 2.49072 9.49561 2.49072C13.3804 2.49072 16.5005 5.61084 16.5093 9.49561C16.5181 13.3892 13.3892 16.5005 9.50439 16.5005ZM9.43408 6.58643C10.0493 6.58643 10.5327 6.09424 10.5327 5.48779C10.5327 4.86377 10.0493 4.38037 9.43408 4.38037C8.82764 4.38037 8.33545 4.86377 8.33545 5.48779C8.33545 6.09424 8.82764 6.58643 9.43408 6.58643ZM8.03662 14.0571H11.4204C11.772 14.0571 12.0532 13.8022 12.0532 13.4419C12.0532 13.1079 11.772 12.8442 11.4204 12.8442H10.4272V8.71338C10.4272 8.24756 10.1899 7.93994 9.75928 7.93994H8.18604C7.83447 7.93994 7.56201 8.20361 7.56201 8.5376C7.56201 8.89795 7.83447 9.15283 8.18604 9.15283H9.05615V12.8442H8.03662C7.69385 12.8442 7.4126 13.1079 7.4126 13.4419C7.4126 13.8022 7.69385 14.0571 8.03662 14.0571Z" fill="#2A5F74"/></svg></span>'
+      standard: 'no'
+      enterprise: 'yes'
+    - row: '<span class="light" style="display: inline; flex-wrap: wrap; align-items: center"><div class="table-tooltip">Vend a separate infrastructure repository for each team/project.</div>Multi-repo vending for project/teams<svg style="position:relative; left:3px;" width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.50439 18.021C14.1626 18.021 18.021 14.1626 18.021 9.49561C18.021 4.8374 14.1538 0.979004 9.49561 0.979004C4.8374 0.979004 0.979004 4.8374 0.979004 9.49561C0.979004 14.1626 4.84619 18.021 9.50439 18.021ZM9.50439 16.5005C5.61963 16.5005 2.5083 13.3892 2.5083 9.49561C2.5083 5.61084 5.61084 2.49072 9.49561 2.49072C13.3804 2.49072 16.5005 5.61084 16.5093 9.49561C16.5181 13.3892 13.3892 16.5005 9.50439 16.5005ZM9.43408 6.58643C10.0493 6.58643 10.5327 6.09424 10.5327 5.48779C10.5327 4.86377 10.0493 4.38037 9.43408 4.38037C8.82764 4.38037 8.33545 4.86377 8.33545 5.48779C8.33545 6.09424 8.82764 6.58643 9.43408 6.58643ZM8.03662 14.0571H11.4204C11.772 14.0571 12.0532 13.8022 12.0532 13.4419C12.0532 13.1079 11.772 12.8442 11.4204 12.8442H10.4272V8.71338C10.4272 8.24756 10.1899 7.93994 9.75928 7.93994H8.18604C7.83447 7.93994 7.56201 8.20361 7.56201 8.5376C7.56201 8.89795 7.83447 9.15283 8.18604 9.15283H9.05615V12.8442H8.03662C7.69385 12.8442 7.4126 13.1079 7.4126 13.4419C7.4126 13.8022 7.69385 14.0571 8.03662 14.0571Z" fill="#2A5F74"/></svg></span>'
+      standard: 'no'
+      enterprise: 'yes'
+    - row: Customized baselines for all vended accounts
       standard: 'no'
       enterprise: 'yes'
 
-- title: 'Patcher<label class="label-beta label-small" style="right: -10px;background: linear-gradient(
-              101.84deg,
-              #fe3162 2.31%,
-              #ff4f47 98.56%
-            );
-            margin-left: 4px;
-            max-height: 20px;
-            color:white;">Beta</label>'
-  tooltip: 
+- title: Pipelines
+  subtitle: 'no'
+  divider: 'yes'
   rows:
-    - row: 'CLI-driven updates'
-      tooltip: Use the patcher CLI to automatically update your Terraform and Terragrunt dependencies.
+    - row: Pull request driven workflow
       standard: 'yes'
       enterprise: 'yes'
-    - row: 'Patch breaking changes'
-      tooltip: When a new release contains breaking changes, Patcher can automatically apply patches from the maintainer to transform your code to work around the backward compatibility.
+    - row: GitOps infrastructure deployments
       standard: 'yes'
       enterprise: 'yes'
-    - row: 'Automated (PR-driven) updates'
-      tooltip: When new releases come out, get automated pull-requests to update you to the new version.
+    - row: Terragrunt plan/apply/destroy
+      standard: 'yes'
+      enterprise: 'yes'
+    - row: '<span class="light" style="display: inline; flex-wrap: wrap; align-items: center"><div class="table-tooltip">Due to licensing restrictions, we can only support Terraform 1.5.x and earlier.</div>Works with OpenTofu and Terraform<svg style="position:relative; left:3px;" width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.50439 18.021C14.1626 18.021 18.021 14.1626 18.021 9.49561C18.021 4.8374 14.1538 0.979004 9.49561 0.979004C4.8374 0.979004 0.979004 4.8374 0.979004 9.49561C0.979004 14.1626 4.84619 18.021 9.50439 18.021ZM9.50439 16.5005C5.61963 16.5005 2.5083 13.3892 2.5083 9.49561C2.5083 5.61084 5.61084 2.49072 9.49561 2.49072C13.3804 2.49072 16.5005 5.61084 16.5093 9.49561C16.5181 13.3892 13.3892 16.5005 9.50439 16.5005ZM9.43408 6.58643C10.0493 6.58643 10.5327 6.09424 10.5327 5.48779C10.5327 4.86377 10.0493 4.38037 9.43408 4.38037C8.82764 4.38037 8.33545 4.86377 8.33545 5.48779C8.33545 6.09424 8.82764 6.58643 9.43408 6.58643ZM8.03662 14.0571H11.4204C11.772 14.0571 12.0532 13.8022 12.0532 13.4419C12.0532 13.1079 11.772 12.8442 11.4204 12.8442H10.4272V8.71338C10.4272 8.24756 10.1899 7.93994 9.75928 7.93994H8.18604C7.83447 7.93994 7.56201 8.20361 7.56201 8.5376C7.56201 8.89795 7.83447 9.15283 8.18604 9.15283H9.05615V12.8442H8.03662C7.69385 12.8442 7.4126 13.1079 7.4126 13.4419C7.4126 13.8022 7.69385 14.0571 8.03662 14.0571Z" fill="#2A5F74"/></svg></span>'
+      standard: 'yes'
+      enterprise: 'yes'
+    - row: '<span class="light" style="display: inline; flex-wrap: wrap; align-items: center"><div class="table-tooltip">Access AWS with automatically managed and rotated credentials (instead of manually managed, long-lived secrets).</div>Use OIDC for AWS authentication<svg style="position:relative; left:3px;" width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.50439 18.021C14.1626 18.021 18.021 14.1626 18.021 9.49561C18.021 4.8374 14.1538 0.979004 9.49561 0.979004C4.8374 0.979004 0.979004 4.8374 0.979004 9.49561C0.979004 14.1626 4.84619 18.021 9.50439 18.021ZM9.50439 16.5005C5.61963 16.5005 2.5083 13.3892 2.5083 9.49561C2.5083 5.61084 5.61084 2.49072 9.49561 2.49072C13.3804 2.49072 16.5005 5.61084 16.5093 9.49561C16.5181 13.3892 13.3892 16.5005 9.50439 16.5005ZM9.43408 6.58643C10.0493 6.58643 10.5327 6.09424 10.5327 5.48779C10.5327 4.86377 10.0493 4.38037 9.43408 4.38037C8.82764 4.38037 8.33545 4.86377 8.33545 5.48779C8.33545 6.09424 8.82764 6.58643 9.43408 6.58643ZM8.03662 14.0571H11.4204C11.772 14.0571 12.0532 13.8022 12.0532 13.4419C12.0532 13.1079 11.772 12.8442 11.4204 12.8442H10.4272V8.71338C10.4272 8.24756 10.1899 7.93994 9.75928 7.93994H8.18604C7.83447 7.93994 7.56201 8.20361 7.56201 8.5376C7.56201 8.89795 7.83447 9.15283 8.18604 9.15283H9.05615V12.8442H8.03662C7.69385 12.8442 7.4126 13.1079 7.4126 13.4419C7.4126 13.8022 7.69385 14.0571 8.03662 14.0571Z" fill="#2A5F74"/></svg></span>'
+      standard: 'no'
+      enterprise: 'no'
+    - row: '<span class="light" style="display: inline; flex-wrap: wrap; align-items: center"><div class="table-tooltip">Automatically capture the underlying user who triggered the CI/CD pipeline in the IAM role session name, so you can audit all API calls in CloudTrail.</div>Audit logging with intelligent pass-through<svg style="position:relative; left:3px;" width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.50439 18.021C14.1626 18.021 18.021 14.1626 18.021 9.49561C18.021 4.8374 14.1538 0.979004 9.49561 0.979004C4.8374 0.979004 0.979004 4.8374 0.979004 9.49561C0.979004 14.1626 4.84619 18.021 9.50439 18.021ZM9.50439 16.5005C5.61963 16.5005 2.5083 13.3892 2.5083 9.49561C2.5083 5.61084 5.61084 2.49072 9.49561 2.49072C13.3804 2.49072 16.5005 5.61084 16.5093 9.49561C16.5181 13.3892 13.3892 16.5005 9.50439 16.5005ZM9.43408 6.58643C10.0493 6.58643 10.5327 6.09424 10.5327 5.48779C10.5327 4.86377 10.0493 4.38037 9.43408 4.38037C8.82764 4.38037 8.33545 4.86377 8.33545 5.48779C8.33545 6.09424 8.82764 6.58643 9.43408 6.58643ZM8.03662 14.0571H11.4204C11.772 14.0571 12.0532 13.8022 12.0532 13.4419C12.0532 13.1079 11.772 12.8442 11.4204 12.8442H10.4272V8.71338C10.4272 8.24756 10.1899 7.93994 9.75928 7.93994H8.18604C7.83447 7.93994 7.56201 8.20361 7.56201 8.5376C7.56201 8.89795 7.83447 9.15283 8.18604 9.15283H9.05615V12.8442H8.03662C7.69385 12.8442 7.4126 13.1079 7.4126 13.4419C7.4126 13.8022 7.69385 14.0571 8.03662 14.0571Z" fill="#2A5F74"/></svg></span>'
+      standard: 'yes'
+      enterprise: 'yes'
+    - row: '<span class="light" style="display: inline; flex-wrap: wrap; align-items: center"><div class="table-tooltip">Vend a set of accounts, such as dev/stage/prod, in a single, automated operation.</div>Multi-account vending<svg style="position:relative; left:3px;" width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.50439 18.021C14.1626 18.021 18.021 14.1626 18.021 9.49561C18.021 4.8374 14.1538 0.979004 9.49561 0.979004C4.8374 0.979004 0.979004 4.8374 0.979004 9.49561C0.979004 14.1626 4.84619 18.021 9.50439 18.021ZM9.50439 16.5005C5.61963 16.5005 2.5083 13.3892 2.5083 9.49561C2.5083 5.61084 5.61084 2.49072 9.49561 2.49072C13.3804 2.49072 16.5005 5.61084 16.5093 9.49561C16.5181 13.3892 13.3892 16.5005 9.50439 16.5005ZM9.43408 6.58643C10.0493 6.58643 10.5327 6.09424 10.5327 5.48779C10.5327 4.86377 10.0493 4.38037 9.43408 4.38037C8.82764 4.38037 8.33545 4.86377 8.33545 5.48779C8.33545 6.09424 8.82764 6.58643 9.43408 6.58643ZM8.03662 14.0571H11.4204C11.772 14.0571 12.0532 13.8022 12.0532 13.4419C12.0532 13.1079 11.772 12.8442 11.4204 12.8442H10.4272V8.71338C10.4272 8.24756 10.1899 7.93994 9.75928 7.93994H8.18604C7.83447 7.93994 7.56201 8.20361 7.56201 8.5376C7.56201 8.89795 7.83447 9.15283 8.18604 9.15283H9.05615V12.8442H8.03662C7.69385 12.8442 7.4126 13.1079 7.4126 13.4419C7.4126 13.8022 7.69385 14.0571 8.03662 14.0571Z" fill="#2A5F74"/></svg></span>'
+      standard: 'yes'
+      enterprise: 'yes'
+    - row: '<span class="light" style="display: inline; flex-wrap: wrap; align-items: center"><div class="table-tooltip">We provide a single place and tooling to vend IAM roles that give each app team the permissions they need.</div>Centralized IAM role provisioning<svg style="position:relative; left:3px;" width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.50439 18.021C14.1626 18.021 18.021 14.1626 18.021 9.49561C18.021 4.8374 14.1538 0.979004 9.49561 0.979004C4.8374 0.979004 0.979004 4.8374 0.979004 9.49561C0.979004 14.1626 4.84619 18.021 9.50439 18.021ZM9.50439 16.5005C5.61963 16.5005 2.5083 13.3892 2.5083 9.49561C2.5083 5.61084 5.61084 2.49072 9.49561 2.49072C13.3804 2.49072 16.5005 5.61084 16.5093 9.49561C16.5181 13.3892 13.3892 16.5005 9.50439 16.5005ZM9.43408 6.58643C10.0493 6.58643 10.5327 6.09424 10.5327 5.48779C10.5327 4.86377 10.0493 4.38037 9.43408 4.38037C8.82764 4.38037 8.33545 4.86377 8.33545 5.48779C8.33545 6.09424 8.82764 6.58643 9.43408 6.58643ZM8.03662 14.0571H11.4204C11.772 14.0571 12.0532 13.8022 12.0532 13.4419C12.0532 13.1079 11.772 12.8442 11.4204 12.8442H10.4272V8.71338C10.4272 8.24756 10.1899 7.93994 9.75928 7.93994H8.18604C7.83447 7.93994 7.56201 8.20361 7.56201 8.5376C7.56201 8.89795 7.83447 9.15283 8.18604 9.15283H9.05615V12.8442H8.03662C7.69385 12.8442 7.4126 13.1079 7.4126 13.4419C7.4126 13.8022 7.69385 14.0571 8.03662 14.0571Z" fill="#2A5F74"/></svg></span>'
+      standard: 'yes'
+      enterprise: 'yes'
+    - row: '<span class="light" style="display: inline; flex-wrap: wrap; align-items: center"><div class="table-tooltip">Automatically provision least-privilege IAM roles for use with OIDC, limiting each team to only the GitHub repos, AWS accounts, and AWS resources they should have access to.</div>Least-privilege OIDC roles<svg style="position:relative; left:3px;" width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.50439 18.021C14.1626 18.021 18.021 14.1626 18.021 9.49561C18.021 4.8374 14.1538 0.979004 9.49561 0.979004C4.8374 0.979004 0.979004 4.8374 0.979004 9.49561C0.979004 14.1626 4.84619 18.021 9.50439 18.021ZM9.50439 16.5005C5.61963 16.5005 2.5083 13.3892 2.5083 9.49561C2.5083 5.61084 5.61084 2.49072 9.49561 2.49072C13.3804 2.49072 16.5005 5.61084 16.5093 9.49561C16.5181 13.3892 13.3892 16.5005 9.50439 16.5005ZM9.43408 6.58643C10.0493 6.58643 10.5327 6.09424 10.5327 5.48779C10.5327 4.86377 10.0493 4.38037 9.43408 4.38037C8.82764 4.38037 8.33545 4.86377 8.33545 5.48779C8.33545 6.09424 8.82764 6.58643 9.43408 6.58643ZM8.03662 14.0571H11.4204C11.772 14.0571 12.0532 13.8022 12.0532 13.4419C12.0532 13.1079 11.772 12.8442 11.4204 12.8442H10.4272V8.71338C10.4272 8.24756 10.1899 7.93994 9.75928 7.93994H8.18604C7.83447 7.93994 7.56201 8.20361 7.56201 8.5376C7.56201 8.89795 7.83447 9.15283 8.18604 9.15283H9.05615V12.8442H8.03662C7.69385 12.8442 7.4126 13.1079 7.4126 13.4419C7.4126 13.8022 7.69385 14.0571 8.03662 14.0571Z" fill="#2A5F74"/></svg></span>'
+      standard: 'yes'
+      enterprise: 'yes'
+    - row: '<span class="light" style="display: inline; flex-wrap: wrap; align-items: center"><div class="table-tooltip">A “team” refers to a unique git repo used to manage infrastructure-as-code. Only git repos that use Gruntwork Pipelines require a team license.</div>Number of team licenses included<svg style="position:relative; left:3px;" width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.50439 18.021C14.1626 18.021 18.021 14.1626 18.021 9.49561C18.021 4.8374 14.1538 0.979004 9.49561 0.979004C4.8374 0.979004 0.979004 4.8374 0.979004 9.49561C0.979004 14.1626 4.84619 18.021 9.50439 18.021ZM9.50439 16.5005C5.61963 16.5005 2.5083 13.3892 2.5083 9.49561C2.5083 5.61084 5.61084 2.49072 9.49561 2.49072C13.3804 2.49072 16.5005 5.61084 16.5093 9.49561C16.5181 13.3892 13.3892 16.5005 9.50439 16.5005ZM9.43408 6.58643C10.0493 6.58643 10.5327 6.09424 10.5327 5.48779C10.5327 4.86377 10.0493 4.38037 9.43408 4.38037C8.82764 4.38037 8.33545 4.86377 8.33545 5.48779C8.33545 6.09424 8.82764 6.58643 9.43408 6.58643ZM8.03662 14.0571H11.4204C11.772 14.0571 12.0532 13.8022 12.0532 13.4419C12.0532 13.1079 11.772 12.8442 11.4204 12.8442H10.4272V8.71338C10.4272 8.24756 10.1899 7.93994 9.75928 7.93994H8.18604C7.83447 7.93994 7.56201 8.20361 7.56201 8.5376C7.56201 8.89795 7.83447 9.15283 8.18604 9.15283H9.05615V12.8442H8.03662C7.69385 12.8442 7.4126 13.1079 7.4126 13.4419C7.4126 13.8022 7.69385 14.0571 8.03662 14.0571Z" fill="#2A5F74"/></svg></span>'
+      standard: '1'
+      enterprise: '2+'
+
+- title: 'Patcher <div style=" background: linear-gradient( 101.84deg, #fe3162 2.31%, #ff4f47 98.56% ); margin-left: 5px; " class="label-beta"> BETA </div>'
+  subtitle: 'no'
+  divider: 'yes'
+  rows:
+    - row: '<span class="light" style="display: inline; flex-wrap: wrap; align-items: center"><div class="table-tooltip">Keep your infrastructure modules up to date with automatic PRs for any releases of module dependencies.</div>Automatic PRs for module dependency updates<svg style="position:relative; left:3px;" width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.50439 18.021C14.1626 18.021 18.021 14.1626 18.021 9.49561C18.021 4.8374 14.1538 0.979004 9.49561 0.979004C4.8374 0.979004 0.979004 4.8374 0.979004 9.49561C0.979004 14.1626 4.84619 18.021 9.50439 18.021ZM9.50439 16.5005C5.61963 16.5005 2.5083 13.3892 2.5083 9.49561C2.5083 5.61084 5.61084 2.49072 9.49561 2.49072C13.3804 2.49072 16.5005 5.61084 16.5093 9.49561C16.5181 13.3892 13.3892 16.5005 9.50439 16.5005ZM9.43408 6.58643C10.0493 6.58643 10.5327 6.09424 10.5327 5.48779C10.5327 4.86377 10.0493 4.38037 9.43408 4.38037C8.82764 4.38037 8.33545 4.86377 8.33545 5.48779C8.33545 6.09424 8.82764 6.58643 9.43408 6.58643ZM8.03662 14.0571H11.4204C11.772 14.0571 12.0532 13.8022 12.0532 13.4419C12.0532 13.1079 11.772 12.8442 11.4204 12.8442H10.4272V8.71338C10.4272 8.24756 10.1899 7.93994 9.75928 7.93994H8.18604C7.83447 7.93994 7.56201 8.20361 7.56201 8.5376C7.56201 8.89795 7.83447 9.15283 8.18604 9.15283H9.05615V12.8442H8.03662C7.69385 12.8442 7.4126 13.1079 7.4126 13.4419C7.4126 13.8022 7.69385 14.0571 8.03662 14.0571Z" fill="#2A5F74"/></svg></span>'
+      standard: 'yes'
+      enterprise: 'yes'
+    - row: '<span class="light" style="display: inline; flex-wrap: wrap; align-items: center"><div class="table-tooltip">Keep your live infrastructure up to date with automatic PRs for any releases of module dependencies.</div>Automatic PRs for live infrastructure updates<svg style="position:relative; left:3px;" width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.50439 18.021C14.1626 18.021 18.021 14.1626 18.021 9.49561C18.021 4.8374 14.1538 0.979004 9.49561 0.979004C4.8374 0.979004 0.979004 4.8374 0.979004 9.49561C0.979004 14.1626 4.84619 18.021 9.50439 18.021ZM9.50439 16.5005C5.61963 16.5005 2.5083 13.3892 2.5083 9.49561C2.5083 5.61084 5.61084 2.49072 9.49561 2.49072C13.3804 2.49072 16.5005 5.61084 16.5093 9.49561C16.5181 13.3892 13.3892 16.5005 9.50439 16.5005ZM9.43408 6.58643C10.0493 6.58643 10.5327 6.09424 10.5327 5.48779C10.5327 4.86377 10.0493 4.38037 9.43408 4.38037C8.82764 4.38037 8.33545 4.86377 8.33545 5.48779C8.33545 6.09424 8.82764 6.58643 9.43408 6.58643ZM8.03662 14.0571H11.4204C11.772 14.0571 12.0532 13.8022 12.0532 13.4419C12.0532 13.1079 11.772 12.8442 11.4204 12.8442H10.4272V8.71338C10.4272 8.24756 10.1899 7.93994 9.75928 7.93994H8.18604C7.83447 7.93994 7.56201 8.20361 7.56201 8.5376C7.56201 8.89795 7.83447 9.15283 8.18604 9.15283H9.05615V12.8442H8.03662C7.69385 12.8442 7.4126 13.1079 7.4126 13.4419C7.4126 13.8022 7.69385 14.0571 8.03662 14.0571Z" fill="#2A5F74"/></svg></span>'
+      standard: 'yes'
+      enterprise: 'yes'
+    - row: '<span class="light" style="display: inline; flex-wrap: wrap; align-items: center"><div class="table-tooltip">Safely and automatically propagate changes from dev to stage to prod, building confidence at each step.</div>Promote changes across </br> environments<svg style="position:relative; left:3px;" width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.50439 18.021C14.1626 18.021 18.021 14.1626 18.021 9.49561C18.021 4.8374 14.1538 0.979004 9.49561 0.979004C4.8374 0.979004 0.979004 4.8374 0.979004 9.49561C0.979004 14.1626 4.84619 18.021 9.50439 18.021ZM9.50439 16.5005C5.61963 16.5005 2.5083 13.3892 2.5083 9.49561C2.5083 5.61084 5.61084 2.49072 9.49561 2.49072C13.3804 2.49072 16.5005 5.61084 16.5093 9.49561C16.5181 13.3892 13.3892 16.5005 9.50439 16.5005ZM9.43408 6.58643C10.0493 6.58643 10.5327 6.09424 10.5327 5.48779C10.5327 4.86377 10.0493 4.38037 9.43408 4.38037C8.82764 4.38037 8.33545 4.86377 8.33545 5.48779C8.33545 6.09424 8.82764 6.58643 9.43408 6.58643ZM8.03662 14.0571H11.4204C11.772 14.0571 12.0532 13.8022 12.0532 13.4419C12.0532 13.1079 11.772 12.8442 11.4204 12.8442H10.4272V8.71338C10.4272 8.24756 10.1899 7.93994 9.75928 7.93994H8.18604C7.83447 7.93994 7.56201 8.20361 7.56201 8.5376C7.56201 8.89795 7.83447 9.15283 8.18604 9.15283H9.05615V12.8442H8.03662C7.69385 12.8442 7.4126 13.1079 7.4126 13.4419C7.4126 13.8022 7.69385 14.0571 8.03662 14.0571Z" fill="#2A5F74"/></svg></span>'
+      standard: 'yes'
+      enterprise: 'yes'
+
+- title: Library
+  subtitle: 'no'
+  divider: 'no'
+  rows:
+    - row: Library user licenses
+      standard: '5 </br> Upgradeable to a maximum of 30'
+      enterprise: '20+'
+    - row: Machine user licenses 
+      standard: '2'
+      enterprise: '4+'
+    - row: Commercial maintenance for all modules
+      standard: 'yes'
+      enterprise: 'yes'
+    - row: Thoroughly tested using Terratest & Terrascan
+      standard: 'yes'
+      enterprise: 'yes'
+    - row: '<span class="light" style="display: inline; flex-wrap: wrap; align-items: center"><div class="table-tooltip">Due to licensing restrictions, we can only support Terraform 1.5.x and earlier.</div>Compatible with OpenTofu, Terraform, & Terragrunt<svg style="position:relative; left:3px;" width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.50439 18.021C14.1626 18.021 18.021 14.1626 18.021 9.49561C18.021 4.8374 14.1538 0.979004 9.49561 0.979004C4.8374 0.979004 0.979004 4.8374 0.979004 9.49561C0.979004 14.1626 4.84619 18.021 9.50439 18.021ZM9.50439 16.5005C5.61963 16.5005 2.5083 13.3892 2.5083 9.49561C2.5083 5.61084 5.61084 2.49072 9.49561 2.49072C13.3804 2.49072 16.5005 5.61084 16.5093 9.49561C16.5181 13.3892 13.3892 16.5005 9.50439 16.5005ZM9.43408 6.58643C10.0493 6.58643 10.5327 6.09424 10.5327 5.48779C10.5327 4.86377 10.0493 4.38037 9.43408 4.38037C8.82764 4.38037 8.33545 4.86377 8.33545 5.48779C8.33545 6.09424 8.82764 6.58643 9.43408 6.58643ZM8.03662 14.0571H11.4204C11.772 14.0571 12.0532 13.8022 12.0532 13.4419C12.0532 13.1079 11.772 12.8442 11.4204 12.8442H10.4272V8.71338C10.4272 8.24756 10.1899 7.93994 9.75928 7.93994H8.18604C7.83447 7.93994 7.56201 8.20361 7.56201 8.5376C7.56201 8.89795 7.83447 9.15283 8.18604 9.15283H9.05615V12.8442H8.03662C7.69385 12.8442 7.4126 13.1079 7.4126 13.4419C7.4126 13.8022 7.69385 14.0571 8.03662 14.0571Z" fill="#2A5F74"/></svg></span>'
+      standard: 'yes'
+      enterprise: 'yes'
+    - row: Self-hosted private mirror of Gruntwork Library
       standard: 'no'
       enterprise: 'yes'
 
-- title: IaC Library
-  tooltip: 
+- title: AWS Foundations
+  subtitle: 'yes'
+  divider: 'no'
   rows:
-    - row: 'Orchestration: ECS, EKS, EC2, ASG'
-      tooltip: Reusable, battle-tested Terraform modules for deploying application workloads on top of ECS, EKS, EC2, and ASGs.
+    - row: '<span class="light" style="display: inline; flex-wrap: wrap; align-items: center"><div class="table-tooltip">Our VPC module is compliant with the CIS AWS Foundations Benchmark</div>CIS-compliant VPC<svg style="position:relative; left:3px;" width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.50439 18.021C14.1626 18.021 18.021 14.1626 18.021 9.49561C18.021 4.8374 14.1538 0.979004 9.49561 0.979004C4.8374 0.979004 0.979004 4.8374 0.979004 9.49561C0.979004 14.1626 4.84619 18.021 9.50439 18.021ZM9.50439 16.5005C5.61963 16.5005 2.5083 13.3892 2.5083 9.49561C2.5083 5.61084 5.61084 2.49072 9.49561 2.49072C13.3804 2.49072 16.5005 5.61084 16.5093 9.49561C16.5181 13.3892 13.3892 16.5005 9.50439 16.5005ZM9.43408 6.58643C10.0493 6.58643 10.5327 6.09424 10.5327 5.48779C10.5327 4.86377 10.0493 4.38037 9.43408 4.38037C8.82764 4.38037 8.33545 4.86377 8.33545 5.48779C8.33545 6.09424 8.82764 6.58643 9.43408 6.58643ZM8.03662 14.0571H11.4204C11.772 14.0571 12.0532 13.8022 12.0532 13.4419C12.0532 13.1079 11.772 12.8442 11.4204 12.8442H10.4272V8.71338C10.4272 8.24756 10.1899 7.93994 9.75928 7.93994H8.18604C7.83447 7.93994 7.56201 8.20361 7.56201 8.5376C7.56201 8.89795 7.83447 9.15283 8.18604 9.15283H9.05615V12.8442H8.03662C7.69385 12.8442 7.4126 13.1079 7.4126 13.4419C7.4126 13.8022 7.69385 14.0571 8.03662 14.0571Z" fill="#2A5F74"/></svg></span>'
       standard: 'yes'
       enterprise: 'yes'
-    - row: 'Data stores: RDS, ElastiCache, S3'
-      tooltip: Reusable, battle-tested Terraform modules for deploying data stores such as RDS, ElastiCache, and S3.
+    - row: '<span class="light" style="display: inline; flex-wrap: wrap; align-items: center"><div class="table-tooltip">Our account baseline module is compliant with the CIS AWS Foundations Benchmark</div>CIS-compliant Account Baseline<svg style="position:relative; left:3px;" width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.50439 18.021C14.1626 18.021 18.021 14.1626 18.021 9.49561C18.021 4.8374 14.1538 0.979004 9.49561 0.979004C4.8374 0.979004 0.979004 4.8374 0.979004 9.49561C0.979004 14.1626 4.84619 18.021 9.50439 18.021ZM9.50439 16.5005C5.61963 16.5005 2.5083 13.3892 2.5083 9.49561C2.5083 5.61084 5.61084 2.49072 9.49561 2.49072C13.3804 2.49072 16.5005 5.61084 16.5093 9.49561C16.5181 13.3892 13.3892 16.5005 9.50439 16.5005ZM9.43408 6.58643C10.0493 6.58643 10.5327 6.09424 10.5327 5.48779C10.5327 4.86377 10.0493 4.38037 9.43408 4.38037C8.82764 4.38037 8.33545 4.86377 8.33545 5.48779C8.33545 6.09424 8.82764 6.58643 9.43408 6.58643ZM8.03662 14.0571H11.4204C11.772 14.0571 12.0532 13.8022 12.0532 13.4419C12.0532 13.1079 11.772 12.8442 11.4204 12.8442H10.4272V8.71338C10.4272 8.24756 10.1899 7.93994 9.75928 7.93994H8.18604C7.83447 7.93994 7.56201 8.20361 7.56201 8.5376C7.56201 8.89795 7.83447 9.15283 8.18604 9.15283H9.05615V12.8442H8.03662C7.69385 12.8442 7.4126 13.1079 7.4126 13.4419C7.4126 13.8022 7.69385 14.0571 8.03662 14.0571Z" fill="#2A5F74"/></svg></span>'
       standard: 'yes'
       enterprise: 'yes'
-    - row: 'Analytics: Elasticsearch, Kafka'
-      tooltip: Reusable, battle-tested Terraform modules for deploying analytics, search, and streaming tools such as Elasticsearch, Kafka, and Kinesis.
+    - row: 'Dual Stack/IPv6 <div style=" background: linear-gradient( 101.84deg, #fe3162 2.31%, #ff4f47 98.56% ); margin-left: 5px; " class="label-beta"> BETA </div>'
       standard: 'yes'
-      enterprise: 'yes'
-    - row: 'Serverless: Lambda, API Gateway'
-      tooltip: Reusable, battle-tested Terraform modules for deploying serverless workloads on top of Lambda and API Gateway.
-      standard: 'yes'
-      enterprise: 'yes'
-    - row: 'Self-hosting (repo-copier)'
-      tooltip: Use the repo-copier CLI tool to copy all the Terraform code to your own version control system, including updating all internal cross-references and authentication details.
-      standard: 'no'
       enterprise: 'yes'
 
+- title: EKS & Running Apps
+  subtitle: 'yes'
+  divider: 'no'
+  rows:
+    - row: Robust EKS cluster support
+      standard: 'yes'
+      enterprise: 'yes'
+    - row: CArgoCD for EKS GitOps
+      standard: 'yes'
+      enterprise: 'yes'
+    - row: AWS ECS, ASG, EC2, and Lambda
+      standard: 'yes'
+      enterprise: 'yes'
+    - row: Application and Network load balancing
+      standard: 'yes'
+      enterprise: 'yes'
+
+- title: Storing Data & Event Streaming
+  subtitle: 'yes'
+  divider: 'yes'
+  rows:
+    - row: RDS, Aurora
+      standard: 'yes'
+      enterprise: 'yes'
+    - row: S3
+      standard: 'yes'
+      enterprise: 'yes'
+    - row: EFS
+      standard: 'yes'
+      enterprise: 'yes'
+    - row: ElastiCache
+      standard: 'yes'
+      enterprise: 'yes'
+    - row: MSK, SQS, SNS, Kinesis, Redshift
+      standard: 'yes'
+      enterprise: 'yes'
 
 - title: Support
-  tooltip: 
+  subtitle: 'no'
+  divider: 'no'
   rows:
-    - row: 'Community support'
-      tooltip: Get support from the Gruntwork team and other Gruntwork customers via the <a href="https://github.com/orgs/gruntwork-io/discussions">Gruntwork Knowledge Base</a>.
+    - row: '<span class="light" style="display: inline; flex-wrap: wrap; align-items: center"><div class="table-tooltip">Technical contacts are members of your team that can submit support requests via email.</div>Number of technical contacts<svg style="position:relative; left:3px;" width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.50439 18.021C14.1626 18.021 18.021 14.1626 18.021 9.49561C18.021 4.8374 14.1538 0.979004 9.49561 0.979004C4.8374 0.979004 0.979004 4.8374 0.979004 9.49561C0.979004 14.1626 4.84619 18.021 9.50439 18.021ZM9.50439 16.5005C5.61963 16.5005 2.5083 13.3892 2.5083 9.49561C2.5083 5.61084 5.61084 2.49072 9.49561 2.49072C13.3804 2.49072 16.5005 5.61084 16.5093 9.49561C16.5181 13.3892 13.3892 16.5005 9.50439 16.5005ZM9.43408 6.58643C10.0493 6.58643 10.5327 6.09424 10.5327 5.48779C10.5327 4.86377 10.0493 4.38037 9.43408 4.38037C8.82764 4.38037 8.33545 4.86377 8.33545 5.48779C8.33545 6.09424 8.82764 6.58643 9.43408 6.58643ZM8.03662 14.0571H11.4204C11.772 14.0571 12.0532 13.8022 12.0532 13.4419C12.0532 13.1079 11.772 12.8442 11.4204 12.8442H10.4272V8.71338C10.4272 8.24756 10.1899 7.93994 9.75928 7.93994H8.18604C7.83447 7.93994 7.56201 8.20361 7.56201 8.5376C7.56201 8.89795 7.83447 9.15283 8.18604 9.15283H9.05615V12.8442H8.03662C7.69385 12.8442 7.4126 13.1079 7.4126 13.4419C7.4126 13.8022 7.69385 14.0571 8.03662 14.0571Z" fill="#2A5F74"/></svg></span>'
+      standard: '2'
+      enterprise: '5+'
+    - row: '<span class="light" style="display: inline; flex-wrap: wrap; align-items: center"><div class="table-tooltip">Gruntwork has partnered with KodeKloud to give your team access to over 75 best-in-class DevOps training courses.</div>KodeKloud training licenses<svg style="position:relative; left:3px;" width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.50439 18.021C14.1626 18.021 18.021 14.1626 18.021 9.49561C18.021 4.8374 14.1538 0.979004 9.49561 0.979004C4.8374 0.979004 0.979004 4.8374 0.979004 9.49561C0.979004 14.1626 4.84619 18.021 9.50439 18.021ZM9.50439 16.5005C5.61963 16.5005 2.5083 13.3892 2.5083 9.49561C2.5083 5.61084 5.61084 2.49072 9.49561 2.49072C13.3804 2.49072 16.5005 5.61084 16.5093 9.49561C16.5181 13.3892 13.3892 16.5005 9.50439 16.5005ZM9.43408 6.58643C10.0493 6.58643 10.5327 6.09424 10.5327 5.48779C10.5327 4.86377 10.0493 4.38037 9.43408 4.38037C8.82764 4.38037 8.33545 4.86377 8.33545 5.48779C8.33545 6.09424 8.82764 6.58643 9.43408 6.58643ZM8.03662 14.0571H11.4204C11.772 14.0571 12.0532 13.8022 12.0532 13.4419C12.0532 13.1079 11.772 12.8442 11.4204 12.8442H10.4272V8.71338C10.4272 8.24756 10.1899 7.93994 9.75928 7.93994H8.18604C7.83447 7.93994 7.56201 8.20361 7.56201 8.5376C7.56201 8.89795 7.83447 9.15283 8.18604 9.15283H9.05615V12.8442H8.03662C7.69385 12.8442 7.4126 13.1079 7.4126 13.4419C7.4126 13.8022 7.69385 14.0571 8.03662 14.0571Z" fill="#2A5F74"/></svg></span>'
+      standard: '2'
+      enterprise: '5+'
+    - row: Basic Terragrunt support
       standard: 'yes'
       enterprise: 'yes'
-    - row: 'Enterprise support'
-      tooltip: Get support via email, a private shared Slack channel, and scheduled video calls directly from the Gruntwork team. Includes SLAs on response times.
+    - row: Bugfix & General Support
+      standard: 'yes'
+      enterprise: 'yes'
+    - row: Email Support
+      standard: 'yes'
+      enterprise: 'yes'
+    - row: Knowledge Base
+      standard: 'yes'
+      enterprise: 'yes'
+    - row: Community Slack
+      standard: 'yes'
+      enterprise: 'yes'
+    - row: Private Slack Channel
       standard: 'no'
       enterprise: 'yes'
-    - row: 'Guided onboarding'
-      tooltip: Get hands-on help, onboarding, and guidance from the Gruntwork team in setting up your DevOps Foundations.
+    - row: Support SLA
       standard: 'no'
-      enterprise: 'yes'
-    - row: 'Consulting'
-      tooltip: Gruntwork works directly with your team to build world-class infrastructure, which we then support & maintain on an ongoing basis.
-      standard: 'no'
-      enterprise: 'available'
+      enterprise: '1-Day'

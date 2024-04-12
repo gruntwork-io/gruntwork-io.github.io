@@ -1,5 +1,4 @@
 .page-pricing {
-
   .pricing-table {
     ul {
       padding: 0;
@@ -19,7 +18,7 @@
         }
 
         .badge {
-          background-color: #2B3745;
+          background-color: #2b3745;
           border-radius: 5px;
           padding: 4px 8px;
           color: #bfbfbf;
@@ -58,7 +57,7 @@
       .light {
         font-size: 16px;
       }
-      
+
       &.pricing-card-wrapper {
         grid-template-columns: 1fr 1fr;
         .empty-grid-col {
@@ -68,7 +67,7 @@
     }
 
     @media screen and (max-width: $screen-sm) {
-      grid-template-columns: 1fr 1.15fr .85fr;
+      grid-template-columns: 1fr 1.15fr 0.85fr;
       .light {
         font-size: 14px;
         line-height: 20px;
@@ -92,8 +91,10 @@
             width: 100%;
             justify-content: stretch;
           }
-          
-          form, button, .btn {
+
+          form,
+          button,
+          .btn {
             width: 100%;
             max-width: 100%;
           }
@@ -112,15 +113,25 @@
       @media screen and (max-width: $screen-sm) {
         margin-bottom: 7px;
       }
-    
+
       @media screen and (max-width: 590px) {
         margin-bottom: 5px;
       }
     }
   }
 
+  .medium-price{
+    margin-top: 24px;
+    margin-bottom: 1px;
+  }
+
   .plans-heading {
     padding: 0 12px;
+    z-index: 1;
+    position: sticky;
+    top: 0;
+    background: #1d252f;
+
     h2 {
       margin-bottom: 18px;
       font-size: 36px;
@@ -139,10 +150,11 @@
     }
   }
 
-  .plans-features {
+  .plans-features, .plans-features-terragrunt {
     hr {
       margin: 0;
-      border-color: #1A4C60;
+      border-color: #1a4c60;
+      border-width: 1px;
       &.with-margin {
         margin: 18px 0 12px;
       }
@@ -159,7 +171,7 @@
         appearance: none;
         width: 17px; /* Adjust the size of the checkbox */
         height: 17px; /* Adjust the size of the checkbox */
-        border: 1px solid #284B5D; /* Default border color */
+        border: 1px solid #284b5d; /* Default border color */
         border-radius: 3px;
         outline: none;
         margin-right: 12px;
@@ -181,8 +193,8 @@
         }
 
         &:checked {
-          background-color: #03C5E7;
-          border-color: #03C5E7;
+          background-color: #03c5e7;
+          border-color: #03c5e7;
 
           &::before {
             opacity: 1;
@@ -232,7 +244,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: center;
   }
 
   .popular-badge {
@@ -242,7 +254,7 @@
     padding: 4px 8px;
     line-height: normal;
     font-weight: 700;
-    border: 1px solid #1A4C60;
+    border: 1px solid #1a4c60;
     border-radius: 4px;
 
     @media screen and (max-width: $screen-md) {
@@ -256,22 +268,136 @@
       margin-bottom: 10px;
     }
   }
+  .pricing-switch-container{
+    display: flex;
+    padding: 34px;
+  }
+  .switches-container {
+    width: 480px;
+    display: flex;
+    padding: 10px 0;
+    position: relative;
+    background: #262E3A;
+    line-height: 3rem;
+    border-radius: 4px;
+    margin-left: auto;
+    margin-right: auto;
+    border: 2px solid #181D26;
+    @media screen and (max-width: $screen-sm) {
+      font-size: 14px;
+    }
+
+  }
+  .switches-container input {
+    visibility: hidden;
+    position: absolute;
+    top: 0;
+  }
+  .switches-container label {
+    width: 50%;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    cursor: pointer;
+    color: #90959E;
+  }
+  .switch-wrapper {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 50%;
+    padding: 0.15rem;
+    z-index: 3;
+    transition: transform .5s cubic-bezier(.77, 0, .175, 1);
+  }
+  .switch-btn {
+    border-radius: 2px;
+    background: #03c5e7;
+    height: 100%;
+  }
+  .switch-btn div {
+    width: 100%;
+    text-align: center;
+    opacity: 0;
+    display: block;
+    color: #fff;
+    transition: opacity .2s cubic-bezier(.77, 0, .175, 1) .125s;
+    will-change: opacity;
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 10px 0;
+  }
+
+  /* slide the switch box from right to left */
+  .switches-container input:nth-of-type(1):checked~.switch-wrapper {
+    transform: translateX(0%);
+  }
+
+  /* slide the switch box from left to right */
+  .switches-container input:nth-of-type(2):checked~.switch-wrapper {
+    transform: translateX(100%);
+  }
+
+  /* toggle the switch box labels - first checkbox:checked - show first switch div */
+  .switches-container input:nth-of-type(1):checked~.switch-wrapper .switch-btn div:nth-of-type(1) {
+    opacity: 1;
+  }
+
+  /* toggle the switch box labels - second checkbox:checked - show second switch div */
+  .switches-container input:nth-of-type(2):checked~.switch-wrapper .switch-btn div:nth-of-type(2) {
+    opacity: 1;
+  }
+
+  .pricing-contact-banner{
+    text-align: center;
+    background-color: rgba(3, 197, 231, 0.10);
+    padding: 20px 10px 30px 10px;
+    position: relative;
+    margin: 60px 0px;
+    h2{
+      font-size: 46px;
+    }
+    .banner-container{
+      margin: auto;
+      max-width: 600px;
+    }
+  }
+
+  .pricing-contact-banner::before {
+    content: "";
+    display: block;
+    position: absolute;
+    height: 55px;
+    width: 100%;
+    top: -25px;
+    z-index: 990;
+    background-image: url("../img/hr-boxes.png");
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: 80px 55px;
+  }
+  #pricingTerragrunt{
+    display: none;
+  }
 
   .pricing-card {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
-    padding: 24px;
+    padding: 10px;
     background-color: #222932;
     border-radius: 6px;
+    @media screen and (max-width: $screen-sm) {
+      padding: 12px;
+    }
     &.pricing-card-with-image {
       flex-direction: row;
       align-items: stretch;
       @media screen and (max-width: $screen-sm) {
         flex-direction: column;
         padding: 16px;
-        border: 1px solid #1A4C60;
+        border: 1px solid #1a4c60;
       }
 
       .pricing-card-image {
@@ -282,7 +408,8 @@
         margin-right: 34px;
         padding: 88px 44px;
         border-radius: 10px;
-        background: #1C2129;
+        background: #1c2129;
+        max-width: 265px;
         img {
           object-fit: contain;
         }
@@ -316,8 +443,8 @@
     }
 
     @media screen and (max-width: 590px) {
-      margin-right: 0!important; // Needs to override element style
-      margin-left: 0!important; // Needs to override element style
+      margin-right: 0 !important; // Needs to override element style
+      margin-left: 0 !important; // Needs to override element style
 
       .annual-contract-p {
         max-width: 100%;
@@ -367,6 +494,12 @@
     }
     .medium-price {
       font-size: 24px;
+      margin-top: 0;
+    }
+    .pricing-contact-banner{
+      h2{
+        font-size: 36px;
+      }
     }
   }
 
@@ -388,12 +521,12 @@
 }
 
 .need-help-text {
-  display: inline;
-  margin-right: .7em;
+  margin-right: 0.7em;
+  margin-bottom: 0.7rem;
 }
 
 .need-help-button {
-  margin-bottom: .6em;
+  margin-bottom: 0.6em;
 }
 
 @media (max-width: $screen-xs-max) {
@@ -419,10 +552,10 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    margin-right: .5em;
+    margin-right: 0.5em;
   }
   li {
-    margin: .8em;
+    margin: 0.8em;
     counter-increment: item;
     font-weight: 700;
   }
@@ -432,15 +565,16 @@
     color: #06a2ff;
     background-color: white;
   }
-  .current-step-icon, .completed-step-icon {
+  .current-step-icon,
+  .completed-step-icon {
     color: #06a2ff;
   }
   // Style for "Select Plan" step on checkout page
   .completed-step::before {
     border: none;
-    content: '\f00c';
+    content: "\f00c";
     font-family: FontAwesome;
-    font-size: .8em;
+    font-size: 0.8em;
     color: white;
     background-color: #06a2ff;
   }
@@ -452,16 +586,16 @@
 
 .table-tooltip {
   z-index: 90;
-  min-width: 200px;
+  min-width: 260px;
   display: none;
   position: absolute;
   bottom: 120%;
-  left: 30%;
+  left: 40%;
   transform: translateX(-50%);
   font-size: $font-size-small;
   border-radius: 8px;
   transition: all ease;
-  @media screen and (max-width: $screen-sm)  {
+  @media screen and (max-width: $screen-sm) {
     font-size: 14px;
     left: 70%;
     min-width: 150px;
@@ -473,7 +607,7 @@
     bottom: -15px;
     left: 50%;
     transform: translateX(-50%);
-    @media screen and (max-width: $screen-sm)  {
+    @media screen and (max-width: $screen-sm) {
       bottom: -10px;
     }
   }
@@ -481,6 +615,21 @@
 
 span.light {
   position: relative;
+}
+
+.light-with-line {
+  background-color: #1d252f;
+  width: max-content;
+  padding-right: 10px;
+
+  &::before {
+    content: "";
+    position: absolute;
+    height: 1px;
+    width: 100%;
+    background-color: #2a5f74;
+    z-index: -1;
+  }
 }
 
 .grid-container {
@@ -493,11 +642,321 @@ span.light {
 }
 
 .grid-container.highlight:hover {
-  border: #1A4C60 1px solid;
+  border: #1a4c60 1px solid;
   transition: all ease;
 }
 
-.grid-container.highlight:hover span{
+.grid-container.highlight:hover span {
   transition: all ease;
   color: white;
+}
+
+.pricing-sticky {
+  display: none;
+  background-color: rgba(34, 41, 50, 0.6);
+  position: sticky;
+  bottom: 100px;
+  transform: translateY(100px);
+  transition: ease;
+  backdrop-filter: blur(10px);
+  @media screen and (max-width: $screen-md) {
+    background-color: rgba(34, 41, 50, 0.4);
+    backdrop-filter: blur(19px);
+  }
+  .pricing-headline, .reference-price-desktop{
+    display: none;
+  }
+}
+
+.pricing-sticky-visible {
+  display: block;
+  transform: translateY(0);
+  visibility: visible;
+  bottom: 0;
+  z-index: 99;
+  .grid-container.pricing-card-wrapper {
+    @media screen and (max-width: $screen-sm) {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    .popular-badge,
+    .annual-contract-p {
+      @media screen and (max-width: $screen-sm) {
+        display: none;
+      }
+    }
+  }
+  .page-pricing .btn.pricing-ctas {
+    @media screen and (max-width: $screen-sm) {
+      min-width: 100px !important;
+    }
+  }
+  .btn {
+    @media screen and (max-width: $screen-sm) {
+      min-width: 100px !important;
+    }
+  }
+}
+.hide-pricing-sticky{
+  display: none !important;
+}
+.pricing-sticky-visible .annual-contract-p-mobile {
+  @media screen and (max-width: $screen-sm) {
+    display: block !important;
+    text-align: center;
+  }
+}
+
+.pricing-card.dark {
+  background-color: rgba(34, 41, 50, 0.6);
+  opacity: 100%;
+  @media screen and (max-width: $screen-md) {
+    background-color: rgba(34, 41, 50, 0.4);
+  }
+  @media screen and (max-width: $screen-sm) {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+  }
+}
+
+.price-box{
+  color: #fff;
+}
+
+.year-price, .currency{
+  font-size: 44px;
+}
+
+.contract-wrapper {
+  border-radius: 4px;
+  display: flex;
+  padding: 8px;
+  justify-content: space-evenly;
+  background-color: #2B3745;
+  .contract {
+    font-size: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    label{
+      display: flex;
+      justify-content: center;
+    }
+  }
+  .contract input[type='radio']{
+    margin: 0;
+    margin-right: 5px;
+    width: 20px;
+    height: 20px;
+    border-radius: 100%;
+    border: 2px solid #bfbfbf;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    accent-color: #2B3745;
+    appearance: none;
+  }
+  ion-radio { --border-width: 0.5px }
+  .contract input[type="radio"]:checked {
+      background-color: #03c5e7;
+      accent-color: #03c5e7;
+  }
+}
+.hide-on-desktop{
+  display: none;
+}
+.show-on-mobile{
+  display: none;
+}
+
+.mobile-price-btn{
+  display: none;
+}
+.contract-wrapper-mobile{
+  display: none;
+}
+.subtitle-mobile-pricing{
+  display: none;
+}
+.monthly-annual-container{
+  display: none;
+}
+.see-details-link{
+  display: none;
+}
+.pricing-price-section{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pricing-headline{
+  background-color: #2b3745;
+  width: 100%;
+  border-radius: 6px;
+  padding: 12px 0;
+  text-align: center;
+}
+.month-price-tag{
+  font-size: 12px;
+  color: #fff;
+}
+.reference-price{
+  display: none;
+}
+.additional-info-footer{
+  display: block;
+  font-size: 12px;
+  margin: 0px;
+}
+.additional-info{
+  display: none;
+}
+.price-description-mobile{
+  font-size: 12px;
+  display: block;
+  margin-bottom: 0;
+}
+.description-numbers-section{
+  margin-bottom: 8px;
+}
+@media screen and (max-width: $screen-sm) {
+  h1 {
+    font-size: 36px;
+  }
+  .lead{
+    font-size: 16px;
+  }
+  .list-price-heading{
+    h4{
+      font-size: 16px;
+    }
+  }
+  .btn-checkout{
+    margin-top: 0;
+  }
+  .pricing-card{
+    width: 100%;
+  }
+  .mobile-price-btn{
+    display: inline;
+  }
+  .contract-wrapper-mobile{
+    display: flex;
+  }
+  .medium-price{
+    margin-right: 0px !important;
+  }
+  .pricing-sticky{
+    .price-description-mobile, .additional-info, .additional-info-footer{
+      display: none;
+    }
+    .subtitle-mobile-pricing{
+      display: none;
+    }
+    .see-details-link{
+      display: block;
+      font-size: 12px;
+      text-decoration: underline;
+      font-style: italic;
+    }
+  }
+  .monthly-annual-container{
+      display: block;
+      .contract-wrapper{
+        justify-content: space-around;
+      }
+  }
+  .contract-wrapper{
+    background-color: transparent;
+  }
+}
+@media screen and (max-width: 590px) {
+.additional-info{
+  font-size: 10px;
+  display: block;
+  margin-bottom: 0;
+}
+.additional-info-footer{
+  display: none;
+}
+.hide-on-mobile{
+  display: none;
+}
+.reference-price{
+  display: block;
+}
+.pricing-headline{
+  background-color: transparent;
+  font-weight: 600;
+  font-size: 16px;
+  color: #fff;
+}
+.hide-on-desktop{
+  display: block;
+}
+.subtitle-mobile-pricing{
+  display: flex;
+  justify-content: center;
+  color: #fff;
+  font-size: 12px;
+}
+.pricing-price-section{
+  display: none;
+ }
+.pricing-sticky{
+  .pricing-headline{
+    display: block;
+  }
+  .reference-price{
+    display: none;
+  }
+  .subtitle-mobile-pricing{
+    display: none;
+  }
+  .contract-wrapper{
+    background-color: transparent;
+  }
+  .contract{
+    label{
+      .contract-picker-label{
+        display: none;
+      }
+    }
+  }
+}
+.annual-contract-wrapper{
+  display: none;
+}
+
+.description-numbers-section-enterprise{
+  display: none;
+}
+}
+@media screen and (min-width: 590px) and (max-width:760px){
+  .contract{
+    label{
+      .contract-picker-label{
+        display: none;
+      }
+    }
+  }
+}
+@media screen and (min-width: 360px) and (max-width: 590px){
+  .contract{
+    label{
+      .contract-picker-label{
+        display: inline-block;
+      }
+    }
+  }
+}
+@media screen and (max-width: 360px){
+  .contract{
+    label{
+      .contract-picker-label{
+        display: none;
+      }
+    }
+  }
 }
