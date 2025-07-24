@@ -1,24 +1,73 @@
 ---
 layout: default
-title: Thank you.
-excerpt: Thank you for contacting us. A grunt will be in touch soon!
+title: "Gruntwork: Thanks!"
 permalink: /thanks/
+slug: thanks
 ---
 
+<style>
+  .thanks-text h1 {
+    color: #2C3E50;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+
+  .thanks-text h3 {
+    color: #34495E;
+    margin-bottom: 15px;
+  }
+
+  .thanks-text h4 {
+    color: #7F8C8D;
+    margin-bottom: 25px;
+  }
+
+  .thanks-text p, .thanks-text h1, .thanks-text h3, .thanks-text h4 {
+    line-height: 1.5;
+  }
+</style>
+
 <div class="main">
-  <div class="section section-hero">
+  <div class="section">
     <div class="container">
       <div class="row">
-        <div class="col-xs-12 text-center">
-          <h1>{{ page.title }}</h1>
-          <p>{{ page.excerpt }}</p>
-          <p>
-            <a href="/" class="btn btn-info" role="button"
-              >Go to the Gruntwork home page</a
-            >
-          </p>
+        <div class="col-xs-12 thanks-text">
+          <h1>Thank you for reaching out!</h1>
+          <h3>A Gruntwork expert will be in touch shortly with a link to book your personalized demo.</h3>
+          <h4>In the meantime, we've gathered some resources to help you understand how Gruntwork can transform your infrastructure management:</h4>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="card mb-3">
+                <div class="card-body">
+                  <h5 class="card-title">Gruntwork Production Framework Explained</h5>
+                  <div class="embed-responsive embed-responsive-16by9">
+                    <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/sYzhlBayRpU" allowfullscreen></iframe>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card mb-3">
+                <div class="card-body">
+                  <h5 class="card-title">Gruntwork Production Framework</h5>
+                  <p class="card-text">Discover the Gruntwork Production Framework and learn how it can help you create and maintain production-grade infrastructure, allowing you to focus on your core business.</p>
+                  <a href="https://docs.gruntwork.io/guides/production-framework/" target="_blank" class="btn btn-primary">Learn More</a>
+                </div>
+              </div>
+              <div class="card mb-3">
+                <div class="card-body">
+                  <h5 class="card-title">Gruntwork Modules Documentation</h5>
+                  <p class="card-text">Explore the comprehensive list of Gruntwork infrastructure modules that can be used to create and manage your cloud resources efficiently and securely.</p>
+                  <a href="https://docs.gruntwork.io/reference/modules/intro/" target="_blank" class="btn btn-primary">View Modules</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
   </div>
 </div>
+
